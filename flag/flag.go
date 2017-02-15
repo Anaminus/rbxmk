@@ -2,7 +2,12 @@ package flag
 
 import (
 	"fmt"
+	"io"
+	"os"
+	"sort"
 	"strconv"
+	"strings"
+	"text/tabwriter"
 	"time"
 )
 
@@ -13,6 +18,7 @@ type Set struct {
 	flagDefs    map[string]*Def
 	currentNode *Node
 	finalNodes  []*Node
+	Usage       string
 }
 
 // Nodes returns a list of parsed nodes.
@@ -76,6 +82,7 @@ type Def struct {
 	Default   string // Default value (as text).
 	SingleArg string // Value when flag is single (bool-like). Empty means the flag is not single.
 	IsNode    bool   // Whether the flag is a node.
+	Type      string
 	Usage     string // Help message.
 }
 
@@ -220,7 +227,7 @@ func (f *Set) Parse(arguments []string) error {
 		}
 		return err
 	}
-	if len(f.currentNode.Flags) > 0 {
+	if f.currentNode != nil && len(f.currentNode.Flags) > 0 {
 		f.finalNodes = append(f.finalNodes, f.currentNode)
 	}
 	f.currentNode = nil
@@ -260,4 +267,57 @@ func (f *Set) Lookup(name string, value interface{}) error {
 		}
 	}
 	return nil
+}
+
+func (f *Set) DisplayUsage(w io.Writer) error {
+	if w == nil {
+		w = os.Stderr
+	}
+	if _, err := w.Write([]byte(f.Usage)); err != nil {
+		return err
+	}
+	if _, err := w.Write([]byte("\nOptions:\n\n")); err != nil {
+		return err
+	}
+
+	sorted := make([]string, len(f.flagDefs))
+	i := 0
+	for name := range f.flagDefs {
+		sorted[i] = name
+		i++
+	}
+	sort.Strings(sorted)
+
+	var buf []byte
+	tw := tabwriter.NewWriter(w, 8, 8, 1, ' ', 0)
+	for _, name := range sorted {
+		def := f.flagDefs[name]
+		typ := strings.ToUpper(def.Type)
+		n := 3 + len(def.Name) + 1 + len(def.Usage) + 1
+		if typ != "" {
+			n += 1 + len(typ)
+		}
+		buf = make([]byte, n)
+		b := buf
+		copy(b, "  -")
+		b = b[3:]
+		copy(b, def.Name)
+		b = b[len(def.Name):]
+		if typ != "" {
+			b[0] = ' '
+			b = b[1:]
+			copy(b, typ)
+			b = b[len(typ):]
+		}
+		b[0] = '\t'
+		b = b[1:]
+		copy(b, def.Usage)
+		b = b[len(def.Usage):]
+		b[0] = '\n'
+
+		if _, err := tw.Write(buf); err != nil {
+			return err
+		}
+	}
+	return tw.Flush()
 }

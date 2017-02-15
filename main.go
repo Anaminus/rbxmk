@@ -534,19 +534,53 @@ type Options struct {
 
 func main() {
 	// Define and parse flags.
-	flagset := new(flag.Set)
-	flagset.Define(
-		flag.Def{Name: "i", IsNode: true, Usage: "Define the reference of an input node."},
-		flag.Def{Name: "o", IsNode: true, Usage: "Define the reference of an output node."},
-		flag.Def{Name: "id", Usage: "Force the ID of the current node."},
-		flag.Def{Name: "map", Usage: "Map nodes to another node."},
-		flag.Def{Name: "format", Usage: "Force the format of the current node."},
+	flagset := &flag.Set{}
+	flagset.Usage = `rbxmk [OPTIONS...]
 
-		flag.Def{Name: "config", Default: "", Usage: "Set default config with a file."},
-		flag.Def{Name: "api", Default: "", Usage: "Get API data from a file for more accurate format decoding."},
+rbxmk options are grouped together as "nodes". Certain flags delimit nodes.
+For example, the -i flag delimits an input node, and also specifies a
+reference for that node. The -o flag delimits an output node, also defining a
+reference. All flags given before a delimiting flag are counted as being apart
+of the node. All flags after a delimiter will be apart of the next node.
+
+Several flags, like -id, specify information for the node they are apart of.
+
+Other flags, like -config, are global; they do not belong to any particular
+node, and may be specified anywhere.
+
+In general, any flag may be specified multiple times. If the flag requires a
+single value, then only the last flag will be counted.
+`
+
+	flagset.Define(
+		flag.Def{Name: "i", IsNode: true, Type: "reference", Usage: "Define the reference of an input node. Delimits an input node."},
+		flag.Def{Name: "o", IsNode: true, Type: "reference", Usage: "Define the reference of an output node. Delimits an output node."},
+		flag.Def{Name: "id", Type: "string", Usage: "Force the ID of the current node."},
+		flag.Def{Name: "map", Type: "mapping", Usage: "Map input nodes to output nodes."},
+		flag.Def{Name: "format", Type: "string", Usage: "Force the format of the current node."},
+		flag.Def{Name: "h", Default: "false", SingleArg: "true", Usage: "Display help."},
+		flag.Def{Name: "help", Default: "false", SingleArg: "true", Usage: "Display help."},
+
+		flag.Def{Name: "config", Default: "", Type: "file", Usage: "Set default configuration from a file."},
+		flag.Def{Name: "api", Default: "", Type: "file", Usage: "Get API data from a file for more accurate format decoding."},
 	)
 	flagset.Parse(os.Args[1:])
 
+	{
+		var help bool
+		if len(flagset.Nodes()) == 0 {
+			help = true
+		} else {
+			flagset.Lookup("h", &help)
+			if !help {
+				flagset.Lookup("help", &help)
+			}
+		}
+		if help {
+			flagset.DisplayUsage(os.Stderr)
+			return
+		}
+	}
 	config := new(Config)
 	config.Load(flagset)
 
