@@ -1,17 +1,19 @@
 package main
 
 import (
-	"encoding/json"
+	"bufio"
 	"errors"
 	"fmt"
-	"github.com/anaminus/rbxmk/flag"
+	"github.com/jessevdk/go-flags"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxapi/dump"
 	"github.com/robloxapi/rbxfile"
+	"io"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 type Source struct {
@@ -145,7 +147,7 @@ func IsDigit(s string) bool {
 	return true
 }
 
-func MakeNodes(fnodes []*flag.Node) (nodes *Nodes, err error) {
+func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 	nodes = new(Nodes)
 
 	type unresolvedMap struct {
@@ -165,22 +167,16 @@ func MakeNodes(fnodes []*flag.Node) (nodes *Nodes, err error) {
 	outNodeIDs := map[string]int{}
 
 	for _, fnode := range fnodes {
-		if fnode.Flag.Def == nil {
-			for _, flag := range fnode.Flags {
-				if flag.Name != "map" {
-					continue
-				}
-				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeEmpty, "", flag.Value})
+		switch fnode.Type {
+		case NodeTypeNone:
+			for _, mapping := range fnode.Mapping {
+				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeEmpty, "", mapping})
 			}
-			continue
-		}
-		switch fnode.Name {
-		case "i":
+		case NodeTypeInput:
 			node := InputNode{
-				Reference: fnode.Value,
-			}
-			if err := fnode.Lookup("id", &node.ID); err != nil {
-				return nil, err
+				Reference: fnode.Reference,
+				ID:        fnode.ID,
+				Format:    fnode.Format,
 			}
 			if node.ID != "" {
 				// Manually assigned ID; check for integrity.
@@ -202,18 +198,17 @@ func MakeNodes(fnodes []*flag.Node) (nodes *Nodes, err error) {
 				}
 			}
 
-			for _, flag := range fnode.Flags {
-				if flag.Name != "map" {
-					continue
-				}
-				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeInput, node.ID, flag.Value})
+			for _, mapping := range fnode.Mapping {
+				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeInput, "", mapping})
 			}
 
 			inNodeIDs[node.ID] = len(nodes.In)
 			nodes.In = append(nodes.In, &node)
-		case "o":
+		case NodeTypeOutput:
 			node := OutputNode{
-				Reference: fnode.Value,
+				Reference: fnode.Reference,
+				ID:        fnode.ID,
+				Format:    fnode.Format,
 			}
 			if node.ID != "" {
 				if !IsAlnum(node.ID) {
@@ -232,11 +227,8 @@ func MakeNodes(fnodes []*flag.Node) (nodes *Nodes, err error) {
 				}
 			}
 
-			for _, flag := range fnode.Flags {
-				if flag.Name != "map" {
-					continue
-				}
-				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeOutput, node.ID, flag.Value})
+			for _, mapping := range fnode.Mapping {
+				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeOutput, "", mapping})
 			}
 
 			outNodeIDs[node.ID] = len(nodes.Out)
@@ -475,45 +467,6 @@ func Fatalf(f string, v ...interface{}) {
 	os.Exit(2)
 }
 
-type Config struct {
-	API string `json:"api"`
-}
-
-func (c *Config) Load(flagset *flag.Set) {
-	// Try to load defaults from file.
-	var path string
-	var file *os.File
-	if err := flagset.Lookup("config", &path); err != nil {
-		Fatalf("failed to parse -config flag: %s", err)
-	}
-	if path != "" {
-		var err error
-		if file, err = os.Open(path); err != nil {
-			Fatalf("failed to open config file: %s", err)
-		}
-		defer file.Close()
-		jd := json.NewDecoder(file)
-		if err := jd.Decode(c); err != nil {
-			Fatalf("failed to decode config file: %s", err)
-		}
-	}
-	// Override from flags.
-	{
-		var flag string
-		var err error
-
-		flag = "api"
-		if err = flagset.Lookup(flag, &c.API); err != nil {
-			goto Error
-		}
-
-		return
-	Error:
-		Fatalf("failed to configure -%s flag: %s", flag, err)
-	}
-
-}
-
 func LoadAPI(path string) (api *rbxapi.API) {
 	if path != "" {
 		file, err := os.Open(path)
@@ -532,10 +485,8 @@ type Options struct {
 	API *rbxapi.API
 }
 
-func main() {
-	// Define and parse flags.
-	flagset := &flag.Set{}
-	flagset.Usage = `rbxmk [OPTIONS...]
+const CommandName = "rbxmk"
+const CommandUsage = `[OPTIONS...]
 
 rbxmk options are grouped together as "nodes". Certain flags delimit nodes.
 For example, the -i flag delimits an input node, and also specifies a
@@ -543,54 +494,163 @@ reference for that node. The -o flag delimits an output node, also defining a
 reference. All flags given before a delimiting flag are counted as being apart
 of the node. All flags after a delimiter will be apart of the next node.
 
-Several flags, like -id, specify information for the node they are apart of.
+Several flags, like --id, specify information for the node they are apart of.
 
-Other flags, like -config, are global; they do not belong to any particular
+Other flags, like --options, are global; they do not belong to any particular
 node, and may be specified anywhere.
 
 In general, any flag may be specified multiple times. If the flag requires a
-single value, then only the last flag will be counted.
-`
+single value, then only the last flag will be counted.`
 
-	flagset.Define(
-		flag.Def{Name: "i", IsNode: true, Type: "reference", Usage: "Define the reference of an input node. Delimits an input node."},
-		flag.Def{Name: "o", IsNode: true, Type: "reference", Usage: "Define the reference of an output node. Delimits an output node."},
-		flag.Def{Name: "id", Type: "string", Usage: "Force the ID of the current node."},
-		flag.Def{Name: "map", Type: "mapping", Usage: "Map input nodes to output nodes."},
-		flag.Def{Name: "format", Type: "string", Usage: "Force the format of the current node."},
-		flag.Def{Name: "h", Default: "false", SingleArg: "true", Usage: "Display help."},
-		flag.Def{Name: "help", Default: "false", SingleArg: "true", Usage: "Display help."},
+type FlagOptions struct {
+	InputReference  func(string) `short:"i" long:"input" description:"Define the reference of an input node. Delimits an input node." long-description:"" value-name:"REF"`
+	OutputReference func(string) `short:"o" long:"output" description:"Define the reference of an output node. Delimits an output node." long-description:"" value-name:"REF"`
+	NodeID          func(string) `short:"" long:"id" description:"Force the ID of the current node." long-description:"" value-name:"STRING"`
+	NodeMap         func(string) `short:"" long:"map" description:"Map input nodes to output nodes." long-description:"" value-name:"MAPPING"`
+	NodeFormat      func(string) `short:"" long:"format" description:"Force the format of the current node." long-description:"" value-name:"STRING"`
+	OptionsFile     func(string) `short:"" long:"options" description:"Set options from a file." long-description:"" value-name:"FILE"`
+	APIFile         string       `short:"" long:"api" description:"Get API data from a file for more accurate format decoding." long-description:"" value-name:"FILE"`
+}
 
-		flag.Def{Name: "config", Default: "", Type: "file", Usage: "Set default configuration from a file."},
-		flag.Def{Name: "api", Default: "", Type: "file", Usage: "Get API data from a file for more accurate format decoding."},
-	)
-	flagset.Parse(os.Args[1:])
+type NodeType uint8
 
-	{
-		var help bool
-		if len(flagset.Nodes()) == 0 {
-			help = true
-		} else {
-			flagset.Lookup("h", &help)
-			if !help {
-				flagset.Lookup("help", &help)
-			}
+const (
+	NodeTypeNone NodeType = iota
+	NodeTypeInput
+	NodeTypeOutput
+)
+
+type FlagNode struct {
+	Type      NodeType
+	Reference string
+	ID        string
+	Mapping   []string
+	Format    string
+}
+
+func ParseOptionsFile(r io.Reader) (args []string, err error) {
+	buf := bufio.NewReader(r)
+	currentLine := make([]byte, 0, 1024)
+	for {
+		part, isPrefix, err := buf.ReadLine()
+		if err == io.EOF {
+			break
 		}
-		if help {
-			flagset.DisplayUsage(os.Stderr)
-			return
+		if err != nil {
+			return nil, err
+		}
+		currentLine = append(currentLine, part...)
+		if !isPrefix {
+			if currentLine[0] != '#' {
+				line := strings.TrimFunc(string(currentLine), unicode.IsSpace)
+				if line != "" {
+					var i int
+					var r rune
+					for i, r = range line {
+						if unicode.IsSpace(r) {
+							break
+						}
+					}
+					name := line[:i]
+					line = strings.TrimLeftFunc(line[i:], unicode.IsSpace)
+					if line != "" {
+						args = append(args, "--"+name)
+						args = append(args, line)
+					} else {
+						args = append(args, "-"+name)
+					}
+				}
+			}
+			currentLine = currentLine[:0]
 		}
 	}
-	config := new(Config)
-	config.Load(flagset)
+	return args, nil
+}
 
-	nodes, err := MakeNodes(flagset.Nodes())
+func LoadOptionsFile(files *[]os.FileInfo, options *FlagOptions, path string) error {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+	for _, fi := range *files {
+		if os.SameFile(fileInfo, fi) {
+			return fmt.Errorf("detected recursive file: %s", path)
+		}
+	}
+	*files = append(*files, fileInfo)
+
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+
+	args, err := ParseOptionsFile(file)
+	file.Close()
+	if err != nil {
+		return err
+	}
+
+	fp := flags.NewParser(options, flags.HelpFlag)
+	fp.Usage = CommandUsage
+	if _, err := fp.ParseArgs(args); err != nil {
+		return err
+	}
+	return nil
+}
+
+func main() {
+	flagNodes := make([]FlagNode, 1)
+	parsedOptionFiles := make([]os.FileInfo, 0, 1)
+	var flagOptions FlagOptions
+	flagOptions = FlagOptions{
+		InputReference: func(s string) {
+			flagNodes[len(flagNodes)-1].Reference = s
+			flagNodes[len(flagNodes)-1].Type = NodeTypeInput
+			flagNodes = append(flagNodes, FlagNode{})
+		},
+		OutputReference: func(s string) {
+			flagNodes[len(flagNodes)-1].Reference = s
+			flagNodes[len(flagNodes)-1].Type = NodeTypeOutput
+			flagNodes = append(flagNodes, FlagNode{})
+		},
+		NodeID: func(s string) {
+			flagNodes[len(flagNodes)-1].ID = s
+		},
+		NodeMap: func(s string) {
+			i := len(flagNodes) - 1
+			flagNodes[i].Mapping = append(flagNodes[i].Mapping, s)
+		},
+		NodeFormat: func(s string) {
+			flagNodes[len(flagNodes)-1].Format = s
+		},
+		OptionsFile: func(s string) {
+			if err := LoadOptionsFile(&parsedOptionFiles, &flagOptions, s); err != nil {
+				Fatalf("failed to load options file: %s", err)
+			}
+		},
+	}
+
+	fp := flags.NewParser(&flagOptions, flags.HelpFlag)
+	fp.Usage = CommandUsage
+	if _, err := fp.Parse(); err != nil {
+		if err, ok := err.(*flags.Error); ok && err.Type == flags.ErrHelp {
+			fmt.Fprintln(os.Stdout, err)
+			return
+		}
+		Fatalf("flag parser error: %s", err)
+	}
+	if len(os.Args) < 2 {
+		fp.WriteHelp(os.Stderr)
+		return
+	}
+
+	nodes, err := MakeNodes(flagNodes)
 	if err != nil {
 		Fatalf("failed to parse flag nodes: %s", err)
 	}
 
 	options := &Options{
-		API: LoadAPI(config.API),
+		API: LoadAPI(flagOptions.APIFile),
 	}
 
 	// Gather Sources from inputs.

@@ -26,48 +26,60 @@ for that node. The `-o` flag delimits an output node, also defining a
 reference. All flags specified before a delimiting flag are counted as being
 apart of the node. All flags after a delimiter will be apart of the next node.
 
-Several flags, like `-id`, specify information for the node they are apart of.
+Several flags, like `--id`, specify information for the node they are apart
+of.
 
-Other flags, like `-config`, are global; they do not belong to any particular
-node, and may be specified anywhere.
+Other flags, like `--options`, are global; they do not belong to any
+particular node, and may be specified anywhere.
 
-In general, any flag may be specified multiple times. If the flag requires a
-single value, then only the last flag will be counted.
+In general, any flag may be specified multiple times. Flags are read from left
+to right. If the option requires a single value, then only the last flag will
+be counted.
 
-Global Flags   | Description
----------------|------------
-`-h`, `-help`  | Display a help message.
-`-config FILE` | Specify a file containing options, in JSON format.
-`-api FILE`    | Specify an API dump file, which may be used by file formats for more correct encoding.
-
-Delimiter Flags | Description
-----------------|------------
-`-i REF`        | Define the reference of the current node. Delimits an input node.
-`-o REF`        | Define the reference of the current node. Delimits an output node.
-
-Node Flags       | Description
+Global Flags     | Description
 -----------------|------------
-`-id STRING`     | Force ID of the current node.
-`-map MAPPING`   | Map input nodes to output nodes.
-`-format STRING` | Force the file format of the current node.
+`-h`, `--help`   | Display a help message.
+`--options FILE` | Specify a file containing options.
+`--api FILE`     | Specify an API dump file, which may be used by file formats for more correct encoding.
 
-### Config options
+Delimiter Flags          | Description
+-------------------------|------------
+`-i REF`, `--input REF`  | Define the reference of the current node. Delimits an input node.
+`-o REF`, `--output REF` | Define the reference of the current node. Delimits an output node.
 
-The following options may be specified in a configuration file:
+Node Flags        | Description
+------------------|------------
+`--id STRING`     | Force ID of the current node.
+`--map MAPPING`   | Map input nodes to output nodes.
+`--format STRING` | Force the file format of the current node.
 
-- `api`
+### Options file
 
-The format of the configuration file is a JSON object. Each field is the name
-of an option mapped to the value of the option. For example,
+The `--options` flag loads options from a file. It can be specified any number
+of times.
 
-```json
-{
-	"api": "path/to/file"
-}
+Any options (including `--options`) may be specified in the file. The options
+are applied immediately, so the order of the options matters. `--options` can
+be treated as expanding into the options within the file.
+
+Option files cannot be recursive; a file may only be loaded once.
+
+#### File syntax
+
+Each line specifies one option. Leading and trailing whitespace is ignored, as
+well as empty lines. Lines beginning with a `#` character are ignored.
+
+Within a line, the name of the option occurs up to the first whitespace. After
+any whitespace, the remaining text is the option argument.
+
 ```
+api path/to/file
+options path/to/suboptions
 
-Options specified directly are prioritized over options set by the
-configuration file.
+# comment
+i inputReference
+o outputReference
+```
 
 ## Node IDs
 
