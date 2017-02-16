@@ -18,6 +18,13 @@ go get -u github.com/anaminus/rbxmk
 If you installed Go correctly, this will install rbxmk to `$GOPATH/bin`,
 which will allow you run it directly from a shell.
 
+If you are on Windows, you may choose to force POSIX-style flags with the
+`forceposix` build tag.
+
+```
+go get -u -tags forceposix github.com/anaminus/rbxmk
+```
+
 ## Command options
 
 Options are grouped together as "nodes". Certain flags delimit nodes. For
