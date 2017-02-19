@@ -122,7 +122,6 @@ type Nodes struct {
 	In    []*InputNode
 	Out   []*OutputNode
 	Graph [][2]int
-	API   *rbxapi.API
 }
 
 func IsAlnum(s string) bool {
