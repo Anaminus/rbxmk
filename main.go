@@ -118,10 +118,72 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 	return handler(opt, node, nextPart, src)
 }
 
+// Mapping is an unevaluated mapping of inputs to outputs. The string is
+// the node ID, the bool is whether the node should be added to the final
+// mapping. The string may be "*", which must be expanded into the current set
+// of nodes for the type of node.
+type Mapping struct {
+	Input  map[string]bool
+	Output map[string]bool
+}
+
+func (m Mapping) Evaluate(nodes *Nodes) (mappings [][2]string) {
+	in := make(map[string]bool, len(m.Input))
+	for id, add := range m.Input {
+		if id == "*" {
+			for id := range nodes.Inputs {
+				in[id] = add
+			}
+		} else {
+			in[id] = add
+		}
+	}
+
+	out := make(map[string]bool, len(m.Output))
+	for id, add := range m.Output {
+		if id == "*" {
+			for id := range nodes.Outputs {
+				out[id] = add
+			}
+		} else {
+			out[id] = add
+		}
+	}
+
+	isorted := make([]string, 0, len(in))
+	for id := range in {
+		isorted = append(isorted, id)
+	}
+	sort.Strings(isorted)
+
+	osorted := make([]string, 0, len(out))
+	for id := range out {
+		osorted = append(osorted, id)
+	}
+	sort.Strings(osorted)
+
+	for _, inID := range isorted {
+		for _, outID := range osorted {
+			// Remove duplicates.
+			current := [2]string{inID, outID}
+			for i, mapping := range mappings {
+				if mapping == current {
+					mappings = mappings[:i+copy(mappings[i:], mappings[i+1:])]
+				}
+			}
+			// Negated mappings are not added back in.
+			if in[inID] && out[outID] {
+				mappings = append(mappings, current)
+			}
+		}
+	}
+	return
+}
+
 type Nodes struct {
-	In    []*InputNode
-	Out   []*OutputNode
-	Graph [][2]int
+	Inputs   map[string]*InputNode
+	Outputs  map[string]*OutputNode
+	Mappings []Mapping
 }
 
 func IsAlnum(s string) bool {
@@ -149,6 +211,13 @@ func IsDigit(s string) bool {
 func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 	nodes = new(Nodes)
 
+	if nodes.Inputs == nil {
+		nodes.Inputs = make(map[string]*InputNode)
+	}
+	if nodes.Outputs == nil {
+		nodes.Outputs = make(map[string]*OutputNode)
+	}
+
 	type unresolvedMap struct {
 		nodeType   uint8  // Type of the parent node
 		parentNode string // ID of the parent node
@@ -162,8 +231,6 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 
 	unresolvedMaps := []unresolvedMap{}
 	inNumericID, outNumericID := 0, 0
-	inNodeIDs := map[string]int{}
-	outNodeIDs := map[string]int{}
 
 	for _, fnode := range fnodes {
 		switch fnode.Type {
@@ -182,7 +249,7 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				if !IsAlnum(node.ID) {
 					return nil, fmt.Errorf("ID %q contains non-alphanumeric characters", node.ID)
 				}
-				if _, exists := inNodeIDs[node.ID]; exists {
+				if _, exists := nodes.Inputs[node.ID]; exists {
 					return nil, fmt.Errorf("input node with ID %q already exists", node.ID)
 				}
 			} else {
@@ -191,7 +258,7 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				for {
 					node.ID = strconv.Itoa(inNumericID)
 					inNumericID++
-					if _, exists := inNodeIDs[node.ID]; !exists {
+					if _, exists := nodes.Inputs[node.ID]; !exists {
 						break
 					}
 				}
@@ -201,8 +268,7 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeInput, "", mapping})
 			}
 
-			inNodeIDs[node.ID] = len(nodes.In)
-			nodes.In = append(nodes.In, &node)
+			nodes.Inputs[node.ID] = &node
 		case NodeTypeOutput:
 			node := OutputNode{
 				Reference: fnode.Reference,
@@ -213,14 +279,14 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				if !IsAlnum(node.ID) {
 					return nil, fmt.Errorf("ID %q contains non-alphanumeric characters", node.ID)
 				}
-				if _, exists := outNodeIDs[node.ID]; exists {
+				if _, exists := nodes.Outputs[node.ID]; exists {
 					return nil, fmt.Errorf("output node with ID %q already exists", node.ID)
 				}
 			} else {
 				for {
 					node.ID = strconv.Itoa(outNumericID)
 					outNumericID++
-					if _, exists := outNodeIDs[node.ID]; !exists {
+					if _, exists := nodes.Outputs[node.ID]; !exists {
 						break
 					}
 				}
@@ -230,18 +296,16 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				unresolvedMaps = append(unresolvedMaps, unresolvedMap{nodeOutput, "", mapping})
 			}
 
-			outNodeIDs[node.ID] = len(nodes.Out)
-			nodes.Out = append(nodes.Out, &node)
+			nodes.Outputs[node.ID] = &node
 		}
 	}
 
 	if len(unresolvedMaps) == 0 {
 		// map each input to each output
-		for i := range nodes.In {
-			for o := range nodes.Out {
-				nodes.Graph = append(nodes.Graph, [2]int{i, o})
-			}
-		}
+		nodes.Mappings = append(nodes.Mappings, Mapping{
+			Input:  map[string]bool{"*": true},
+			Output: map[string]bool{"*": true},
+		})
 		return
 	}
 
@@ -249,7 +313,7 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 	var ErrSyntax = errors.New("syntax")
 
 	// Parse a string used to map inputs to outputs.
-	parseMapping := func(m unresolvedMap, inNodeIDs, outNodeIDs map[string]int) (in, out map[string]bool, err error) {
+	parseMapping := func(m unresolvedMap) (in, out map[string]bool, err error) {
 		node := m.nodeType
 		v := m.mapStr
 
@@ -292,28 +356,25 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				switch node {
 				case nodeInput:
 					// Node is an input, so map it to each output node.
-					for id := range outNodeIDs {
-						out[id] = add
-					}
+
+					// Add wildcard as the selection, to be expanded into the
+					// current set of nodes when it is evaluated. Adding a "*"
+					// is safe from user input, since IDs are limited to
+					// alphanumeric characters.
+					out["*"] = add
 				case nodeOutput:
 					// Node is an output, so map each input node to it.
-					for id := range inNodeIDs {
-						in[id] = add
-					}
+					in["*"] = add
 				default:
 					// Orphaned mappings with no parent node are invalid.
 					goto Invalid
 				}
 			case stateInput:
 				// Currently parsing the input side, so select each input node.
-				for id := range inNodeIDs {
-					in[id] = add
-				}
+				in["*"] = add
 			case stateOutput:
 				// Currently parsing the output side, so select each output node.
-				for id := range outNodeIDs {
-					out[id] = add
-				}
+				out["*"] = add
 			default:
 				return nil, nil, ErrSyntax
 			}
@@ -340,25 +401,13 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 				// Select mapping based on the parent node.
 				switch node {
 				case nodeInput:
-					if _, exists := outNodeIDs[v[i:j]]; !exists {
-						goto Invalid
-					}
 					out[v[i:j]] = add
 				case nodeOutput:
-					if _, exists := inNodeIDs[v[i:j]]; !exists {
-						goto Invalid
-					}
 					in[v[i:j]] = add
 				}
 			case stateInput:
-				if _, exists := inNodeIDs[v[i:j]]; !exists {
-					goto Invalid
-				}
 				in[v[i:j]] = add
 			case stateOutput:
-				if _, exists := outNodeIDs[v[i:j]]; !exists {
-					goto Invalid
-				}
 				out[v[i:j]] = add
 			default:
 				return nil, nil, ErrSyntax
@@ -423,40 +472,12 @@ func MakeNodes(fnodes []FlagNode) (nodes *Nodes, err error) {
 		return nil, nil, ErrInvalid
 	}
 
-	for _, m := range unresolvedMaps {
-		in, out, err := parseMapping(m, inNodeIDs, outNodeIDs)
+	for _, um := range unresolvedMaps {
+		in, out, err := parseMapping(um)
 		if err != nil {
 			return nil, err
 		}
-
-		isorted := make([]string, 0, len(in))
-		for id := range in {
-			isorted = append(isorted, id)
-		}
-		sort.Strings(isorted)
-		osorted := make([]string, 0, len(out))
-		for id := range out {
-			osorted = append(osorted, id)
-		}
-		sort.Strings(osorted)
-
-		for _, inID := range isorted {
-			i := inNodeIDs[inID]
-			for _, outID := range osorted {
-				o := outNodeIDs[outID]
-				// Remove duplicates.
-				g := [2]int{i, o}
-				for n, m := range nodes.Graph {
-					if m == g {
-						nodes.Graph = nodes.Graph[:n+copy(nodes.Graph[n:], nodes.Graph[n+1:])]
-					}
-				}
-				// Negated mappings are not added back in.
-				if in[inID] && out[outID] {
-					nodes.Graph = append(nodes.Graph, g)
-				}
-			}
-		}
+		nodes.Mappings = append(nodes.Mappings, Mapping{in, out})
 	}
 	return
 }
@@ -653,19 +674,30 @@ func main() {
 	}
 
 	// Gather Sources from inputs.
-	sources := make([]*Source, len(nodes.In))
-	for i, node := range nodes.In {
+	sources := make(map[string]*Source, len(nodes.Inputs))
+	for id, node := range nodes.Inputs {
 		var err error
-		if sources[i], err = node.ResolveReference(options); err != nil {
+		if sources[id], err = node.ResolveReference(options); err != nil {
 			Fatalf("error resolving reference of input %q: %s", node.ID, err)
 		}
 	}
 
 	// Map inputs to outputs.
-	for _, m := range nodes.Graph {
-		node := nodes.Out[m[1]]
-		if err := node.ResolveReference(options, sources[m[0]]); err != nil {
-			Fatalf("error resolving reference of output %q: %s", node.ID, err)
+	for _, mapping := range nodes.Mappings {
+		mappings := mapping.Evaluate(nodes)
+		for _, m := range mappings {
+			node, exists := nodes.Outputs[m[1]]
+			if !exists {
+				Fatalf("error mapping %q to %q: output %q does not exist", m[0], m[1], m[1])
+			}
+			src, exists := sources[m[0]]
+			if !exists {
+				Fatalf("error mapping %q to %q: input %q does not exist", m[0], m[1], m[0])
+			}
+
+			if err := node.ResolveReference(options, src); err != nil {
+				Fatalf("error resolving reference of output %q: %s", node.ID, err)
+			}
 		}
 	}
 }
