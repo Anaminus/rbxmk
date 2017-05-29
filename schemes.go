@@ -41,7 +41,7 @@ func IsDigit(s string) bool {
 }
 
 func HandleHTTPInputScheme(opt *Options, node *InputNode, _ string) (src *Source, err error) {
-	u, err := url.Parse(node.Reference)
+	u, err := url.Parse(strings.Join(node.Reference, ""))
 	if err != nil {
 		return
 	}
