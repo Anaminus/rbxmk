@@ -243,6 +243,15 @@ func (st *LuaState) Init(opt *Options) {
 			l.PushString("error")
 			return 1
 		}},
+		{"__tostring", func(l *lua.State) int {
+			err, ok := l.ToUserData(1).(error)
+			if ok {
+				l.PushString(err.Error())
+			} else {
+				l.PushString("<error>")
+			}
+			return 1
+		}},
 		{"__metatable", func(l *lua.State) int {
 			l.PushString("the metatable is locked")
 			return 1
