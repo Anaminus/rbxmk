@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Shopify/go-lua"
 	"os"
+	"strings"
 )
 
 type LuaState struct {
@@ -100,12 +101,12 @@ func (t tArgs) Length() int {
 	return t.l.RawLength(tableArg)
 }
 
-func (t tArgs) FieldError(name string, expected, got string) string {
-	lua.Errorf(l, "bad value at field %q: %s expected, got %s", name, expected, got)
+func (t tArgs) FieldError(name string, expected, got string) {
+	lua.Errorf(t.l, "bad value at field %q: %s expected, got %s", name, expected, got)
 }
 
-func (t tArgs) IndexError(index int, expected, got string) string {
-	lua.Errorf(l, "bad value at index #%d: %s expected, got %s", index, expected, got)
+func (t tArgs) IndexError(index int, expected, got string) {
+	lua.Errorf(t.l, "bad value at index #%d: %s expected, got %s", index, expected, got)
 }
 
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
@@ -150,15 +151,17 @@ func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string)
 	case "input", "output", "error":
 		v = t.l.ToUserData(-1)
 	case "nil":
-		if !opt {
-			fallthrough
+		if opt {
+			nodeType = ""
+			goto finish
 		}
-		nodeType = ""
+		fallthrough
 	default:
 		t.l.Pop(1)
 		// -field
 		t.FieldError(name, "node", nodeType)
 	}
+finish:
 	t.l.Pop(1)
 	// -field
 	return v, nodeType
@@ -187,7 +190,6 @@ func (st *LuaState) Init(opt *Options) {
 	l := lua.NewState()
 	st.options = opt
 	st.state = l
-	st.flagNodes = []FlagNode{}
 	st.fileStack = make([]os.FileInfo, 0, 1)
 
 	// switch t := l.TypeOf(1); t {
@@ -293,6 +295,7 @@ func (st *LuaState) Init(opt *Options) {
 			}
 
 			// lookup filter
+			_ = filterName
 
 			return lua.MultipleReturns
 		}},
@@ -347,7 +350,7 @@ func (st *LuaState) Init(opt *Options) {
 			// function, +args...
 
 			// Call loaded function.
-			err = l.ProtectedCall(nt-1, lua.MultipleReturns, nil)
+			err = l.ProtectedCall(nt-1, lua.MultipleReturns, 0)
 			// -function, -args..., +returns...
 			st.popFile()
 			if err != nil {
@@ -372,16 +375,34 @@ func (st *LuaState) Init(opt *Options) {
 }
 
 func (st *LuaState) pushFile(fi os.FileInfo) error {
-	for i, f := range st.fileStack {
+	for _, f := range st.fileStack {
 		if os.SameFile(fi, f) {
 			return fmt.Errorf("cannot load file %q: file is already running", fi.Name())
 		}
 	}
 	st.fileStack = append(st.fileStack, fi)
+	return nil
 }
 
 func (st *LuaState) popFile() {
 	st.fileStack = st.fileStack[:len(st.fileStack)-1]
+}
+
+func (st *LuaState) DoFileHandle(f *os.File) error {
+	fi, err := f.Stat()
+	if err != nil {
+		return err
+	}
+	if err = st.pushFile(fi); err != nil {
+		return err
+	}
+	if err := st.state.Load(f, fi.Name(), ""); err != nil {
+		st.popFile()
+		return err
+	}
+	err = st.state.ProtectedCall(0, lua.MultipleReturns, 0)
+	st.popFile()
+	return err
 }
 
 func (st *LuaState) DoFile(fileName string) error {
@@ -398,4 +419,8 @@ func (st *LuaState) DoFile(fileName string) error {
 		return err
 	}
 	return nil
+}
+
+func (st *LuaState) DoString(s, name string) error {
+	return st.state.Load(strings.NewReader(s), name, "")
 }
