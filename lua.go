@@ -73,51 +73,6 @@ func typeOf(l *lua.State, index int) string {
 	return t.String()
 }
 
-func indexError(l *lua.State, index *string, expectedType, gotType string) {
-	if *index == "" {
-		lua.Errorf(l, "bad value at table index %s: %s expected, got %s", index, expectedType, gotType)
-	} else {
-		lua.Errorf(l, "bad value in table: %s expected, got %s", expectedType, gotType)
-	}
-}
-
-func checkIndexType(l *lua.State, i int, typ string) {
-	index, ok := l.ToString(-1)
-	l.Table(i)
-	t := typeOf(l, -1)
-	if t != typ {
-		if ok {
-			indexError(&index, typ, t)
-		} else {
-			indexError(nil, typ, t)
-		}
-	}
-}
-
-func stringFromIndex(l *lua.State, i, s *string) {
-	checkIndexType(l, i, lua.TypeString.String())
-	*s, _ = l.ToString(-1)
-	l.Pop(1)
-}
-
-func optStringFromIndex(l *lua.State, i, s *string) (ok bool) {
-	index, ok := l.ToString(-1)
-	l.Table(i)
-	t := l.TypeOf(-1)
-	if t == lua.TypeNil {
-		return false
-	} else if t != lua.TypeString {
-		if ok {
-			lua.Errorf(l, "bad value at table index %s: %s expected, got %s", index, lua.TypeString.String(), t.String())
-		} else {
-			lua.Errorf(l, "bad value in table: %s expected, got %s", lua.TypeString.String(), t.String())
-		}
-	}
-	*s, _ = l.ToString(-1)
-	l.Pop(1)
-	return true
-}
-
 func mapNodes(l *lua.State, inputs []*Source, outputs []*OutputNode) int {
 	// map inputs to outputs, push errors to lua state
 	return 0
