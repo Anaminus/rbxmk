@@ -18,6 +18,28 @@ func init() {
 	RegisterOutputScheme("file", HandleFileOutputScheme)
 }
 
+func IsAlnum(s string) bool {
+	for _, r := range s {
+		if (r >= '0' && r <= '9') ||
+			(r >= 'A' && r <= 'Z') ||
+			(r >= 'a' && r <= 'z') ||
+			r == '_' {
+			continue
+		}
+		return false
+	}
+	return true
+}
+func IsDigit(s string) bool {
+	for _, r := range s {
+		if r >= '0' && r <= '9' {
+			continue
+		}
+		return false
+	}
+	return true
+}
+
 func HandleHTTPInputScheme(opt *Options, node *InputNode, _ string) (src *Source, err error) {
 	u, err := url.Parse(node.Reference)
 	if err != nil {
