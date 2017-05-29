@@ -307,3 +307,28 @@ possible to receive data from the output location.
 
 The format of the selected file, if not forced, is determined by the MIME type
 given by the response.
+
+## Formats
+
+Extension | Data       | Description
+----------|------------|------------
+rbxl      | Instances  | Roblox place
+rbxm      | Instances  | Roblox model
+rbxlx     | Instances  | Roblox place in XML
+rbxmx     | Instances  | Roblox model in XML
+json      | Properties | Set of properties in JSON format
+xml       | Properties | Set of properties in XML format
+lua       | Value      | Lua source file
+txt       | Value      | Normal text file
+bin       | Value      | binary file
+
+Type | Amount
+Instance | 1
+Instance | >1
+Property | 1
+Property | >1
+Value    | 1
+Value    | >1
+
+## Data
+

@@ -56,6 +56,19 @@ func RegisterOutputScheme(name string, handler OutputSchemeHandler) {
 	registeredOutputSchemes[name] = handler
 }
 
+var registeredFilters = map[string]Filter{}
+
+func RegisterFilter(filter Filter) {
+	if filter == nil {
+		panic("cannot register nil scheme handler")
+	}
+	name, _ := filter.Signature()
+	if _, registered := registeredFilters[name]; registered {
+		panic("filter already registered")
+	}
+	registeredFilters[name] = filter
+}
+
 // parseScheme separates a string into scheme and path parts.
 func parseScheme(s string) (scheme, path string) {
 	for i := 0; i < len(s); i++ {
@@ -79,14 +92,16 @@ func parseScheme(s string) (scheme, path string) {
 }
 
 type InputNode struct {
-	ID             string // Name used to identify the node.
-	Reference      string // Raw string that refers to a source.
-	Format         string // Forced file format. If empty, it is filled in after being guessed.
-	ParsedProtocol string // The protocol parsed from the reference.
+	Reference      []string // Raw strings that refer to a source.
+	Format         string   // Forced file format. If empty, it is filled in after being guessed.
+	ParsedProtocol string   // The protocol parsed from the reference.
 }
 
 func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
-	scheme, nextPart := parseScheme(node.Reference)
+	if len(node.Reference) < 1 {
+		return nil, errors.New("node requires at least one reference argument")
+	}
+	scheme, nextPart := parseScheme(node.Reference[0])
 	handler, exists := registeredInputSchemes[scheme]
 	if !exists {
 		// Assume file:// scheme.
@@ -99,14 +114,16 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 }
 
 type OutputNode struct {
-	ID             string // Name used to identify the node.
 	Reference      string // Raw string that refers to a source.
 	Format         string // Forced file format. If empty, it is filled in after being guessed.
 	ParsedProtocol string // The protocol parsed from the reference.
 }
 
 func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) {
-	scheme, nextPart := parseScheme(node.Reference)
+	if len(node.Reference) < 1 {
+		return nil, errors.New("node requires at least one reference argument")
+	}
+	scheme, nextPart := parseScheme(node.Reference[0])
 	handler, exists := registeredOutputSchemes[scheme]
 	if !exists {
 		// Assume file:// scheme.
@@ -509,14 +526,16 @@ const CommandName = "rbxmk"
 const CommandUsage = `[OPTIONS...]
 
 rbxmk options are grouped together as "nodes". Certain flags delimit nodes.
-For example, the -i flag delimits an input node, and also specifies a
-reference for that node. The -o flag delimits an output node, also defining a
-reference. All flags given before a delimiting flag are counted as being apart
-of the node. All flags after a delimiter will be apart of the next node.
+For example, the -i flag begins an input node, and also specifies a reference
+for that node. The -o flag begins an output node, also defining a reference.
+All flags given after a delimiting flag are counted as being apart of the
+node. All flags before a delimiter are apart of the previous node.
 
 Several flags, like --id, specify information for the node they are apart of.
 
-Other flags, like --options, are global; they do not belong to any particular
+Other flags, like --map or --filter, perform an action.
+
+Certain flags, like --api, are global; they do not belong to any particular
 node, and may be specified anywhere.
 
 In general, any flag may be specified multiple times. If the flag requires a
@@ -542,7 +561,7 @@ const (
 
 type FlagNode struct {
 	Type      NodeType
-	Reference string
+	Reference []string
 	ID        string
 	Mapping   []string
 	Format    string
@@ -624,14 +643,14 @@ func main() {
 	var flagOptions FlagOptions
 	flagOptions = FlagOptions{
 		InputReference: func(s string) {
-			flagNodes[len(flagNodes)-1].Reference = s
-			flagNodes[len(flagNodes)-1].Type = NodeTypeInput
 			flagNodes = append(flagNodes, FlagNode{})
+			flagNodes[len(flagNodes)-1].Type = NodeTypeInput
+			flagNodes[len(flagNodes)-1].Reference = s
 		},
 		OutputReference: func(s string) {
-			flagNodes[len(flagNodes)-1].Reference = s
-			flagNodes[len(flagNodes)-1].Type = NodeTypeOutput
 			flagNodes = append(flagNodes, FlagNode{})
+			flagNodes[len(flagNodes)-1].Type = NodeTypeOutput
+			flagNodes[len(flagNodes)-1].Reference = s
 		},
 		NodeID: func(s string) {
 			flagNodes[len(flagNodes)-1].ID = s
