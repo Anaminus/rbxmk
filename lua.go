@@ -322,15 +322,36 @@ func (st *LuaState) Init(opt *Options) {
 			fileName := t.IndexString(1)
 			fi, err := os.Stat(fileName)
 			if err != nil {
-				returnErrorNode(l, err)
+				return returnErrorNode(l, err)
 			}
 			if err = st.pushFile(fi); err != nil {
-				returnErrorNode(l, err)
+				return returnErrorNode(l, err)
 			}
-			err = lua.DoFile(l, fileName)
+
+			// Load file as function.
+			err = lua.LoadFile(l, fileName, "")
+			if err != nil {
+				st.popFile()
+				return returnErrorNode(l, err)
+			}
+			// +function
+
+			// Push extra arguments as arguments to loaded function.
+			nt := t.Length()
+			for i := 2; i <= nt; i++ {
+				l.PushInteger(i)
+				// function, ..., +int
+				l.Table(tableArg)
+				// function, ..., -int, +arg
+			}
+			// function, +args...
+
+			// Call loaded function.
+			err = l.ProtectedCall(nt-1, lua.MultipleReturns, nil)
+			// -function, -args..., +returns...
 			st.popFile()
 			if err != nil {
-				l.Error()
+				return returnErrorNode(l, err)
 			}
 			return lua.MultipleReturns
 		}},
