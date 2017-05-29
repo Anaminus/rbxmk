@@ -13,19 +13,6 @@ type LuaState struct {
 	fileStack []os.FileInfo
 }
 
-func (st *LuaState) pushFile(fi os.FileInfo) error {
-	for i, f := range st.fileStack {
-		if os.SameFile(fi, f) {
-			return fmt.Errorf("cannot load file %q: file is already running", fi.Name())
-		}
-	}
-	st.fileStack = append(st.fileStack, fi)
-}
-
-func (st *LuaState) popFile() {
-	st.fileStack = st.fileStack[:len(st.fileStack)-1]
-}
-
 const (
 	typeInputNode  = "inputMetatable"
 	typeOutputNode = "outputMetatable"
@@ -361,4 +348,33 @@ func (st *LuaState) Init(opt *Options) {
 		}},
 	}, 0)
 	l.Pop(1)
+}
+
+func (st *LuaState) pushFile(fi os.FileInfo) error {
+	for i, f := range st.fileStack {
+		if os.SameFile(fi, f) {
+			return fmt.Errorf("cannot load file %q: file is already running", fi.Name())
+		}
+	}
+	st.fileStack = append(st.fileStack, fi)
+}
+
+func (st *LuaState) popFile() {
+	st.fileStack = st.fileStack[:len(st.fileStack)-1]
+}
+
+func (st *LuaState) DoFile(fileName string) error {
+	fi, err := os.Stat(fileName)
+	if err != nil {
+		return err
+	}
+	if err = st.pushFile(fi); err != nil {
+		return err
+	}
+	err = lua.DoFile(st.state, fileName)
+	st.popFile()
+	if err != nil {
+		return err
+	}
+	return nil
 }
