@@ -5,6 +5,9 @@
 The general workflow is that **inputs** are specified, transformed somehow,
 then mapped to **outputs**.
 
+[Lua](https://lua.org) scripts are used to perform actions. Scripts are run in
+a stripped-down environment, with only a small set of functions available.
+
 ## Installation
 
 1. [Install Go](https://golang.org/doc/install)
@@ -18,206 +21,159 @@ go get -u github.com/anaminus/rbxmk
 If you installed Go correctly, this will install rbxmk to `$GOPATH/bin`,
 which will allow you run it directly from a shell.
 
-If you are on Windows, you may choose to force POSIX-style flags with the
-`forceposix` build tag.
+This document uses POSIX-style flags (`-f`, `--flag`), although windows-style
+flags (`/f`, `/flag`) are possible when rbxmk is compiled for Windows. If you
+are compiling for Windows, you may choose to force POSIX-style flags with the
+`forceposix` build tag:
 
 ```
 go get -u -tags forceposix github.com/anaminus/rbxmk
 ```
 
+For more information, see the [go-flags](https://godoc.org/github.com/jessevdk/go-flags) package.
+
 ## Command options
 
-Options are grouped together as "nodes". Certain flags delimit nodes. For
-example, the `-i` flag delimits an input node, and also specifies a reference
-for that node. The `-o` flag delimits an output node, also defining a
-reference. All flags specified before a delimiting flag are counted as being
-apart of the node. All flags after a delimiter will be apart of the next node.
+Since almost all actions are done in Lua, there are only a few command
+options:
 
-Several flags, like `--id`, specify information for the node they are apart
-of.
+```
+rbxmk [OPTIONS...] [- | SCRIPT]
+```
 
-Other flags, like `--options`, are global; they do not belong to any
-particular node, and may be specified anywhere.
-
-In general, any flag may be specified multiple times. Flags are read from left
-to right. If the option requires a single value, then only the last flag will
-be counted.
-
-Global Flags     | Description
+Options          | Description
 -----------------|------------
 `-h`, `--help`   | Display a help message.
-`--options FILE` | Specify a file containing options.
-`--api FILE`     | Specify an API dump file, which may be used by file formats for more correct encoding.
+`-f`, `--file`   | Run a script from a file. This may be given any number of times.
 
-Delimiter Flags          | Description
--------------------------|------------
-`-i REF`, `--input REF`  | Define the reference of the current node. Delimits an input node.
-`-o REF`, `--output REF` | Define the reference of the current node. Delimits an output node.
+Passing `-` runs a script from stdin. Otherwise, the first non-option
+(`SCRIPT`) will run as a script. Scripts run in the order they are given. `-`
+or `SCRIPT` can only be given after all other options.
 
-Node Flags        | Description
-------------------|------------
-`--id STRING`     | Force ID of the current node.
-`--map MAPPING`   | Map input nodes to output nodes.
-`--format STRING` | Force the file format of the current node.
+## Lua environment
 
-### Options file
+None of the regular base functions and libraries are loaded. Instead, a small
+set of functions are made available. Each of these functions accept a table as
+their only argument.
 
-The `--options` flag loads options from a file. It can be specified any number
-of times.
+Lua has the following bit of syntax sugar to support this: if a constructed
+table is the only argument to a function, then the function's parentheses may
+be omitted:
 
-Any options (including `--options`) may be specified in the file. The options
-are applied immediately, so the order of the options matters. `--options` can
-be treated as expanding into the options within the file.
-
-Option files cannot be recursive; a file may only be loaded once.
-
-#### File syntax
-
-Each line specifies one option. Leading and trailing whitespace is ignored, as
-well as empty lines. Lines beginning with a `#` character are ignored.
-
-Within a line, the name of the option occurs up to the first whitespace. After
-any whitespace, the remaining text is the option argument.
-
-```
-api path/to/file
-options path/to/suboptions
-
-# comment
-i inputReference
-o outputReference
+```lua
+func({arg1, arg2})
+func{arg1, arg2}
+-- Both calls are equivalent
 ```
 
-## Node IDs
+Henceforth, an "argument" will refer to a value within this kind of table.
 
-IDs are used to refer to nodes for further processing, such as mapping. IDs
-are case-sensitive, and may only contain letters, digits, and `_`.
+Because of how tables work, there can be two kinds of arguments: named and
+unnamed.
 
-IDs can be assigned manually by the user with the `-id` flag. For example,
+```lua
+-- Unnamed arguments
+func{value, value}
 
-```
--id first -i input
-```
-
-The first input node now has an ID of `first`.
-
-If a node is not assigned an ID manually, it is automatically given a
-numerical name. Unassigned nodes are given the next available number for the
-type of node. For example, the first unassigned input node will have an ID of
-`0`. The next input node will have an ID of `1`, and so on.
-
-## Mapping
-
-Inputs must be mapped to outputs somehow. By default, when no mapping is
-defined, each input is mapped to each output. This can be modified with the
-`-map` flag.
-
-To start, let's define some nodes:
-
-```
--id A -i refA
--id B -i refB
--id C -i refC
--id X -o refX
--id Y -o refY
--id Z -o refZ
+-- Named arguments
+func{arg1=value, arg2=value}
 ```
 
-So there are 3 inputs: A, B, and C, then 3 outputs: X, Y, and Z.
+### Functions
 
-The value of the `-map` flag has a certain syntax. In general, there are
-*left* and *right* sides of the mapping, which are separated by a `:`
-character. The left side selects inputs, while the right side selects outputs.
-For example, input A can be mapped to output X like so:
+The following functions are available:
 
-```
--map A:X    Map A to X
-                A -> X
-```
+Name                             | Description
+---------------------------------|------------
+[`input`](#user-content-input)   | Create an input node.
+[`output`](#user-content-output) | Create an output node.
+[`map`](#user-content-map)       | Map one or more inputs to one or more outputs.
+[`filter`](#user-content-filter) | Transform nodes.
+[`load`](#user-content-load)     | Load and execute a script.
+[`type`](#user-content-type)     | Return the type of a value as a string.
+[`error`](#user-content-error)   | Create an error node.
+[`exit`](#user-content-exit)     | Force the program to exit.
 
-On either side, multiple nodes can be selected with a `,` character:
+#### input
 
-```
--map A,B,C:X    Map A, B, and C to X
-                    A -> X
-                    B -> X
-                    C -> X
--map A:X,Y,Z    Map A to X, Y, and Z
-                    A -> X
-                    A -> Y
-                    A -> Z
--map A,B:X,Y    Map A and B to X and Y
-                    A -> X
-                    A -> Y
-                    B -> X
-                    B -> Y
-```
+`node = input{format=string, ...string}`
 
-The `*` character will select all nodes for the current side.
+`input` creates an input node. The arguments specify the
+[reference](#user-content-references) to the input. The `format` argument
+forces the file format, if needed.
 
-```
--map *:X    Map each input to X
-                A -> X
-                B -> X
-                C -> X
--map A:*    Map A to each output
-                A -> X
-                A -> Y
-                A -> Z
+#### output
+
+```lua
+node = output{format=string, ...string}
 ```
 
-The mapping of a node may be negated by using a `-` character before the node.
-This causes an input to no longer be mapped to an output.
+`output` creates an output node. The arguments specify the
+[reference](#user-content-references) to the output. The `format` argument
+forces the file format, if needed.
 
-```
--map "-A:X"     Negate mapping of A to X
--map "A:-X"     Negate mapping of A to X (same result)
-```
+#### map
 
-Operators may be combined to create more complex mappings.
+`node = map{...node}`
 
-```
--map "*,-B:X"   Map each input, except B, to X
-                    A -> X
-                    C -> X
--map "-*:X"     Negate mapping of each input to X (same as "*:-X")
-```
+`map` maps one or more input nodes to one or more output nodes. Any kind of
+node may be passed to `map` (error nodes will be ignored). If an error occurs,
+`map` returns an error node.
 
-As stated before, when no mappings are specified, the default is that each
-input is mapped to each output. This is equivalent to `*:*`:
+Nodes are mapped in the order they are received. That is, inputs are gathered
+in one list, and outputs are gathered in another. Then each node in the input
+list is mapped to each node in the output list, in order. For example:
 
-```
--map *:*    Map each input to each output
-                A -> X
-                B -> X
-                C -> X
-                A -> Y
-                B -> Y
-                C -> Y
-                A -> Z
-                B -> Z
-                C -> Z
+```lua
+A,B = input{...},input{...}
+X,Y = output{...},output{...}
+map{A, X, B, Y}
+-- 1: A -> X
+-- 2: A -> Y
+-- 3: B -> X
+-- 4: B -> Y
 ```
 
-When a `-map` flag is given inside a node, that node can be used for the
-mapping. The side which is the same as the node type may be omitted. In this
-case, the value of the `-map` specifies the opposite side of the mapping.
+#### filter
 
-```
--id A -map X -i refA         Map input A to output X
--id X -map "*,-B" -o refX    Map each input, except B, to X
-```
+`... = filter{string, ...}`
 
-Note that an input can be mapped to an output only once. For the mapping
-`*,-B:X`, each input is mapped to X, and then B is no longer mapped to X. This
-overrides any previous mappings for the inputs and outputs involved.
+`filter` transforms nodes. The first argument specifies the filter name.
+Subsequent arguments and return values depend on the filter. See
+[Filters](#user-content-filters) for a list of filters and their arguments.
 
-```
--map "*:X,Y"    Each input is mapped to X and Y
--map "-B:X"     B is no longer mapped to X, but is still mapped to Y
--map "B:X,-Y"   B is now mapped to X, but no longer mapped to Y
--map "-B:*"     B is no longer mapped to any output
-```
+#### load
+
+`... = load{string, ...}`
+
+`load` executes a file as a script. The first argument is the file name.
+Subsequent arguments are passed to the script (which may be received with the
+`...` operator). If an error occurs, `load` returns an error node. Otherwise,
+`load` returns any values returned by the script.
+
+#### type
+
+`string = type{value}`
+
+`type` returns the type of the given value as a string. In addition to the
+regular Lua types, the following types are available:
+
+- `input`: an input node.
+- `output`: an output node.
+- `error`: an error node.
+
+#### error
+
+`node = error{string}`
+
+`error` creates an error node, with the first argument as the error message.
+
+#### exit
+
+`exit{node}`
+
+`exit` forces the program to exit. An optional error node can be given, which
+will be passed to the program.
 
 ## References
 
@@ -230,11 +186,11 @@ the file, or even further by selecting data within the data.
 
 Files have particular formats. Several formats are supported for either
 inputs, outputs, or both. The format of a file can usually be determined
-automatically. For example, by the file extension. The format of a file
-referred to by a node may also be forced directly, with the `-format` flag.
+automatically (e.g. the file extension). The format of a file referred to by a
+node may also be forced directly, with the `format` argument.
 
-When data is retrieved from a file, it is formatted in a generic way. There
-are three types of data:
+When data is selected from a file, it is formatted in a generic way. There are
+three types of data:
 
 - **Instances**: These are the usual Roblox instances, consisting of a
   ClassName, a set of properties, and a list of child Instances.
@@ -251,21 +207,23 @@ down into the Instance to select a property.
 In terms of input, drilling specifies the data that is retrieved. For output,
 drilling determines where data will go.
 
-Drilling is indicated by a `:` character, called the **drill separator**,
-which delimits parts of a reference string.
-
+The [`input`](#user-content-input) and [`output`](#user-content-output)
+functions specify that their unnamed arguments make up the returned node's
+reference. Each successive argument drills down into the data of the previous
+argument.
 
 ### Syntax
 
-References have a syntax. It begins with a URI-like scheme:
+The first argument of a reference indicates a file location, and has a
+specific syntax. It begins with a URI-like scheme:
 
 ```
 scheme://
 ```
 
-The next part of the reference is used to locate a file. The syntax of the
-next part depends on the scheme. Schemes may be defined for either inputs,
-outputs, or both.
+The rest of the argument is used to locate a file. The syntax of this part
+depends on the scheme. Schemes may be defined for either inputs, outputs, or
+both.
 
 If no scheme is specified, then the reference is assumed to be of the
 `file://` scheme.
@@ -290,7 +248,8 @@ C:/Users/user/projects/project/file.rbxl
 /home/user/projects/project/file.rbxl
 ```
 
-The format of the selected file, if not forced, is determined by the file extension.
+The format of the selected file, if not forced, is determined by the file
+extension.
 
 ### http://, https://
 
@@ -321,14 +280,3 @@ xml       | Properties | Set of properties in XML format
 lua       | Value      | Lua source file
 txt       | Value      | Normal text file
 bin       | Value      | binary file
-
-Type | Amount
-Instance | 1
-Instance | >1
-Property | 1
-Property | >1
-Value    | 1
-Value    | >1
-
-## Data
-
