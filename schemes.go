@@ -41,138 +41,108 @@ func IsDigit(s string) bool {
 }
 
 func HandleHTTPInputScheme(opt *Options, node *InputNode, _ string) (src *Source, err error) {
-	u, err := url.Parse(strings.Join(node.Reference, ""))
+	u, err := url.Parse(node.Reference[0])
 	if err != nil {
 		return
 	}
 
-	// Search the end of the URL for a drill separator.
-	nextPart := ""
-	if u.Fragment != "" {
-		i := strings.IndexByte(u.Fragment, ':')
-		if i > -1 {
-			nextPart = u.Fragment[i+1:]
-			u.Fragment = u.Fragment[:i]
-		}
-	} else if u.RawQuery != "" {
-		i := strings.IndexByte(u.RawQuery, ':')
-		if i > -1 {
-			nextPart = u.RawQuery[i+1:]
-			u.RawQuery = u.RawQuery[:i]
-		}
-	} else if u.Path != "" {
-		i := strings.IndexByte(u.Path, ':')
-		if i > -1 {
-			nextPart = u.Path[i+1:]
-			u.Path = u.Path[:i]
-		}
-	}
-
-	// BUG: URLs cannot contain a ':' without it being detected as a drill.
-	// Excludes "host:port" pattern, includes URL-escaped characters.
-	//
-	// This might be worked around by ignoring URL-escaped characters.
-	// However, this requires a custom version of the url package; some parts
-	// of the url cannot be acquired in raw format, and the raw parts that can
-	// be acquired cannot be unescaped after parsing them.
-
 	// Reconstruct the url without the drill.
 	urlPart := u.String()
+	// nextPart := node.Reference[1]
 
-	_, _ = urlPart, nextPart
+	_ = urlPart
 	// TODO: get resource; expect a format
 	return
 }
 
-func parseFilePath(ref, format string) (path, next, ext string) {
-	path = ref
-	if len(filepath.VolumeName(ref)) == 2 {
-		// If path contains drive letter, skip over it.
-		i := strings.IndexByte(ref[2:], ':')
-		if i > -1 {
-			next = ref[i+3:]
-			path = ref[:i+2]
-		}
-	} else {
-		i := strings.IndexByte(ref, ':')
-		if i > -1 {
-			next = ref[i+1:]
-			path = ref[:i]
-		}
-	}
-
-	if format != "" {
-		// Format was specified by a flag.
-		ext = format
-	} else {
-		// Guess the format by looking at the file extension.
-		ext = strings.TrimPrefix(filepath.Ext(path), ".")
-	}
-	return
-}
-
 func HandleFileInputScheme(opt *Options, node *InputNode, ref string) (src *Source, err error) {
-	pathPart, nextPart, ext := parseFilePath(ref, node.Format)
-	if ext == "" {
-		return nil, errors.New("file must have an extension")
+	// Find extension.
+	var ext string
+	if node.Format == "" {
+		ext = strings.TrimPrefix(filepath.Ext(ref), ".")
+		node.Format = ext
+	} else {
+		ext = node.Format
 	}
-	node.Format = ext
 
+	// Find format.
 	newFormat, exists := registeredFormats[ext]
 	if !exists {
 		return nil, errors.New("format is not registered")
 	}
 
-	file, err := os.Open(pathPart)
+	// Open file.
+	file, err := os.Open(ref)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
+	// Decode file with format.
 	src, err = newFormat(opt).Decode(file)
 	if err != nil {
 		return nil, err
 	}
 
-	if nextPart == "" {
+	refs := node.Reference[1:]
+	if len(refs) == 0 {
+		// Return contents of file.
 		return src, nil
 	}
+
+	// Drill down into file.
 	var parent *rbxfile.Instance
-	parent, nextPart, err = ParseInstanceReference(src, nextPart)
-	if err != nil {
+	if parent, err = ParseInstanceReference(src, refs[0]); err != nil {
 		return nil, err
 	}
 
-	if nextPart == "" {
+	refs = refs[1:]
+	if len(refs) == 0 {
+		// Return instance.
 		return &Source{Instances: []*rbxfile.Instance{parent}}, nil
 	}
-	src, nextPart, err = GetPropertyReference(parent, nextPart)
+	// Drill down into instance.
+	src, err = GetPropertyReference(parent, refs[0])
+
+	refs = refs[1:]
+	if len(refs) == 0 {
+		return src, err
+	}
+
+	// TODO: further processing.
 	return src, err
 }
 
 func HandleFileOutputScheme(opt *Options, node *OutputNode, ref string, input *Source) (err error) {
-	pathPart, nextPart, ext := parseFilePath(ref, node.Format)
-	if ext == "" {
-		return errors.New("file must have an extension")
+	// Find extension.
+	var ext string
+	if node.Format == "" {
+		ext = strings.TrimPrefix(filepath.Ext(ref), ".")
+		node.Format = ext
+	} else {
+		ext = node.Format
 	}
-	node.Format = ext
 
+	// Find format.
 	newFormat, exists := registeredFormats[ext]
 	if !exists {
 		return errors.New("format is not registered")
 	}
 	format := newFormat(opt)
 
+	refs := node.Reference[1:]
+
 	var file *os.File
 	var output *Source
-	if nextPart == "" {
-		file, err = os.Create(pathPart)
+	if len(refs) == 0 {
+		// No drilling; content of input overwrites output.
+		file, err = os.Create(ref)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
 
-		// No drilling; append input instances to root of output.
+		// Append input instances to root of output.
 		if len(input.Properties) > 0 || len(input.Values) > 0 {
 			return errors.New("cannot map input to file: source must contain only instances")
 		}
@@ -183,7 +153,8 @@ func HandleFileOutputScheme(opt *Options, node *OutputNode, ref string, input *S
 			output.Instances[i] = inst.Clone()
 		}
 	} else {
-		file, err = os.Open(pathPart)
+		// Drilling; open and decode the output file.
+		file, err = os.Open(ref)
 		if os.IsNotExist(err) {
 			return errors.New("cannot drill into file: file does not exist")
 		}
@@ -198,12 +169,12 @@ func HandleFileOutputScheme(opt *Options, node *OutputNode, ref string, input *S
 
 		// Drill into instance.
 		var parent *rbxfile.Instance
-		parent, nextPart, err = ParseInstanceReference(output, nextPart)
-		if err != nil {
+		if parent, err = ParseInstanceReference(output, refs[0]); err != nil {
 			return err
 		}
 
-		if nextPart == "" {
+		refs = refs[1:]
+		if len(refs) == 0 {
 			// No drilling; set properties, and append input as children.
 			if len(input.Values) > 0 {
 				return errors.New("cannot map input to instance: source must not contain values")
@@ -217,14 +188,13 @@ func HandleFileOutputScheme(opt *Options, node *OutputNode, ref string, input *S
 			}
 		} else {
 			// Drill into property.
-			if err = SetPropertyReference(parent, input, nextPart); err != nil {
+			if err = SetPropertyReference(parent, input, refs); err != nil {
 				return err
 			}
 		}
 
 		// Secure file for writing.
-		file, err = os.Create(pathPart)
-		if err != nil {
+		if file, err = os.Create(ref); err != nil {
 			return err
 		}
 		defer file.Close()
@@ -237,12 +207,9 @@ func HandleFileOutputScheme(opt *Options, node *OutputNode, ref string, input *S
 	return format.Encode(file, output)
 }
 
-func GetPropertyReference(input *rbxfile.Instance, ref string) (output *Source, nextPart string, err error) {
-	if drill := strings.IndexByte(ref, ':'); drill > -1 {
-		ref, nextPart = ref[:drill], ref[drill+1:]
-	}
+func GetPropertyReference(input *rbxfile.Instance, ref string) (output *Source, err error) {
 	if ref == "" {
-		return nil, "", errors.New("property not specified")
+		return nil, errors.New("property not specified")
 	}
 	if ref == "*" {
 		// Select all properties.
@@ -254,16 +221,13 @@ func GetPropertyReference(input *rbxfile.Instance, ref string) (output *Source, 
 
 	v, exists := input.Properties[ref]
 	if !exists {
-		return nil, "", errors.New("unknown property")
+		return nil, errors.New("unknown property")
 	}
-	return &Source{Values: []rbxfile.Value{v}}, nextPart, nil
+	return &Source{Values: []rbxfile.Value{v}}, nil
 }
 
-func SetPropertyReference(parent *rbxfile.Instance, input *Source, ref string) (err error) {
-	var nextPart string
-	if drill := strings.IndexByte(ref, ':'); drill > -1 {
-		ref, nextPart = ref[:drill], ref[drill+1:]
-	}
+func SetPropertyReference(parent *rbxfile.Instance, input *Source, refs []string) (err error) {
+	ref := refs[0]
 	if ref == "" {
 		return errors.New("property not specified")
 	}
@@ -271,7 +235,7 @@ func SetPropertyReference(parent *rbxfile.Instance, input *Source, ref string) (
 	// TODO: use API to make sure assignment is correct.
 
 	// TODO: drill into properties.
-	_ = nextPart
+	refs = refs[1:]
 
 	if len(input.Instances) > 0 {
 		return errors.New("cannot map input to property: source must not contain instances")
@@ -280,13 +244,13 @@ func SetPropertyReference(parent *rbxfile.Instance, input *Source, ref string) (
 		if len(input.Properties) > 0 {
 			return errors.New("cannot map input to property: source must not contain properties while also containing a value")
 		}
-		// Map value to property
+		// Map value to property.
 		parent.Properties[ref] = input.Values[0].Copy()
 	} else {
 		if len(input.Values) > 0 {
 			return errors.New("cannot map input to property: source must not contain values while also containing properties")
 		}
-		// Map property matching name
+		// Map property matching name.
 		value, exists := input.Properties[ref]
 		if !exists {
 			return errors.New("cannot map input to property: cannot find input matching name")
@@ -296,7 +260,10 @@ func SetPropertyReference(parent *rbxfile.Instance, input *Source, ref string) (
 	return nil
 }
 
-func ParseInstanceReference(input *Source, ref string) (output *rbxfile.Instance, next string, err error) {
+func ParseInstanceReference(input *Source, ref string) (output *rbxfile.Instance, err error) {
+	// TODO: Drop @ convention; parse mixed references by restricting names
+	// from starting with digits; names index by name, numbers index the nth
+	// child. ALT: ':' signals a number, '.' signals a name.
 	i := 0
 	if ref == "" {
 		goto Finish
@@ -309,7 +276,9 @@ func ParseInstanceReference(input *Source, ref string) (output *rbxfile.Instance
 		goto Finish
 	}
 ParseNamedRef:
+	// Parse child by name ("Workspace.Model.Part").
 	{
+		// Parse a word.
 		j := i
 		for ; j < len(ref); j++ {
 			if !IsAlnum(string(ref[j])) {
@@ -322,6 +291,7 @@ ParseNamedRef:
 		}
 		name := ref[i:j]
 		if output == nil {
+			// Search for child of name in root.
 			for _, inst := range input.Instances {
 				if inst.Name() == name {
 					output = inst
@@ -329,29 +299,31 @@ ParseNamedRef:
 				}
 			}
 		} else {
+			// Search for child of name in current parent.
 			output = output.FindFirstChild(name, false)
 		}
+		// Child of name must be found.
 		if output == nil {
 			err = errors.New("indexed child is nil")
 			goto Error
 		}
 		i = j
+		// Finish if end of ref was reached.
 		if i >= len(ref) {
 			goto Finish
 		}
-		switch c := ref[i]; c {
-		case '.':
-			i++
-			goto ParseNamedRef
-		case ':':
-			i++
-			// drill down
-			next = ref[i:]
+		// Expect `.` separator.
+		if ref[i] != '.' {
+			err = errors.New("expected '.' separator")
+			goto Error
 		}
-		goto Finish
+		i++
+		goto ParseNamedRef
 	}
 ParseChildRef:
+	// Parse child of the form "@0.1.2" (2nd child of 1st child of 0th child).
 	{
+		// Parse a number.
 		if i >= len(ref) {
 			err = errors.New("expected digit")
 			goto Error
@@ -371,48 +343,50 @@ ParseChildRef:
 			err = errors.New("failed to parse number")
 			goto Error
 		}
+		// Number must be positive (negative shouldn't be possible).
 		if n < 0 {
 			err = errors.New("invalid index")
 			goto Error
 		}
 		if output == nil {
+			// Get the nth child from the root.
 			if n >= len(input.Instances) {
 				err = errors.New("index exceeds length of parent")
 				goto Error
 			}
 			output = input.Instances[n]
 		} else {
+			// Get the nth child from the current parent.
 			if n >= len(output.Children) {
 				err = errors.New("index exceeds length of parent")
 				goto Error
 			}
 			output = output.Children[n]
 		}
+		// Child must be found.
 		if output == nil {
 			err = errors.New("indexed child is nil")
 			goto Error
 		}
 		i = j
+		// Finish if end of ref was reached.
 		if i >= len(ref) {
 			goto Finish
 		}
-		switch c := ref[i]; c {
-		case '.':
-			i++
-			goto ParseChildRef
-		case ':':
-			i++
-			// drill down
-			next = ref[i:]
+		// Expect `.` separator.
+		if ref[i] != '.' {
+			err = errors.New("expected '.' separator")
+			goto Error
 		}
-		goto Finish
+		i++
+		goto ParseChildRef
 	}
 Finish:
 	if output == nil {
 		err = errors.New("no instance selected")
 		goto Error
 	}
-	return output, next, nil
+	return output, nil
 Error:
-	return nil, "", err
+	return nil, err
 }
