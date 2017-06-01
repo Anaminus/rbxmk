@@ -16,6 +16,24 @@ type Source struct {
 	Values     []rbxfile.Value
 }
 
+func (src *Source) Copy() *Source {
+	dst := &Source{
+		Instances:  make([]*rbxfile.Instance, len(src.Instances)),
+		Properties: make(map[string]rbxfile.Value, len(src.Properties)),
+		Values:     make([]rbxfile.Value, len(src.Values)),
+	}
+	for i, inst := range src.Instances {
+		dst.Instances[i] = inst.Clone()
+	}
+	for name, value := range src.Properties {
+		dst.Properties[name] = value.Copy()
+	}
+	for i, value := range src.Values {
+		dst.Values[i] = value.Copy()
+	}
+	return dst
+}
+
 // parseScheme separates a string into scheme and path parts.
 func parseScheme(s string) (scheme, path string) {
 	for i := 0; i < len(s); i++ {
