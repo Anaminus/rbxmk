@@ -367,21 +367,23 @@ func (st *LuaState) popFile() {
 	st.fileStack = st.fileStack[:len(st.fileStack)-1]
 }
 
-func (st *LuaState) DoFileHandle(f *os.File) error {
-	fi, err := f.Stat()
-	if err != nil {
+type LuaSyntaxError string
+
+func (err LuaSyntaxError) Error() string {
+	return "syntax error: " + string(err)
+}
+
+func (st *LuaState) DoString(s, name string) (err error) {
+	if err = st.state.Load(strings.NewReader(s), name, ""); err != nil {
+		if err == lua.SyntaxError {
+			return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
+		}
 		return err
 	}
-	if err = st.pushFile(fi); err != nil {
+	if err = st.state.ProtectedCall(0, lua.MultipleReturns, 0); err != nil {
 		return err
 	}
-	if err := st.state.Load(f, fi.Name(), ""); err != nil {
-		st.popFile()
-		return err
-	}
-	err = st.state.ProtectedCall(0, lua.MultipleReturns, 0)
-	st.popFile()
-	return err
+	return nil
 }
 
 func (st *LuaState) DoFile(fileName string) error {
@@ -394,12 +396,28 @@ func (st *LuaState) DoFile(fileName string) error {
 	}
 	err = lua.DoFile(st.state, fileName)
 	st.popFile()
+	if err == lua.SyntaxError {
+		return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
+	}
+	return err
+}
+
+func (st *LuaState) DoFileHandle(f *os.File) error {
+	fi, err := f.Stat()
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (st *LuaState) DoString(s, name string) error {
-	return st.state.Load(strings.NewReader(s), name, "")
+	if err = st.pushFile(fi); err != nil {
+		return err
+	}
+	if err = st.state.Load(f, fi.Name(), ""); err != nil {
+		st.popFile()
+		if err == lua.SyntaxError {
+			return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
+		}
+		return err
+	}
+	err = st.state.ProtectedCall(0, lua.MultipleReturns, 0)
+	st.popFile()
+	return err
 }
