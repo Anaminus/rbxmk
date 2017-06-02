@@ -367,12 +367,20 @@ func NewLuaState(opt *Options) *LuaState {
 			return returnErrorNode(l, errors.New(lua.CheckString(l, 1)))
 		}},
 		{"exit", func(l *lua.State) int {
-			v := l.ToUserData(1)
-			err, _ := v.(error)
+			t := GetArgs(l)
+			var err error
+			if v, typ := t.IndexNode(1); typ == "error" {
+				err, _ = v.(error)
+			}
 			panic(exitMarker{err: err})
 		}},
 		{"type", func(l *lua.State) int {
-			l.PushString(typeOf(l, 1))
+			GetArgs(l)
+			l.PushInteger(1)
+			l.Table(tableArg)
+			typ := typeOf(l, -1)
+			l.Pop(1)
+			l.PushString(typ)
 			return 1
 		}},
 	}, 0)
