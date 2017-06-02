@@ -189,6 +189,18 @@ func (t tArgs) FieldValue(name string) interface{} {
 	return v
 }
 
+// PushAsArgs takes the indices of the table and pushes them to the stack,
+// removing the table afterwards.
+func (t tArgs) PushAsArgs() {
+	nt := t.Length()
+	for i := 1; i <= nt; i++ {
+		t.l.PushInteger(i)
+		t.l.Table(tableArg)
+	}
+	// table, args...
+	t.l.Remove(tableArg) // -table, args...
+}
+
 func NewLuaState(opt *Options) *LuaState {
 	st := &LuaState{}
 	l := lua.NewState()
