@@ -200,14 +200,6 @@ func NewLuaState(opt *Options) *LuaState {
 	st.state = l
 	st.fileStack = make([]os.FileInfo, 0, 1)
 
-	// switch t := l.TypeOf(1); t {
-	// case lua.TypeNone:
-	// 	// error: invalid type
-	// default:
-	// 	return
-	// case lua.TypeUserData, lua.TypeLightUserData:
-	// }
-
 	lua.NewMetaTable(l, "inputMetaTable")
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
