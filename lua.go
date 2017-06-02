@@ -39,21 +39,16 @@ func typeOf(l *lua.State, index int) string {
 			return t.String()
 		}
 		// +metatable
-		l.Field(-1, "__type")
-		// metatable, +field
+		l.Field(-1, "__type") // metatable, +field
 		if l.TypeOf(-1) != lua.TypeFunction {
-			l.Pop(2)
-			// -metatable, -field
+			l.Pop(2) // -metatable, -field
 			return t.String()
 		}
 
-		l.PushValue(index)
-		// metatable, field, +userdata
-		l.Call(1, 1)
-		// metatable, -field, -userdata, +string
-		s, ok := l.ToString(-1)
-		l.Pop(2)
-		// -metatable, -string
+		l.PushValue(index)      // metatable, field, +userdata
+		l.Call(1, 1)            // metatable, -field, -userdata, +string
+		s, ok := l.ToString(-1) // metatable, string
+		l.Pop(2)                // -metatable, -string
 		if ok {
 			return s
 		}
@@ -117,42 +112,34 @@ func (t tArgs) IndexError(index int, expected, got string) {
 }
 
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
-	t.l.Field(tableArg, name)
-	// +field
+	t.l.Field(tableArg, name) // +field
 	s, ok = t.l.ToString(-1)
 	if !ok {
 		typ := typeOf(t.l, -1)
 		if typ != "nil" || !opt {
-			t.l.Pop(1)
-			// -field
+			t.l.Pop(1) // -field
 			t.FieldError(name, lua.TypeString.String(), typ)
 		}
 	}
-	t.l.Pop(1)
-	// -field
+	t.l.Pop(1) // -field
 	return s, ok
 }
 
 func (t tArgs) IndexString(index int) string {
-	t.l.PushInteger(index)
-	// +index
-	t.l.Table(tableArg)
-	// -index, +value
+	t.l.PushInteger(index) // +index
+	t.l.Table(tableArg)    // -index, +value
 	s, ok := t.l.ToString(-1)
 	if !ok {
 		typ := typeOf(t.l, -1)
-		t.l.Pop(1)
-		// -value
+		t.l.Pop(1) // -value
 		t.IndexError(index, lua.TypeString.String(), typ)
 	}
-	t.l.Pop(1)
-	// -value
+	t.l.Pop(1) // -value
 	return s
 }
 
 func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string) {
-	t.l.Field(tableArg, name)
-	// +field
+	t.l.Field(tableArg, name) // +field
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
 	case "input", "output", "error":
@@ -164,32 +151,26 @@ func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string)
 		}
 		fallthrough
 	default:
-		t.l.Pop(1)
-		// -field
+		t.l.Pop(1) // -field
 		t.FieldError(name, "node", nodeType)
 	}
 finish:
-	t.l.Pop(1)
-	// -field
+	t.l.Pop(1) // -field
 	return v, nodeType
 }
 
 func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
-	t.l.PushInteger(index)
-	// +index
-	t.l.Table(tableArg)
-	// -index, +value
+	t.l.PushInteger(index) // +index
+	t.l.Table(tableArg)    // -index, +value
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
 	case "input", "output", "error":
 		v = t.l.ToUserData(-1)
 	default:
-		t.l.Pop(1)
-		// -value
+		t.l.Pop(1) // -value
 		t.IndexError(index, "node", nodeType)
 	}
-	t.l.Pop(1)
-	// -value
+	t.l.Pop(1) // -value
 	return v, nodeType
 }
 
@@ -342,16 +323,13 @@ func NewLuaState(opt *Options) *LuaState {
 			// Push extra arguments as arguments to loaded function.
 			nt := t.Length()
 			for i := 2; i <= nt; i++ {
-				l.PushInteger(i)
-				// function, ..., +int
-				l.Table(tableArg)
-				// function, ..., -int, +arg
+				l.PushInteger(i)  // function, ..., +int
+				l.Table(tableArg) // function, ..., -int, +arg
 			}
 			// function, +args...
 
 			// Call loaded function.
-			err = l.ProtectedCall(nt-1, lua.MultipleReturns, 0)
-			// -function, -args..., +returns...
+			err = l.ProtectedCall(nt-1, lua.MultipleReturns, 0) // -function, -args..., +returns...
 			st.popFile()
 			if err != nil {
 				return returnErrorNode(l, err)
