@@ -15,9 +15,9 @@ type LuaState struct {
 }
 
 const (
-	typeInputNode  = "inputMetatable"
-	typeOutputNode = "outputMetatable"
-	typeErrorNode  = "errorMetatable"
+	luaTypeInput  = "input"
+	luaTypeOutput = "output"
+	luaTypeError  = "error"
 )
 
 func returnNode(l *lua.State, value interface{}, nodeType string) int {
@@ -26,10 +26,10 @@ func returnNode(l *lua.State, value interface{}, nodeType string) int {
 	return 1
 }
 
-func returnErrorNode(l *lua.State, err error) int {
-	l.PushUserData(err)
-	lua.SetMetaTableNamed(l, typeErrorNode)
-	return 1
+func throwError(l *lua.State, err error) int {
+	l.PushString(err.Error())
+	l.Error()
+	return 0
 }
 
 func typeOf(l *lua.State, index int) string {
@@ -142,7 +142,7 @@ func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string)
 	t.l.Field(tableArg, name) // +field
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
-	case "input", "output", "error":
+	case luaTypeInput, luaTypeOutput:
 		v = t.l.ToUserData(-1)
 	case "nil":
 		if opt {
@@ -164,7 +164,7 @@ func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 	t.l.Table(tableArg)    // -index, +value
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
-	case "input", "output", "error":
+	case luaTypeInput, luaTypeOutput:
 		v = t.l.ToUserData(-1)
 	default:
 		t.l.Pop(1) // -value
@@ -208,10 +208,10 @@ func NewLuaState(opt *Options) *LuaState {
 	st.state = l
 	st.fileStack = make([]os.FileInfo, 0, 1)
 
-	lua.NewMetaTable(l, "inputMetaTable")
+	lua.NewMetaTable(l, luaTypeInput)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
-			l.PushString("input")
+			l.PushString(luaTypeInput)
 			return 1
 		}},
 		{"__metatable", func(l *lua.State) int {
@@ -221,10 +221,10 @@ func NewLuaState(opt *Options) *LuaState {
 	}, 0)
 	l.Pop(1)
 
-	lua.NewMetaTable(l, "outputMetaTable")
+	lua.NewMetaTable(l, luaTypeOutput)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
-			l.PushString("output")
+			l.PushString(luaTypeOutput)
 			return 1
 		}},
 		{"__metatable", func(l *lua.State) int {
@@ -234,10 +234,10 @@ func NewLuaState(opt *Options) *LuaState {
 	}, 0)
 	l.Pop(1)
 
-	lua.NewMetaTable(l, "errorMetaTable")
+	lua.NewMetaTable(l, luaTypeError)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
-			l.PushString("error")
+			l.PushString(luaTypeError)
 			return 1
 		}},
 		{"__tostring", func(l *lua.State) int {
@@ -273,10 +273,10 @@ func NewLuaState(opt *Options) *LuaState {
 
 			src, err := node.ResolveReference(st.options)
 			if err != nil {
-				return returnNode(l, err, typeErrorNode)
+				return throwError(l, err)
 			}
 
-			return returnNode(l, src, typeInputNode)
+			return returnNode(l, src, luaTypeInput)
 		}},
 		{"output", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -289,7 +289,7 @@ func NewLuaState(opt *Options) *LuaState {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
 
-			return returnNode(l, node, typeOutputNode)
+			return returnNode(l, node, luaTypeOutput)
 		}},
 		{"filter", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -316,12 +316,10 @@ func NewLuaState(opt *Options) *LuaState {
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
 				switch v, typ := t.IndexNode(i); typ {
-				case "input":
+				case luaTypeInput:
 					inputs = append(inputs, v.(*Source))
-				case "output":
+				case luaTypeOutput:
 					outputs = append(outputs, v.(*OutputNode))
-				default:
-					// error node
 				}
 			}
 
@@ -333,17 +331,16 @@ func NewLuaState(opt *Options) *LuaState {
 			fileName := t.IndexString(1)
 			fi, err := os.Stat(fileName)
 			if err != nil {
-				return returnErrorNode(l, err)
+				return throwError(l, err)
 			}
 			if err = st.pushFile(fi); err != nil {
-				return returnErrorNode(l, err)
+				return throwError(l, err)
 			}
 
 			// Load file as function.
-			err = lua.LoadFile(l, fileName, "")
-			if err != nil {
+			if err = lua.LoadFile(l, fileName, ""); err != nil {
 				st.popFile()
-				return returnErrorNode(l, err)
+				return throwError(l, err)
 			}
 			// +function
 
@@ -359,12 +356,12 @@ func NewLuaState(opt *Options) *LuaState {
 			err = l.ProtectedCall(nt-1, lua.MultipleReturns, 0) // -function, -args..., +returns...
 			st.popFile()
 			if err != nil {
-				return returnErrorNode(l, err)
+				return throwError(l, err)
 			}
 			return lua.MultipleReturns
 		}},
 		{"error", func(l *lua.State) int {
-			return returnErrorNode(l, errors.New(lua.CheckString(l, 1)))
+			return throwError(l, errors.New(lua.CheckString(l, 1)))
 		}},
 		{"exit", func(l *lua.State) int {
 			t := GetArgs(l)
