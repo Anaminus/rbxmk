@@ -93,6 +93,7 @@ Name                             | Description
 [`type`](#user-content-type)     | Return the type of a value as a string.
 [`error`](#user-content-error)   | Create an error node.
 [`exit`](#user-content-exit)     | Force the program to exit.
+[`pcall`](#user-content-pcall)   | Call a function in protected mode.
 
 #### input
 
@@ -114,11 +115,10 @@ forces the file format, if needed.
 
 #### map
 
-`node = map{...node}`
+`map{...node}`
 
-`map` maps one or more input nodes to one or more output nodes. Any kind of
-node may be passed to `map` (error nodes will be ignored). If an error occurs,
-`map` returns an error node.
+`map` maps one or more input nodes to one or more output nodes. Either kind of
+node may be passed to `map`.
 
 Nodes are mapped in the order they are received. That is, inputs are gathered
 in one list, and outputs are gathered in another. Then each node in the input
@@ -148,8 +148,7 @@ Subsequent arguments and return values depend on the filter. See
 
 `load` executes a file as a script. The first argument is the file name.
 Subsequent arguments are passed to the script (which may be received with the
-`...` operator). If an error occurs, `load` returns an error node. Otherwise,
-`load` returns any values returned by the script.
+`...` operator). `load` returns any values returned by the script.
 
 #### type
 
@@ -160,20 +159,27 @@ regular Lua types, the following types are available:
 
 - `input`: an input node.
 - `output`: an output node.
-- `error`: an error node.
 
 #### error
 
-`node = error{string}`
+`error{string}`
 
-`error` creates an error node, with the first argument as the error message.
+`error` throws an error, with the first argument as the error message.
 
 #### exit
 
-`exit{node}`
+`exit{string}`
 
-`exit` forces the program to exit. An optional error node can be given, which
+`exit` forces the program to exit. An optional message can be given, which
 will be passed to the program.
+
+#### pcall
+
+`pcall{function, ...}`
+
+`pcall` calls a function with the given arguments. If an error occurs, `pcall`
+returns false, followed by the error message. If no errors occur, `pcall`
+return true, followed by any values returned by the called function.
 
 ## References
 
