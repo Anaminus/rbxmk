@@ -87,10 +87,9 @@ func GetArgs(l *lua.State) tArgs {
 }
 
 func (t tArgs) Check() {
-	if t.l.Top() != 1 {
+	if t.l.Top() != 1 || typeOf(t.l, tableArg) != "table" {
 		lua.Errorf(t.l, "function must have 1 table argument")
 	}
-	lua.CheckType(t.l, tableArg, lua.TypeTable)
 	if t.l.MetaTable(tableArg) {
 		t.l.Pop(1)
 		lua.Errorf(t.l, "table cannot have metatable")
