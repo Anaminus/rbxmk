@@ -34,21 +34,9 @@ func throwError(l *lua.State, err error) int {
 
 func typeOf(l *lua.State, index int) string {
 	t := l.TypeOf(index)
-	if t == lua.TypeUserData {
-		if !l.MetaTable(index) {
-			return t.String()
-		}
-		// +metatable
-		l.Field(-1, "__type") // metatable, +field
-		if l.TypeOf(-1) != lua.TypeFunction {
-			l.Pop(2) // -metatable, -field
-			return t.String()
-		}
-
-		l.PushValue(index)      // metatable, field, +userdata
-		l.Call(1, 1)            // metatable, -field, -userdata, +string
-		s, ok := l.ToString(-1) // metatable, string
-		l.Pop(2)                // -metatable, -string
+	if t == lua.TypeUserData && lua.CallMeta(l, index, "__type") {
+		s, ok := l.ToString(-1)
+		l.Pop(1)
 		if ok {
 			return s
 		}
