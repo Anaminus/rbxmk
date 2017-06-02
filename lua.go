@@ -102,11 +102,19 @@ func (t tArgs) Length() int {
 }
 
 func (t tArgs) FieldError(name string, expected, got string) {
-	lua.Errorf(t.l, "bad value at field %q: %s expected, got %s", name, expected, got)
+	if got == "" {
+		lua.Errorf(t.l, "bad value at field %q: %s expected", name, expected)
+	} else {
+		lua.Errorf(t.l, "bad value at field %q: %s expected, got %s", name, expected, got)
+	}
 }
 
 func (t tArgs) IndexError(index int, expected, got string) {
-	lua.Errorf(t.l, "bad value at index #%d: %s expected, got %s", index, expected, got)
+	if got == "" {
+		lua.Errorf(t.l, "bad value at index #%d: %s expected", index, expected)
+	} else {
+		lua.Errorf(t.l, "bad value at index #%d: %s expected, got %s", index, expected, got)
+	}
 }
 
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
