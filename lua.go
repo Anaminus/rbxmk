@@ -174,6 +174,21 @@ func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 	return v, nodeType
 }
 
+func (t tArgs) IndexValue(index int) interface{} {
+	t.l.PushInteger(index)  // +index
+	t.l.Table(tableArg)     // -index, +value
+	v := t.l.ToUserData(-1) // value
+	t.l.Pop(1)              // -value
+	return v
+}
+
+func (t tArgs) FieldValue(name string) interface{} {
+	t.l.Field(tableArg, name) // +field
+	v := t.l.ToUserData(-1)   // field
+	t.l.Pop(1)                // -field
+	return v
+}
+
 func NewLuaState(opt *Options) *LuaState {
 	st := &LuaState{}
 	l := lua.NewState()
