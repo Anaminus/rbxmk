@@ -380,6 +380,32 @@ func NewLuaState(opt *Options) *LuaState {
 			l.PushString(typ)
 			return 1
 		}},
+		{"pcall", func(l *lua.State) int {
+			finishPCall := func(l *lua.State, status bool) int {
+				// nil, results...
+				if !l.CheckStack(1) {
+					l.SetTop(0)                    // -nil, -results...
+					l.PushBoolean(false)           // +false
+					l.PushString("stack overflow") // false, +msg
+					return 2
+				}
+				l.PushBoolean(status) // nil, results..., +status
+				l.Replace(1)          // nil>status, results...
+				return l.Top()
+			}
+
+			t := GetArgs(l)    // table
+			t.PushAsArgs()     // -table, +func, +args...
+			lua.CheckAny(l, 1) // func, args...
+			l.PushNil()        // func, args..., +nil
+			l.Insert(1)        // >nil, func, args...
+			status := nil == l.ProtectedCallWithContinuation(l.Top()-2, lua.MultipleReturns, 0, 0, func(l *lua.State) int {
+				_, shouldYield, _ := l.Context()
+				return finishPCall(l, shouldYield)
+			})
+			// nil, -func, -args..., +results...
+			return finishPCall(l, status) // status, results...
+		}},
 	}, 0)
 	l.Pop(1)
 	return st
