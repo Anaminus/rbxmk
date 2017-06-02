@@ -186,7 +186,8 @@ func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 	return v, nodeType
 }
 
-func (st *LuaState) Init(opt *Options) {
+func NewLuaState(opt *Options) *LuaState {
+	st := &LuaState{}
 	l := lua.NewState()
 	st.options = opt
 	st.state = l
@@ -372,6 +373,7 @@ func (st *LuaState) Init(opt *Options) {
 		}},
 	}, 0)
 	l.Pop(1)
+	return st
 }
 
 func (st *LuaState) pushFile(fi os.FileInfo) error {

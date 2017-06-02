@@ -158,9 +158,7 @@ func main() {
 	}
 
 	options := &Options{}
-
-	state := &LuaState{}
-	state.Init(options)
+	state := NewLuaState(options)
 
 	for _, f := range flagOptions.Files {
 		if err := state.DoFile(f); err != nil {
