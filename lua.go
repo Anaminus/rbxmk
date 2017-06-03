@@ -262,6 +262,9 @@ func NewLuaState(opt *Options) *LuaState {
 			node.Format, _ = t.FieldString(formatIndex, true)
 
 			nt := t.Length()
+			if nt == 0 {
+				throwError(l, errors.New("at least 1 reference argument is required"))
+			}
 			for i := 1; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
@@ -280,6 +283,9 @@ func NewLuaState(opt *Options) *LuaState {
 			node.Format, _ = t.FieldString(formatIndex, true)
 
 			nt := t.Length()
+			if nt == 0 {
+				throwError(l, errors.New("at least 1 reference argument is required"))
+			}
 			for i := 1; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
