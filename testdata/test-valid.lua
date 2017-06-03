@@ -1,1 +1,1 @@
-return _HELLO() == "hello world!"
+return _hello() == "hello world!"
