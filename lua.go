@@ -259,7 +259,7 @@ func NewLuaState(opt *Options) *LuaState {
 			t := GetArgs(l)
 			node := &InputNode{}
 
-			node.Format, _ = t.FieldString(formatIndex, false)
+			node.Format, _ = t.FieldString(formatIndex, true)
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
@@ -277,7 +277,7 @@ func NewLuaState(opt *Options) *LuaState {
 			t := GetArgs(l)
 			node := &OutputNode{}
 
-			node.Format, _ = t.FieldString(formatIndex, false)
+			node.Format, _ = t.FieldString(formatIndex, true)
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
