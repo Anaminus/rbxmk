@@ -83,19 +83,26 @@ func (t tArgs) Length() int {
 	return t.l.RawLength(tableArg)
 }
 
+func luaErrorf(l *lua.State, format string, a ...interface{}) {
+	lua.Where(l, 1)
+	l.PushString(fmt.Sprintf(format, a...))
+	l.Concat(2)
+	l.Error()
+}
+
 func (t tArgs) FieldError(name string, expected, got string) {
 	if got == "" {
-		lua.Errorf(t.l, "bad value at field %q: %s expected", name, expected)
+		luaErrorf(t.l, "bad value at field %q: %s expected", name, expected)
 	} else {
-		lua.Errorf(t.l, "bad value at field %q: %s expected, got %s", name, expected, got)
+		luaErrorf(t.l, "bad value at field %q: %s expected, got %s", name, expected, got)
 	}
 }
 
 func (t tArgs) IndexError(index int, expected, got string) {
 	if got == "" {
-		lua.Errorf(t.l, "bad value at index #%d: %s expected", index, expected)
+		luaErrorf(t.l, "bad value at index #%d: %s expected", index, expected)
 	} else {
-		lua.Errorf(t.l, "bad value at index #%d: %s expected, got %s", index, expected, got)
+		luaErrorf(t.l, "bad value at index #%d: %s expected, got %s", index, expected, got)
 	}
 }
 
