@@ -44,11 +44,6 @@ func typeOf(l *lua.State, index int) string {
 	return t.String()
 }
 
-func mapNodes(l *lua.State, inputs []*Source, outputs []*OutputNode) int {
-	// map inputs to outputs, push errors to lua state
-	return 0
-}
-
 const tableArg = 1
 
 type tArgs struct {
@@ -324,7 +319,7 @@ func NewLuaState(opt *Options) *LuaState {
 				}
 			}
 
-			return mapNodes(l, inputs, outputs)
+			return st.mapNodes(inputs, outputs)
 		}},
 		{"load", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -479,4 +474,15 @@ func (st *LuaState) DoFileHandle(f *os.File) error {
 	err = st.state.ProtectedCall(0, lua.MultipleReturns, 0)
 	st.popFile()
 	return err
+}
+
+func (st *LuaState) mapNodes(inputs []*Source, outputs []*OutputNode) int {
+	for _, input := range inputs {
+		for _, output := range outputs {
+			if err := output.ResolveReference(st.options, input); err != nil {
+				return throwError(st.state, err)
+			}
+		}
+	}
+	return 0
 }
