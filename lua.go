@@ -298,10 +298,47 @@ func NewLuaState(opt *Options) *LuaState {
 				i = 2
 			}
 
-			// lookup filter
-			_ = filterName
+			filterFunc, exists := registeredFilters[filterName]
+			if !exists {
+				return throwError(l, fmt.Errorf("unknown filter %q", filterName))
+			}
 
-			return lua.MultipleReturns
+			nt := t.Length()
+			arguments := make([]interface{}, nt-i+1)
+			for o := i; i <= nt; i++ {
+				arguments[i-o] = t.IndexValue(i)
+			}
+
+			results, err := CallFilter(filterFunc, arguments...)
+			if err != nil {
+				return throwError(l, err)
+			}
+
+			for _, result := range results {
+				switch v := result.(type) {
+				case bool:
+					l.PushBoolean(v)
+				case lua.Function:
+					l.PushGoFunction(v)
+				case int:
+					l.PushInteger(v)
+				case float64:
+					l.PushNumber(v)
+				case string:
+					l.PushString(v)
+				case uint:
+					l.PushUnsigned(v)
+				case *Source:
+					l.PushUserData(v)
+					lua.SetMetaTableNamed(l, luaTypeInput)
+				case *OutputNode:
+					l.PushUserData(v)
+					lua.SetMetaTableNamed(l, luaTypeOutput)
+				default:
+					l.PushNil()
+				}
+			}
+			return len(results)
 		}},
 		{"map", func(l *lua.State) int {
 			t := GetArgs(l)

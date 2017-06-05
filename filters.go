@@ -1,17 +1,30 @@
 package main
 
-type Filter interface {
-	Signature() (name string, args []interface{})
-	Filter(in ...interface{}) (out []*Source)
+import (
+	"runtime"
+)
+
+type Filter func(f FilterArgs, arguments []interface{}) (results []interface{})
+
+// FilterArgs is used by a Filter to indicate that it is done processing its
+// arguments.
+type FilterArgs interface {
+	ProcessedArgs()
 }
 
-// type FilterDrill struct{}
+type filterArgs bool
 
-// func (FilterDrill) Signature() string {
-// 	return "drill", []interface{}{&Source{}, ""}
-// }
+func (f *filterArgs) ProcessedArgs() {
+	*f = true
+}
 
-// func (FilterDrill) Filter(in ...interface{}) (out []*Source) {
-// 	input := in[0].(*Source)
-// 	ref := in[1].(string)
-// }
+func CallFilter(filter Filter, arguments ...interface{}) (results []interface{}, err error) {
+	var argsProcessed filterArgs
+	defer func() {
+		if !argsProcessed {
+			err = recover().(runtime.Error)
+		}
+	}()
+	results = filter(&argsProcessed, arguments)
+	return
+}

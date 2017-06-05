@@ -36,11 +36,10 @@ func RegisterOutputScheme(name string, handler OutputSchemeHandler) {
 
 var registeredFilters = map[string]Filter{}
 
-func RegisterFilter(filter Filter) {
+func RegisterFilter(name string, filter Filter) {
 	if filter == nil {
-		panic("cannot register nil scheme handler")
+		panic("cannot register nil filter")
 	}
-	name, _ := filter.Signature()
 	if _, registered := registeredFilters[name]; registered {
 		panic("filter already registered")
 	}
