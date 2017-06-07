@@ -477,6 +477,16 @@ func NewLuaState(opt *Options) *LuaState {
 			// nil, -func, -args..., +results...
 			return finishPCall(l, status) // status, results...
 		}},
+		{"getenv", func(l *lua.State) int {
+			t := GetArgs(l)
+			value, ok := os.LookupEnv(t.IndexString(1))
+			if ok {
+				l.PushString(value)
+			} else {
+				l.PushNil()
+			}
+			return 1
+		}},
 	}, 0)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__metatable", func(l *lua.State) int {

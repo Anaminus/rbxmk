@@ -96,6 +96,7 @@ Name                             | Description
 [`error`](#user-content-error)   | Create an error node.
 [`exit`](#user-content-exit)     | Force the program to exit.
 [`pcall`](#user-content-pcall)   | Call a function in protected mode.
+[`getenv`](#user-content-getenv) | Get the value of an environment variable.
 
 #### input
 
@@ -188,6 +189,13 @@ will be passed to the program.
 `pcall` calls a function with the given arguments. If an error occurs, `pcall`
 returns false, followed by the error message. If no errors occur, `pcall`
 return true, followed by any values returned by the called function.
+
+#### getenv
+
+`string = getenv{string}`
+
+`getenv` returns the value of an environment variable of the given name.
+Returns nil if the variable is not present.
 
 ## References
 
