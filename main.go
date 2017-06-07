@@ -124,20 +124,15 @@ type Options struct {
 }
 
 const CommandName = "rbxmk"
-const CommandUsage = `[OPTIONS...] [- | SCRIPT]
+const CommandUsage = `[ -h ] [ -f FILE ] [ ARGS... ]
 
-rbxmk uses Lua to perform actions. Lua scripts can be executed from several
-places.
-
-- From files: Specifying one or more "-f" or "--file" options will execute Lua
-  from the given files. Files are executed in the order they are specified.
-- From SCRIPT: The first non-flag option signals the rest of the command to be
-  read as a Lua script.
-- From stdin: Specifying "-" will begin parsing Lua from stdin.
+Options after any valid flags will be passed to the script as arguments.
+Numbers and bools are parsed into their respective types in Lua, and any other
+values are read as strings.
 `
 
 type FlagOptions struct {
-	Files []string `short:"f" long:"file" description:"A file to be executed as a Lua script." long-description:"" value-name:"FILE"`
+	File string `short:"f" long:"file" description:"A file to be executed as a Lua script. If not specified, then the script will be read from stdin instead." long-description:"" value-name:"FILE"`
 }
 
 func main() {
@@ -160,24 +155,27 @@ func main() {
 	options := &Options{}
 	state := NewLuaState(options)
 
-	for _, f := range flagOptions.Files {
-		if err := state.DoFile(f); err != nil {
-			Fatalf("error running file %q: %s", f, err)
+	for _, arg := range args {
+		number, err := strconv.ParseFloat(arg, 64)
+		switch {
+		case err == nil:
+			state.state.PushNumber(number)
+		case arg == "true":
+			state.state.PushBoolean(true)
+		case arg == "false":
+			state.state.PushBoolean(false)
+		default:
+			state.state.PushString(arg)
 		}
 	}
 
-	if len(args) == 1 && args[0] == "-" {
-		if err := state.DoFileHandle(os.Stdin); err != nil {
+	if flagOptions.File != "" {
+		if err := state.DoFile(flagOptions.File, len(args)); err != nil {
+			Fatalf("error running file %q: %s", flagOptions.File, err)
+		}
+	} else {
+		if err := state.DoFileHandle(os.Stdin, len(args)); err != nil {
 			Fatalf("error running stdin: %s", err)
 		}
-		return
-	}
-
-	if len(args) > 1 {
-		Fatalf("single SCRIPT argument expected (is your script quoted?)")
-	}
-
-	if err := state.DoString(args[0], "command argument"); err != nil {
-		Fatalf("error running command argument: %s", err)
 	}
 }

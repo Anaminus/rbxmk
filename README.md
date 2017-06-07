@@ -38,17 +38,19 @@ Since almost all actions are done in Lua, there are only a few command
 options:
 
 ```
-rbxmk [OPTIONS...] [- | SCRIPT]
+rbxmk [ -h ] [ -f FILE ] [ ARGS... ]
 ```
 
 Options          | Description
 -----------------|------------
 `-h`, `--help`   | Display a help message.
-`-f`, `--file`   | Run a script from a file. This may be given any number of times.
+`-f`, `--file`   | Run a script from a file.
 
-Passing `-` runs a script from stdin. Otherwise, the first non-option
-(`SCRIPT`) will run as a script. Scripts run in the order they are given. `-`
-or `SCRIPT` can only be given after all other options.
+If the `-f` option is not given, then the script is read from stdin.
+
+Options after any valid flags will be passed to the script as arguments.
+Numbers and bools are parsed into their respective types in Lua, and any other
+values are read as strings.
 
 ## Lua environment
 
