@@ -244,6 +244,38 @@ func NewLuaState(opt *Options) *LuaState {
 	st.fileStack = make([]os.FileInfo, 0, 1)
 
 	lua.NewMetaTable(l, luaTypeInput)
+	SetIndexFunctions(l, []lua.RegistryFunction{
+		{"CheckInstance", func(l *lua.State) int {
+			src := l.ToUserData(1).(*Source)
+			t := GetMethodArgs(l)
+
+			nt := t.Length()
+			ref := make([]string, nt)
+			for i := 1; i <= nt; i++ {
+				ref[i-1] = t.IndexString(i)
+			}
+
+			var err error
+			if src, ref, err = DrillInputInstance(st.options, src, ref); err != nil && err != EOD {
+				l.PushBoolean(false)
+				return 1
+			}
+			if src, ref, err = DrillInputProperty(st.options, src, ref); err != nil && err != EOD {
+				l.PushBoolean(false)
+				return 1
+			}
+			l.PushBoolean(true)
+			return 1
+		}},
+		{"CheckProperty", func(l *lua.State) int {
+			src := l.ToUserData(1).(*Source)
+			t := GetMethodArgs(l)
+			name := t.IndexString(1)
+			_, exists := src.Properties[name]
+			l.PushBoolean(exists)
+			return 1
+		}},
+	}, 0)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
 			l.PushString(luaTypeInput)
