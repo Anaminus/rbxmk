@@ -8,6 +8,24 @@ import (
 	"strings"
 )
 
+/*
+Stack Annotations:
+    separate values : a, b
+	insert          : +a
+	remove          : -a
+	insert from top : >a
+	replace         : a>b
+	group of values : a...
+
+	stack   : a, b, c, d
+	push    : a, b, c, d, +e
+	pop     : a, b, c, d, -e
+	insert  : >d, a, b, c
+	replace : d>c, a, b
+	copy    : c, a>c, b
+	remove  : c, -c, b
+*/
+
 type LuaState struct {
 	options   *Options
 	state     *lua.State
