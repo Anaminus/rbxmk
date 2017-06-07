@@ -164,6 +164,8 @@ func main() {
 			state.state.PushBoolean(true)
 		case arg == "false":
 			state.state.PushBoolean(false)
+		case arg == "nil":
+			state.state.PushNil()
 		default:
 			state.state.PushString(arg)
 		}
