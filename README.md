@@ -105,6 +105,9 @@ Name                             | Description
 [reference](#user-content-references) to the input. The `format` argument
 forces the file format, if needed.
 
+`input` retrieves the current state of the referred data immediately, and
+holds it in memory.
+
 #### output
 
 ```lua
@@ -114,6 +117,9 @@ node = output{format=string, ...string}
 `output` creates an output node. The arguments specify the
 [reference](#user-content-references) to the output. The `format` argument
 forces the file format, if needed.
+
+`output` returns an object that points to the referred data, which can be
+evaluated later.
 
 #### map
 
