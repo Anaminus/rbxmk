@@ -63,9 +63,11 @@ func typeOf(l *lua.State, index int) string {
 }
 
 const tableArg = 1
+const tableMethodArg = 1
 
 type tArgs struct {
-	l *lua.State
+	l   *lua.State
+	off int
 }
 
 type exitMarker struct {
@@ -77,23 +79,29 @@ func (exitMarker) Error() string {
 }
 
 func GetArgs(l *lua.State) tArgs {
-	t := tArgs{l: l}
+	t := tArgs{l: l, off: tableArg}
+	t.Check()
+	return t
+}
+
+func GetMethodArgs(l *lua.State) tArgs {
+	t := tArgs{l: l, off: tableMethodArg}
 	t.Check()
 	return t
 }
 
 func (t tArgs) Check() {
-	if t.l.Top() != 1 || typeOf(t.l, tableArg) != "table" {
+	if t.l.Top() != 1 || typeOf(t.l, t.off) != "table" {
 		lua.Errorf(t.l, "function must have 1 table argument")
 	}
-	if t.l.MetaTable(tableArg) {
+	if t.l.MetaTable(t.off) {
 		t.l.Pop(1)
 		lua.Errorf(t.l, "table cannot have metatable")
 	}
 }
 
 func (t tArgs) Length() int {
-	return t.l.RawLength(tableArg)
+	return t.l.RawLength(t.off)
 }
 
 func luaErrorf(l *lua.State, format string, a ...interface{}) {
@@ -120,7 +128,7 @@ func (t tArgs) IndexError(index int, expected, got string) {
 }
 
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
-	t.l.Field(tableArg, name) // +field
+	t.l.Field(t.off, name) // +field
 	s, ok = t.l.ToString(-1)
 	if !ok {
 		typ := typeOf(t.l, -1)
@@ -135,7 +143,7 @@ func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
 
 func (t tArgs) IndexString(index int) string {
 	t.l.PushInteger(index) // +index
-	t.l.Table(tableArg)    // -index, +value
+	t.l.Table(t.off)       // -index, +value
 	s, ok := t.l.ToString(-1)
 	if !ok {
 		typ := typeOf(t.l, -1)
@@ -147,7 +155,7 @@ func (t tArgs) IndexString(index int) string {
 }
 
 func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string) {
-	t.l.Field(tableArg, name) // +field
+	t.l.Field(t.off, name) // +field
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
 	case luaTypeInput, luaTypeOutput:
@@ -169,7 +177,7 @@ finish:
 
 func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 	t.l.PushInteger(index) // +index
-	t.l.Table(tableArg)    // -index, +value
+	t.l.Table(t.off)       // -index, +value
 	nodeType = typeOf(t.l, -1)
 	switch nodeType {
 	case luaTypeInput, luaTypeOutput:
@@ -184,16 +192,16 @@ func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 
 func (t tArgs) IndexValue(index int) interface{} {
 	t.l.PushInteger(index)  // +index
-	t.l.Table(tableArg)     // -index, +value
+	t.l.Table(t.off)        // -index, +value
 	v := t.l.ToUserData(-1) // value
 	t.l.Pop(1)              // -value
 	return v
 }
 
 func (t tArgs) FieldValue(name string) interface{} {
-	t.l.Field(tableArg, name) // +field
-	v := t.l.ToUserData(-1)   // field
-	t.l.Pop(1)                // -field
+	t.l.Field(t.off, name)  // +field
+	v := t.l.ToUserData(-1) // field
+	t.l.Pop(1)              // -field
 	return v
 }
 
@@ -203,10 +211,10 @@ func (t tArgs) PushAsArgs() {
 	nt := t.Length()
 	for i := 1; i <= nt; i++ {
 		t.l.PushInteger(i)
-		t.l.Table(tableArg)
+		t.l.Table(t.off)
 	}
 	// table, args...
-	t.l.Remove(tableArg) // -table, args...
+	t.l.Remove(t.off) // -table, args...
 }
 
 // Set the __index metamethod to a table of functions.
