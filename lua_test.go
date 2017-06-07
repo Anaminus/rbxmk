@@ -62,7 +62,7 @@ func TestLuaStateInit(t *testing.T) {
 	st := InitTestLib(nil)
 
 	assertFunc := func(name string) {
-		err := st.DoString(`return _type(`+name+`) == "function"`, "test func "+name)
+		err := st.DoString(`return _type(`+name+`) == "function"`, "test func "+name, 0)
 		if err != nil {
 			t.Errorf("error testing function %s: %s", name, err)
 		}
@@ -87,19 +87,19 @@ func TestLuaStateDoString(t *testing.T) {
 	st := InitTestLib(nil)
 	var err error
 
-	err = st.DoString(`func`, "test syntax")
+	err = st.DoString(`func`, "test syntax", 0)
 	if _, ok := err.(LuaSyntaxError); !ok {
 		t.Errorf("expected LuaSyntaxError (got %q)", err)
 	}
 	st.state.Pop(1)
 
-	err = st.DoString(`_DOES_NOT_EXIST()`, "test runtime")
+	err = st.DoString(`_DOES_NOT_EXIST()`, "test runtime", 0)
 	if _, ok := err.(lua.RuntimeError); !ok {
 		t.Errorf("expected lua.RuntimeError (got %q)", err)
 	}
 	st.state.Pop(1)
 
-	err = st.DoString(`return _hello() == "hello world!"`, "test valid")
+	err = st.DoString(`return _hello() == "hello world!"`, "test valid", 0)
 	if err != nil {
 		t.Errorf("unexpected error: %q", err)
 	}
@@ -113,21 +113,21 @@ func TestLuaStateDoFile(t *testing.T) {
 	var err error
 
 	// Test syntax error.
-	err = st.DoFile("testdata/test-syntax.lua")
+	err = st.DoFile("testdata/test-syntax.lua", 0)
 	if _, ok := err.(LuaSyntaxError); !ok {
 		t.Errorf("expected LuaSyntaxError (got %q)", err)
 	}
 	st.state.Pop(1)
 
 	// Test runtime error.
-	err = st.DoFile("testdata/test-runtime.lua")
+	err = st.DoFile("testdata/test-runtime.lua", 0)
 	if _, ok := err.(lua.RuntimeError); !ok {
 		t.Errorf("expected lua.RuntimeError (got %q)", err)
 	}
 	st.state.Pop(1)
 
 	// Test no error.
-	err = st.DoFile("testdata/test-valid.lua")
+	err = st.DoFile("testdata/test-valid.lua", 0)
 	if err != nil {
 		t.Errorf("unexpected error: %q", err)
 	}
@@ -147,7 +147,7 @@ func TestLuaStateDoFileHandle(t *testing.T) {
 	}
 
 	// Test syntax error.
-	err = st.DoFileHandle(f)
+	err = st.DoFileHandle(f, 0)
 	f.Close()
 	if _, ok := err.(LuaSyntaxError); !ok {
 		t.Errorf("expected LuaSyntaxError (got %q)", err)
@@ -160,7 +160,7 @@ func TestLuaStateDoFileHandle(t *testing.T) {
 	}
 
 	// Test runtime error.
-	err = st.DoFileHandle(f)
+	err = st.DoFileHandle(f, 0)
 	f.Close()
 	if _, ok := err.(lua.RuntimeError); !ok {
 		t.Errorf("expected lua.RuntimeError (got %q)", err)
@@ -173,7 +173,7 @@ func TestLuaStateDoFileHandle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = st.DoFileHandle(f)
+	err = st.DoFileHandle(f, 0)
 	f.Close()
 	if err != nil {
 		t.Errorf("unexpected error: %q", err)
@@ -184,12 +184,12 @@ func TestLuaStateDoFileHandle(t *testing.T) {
 }
 
 func mustNotError(t *testing.T, st *LuaState, name, script string) {
-	if err := st.DoString(script, ""); err != nil {
+	if err := st.DoString(script, "", 0); err != nil {
 		t.Errorf("%s: unexpected error: %s", name, err)
 	}
 }
 func mustError(t *testing.T, st *LuaState, name, msg, script string) {
-	if err := st.DoString(script, ""); err == nil {
+	if err := st.DoString(script, "", 0); err == nil {
 		t.Errorf("%s: expected error", name)
 	} else if msg != "" {
 		if !strings.Contains(err.Error(), msg) {
@@ -290,7 +290,7 @@ func TestLuaFuncMap(t *testing.T)    {}
 func TestLuaFuncLoad(t *testing.T) {
 	st := InitTestLib(nil)
 
-	if err := st.DoFile("testdata/test-loop.lua"); err == nil {
+	if err := st.DoFile("testdata/test-loop.lua", 0); err == nil {
 		t.Fatalf("expected error")
 	}
 }
