@@ -209,6 +209,25 @@ func (t tArgs) PushAsArgs() {
 	t.l.Remove(tableArg) // -table, args...
 }
 
+// Set the __index metamethod to a table of functions.
+func SetIndexFunctions(l *lua.State, functions []lua.RegistryFunction, upValueCount uint8) {
+	uvCount := int(upValueCount)
+	lua.CheckStackWithMessage(l, uvCount, "too many upvalues")
+	l.CreateTable(0, len(functions)) // metatable, up..., +table
+	l.Insert(-(uvCount + 1))         // metatable, >table, up...
+	for _, r := range functions {
+		for i := 0; i < uvCount; i++ {
+			l.PushValue(-uvCount)
+		} // metatable, table, up..., +up...
+		l.PushGoClosure(r.Function, upValueCount) // metatable, table, up..., +func, -up...
+		l.SetField(-(uvCount + 2), r.Name)        // metatable, table, up..., -func
+	} // metatable, table, up...
+	l.Pop(uvCount)          // metatable, table, -up...
+	l.PushString("__index") // metatable, table, +index
+	l.Insert(-2)            // metatable, >index, table
+	l.SetTable(-3)          // metatable, -index, -table
+}
+
 func NewLuaState(opt *Options) *LuaState {
 	st := &LuaState{}
 	l := lua.NewState()
