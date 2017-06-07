@@ -501,20 +501,21 @@ func (err LuaSyntaxError) Error() string {
 	return "syntax error: " + string(err)
 }
 
-func (st *LuaState) DoString(s, name string) (err error) {
+func (st *LuaState) DoString(s, name string, args int) (err error) {
 	if err = st.state.Load(strings.NewReader(s), name, ""); err != nil {
 		if err == lua.SyntaxError {
 			return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
 		}
 		return err
-	}
-	if err = st.state.ProtectedCall(0, lua.MultipleReturns, 0); err != nil {
+	} // args..., +func
+	st.state.Insert(-args - 1) // >func, args...
+	if err = st.state.ProtectedCall(args, lua.MultipleReturns, 0); err != nil {
 		return err
-	}
+	} // +results..., -func, -args...
 	return nil
 }
 
-func (st *LuaState) DoFile(fileName string) error {
+func (st *LuaState) DoFile(fileName string, args int) error {
 	fi, err := os.Stat(fileName)
 	if err != nil {
 		return err
@@ -522,15 +523,20 @@ func (st *LuaState) DoFile(fileName string) error {
 	if err = st.pushFile(fi); err != nil {
 		return err
 	}
-	err = lua.DoFile(st.state, fileName)
+	if err := lua.LoadFile(st.state, fileName, ""); err != nil {
+		st.popFile()
+		if err == lua.SyntaxError {
+			return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
+		}
+		return err
+	} // args..., +func
+	st.state.Insert(-args - 1)                                 // >func, args...
+	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
-	if err == lua.SyntaxError {
-		return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
-	}
 	return err
 }
 
-func (st *LuaState) DoFileHandle(f *os.File) error {
+func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	fi, err := f.Stat()
 	if err != nil {
 		return err
@@ -544,8 +550,9 @@ func (st *LuaState) DoFileHandle(f *os.File) error {
 			return LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
 		}
 		return err
-	}
-	err = st.state.ProtectedCall(0, lua.MultipleReturns, 0)
+	} // args..., +func
+	st.state.Insert(-args - 1)                                 // >func, args...
+	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
 	return err
 }
