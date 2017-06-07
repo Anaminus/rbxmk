@@ -15,6 +15,7 @@ type Source struct {
 	Instances  []*rbxfile.Instance
 	Properties map[string]rbxfile.Value
 	Values     []rbxfile.Value
+	Sources    []*Source
 }
 
 func (src *Source) Copy() *Source {
@@ -22,6 +23,7 @@ func (src *Source) Copy() *Source {
 		Instances:  make([]*rbxfile.Instance, len(src.Instances)),
 		Properties: make(map[string]rbxfile.Value, len(src.Properties)),
 		Values:     make([]rbxfile.Value, len(src.Values)),
+		Sources:    make([]*Source, len(src.Sources)),
 	}
 	for i, inst := range src.Instances {
 		dst.Instances[i] = inst.Clone()
@@ -31,6 +33,9 @@ func (src *Source) Copy() *Source {
 	}
 	for i, value := range src.Values {
 		dst.Values[i] = value.Copy()
+	}
+	for i, s := range src.Sources {
+		dst.Sources[i] = s.Copy()
 	}
 	return dst
 }
