@@ -8,6 +8,7 @@ import (
 	"github.com/robloxapi/rbxapi/dump"
 	"github.com/robloxapi/rbxfile"
 	"os"
+	"strconv"
 )
 
 type Source struct {
