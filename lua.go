@@ -283,10 +283,11 @@ func NewLuaState(opt *Options) *LuaState {
 	}, 0)
 	l.Pop(1)
 
-	l.PushGlobalTable()
+	l.PushGlobalTable()                    // +global
+	lua.NewMetaTable(l, "globalMetatable") // global, +metatable
 
 	const formatIndex = "format"
-	lua.SetFunctions(l, []lua.RegistryFunction{
+	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"input", func(l *lua.State) int {
 			t := GetArgs(l)
 			node := &InputNode{}
@@ -477,7 +478,14 @@ func NewLuaState(opt *Options) *LuaState {
 			return finishPCall(l, status) // status, results...
 		}},
 	}, 0)
-	l.Pop(1)
+	lua.SetFunctions(l, []lua.RegistryFunction{
+		{"__metatable", func(l *lua.State) int {
+			l.PushString("the metatable is locked")
+			return 1
+		}},
+	}, 0)
+	l.SetMetaTable(-2) // global, -metatable
+	l.Pop(1)           // -global
 	return st
 }
 
