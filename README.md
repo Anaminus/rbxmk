@@ -49,8 +49,8 @@ Options          | Description
 If the `-f` option is not given, then the script is read from stdin.
 
 Options after any valid flags will be passed to the script as arguments.
-Numbers and bools are parsed into their respective types in Lua, and any other
-values are read as strings.
+Numbers, bools, and nil are parsed into their respective types in Lua, and any
+other values are read as strings.
 
 ## Lua environment
 

@@ -127,8 +127,8 @@ const CommandName = "rbxmk"
 const CommandUsage = `[ -h ] [ -f FILE ] [ ARGS... ]
 
 Options after any valid flags will be passed to the script as arguments.
-Numbers and bools are parsed into their respective types in Lua, and any other
-values are read as strings.
+Numbers, bools, and nil are parsed into their respective types in Lua, and any
+other values are read as strings.
 `
 
 type FlagOptions struct {
