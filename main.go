@@ -12,6 +12,7 @@ import (
 )
 
 type Source struct {
+	FileName   string
 	Instances  []*rbxfile.Instance
 	Properties map[string]rbxfile.Value
 	Values     []rbxfile.Value
@@ -20,6 +21,7 @@ type Source struct {
 
 func (src *Source) Copy() *Source {
 	dst := &Source{
+		FileName:   src.FileName,
 		Instances:  make([]*rbxfile.Instance, len(src.Instances)),
 		Properties: make(map[string]rbxfile.Value, len(src.Properties)),
 		Values:     make([]rbxfile.Value, len(src.Values)),
