@@ -15,6 +15,8 @@ func registerOutput(name string, scheme rbxmk.OutputScheme) {
 	registryOutput[name] = scheme
 }
 
+// Register registers the schemes implemented by this package to a given
+// rbxmk.Schemes.
 func Register(schemes *rbxmk.Schemes) {
 	for name, scheme := range registryInput {
 		schemes.RegisterInput(name, scheme)
