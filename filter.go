@@ -28,3 +28,21 @@ func CallFilter(filter Filter, arguments ...interface{}) (results []interface{},
 	results = filter(&argsProcessed, arguments)
 	return
 }
+
+type Filters map[string]Filter
+
+var DefaultFilters = Filters{}
+
+func (fs Filters) Register(name string, filter Filter) {
+	if filter == nil {
+		panic("cannot register nil filter")
+	}
+	if _, registered := fs[name]; registered {
+		panic("filter already registered")
+	}
+	fs[name] = filter
+}
+
+func (fs Filters) Filter(name string) Filter {
+	return fs[name]
+}
