@@ -15,7 +15,7 @@ a stripped-down environment, with only a small set of functions available.
 3. Using a shell with Git (such as Git Bash), run the following command:
 
 ```
-go get -u github.com/anaminus/rbxmk
+go get -u github.com/anaminus/rbxmk/rbxmk
 ```
 
 If you installed Go correctly, this will install rbxmk to `$GOPATH/bin`,
@@ -27,7 +27,7 @@ are compiling for Windows, you may choose to force POSIX-style flags with the
 `forceposix` build tag:
 
 ```
-go get -u -tags forceposix github.com/anaminus/rbxmk
+go get -u -tags forceposix github.com/anaminus/rbxmk/rbxmk
 ```
 
 For more information, see the [go-flags](https://godoc.org/github.com/jessevdk/go-flags) package.
