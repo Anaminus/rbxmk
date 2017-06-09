@@ -7,18 +7,17 @@ import (
 )
 
 func init() {
-	RegisterFormat(func(_ *Options) Format { return &LuaFormat{} })
+	DefaultFormats.Register(FormatInfo{
+		Name:           "Lua",
+		Ext:            "lua",
+		Init:           func(_ *Options) Format { return &LuaFormat{} },
+		InputDrills:    nil,
+		OutputDrills:   nil,
+		OutputResolver: ResolveOutputSource,
+	})
 }
 
 type LuaFormat struct{}
-
-func (LuaFormat) Name() string {
-	return "Lua"
-}
-
-func (LuaFormat) Ext() string {
-	return "lua"
-}
 
 func (LuaFormat) Decode(r io.Reader) (src *Source, err error) {
 	b, err := ioutil.ReadAll(r)

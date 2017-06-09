@@ -66,46 +66,98 @@ func parseScheme(s string) (scheme, path string) {
 
 type InputNode struct {
 	Reference      []string // Raw strings that refer to a source.
+	Source         *Source  // Pre-resolved Source.
 	Format         string   // Forced file format. If empty, it is filled in after being guessed.
 	ParsedProtocol string   // The protocol parsed from the reference.
 }
 
 func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
-	if len(node.Reference) < 1 {
-		return nil, errors.New("node requires at least one reference argument")
+	ref := node.Reference
+	var ext string
+	if node.Source != nil {
+		src = node.Source
+		ext = node.Format
+	} else {
+		if len(ref) < 1 {
+			return nil, errors.New("node requires at least one reference argument")
+		}
+		schemeName, nextPart := parseScheme(ref[0])
+		if schemeName == "" {
+			// Assume file:// scheme.
+			schemeName = "file"
+		}
+		scheme, exists := registeredInputSchemes[schemeName]
+		if !exists {
+			return nil, errors.New("input scheme \"" + schemeName + "\" has not been registered")
+		}
+		if ext, src, err = scheme.Handler(opt, node, nextPart); err != nil {
+			return nil, err
+		}
+		ref = ref[1:]
 	}
-	scheme, nextPart := parseScheme(node.Reference[0])
-	handler, exists := registeredInputSchemes[scheme]
-	if !exists {
-		// Assume file:// scheme.
-		handler = registeredInputSchemes["file"]
+
+	drills, _ := DefaultFormats.InputDrills(ext)
+	for _, drill := range drills {
+		if src, ref, err = drill(opt, src, ref); err != nil && err != EOD {
+			return nil, err
+		}
 	}
-	if handler == nil {
-		panic("\"file\" input scheme has not been registered")
-	}
-	return handler(opt, node, nextPart)
+	return src, nil
 }
 
 type OutputNode struct {
 	Reference      []string // Raw string that refers to a source.
+	Source         *Source  // Pre-resolved Source.
 	Format         string   // Forced file format. If empty, it is filled in after being guessed.
 	ParsedProtocol string   // The protocol parsed from the reference.
 }
 
 func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) {
-	if len(node.Reference) < 1 {
+	ref := node.Reference
+	var ext string
+	if node.Source != nil {
+		ext = node.Format
+		return node.drillOutput(opt, addrSource{src: node.Source}, ref, ext, src)
+	}
+
+	if len(ref) < 1 {
 		return errors.New("node requires at least one reference argument")
 	}
-	scheme, nextPart := parseScheme(node.Reference[0])
-	handler, exists := registeredOutputSchemes[scheme]
-	if !exists {
+	schemeName, nextPart := parseScheme(ref[0])
+	if schemeName == "" {
 		// Assume file:// scheme.
-		handler = registeredOutputSchemes["file"]
+		schemeName = "file"
 	}
-	if handler == nil {
-		panic("\"file\" output scheme has not been registered")
+	scheme, exists := registeredOutputSchemes[schemeName]
+	if !exists {
+		return errors.New("output scheme \"" + schemeName + "\" has not been registered")
 	}
-	return handler(opt, node, nextPart, src)
+	var outsrc *Source
+	if ext, outsrc, err = scheme.Handler(opt, node, nextPart); err != nil {
+		return err
+	}
+	ref = ref[1:]
+	if err = node.drillOutput(opt, addrSource{src: outsrc}, ref, ext, src); err != nil {
+		return err
+	}
+	return scheme.Finalizer(opt, node, nextPart, ext, outsrc)
+}
+
+func (node *OutputNode) drillOutput(opt *Options, addr SourceAddress, ref []string, ext string, src *Source) (err error) {
+	drills, exists := DefaultFormats.OutputDrills(ext)
+	if !exists {
+		return errors.New("invalid format \"" + ext + "\"")
+	}
+	for _, drill := range drills {
+		if addr, ref, err = drill(opt, addr, ref); err != nil && err != EOD {
+			return err
+		}
+	}
+	resolver, _ := DefaultFormats.OutputResolver(ext)
+	if err = resolver(node.Reference, addr, src); err != nil {
+		return err
+	}
+	return nil
 }
 
 func Fatalf(f string, v ...interface{}) {

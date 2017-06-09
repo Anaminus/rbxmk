@@ -116,6 +116,24 @@ func (a addrValue) Set(v interface{}) (err error) {
 	return nil
 }
 
+type addrSource struct {
+	src *Source
+}
+
+func (a addrSource) Get() (v interface{}, err error) {
+	return a.src, nil
+}
+
+func (a addrSource) Set(v interface{}) (err error) {
+	switch v := v.(type) {
+	case *Source:
+		*a.src = *v
+	default:
+		return fmt.Errorf("received unexpected type")
+	}
+	return nil
+}
+
 // Drill receives a Source and drills into it using inref, returning a
 // SourceAddress which points to the resulting data within insrc. It also
 // returns the reference after it has been parsed. In case of an error, inref
@@ -346,4 +364,73 @@ func DrillInputProperty(opt *Options, insrc *Source, inref []string) (outsrc *So
 	default:
 		panic("unexpected value returned from DrillProperty")
 	}
+}
+
+func DrillOutputInstance(opt *Options, inaddr SourceAddress, inref []string) (outaddr SourceAddress, outref []string, err error) {
+	v, err := inaddr.Get()
+	inst := v.([]*rbxfile.Instance)
+	insrc := &Source{Instances: inst}
+	return DrillInstance(opt, insrc, inref)
+}
+
+func DrillOutputProperty(opt *Options, inaddr SourceAddress, inref []string) (outaddr SourceAddress, outref []string, err error) {
+	v, err := inaddr.Get()
+	inst := v.(*rbxfile.Instance)
+	insrc := &Source{Instances: []*rbxfile.Instance{inst}}
+	return DrillProperty(opt, insrc, inref)
+}
+
+func ResolveOutputSource(ref []string, addr SourceAddress, src *Source) (err error) {
+	// addrSource
+	return addr.Set(src)
+}
+
+func ResolveOutputInstance(ref []string, addr SourceAddress, src *Source) (err error) {
+	switch len(ref) {
+	case 1: // addrSource
+		// Content of input overwrites output.
+		if len(src.Properties) > 0 || len(src.Values) > 0 {
+			return errors.New("cannot map input to file: source must contain only instances")
+		}
+		return addr.Set(src)
+	case 2: // addrInstance
+		// No drilling; set properties, and append input as children.
+		if len(src.Values) > 0 {
+			return errors.New("cannot map input to instance: source must not contain values")
+		}
+		// TODO: Use API to make sure properties are correct.
+		if err := addr.Set(src.Properties); err != nil {
+			return err
+		}
+		if err := addr.Set(src.Instances); err != nil {
+			return err
+		}
+		return nil
+	case 3: // addrProperty / addrProperties
+		if len(src.Instances) > 0 {
+			return errors.New("cannot map input to property: source must not contain instances")
+		}
+		if len(src.Values) == 1 {
+			if len(src.Properties) > 0 {
+				return errors.New("cannot map input to property: source must not contain properties while also containing a value")
+			}
+			// Map value to property.
+			if err := addr.Set(src.Values[0].Copy()); err != nil {
+				return err
+			}
+		} else {
+			if len(src.Values) > 0 {
+				return errors.New("cannot map input to property: source must not contain values while also containing properties")
+			}
+			// Map property matching name.
+			value, exists := src.Properties[ref[2]]
+			if !exists {
+				return errors.New("cannot map input to property: cannot find input matching name")
+			}
+			if err := addr.Set(value.Copy()); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

@@ -9,10 +9,38 @@ import (
 )
 
 func init() {
-	RegisterFormat(func(opt *Options) Format { return &RBXFormat{false, false, opt.API} }) // rbxl
-	RegisterFormat(func(opt *Options) Format { return &RBXFormat{false, true, opt.API} })  // rbxlx
-	RegisterFormat(func(opt *Options) Format { return &RBXFormat{true, false, opt.API} })  // rbxm
-	RegisterFormat(func(opt *Options) Format { return &RBXFormat{true, true, opt.API} })   // rbxmx
+	DefaultFormats.Register(FormatInfo{
+		Name:           "RBXL",
+		Ext:            "rbxl",
+		Init:           func(opt *Options) Format { return &RBXFormat{Model: false, XML: false, API: opt.API} },
+		InputDrills:    []InputDrill{DrillInputInstance, DrillInputProperty},
+		OutputDrills:   []OutputDrill{DrillOutputInstance, DrillOutputProperty},
+		OutputResolver: ResolveOutputInstance,
+	})
+	DefaultFormats.Register(FormatInfo{
+		Name:           "RBXLX",
+		Ext:            "rbxlx",
+		Init:           func(opt *Options) Format { return &RBXFormat{Model: false, XML: true, API: opt.API} },
+		InputDrills:    []InputDrill{DrillInputInstance, DrillInputProperty},
+		OutputDrills:   []OutputDrill{DrillOutputInstance, DrillOutputProperty},
+		OutputResolver: ResolveOutputInstance,
+	})
+	DefaultFormats.Register(FormatInfo{
+		Name:           "RBXM",
+		Ext:            "rbxm",
+		Init:           func(opt *Options) Format { return &RBXFormat{Model: true, XML: false, API: opt.API} },
+		InputDrills:    []InputDrill{DrillInputInstance, DrillInputProperty},
+		OutputDrills:   []OutputDrill{DrillOutputInstance, DrillOutputProperty},
+		OutputResolver: ResolveOutputInstance,
+	})
+	DefaultFormats.Register(FormatInfo{
+		Name:           "RBXMX",
+		Ext:            "rbxmx",
+		Init:           func(opt *Options) Format { return &RBXFormat{Model: true, XML: true, API: opt.API} },
+		InputDrills:    []InputDrill{DrillInputInstance, DrillInputProperty},
+		OutputDrills:   []OutputDrill{DrillOutputInstance, DrillOutputProperty},
+		OutputResolver: ResolveOutputInstance,
+	})
 }
 
 ////////////////////////////////
@@ -21,38 +49,6 @@ type RBXFormat struct {
 	Model bool // Model or Place
 	XML   bool // XML or Binary
 	API   *rbxapi.API
-}
-
-func (f RBXFormat) Name() string {
-	if f.Model {
-		if f.XML {
-			return "RBXMX"
-		} else {
-			return "RBXM"
-		}
-	} else {
-		if f.XML {
-			return "RBXLX"
-		} else {
-			return "RBXL"
-		}
-	}
-}
-
-func (f RBXFormat) Ext() string {
-	if f.Model {
-		if f.XML {
-			return "rbxmx"
-		} else {
-			return "rbxm"
-		}
-	} else {
-		if f.XML {
-			return "rbxlx"
-		} else {
-			return "rbxl"
-		}
-	}
 }
 
 func (f *RBXFormat) Decode(r io.Reader) (src *Source, err error) {
