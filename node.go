@@ -50,8 +50,8 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 			// Assume file:// scheme.
 			schemeName = "file"
 		}
-		scheme, exists := registeredInputSchemes[schemeName]
-		if !exists {
+		scheme := DefaultSchemes.Input(schemeName)
+		if scheme == nil {
 			return nil, errors.New("input scheme \"" + schemeName + "\" has not been registered")
 		}
 		if ext, src, err = scheme.Handler(opt, node, nextPart); err != nil {
@@ -109,8 +109,8 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 		// Assume file:// scheme.
 		schemeName = "file"
 	}
-	scheme, exists := registeredOutputSchemes[schemeName]
-	if !exists {
+	scheme := DefaultSchemes.Output(schemeName)
+	if scheme == nil {
 		return errors.New("output scheme \"" + schemeName + "\" has not been registered")
 	}
 	var outsrc *Source

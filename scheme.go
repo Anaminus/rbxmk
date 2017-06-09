@@ -34,3 +34,44 @@ type OutputSchemeHandler func(opt *Options, node *OutputNode, ref string) (ext s
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given.
 type OutputFinalizer func(opt *Options, node *OutputNode, ref, ext string, outsrc *Source) (err error)
+
+type Schemes struct {
+	input  map[string]*InputScheme
+	output map[string]*OutputScheme
+}
+
+var DefaultSchemes = Schemes{
+	input:  map[string]*InputScheme{},
+	output: map[string]*OutputScheme{},
+}
+
+func (s Schemes) RegisterInput(name string, scheme InputScheme) {
+	if scheme.Handler == nil {
+		panic("input scheme must have handler")
+	}
+	if _, registered := s.input[name]; registered {
+		panic("scheme already registered")
+	}
+	s.input[name] = &scheme
+}
+
+func (s Schemes) RegisterOutput(name string, scheme OutputScheme) {
+	if scheme.Handler == nil {
+		panic("output scheme must have handler")
+	}
+	if scheme.Finalizer == nil {
+		panic("output scheme must have finalizer")
+	}
+	if _, registered := s.output[name]; registered {
+		panic("scheme already registered")
+	}
+	s.output[name] = &scheme
+}
+
+func (s Schemes) Input(name string) *InputScheme {
+	return s.input[name]
+}
+
+func (s Schemes) Output(name string) *OutputScheme {
+	return s.output[name]
+}

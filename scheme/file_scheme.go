@@ -9,10 +9,10 @@ import (
 )
 
 func init() {
-	rbxmk.RegisterInputScheme("file", rbxmk.InputScheme{
+	rbxmk.DefaultSchemes.RegisterInput("file", rbxmk.InputScheme{
 		Handler: fileInputSchemeHandler,
 	})
-	rbxmk.RegisterOutputScheme("file", rbxmk.OutputScheme{
+	rbxmk.DefaultSchemes.RegisterOutput("file", rbxmk.OutputScheme{
 		Handler:   fileOutputSchemeHandler,
 		Finalizer: fileOutputFinalizer,
 	})
