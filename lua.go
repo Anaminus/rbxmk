@@ -338,7 +338,12 @@ func NewLuaState(opt *Options) *LuaState {
 			if nt == 0 {
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
-			for i := 1; i <= nt; i++ {
+			i := 1
+			if src, ok := t.IndexValue(i).(*Source); ok {
+				node.Source = src
+				i = 2
+			}
+			for ; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
 
@@ -359,7 +364,12 @@ func NewLuaState(opt *Options) *LuaState {
 			if nt == 0 {
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
-			for i := 1; i <= nt; i++ {
+			i := 1
+			if src, ok := t.IndexValue(i).(*Source); ok {
+				node.Source = src
+				i = 2
+			}
+			for ; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
 
