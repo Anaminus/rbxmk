@@ -29,20 +29,26 @@ func CallFilter(filter Filter, arguments ...interface{}) (results []interface{},
 	return
 }
 
-type Filters map[string]Filter
+type Filters struct {
+	f map[string]Filter
+}
 
-var DefaultFilters = Filters{}
+func NewFilters() *Filters {
+	return &Filters{f: map[string]Filter{}}
+}
 
-func (fs Filters) Register(name string, filter Filter) {
+var DefaultFilters = NewFilters()
+
+func (fs *Filters) Register(name string, filter Filter) {
 	if filter == nil {
 		panic("cannot register nil filter")
 	}
-	if _, registered := fs[name]; registered {
+	if _, registered := fs.f[name]; registered {
 		panic("filter already registered")
 	}
-	fs[name] = filter
+	fs.f[name] = filter
 }
 
-func (fs Filters) Filter(name string) Filter {
-	return fs[name]
+func (fs *Filters) Filter(name string) Filter {
+	return fs.f[name]
 }

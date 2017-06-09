@@ -64,12 +64,18 @@ type Format interface {
 
 type InitFormat func(opt *Options) Format
 
-type Formats map[string]*FormatInfo
+type Formats struct {
+	f map[string]*FormatInfo
+}
 
-var DefaultFormats = Formats{}
+func NewFormats() *Formats {
+	return &Formats{f: map[string]*FormatInfo{}}
+}
 
-func (fs Formats) Register(f FormatInfo) {
-	if _, registered := fs[f.Ext]; registered {
+var DefaultFormats = NewFormats()
+
+func (fs *Formats) Register(f FormatInfo) {
+	if _, registered := fs.f[f.Ext]; registered {
 		panic("format already registered")
 	}
 	if f.Init == nil {
@@ -87,28 +93,28 @@ func (fs Formats) Register(f FormatInfo) {
 	copy(od, f.OutputDrills)
 	f.OutputDrills = od
 
-	fs[f.Ext] = &f
+	fs.f[f.Ext] = &f
 }
 
-func (fs Formats) Name(ext string) (name string, registered bool) {
+func (fs *Formats) Name(ext string) (name string, registered bool) {
 	var f *FormatInfo
-	if f, registered = fs[ext]; !registered {
+	if f, registered = fs.f[ext]; !registered {
 		return "", false
 	}
 	return f.Name, true
 }
 
-func (fs Formats) Init(ext string, opt *Options) (format Format, registered bool) {
+func (fs *Formats) Init(ext string, opt *Options) (format Format, registered bool) {
 	var f *FormatInfo
-	if f, registered = fs[ext]; !registered {
+	if f, registered = fs.f[ext]; !registered {
 		return nil, false
 	}
 	return f.Init(opt), true
 }
 
-func (fs Formats) InputDrills(ext string) (drills []InputDrill, registered bool) {
+func (fs *Formats) InputDrills(ext string) (drills []InputDrill, registered bool) {
 	var f *FormatInfo
-	if f, registered = fs[ext]; !registered {
+	if f, registered = fs.f[ext]; !registered {
 		return nil, false
 	}
 	drills = make([]InputDrill, len(f.InputDrills))
@@ -116,9 +122,9 @@ func (fs Formats) InputDrills(ext string) (drills []InputDrill, registered bool)
 	return drills, true
 }
 
-func (fs Formats) OutputDrills(ext string) (drills []OutputDrill, registered bool) {
+func (fs *Formats) OutputDrills(ext string) (drills []OutputDrill, registered bool) {
 	var f *FormatInfo
-	if f, registered = fs[ext]; !registered {
+	if f, registered = fs.f[ext]; !registered {
 		return nil, false
 	}
 	drills = make([]OutputDrill, len(f.OutputDrills))
@@ -126,9 +132,9 @@ func (fs Formats) OutputDrills(ext string) (drills []OutputDrill, registered boo
 	return f.OutputDrills, true
 }
 
-func (fs Formats) OutputResolver(ext string) (resolver OutputResolver, registered bool) {
+func (fs *Formats) OutputResolver(ext string) (resolver OutputResolver, registered bool) {
 	var f *FormatInfo
-	if f, registered = fs[ext]; !registered {
+	if f, registered = fs.f[ext]; !registered {
 		return nil, false
 	}
 	return f.OutputResolver, true

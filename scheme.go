@@ -40,12 +40,16 @@ type Schemes struct {
 	output map[string]*OutputScheme
 }
 
-var DefaultSchemes = Schemes{
-	input:  map[string]*InputScheme{},
-	output: map[string]*OutputScheme{},
+func NewSchemes() *Schemes {
+	return &Schemes{
+		input:  map[string]*InputScheme{},
+		output: map[string]*OutputScheme{},
+	}
 }
 
-func (s Schemes) RegisterInput(name string, scheme InputScheme) {
+var DefaultSchemes = NewSchemes()
+
+func (s *Schemes) RegisterInput(name string, scheme InputScheme) {
 	if scheme.Handler == nil {
 		panic("input scheme must have handler")
 	}
@@ -55,7 +59,7 @@ func (s Schemes) RegisterInput(name string, scheme InputScheme) {
 	s.input[name] = &scheme
 }
 
-func (s Schemes) RegisterOutput(name string, scheme OutputScheme) {
+func (s *Schemes) RegisterOutput(name string, scheme OutputScheme) {
 	if scheme.Handler == nil {
 		panic("output scheme must have handler")
 	}
@@ -68,10 +72,10 @@ func (s Schemes) RegisterOutput(name string, scheme OutputScheme) {
 	s.output[name] = &scheme
 }
 
-func (s Schemes) Input(name string) *InputScheme {
+func (s *Schemes) Input(name string) *InputScheme {
 	return s.input[name]
 }
 
-func (s Schemes) Output(name string) *OutputScheme {
+func (s *Schemes) Output(name string) *OutputScheme {
 	return s.output[name]
 }
