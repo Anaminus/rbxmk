@@ -13,8 +13,6 @@ import (
 // the address may no longer point to the expected location, if the data is
 // moved.
 type SourceAddress interface {
-	// Returns the Source to which data is being pointed.
-	Source() *Source
 	// Returns the data being pointed to.
 	Get() (v interface{}, err error)
 	// Sets the data being pointed to. This may include modifying the current
@@ -25,10 +23,6 @@ type SourceAddress interface {
 type addrInstance struct {
 	src  *Source
 	inst *rbxfile.Instance
-}
-
-func (a addrInstance) Source() *Source {
-	return a.src
 }
 
 func (a addrInstance) Get() (v interface{}, err error) {
@@ -63,10 +57,6 @@ type addrProperty struct {
 	name  string
 }
 
-func (a addrProperty) Source() *Source {
-	return a.src
-}
-
 func (a addrProperty) Get() (v interface{}, err error) {
 	return a.props[a.name], nil
 }
@@ -85,10 +75,6 @@ type addrProperties struct {
 	inst *rbxfile.Instance
 }
 
-func (a addrProperties) Source() *Source {
-	return a.src
-}
-
 func (a addrProperties) Get() (v interface{}, err error) {
 	return a.inst.Properties, nil
 }
@@ -105,10 +91,6 @@ func (a addrProperties) Set(v interface{}) (err error) {
 type addrValue struct {
 	src   *Source
 	index int
-}
-
-func (a addrValue) Source() *Source {
-	return a.src
 }
 
 func (a addrValue) Get() (v interface{}, err error) {
