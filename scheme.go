@@ -1,4 +1,4 @@
-package main
+package rbxmk
 
 type InputScheme struct {
 	Handler InputSchemeHandler
@@ -34,33 +34,3 @@ type OutputSchemeHandler func(opt *Options, node *OutputNode, ref string) (ext s
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given.
 type OutputFinalizer func(opt *Options, node *OutputNode, ref, ext string, outsrc *Source) (err error)
-
-// func init() {
-// 	RegisterInputScheme("file", HandleFileInputScheme)
-// 	RegisterInputScheme("http", HandleHTTPInputScheme)
-// 	RegisterInputScheme("https", HandleHTTPInputScheme)
-
-// 	RegisterOutputScheme("file", HandleFileOutputScheme)
-// }
-
-func IsAlnum(s string) bool {
-	for _, r := range s {
-		if (r >= '0' && r <= '9') ||
-			(r >= 'A' && r <= 'Z') ||
-			(r >= 'a' && r <= 'z') ||
-			r == '_' {
-			continue
-		}
-		return false
-	}
-	return true
-}
-func IsDigit(s string) bool {
-	for _, r := range s {
-		if r >= '0' && r <= '9' {
-			continue
-		}
-		return false
-	}
-	return true
-}

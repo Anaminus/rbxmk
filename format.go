@@ -1,8 +1,30 @@
-package main
+package rbxmk
 
 import (
+	"errors"
 	"io"
 )
+
+// SourceAddress points to data within a Source. Data is allowed to be
+// resolved as the address is created. For example, an address can point
+// directly to an instance within a tree in the Source. Note that this means
+// the address may no longer point to the expected location, if the data is
+// moved.
+type SourceAddress interface {
+	// Returns the data being pointed to.
+	Get() (v interface{}, err error)
+	// Sets the data being pointed to. This may include modifying the current
+	// data, rather than replacing it.
+	Set(v interface{}) (err error)
+}
+
+// Drill receives a Source and drills into it using inref, returning a
+// SourceAddress which points to the resulting data within insrc. It also
+// returns the reference after it has been parsed. In case of an error, inref
+// is returned. If inref is empty, then an EOD error is returned.
+type Drill func(opt *Options, insrc *Source, inref []string) (outaddr SourceAddress, outref []string, err error)
+
+var EOD = errors.New("end of drill")
 
 type FormatInfo struct {
 	Name           string

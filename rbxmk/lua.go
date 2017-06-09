@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Shopify/go-lua"
+	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/format"
 	"os"
 	"strings"
 )
@@ -27,7 +29,7 @@ Stack Annotations:
 */
 
 type LuaState struct {
-	options   *Options
+	options   *rbxmk.Options
 	state     *lua.State
 	fileStack []os.FileInfo
 }
@@ -236,7 +238,7 @@ func SetIndexFunctions(l *lua.State, functions []lua.RegistryFunction, upValueCo
 	l.SetTable(-3)          // metatable, -index, -table
 }
 
-func NewLuaState(opt *Options) *LuaState {
+func NewLuaState(opt *rbxmk.Options) *LuaState {
 	st := &LuaState{}
 	l := lua.NewState()
 	st.options = opt
@@ -246,7 +248,7 @@ func NewLuaState(opt *Options) *LuaState {
 	lua.NewMetaTable(l, luaTypeInput)
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"CheckInstance", func(l *lua.State) int {
-			src := l.ToUserData(1).(*Source)
+			src := l.ToUserData(1).(*rbxmk.Source)
 			t := GetMethodArgs(l)
 
 			nt := t.Length()
@@ -256,11 +258,11 @@ func NewLuaState(opt *Options) *LuaState {
 			}
 
 			var err error
-			if src, ref, err = DrillInputInstance(st.options, src, ref); err != nil && err != EOD {
+			if src, ref, err = format.DrillInputInstance(st.options, src, ref); err != nil && err != rbxmk.EOD {
 				l.PushBoolean(false)
 				return 1
 			}
-			if src, ref, err = DrillInputProperty(st.options, src, ref); err != nil && err != EOD {
+			if src, ref, err = format.DrillInputProperty(st.options, src, ref); err != nil && err != rbxmk.EOD {
 				l.PushBoolean(false)
 				return 1
 			}
@@ -268,7 +270,7 @@ func NewLuaState(opt *Options) *LuaState {
 			return 1
 		}},
 		{"CheckProperty", func(l *lua.State) int {
-			src := l.ToUserData(1).(*Source)
+			src := l.ToUserData(1).(*rbxmk.Source)
 			t := GetMethodArgs(l)
 			name := t.IndexString(1)
 			_, exists := src.Properties[name]
@@ -330,7 +332,7 @@ func NewLuaState(opt *Options) *LuaState {
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"input", func(l *lua.State) int {
 			t := GetArgs(l)
-			node := &InputNode{}
+			node := &rbxmk.InputNode{}
 
 			node.Format, _ = t.FieldString(formatIndex, true)
 
@@ -339,7 +341,7 @@ func NewLuaState(opt *Options) *LuaState {
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if src, ok := t.IndexValue(i).(*Source); ok {
+			if src, ok := t.IndexValue(i).(*rbxmk.Source); ok {
 				node.Source = src
 				i = 2
 			}
@@ -356,7 +358,7 @@ func NewLuaState(opt *Options) *LuaState {
 		}},
 		{"output", func(l *lua.State) int {
 			t := GetArgs(l)
-			node := &OutputNode{}
+			node := &rbxmk.OutputNode{}
 
 			node.Format, _ = t.FieldString(formatIndex, true)
 
@@ -365,7 +367,7 @@ func NewLuaState(opt *Options) *LuaState {
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if src, ok := t.IndexValue(i).(*Source); ok {
+			if src, ok := t.IndexValue(i).(*rbxmk.Source); ok {
 				node.Source = src
 				i = 2
 			}
@@ -386,8 +388,8 @@ func NewLuaState(opt *Options) *LuaState {
 				i = 2
 			}
 
-			filterFunc, exists := registeredFilters[filterName]
-			if !exists {
+			filterFunc := rbxmk.DefaultFilters.Filter(filterName)
+			if filterFunc == nil {
 				return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 			}
 
@@ -397,7 +399,7 @@ func NewLuaState(opt *Options) *LuaState {
 				arguments[i-o] = t.IndexValue(i)
 			}
 
-			results, err := CallFilter(filterFunc, arguments...)
+			results, err := rbxmk.CallFilter(filterFunc, arguments...)
 			if err != nil {
 				return throwError(l, err)
 			}
@@ -416,10 +418,10 @@ func NewLuaState(opt *Options) *LuaState {
 					l.PushString(v)
 				case uint:
 					l.PushUnsigned(v)
-				case *Source:
+				case *rbxmk.Source:
 					l.PushUserData(v)
 					lua.SetMetaTableNamed(l, luaTypeInput)
-				case *OutputNode:
+				case *rbxmk.OutputNode:
 					l.PushUserData(v)
 					lua.SetMetaTableNamed(l, luaTypeOutput)
 				default:
@@ -431,16 +433,16 @@ func NewLuaState(opt *Options) *LuaState {
 		{"map", func(l *lua.State) int {
 			t := GetArgs(l)
 
-			inputs := make([]*Source, 1)
-			outputs := make([]*OutputNode, 1)
+			inputs := make([]*rbxmk.Source, 1)
+			outputs := make([]*rbxmk.OutputNode, 1)
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
 				switch v, typ := t.IndexNode(i); typ {
 				case luaTypeInput:
-					inputs = append(inputs, v.(*Source))
+					inputs = append(inputs, v.(*rbxmk.Source))
 				case luaTypeOutput:
-					outputs = append(outputs, v.(*OutputNode))
+					outputs = append(outputs, v.(*rbxmk.OutputNode))
 				}
 			}
 
@@ -625,7 +627,7 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	return err
 }
 
-func (st *LuaState) mapNodes(inputs []*Source, outputs []*OutputNode) int {
+func (st *LuaState) mapNodes(inputs []*rbxmk.Source, outputs []*rbxmk.OutputNode) int {
 	for _, input := range inputs {
 		for _, output := range outputs {
 			if err := output.ResolveReference(st.options, input); err != nil {

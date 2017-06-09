@@ -1,4 +1,4 @@
-package main
+package rbxmk
 
 var registeredInputSchemes = map[string]InputScheme{}
 
@@ -27,14 +27,20 @@ func RegisterOutputScheme(name string, scheme OutputScheme) {
 	registeredOutputSchemes[name] = scheme
 }
 
-var registeredFilters = map[string]Filter{}
+type Filters map[string]Filter
 
-func RegisterFilter(name string, filter Filter) {
+var DefaultFilters = Filters{}
+
+func (fs Filters) Register(name string, filter Filter) {
 	if filter == nil {
 		panic("cannot register nil filter")
 	}
-	if _, registered := registeredFilters[name]; registered {
+	if _, registered := fs[name]; registered {
 		panic("filter already registered")
 	}
-	registeredFilters[name] = filter
+	fs[name] = filter
+}
+
+func (fs Filters) Filter(name string) Filter {
+	return fs[name]
 }

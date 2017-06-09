@@ -1,27 +1,15 @@
-package main
+package format
 
 import (
 	"errors"
 	"fmt"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	"strconv"
 )
 
-// SourceAddress points to data within a Source. Data is allowed to be
-// resolved as the address is created. For example, an address can point
-// directly to an instance within a tree in the Source. Note that this means
-// the address may no longer point to the expected location, if the data is
-// moved.
-type SourceAddress interface {
-	// Returns the data being pointed to.
-	Get() (v interface{}, err error)
-	// Sets the data being pointed to. This may include modifying the current
-	// data, rather than replacing it.
-	Set(v interface{}) (err error)
-}
-
 type addrInstance struct {
-	src  *Source
+	src  *rbxmk.Source
 	inst *rbxfile.Instance
 }
 
@@ -52,7 +40,7 @@ func (a addrInstance) Set(v interface{}) (err error) {
 }
 
 type addrProperty struct {
-	src   *Source
+	src   *rbxmk.Source
 	props map[string]rbxfile.Value
 	name  string
 }
@@ -71,7 +59,7 @@ func (a addrProperty) Set(v interface{}) (err error) {
 }
 
 type addrProperties struct {
-	src  *Source
+	src  *rbxmk.Source
 	inst *rbxfile.Instance
 }
 
@@ -89,7 +77,7 @@ func (a addrProperties) Set(v interface{}) (err error) {
 }
 
 type addrValue struct {
-	src   *Source
+	src   *rbxmk.Source
 	index int
 }
 
@@ -116,32 +104,6 @@ func (a addrValue) Set(v interface{}) (err error) {
 	return nil
 }
 
-type addrSource struct {
-	src *Source
-}
-
-func (a addrSource) Get() (v interface{}, err error) {
-	return a.src, nil
-}
-
-func (a addrSource) Set(v interface{}) (err error) {
-	switch v := v.(type) {
-	case *Source:
-		*a.src = *v
-	default:
-		return fmt.Errorf("received unexpected type")
-	}
-	return nil
-}
-
-// Drill receives a Source and drills into it using inref, returning a
-// SourceAddress which points to the resulting data within insrc. It also
-// returns the reference after it has been parsed. In case of an error, inref
-// is returned. If inref is empty, then an EOD error is returned.
-type Drill func(opt *Options, insrc *Source, inref []string) (outaddr SourceAddress, outref []string, err error)
-
-var EOD = errors.New("end of drill")
-
 func isAlnum(b byte) bool {
 	return ('0' <= b && b <= '9') ||
 		('A' <= b && b <= 'Z') ||
@@ -162,9 +124,9 @@ func (err ParseError) Error() string {
 	return fmt.Sprintf("@%d: %s", err.Index, err.Err)
 }
 
-func DrillInstance(opt *Options, insrc *Source, inref []string) (outaddr SourceAddress, outref []string, err error) {
+func DrillInstance(opt *rbxmk.Options, insrc *rbxmk.Source, inref []string) (outaddr rbxmk.SourceAddress, outref []string, err error) {
 	if len(inref) == 0 {
-		err = EOD
+		err = rbxmk.EOD
 		return nil, inref, err
 	}
 	if len(insrc.Instances) == 0 {
@@ -299,9 +261,9 @@ Error:
 	return nil, inref, ParseError{Index: i, Err: err}
 }
 
-func DrillProperty(opt *Options, insrc *Source, inref []string) (outaddr SourceAddress, outref []string, err error) {
+func DrillProperty(opt *rbxmk.Options, insrc *rbxmk.Source, inref []string) (outaddr rbxmk.SourceAddress, outref []string, err error) {
 	if len(inref) == 0 {
-		err = EOD
+		err = rbxmk.EOD
 		return nil, inref, err
 	}
 	if len(insrc.Instances) != 1 {
@@ -331,7 +293,7 @@ func DrillProperty(opt *Options, insrc *Source, inref []string) (outaddr SourceA
 	return addrProperty{src: insrc, props: insrc.Instances[0].Properties, name: ref}, inref[1:], nil
 }
 
-func DrillInputInstance(opt *Options, insrc *Source, inref []string) (outsrc *Source, outref []string, err error) {
+func DrillInputInstance(opt *rbxmk.Options, insrc *rbxmk.Source, inref []string) (outsrc *rbxmk.Source, outref []string, err error) {
 	outaddr, outref, err := DrillInstance(opt, insrc, inref)
 	if err != nil {
 		return insrc, inref, err
@@ -344,10 +306,10 @@ func DrillInputInstance(opt *Options, insrc *Source, inref []string) (outsrc *So
 	if !ok {
 		panic("unexpected value returned from DrillInstance")
 	}
-	return &Source{Instances: []*rbxfile.Instance{inst}}, outref, nil
+	return &rbxmk.Source{Instances: []*rbxfile.Instance{inst}}, outref, nil
 }
 
-func DrillInputProperty(opt *Options, insrc *Source, inref []string) (outsrc *Source, outref []string, err error) {
+func DrillInputProperty(opt *rbxmk.Options, insrc *rbxmk.Source, inref []string) (outsrc *rbxmk.Source, outref []string, err error) {
 	outaddr, outref, err := DrillProperty(opt, insrc, inref)
 	if err != nil {
 		return insrc, inref, err
@@ -358,34 +320,34 @@ func DrillInputProperty(opt *Options, insrc *Source, inref []string) (outsrc *So
 	}
 	switch v := v.(type) {
 	case map[string]rbxfile.Value:
-		return &Source{Properties: v}, outref, nil
+		return &rbxmk.Source{Properties: v}, outref, nil
 	case rbxfile.Value:
-		return &Source{Values: []rbxfile.Value{v}}, outref, nil
+		return &rbxmk.Source{Values: []rbxfile.Value{v}}, outref, nil
 	default:
 		panic("unexpected value returned from DrillProperty")
 	}
 }
 
-func DrillOutputInstance(opt *Options, inaddr SourceAddress, inref []string) (outaddr SourceAddress, outref []string, err error) {
+func DrillOutputInstance(opt *rbxmk.Options, inaddr rbxmk.SourceAddress, inref []string) (outaddr rbxmk.SourceAddress, outref []string, err error) {
 	v, err := inaddr.Get()
 	inst := v.([]*rbxfile.Instance)
-	insrc := &Source{Instances: inst}
+	insrc := &rbxmk.Source{Instances: inst}
 	return DrillInstance(opt, insrc, inref)
 }
 
-func DrillOutputProperty(opt *Options, inaddr SourceAddress, inref []string) (outaddr SourceAddress, outref []string, err error) {
+func DrillOutputProperty(opt *rbxmk.Options, inaddr rbxmk.SourceAddress, inref []string) (outaddr rbxmk.SourceAddress, outref []string, err error) {
 	v, err := inaddr.Get()
 	inst := v.(*rbxfile.Instance)
-	insrc := &Source{Instances: []*rbxfile.Instance{inst}}
+	insrc := &rbxmk.Source{Instances: []*rbxfile.Instance{inst}}
 	return DrillProperty(opt, insrc, inref)
 }
 
-func ResolveOutputSource(ref []string, addr SourceAddress, src *Source) (err error) {
+func ResolveOutputSource(ref []string, addr rbxmk.SourceAddress, src *rbxmk.Source) (err error) {
 	// addrSource
 	return addr.Set(src)
 }
 
-func ResolveOutputInstance(ref []string, addr SourceAddress, src *Source) (err error) {
+func ResolveOutputInstance(ref []string, addr rbxmk.SourceAddress, src *rbxmk.Source) (err error) {
 	switch len(ref) {
 	case 1: // addrSource
 		// Content of input overwrites output.
@@ -420,7 +382,7 @@ func ResolveOutputInstance(ref []string, addr SourceAddress, src *Source) (err e
 			}
 		} else {
 			if len(src.Values) > 0 {
-				return errors.New("cannot map input to property: source must not contain values while also containing properties")
+				return errors.New("cannot map input to property: rbxmk.source must not contain values while also containing properties")
 			}
 			// Map property matching name.
 			value, exists := src.Properties[ref[2]]
