@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	rbxmk.DefaultFormats.Register(rbxmk.FormatInfo{
+	register(rbxmk.FormatInfo{
 		Name:           "RBXL",
 		Ext:            "rbxl",
 		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: false, XML: false, API: opt.API} },
@@ -18,7 +18,7 @@ func init() {
 		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
 		OutputResolver: ResolveOutputInstance,
 	})
-	rbxmk.DefaultFormats.Register(rbxmk.FormatInfo{
+	register(rbxmk.FormatInfo{
 		Name:           "RBXLX",
 		Ext:            "rbxlx",
 		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: false, XML: true, API: opt.API} },
@@ -26,7 +26,7 @@ func init() {
 		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
 		OutputResolver: ResolveOutputInstance,
 	})
-	rbxmk.DefaultFormats.Register(rbxmk.FormatInfo{
+	register(rbxmk.FormatInfo{
 		Name:           "RBXM",
 		Ext:            "rbxm",
 		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: true, XML: false, API: opt.API} },
@@ -34,7 +34,7 @@ func init() {
 		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
 		OutputResolver: ResolveOutputInstance,
 	})
-	rbxmk.DefaultFormats.Register(rbxmk.FormatInfo{
+	register(rbxmk.FormatInfo{
 		Name:           "RBXMX",
 		Ext:            "rbxmx",
 		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: true, XML: true, API: opt.API} },

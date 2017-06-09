@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/filter"
+	"github.com/anaminus/rbxmk/format"
+	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxapi/dump"
@@ -58,7 +61,11 @@ func main() {
 		return
 	}
 
-	options := &rbxmk.Options{}
+	options := rbxmk.NewOptions()
+	scheme.Register(options.Schemes)
+	format.Register(options.Formats)
+	filter.Register(options.Filters)
+
 	state := NewLuaState(options)
 
 	for _, arg := range args {

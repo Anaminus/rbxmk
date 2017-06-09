@@ -50,7 +50,7 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 			// Assume file:// scheme.
 			schemeName = "file"
 		}
-		scheme := DefaultSchemes.Input(schemeName)
+		scheme := opt.Schemes.Input(schemeName)
 		if scheme == nil {
 			return nil, errors.New("input scheme \"" + schemeName + "\" has not been registered")
 		}
@@ -60,7 +60,7 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 		ref = ref[1:]
 	}
 
-	drills, _ := DefaultFormats.InputDrills(ext)
+	drills, _ := opt.Formats.InputDrills(ext)
 	for _, drill := range drills {
 		if src, ref, err = drill(opt, src, ref); err != nil && err != EOD {
 			return nil, err
@@ -109,7 +109,7 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 		// Assume file:// scheme.
 		schemeName = "file"
 	}
-	scheme := DefaultSchemes.Output(schemeName)
+	scheme := opt.Schemes.Output(schemeName)
 	if scheme == nil {
 		return errors.New("output scheme \"" + schemeName + "\" has not been registered")
 	}
@@ -125,7 +125,7 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 }
 
 func (node *OutputNode) drillOutput(opt *Options, addr SourceAddress, ref []string, ext string, src *Source) (err error) {
-	drills, exists := DefaultFormats.OutputDrills(ext)
+	drills, exists := opt.Formats.OutputDrills(ext)
 	if !exists {
 		return errors.New("invalid format \"" + ext + "\"")
 	}
@@ -134,7 +134,7 @@ func (node *OutputNode) drillOutput(opt *Options, addr SourceAddress, ref []stri
 			return err
 		}
 	}
-	resolver, _ := DefaultFormats.OutputResolver(ext)
+	resolver, _ := opt.Formats.OutputResolver(ext)
 	if err = resolver(node.Reference, addr, src); err != nil {
 		return err
 	}

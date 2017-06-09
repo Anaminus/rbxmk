@@ -72,8 +72,6 @@ func NewFormats() *Formats {
 	return &Formats{f: map[string]*FormatInfo{}}
 }
 
-var DefaultFormats = NewFormats()
-
 func (fs *Formats) Register(f FormatInfo) {
 	if _, registered := fs.f[f.Ext]; registered {
 		panic("format already registered")

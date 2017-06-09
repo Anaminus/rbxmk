@@ -47,8 +47,6 @@ func NewSchemes() *Schemes {
 	}
 }
 
-var DefaultSchemes = NewSchemes()
-
 func (s *Schemes) RegisterInput(name string, scheme InputScheme) {
 	if scheme.Handler == nil {
 		panic("input scheme must have handler")

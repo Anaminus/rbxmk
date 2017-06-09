@@ -388,7 +388,7 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 				i = 2
 			}
 
-			filterFunc := rbxmk.DefaultFilters.Filter(filterName)
+			filterFunc := opt.Filters.Filter(filterName)
 			if filterFunc == nil {
 				return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 			}

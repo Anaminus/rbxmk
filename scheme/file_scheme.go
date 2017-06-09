@@ -9,10 +9,10 @@ import (
 )
 
 func init() {
-	rbxmk.DefaultSchemes.RegisterInput("file", rbxmk.InputScheme{
+	registerInput("file", rbxmk.InputScheme{
 		Handler: fileInputSchemeHandler,
 	})
-	rbxmk.DefaultSchemes.RegisterOutput("file", rbxmk.OutputScheme{
+	registerOutput("file", rbxmk.OutputScheme{
 		Handler:   fileOutputSchemeHandler,
 		Finalizer: fileOutputFinalizer,
 	})
@@ -27,7 +27,7 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename 
 	}
 
 	// Find format.
-	format, exists := rbxmk.DefaultFormats.Init(ext, opt)
+	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
 		return "", nil, errors.New("format is not registered")
 	}
@@ -56,7 +56,7 @@ func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, filenam
 	}
 
 	// Find format.
-	format, exists := rbxmk.DefaultFormats.Init(ext, opt)
+	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
 		return "", nil, errors.New("format is not registered")
 	}
@@ -79,7 +79,7 @@ func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, filenam
 }
 
 func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, filename, ext string, outsrc *rbxmk.Source) (err error) {
-	format, exists := rbxmk.DefaultFormats.Init(ext, opt)
+	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
 		return errors.New("format is not registered")
 	}

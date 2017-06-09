@@ -37,8 +37,6 @@ func NewFilters() *Filters {
 	return &Filters{f: map[string]Filter{}}
 }
 
-var DefaultFilters = NewFilters()
-
 func (fs *Filters) Register(name string, filter Filter) {
 	if filter == nil {
 		panic("cannot register nil filter")

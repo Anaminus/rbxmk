@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	rbxmk.DefaultFormats.Register(rbxmk.FormatInfo{
+	register(rbxmk.FormatInfo{
 		Name:           "Lua",
 		Ext:            "lua",
 		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{} },
