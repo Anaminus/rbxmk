@@ -18,12 +18,22 @@ func init() {
 	})
 }
 
+func guessFileExtension(format, filename string) (ext string) {
+	ext = format
+	if ext == "" {
+		// Try to guess the format.
+		if fi, err := os.Stat(filename); err == nil && fi.IsDir() {
+			ext = "directory"
+		} else {
+			ext = strings.TrimPrefix(filepath.Ext(filename), ".")
+		}
+	}
+	return ext
+}
+
 func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	// Find extension.
-	if node.Format == "" {
-		ext = strings.TrimPrefix(filepath.Ext(filename), ".")
-	} else {
-		ext = node.Format
+	if ext = guessFileExtension(node.Format, filename); ext == "" {
+		return "", nil, errors.New("failed to guess format")
 	}
 
 	// Find format.
@@ -48,11 +58,8 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename 
 }
 
 func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	// Find extension.
-	if node.Format == "" {
-		ext = strings.TrimPrefix(filepath.Ext(filename), ".")
-	} else {
-		ext = node.Format
+	if ext = guessFileExtension(node.Format, filename); ext == "" {
+		return "", nil, errors.New("failed to guess format")
 	}
 
 	// Find format.
