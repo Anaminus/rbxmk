@@ -4,8 +4,6 @@ import (
 	"errors"
 	"github.com/anaminus/rbxmk"
 	"os"
-	"path/filepath"
-	"strings"
 )
 
 func init() {
@@ -18,21 +16,39 @@ func init() {
 	})
 }
 
-func guessFileExtension(format, filename string) (ext string) {
+func guessFileExtension(opt *rbxmk.Options, format, filename string) (ext string) {
 	ext = format
 	if ext == "" {
 		// Try to guess the format.
 		if fi, err := os.Stat(filename); err == nil && fi.IsDir() {
 			ext = "directory"
 		} else {
-			ext = strings.TrimPrefix(filepath.Ext(filename), ".")
+			{
+				i := len(filename) - 1
+				for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
+				}
+				filename = filename[i+1:]
+			}
+			for {
+				for i := 0; i < len(filename); i++ {
+					if filename[i] == '.' {
+						filename = filename[i+1:]
+						goto check
+					}
+				}
+				return ""
+			check:
+				if opt.Formats.Registered(filename) {
+					return filename
+				}
+			}
 		}
 	}
 	return ext
 }
 
 func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	if ext = guessFileExtension(node.Format, filename); ext == "" {
+	if ext = guessFileExtension(opt, node.Format, filename); ext == "" {
 		return "", nil, errors.New("failed to guess format")
 	}
 
@@ -58,7 +74,7 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename 
 }
 
 func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	if ext = guessFileExtension(node.Format, filename); ext == "" {
+	if ext = guessFileExtension(opt, node.Format, filename); ext == "" {
 		return "", nil, errors.New("failed to guess format")
 	}
 
