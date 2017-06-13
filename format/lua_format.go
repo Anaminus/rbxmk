@@ -11,7 +11,7 @@ import (
 func init() {
 	register(rbxmk.FormatInfo{
 		Name:           "Lua Script",
-		Ext:            "lua",
+		Ext:            "script.lua",
 		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaScript} },
 		InputDrills:    nil,
 		OutputDrills:   nil,
@@ -19,7 +19,7 @@ func init() {
 	})
 	register(rbxmk.FormatInfo{
 		Name:           "Lua LocalScript",
-		Ext:            "local.lua",
+		Ext:            "localscript.lua",
 		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaLocalScript} },
 		InputDrills:    nil,
 		OutputDrills:   nil,
@@ -27,7 +27,7 @@ func init() {
 	})
 	register(rbxmk.FormatInfo{
 		Name:           "Lua ModuleScript",
-		Ext:            "module.lua",
+		Ext:            "modulescript.lua",
 		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaModuleScript} },
 		InputDrills:    nil,
 		OutputDrills:   nil,
