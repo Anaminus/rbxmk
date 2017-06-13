@@ -10,6 +10,14 @@ import (
 
 func init() {
 	register(rbxmk.FormatInfo{
+		Name:           "Lua",
+		Ext:            "lua",
+		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaValue} },
+		InputDrills:    nil,
+		OutputDrills:   nil,
+		OutputResolver: ResolveOutputSource,
+	})
+	register(rbxmk.FormatInfo{
 		Name:           "Lua Script",
 		Ext:            "script.lua",
 		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaScript} },
