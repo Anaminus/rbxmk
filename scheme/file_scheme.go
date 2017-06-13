@@ -47,61 +47,61 @@ func guessFileExtension(opt *rbxmk.Options, format, filename string) (ext string
 	return ext
 }
 
-func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	if ext = guessFileExtension(opt, node.Format, filename); ext == "" {
-		return "", nil, errors.New("failed to guess format")
+func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, src *rbxmk.Source, err error) {
+	if ext = guessFileExtension(opt, node.Format, inref[0]); ext == "" {
+		return "", nil, nil, errors.New("failed to guess format")
 	}
 
 	// Find format.
 	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
-		return "", nil, errors.New("format is not registered")
+		return "", nil, nil, errors.New("format is not registered")
 	}
 
 	// Open file.
-	file, err := os.Open(filename)
+	file, err := os.Open(inref[0])
 	if err != nil {
-		return "", nil, err
+		return "", nil, nil, err
 	}
 	defer file.Close()
 
 	// Decode file with format.
 	if src, err = format.Decode(file); err != nil {
-		return "", nil, err
+		return "", nil, nil, err
 	}
 
-	return ext, src.Copy(), nil
+	return ext, inref[1:], src.Copy(), nil
 }
 
-func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, filename string) (ext string, src *rbxmk.Source, err error) {
-	if ext = guessFileExtension(opt, node.Format, filename); ext == "" {
-		return "", nil, errors.New("failed to guess format")
+func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, src *rbxmk.Source, err error) {
+	if ext = guessFileExtension(opt, node.Format, inref[0]); ext == "" {
+		return "", nil, nil, errors.New("failed to guess format")
 	}
 
 	// Find format.
 	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
-		return "", nil, errors.New("format is not registered")
+		return "", nil, nil, errors.New("format is not registered")
 	}
 
 	// Open file.
-	file, err := os.Open(filename)
+	file, err := os.Open(inref[0])
 	if os.IsNotExist(err) {
-		return ext, &rbxmk.Source{}, nil
+		return ext, inref[1:], &rbxmk.Source{}, nil
 	}
 	if err != nil {
-		return "", nil, err
+		return "", nil, nil, err
 	}
 	defer file.Close()
 
 	// Decode file with format.
 	if src, err = format.Decode(file); err != nil {
-		return "", nil, err
+		return "", nil, nil, err
 	}
-	return ext, src, nil
+	return ext, inref[1:], src, nil
 }
 
-func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, filename, ext string, outsrc *rbxmk.Source) (err error) {
+func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, ext string, inref []string, outsrc *rbxmk.Source) (err error) {
 	format, exists := opt.Formats.Init(ext, opt)
 	if !exists {
 		return errors.New("format is not registered")
@@ -109,7 +109,7 @@ func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, filename, e
 	if !format.CanEncode(outsrc) {
 		return errors.New("cannot encode transformed output")
 	}
-	file, err := os.Create(filename)
+	file, err := os.Create(inref[0])
 	if err != nil {
 		return err
 	}

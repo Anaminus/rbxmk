@@ -54,10 +54,12 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 		if scheme == nil {
 			return nil, errors.New("input scheme \"" + schemeName + "\" has not been registered")
 		}
-		if ext, src, err = scheme.Handler(opt, node, nextPart); err != nil {
+		modref := make([]string, len(ref))
+		copy(modref[1:], ref[1:])
+		modref[0] = nextPart
+		if ext, ref, src, err = scheme.Handler(opt, node, modref); err != nil {
 			return nil, err
 		}
-		ref = ref[1:]
 	}
 
 	drills, _ := opt.Formats.InputDrills(ext)
@@ -113,15 +115,17 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 	if scheme == nil {
 		return errors.New("output scheme \"" + schemeName + "\" has not been registered")
 	}
+	modref := make([]string, len(ref))
+	copy(modref[1:], ref[1:])
+	modref[0] = nextPart
 	var outsrc *Source
-	if ext, outsrc, err = scheme.Handler(opt, node, nextPart); err != nil {
+	if ext, ref, outsrc, err = scheme.Handler(opt, node, modref); err != nil {
 		return err
 	}
-	ref = ref[1:]
 	if err = node.drillOutput(opt, addrSource{src: outsrc}, ref, ext, src); err != nil {
 		return err
 	}
-	return scheme.Finalizer(opt, node, nextPart, ext, outsrc)
+	return scheme.Finalizer(opt, node, ext, ref, outsrc)
 }
 
 func (node *OutputNode) drillOutput(opt *Options, addr SourceAddress, ref []string, ext string, src *Source) (err error) {
