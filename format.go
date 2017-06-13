@@ -94,6 +94,11 @@ func (fs *Formats) Register(f FormatInfo) {
 	fs.f[f.Ext] = &f
 }
 
+func (fs *Formats) Registered(ext string) (registered bool) {
+	_, registered = fs.f[ext]
+	return registered
+}
+
 func (fs *Formats) Name(ext string) (name string, registered bool) {
 	var f *FormatInfo
 	if f, registered = fs.f[ext]; !registered {
