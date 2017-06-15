@@ -701,3 +701,98 @@ func (st *LuaState) mapNodes(inputs []*rbxmk.Source, outputs []*rbxmk.OutputNode
 	}
 	return 0
 }
+
+// GetLibrary returns the functions in a standard Lua library, while taking
+// care to undo any side-effects that result from opening the library. The
+// package library is not supported.
+func (st *LuaState) GetLibrary(lib string) (funcs []lua.RegistryFunction) {
+	l := st.state
+	base := false
+	switch lib {
+	case "base":
+		lua.BaseOpen(l)
+		//     l.PushGlobalTable()             // +library
+		//     l.PushGlobalTable()             // library, +global
+		//     l.SetField(-2, "_G")            // library, -global
+		//     SetFunctions(l, baseLibrary, 0) // library
+		//     l.PushString(VersionString)     // library, +version
+		//     l.SetField(-2, "_VERSION")      // library, -version
+		l.PushNil()                // library, +nil
+		l.SetField(-2, "_VERSION") // library, -nil
+		l.PushNil()                // library, +nil
+		l.SetField(-2, "_G")       // library, -nil
+		base = true
+
+	case "bit32":
+		lua.Bit32Open(l)
+		//     NewLibrary(l, bitLibrary) // +library
+
+	case "debug":
+		lua.DebugOpen(l)
+		//     NewLibrary(l, debugLibrary) // +library
+
+	case "io":
+		lua.IOOpen(l)
+		//     NewLibrary(l, ioLibrary)                        // +library
+		//     NewMetaTable(l, fileHandle)                     // library, +meta
+		//     l.PushValue(-1)                                 // library, meta, +meta
+		//     l.SetField(-2, "__index")                       // library, meta, -meta
+		//     SetFunctions(l, fileHandleMethods, 0)           // library, meta
+		//     l.Pop(1)                                        // library, -meta
+		//     registerStdFile(l, os.Stdin, input, "stdin")    // library
+		//     registerStdFile(l, os.Stdout, output, "stdout") // library
+		//     registerStdFile(l, os.Stderr, "", "stderr")     // library
+
+	case "math":
+		lua.MathOpen(l)
+		//     NewLibrary(l, mathLibrary)    // +library
+		//     l.PushNumber(3.14...)         // library, +pi
+		//     l.SetField(-2, "pi")          // library, -pi
+		//     l.PushNumber(math.MaxFloat64) // library, +huge
+		//     l.SetField(-2, "huge")        // library, -huge
+
+	case "os":
+		lua.OSOpen(l)
+		//     NewLibrary(l, osLibrary) // +library
+
+	case "string":
+		lua.StringOpen(l)
+		//     NewLibrary(l, stringLibrary) // +library
+		//     l.CreateTable(0, 1)          // library, +meta
+		//     l.PushString("")             // library, meta, +string
+		//     l.PushValue(-2)              // library, meta, string, +meta
+		//     l.SetMetaTable(-2)           // library, meta, string, -meta
+		//     l.Pop(1)                     // library, meta, -string
+		//     l.PushValue(-2)              // library, meta, +library
+		//     l.SetField(-2, "__index")    // library, meta, -library
+		//     l.Pop(1)                     // library, -meta
+		l.PushString("")   // library, +string
+		l.PushNil()        // library, string, +nil
+		l.SetMetaTable(-2) // library, string, -nil
+		l.Pop(1)           // library, -string
+
+	case "table":
+		lua.TableOpen(l)
+		//     NewLibrary(l, tableLibrary) // +library
+
+	default:
+		return nil
+	}
+
+	// Get library functions
+	l.PushNil()      // library, +key
+	for l.Next(-2) { // library, -key, +key, +value | library, -key
+		name, ok := l.ToString(-2)
+		if f := l.ToGoFunction(-1); ok && f != nil {
+			funcs = append(funcs, lua.RegistryFunction{Name: name, Function: f})
+		}
+		l.Pop(1) // library, key, -value
+		if base {
+			l.PushValue(-1) // library, key, +key
+			l.PushNil()     // library, key, key, +nil
+			l.SetTable(-3)  // library, key, -key, -nil
+		}
+	} // library
+	l.Pop(1) // -library
+	return funcs
+}
