@@ -87,18 +87,21 @@ func{arg1=value, arg2=value}
 
 The following functions are available:
 
-Name                             | Description
----------------------------------|------------
-[`input`](#user-content-input)   | Create an input node.
-[`output`](#user-content-output) | Create an output node.
-[`map`](#user-content-map)       | Map one or more inputs to one or more outputs.
-[`filter`](#user-content-filter) | Transform nodes.
-[`load`](#user-content-load)     | Load and execute a script.
-[`type`](#user-content-type)     | Return the type of a value as a string.
-[`error`](#user-content-error)   | Create an error node.
-[`exit`](#user-content-exit)     | Force the program to exit.
-[`pcall`](#user-content-pcall)   | Call a function in protected mode.
-[`getenv`](#user-content-getenv) | Get the value of an environment variable.
+Name                               | Description
+-----------------------------------|------------
+[`input`](#user-content-input)     | Create an input node.
+[`output`](#user-content-output)   | Create an output node.
+[`map`](#user-content-map)         | Map one or more inputs to one or more outputs.
+[`filter`](#user-content-filter)   | Transform nodes.
+[`load`](#user-content-load)       | Load and execute a script.
+[`type`](#user-content-type)       | Return the type of a value as a string.
+[`error`](#user-content-error)     | Create an error node.
+[`exit`](#user-content-exit)       | Force the program to exit.
+[`pcall`](#user-content-pcall)     | Call a function in protected mode.
+[`getenv`](#user-content-getenv)   | Get the value of an environment variable.
+[`print`](#user-content-print)     | Print values to stdout.
+[`printf`](#user-content-printf)   | Print a formatted string to stdout.
+[`sprintf`](#user-content-sprintf) | Return a formatted string.
 
 #### input
 
@@ -220,6 +223,30 @@ return true, followed by any values returned by the called function.
 
 `getenv` returns the value of an environment variable of the given name.
 Returns nil if the variable is not present.
+
+#### print
+
+`print{...}`
+
+`print` receives a number of values and writes them to standard output.
+`print` follows the same rules as
+[fmt.Println](https://golang.org/pkg/fmt/#Print).
+
+#### printf
+
+`printf{string, ...}`
+
+`printf` receives a number of values, formats them according to the first
+argument, and writes the result to standard output. `printf` follows the same
+rules as [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
+
+#### sprintf
+
+`string = sprintf{string, ...}`
+
+`sprintf` receives a number of values, formats them according to the first
+argument, and returns the resulting string. `sprintf` follows the same rules
+as [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
 
 ## References
 

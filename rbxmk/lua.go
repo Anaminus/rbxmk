@@ -547,6 +547,62 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 			}
 			return 1
 		}},
+		{"print", func(l *lua.State) int {
+			t := GetArgs(l)
+			nt := t.Length()
+			s := make([]interface{}, nt)
+			for i := 1; i <= nt; i++ {
+				v := t.IndexValue(i)
+				switch v.(type) {
+				case *rbxmk.Source:
+					s[i-1] = "<input>"
+				case *rbxmk.OutputNode:
+					s[i-1] = "<output>"
+				default:
+					s[i-1] = v
+				}
+			}
+			fmt.Println(s...)
+			return 0
+		}},
+		{"sprintf", func(l *lua.State) int {
+			t := GetArgs(l)
+			format := t.IndexString(1)
+			nt := t.Length()
+			s := make([]interface{}, nt-1)
+			for i := 2; i <= nt; i++ {
+				v := t.IndexValue(i)
+				switch v.(type) {
+				case *rbxmk.Source:
+					s[i-2] = "<input>"
+				case *rbxmk.OutputNode:
+					s[i-2] = "<output>"
+				default:
+					s[i-2] = v
+				}
+			}
+			l.PushString(fmt.Sprintf(format, s...)) // table, +fstring
+			return 1
+		}},
+		{"printf", func(l *lua.State) int {
+			t := GetArgs(l)
+			format := t.IndexString(1)
+			nt := t.Length()
+			s := make([]interface{}, nt-1)
+			for i := 2; i <= nt; i++ {
+				v := t.IndexValue(i)
+				switch v.(type) {
+				case *rbxmk.Source:
+					s[i-2] = "<input>"
+				case *rbxmk.OutputNode:
+					s[i-2] = "<output>"
+				default:
+					s[i-2] = v
+				}
+			}
+			fmt.Printf(format, s...)
+			return 0
+		}},
 	}, 0)
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__metatable", func(l *lua.State) int {
