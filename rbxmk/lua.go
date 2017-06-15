@@ -193,10 +193,10 @@ func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
 }
 
 func (t tArgs) IndexValue(index int) interface{} {
-	t.l.PushInteger(index)  // +index
-	t.l.Table(t.off)        // -index, +value
-	v := t.l.ToUserData(-1) // value
-	t.l.Pop(1)              // -value
+	t.l.PushInteger(index) // +index
+	t.l.Table(t.off)       // -index, +value
+	v := t.l.ToValue(-1)   // value
+	t.l.Pop(1)             // -value
 	return v
 }
 
