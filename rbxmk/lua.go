@@ -245,6 +245,19 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 	st.state = l
 	st.fileStack = make([]os.FileInfo, 0, 1)
 
+	var string_Format lua.Function
+loop:
+	for _, f := range st.GetLibrary("string") {
+		switch f.Name {
+		case "format":
+			string_Format = f.Function
+			break loop
+		}
+	}
+	if string_Format == nil {
+		panic("failed to find string.format function")
+	}
+
 	lua.NewMetaTable(l, luaTypeInput)
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"CheckInstance", func(l *lua.State) int {
@@ -566,41 +579,18 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 			return 0
 		}},
 		{"sprintf", func(l *lua.State) int {
-			t := GetArgs(l)
-			format := t.IndexString(1)
-			nt := t.Length()
-			s := make([]interface{}, nt-1)
-			for i := 2; i <= nt; i++ {
-				v := t.IndexValue(i)
-				switch v.(type) {
-				case *rbxmk.Source:
-					s[i-2] = "<input>"
-				case *rbxmk.OutputNode:
-					s[i-2] = "<output>"
-				default:
-					s[i-2] = v
-				}
-			}
-			l.PushString(fmt.Sprintf(format, s...)) // table, +fstring
+			t := GetArgs(l)  // table
+			t.PushAsArgs()   // -table, +format, +args...
+			string_Format(l) // -format, -args..., +fstring
 			return 1
 		}},
 		{"printf", func(l *lua.State) int {
-			t := GetArgs(l)
-			format := t.IndexString(1)
-			nt := t.Length()
-			s := make([]interface{}, nt-1)
-			for i := 2; i <= nt; i++ {
-				v := t.IndexValue(i)
-				switch v.(type) {
-				case *rbxmk.Source:
-					s[i-2] = "<input>"
-				case *rbxmk.OutputNode:
-					s[i-2] = "<output>"
-				default:
-					s[i-2] = v
-				}
-			}
-			fmt.Printf(format, s...)
+			t := GetArgs(l)        // table
+			t.PushAsArgs()         // -table, +format, +args...
+			string_Format(l)       // -format, -args..., +fstring
+			s, _ := l.ToString(-1) // fstring
+			l.Pop(1)               // -fstring
+			fmt.Print(s)
 			return 0
 		}},
 	}, 0)
