@@ -89,19 +89,19 @@ The following functions are available:
 
 Name                               | Description
 -----------------------------------|------------
-[`input`](#user-content-input)     | Create an input node.
-[`output`](#user-content-output)   | Create an output node.
-[`map`](#user-content-map)         | Map one or more inputs to one or more outputs.
-[`filter`](#user-content-filter)   | Transform nodes.
-[`load`](#user-content-load)       | Load and execute a script.
-[`type`](#user-content-type)       | Return the type of a value as a string.
 [`error`](#user-content-error)     | Create an error node.
 [`exit`](#user-content-exit)       | Force the program to exit.
-[`pcall`](#user-content-pcall)     | Call a function in protected mode.
+[`filter`](#user-content-filter)   | Transform nodes.
 [`getenv`](#user-content-getenv)   | Get the value of an environment variable.
+[`input`](#user-content-input)     | Create an input node.
+[`load`](#user-content-load)       | Load and execute a script.
+[`map`](#user-content-map)         | Map one or more inputs to one or more outputs.
+[`output`](#user-content-output)   | Create an output node.
+[`pcall`](#user-content-pcall)     | Call a function in protected mode.
 [`print`](#user-content-print)     | Print values to stdout.
 [`printf`](#user-content-printf)   | Print a formatted string to stdout.
 [`sprintf`](#user-content-sprintf) | Return a formatted string.
+[`type`](#user-content-type)       | Return the type of a value as a string.
 
 #### input
 
