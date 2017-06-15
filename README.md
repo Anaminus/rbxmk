@@ -10,6 +10,8 @@ a stripped-down environment, with only a small set of functions available.
 
 ## Installation
 
+**This project is unstable! Use at your own risk!**
+
 1. [Install Go](https://golang.org/doc/install)
 2. [Install Git](http://git-scm.com/downloads)
 3. Using a shell with Git (such as Git Bash), run the following command:
