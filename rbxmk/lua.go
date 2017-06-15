@@ -283,6 +283,10 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 			l.PushString(luaTypeInput)
 			return 1
 		}},
+		{"__tostring", func(l *lua.State) int {
+			l.PushString("<input>")
+			return 1
+		}},
 		{"__metatable", func(l *lua.State) int {
 			l.PushString("the metatable is locked")
 			return 1
@@ -294,6 +298,10 @@ func NewLuaState(opt *rbxmk.Options) *LuaState {
 	lua.SetFunctions(l, []lua.RegistryFunction{
 		{"__type", func(l *lua.State) int {
 			l.PushString(luaTypeOutput)
+			return 1
+		}},
+		{"__tostring", func(l *lua.State) int {
+			l.PushString("<output>")
 			return 1
 		}},
 		{"__metatable", func(l *lua.State) int {
