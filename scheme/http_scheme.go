@@ -1,7 +1,6 @@
 package scheme
 
 import (
-	"bytes"
 	"errors"
 	"github.com/anaminus/rbxmk"
 	"net/http"
@@ -23,10 +22,9 @@ func init() {
 	registerOutput("https", output)
 }
 
-func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, src *rbxmk.Source, err error) {
+func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
 	ext = node.Format
-	format, exists := opt.Formats.Init(ext, opt)
-	if !exists {
+	if !opt.Formats.Registered(ext) {
 		return "", nil, nil, errors.New("format is not registered")
 	}
 
@@ -39,31 +37,27 @@ func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 		return "", nil, nil, errors.New(resp.Status)
 	}
 
-	if src, err = format.Decode(resp.Body); err != nil {
+	format, err := opt.Formats.Decoder(ext, opt, resp.Body)
+	if err := format.Decode(&data); err != nil {
 		return "", nil, nil, err
 	}
-	return ext, inref[1:], src, err
+	return ext, inref[1:], data, err
 }
 
-func httpOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, src *rbxmk.Source, err error) {
-	return node.Format, inref[1:], &rbxmk.Source{}, nil
+func httpOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
+	return node.Format, inref[1:], nil, nil
 }
 
-func httpOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, ext string, inref []string, outsrc *rbxmk.Source) (err error) {
-	format, exists := opt.Formats.Init(ext, opt)
-	if !exists {
+func httpOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
+	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}
-
-	if !format.CanEncode(outsrc) {
-		return errors.New("cannot encode transformed output")
-	}
-
-	var buf bytes.Buffer
-	if err := format.Encode(&buf, outsrc); err != nil {
+	fe, err := opt.Formats.Encoder(ext, opt, outdata)
+	if err != nil {
 		return err
 	}
-	resp, err := http.Post(node.Reference[0], "", &buf)
+
+	resp, err := http.Post(node.Reference[0], "", fe)
 	if err != nil {
 		return err
 	}
