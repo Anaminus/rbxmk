@@ -12,7 +12,7 @@ type InputScheme struct {
 //
 // If InputSchemeHandler used a Format to retrieve the source, then it ensures
 // that node.Format is set to the Format's extension.
-type InputSchemeHandler func(opt *Options, node *InputNode, inref []string) (ext string, outref []string, src *Source, err error)
+type InputSchemeHandler func(opt *Options, node *InputNode, inref []string) (ext string, outref []string, data Data, err error)
 
 type OutputScheme struct {
 	Handler   OutputSchemeHandler // Get current state of output source from location (if needed)
@@ -27,13 +27,13 @@ type OutputScheme struct {
 //
 // If retrieving the current state of the location is not applicable, then an
 // empty or nil Source may be returned.
-type OutputSchemeHandler func(opt *Options, node *OutputNode, inref []string) (ext string, outref []string, src *Source, err error)
+type OutputSchemeHandler func(opt *Options, node *OutputNode, inref []string) (ext string, outref []string, data Data, err error)
 
 // OutputFinalizer is used to write a modified Source to a location. ref is
 // the first value of node.Reference after it has been parsed by the protocol
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given.
-type OutputFinalizer func(opt *Options, node *OutputNode, ext string, inref []string, outsrc *Source) (err error)
+type OutputFinalizer func(opt *Options, node *OutputNode, inref []string, ext string, outdata Data) (err error)
 
 type Schemes struct {
 	input  map[string]*InputScheme

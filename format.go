@@ -5,64 +5,39 @@ import (
 	"io"
 )
 
-// SourceAddress points to data within a Source. Data is allowed to be
-// resolved as the address is created. For example, an address can point
-// directly to an instance within a tree in the Source. Note that this means
-// the address may no longer point to the expected location, if the data is
-// moved.
-type SourceAddress interface {
-	// Returns the data being pointed to.
-	Get() (v interface{}, err error)
-	// Sets the data being pointed to. This may include modifying the current
-	// data, rather than replacing it.
-	Set(v interface{}) (err error)
-}
+type Data interface{}
 
-// Drill receives a Source and drills into it using inref, returning a
-// SourceAddress which points to the resulting data within insrc. It also
-// returns the reference after it has been parsed. In case of an error, inref
-// is returned. If inref is empty, then an EOD error is returned.
-type Drill func(opt *Options, insrc *Source, inref []string) (outaddr SourceAddress, outref []string, err error)
+// Drill receives a Data and drills into it using inref, returning a Data to
+// represent the result. It also returns the reference after it has been
+// parsed. In case of an error, the original Data and inref is returned. If
+// inref is empty, then an EOD error is returned.
+type Drill func(opt *Options, indata Data, inref []string) (outdata Data, outref []string, err error)
+
+type OutputResolver func(ref []string, indata, data Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 
 type FormatInfo struct {
 	Name           string
 	Ext            string
-	Init           InitFormat
-	InputDrills    []InputDrill
-	OutputDrills   []OutputDrill
+	Decoder        InitFormatDecoder
+	Encoder        InitFormatEncoder
+	InputDrills    []Drill
+	OutputDrills   []Drill
 	OutputResolver OutputResolver
 }
 
-// InputDrill is used to retrieve data within a Source. inref is used to drill
-// to data within the Source, returning the result as another Source.
-//
-// InputDrill also returns inref after it has been processed. If inref is
-// empty, then an EOD (end of drill) error is returned, as well as the
-// original Source and reference.
-type InputDrill func(opt *Options, insrc *Source, inref []string) (outsrc *Source, outref []string, err error)
-
-// OutputDrill is used to locate data within a Source. inaddr points to some
-// data within a Source. After inaddr is resolved, inref is used to drill
-// further into the data, returning a SourceAddress that points to the data.
-//
-// OutputDrill also returns inref after it has been processed. If inref is
-// empty, then an EOD (end of drill) error is returned, as well as the
-// original Source and reference.
-type OutputDrill func(opt *Options, inaddr SourceAddress, inref []string) (outaddr SourceAddress, outref []string, err error)
-
-// OutputResolver is used to apply to contents of a Source to a location
-// pointed to by a SourceAddress. A reference is provided for context.
-type OutputResolver func(ref []string, addr SourceAddress, src *Source) (err error)
-
-type Format interface {
-	Decode(r io.Reader) (src *Source, err error)
-	CanEncode(src *Source) bool
-	Encode(w io.Writer, src *Source) (err error)
+type FormatDecoder interface {
+	Decode(data *Data) (err error)
 }
 
-type InitFormat func(opt *Options) Format
+type FormatEncoder interface {
+	io.Reader
+	io.WriterTo
+}
+
+type InitFormatDecoder func(opt *Options, r io.Reader) (format FormatDecoder, err error)
+type InitFormatEncoder func(opt *Options, data Data) (format FormatEncoder, err error)
 
 type Formats struct {
 	f map[string]*FormatInfo
@@ -76,18 +51,18 @@ func (fs *Formats) Register(f FormatInfo) {
 	if _, registered := fs.f[f.Ext]; registered {
 		panic("format already registered")
 	}
-	if f.Init == nil {
-		panic("format must have Init function")
+	if f.Decoder == nil {
+		panic("format must have Decoder function")
 	}
-	if f.OutputResolver == nil {
-		panic("format must have OutputResolver function")
+	if f.Encoder == nil {
+		panic("format must have Encoder function")
 	}
 
-	id := make([]InputDrill, len(f.InputDrills))
+	id := make([]Drill, len(f.InputDrills))
 	copy(id, f.InputDrills)
 	f.InputDrills = id
 
-	od := make([]OutputDrill, len(f.OutputDrills))
+	od := make([]Drill, len(f.OutputDrills))
 	copy(od, f.OutputDrills)
 	f.OutputDrills = od
 
@@ -99,46 +74,54 @@ func (fs *Formats) Registered(ext string) (registered bool) {
 	return registered
 }
 
-func (fs *Formats) Name(ext string) (name string, registered bool) {
-	var f *FormatInfo
-	if f, registered = fs.f[ext]; !registered {
-		return "", false
+func (fs *Formats) Name(ext string) (name string) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return ""
 	}
-	return f.Name, true
+	return f.Name
 }
 
-func (fs *Formats) Init(ext string, opt *Options) (format Format, registered bool) {
-	var f *FormatInfo
-	if f, registered = fs.f[ext]; !registered {
-		return nil, false
+func (fs *Formats) Decoder(ext string, opt *Options, r io.Reader) (format FormatDecoder, err error) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil, nil
 	}
-	return f.Init(opt), true
+	return f.Decoder(opt, r)
 }
 
-func (fs *Formats) InputDrills(ext string) (drills []InputDrill, registered bool) {
-	var f *FormatInfo
-	if f, registered = fs.f[ext]; !registered {
-		return nil, false
+func (fs *Formats) Encoder(ext string, opt *Options, data Data) (format FormatEncoder, err error) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil, nil
 	}
-	drills = make([]InputDrill, len(f.InputDrills))
+	return f.Encoder(opt, data)
+}
+
+func (fs *Formats) InputDrills(ext string) (drills []Drill) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil
+	}
+	drills = make([]Drill, len(f.InputDrills))
 	copy(drills, f.InputDrills)
-	return drills, true
+	return drills
 }
 
-func (fs *Formats) OutputDrills(ext string) (drills []OutputDrill, registered bool) {
-	var f *FormatInfo
-	if f, registered = fs.f[ext]; !registered {
-		return nil, false
+func (fs *Formats) OutputDrills(ext string) (drills []Drill) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil
 	}
-	drills = make([]OutputDrill, len(f.OutputDrills))
+	drills = make([]Drill, len(f.OutputDrills))
 	copy(drills, f.OutputDrills)
-	return f.OutputDrills, true
+	return f.OutputDrills
 }
 
-func (fs *Formats) OutputResolver(ext string) (resolver OutputResolver, registered bool) {
-	var f *FormatInfo
-	if f, registered = fs.f[ext]; !registered {
-		return nil, false
+func (fs *Formats) OutputResolver(ext string) (resolver OutputResolver) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil
 	}
-	return f.OutputResolver, true
+	return f.OutputResolver
 }

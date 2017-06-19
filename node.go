@@ -1,8 +1,6 @@
 package rbxmk
 
 import (
-	"fmt"
-
 	"errors"
 )
 
@@ -29,17 +27,16 @@ func parseScheme(s string) (scheme, path string) {
 }
 
 type InputNode struct {
-	Reference      []string // Raw strings that refer to a source.
-	Source         *Source  // Pre-resolved Source.
-	Format         string   // Forced file format. If empty, it is filled in after being guessed.
-	ParsedProtocol string   // The protocol parsed from the reference.
+	Reference []string // Raw strings that refer to data.
+	Data      Data     // Pre-resolved Data.
+	Format    string   // Forced file format.
 }
 
-func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
+func (node *InputNode) ResolveReference(opt *Options) (data Data, err error) {
 	ref := node.Reference
 	var ext string
-	if node.Source != nil {
-		src = node.Source
+	if node.Data != nil {
+		data = node.Data
 		ext = node.Format
 	} else {
 		if len(ref) < 1 {
@@ -57,50 +54,35 @@ func (node *InputNode) ResolveReference(opt *Options) (src *Source, err error) {
 		modref := make([]string, len(ref))
 		copy(modref[1:], ref[1:])
 		modref[0] = nextPart
-		if ext, ref, src, err = scheme.Handler(opt, node, modref); err != nil {
+		if ext, ref, data, err = scheme.Handler(opt, node, modref); err != nil {
 			return nil, err
 		}
 	}
 
-	drills, _ := opt.Formats.InputDrills(ext)
-	for _, drill := range drills {
-		if src, ref, err = drill(opt, src, ref); err != nil && err != EOD {
+	if !opt.Formats.Registered(ext) {
+		return nil, errors.New("unknown format \"" + ext + "\"")
+	}
+	for _, drill := range opt.Formats.InputDrills(ext) {
+		if data, ref, err = drill(opt, data, ref); err != nil && err != EOD {
 			return nil, err
 		}
 	}
-	return src, nil
+	return data, nil
 }
 
 type OutputNode struct {
-	Reference      []string // Raw string that refers to a source.
-	Source         *Source  // Pre-resolved Source.
-	Format         string   // Forced file format. If empty, it is filled in after being guessed.
-	ParsedProtocol string   // The protocol parsed from the reference.
+	Reference []string // Raw string that refers to data.
+	Data      Data     // Pre-resolved Data.
+	Format    string   // Forced file format. If empty, it is filled in after being guessed.
 }
 
-type addrSource struct {
-	src *Source
-}
-
-func (a addrSource) Get() (v interface{}, err error) {
-	return a.src, nil
-}
-
-func (a addrSource) Set(v interface{}) (err error) {
-	switch v := v.(type) {
-	case *Source:
-		*a.src = *v
-	default:
-		return fmt.Errorf("received unexpected type")
-	}
-	return nil
-}
-func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) {
+func (node *OutputNode) ResolveReference(opt *Options, data Data) (err error) {
 	ref := node.Reference
 	var ext string
-	if node.Source != nil {
+	if node.Data != nil {
 		ext = node.Format
-		return node.drillOutput(opt, addrSource{src: node.Source}, ref, ext, src)
+		_, err = node.drillOutput(opt, node.Data, ref, ext, data)
+		return err
 	}
 
 	if len(ref) < 1 {
@@ -118,29 +100,25 @@ func (node *OutputNode) ResolveReference(opt *Options, src *Source) (err error) 
 	modref := make([]string, len(ref))
 	copy(modref[1:], ref[1:])
 	modref[0] = nextPart
-	var outsrc *Source
-	if ext, ref, outsrc, err = scheme.Handler(opt, node, modref); err != nil {
+	var outdata Data
+	if ext, ref, outdata, err = scheme.Handler(opt, node, modref); err != nil {
 		return err
 	}
-	if err = node.drillOutput(opt, addrSource{src: outsrc}, ref, ext, src); err != nil {
+	if outdata, err = node.drillOutput(opt, outdata, ref, ext, data); err != nil {
 		return err
 	}
-	return scheme.Finalizer(opt, node, ext, ref, outsrc)
+	return scheme.Finalizer(opt, node, modref, ext, outdata)
 }
 
-func (node *OutputNode) drillOutput(opt *Options, addr SourceAddress, ref []string, ext string, src *Source) (err error) {
-	drills, exists := opt.Formats.OutputDrills(ext)
-	if !exists {
-		return errors.New("invalid format \"" + ext + "\"")
+func (node *OutputNode) drillOutput(opt *Options, indata Data, ref []string, ext string, data Data) (outdata Data, err error) {
+	if !opt.Formats.Registered(ext) {
+		return nil, errors.New("invalid format \"" + ext + "\"")
 	}
-	for _, drill := range drills {
-		if addr, ref, err = drill(opt, addr, ref); err != nil && err != EOD {
-			return err
+	for _, drill := range opt.Formats.OutputDrills(ext) {
+		if indata, ref, err = drill(opt, indata, ref); err != nil && err != EOD {
+			return nil, err
 		}
 	}
-	resolver, _ := opt.Formats.OutputResolver(ext)
-	if err = resolver(node.Reference, addr, src); err != nil {
-		return err
-	}
-	return nil
+	resolver := opt.Formats.OutputResolver(ext)
+	return resolver(node.Reference, indata, data)
 }
