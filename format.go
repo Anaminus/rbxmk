@@ -13,49 +13,51 @@ type Data interface{}
 // inref is empty, then an EOD error is returned.
 type Drill func(opt *Options, indata Data, inref []string) (outdata Data, outref []string, err error)
 
-type OutputResolver func(ref []string, indata, data Data) (outdata Data, err error)
+// Resolver is used to merge one Data into another. A reference is provided
+// for context.
+type Resolver func(ref []string, indata, data Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 
-type FormatInfo struct {
-	Name           string
-	Ext            string
-	Decoder        InitFormatDecoder
-	Encoder        InitFormatEncoder
-	InputDrills    []Drill
-	OutputDrills   []Drill
-	OutputResolver OutputResolver
+type Format struct {
+	Name         string
+	Ext          string
+	Codec        InitFormatCodec
+	InputDrills  []Drill
+	OutputDrills []Drill
+	Resolver     Resolver
+	// CanEncode    func(data Data) bool
 }
 
 type FormatDecoder interface {
-	Decode(data *Data) (err error)
+	Decode(r io.Reader, data *Data) (err error)
 }
 
 type FormatEncoder interface {
-	io.Reader
-	io.WriterTo
+	Encode(w io.Writer, data Data) (err error)
 }
 
-type InitFormatDecoder func(opt *Options, r io.Reader) (format FormatDecoder, err error)
-type InitFormatEncoder func(opt *Options, data Data) (format FormatEncoder, err error)
+type FormatCodec interface {
+	FormatDecoder
+	FormatEncoder
+}
+
+type InitFormatCodec func(opt *Options) (codec FormatCodec)
 
 type Formats struct {
-	f map[string]*FormatInfo
+	f map[string]*Format
 }
 
 func NewFormats() *Formats {
-	return &Formats{f: map[string]*FormatInfo{}}
+	return &Formats{f: map[string]*Format{}}
 }
 
-func (fs *Formats) Register(f FormatInfo) {
+func (fs *Formats) Register(f Format) {
 	if _, registered := fs.f[f.Ext]; registered {
 		panic("format already registered")
 	}
-	if f.Decoder == nil {
-		panic("format must have Decoder function")
-	}
-	if f.Encoder == nil {
-		panic("format must have Encoder function")
+	if f.Codec == nil {
+		panic("format must have Codec function")
 	}
 
 	id := make([]Drill, len(f.InputDrills))
@@ -82,20 +84,36 @@ func (fs *Formats) Name(ext string) (name string) {
 	return f.Name
 }
 
-func (fs *Formats) Decoder(ext string, opt *Options, r io.Reader) (format FormatDecoder, err error) {
+func (fs *Formats) Decoder(ext string, opt *Options) (dec FormatDecoder) {
 	f, registered := fs.f[ext]
 	if !registered {
-		return nil, nil
+		return nil
 	}
-	return f.Decoder(opt, r)
+	return f.Codec(opt)
 }
 
-func (fs *Formats) Encoder(ext string, opt *Options, data Data) (format FormatEncoder, err error) {
+func (fs *Formats) Decode(ext string, opt *Options, r io.Reader, data *Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
-		return nil, nil
+		return nil
 	}
-	return f.Encoder(opt, data)
+	return f.Codec(opt).Decode(r, data)
+}
+
+func (fs *Formats) Encoder(ext string, opt *Options) (enc FormatEncoder) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil
+	}
+	return f.Codec(opt)
+}
+
+func (fs *Formats) Encode(ext string, opt *Options, w io.Writer, data Data) (err error) {
+	f, registered := fs.f[ext]
+	if !registered {
+		return nil
+	}
+	return f.Codec(opt).Encode(w, data)
 }
 
 func (fs *Formats) InputDrills(ext string) (drills []Drill) {
@@ -118,10 +136,10 @@ func (fs *Formats) OutputDrills(ext string) (drills []Drill) {
 	return f.OutputDrills
 }
 
-func (fs *Formats) OutputResolver(ext string) (resolver OutputResolver) {
+func (fs *Formats) Resolver(ext string) (resolver Resolver) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.OutputResolver
+	return f.Resolver
 }
