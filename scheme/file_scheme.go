@@ -65,11 +65,7 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 	defer file.Close()
 
 	// Decode file with format.
-	format, err := opt.Formats.Decoder(ext, opt, file)
-	if err != nil {
-		return "", nil, nil, err
-	}
-	if err = format.Decode(&data); err != nil {
+	if err = opt.Formats.Decode(ext, opt, file, &data); err != nil {
 		return "", nil, nil, err
 	}
 
@@ -97,11 +93,7 @@ func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref [
 	defer file.Close()
 
 	// Decode file with format.
-	format, err := opt.Formats.Decoder(ext, opt, file)
-	if err != nil {
-		return "", nil, nil, err
-	}
-	if err = format.Decode(&data); err != nil {
+	if err = opt.Formats.Decode(ext, opt, file, &data); err != nil {
 		return "", nil, nil, err
 	}
 	return ext, inref[1:], data, nil
@@ -111,15 +103,13 @@ func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []str
 	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}
-	format, err := opt.Formats.Encoder(ext, opt, outdata)
-	if err != nil {
-		return err
-	}
 	file, err := os.Create(inref[0])
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	_, err = format.WriteTo(file)
-	return err
+	if err = opt.Formats.Encode(ext, opt, file, outdata); err != nil {
+		return err
+	}
+	return file.Sync()
 }

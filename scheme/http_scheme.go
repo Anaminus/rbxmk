@@ -1,6 +1,7 @@
 package scheme
 
 import (
+	"bytes"
 	"errors"
 	"github.com/anaminus/rbxmk"
 	"net/http"
@@ -37,8 +38,7 @@ func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 		return "", nil, nil, errors.New(resp.Status)
 	}
 
-	format, err := opt.Formats.Decoder(ext, opt, resp.Body)
-	if err := format.Decode(&data); err != nil {
+	if err := opt.Formats.Decode(ext, opt, resp.Body, &data); err != nil {
 		return "", nil, nil, err
 	}
 	return ext, inref[1:], data, err
@@ -52,12 +52,11 @@ func httpOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []str
 	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}
-	fe, err := opt.Formats.Encoder(ext, opt, outdata)
-	if err != nil {
+	var buf bytes.Buffer
+	if err = opt.Formats.Encode(ext, opt, &buf, outdata); err != nil {
 		return err
 	}
-
-	resp, err := http.Post(node.Reference[0], "", fe)
+	resp, err := http.Post(node.Reference[0], "", &buf)
 	if err != nil {
 		return err
 	}
