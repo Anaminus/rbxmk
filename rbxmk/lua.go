@@ -261,7 +261,7 @@ loop:
 	lua.NewMetaTable(l, luaTypeInput)
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"CheckInstance", func(l *lua.State) int {
-			src := l.ToUserData(1).(*rbxmk.Source)
+			data := l.ToUserData(1).(rbxmk.Data)
 			t := GetMethodArgs(l)
 
 			nt := t.Length()
@@ -271,11 +271,11 @@ loop:
 			}
 
 			var err error
-			if src, ref, err = format.DrillInputInstance(st.options, src, ref); err != nil && err != rbxmk.EOD {
+			if data, ref, err = format.DrillInstance(st.options, data, ref); err != nil && err != rbxmk.EOD {
 				l.PushBoolean(false)
 				return 1
 			}
-			if src, ref, err = format.DrillInputProperty(st.options, src, ref); err != nil && err != rbxmk.EOD {
+			if data, ref, err = format.DrillInstanceProperty(st.options, data, ref); err != nil && err != rbxmk.EOD {
 				l.PushBoolean(false)
 				return 1
 			}
@@ -283,11 +283,15 @@ loop:
 			return 1
 		}},
 		{"CheckProperty", func(l *lua.State) int {
-			src := l.ToUserData(1).(*rbxmk.Source)
+			data := l.ToUserData(1).(rbxmk.Data)
 			t := GetMethodArgs(l)
-			name := t.IndexString(1)
-			_, exists := src.Properties[name]
-			l.PushBoolean(exists)
+			ref := []string{t.IndexString(1)}
+			var err error
+			if data, ref, err = format.DrillProperty(st.options, data, ref); err != nil && err != rbxmk.EOD {
+				l.PushBoolean(false)
+				return 1
+			}
+			l.PushBoolean(true)
 			return 1
 		}},
 	}, 0)
@@ -362,20 +366,20 @@ loop:
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if src, ok := t.IndexValue(i).(*rbxmk.Source); ok {
-				node.Source = src
+			if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
+				node.Data = data
 				i = 2
 			}
 			for ; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i))
 			}
 
-			src, err := node.ResolveReference(st.options)
+			data, err := node.ResolveReference(st.options)
 			if err != nil {
 				return throwError(l, err)
 			}
 
-			return returnNode(l, src, luaTypeInput)
+			return returnNode(l, data, luaTypeInput)
 		}},
 		{"output", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -388,8 +392,8 @@ loop:
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if src, ok := t.IndexValue(i).(*rbxmk.Source); ok {
-				node.Source = src
+			if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
+				node.Data = data
 				i = 2
 			}
 			for ; i <= nt; i++ {
@@ -439,7 +443,7 @@ loop:
 					l.PushString(v)
 				case uint:
 					l.PushUnsigned(v)
-				case *rbxmk.Source:
+				case rbxmk.Data:
 					l.PushUserData(v)
 					lua.SetMetaTableNamed(l, luaTypeInput)
 				case *rbxmk.OutputNode:
@@ -454,14 +458,14 @@ loop:
 		{"map", func(l *lua.State) int {
 			t := GetArgs(l)
 
-			inputs := make([]*rbxmk.Source, 1)
+			inputs := make([]rbxmk.Data, 1)
 			outputs := make([]*rbxmk.OutputNode, 1)
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
 				switch v, typ := t.IndexNode(i); typ {
 				case luaTypeInput:
-					inputs = append(inputs, v.(*rbxmk.Source))
+					inputs = append(inputs, v.(rbxmk.Data))
 				case luaTypeOutput:
 					outputs = append(outputs, v.(*rbxmk.OutputNode))
 				}
@@ -567,7 +571,7 @@ loop:
 			for i := 1; i <= nt; i++ {
 				v := t.IndexValue(i)
 				switch v.(type) {
-				case *rbxmk.Source:
+				case rbxmk.Data:
 					s[i-1] = "<input>"
 				case *rbxmk.OutputNode:
 					s[i-1] = "<output>"
@@ -681,7 +685,7 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	return err
 }
 
-func (st *LuaState) mapNodes(inputs []*rbxmk.Source, outputs []*rbxmk.OutputNode) int {
+func (st *LuaState) mapNodes(inputs []rbxmk.Data, outputs []*rbxmk.OutputNode) int {
 	for _, input := range inputs {
 		for _, output := range outputs {
 			if err := output.ResolveReference(st.options, input); err != nil {
