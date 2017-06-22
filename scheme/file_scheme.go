@@ -16,7 +16,7 @@ func init() {
 	})
 }
 
-func guessFileExtension(opt *rbxmk.Options, format, filename string) (ext string) {
+func GuessFileExtension(opt *rbxmk.Options, format, filename string) (ext string) {
 	ext = format
 	if ext == "" {
 		// Try to guess the format.
@@ -48,7 +48,7 @@ func guessFileExtension(opt *rbxmk.Options, format, filename string) (ext string
 }
 
 func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
-	if ext = guessFileExtension(opt, node.Format, inref[0]); ext == "" {
+	if ext = GuessFileExtension(opt, node.Format, inref[0]); ext == "" {
 		return "", nil, nil, errors.New("failed to guess format")
 	}
 
@@ -73,7 +73,7 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 }
 
 func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
-	if ext = guessFileExtension(opt, node.Format, inref[0]); ext == "" {
+	if ext = GuessFileExtension(opt, node.Format, inref[0]); ext == "" {
 		return "", nil, nil, errors.New("failed to guess format")
 	}
 
