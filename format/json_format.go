@@ -2,6 +2,7 @@ package format
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	rbxfilejson "github.com/robloxapi/rbxfile/json"
@@ -9,13 +10,13 @@ import (
 )
 
 func init() {
-	register(rbxmk.FormatInfo{
-		Name:           "JSON",
-		Ext:            "json",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &JSONFormat{} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "JSON",
+		Ext:          "json",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &JSONCodec{} },
+		InputDrills:  []rbxmk.Drill{DrillProperty},
+		OutputDrills: []rbxmk.Drill{DrillProperty},
+		Resolver:     ResolveProperties,
 	})
 }
 
@@ -25,32 +26,48 @@ type jsonProp struct {
 	value interface{} `json:"value"`
 }
 
-type JSONFormat struct{}
+type JSONCodec struct{}
 
-func (f JSONFormat) Decode(r io.Reader) (src *rbxmk.Source, err error) {
-	props := jsonPropList{}
-	if err := json.NewDecoder(r).Decode(&props); err != nil {
-		return nil, err
+func (c JSONCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
+	jprops := jsonPropList{}
+	if err := json.NewDecoder(r).Decode(&jprops); err != nil {
+		return err
 	}
-	src = &rbxmk.Source{Properties: make(map[string]rbxfile.Value, len(props))}
-	for name, prop := range props {
+	props := make(map[string]rbxfile.Value, len(jprops))
+	for name, prop := range jprops {
 		value := rbxfilejson.ValueFromJSONInterface(rbxfile.TypeFromString(prop.typ), prop.value)
 		if value == nil {
 			continue
 		}
-		src.Properties[name] = value
+		props[name] = value
 	}
-	return src, nil
+	*data = props
+	return nil
 }
 
-func (f JSONFormat) CanEncode(src *rbxmk.Source) bool {
-	return len(src.Instances) == 0 && len(src.Values) == 0
-}
+func (c JSONCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
+	var instance *rbxfile.Instance
+	switch v := data.(type) {
+	case []*rbxfile.Instance:
+		if len(v) > 0 {
+			instance = v[0]
+		}
+	case *rbxfile.Instance:
+		instance = v
+	case Property:
+		data = map[string]rbxfile.Value{v.Name: v.Properties[v.Name]}
+	}
+	if instance != nil {
+		data = instance.Properties
+	}
 
-func (f JSONFormat) Encode(w io.Writer, src *rbxmk.Source) (err error) {
-	props := make(map[string]jsonProp, len(src.Properties))
-	for name, value := range src.Properties {
-		props[name] = jsonProp{
+	props, ok := data.(map[string]rbxfile.Value)
+	if !ok {
+		return errors.New("unexpected Data type")
+	}
+	jprops := make(map[string]jsonProp, len(props))
+	for name, value := range props {
+		jprops[name] = jsonProp{
 			typ:   value.Type().String(),
 			value: rbxfilejson.ValueToJSONInterface(value, nil),
 		}
@@ -58,5 +75,5 @@ func (f JSONFormat) Encode(w io.Writer, src *rbxmk.Source) (err error) {
 
 	je := json.NewEncoder(w)
 	je.SetIndent("", "\t")
-	return je.Encode(&props)
+	return je.Encode(&jprops)
 }

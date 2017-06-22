@@ -1,6 +1,7 @@
 package format
 
 import (
+	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -10,79 +11,85 @@ import (
 )
 
 func init() {
-	register(rbxmk.FormatInfo{
-		Name:           "RBXL",
-		Ext:            "rbxl",
-		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: false, XML: false, API: opt.API} },
-		InputDrills:    []rbxmk.InputDrill{DrillInputInstance, DrillInputProperty},
-		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
-		OutputResolver: ResolveOutputInstance,
+	register(rbxmk.Format{
+		Name: "RBXL",
+		Ext:  "rbxl",
+		Codec: func(opt *rbxmk.Options) (codec rbxmk.FormatCodec) {
+			return &RBXCodec{model: false, xml: false, api: opt.API}
+		},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		Resolver:     ResolveInstance,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "RBXLX",
-		Ext:            "rbxlx",
-		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: false, XML: true, API: opt.API} },
-		InputDrills:    []rbxmk.InputDrill{DrillInputInstance, DrillInputProperty},
-		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
-		OutputResolver: ResolveOutputInstance,
+	register(rbxmk.Format{
+		Name: "RBXLX",
+		Ext:  "rbxlx",
+		Codec: func(opt *rbxmk.Options) (codec rbxmk.FormatCodec) {
+			return &RBXCodec{model: false, xml: true, api: opt.API}
+		},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		Resolver:     ResolveInstance,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "RBXM",
-		Ext:            "rbxm",
-		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: true, XML: false, API: opt.API} },
-		InputDrills:    []rbxmk.InputDrill{DrillInputInstance, DrillInputProperty},
-		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
-		OutputResolver: ResolveOutputInstance,
+	register(rbxmk.Format{
+		Name: "RBXM",
+		Ext:  "rbxm",
+		Codec: func(opt *rbxmk.Options) (codec rbxmk.FormatCodec) {
+			return &RBXCodec{model: true, xml: false, api: opt.API}
+		},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		Resolver:     ResolveInstance,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "RBXMX",
-		Ext:            "rbxmx",
-		Init:           func(opt *rbxmk.Options) rbxmk.Format { return &RBXFormat{Model: true, XML: true, API: opt.API} },
-		InputDrills:    []rbxmk.InputDrill{DrillInputInstance, DrillInputProperty},
-		OutputDrills:   []rbxmk.OutputDrill{DrillOutputInstance, DrillOutputProperty},
-		OutputResolver: ResolveOutputInstance,
+	register(rbxmk.Format{
+		Name: "RBXMX",
+		Ext:  "rbxmx",
+		Codec: func(opt *rbxmk.Options) (codec rbxmk.FormatCodec) {
+			return &RBXCodec{model: true, xml: true, api: opt.API}
+		},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		Resolver:     ResolveInstance,
 	})
 }
 
-////////////////////////////////
-
-type RBXFormat struct {
-	Model bool // Model or Place
-	XML   bool // XML or Binary
-	API   *rbxapi.API
+type RBXCodec struct {
+	model bool // Model or Place
+	xml   bool // XML or Binary
+	api   *rbxapi.API
 }
 
-func (f *RBXFormat) Decode(r io.Reader) (src *rbxmk.Source, err error) {
+func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	var root *rbxfile.Root
-	if f.XML {
-		root, err = xml.Deserialize(r, f.API)
+	if c.xml {
+		root, err = xml.Deserialize(r, c.api)
 	} else {
-		if f.Model {
-			root, err = bin.DeserializeModel(r, f.API)
+		if c.model {
+			root, err = bin.DeserializeModel(r, c.api)
 		} else {
-			root, err = bin.DeserializePlace(r, f.API)
+			root, err = bin.DeserializePlace(r, c.api)
 		}
 	}
-
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &rbxmk.Source{Instances: root.Instances}, nil
+	*data = root.Instances
+	return nil
 }
 
-func (f *RBXFormat) CanEncode(src *rbxmk.Source) bool {
-	return len(src.Properties) == 0 && len(src.Values) == 0
-}
-
-func (f *RBXFormat) Encode(w io.Writer, src *rbxmk.Source) (err error) {
-	root := &rbxfile.Root{Instances: src.Instances}
-	if f.XML {
-		err = xml.Serialize(w, f.API, root)
+func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
+	instances, ok := data.([]*rbxfile.Instance)
+	if !ok {
+		return errors.New("unexpected Data type")
+	}
+	root := &rbxfile.Root{Instances: instances}
+	if c.xml {
+		err = xml.Serialize(w, c.api, root)
 	} else {
-		if f.Model {
-			err = bin.SerializeModel(w, f.API, root)
+		if c.model {
+			err = bin.SerializeModel(w, c.api, root)
 		} else {
-			err = bin.SerializePlace(w, f.API, root)
+			err = bin.SerializePlace(w, c.api, root)
 		}
 	}
 	return err

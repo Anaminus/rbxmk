@@ -9,63 +9,51 @@ import (
 )
 
 func init() {
-	register(rbxmk.FormatInfo{
-		Name:           "Text",
-		Ext:            "txt",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &TextFormat{Binary: false} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Text",
+		Ext:          "txt",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &TextCodec{Binary: false} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "Binary",
-		Ext:            "bin",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &TextFormat{Binary: true} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Binary",
+		Ext:          "bin",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &TextCodec{Binary: true} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
 }
 
-type TextFormat struct {
+type TextCodec struct {
 	Binary bool
 }
 
-func (f TextFormat) Decode(r io.Reader) (src *rbxmk.Source, err error) {
+func (c *TextCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var v rbxfile.Value
-	if f.Binary {
-		v = rbxfile.ValueBinaryString(b)
+	if c.Binary {
+		*data = rbxfile.ValueBinaryString(b)
 	} else {
-		v = rbxfile.ValueString(b)
+		*data = rbxfile.ValueString(b)
 	}
-	return &rbxmk.Source{Values: []rbxfile.Value{v}}, nil
+	return nil
 }
 
-func (TextFormat) CanEncode(src *rbxmk.Source) bool {
-	if len(src.Instances) > 0 || len(src.Properties) > 0 || len(src.Values) != 1 {
-		return false
-	}
-	switch src.Values[0].(type) {
-	case rbxfile.ValueString, rbxfile.ValueProtectedString, rbxfile.ValueBinaryString:
-		return true
-	}
-	return false
-}
-
-func (TextFormat) Encode(w io.Writer, src *rbxmk.Source) (err error) {
-	switch v := src.Values[0].(type) {
-	case rbxfile.ValueString:
-		_, err = w.Write([]byte(v))
+func (c *TextCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
+	switch v := data.(type) {
 	case rbxfile.ValueProtectedString:
 		_, err = w.Write([]byte(v))
 	case rbxfile.ValueBinaryString:
 		_, err = w.Write([]byte(v))
+	case rbxfile.ValueString:
+		_, err = w.Write([]byte(v))
 	default:
-		return errors.New("unexpected value type: " + v.Type().String())
+		err = errors.New("unexpected Data type")
 	}
-	return nil
+	return err
 }

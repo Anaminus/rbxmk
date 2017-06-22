@@ -9,37 +9,37 @@ import (
 )
 
 func init() {
-	register(rbxmk.FormatInfo{
-		Name:           "Lua",
-		Ext:            "lua",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaValue} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Lua",
+		Ext:          "lua",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaValue} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "Lua Script",
-		Ext:            "script.lua",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaScript} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Lua Script",
+		Ext:          "script.lua",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaScript} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "Lua LocalScript",
-		Ext:            "localscript.lua",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaLocalScript} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Lua LocalScript",
+		Ext:          "localscript.lua",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaLocalScript} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
-	register(rbxmk.FormatInfo{
-		Name:           "Lua ModuleScript",
-		Ext:            "modulescript.lua",
-		Init:           func(_ *rbxmk.Options) rbxmk.Format { return &LuaFormat{Type: LuaModuleScript} },
-		InputDrills:    nil,
-		OutputDrills:   nil,
-		OutputResolver: ResolveOutputSource,
+	register(rbxmk.Format{
+		Name:         "Lua ModuleScript",
+		Ext:          "modulescript.lua",
+		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaModuleScript} },
+		InputDrills:  nil,
+		OutputDrills: nil,
+		Resolver:     ResolveOverwrite,
 	})
 }
 
@@ -64,59 +64,52 @@ func (t LuaType) ClassName() string {
 	return ""
 }
 
-type LuaFormat struct {
+type LuaCodec struct {
 	Type LuaType
 }
 
-func (f LuaFormat) Decode(r io.Reader) (src *rbxmk.Source, err error) {
+func (c LuaCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if f.Type.ClassName() == "" {
-		return &rbxmk.Source{Values: []rbxfile.Value{rbxfile.ValueProtectedString(b)}}, nil
+	if c.Type.ClassName() == "" {
+		*data = rbxfile.ValueProtectedString(b)
+		return nil
 	}
-	script := rbxfile.NewInstance(f.Type.ClassName(), nil)
+	script := rbxfile.NewInstance(c.Type.ClassName(), nil)
 	script.Set("Source", rbxfile.ValueProtectedString(b))
-	return &rbxmk.Source{Instances: []*rbxfile.Instance{script}}, nil
+	*data = script
+	return nil
 }
 
-func (f LuaFormat) CanEncode(src *rbxmk.Source) bool {
-	if f.Type.ClassName() == "" {
-		if len(src.Instances) > 0 || len(src.Properties) > 0 || len(src.Values) != 1 {
-			return false
+func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
+	var script *rbxfile.Instance
+	switch v := data.(type) {
+	case []*rbxfile.Instance:
+		if len(v) > 0 {
+			script = v[0]
 		}
-		switch src.Values[0].(type) {
-		case rbxfile.ValueString, rbxfile.ValueProtectedString, rbxfile.ValueBinaryString:
-			return true
+	case *rbxfile.Instance:
+		script = v
+	}
+	if script != nil {
+		switch script.ClassName {
+		case "Script", "LocalScript", "ModuleScript":
+			if source, ok := script.Properties["Source"]; ok {
+				data = source
+			}
 		}
-		return false
 	}
-	if len(src.Instances) != 1 || len(src.Properties) > 0 || len(src.Values) > 0 {
-		return false
-	}
-	return src.Instances[0].ClassName == f.Type.ClassName()
-}
-
-func (f LuaFormat) Encode(w io.Writer, src *rbxmk.Source) (err error) {
-	var v rbxfile.Value
-	switch f.Type {
-	case LuaScript, LuaLocalScript, LuaModuleScript:
-		if v = src.Instances[0].Get("Source"); v == nil {
-			return
-		}
-	default:
-		v = src.Values[0]
-	}
-	switch v := v.(type) {
-	case rbxfile.ValueString:
-		_, err = w.Write([]byte(v))
+	switch v := data.(type) {
 	case rbxfile.ValueProtectedString:
 		_, err = w.Write([]byte(v))
 	case rbxfile.ValueBinaryString:
 		_, err = w.Write([]byte(v))
+	case rbxfile.ValueString:
+		_, err = w.Write([]byte(v))
 	default:
-		return errors.New("unexpected value type: " + v.Type().String())
+		err = errors.New("unexpected Data type")
 	}
-	return
+	return err
 }

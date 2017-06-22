@@ -4,9 +4,9 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
-var registry []rbxmk.FormatInfo
+var registry []rbxmk.Format
 
-func register(format rbxmk.FormatInfo) {
+func register(format rbxmk.Format) {
 	registry = append(registry, format)
 }
 
