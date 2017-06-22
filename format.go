@@ -13,9 +13,8 @@ type Data interface{}
 // inref is empty, then an EOD error is returned.
 type Drill func(opt *Options, indata Data, inref []string) (outdata Data, outref []string, err error)
 
-// Resolver is used to merge one Data into another. A reference is provided
-// for context.
-type Resolver func(ref []string, indata, data Data) (outdata Data, err error)
+// Resolver is used to merge one Data into another.
+type Resolver func(opt *Options, indata, data Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 

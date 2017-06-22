@@ -120,5 +120,5 @@ func (node *OutputNode) drillOutput(opt *Options, indata Data, ref []string, ext
 		}
 	}
 	resolver := opt.Formats.Resolver(ext)
-	return resolver(node.Reference, indata, data)
+	return resolver(opt, indata, data)
 }
