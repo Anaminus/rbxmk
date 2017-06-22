@@ -65,7 +65,7 @@ func fileInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 	defer file.Close()
 
 	// Decode file with format.
-	if err = opt.Formats.Decode(ext, opt, file, &data); err != nil {
+	if err = opt.Formats.Decode(ext, opt, file.Name(), file, &data); err != nil {
 		return "", nil, nil, err
 	}
 
@@ -93,7 +93,7 @@ func fileOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref [
 	defer file.Close()
 
 	// Decode file with format.
-	if err = opt.Formats.Decode(ext, opt, file, &data); err != nil {
+	if err = opt.Formats.Decode(ext, opt, file.Name(), file, &data); err != nil {
 		return "", nil, nil, err
 	}
 	return ext, inref[1:], data, nil
@@ -108,7 +108,7 @@ func fileOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []str
 		return err
 	}
 	defer file.Close()
-	if err = opt.Formats.Encode(ext, opt, file, outdata); err != nil {
+	if err = opt.Formats.Encode(ext, opt, file.Name(), file, outdata); err != nil {
 		return err
 	}
 	return file.Sync()

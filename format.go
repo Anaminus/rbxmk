@@ -41,7 +41,7 @@ type FormatCodec interface {
 	FormatEncoder
 }
 
-type InitFormatCodec func(opt *Options) (codec FormatCodec)
+type InitFormatCodec func(opt *Options, ctx interface{}) (codec FormatCodec)
 
 type Formats struct {
 	f map[string]*Format
@@ -83,36 +83,36 @@ func (fs *Formats) Name(ext string) (name string) {
 	return f.Name
 }
 
-func (fs *Formats) Decoder(ext string, opt *Options) (dec FormatDecoder) {
+func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec FormatDecoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.Codec(opt)
+	return f.Codec(opt, ctx)
 }
 
-func (fs *Formats) Decode(ext string, opt *Options, r io.Reader, data *Data) (err error) {
+func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader, data *Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.Codec(opt).Decode(r, data)
+	return f.Codec(opt, ctx).Decode(r, data)
 }
 
-func (fs *Formats) Encoder(ext string, opt *Options) (enc FormatEncoder) {
+func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc FormatEncoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.Codec(opt)
+	return f.Codec(opt, ctx)
 }
 
-func (fs *Formats) Encode(ext string, opt *Options, w io.Writer, data Data) (err error) {
+func (fs *Formats) Encode(ext string, opt *Options, ctx interface{}, w io.Writer, data Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.Codec(opt).Encode(w, data)
+	return f.Codec(opt, ctx).Encode(w, data)
 }
 
 func (fs *Formats) InputDrills(ext string) (drills []Drill) {

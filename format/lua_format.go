@@ -3,40 +3,59 @@ package format
 import (
 	"errors"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/scheme"
 	"github.com/robloxapi/rbxfile"
 	"io"
 	"io/ioutil"
+	"path/filepath"
 )
+
+func getFileNameCtx(opt *rbxmk.Options, ctx interface{}) string {
+	path, _ := ctx.(string)
+	if path == "" {
+		return path
+	}
+	base := filepath.Base(path)
+	return base[:len(base)-len(scheme.GuessFileExtension(opt, "", base))]
+}
 
 func init() {
 	register(rbxmk.Format{
-		Name:         "Lua",
-		Ext:          "lua",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaValue} },
+		Name: "Lua",
+		Ext:  "lua",
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+			return &LuaCodec{Type: LuaValue, Name: getFileNameCtx(opt, ctx)}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
 	})
 	register(rbxmk.Format{
-		Name:         "Lua Script",
-		Ext:          "script.lua",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaScript} },
+		Name: "Lua Script",
+		Ext:  "script.lua",
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+			return &LuaCodec{Type: LuaScript, Name: getFileNameCtx(opt, ctx)}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
 	})
 	register(rbxmk.Format{
-		Name:         "Lua LocalScript",
-		Ext:          "localscript.lua",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaLocalScript} },
+		Name: "Lua LocalScript",
+		Ext:  "localscript.lua",
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+			return &LuaCodec{Type: LuaLocalScript, Name: getFileNameCtx(opt, ctx)}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
 	})
 	register(rbxmk.Format{
-		Name:         "Lua ModuleScript",
-		Ext:          "modulescript.lua",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &LuaCodec{Type: LuaModuleScript} },
+		Name: "Lua ModuleScript",
+		Ext:  "modulescript.lua",
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+			return &LuaCodec{Type: LuaModuleScript, Name: getFileNameCtx(opt, ctx)}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
@@ -66,6 +85,7 @@ func (t LuaType) ClassName() string {
 
 type LuaCodec struct {
 	Type LuaType
+	Name string
 }
 
 func (c LuaCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
@@ -78,6 +98,9 @@ func (c LuaCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 		return nil
 	}
 	script := rbxfile.NewInstance(c.Type.ClassName(), nil)
+	if c.Name != "" {
+		script.SetName(c.Name)
+	}
 	script.Set("Source", rbxfile.ValueProtectedString(b))
 	*data = script
 	return nil

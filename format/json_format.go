@@ -11,9 +11,11 @@ import (
 
 func init() {
 	register(rbxmk.Format{
-		Name:         "JSON",
-		Ext:          "json",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &JSONCodec{} },
+		Name: "JSON",
+		Ext:  "json",
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+			return &JSONCodec{}
+		},
 		InputDrills:  []rbxmk.Drill{DrillProperty},
 		OutputDrills: []rbxmk.Drill{DrillProperty},
 		Resolver:     ResolveProperties,

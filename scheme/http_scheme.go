@@ -38,7 +38,7 @@ func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 		return "", nil, nil, errors.New(resp.Status)
 	}
 
-	if err := opt.Formats.Decode(ext, opt, resp.Body, &data); err != nil {
+	if err := opt.Formats.Decode(ext, opt, nil, resp.Body, &data); err != nil {
 		return "", nil, nil, err
 	}
 	return ext, inref[1:], data, err
@@ -53,7 +53,7 @@ func httpOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []str
 		return errors.New("format is not registered")
 	}
 	var buf bytes.Buffer
-	if err = opt.Formats.Encode(ext, opt, &buf, outdata); err != nil {
+	if err = opt.Formats.Encode(ext, opt, nil, &buf, outdata); err != nil {
 		return err
 	}
 	resp, err := http.Post(node.Reference[0], "", &buf)

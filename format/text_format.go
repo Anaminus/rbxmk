@@ -10,17 +10,21 @@ import (
 
 func init() {
 	register(rbxmk.Format{
-		Name:         "Text",
-		Ext:          "txt",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &TextCodec{Binary: false} },
+		Name: "Text",
+		Ext:  "txt",
+		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
+			return &TextCodec{Binary: false}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
 	})
 	register(rbxmk.Format{
-		Name:         "Binary",
-		Ext:          "bin",
-		Codec:        func(*rbxmk.Options) rbxmk.FormatCodec { return &TextCodec{Binary: true} },
+		Name: "Binary",
+		Ext:  "bin",
+		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
+			return &TextCodec{Binary: true}
+		},
 		InputDrills:  nil,
 		OutputDrills: nil,
 		Resolver:     ResolveOverwrite,
