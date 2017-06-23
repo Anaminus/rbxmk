@@ -370,11 +370,14 @@ loop:
 	lua.NewMetaTable(l, "globalMetatable") // global, +metatable
 
 	const formatIndex = "format"
+	const apiIndex = "api"
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"input", func(l *lua.State) int {
 			t := GetArgs(l)
 
 			opt := st.options
+			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+
 			node := &rbxmk.InputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
 			node.Options = opt
@@ -403,6 +406,8 @@ loop:
 			t := GetArgs(l)
 
 			opt := st.options
+			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+
 			node := &rbxmk.OutputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
 			node.Options = opt
@@ -426,6 +431,8 @@ loop:
 			t := GetArgs(l)
 
 			opt := st.options
+			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+
 			const filterNameIndex = "name"
 			var i int = 1
 			filterName, ok := t.FieldString(filterNameIndex, true)
