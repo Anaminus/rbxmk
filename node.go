@@ -27,12 +27,14 @@ func parseScheme(s string) (scheme, path string) {
 }
 
 type InputNode struct {
+	Options   Options
 	Reference []string // Raw strings that refer to data.
 	Data      Data     // Pre-resolved Data.
 	Format    string   // Forced file format.
 }
 
-func (node *InputNode) ResolveReference(opt Options) (data Data, err error) {
+func (node *InputNode) ResolveReference() (data Data, err error) {
+	opt := node.Options
 	ref := node.Reference
 	var ext string
 	if node.Data != nil {
@@ -71,12 +73,14 @@ func (node *InputNode) ResolveReference(opt Options) (data Data, err error) {
 }
 
 type OutputNode struct {
+	Options   Options
 	Reference []string // Raw string that refers to data.
 	Data      Data     // Pre-resolved Data.
 	Format    string   // Forced file format. If empty, it is filled in after being guessed.
 }
 
-func (node *OutputNode) ResolveReference(opt Options, data Data) (err error) {
+func (node *OutputNode) ResolveReference(data Data) (err error) {
+	opt := node.Options
 	ref := node.Reference
 	var ext string
 	if node.Data != nil {

@@ -373,9 +373,11 @@ loop:
 	SetIndexFunctions(l, []lua.RegistryFunction{
 		{"input", func(l *lua.State) int {
 			t := GetArgs(l)
-			node := &rbxmk.InputNode{}
 
+			opt := st.options
+			node := &rbxmk.InputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
+			node.Options = opt
 
 			nt := t.Length()
 			if nt == 0 {
@@ -390,7 +392,7 @@ loop:
 				node.Reference = append(node.Reference, t.IndexString(i, false))
 			}
 
-			data, err := node.ResolveReference(st.options)
+			data, err := node.ResolveReference()
 			if err != nil {
 				return throwError(l, err)
 			}
@@ -399,9 +401,11 @@ loop:
 		}},
 		{"output", func(l *lua.State) int {
 			t := GetArgs(l)
-			node := &rbxmk.OutputNode{}
 
+			opt := st.options
+			node := &rbxmk.OutputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
+			node.Options = opt
 
 			nt := t.Length()
 			if nt == 0 {
@@ -429,7 +433,7 @@ loop:
 				i = 2
 			}
 
-			filterFunc := opt.Filters.Filter(filterName)
+			filterFunc := st.options.Filters.Filter(filterName)
 			if filterFunc == nil {
 				return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 			}
@@ -717,7 +721,7 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 func (st *LuaState) mapNodes(inputs []rbxmk.Data, outputs []*rbxmk.OutputNode) int {
 	for _, input := range inputs {
 		for _, output := range outputs {
-			if err := output.ResolveReference(st.options, input); err != nil {
+			if err := output.ResolveReference(input); err != nil {
 				return throwError(st.state, err)
 			}
 		}
