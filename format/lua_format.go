@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-func getFileNameCtx(opt *rbxmk.Options, ctx interface{}) string {
+func getFileNameCtx(opt rbxmk.Options, ctx interface{}) string {
 	path, _ := ctx.(string)
 	if path == "" {
 		return path
@@ -23,7 +23,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Lua",
 		Ext:  "lua",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaValue, Name: getFileNameCtx(opt, ctx)}
 		},
 		InputDrills:  nil,
@@ -33,7 +33,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Lua Script",
 		Ext:  "script.lua",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaScript, Name: getFileNameCtx(opt, ctx)}
 		},
 		InputDrills:  nil,
@@ -43,7 +43,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Lua LocalScript",
 		Ext:  "localscript.lua",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaLocalScript, Name: getFileNameCtx(opt, ctx)}
 		},
 		InputDrills:  nil,
@@ -53,7 +53,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Lua ModuleScript",
 		Ext:  "modulescript.lua",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaModuleScript, Name: getFileNameCtx(opt, ctx)}
 		},
 		InputDrills:  nil,

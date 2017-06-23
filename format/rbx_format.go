@@ -14,7 +14,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "RBXL",
 		Ext:  "rbxl",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
+		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: false, api: opt.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
@@ -24,7 +24,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "RBXLX",
 		Ext:  "rbxlx",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
+		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: true, api: opt.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
@@ -34,7 +34,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "RBXM",
 		Ext:  "rbxm",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
+		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: false, api: opt.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
@@ -44,7 +44,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "RBXMX",
 		Ext:  "rbxmx",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
+		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: true, api: opt.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},

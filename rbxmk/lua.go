@@ -30,7 +30,7 @@ Stack Annotations:
 */
 
 type LuaState struct {
-	options   *rbxmk.Options
+	options   rbxmk.Options
 	state     *lua.State
 	fileStack []os.FileInfo
 }
@@ -237,7 +237,7 @@ func SetIndexFunctions(l *lua.State, functions []lua.RegistryFunction, upValueCo
 	l.SetTable(-3)          // metatable, -index, -table
 }
 
-func NewLuaState(opt *rbxmk.Options) *LuaState {
+func NewLuaState(opt rbxmk.Options) *LuaState {
 	st := &LuaState{}
 	l := lua.NewState()
 	st.options = opt

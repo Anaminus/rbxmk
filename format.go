@@ -11,10 +11,10 @@ type Data interface{}
 // represent the result. It also returns the reference after it has been
 // parsed. In case of an error, the original Data and inref is returned. If
 // inref is empty, then an EOD error is returned.
-type Drill func(opt *Options, indata Data, inref []string) (outdata Data, outref []string, err error)
+type Drill func(opt Options, indata Data, inref []string) (outdata Data, outref []string, err error)
 
 // Resolver is used to merge one Data into another.
-type Resolver func(opt *Options, indata, data Data) (outdata Data, err error)
+type Resolver func(opt Options, indata, data Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 
@@ -41,7 +41,7 @@ type FormatCodec interface {
 	FormatEncoder
 }
 
-type InitFormatCodec func(opt *Options, ctx interface{}) (codec FormatCodec)
+type InitFormatCodec func(opt Options, ctx interface{}) (codec FormatCodec)
 
 type Formats struct {
 	f map[string]*Format
@@ -83,7 +83,7 @@ func (fs *Formats) Name(ext string) (name string) {
 	return f.Name
 }
 
-func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec FormatDecoder) {
+func (fs *Formats) Decoder(ext string, opt Options, ctx interface{}) (dec FormatDecoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -91,7 +91,7 @@ func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec Forma
 	return f.Codec(opt, ctx)
 }
 
-func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader, data *Data) (err error) {
+func (fs *Formats) Decode(ext string, opt Options, ctx interface{}, r io.Reader, data *Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -99,7 +99,7 @@ func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader
 	return f.Codec(opt, ctx).Decode(r, data)
 }
 
-func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc FormatEncoder) {
+func (fs *Formats) Encoder(ext string, opt Options, ctx interface{}) (enc FormatEncoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -107,7 +107,7 @@ func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc Forma
 	return f.Codec(opt, ctx)
 }
 
-func (fs *Formats) Encode(ext string, opt *Options, ctx interface{}, w io.Writer, data Data) (err error) {
+func (fs *Formats) Encode(ext string, opt Options, ctx interface{}, w io.Writer, data Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil

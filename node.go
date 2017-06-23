@@ -32,7 +32,7 @@ type InputNode struct {
 	Format    string   // Forced file format.
 }
 
-func (node *InputNode) ResolveReference(opt *Options) (data Data, err error) {
+func (node *InputNode) ResolveReference(opt Options) (data Data, err error) {
 	ref := node.Reference
 	var ext string
 	if node.Data != nil {
@@ -76,7 +76,7 @@ type OutputNode struct {
 	Format    string   // Forced file format. If empty, it is filled in after being guessed.
 }
 
-func (node *OutputNode) ResolveReference(opt *Options, data Data) (err error) {
+func (node *OutputNode) ResolveReference(opt Options, data Data) (err error) {
 	ref := node.Reference
 	var ext string
 	if node.Data != nil {
@@ -110,7 +110,7 @@ func (node *OutputNode) ResolveReference(opt *Options, data Data) (err error) {
 	return scheme.Finalizer(opt, node, modref, ext, outdata)
 }
 
-func (node *OutputNode) drillOutput(opt *Options, indata Data, ref []string, ext string, data Data) (outdata Data, err error) {
+func (node *OutputNode) drillOutput(opt Options, indata Data, ref []string, ext string, data Data) (outdata Data, err error) {
 	if !opt.Formats.Registered(ext) {
 		return nil, errors.New("invalid format \"" + ext + "\"")
 	}

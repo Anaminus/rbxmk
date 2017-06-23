@@ -34,7 +34,7 @@ func (err ParseError) Error() string {
 	return fmt.Sprintf("@%d: %s", err.Index, err.Err)
 }
 
-func DrillInstance(opt *rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -177,7 +177,7 @@ Error:
 	return indata, inref, ParseError{Index: i, Err: err}
 }
 
-func DrillInstanceProperty(opt *rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func DrillInstanceProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -217,7 +217,7 @@ func DrillInstanceProperty(opt *rbxmk.Options, indata rbxmk.Data, inref []string
 	return Property{Properties: instance.Properties, Name: ref}, inref[1:], nil
 }
 
-func DrillProperty(opt *rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -235,11 +235,11 @@ func DrillProperty(opt *rbxmk.Options, indata rbxmk.Data, inref []string) (outda
 
 // ResolveOverwrite is a rbxmk.Resolver that overrides the output data with
 // the input data.
-func ResolveOverwrite(opt *rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func ResolveOverwrite(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	return data, nil
 }
 
-func ResolveInstance(opt *rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func ResolveInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch indata := indata.(type) {
 	case nil:
 		switch data := data.(type) {
@@ -278,7 +278,7 @@ func ResolveInstance(opt *rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk
 	return ResolveProperties(opt, indata, data)
 }
 
-func ResolveProperties(opt *rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func ResolveProperties(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch indata := indata.(type) {
 	case nil:
 		switch data := data.(type) {

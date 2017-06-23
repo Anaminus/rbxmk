@@ -14,8 +14,8 @@ type Options struct {
 	API     *rbxapi.API
 }
 
-func NewOptions() *Options {
-	return &Options{
+func NewOptions() Options {
+	return Options{
 		Schemes: NewSchemes(),
 		Formats: NewFormats(),
 		Filters: NewFilters(),

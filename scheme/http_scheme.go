@@ -23,7 +23,7 @@ func init() {
 	registerOutput("https", output)
 }
 
-func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
+func httpInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
 	ext = node.Format
 	if !opt.Formats.Registered(ext) {
 		return "", nil, nil, errors.New("format is not registered")
@@ -44,11 +44,11 @@ func httpInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []s
 	return ext, inref[1:], data, err
 }
 
-func httpOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
+func httpOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
 	return node.Format, inref[1:], nil, nil
 }
 
-func httpOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
+func httpOutputFinalizer(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
 	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}

@@ -12,7 +12,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Text",
 		Ext:  "txt",
-		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
+		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: false}
 		},
 		InputDrills:  nil,
@@ -22,7 +22,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "Binary",
 		Ext:  "bin",
-		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
+		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: true}
 		},
 		InputDrills:  nil,

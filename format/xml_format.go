@@ -13,7 +13,7 @@ func init() {
 	register(rbxmk.Format{
 		Name: "XML",
 		Ext:  "xml",
-		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &XMLCodec{API: opt.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillProperty},

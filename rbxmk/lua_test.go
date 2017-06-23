@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	RegisterInputScheme("test", func(opt *Options, node *InputNode, ref string) (src *Source, err error) {
+	RegisterInputScheme("test", func(opt Options, node *InputNode, ref string) (src *Source, err error) {
 		switch ref {
 		case "":
 			return &Source{}, nil
@@ -18,7 +18,7 @@ func init() {
 	})
 }
 
-func InitTestLib(opt *Options) *LuaState {
+func InitTestLib(opt Options) *LuaState {
 	st := NewLuaState(opt)
 	st.state.PushGlobalTable()
 	lua.SetFunctions(st.state, []lua.RegistryFunction{
