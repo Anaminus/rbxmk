@@ -7,8 +7,6 @@ import (
 	"github.com/anaminus/rbxmk/format"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
-	"github.com/robloxapi/rbxapi"
-	"github.com/robloxapi/rbxapi/dump"
 	"os"
 	"strconv"
 )
@@ -16,20 +14,6 @@ import (
 func Fatalf(f string, v ...interface{}) {
 	fmt.Fprintf(os.Stderr, f, v...)
 	os.Exit(2)
-}
-
-func LoadAPI(path string) (api *rbxapi.API) {
-	if path != "" {
-		file, err := os.Open(path)
-		if err != nil {
-			Fatalf("failed to open config file: %s", err)
-		}
-		defer file.Close()
-		if api, err = dump.Decode(file); err != nil {
-			Fatalf("failed to decode API file: %s", err)
-		}
-	}
-	return
 }
 
 const CommandName = "rbxmk"
