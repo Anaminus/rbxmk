@@ -4,7 +4,7 @@ import (
 	"runtime"
 )
 
-type Filter func(f FilterArgs, arguments []interface{}) (results []interface{})
+type Filter func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{})
 
 // FilterArgs is used by a Filter to indicate that it is done processing its
 // arguments.
@@ -18,14 +18,14 @@ func (f *filterArgs) ProcessedArgs() {
 	*f = true
 }
 
-func CallFilter(filter Filter, arguments ...interface{}) (results []interface{}, err error) {
+func CallFilter(filter Filter, opt Options, arguments ...interface{}) (results []interface{}, err error) {
 	var argsProcessed filterArgs
 	defer func() {
 		if !argsProcessed {
 			err = recover().(runtime.Error)
 		}
 	}()
-	results = filter(&argsProcessed, arguments)
+	results = filter(&argsProcessed, opt, arguments)
 	return
 }
 

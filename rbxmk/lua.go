@@ -425,6 +425,7 @@ loop:
 		{"filter", func(l *lua.State) int {
 			t := GetArgs(l)
 
+			opt := st.options
 			const filterNameIndex = "name"
 			var i int = 1
 			filterName, ok := t.FieldString(filterNameIndex, true)
@@ -433,7 +434,7 @@ loop:
 				i = 2
 			}
 
-			filterFunc := st.options.Filters.Filter(filterName)
+			filterFunc := opt.Filters.Filter(filterName)
 			if filterFunc == nil {
 				return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 			}
@@ -444,7 +445,7 @@ loop:
 				arguments[i-o] = t.IndexValue(i)
 			}
 
-			results, err := rbxmk.CallFilter(filterFunc, arguments...)
+			results, err := rbxmk.CallFilter(filterFunc, opt, arguments...)
 			if err != nil {
 				return throwError(l, err)
 			}
