@@ -40,9 +40,9 @@ const (
 	luaTypeError  = "error"
 )
 
-func returnNode(l *lua.State, value interface{}, nodeType string) int {
+func returnTypedValue(l *lua.State, value interface{}, valueType string) int {
 	l.PushUserData(value)
-	lua.SetMetaTableNamed(l, nodeType)
+	lua.SetMetaTableNamed(l, valueType)
 	return 1
 }
 
@@ -113,7 +113,7 @@ func luaErrorf(l *lua.State, format string, a ...interface{}) {
 	l.Error()
 }
 
-func (t tArgs) FieldError(name string, expected, got string) {
+func (t tArgs) ErrorField(name string, expected, got string) {
 	if got == "" {
 		luaErrorf(t.l, "bad value at field %q: %s expected", name, expected)
 	} else {
@@ -121,7 +121,7 @@ func (t tArgs) FieldError(name string, expected, got string) {
 	}
 }
 
-func (t tArgs) IndexError(index int, expected, got string) {
+func (t tArgs) ErrorIndex(index int, expected, got string) {
 	if got == "" {
 		luaErrorf(t.l, "bad value at index #%d: %s expected", index, expected)
 	} else {
@@ -131,65 +131,62 @@ func (t tArgs) IndexError(index int, expected, got string) {
 
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
 	t.l.Field(t.off, name) // +field
-	s, ok = t.l.ToString(-1)
-	if !ok {
+	if s, ok = t.l.ToString(-1); !ok {
 		typ := typeOf(t.l, -1)
-		if typ != "nil" || !opt {
-			t.l.Pop(1) // -field
-			t.FieldError(name, lua.TypeString.String(), typ)
+		t.l.Pop(1) // -field
+		if opt && typ == "nil" {
+			return "", false
 		}
+		t.ErrorField(name, lua.TypeString.String(), typ)
 	}
 	t.l.Pop(1) // -field
 	return s, ok
 }
 
-func (t tArgs) IndexString(index int) string {
+func (t tArgs) IndexString(index int, opt bool) string {
 	t.l.PushInteger(index) // +index
 	t.l.Table(t.off)       // -index, +value
 	s, ok := t.l.ToString(-1)
 	if !ok {
 		typ := typeOf(t.l, -1)
 		t.l.Pop(1) // -value
-		t.IndexError(index, lua.TypeString.String(), typ)
+		if opt && typ == "nil" {
+			return ""
+		}
+		t.ErrorIndex(index, lua.TypeString.String(), typ)
 	}
 	t.l.Pop(1) // -value
 	return s
 }
 
-func (t tArgs) FieldNode(name string, opt bool) (v interface{}, nodeType string) {
+func (t tArgs) FieldTyped(name string, valueType string, opt bool) (v interface{}) {
 	t.l.Field(t.off, name) // +field
-	nodeType = typeOf(t.l, -1)
-	switch nodeType {
-	case luaTypeInput, luaTypeOutput:
-		v = t.l.ToUserData(-1)
-	case "nil":
-		if opt {
-			nodeType = ""
-			goto finish
-		}
-		fallthrough
-	default:
+	if typ := typeOf(t.l, -1); typ != valueType {
 		t.l.Pop(1) // -field
-		t.FieldError(name, "node", nodeType)
+		if opt && typ == "nil" {
+			return nil
+		}
+		t.ErrorField(name, valueType, typ)
 	}
-finish:
+	v = t.l.ToUserData(-1)
 	t.l.Pop(1) // -field
-	return v, nodeType
+	return v
 }
 
-func (t tArgs) IndexNode(index int) (v interface{}, nodeType string) {
+func (t tArgs) IndexTyped(index int, valueType string, opt bool) (v interface{}) {
 	t.l.PushInteger(index) // +index
 	t.l.Table(t.off)       // -index, +value
-	nodeType = typeOf(t.l, -1)
-	switch nodeType {
-	case luaTypeInput, luaTypeOutput:
-		v = t.l.ToUserData(-1)
-	default:
+	typ := typeOf(t.l, -1)
+	if typ != valueType {
 		t.l.Pop(1) // -value
-		t.IndexError(index, "node", nodeType)
+		if opt && typ == "nil" {
+			return nil
+		}
+		t.ErrorIndex(index, valueType, typ)
 	}
+	v = t.l.ToUserData(-1)
 	t.l.Pop(1) // -value
-	return v, nodeType
+	return v
 }
 
 func (t tArgs) IndexValue(index int) interface{} {
@@ -267,7 +264,7 @@ loop:
 			nt := t.Length()
 			ref := make([]string, nt)
 			for i := 1; i <= nt; i++ {
-				ref[i-1] = t.IndexString(i)
+				ref[i-1] = t.IndexString(i, false)
 			}
 
 			var err error
@@ -285,7 +282,7 @@ loop:
 		{"CheckProperty", func(l *lua.State) int {
 			data := l.ToUserData(1).(rbxmk.Data)
 			t := GetMethodArgs(l)
-			ref := []string{t.IndexString(1)}
+			ref := []string{t.IndexString(1, false)}
 			var err error
 			if data, ref, err = format.DrillProperty(st.options, data, ref); err != nil && err != rbxmk.EOD {
 				l.PushBoolean(false)
@@ -371,7 +368,7 @@ loop:
 				i = 2
 			}
 			for ; i <= nt; i++ {
-				node.Reference = append(node.Reference, t.IndexString(i))
+				node.Reference = append(node.Reference, t.IndexString(i, false))
 			}
 
 			data, err := node.ResolveReference(st.options)
@@ -379,7 +376,7 @@ loop:
 				return throwError(l, err)
 			}
 
-			return returnNode(l, data, luaTypeInput)
+			return returnTypedValue(l, data, luaTypeInput)
 		}},
 		{"output", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -397,10 +394,10 @@ loop:
 				i = 2
 			}
 			for ; i <= nt; i++ {
-				node.Reference = append(node.Reference, t.IndexString(i))
+				node.Reference = append(node.Reference, t.IndexString(i, false))
 			}
 
-			return returnNode(l, node, luaTypeOutput)
+			return returnTypedValue(l, node, luaTypeOutput)
 		}},
 		{"filter", func(l *lua.State) int {
 			t := GetArgs(l)
@@ -409,7 +406,7 @@ loop:
 			var i int = 1
 			filterName, ok := t.FieldString(filterNameIndex, true)
 			if !ok {
-				filterName = t.IndexString(i)
+				filterName = t.IndexString(i, false)
 				i = 2
 			}
 
@@ -463,11 +460,11 @@ loop:
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
-				switch v, typ := t.IndexNode(i); typ {
-				case luaTypeInput:
-					inputs = append(inputs, v.(rbxmk.Data))
-				case luaTypeOutput:
-					outputs = append(outputs, v.(*rbxmk.OutputNode))
+				switch v := t.IndexValue(i).(type) {
+				case rbxmk.Data:
+					inputs = append(inputs, v)
+				case *rbxmk.OutputNode:
+					outputs = append(outputs, v)
 				}
 			}
 
@@ -476,7 +473,7 @@ loop:
 		{"load", func(l *lua.State) int {
 			t := GetArgs(l)
 
-			fileName := t.IndexString(1)
+			fileName := t.IndexString(1, false)
 			fi, err := os.Stat(fileName)
 			if err != nil {
 				return throwError(l, err)
@@ -513,10 +510,8 @@ loop:
 		}},
 		{"exit", func(l *lua.State) int {
 			t := GetArgs(l)
-			var err error
-			if v, typ := t.IndexNode(1); typ == "error" {
-				err, _ = v.(error)
-			}
+			v := t.IndexTyped(1, luaTypeError, false)
+			err, _ := v.(error)
 			panic(exitMarker{err: err})
 		}},
 		{"type", func(l *lua.State) int {
@@ -556,7 +551,7 @@ loop:
 		}},
 		{"getenv", func(l *lua.State) int {
 			t := GetArgs(l)
-			value, ok := os.LookupEnv(t.IndexString(1))
+			value, ok := os.LookupEnv(t.IndexString(1, false))
 			if ok {
 				l.PushString(value)
 			} else {
