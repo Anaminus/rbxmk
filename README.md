@@ -87,30 +87,34 @@ func{arg1=value, arg2=value}
 
 The following functions are available:
 
-Name                               | Description
------------------------------------|------------
-[`error`](#user-content-error)     | Create an error node.
-[`exit`](#user-content-exit)       | Force the program to exit.
-[`filter`](#user-content-filter)   | Transform nodes.
-[`getenv`](#user-content-getenv)   | Get the value of an environment variable.
-[`input`](#user-content-input)     | Create an input node.
-[`load`](#user-content-load)       | Load and execute a script.
-[`map`](#user-content-map)         | Map one or more inputs to one or more outputs.
-[`output`](#user-content-output)   | Create an output node.
-[`pcall`](#user-content-pcall)     | Call a function in protected mode.
-[`print`](#user-content-print)     | Print values to stdout.
-[`printf`](#user-content-printf)   | Print a formatted string to stdout.
-[`sprintf`](#user-content-sprintf) | Return a formatted string.
-[`type`](#user-content-type)       | Return the type of a value as a string.
+Name                                     | Description
+-----------------------------------------|------------
+[`error`](#user-content-error)           | Create an error node.
+[`exit`](#user-content-exit)             | Force the program to exit.
+[`filter`](#user-content-filter)         | Transform nodes.
+[`getenv`](#user-content-getenv)         | Get the value of an environment variable.
+[`globalapi`](#user-content-globalapi)   | Set an API as the default for all functions.
+[`input`](#user-content-input)           | Create an input node.
+[`load`](#user-content-load)             | Load and execute a script.
+[`loadapi`](#user-content-loadapi)       | Load an API file.
+[`map`](#user-content-map)               | Map one or more inputs to one or more outputs.
+[`output`](#user-content-output)         | Create an output node.
+[`pcall`](#user-content-pcall)           | Call a function in protected mode.
+[`print`](#user-content-print)           | Print values to stdout.
+[`printf`](#user-content-printf)         | Print a formatted string to stdout.
+[`sprintf`](#user-content-sprintf)       | Return a formatted string.
+[`type`](#user-content-type)             | Return the type of a value as a string.
 
 #### input
 
-`node = input{format=string, ...string}`
+`node = input{format=string, api=nil, ...string}`
 
 `input` creates an input node. The arguments specify the
 [reference](#user-content-references) to the input. The `format` argument
 forces the file format, if needed.
 
+The optional `api` argument specifies an API value to enhance the handling of
+instances and properties. Specifying a non-nil API overrides the default API.
 
 An input node returned by `input` has two methods:
 
@@ -137,13 +141,15 @@ node.
 #### output
 
 ```lua
-node = output{format=string, ...string}
+node = output{format=string, api=nil, ...string}
 ```
 
 `output` creates an output node. The arguments specify the
 [reference](#user-content-references) to the output. The `format` argument
 forces the file format, if needed.
 
+The optional `api` argument specifies an API value to enhance the handling of
+instances and properties. Specifying a non-nil API overrides the default API.
 
 #### map
 
@@ -168,11 +174,15 @@ map{A, X, B, Y}
 
 #### filter
 
-`... = filter{string, ...}`
+`... = filter{api=nil, string, ...}`
 
 `filter` transforms nodes. The first argument specifies the filter name.
 Subsequent arguments and return values depend on the filter. See
 [Filters](#user-content-filters) for a list of filters and their arguments.
+
+The optional `api` argument specifies an API value to enhance the handling of
+instances and properties. Specifying a non-nil API overrides the default API.
+The API is used only by applicable filters.
 
 #### load
 
@@ -243,6 +253,24 @@ rules as [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
 `sprintf` receives a number of values, formats them according to the first
 argument, and returns the resulting string. `sprintf` follows the same rules
 as [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
+
+#### loadapi
+
+`api = loadapi{string}`
+
+`loadapi` receives a path to a file containing an API dump. `loadapi` returns
+a value representing the API. This can be passed to certain functions to
+enhance how the function handles instances and properties.
+
+#### globalapi
+
+`globalapi{api}`
+
+`globalapi` sets the default API value to be used by all applicable functions.
+Several functions have an `api` argument, which can be used to override the
+default API for that call.
+
+Initially, the default API is nil.
 
 ## References
 

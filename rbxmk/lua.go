@@ -6,6 +6,7 @@ import (
 	"github.com/Shopify/go-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/format"
+	"github.com/robloxapi/rbxapi"
 	"os"
 	"strings"
 )
@@ -38,6 +39,7 @@ const (
 	luaTypeInput  = "input"
 	luaTypeOutput = "output"
 	luaTypeError  = "error"
+	luaTypeAPI    = "api"
 )
 
 func returnTypedValue(l *lua.State, value interface{}, valueType string) int {
@@ -347,6 +349,23 @@ loop:
 	}, 0)
 	l.Pop(1)
 
+	lua.NewMetaTable(l, luaTypeAPI)
+	lua.SetFunctions(l, []lua.RegistryFunction{
+		{"__type", func(l *lua.State) int {
+			l.PushString(luaTypeAPI)
+			return 1
+		}},
+		{"__tostring", func(l *lua.State) int {
+			l.PushString("<api>")
+			return 1
+		}},
+		{"__metatable", func(l *lua.State) int {
+			l.PushString("the metatable is locked")
+			return 1
+		}},
+	}, 0)
+	l.Pop(1)
+
 	l.PushGlobalTable()                    // +global
 	lua.NewMetaTable(l, "globalMetatable") // global, +metatable
 
@@ -590,6 +609,21 @@ loop:
 			s, _ := l.ToString(-1) // fstring
 			l.Pop(1)               // -fstring
 			fmt.Print(s)
+			return 0
+		}},
+		{"loadapi", func(l *lua.State) int {
+			t := GetArgs(l)
+			path := t.IndexString(1, false)
+			api, err := rbxmk.LoadAPI(path)
+			if err != nil {
+				return throwError(l, err)
+			}
+			return returnTypedValue(l, api, luaTypeAPI)
+		}},
+		{"globalapi", func(l *lua.State) int {
+			t := GetArgs(l)
+			api, _ := t.IndexTyped(1, luaTypeAPI, true).(*rbxapi.API)
+			st.options.API = api
 			return 0
 		}},
 	}, 0)
