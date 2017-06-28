@@ -445,7 +445,7 @@ func (p *genParser) parseClassItem(parent *rbxfile.Instance) bool {
 		}
 		inst.SetParent(parent)
 	case p.look(":"), p.look("="):
-		value, ok := p.parseProperty(name)
+		value, ok := p.parseProperty(name, parent)
 		if !ok {
 			return false
 		}
@@ -507,7 +507,7 @@ func (p *genParser) parseProperties() bool {
 	if !ok {
 		return false
 	}
-	value, ok := p.parseProperty(name)
+	value, ok := p.parseProperty(name, nil)
 	if !ok {
 		return false
 	}
@@ -520,7 +520,7 @@ func (p *genParser) parseProperties() bool {
 		if !ok {
 			return false
 		}
-		value, ok := p.parseProperty(name)
+		value, ok := p.parseProperty(name, nil)
 		if !ok {
 			return false
 		}
@@ -530,16 +530,30 @@ func (p *genParser) parseProperties() bool {
 }
 
 // Parse a single property (<name> [ ':' <type> ] '=' <value>).
-func (p *genParser) parseProperty(name string) (value rbxfile.Value, ok bool) {
+func (p *genParser) parseProperty(name string, parent *rbxfile.Instance) (value rbxfile.Value, ok bool) {
 	var propType string
-	if p.api != nil {
+	if p.api != nil && parent != nil {
+		var propDesc *rbxapi.Property
+		if classDesc := p.api.Classes[parent.ClassName]; classDesc != nil {
+			propDesc, _ = classDesc.Members[name].(*rbxapi.Property)
+			if propDesc == nil {
+				p.err(fmt.Errorf("property %s is not a valid member of %s", name, parent.ClassName))
+				return nil, false
+			}
+		}
 		if p.try(":") {
 			if propType, ok = p.parseName("type"); !ok {
 				return nil, false
 			}
-			// TODO: API: verify propType
+			if propDesc != nil && propType != propDesc.ValueType {
+				p.err(fmt.Errorf("expected type %s for property %s.%s (got %s)", propDesc.ValueType, parent.ClassName, name, propType))
+				return nil, false
+			}
+		} else if propDesc != nil {
+			propType = propDesc.ValueType
 		} else {
-			// TODO: API: find propType
+			p.err(fmt.Errorf("expected ':'"))
+			return nil, false
 		}
 	} else {
 		if !p.try(":") {
