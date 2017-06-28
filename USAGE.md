@@ -75,7 +75,7 @@ The following functions are available:
 
 Name                                     | Description
 -----------------------------------------|------------
-[`error`](#user-content-error)           | Create an error node.
+[`error`](#user-content-error)           | Throw an error.
 [`exit`](#user-content-exit)             | Force the program to exit.
 [`filter`](#user-content-filter)         | Transform nodes.
 [`getenv`](#user-content-getenv)         | Get the value of an environment variable.
