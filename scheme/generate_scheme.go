@@ -642,10 +642,6 @@ func (p *genParser) parseProperty(name string, parent *rbxfile.Instance) (value 
 		var propDesc *rbxapi.Property
 		if classDesc := p.api.Classes[parent.ClassName]; classDesc != nil {
 			propDesc, _ = classDesc.Members[name].(*rbxapi.Property)
-			if propDesc == nil {
-				p.err(fmt.Errorf("property %s is not a valid member of %s", name, parent.ClassName))
-				return nil, false
-			}
 		}
 		if p.try(":") {
 			if propType, ok = p.parseName("type"); !ok {
