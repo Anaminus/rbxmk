@@ -344,6 +344,108 @@ loop:
 		case '\\':
 			p.inc(w)
 			r, w = p.peek()
+			switch {
+			case p.parseDigit():
+				p.parseDigit()
+				p.parseDigit()
+				n, err := strconv.ParseUint(p.s[j:p.i], 10, 8)
+				if err != nil {
+					p.err(fmt.Errorf("error in escape sequence: %s", err.(*strconv.NumError).Err))
+					return "", false
+				}
+				s = append(s, rune(n))
+			case r == 'x':
+				p.inc(w)
+				j := p.i
+				for i := 0; i < 2; i++ {
+					if !p.parseHexdigit() {
+						if p.eof() {
+							p.err(fmt.Errorf("non-hex character in escape sequence"))
+						} else {
+							p.err(fmt.Errorf("non-hex character in escape sequence: %s", string(p.s[p.i])))
+						}
+						return "", false
+					}
+				}
+				n, err := strconv.ParseUint(p.s[j:p.i], 16, 8)
+				if err != nil {
+					p.err(fmt.Errorf("error in escape sequence: %s", err.(*strconv.NumError).Err))
+					return "", false
+				}
+				s = append(s, rune(n))
+			case r == 'u':
+				p.inc(w)
+				j := p.i
+				for i := 0; i < 4; i++ {
+					if !p.parseHexdigit() {
+						if p.eof() {
+							p.err(fmt.Errorf("non-hex character in escape sequence"))
+						} else {
+							p.err(fmt.Errorf("non-hex character in escape sequence: %s", string(p.s[p.i])))
+						}
+						return "", false
+					}
+				}
+				n, err := strconv.ParseUint(p.s[j:p.i], 16, 16)
+				if err != nil {
+					p.err(fmt.Errorf("error in escape sequence: %s", err.(*strconv.NumError).Err))
+					return "", false
+				}
+				s = append(s, rune(n))
+			case r == 'U':
+				p.inc(w)
+				j := p.i
+				for i := 0; i < 8; i++ {
+					if !p.parseHexdigit() {
+						if p.eof() {
+							p.err(fmt.Errorf("non-hex character in escape sequence"))
+						} else {
+							p.err(fmt.Errorf("non-hex character in escape sequence: %s", string(p.s[p.i])))
+						}
+						return "", false
+					}
+				}
+				n, err := strconv.ParseUint(p.s[j:p.i], 16, 32)
+				if err != nil {
+					p.err(fmt.Errorf("error in escape sequence: %s", err.(*strconv.NumError).Err))
+					return "", false
+				}
+				s = append(s, rune(n))
+			case r == 'a':
+				s = append(s, '\a')
+				p.inc(1)
+			case r == 'b':
+				s = append(s, '\b')
+				p.inc(1)
+			case r == 'f':
+				s = append(s, '\f')
+				p.inc(1)
+			case r == 'n':
+				s = append(s, '\n')
+				p.inc(1)
+			case r == 'r':
+				s = append(s, '\r')
+				p.inc(1)
+			case r == 't':
+				s = append(s, '\t')
+				p.inc(1)
+			case r == 'v':
+				s = append(s, '\v')
+				p.inc(1)
+			case r == '\\':
+				s = append(s, '\\')
+				p.inc(1)
+			case r == '\'':
+				s = append(s, '\'')
+				p.inc(1)
+			case r == '"':
+				s = append(s, '"')
+				p.inc(1)
+			default:
+				p.err(fmt.Errorf("unknown escape sequence"))
+				return "", false
+			}
+			r, w = p.peek()
 		case quot:
 			p.inc(w)
 			break loop
@@ -410,6 +512,10 @@ func (p *genParser) parseClass(name string) (inst *rbxfile.Instance, ok bool) {
 	if !p.try("{") {
 		p.err(fmt.Errorf("expected '{'"))
 		return nil, false
+	}
+	if p.api != nil {
+		// Fill in properties from API.
+
 	}
 	if !p.try("}") {
 		if !p.parseClassItem(inst) {
