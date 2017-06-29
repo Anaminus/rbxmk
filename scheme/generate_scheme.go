@@ -591,6 +591,9 @@ func (p *genParser) parseName(t string) (s string, ok bool) {
 	if s, ok = p.parseString(); ok {
 		return s, true
 	}
+	if p.look("\"") || p.look("'") {
+		return "", false
+	}
 	p.errmsg = nil
 	if s, ok = p.parseIdent(); ok && s != "" {
 		return s, true
@@ -623,11 +626,18 @@ func (p *genParser) parseValue() (comp []interface{}, ok bool) {
 func (p *genParser) parseComponent() (v interface{}, ok bool) {
 	if v, ok = p.parseBool(); ok {
 		return v, true
-	} else if v, ok = p.parseNumber(); ok {
-		return v, true
-	} else if v, ok = p.parseString(); ok {
+	}
+	if v, ok = p.parseNumber(); ok {
 		return v, true
 	}
-	p.err(fmt.Errorf("expected value"))
+	if r, _ := p.peek(); '0' <= r && r <= '9' {
+		return nil, false
+	}
+	if v, ok = p.parseString(); ok {
+		return v, true
+	}
+	if r, _ := p.peek(); r != '"' && r != '\'' {
+		p.err(fmt.Errorf("expected value"))
+	}
 	return nil, false
 }
