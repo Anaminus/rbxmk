@@ -11,8 +11,8 @@ import (
 
 func init() {
 	register(rbxmk.Format{
-		Name: "JSON",
-		Ext:  "json",
+		Name: "JSON Properties",
+		Ext:  "properties.json",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &JSONCodec{}
 		},

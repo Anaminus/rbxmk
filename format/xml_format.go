@@ -11,8 +11,8 @@ import (
 
 func init() {
 	register(rbxmk.Format{
-		Name: "XML",
-		Ext:  "xml",
+		Name: "XML Properties",
+		Ext:  "properties.xml",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &XMLCodec{API: opt.API}
 		},
