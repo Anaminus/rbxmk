@@ -515,7 +515,15 @@ func (p *genParser) parseClass(name string) (inst *rbxfile.Instance, ok bool) {
 	}
 	if p.api != nil {
 		// Fill in properties from API.
-
+		if classAPI := p.api.Classes[name]; classAPI != nil {
+			for _, member := range classAPI.MemberList() {
+				if prop, _ := member.(*rbxapi.Property); prop != nil {
+					if typ := rbxfile.TypeFromAPIString(p.api, prop.ValueType); typ != rbxfile.TypeInvalid {
+						inst.Properties[prop.MemberName] = rbxfile.NewValue(typ)
+					}
+				}
+			}
+		}
 	}
 	if !p.try("}") {
 		if !p.parseClassItem(inst) {
