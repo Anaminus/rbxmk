@@ -655,12 +655,13 @@ func (p *genParser) parseProperty(name string, parent *rbxfile.Instance) (value 
 			if propType, ok = p.parseName("type"); !ok {
 				return nil, false
 			}
-			if propDesc != nil && propType != propDesc.ValueType {
+			propType = rbxfile.TypeFromAPIString(p.api, propType).String()
+			if propDesc != nil && propType != rbxfile.TypeFromAPIString(p.api, propDesc.ValueType).String() {
 				p.err(fmt.Errorf("expected type %s for property %s.%s (got %s)", propDesc.ValueType, parent.ClassName, name, propType))
 				return nil, false
 			}
 		} else if propDesc != nil {
-			propType = propDesc.ValueType
+			propType = rbxfile.TypeFromAPIString(p.api, propDesc.ValueType).String()
 		} else {
 			p.err(fmt.Errorf("expected ':'"))
 			return nil, false
