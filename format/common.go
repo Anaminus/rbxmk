@@ -251,76 +251,78 @@ func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 
 // MergeOverwrite is a rbxmk.Merger that overrides the output data with
 // the input data.
-func MergeOverwrite(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
-	return data, nil
+func MergeOverwrite(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outdata rbxmk.Data, err error) {
+	return indata, nil
 }
 
-func MergeInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
-	switch indata := indata.(type) {
+func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outdata rbxmk.Data, err error) {
+	switch drilldata := drilldata.(type) {
 	case nil:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case []*rbxfile.Instance:
-			return data, nil
+			return indata, nil
 		case *rbxfile.Instance:
-			return []*rbxfile.Instance{data}, nil
+			return []*rbxfile.Instance{indata}, nil
 		}
 	case []*rbxfile.Instance:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case []*rbxfile.Instance:
-			return append(indata, data...), nil
+			drilldata = append(drilldata, indata...)
+			return rootdata, nil
 		case *rbxfile.Instance:
-			return append(indata, data), nil
+			drilldata = append(drilldata, indata)
+			return rootdata, nil
 		}
 	case *rbxfile.Instance:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case []*rbxfile.Instance:
-			for _, child := range data {
-				indata.AddChild(child)
+			for _, child := range indata {
+				drilldata.AddChild(child)
 			}
-			return []*rbxfile.Instance{indata}, nil
+			return rootdata, nil
 		case *rbxfile.Instance:
-			indata.AddChild(data)
-			return []*rbxfile.Instance{indata}, nil
+			drilldata.AddChild(indata)
+			return rootdata, nil
 		case map[string]rbxfile.Value:
-			for name, value := range data {
-				indata.Properties[name] = value
+			for name, value := range indata {
+				drilldata.Properties[name] = value
 			}
-			return []*rbxfile.Instance{indata}, nil
+			return rootdata, nil
 		case Property:
-			indata.Properties[data.Name] = data.Properties[data.Name]
-			return []*rbxfile.Instance{indata}, nil
+			drilldata.Properties[indata.Name] = indata.Properties[indata.Name]
+			return rootdata, nil
 		}
 	}
-	return MergeProperties(opt, indata, data)
+	return MergeProperties(opt, rootdata, drilldata, indata)
 }
 
-func MergeProperties(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
-	switch indata := indata.(type) {
+func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outdata rbxmk.Data, err error) {
+	switch drilldata := drilldata.(type) {
 	case nil:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case map[string]rbxfile.Value:
-			return data, nil
+			return indata, nil
 		}
 	case map[string]rbxfile.Value:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case map[string]rbxfile.Value:
-			for name, value := range data {
-				indata[name] = value
+			for name, value := range indata {
+				drilldata[name] = value
 			}
-			return indata, nil
+			return rootdata, nil
 		case Property:
-			indata[data.Name] = data.Properties[data.Name]
-			return indata, nil
+			drilldata[indata.Name] = indata.Properties[indata.Name]
+			return rootdata, nil
 		}
 	case Property:
-		switch data := data.(type) {
+		switch indata := indata.(type) {
 		case Property:
-			indata.Properties[indata.Name] = data.Properties[data.Name]
-			return indata, nil
+			drilldata.Properties[drilldata.Name] = indata.Properties[indata.Name]
+			return rootdata, nil
 		case rbxfile.Value:
-			indata.Properties[indata.Name] = data
-			return indata, nil
+			drilldata.Properties[drilldata.Name] = indata
+			return rootdata, nil
 		}
 	}
-	return nil, NewDataTypeError(indata)
+	return nil, NewDataTypeError(drilldata)
 }

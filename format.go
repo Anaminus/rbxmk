@@ -13,8 +13,14 @@ type Data interface{}
 // inref is empty, then an EOD error is returned.
 type Drill func(opt Options, indata Data, inref []string) (outdata Data, outref []string, err error)
 
-// Merger is used to merge one Data into another.
-type Merger func(opt Options, indata, data Data) (outdata Data, err error)
+// Merger is used to merge input Data into output Data. Three kinds of Data
+// are received. rootdata is the top-level data returned by an output scheme
+// handler. drilldata is a value within the rootdata, which was selected by
+// one or more Drills. If no drills were used, then drilldata will be equal to
+// rootdata. Depending on the scheme, both rootdata and drilldata may be nil.
+// indata is the data to be merged. Merger returns the resulting Data after it
+// has been merged.
+type Merger func(opt Options, rootdata, drilldata, indata Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 
