@@ -513,6 +513,12 @@ loop:
 					outputs = append(outputs, v)
 				}
 			}
+			if len(inputs) == 0 {
+				return throwError(l, errors.New("at least 1 input is expected"))
+			}
+			if len(outputs) == 0 {
+				return throwError(l, errors.New("at least 1 output is expected"))
+			}
 
 			return st.mapNodes(inputs, outputs)
 		}},
