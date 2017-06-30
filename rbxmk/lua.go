@@ -558,7 +558,7 @@ loop:
 			if err != nil {
 				return throwError(l, err)
 			}
-			return lua.MultipleReturns
+			return l.Top() - 1
 		}},
 		{"error", func(l *lua.State) int {
 			return throwError(l, errors.New(lua.CheckString(l, 1)))
