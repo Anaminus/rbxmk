@@ -1,7 +1,6 @@
 package format
 
 import (
-	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -59,7 +58,7 @@ func (c *XMLCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 
 	props, ok := data.(map[string]rbxfile.Value)
 	if !ok {
-		return errors.New("unexpected Data type")
+		return NewDataTypeError(data)
 	}
 
 	doc := &xml.Document{Indent: "\t"}

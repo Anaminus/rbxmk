@@ -1,7 +1,6 @@
 package format
 
 import (
-	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/robloxapi/rbxfile"
@@ -132,7 +131,7 @@ func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	case rbxfile.ValueString:
 		_, err = w.Write([]byte(v))
 	default:
-		err = errors.New("unexpected Data type")
+		err = NewDataTypeError(data)
 	}
 	return err
 }

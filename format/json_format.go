@@ -2,7 +2,6 @@ package format
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	rbxfilejson "github.com/robloxapi/rbxfile/json"
@@ -65,7 +64,7 @@ func (c JSONCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 
 	props, ok := data.(map[string]rbxfile.Value)
 	if !ok {
-		return errors.New("unexpected Data type")
+		return NewDataTypeError(data)
 	}
 	jprops := make(map[string]jsonProp, len(props))
 	for name, value := range props {

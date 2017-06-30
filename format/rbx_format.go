@@ -1,7 +1,6 @@
 package format
 
 import (
-	"errors"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -80,7 +79,7 @@ func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	instances, ok := data.([]*rbxfile.Instance)
 	if !ok {
-		return errors.New("unexpected Data type")
+		return NewDataTypeError(data)
 	}
 	root := &rbxfile.Root{Instances: instances}
 	if c.xml {
