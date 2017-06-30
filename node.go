@@ -1,7 +1,6 @@
 package rbxmk
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -56,7 +55,7 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 		ext = node.Format
 	} else {
 		if len(ref) < 1 {
-			return nil, &NodeError{"input", "", errors.New("node requires at least one reference argument")}
+			return nil, &NodeError{"input", "", fmt.Errorf("node requires at least one reference argument")}
 		}
 		schemeName, nextPart := parseScheme(ref[0])
 		if schemeName == "" {
@@ -65,7 +64,7 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 		}
 		scheme := opt.Schemes.Input(schemeName)
 		if scheme == nil {
-			return nil, &NodeError{"input", "", errors.New("input scheme \"" + schemeName + "\" has not been registered")}
+			return nil, &NodeError{"input", "", fmt.Errorf("input scheme %s has not been registered", schemeName)}
 		}
 		modref := make([]string, len(ref))
 		copy(modref[1:], ref[1:])
@@ -77,7 +76,7 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 	}
 
 	if !opt.Formats.Registered(ext) {
-		return nil, &NodeError{"input", "", errors.New("unknown format \"" + ext + "\"")}
+		return nil, &NodeError{"input", "", fmt.Errorf("unknown format %s", ext)}
 	}
 	for i, drill := range opt.Formats.InputDrills(ext) {
 		if data, ref, err = drill(opt, data, ref); err != nil && err != EOD {
@@ -108,7 +107,7 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	}
 
 	if len(ref) < 1 {
-		return &NodeError{"output", "", errors.New("node requires at least one reference argument")}
+		return &NodeError{"output", "", fmt.Errorf("node requires at least one reference argument")}
 	}
 	schemeName, nextPart := parseScheme(ref[0])
 	if schemeName == "" {
@@ -117,7 +116,7 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	}
 	scheme := opt.Schemes.Output(schemeName)
 	if scheme == nil {
-		return &NodeError{"output", "", errors.New("output scheme \"" + schemeName + "\" has not been registered")}
+		return &NodeError{"output", "", fmt.Errorf("output scheme %s has not been registered", schemeName)}
 	}
 	modref := make([]string, len(ref))
 	copy(modref[1:], ref[1:])
@@ -139,7 +138,7 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 
 func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, ext string, indata Data) (outdata Data, err error) {
 	if !opt.Formats.Registered(ext) {
-		return nil, &NodeError{"output", "", errors.New("invalid format \"" + ext + "\"")}
+		return nil, &NodeError{"output", "", fmt.Errorf("invalid format %s", ext)}
 	}
 	drilldata := rootdata
 	for i, drill := range opt.Formats.OutputDrills(ext) {
