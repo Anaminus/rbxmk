@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
+	"reflect"
 	"strconv"
 )
 
@@ -34,6 +35,18 @@ func (err ParseError) Error() string {
 	return fmt.Sprintf("@%d: %s", err.Index, err.Err)
 }
 
+type DataTypeError struct {
+	dataName string
+}
+
+func (err DataTypeError) Error() string {
+	return fmt.Sprintf("unexpected Data type: %s", err.dataName)
+}
+
+func NewDataTypeError(data rbxmk.Data) error {
+	return DataTypeError{dataName: reflect.TypeOf(data).String()}
+}
+
 func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
@@ -48,11 +61,11 @@ func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 		instances = v
 	case *rbxfile.Instance:
 		if v == nil {
-			return indata, inref, errors.New("unexpected Data type")
+			return indata, inref, fmt.Errorf("*rbxfile.Instance Data cannot be nil")
 		}
 		instance = v
 	default:
-		return indata, inref, errors.New("unexpected Data type")
+		return indata, inref, NewDataTypeError(indata)
 	}
 
 	i := 0
@@ -187,16 +200,16 @@ func DrillInstanceProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string)
 	switch v := indata.(type) {
 	case []*rbxfile.Instance:
 		if len(v) == 0 {
-			return indata, inref, errors.New("unexpected Data type")
+			return indata, inref, fmt.Errorf("length of []*rbxfile.Instance Data cannot be 0")
 		}
 		instance = v[0]
 	case *rbxfile.Instance:
 		if v == nil {
-			return indata, inref, errors.New("unexpected Data type")
+			return indata, inref, fmt.Errorf("*rbxfile.Instance Data cannot be nil")
 		}
 		instance = v
 	default:
-		err = errors.New("unexpected Data type")
+		err = NewDataTypeError(indata)
 		return indata, inref, err
 	}
 
@@ -225,7 +238,7 @@ func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 
 	props, ok := indata.(map[string]rbxfile.Value)
 	if !ok {
-		return indata, inref, errors.New("unexpected Data type")
+		return indata, inref, NewDataTypeError(indata)
 	}
 	if _, exists := props[inref[0]]; !exists {
 		return indata, inref, fmt.Errorf("property %q not present in instance", inref[0])
@@ -306,5 +319,5 @@ func ResolveProperties(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxm
 			return indata, nil
 		}
 	}
-	return nil, errors.New("unexpected Data type")
+	return nil, NewDataTypeError(indata)
 }
