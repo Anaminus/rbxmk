@@ -44,6 +44,9 @@ func (err DataTypeError) Error() string {
 }
 
 func NewDataTypeError(data rbxmk.Data) error {
+	if data == nil {
+		return DataTypeError{dataName: "nil"}
+	}
 	return DataTypeError{dataName: reflect.TypeOf(data).String()}
 }
 
