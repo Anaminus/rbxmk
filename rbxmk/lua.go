@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/rbxmk/format"
 	"github.com/robloxapi/rbxapi"
 	"os"
+	"reflect"
 	"strings"
 )
 
@@ -622,7 +623,11 @@ loop:
 				typ := t.TypeOfIndex(i)
 				switch typ {
 				case "input":
-					s[i-1] = "<input>"
+					if typ := reflect.TypeOf(t.IndexValue(i)); typ == nil {
+						s[i-1] = "<input(nil)>"
+					} else {
+						s[i-1] = "<input(" + typ.String() + ")>"
+					}
 				case "output":
 					s[i-1] = "<output>"
 				default:
