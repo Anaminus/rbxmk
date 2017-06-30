@@ -50,6 +50,25 @@ func NewDataTypeError(data rbxmk.Data) error {
 	return DataTypeError{dataName: reflect.TypeOf(data).String()}
 }
 
+type MergeError struct {
+	drilldata, indata string
+}
+
+func (err *MergeError) Error() string {
+	return fmt.Sprintf("cannot merge types %s and %s", err.drilldata, err.indata)
+}
+
+func NewMergeError(drilldata, indata rbxmk.Data) error {
+	err := &MergeError{"nil", "nil"}
+	if drilldata != nil {
+		err.drilldata = reflect.TypeOf(drilldata).String()
+	}
+	if indata != nil {
+		err.indata = reflect.TypeOf(indata).String()
+	}
+	return err
+}
+
 func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
@@ -324,5 +343,5 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 			return rootdata, nil
 		}
 	}
-	return nil, NewDataTypeError(drilldata)
+	return nil, NewMergeError(drilldata, indata)
 }
