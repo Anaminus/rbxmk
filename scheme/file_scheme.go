@@ -91,6 +91,11 @@ func fileOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []
 		return "", nil, nil, err
 	}
 	defer file.Close()
+	if n, _ := file.Seek(0, os.SEEK_END); n == 0 {
+		// Empty file, do not decode.
+		return ext, inref[1:], nil, nil
+	}
+	file.Seek(0, os.SEEK_SET)
 
 	// Decode file with format.
 	if err = opt.Formats.Decode(ext, opt, file.Name(), file, &data); err != nil {
