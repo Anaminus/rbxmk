@@ -148,9 +148,9 @@ func (node *OutputNode) drillOutput(opt Options, indata Data, ref []string, ext 
 			break
 		}
 	}
-	resolver := opt.Formats.Resolver(ext)
-	if outdata, err = resolver(opt, indata, data); err != nil {
-		err = &NodeError{"output", fmt.Sprintf("%s format, Resolver", opt.Formats.Name(ext)), err}
+	merger := opt.Formats.Merger(ext)
+	if outdata, err = merger(opt, indata, data); err != nil {
+		err = &NodeError{"output", fmt.Sprintf("%s format, Merger", opt.Formats.Name(ext)), err}
 	}
 	return outdata, err
 }

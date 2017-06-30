@@ -18,7 +18,7 @@ func init() {
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		Resolver:     ResolveInstance,
+		Merger:       MergeInstance,
 	})
 	register(rbxmk.Format{
 		Name: "RBXLX",
@@ -28,7 +28,7 @@ func init() {
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		Resolver:     ResolveInstance,
+		Merger:       MergeInstance,
 	})
 	register(rbxmk.Format{
 		Name: "RBXM",
@@ -38,7 +38,7 @@ func init() {
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		Resolver:     ResolveInstance,
+		Merger:       MergeInstance,
 	})
 	register(rbxmk.Format{
 		Name: "RBXMX",
@@ -48,7 +48,7 @@ func init() {
 		},
 		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		Resolver:     ResolveInstance,
+		Merger:       MergeInstance,
 	})
 }
 

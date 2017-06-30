@@ -249,13 +249,13 @@ func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 	return Property{Properties: props, Name: inref[0]}, inref[1:], nil
 }
 
-// ResolveOverwrite is a rbxmk.Resolver that overrides the output data with
+// MergeOverwrite is a rbxmk.Merger that overrides the output data with
 // the input data.
-func ResolveOverwrite(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func MergeOverwrite(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	return data, nil
 }
 
-func ResolveInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func MergeInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch indata := indata.(type) {
 	case nil:
 		switch data := data.(type) {
@@ -291,10 +291,10 @@ func ResolveInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.
 			return []*rbxfile.Instance{indata}, nil
 		}
 	}
-	return ResolveProperties(opt, indata, data)
+	return MergeProperties(opt, indata, data)
 }
 
-func ResolveProperties(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
+func MergeProperties(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch indata := indata.(type) {
 	case nil:
 		switch data := data.(type) {

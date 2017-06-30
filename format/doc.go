@@ -4,7 +4,7 @@ Package format implements several file formats for the rbxmk command. These
 formats can be registered to a rbxmk.Formats with the Register function.
 
 This package also contains several reusable functions that implement
-rbxmk.Drill and rbxmk.OutputResolver.
+rbxmk.Drill and rbxmk.OutputMerger.
 
 Formats
 

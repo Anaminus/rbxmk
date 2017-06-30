@@ -16,7 +16,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 	register(rbxmk.Format{
 		Name: "Binary",
@@ -26,7 +26,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 }
 

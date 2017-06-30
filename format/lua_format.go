@@ -27,7 +27,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 	register(rbxmk.Format{
 		Name: "Lua Script",
@@ -37,7 +37,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 	register(rbxmk.Format{
 		Name: "Lua LocalScript",
@@ -47,7 +47,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 	register(rbxmk.Format{
 		Name: "Lua ModuleScript",
@@ -57,7 +57,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Resolver:     ResolveOverwrite,
+		Merger:       MergeOverwrite,
 	})
 }
 

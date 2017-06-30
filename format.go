@@ -13,8 +13,8 @@ type Data interface{}
 // inref is empty, then an EOD error is returned.
 type Drill func(opt Options, indata Data, inref []string) (outdata Data, outref []string, err error)
 
-// Resolver is used to merge one Data into another.
-type Resolver func(opt Options, indata, data Data) (outdata Data, err error)
+// Merger is used to merge one Data into another.
+type Merger func(opt Options, indata, data Data) (outdata Data, err error)
 
 var EOD = errors.New("end of drill")
 
@@ -24,7 +24,7 @@ type Format struct {
 	Codec        InitFormatCodec
 	InputDrills  []Drill
 	OutputDrills []Drill
-	Resolver     Resolver
+	Merger       Merger
 	// CanEncode    func(data Data) bool
 }
 
@@ -135,10 +135,10 @@ func (fs *Formats) OutputDrills(ext string) (drills []Drill) {
 	return f.OutputDrills
 }
 
-func (fs *Formats) Resolver(ext string) (resolver Resolver) {
+func (fs *Formats) Merger(ext string) (merger Merger) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
 	}
-	return f.Resolver
+	return f.Merger
 }
