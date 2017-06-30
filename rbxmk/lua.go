@@ -501,8 +501,8 @@ loop:
 		{"map", func(l *lua.State) int {
 			t := GetArgs(l)
 
-			inputs := make([]rbxmk.Data, 1)
-			outputs := make([]*rbxmk.OutputNode, 1)
+			inputs := make([]rbxmk.Data, 0, 1)
+			outputs := make([]*rbxmk.OutputNode, 0, 1)
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
