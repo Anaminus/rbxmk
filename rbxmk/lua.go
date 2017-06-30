@@ -387,10 +387,10 @@ loop:
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
-				node.Data = data
-				i = 2
-			}
+			// if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
+			// 	node.Data = data
+			// 	i = 2
+			// }
 			for ; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i, false))
 			}
@@ -417,10 +417,10 @@ loop:
 				throwError(l, errors.New("at least 1 reference argument is required"))
 			}
 			i := 1
-			if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
-				node.Data = data
-				i = 2
-			}
+			// if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
+			// 	node.Data = data
+			// 	i = 2
+			// }
 			for ; i <= nt; i++ {
 				node.Reference = append(node.Reference, t.IndexString(i, false))
 			}
