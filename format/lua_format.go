@@ -15,7 +15,11 @@ func getFileNameCtx(opt rbxmk.Options, ctx interface{}) string {
 		return path
 	}
 	base := filepath.Base(path)
-	return base[:len(base)-len(scheme.GuessFileExtension(opt, "", base))]
+	ext := scheme.GuessFileExtension(opt, "", base)
+	if ext == "" {
+		return base[:len(base)]
+	}
+	return base[:len(base)-len(ext)-1]
 }
 
 func init() {
