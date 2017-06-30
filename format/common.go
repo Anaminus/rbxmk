@@ -259,7 +259,7 @@ func ResolveInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.
 		case []*rbxfile.Instance:
 			return data, nil
 		case *rbxfile.Instance:
-			return data, nil
+			return []*rbxfile.Instance{data}, nil
 		}
 	case []*rbxfile.Instance:
 		switch data := data.(type) {
@@ -274,18 +274,18 @@ func ResolveInstance(opt rbxmk.Options, indata, data rbxmk.Data) (outdata rbxmk.
 			for _, child := range data {
 				indata.AddChild(child)
 			}
-			return indata, nil
+			return []*rbxfile.Instance{indata}, nil
 		case *rbxfile.Instance:
 			indata.AddChild(data)
-			return indata, nil
+			return []*rbxfile.Instance{indata}, nil
 		case map[string]rbxfile.Value:
 			for name, value := range data {
 				indata.Properties[name] = value
 			}
-			return indata, nil
+			return []*rbxfile.Instance{indata}, nil
 		case Property:
 			indata.Properties[data.Name] = data.Properties[data.Name]
-			return indata, nil
+			return []*rbxfile.Instance{indata}, nil
 		}
 	}
 	return ResolveProperties(opt, indata, data)
