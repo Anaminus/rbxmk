@@ -613,14 +613,14 @@ loop:
 			nt := t.Length()
 			s := make([]interface{}, nt)
 			for i := 1; i <= nt; i++ {
-				v := t.IndexValue(i)
-				switch v.(type) {
-				case rbxmk.Data:
+				typ := t.TypeOfIndex(i)
+				switch typ {
+				case "input":
 					s[i-1] = "<input>"
-				case *rbxmk.OutputNode:
+				case "output":
 					s[i-1] = "<output>"
 				default:
-					s[i-1] = v
+					s[i-1] = t.IndexValue(i)
 				}
 			}
 			fmt.Println(s...)
