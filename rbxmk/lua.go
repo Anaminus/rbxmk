@@ -131,6 +131,21 @@ func (t tArgs) ErrorIndex(index int, expected, got string) {
 	}
 }
 
+func (t tArgs) TypeOfField(name string) string {
+	t.l.Field(t.off, name) // +field
+	typ := typeOf(t.l, -1)
+	t.l.Pop(1) // -field
+	return typ
+}
+
+func (t tArgs) TypeOfIndex(index int) string {
+	t.l.PushInteger(index) // +index
+	t.l.Table(t.off)       // -index, +value
+	typ := typeOf(t.l, -1)
+	t.l.Pop(1) // -index
+	return typ
+}
+
 func (t tArgs) FieldString(name string, opt bool) (s string, ok bool) {
 	t.l.Field(t.off, name) // +field
 	if s, ok = t.l.ToString(-1); !ok {
