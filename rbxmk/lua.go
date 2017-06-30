@@ -699,6 +699,18 @@ func (err LuaSyntaxError) Error() string {
 	return "syntax error: " + string(err)
 }
 
+type LuaError struct {
+	Where string
+	Err   error
+}
+
+func (err LuaError) Error() string {
+	if err.Where == "" {
+		return err.Err.Error()
+	}
+	return err.Where + " " + err.Err.Error()
+}
+
 func (st *LuaState) DoString(s, name string, args int) (err error) {
 	if err = st.state.Load(strings.NewReader(s), name, ""); err != nil {
 		if err == lua.SyntaxError {
@@ -708,7 +720,9 @@ func (st *LuaState) DoString(s, name string, args int) (err error) {
 	} // args..., +func
 	st.state.Insert(-args - 1) // >func, args...
 	if err = st.state.ProtectedCall(args, lua.MultipleReturns, 0); err != nil {
-		return err
+		lua.Where(st.state, 0)
+		where, _ := st.state.ToString(-1)
+		return &LuaError{where, err}
 	} // +results..., -func, -args...
 	return nil
 }
@@ -731,7 +745,12 @@ func (st *LuaState) DoFile(fileName string, args int) error {
 	st.state.Insert(-args - 1)                                 // >func, args...
 	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
-	return err
+	if err != nil {
+		lua.Where(st.state, 0)
+		where, _ := st.state.ToString(-1)
+		return &LuaError{where, err}
+	}
+	return nil
 }
 
 func (st *LuaState) DoFileHandle(f *os.File, args int) error {
@@ -752,7 +771,12 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	st.state.Insert(-args - 1)                                 // >func, args...
 	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
-	return err
+	if err != nil {
+		lua.Where(st.state, 0)
+		where, _ := st.state.ToString(-1)
+		return &LuaError{where, err}
+	}
+	return nil
 }
 
 func (st *LuaState) mapNodes(inputs []rbxmk.Data, outputs []*rbxmk.OutputNode) int {
