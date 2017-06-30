@@ -516,6 +516,9 @@ loop:
 			// Load file as function.
 			if err = lua.LoadFile(l, fileName, ""); err != nil {
 				st.popFile()
+				if err == lua.SyntaxError {
+					err = LuaSyntaxError(fmt.Sprintf("%s", st.state.ToValue(-1)))
+				}
 				return throwError(l, err)
 			}
 			// +function
