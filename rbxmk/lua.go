@@ -506,11 +506,11 @@ loop:
 
 			nt := t.Length()
 			for i := 1; i <= nt; i++ {
-				switch v := t.IndexValue(i).(type) {
-				case rbxmk.Data:
-					inputs = append(inputs, v)
-				case *rbxmk.OutputNode:
-					outputs = append(outputs, v)
+				switch t.TypeOfIndex(i) {
+				case "input":
+					inputs = append(inputs, t.IndexValue(i).(rbxmk.Data))
+				case "output":
+					outputs = append(outputs, t.IndexValue(i).(*rbxmk.OutputNode))
 				}
 			}
 			if len(inputs) == 0 {
