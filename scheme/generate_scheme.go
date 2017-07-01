@@ -57,7 +57,7 @@ func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) 
 		return nil, p.errmsg
 	}
 	p.processRefs()
-	return p.instances, nil
+	return &p.instances, nil
 }
 
 func generateProperty(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
