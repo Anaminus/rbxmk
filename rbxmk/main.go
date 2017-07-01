@@ -40,7 +40,7 @@ func main() {
 		}
 		Fatalf("flag parser error: %s", err)
 	}
-	if len(os.Args) < 2 {
+	if stat, _ := os.Stdin.Stat(); stat == nil && len(os.Args) < 2 {
 		fp.WriteHelp(os.Stderr)
 		return
 	}
