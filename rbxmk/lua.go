@@ -579,7 +579,7 @@ loop:
 			return l.Top() - 1
 		}},
 		{"error", func(l *lua.State) int {
-			return throwError(l, errors.New(lua.CheckString(l, 1)))
+			return throwError(l, errors.New(GetArgs(l).IndexString(1, false)))
 		}},
 		{"exit", func(l *lua.State) int {
 			t := GetArgs(l)
