@@ -523,6 +523,23 @@ loop:
 
 			return st.mapNodes(inputs, outputs)
 		}},
+		{"delete", func(l *lua.State) int {
+			t := GetArgs(l)
+
+			outputs := make([]*rbxmk.OutputNode, 0, 1)
+			nt := t.Length()
+			for i := 1; i <= nt; i++ {
+				switch t.TypeOfIndex(i) {
+				case "output":
+					outputs = append(outputs, t.IndexValue(i).(*rbxmk.OutputNode))
+				}
+			}
+			if len(outputs) == 0 {
+				return throwError(l, errors.New("at least 1 output is expected"))
+			}
+
+			return st.mapNodes([]rbxmk.Data{rbxmk.DeleteData{}}, outputs)
+		}},
 		{"load", func(l *lua.State) int {
 			t := GetArgs(l)
 

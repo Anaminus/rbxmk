@@ -75,6 +75,7 @@ The following functions are available:
 
 Name                                 | Description
 -------------------------------------|------------
+[delete](#user-content-delete)       | Delete an output node.
 [error](#user-content-error)         | Throw an error.
 [exit](#user-content-exit)           | Force the program to exit.
 [**filter**](#user-content-filter)   | Transform nodes.
@@ -157,6 +158,13 @@ map{A, X, B, Y}
 -- 3: B -> X
 -- 4: B -> Y
 ```
+
+### map
+
+`delete{...output}`
+
+For each output node received, `delete` removes the data pointed to by the
+node.
 
 ### filter
 
