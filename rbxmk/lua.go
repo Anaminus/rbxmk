@@ -737,6 +737,9 @@ func (st *LuaState) DoString(s, name string, args int) (err error) {
 	} // args..., +func
 	st.state.Insert(-args - 1) // >func, args...
 	if err = st.state.ProtectedCall(args, lua.MultipleReturns, 0); err != nil {
+		if e, ok := err.(lua.RuntimeError); ok {
+			err = errors.New(string(e))
+		}
 		lua.Where(st.state, 0)
 		where, _ := st.state.ToString(-1)
 		return &LuaError{where, err}
@@ -763,6 +766,9 @@ func (st *LuaState) DoFile(fileName string, args int) error {
 	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
 	if err != nil {
+		if e, ok := err.(lua.RuntimeError); ok {
+			err = errors.New(string(e))
+		}
 		lua.Where(st.state, 0)
 		where, _ := st.state.ToString(-1)
 		return &LuaError{where, err}
@@ -789,6 +795,9 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	err = st.state.ProtectedCall(args, lua.MultipleReturns, 0) // +results..., -func, -args...
 	st.popFile()
 	if err != nil {
+		if e, ok := err.(lua.RuntimeError); ok {
+			err = errors.New(string(e))
+		}
 		lua.Where(st.state, 0)
 		where, _ := st.state.ToString(-1)
 		return &LuaError{where, err}
