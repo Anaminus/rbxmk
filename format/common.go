@@ -55,7 +55,7 @@ type MergeError struct {
 }
 
 func (err *MergeError) Error() string {
-	return fmt.Sprintf("cannot merge types %s and %s", err.drilldata, err.indata)
+	return fmt.Sprintf("cannot merge type %s into %s", err.indata, err.drilldata)
 }
 
 func NewMergeError(drilldata, indata rbxmk.Data) error {
