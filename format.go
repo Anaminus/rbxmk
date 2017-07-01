@@ -20,7 +20,14 @@ type Drill func(opt Options, indata Data, inref []string) (outdata Data, outref 
 // rootdata. Depending on the scheme, both rootdata and drilldata may be nil.
 // indata is the data to be merged. Merger returns the resulting Data after it
 // has been merged.
+//
+// If indata is of the type DeleteData, then the value of drilldata should be
+// removed such that it is no longer present under rootdata.
 type Merger func(opt Options, rootdata, drilldata, indata Data) (outdata Data, err error)
+
+// DeleteData is passed as indata to a Merger to indicate that drilldata
+// should be deleted.
+type DeleteData struct{}
 
 var EOD = errors.New("end of drill")
 

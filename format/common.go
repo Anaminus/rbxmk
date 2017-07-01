@@ -283,6 +283,8 @@ func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (o
 		case *rbxfile.Instance:
 			v := []*rbxfile.Instance{indata}
 			return &v, nil
+		case rbxmk.DeleteData:
+			return nil, nil
 		}
 	case *[]*rbxfile.Instance:
 		switch indata := indata.(type) {
@@ -292,6 +294,8 @@ func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (o
 		case *rbxfile.Instance:
 			*drilldata = append(*drilldata, indata)
 			return rootdata, nil
+		case rbxmk.DeleteData:
+			*drilldata = (*drilldata)[:0]
 		}
 	case *rbxfile.Instance:
 		switch indata := indata.(type) {
@@ -311,6 +315,8 @@ func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (o
 		case Property:
 			drilldata.Properties[indata.Name] = indata.Properties[indata.Name]
 			return rootdata, nil
+		case rbxmk.DeleteData:
+			drilldata.SetParent(nil)
 		}
 	}
 	return MergeProperties(opt, rootdata, drilldata, indata)
@@ -322,6 +328,8 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 		switch indata := indata.(type) {
 		case map[string]rbxfile.Value:
 			return indata, nil
+		case rbxmk.DeleteData:
+			return nil, nil
 		}
 	case map[string]rbxfile.Value:
 		switch indata := indata.(type) {
@@ -333,6 +341,10 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 		case Property:
 			drilldata[indata.Name] = indata.Properties[indata.Name]
 			return rootdata, nil
+		case rbxmk.DeleteData:
+			for k := range drilldata {
+				delete(drilldata, k)
+			}
 		}
 	case Property:
 		switch indata := indata.(type) {
@@ -342,6 +354,8 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 		case rbxfile.Value:
 			drilldata.Properties[drilldata.Name] = indata
 			return rootdata, nil
+		case rbxmk.DeleteData:
+			delete(drilldata.Properties, drilldata.Name)
 		}
 	}
 	return nil, NewMergeError(drilldata, indata)
