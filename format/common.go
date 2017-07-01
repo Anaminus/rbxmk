@@ -79,8 +79,8 @@ func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 	var instances []*rbxfile.Instance
 
 	switch v := indata.(type) {
-	case []*rbxfile.Instance:
-		instances = v
+	case *[]*rbxfile.Instance:
+		instances = *v
 	case *rbxfile.Instance:
 		if v == nil {
 			return indata, inref, fmt.Errorf("*rbxfile.Instance Data cannot be nil")
@@ -220,11 +220,11 @@ func DrillInstanceProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string)
 
 	var instance *rbxfile.Instance
 	switch v := indata.(type) {
-	case []*rbxfile.Instance:
-		if len(v) == 0 {
-			return indata, inref, fmt.Errorf("length of []*rbxfile.Instance Data cannot be 0")
+	case *[]*rbxfile.Instance:
+		if len(*v) == 0 {
+			return indata, inref, fmt.Errorf("length of *[]*rbxfile.Instance Data cannot be 0")
 		}
-		instance = v[0]
+		instance = (*v)[0]
 	case *rbxfile.Instance:
 		if v == nil {
 			return indata, inref, fmt.Errorf("*rbxfile.Instance Data cannot be nil")
@@ -278,24 +278,25 @@ func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (o
 	switch drilldata := drilldata.(type) {
 	case nil:
 		switch indata := indata.(type) {
-		case []*rbxfile.Instance:
+		case *[]*rbxfile.Instance:
 			return indata, nil
 		case *rbxfile.Instance:
-			return []*rbxfile.Instance{indata}, nil
+			v := []*rbxfile.Instance{indata}
+			return &v, nil
 		}
-	case []*rbxfile.Instance:
+	case *[]*rbxfile.Instance:
 		switch indata := indata.(type) {
-		case []*rbxfile.Instance:
-			drilldata = append(drilldata, indata...)
+		case *[]*rbxfile.Instance:
+			*drilldata = append(*drilldata, *indata...)
 			return rootdata, nil
 		case *rbxfile.Instance:
-			drilldata = append(drilldata, indata)
+			*drilldata = append(*drilldata, indata)
 			return rootdata, nil
 		}
 	case *rbxfile.Instance:
 		switch indata := indata.(type) {
-		case []*rbxfile.Instance:
-			for _, child := range indata {
+		case *[]*rbxfile.Instance:
+			for _, child := range *indata {
 				drilldata.AddChild(child)
 			}
 			return rootdata, nil

@@ -49,9 +49,9 @@ func (c JSONCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 func (c JSONCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	var instance *rbxfile.Instance
 	switch v := data.(type) {
-	case []*rbxfile.Instance:
-		if len(v) > 0 {
-			instance = v[0]
+	case *[]*rbxfile.Instance:
+		if len(*v) > 0 {
+			instance = (*v)[0]
 		}
 	case *rbxfile.Instance:
 		instance = v

@@ -112,9 +112,9 @@ func (c LuaCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	var script *rbxfile.Instance
 	switch v := data.(type) {
-	case []*rbxfile.Instance:
-		if len(v) > 0 {
-			script = v[0]
+	case *[]*rbxfile.Instance:
+		if len(*v) > 0 {
+			script = (*v)[0]
 		}
 	case *rbxfile.Instance:
 		script = v

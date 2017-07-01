@@ -72,16 +72,16 @@ func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	if err != nil {
 		return err
 	}
-	*data = root.Instances
+	*data = &root.Instances
 	return nil
 }
 
 func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
-	instances, ok := data.([]*rbxfile.Instance)
+	instances, ok := data.(*[]*rbxfile.Instance)
 	if !ok {
 		return NewDataTypeError(data)
 	}
-	root := &rbxfile.Root{Instances: instances}
+	root := &rbxfile.Root{Instances: *instances}
 	if c.xml {
 		err = xml.Serialize(w, c.api, root)
 	} else {
