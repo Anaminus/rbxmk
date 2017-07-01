@@ -34,26 +34,6 @@ go get -u -tags forceposix github.com/anaminus/rbxmk/rbxmk
 
 For more information, see the [go-flags](https://godoc.org/github.com/jessevdk/go-flags) package.
 
-## Command options
-
-Since almost all actions are done in Lua, there are only a few command
-options:
-
-```
-rbxmk [ -h ] [ -f FILE ] [ ARGS... ]
-```
-
-Options          | Description
------------------|------------
-`-h`, `--help`   | Display a help message.
-`-f`, `--file`   | Run a script from a file.
-
-If the `-f` option is not given, then the script is read from stdin.
-
-Options after any valid flags will be passed to the script as arguments.
-Numbers, bools, and nil are parsed into their respective types in Lua, and any
-other values are read as strings.
-
 ## Usage
 
 See [USAGE.md](USAGE.md) for details on how to use `rbxmk`.

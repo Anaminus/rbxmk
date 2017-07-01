@@ -5,6 +5,7 @@ This document provides details on how `rbxmk` works, for regular usage.
 <table>
 <thead><tr><th>Table of Contents</th></tr></thead>
 <tbody><tr><td><ol>
+	<li><a href="#user-content-command-options">Command options</a></li>
 	<li><a href="#user-content-lua-environment">Lua environment</a></li>
 	<li><a href="#user-content-lua-functions-table">Lua functions table</a></li>
 	<li><a href="#user-content-resolve-chain">Resolve chain</a><ol>
@@ -37,6 +38,26 @@ This document provides details on how `rbxmk` works, for regular usage.
 	</ol></li>
 </ol></td></tr></tbody>
 </table>
+
+## Command options
+
+Since almost all actions are done in Lua, the `rbxmk` command has only a few
+options:
+
+```
+rbxmk [ -h ] [ -f FILE ] [ ARGS... ]
+```
+
+Options          | Description
+-----------------|------------
+`-h`, `--help`   | Display a help message.
+`-f`, `--file`   | Run a Lua script from a file.
+
+If the `-f` option is not given, then the script is read from stdin.
+
+Options after any valid flags will be passed to the script as arguments.
+Numbers, bools, and nil are parsed into their respective types in Lua, and any
+other values are read as strings.
 
 ## Lua environment
 
