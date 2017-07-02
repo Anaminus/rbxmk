@@ -7,6 +7,7 @@ import (
 	"github.com/anaminus/rbxmk/format"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
+	"github.com/yuin/gopher-lua"
 	"os"
 	"strconv"
 )
@@ -56,15 +57,15 @@ func main() {
 		number, err := strconv.ParseFloat(arg, 64)
 		switch {
 		case err == nil:
-			state.state.PushNumber(number)
+			state.state.Push(lua.LNumber(number))
 		case arg == "true":
-			state.state.PushBoolean(true)
+			state.state.Push(lua.LTrue)
 		case arg == "false":
-			state.state.PushBoolean(false)
+			state.state.Push(lua.LFalse)
 		case arg == "nil":
-			state.state.PushNil()
+			state.state.Push(lua.LNil)
 		default:
-			state.state.PushString(arg)
+			state.state.Push(lua.LString(arg))
 		}
 	}
 
