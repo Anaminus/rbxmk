@@ -11,10 +11,15 @@ import (
 	"strings"
 )
 
+type fileInfo struct {
+	path string
+	fi   os.FileInfo
+}
+
 type LuaState struct {
 	options   rbxmk.Options
 	state     *lua.LState
-	fileStack []os.FileInfo
+	fileStack []*fileInfo
 }
 
 const (
@@ -192,7 +197,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 	l := lua.NewState(lua.Options{SkipOpenLibs: true})
 	st.options = opt
 	st.state = l
-	st.fileStack = make([]os.FileInfo, 0, 1)
+	st.fileStack = make([]*fileInfo, 0, 1)
 
 	string_Format := func(l *lua.LState) int {
 		str := l.CheckString(1)
@@ -457,7 +462,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			if err != nil {
 				return throwError(l, err)
 			}
-			if err = st.pushFile(fi); err != nil {
+			if err = st.pushFile(&fileInfo{fileName, fi}); err != nil {
 				return throwError(l, err)
 			}
 
@@ -597,10 +602,10 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 	return st
 }
 
-func (st *LuaState) pushFile(fi os.FileInfo) error {
+func (st *LuaState) pushFile(fi *fileInfo) error {
 	for _, f := range st.fileStack {
-		if os.SameFile(fi, f) {
-			return fmt.Errorf("\"%s\" is already running", fi.Name())
+		if os.SameFile(fi.fi, f.fi) {
+			return fmt.Errorf("\"%s\" is already running", fi.path)
 		}
 	}
 	st.fileStack = append(st.fileStack, fi)
@@ -608,7 +613,10 @@ func (st *LuaState) pushFile(fi os.FileInfo) error {
 }
 
 func (st *LuaState) popFile() {
-	st.fileStack = st.fileStack[:len(st.fileStack)-1]
+	if len(st.fileStack) > 0 {
+		st.fileStack[len(st.fileStack)-1] = nil
+		st.fileStack = st.fileStack[:len(st.fileStack)-1]
+	}
 }
 
 type LuaSyntaxError string
@@ -643,7 +651,7 @@ func (st *LuaState) DoFile(fileName string, args int) error {
 	if err != nil {
 		return err
 	}
-	if err = st.pushFile(fi); err != nil {
+	if err = st.pushFile(&fileInfo{fileName, fi}); err != nil {
 		return err
 	}
 
@@ -663,7 +671,7 @@ func (st *LuaState) DoFileHandle(f *os.File, args int) error {
 	if err != nil {
 		return err
 	}
-	if err = st.pushFile(fi); err != nil {
+	if err = st.pushFile(&fileInfo{f.Name(), fi}); err != nil {
 		return err
 	}
 
