@@ -75,6 +75,9 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 		}
 	}
 
+	if ext == "" {
+		return data, nil
+	}
 	if !opt.Formats.Registered(ext) {
 		return nil, &NodeError{"input", "", fmt.Errorf("unknown format %s", ext)}
 	}
