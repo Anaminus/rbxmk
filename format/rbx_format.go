@@ -77,11 +77,15 @@ func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 }
 
 func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
-	instances, ok := data.(*[]*rbxfile.Instance)
-	if !ok {
+	var root *rbxfile.Root
+	switch v := data.(type) {
+	case *[]*rbxfile.Instance:
+		root = &rbxfile.Root{Instances: *v}
+	case nil:
+		root = &rbxfile.Root{}
+	default:
 		return NewDataTypeError(data)
 	}
-	root := &rbxfile.Root{Instances: *instances}
 	if c.xml {
 		err = xml.Serialize(w, c.api, root)
 	} else {

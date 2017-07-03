@@ -47,19 +47,17 @@ func (c JSONCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 }
 
 func (c JSONCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
-	var instance *rbxfile.Instance
 	switch v := data.(type) {
 	case *[]*rbxfile.Instance:
 		if len(*v) > 0 {
-			instance = (*v)[0]
+			data = (*v)[0].Properties
 		}
 	case *rbxfile.Instance:
-		instance = v
+		data = v.Properties
 	case Property:
 		data = map[string]rbxfile.Value{v.Name: v.Properties[v.Name]}
-	}
-	if instance != nil {
-		data = instance.Properties
+	case nil:
+		data = map[string]rbxfile.Value{}
 	}
 
 	props, ok := data.(map[string]rbxfile.Value)

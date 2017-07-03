@@ -420,9 +420,10 @@ xml              | `[string]Value`   | `[]Instance*`, `Instance`, `[string]Value
 - `*`: Selects the first Instance in the list.
 - `Script-like`: An `Instance` of the class `Script`, `LocalScript`, or
   `ModuleScript`.
-- `String-like`: A `Value` of the type `String`, `BinaryString`,
-  `ProtectedString`.
-
+- `String-like`: A `string`, or a `Value` of the type `String`,
+  `BinaryString`, `ProtectedString`.
+- All formats can encode `nil` as Data. The result will be the empty value for
+  the format.
 
 ## Schemes
 

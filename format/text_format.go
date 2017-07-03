@@ -55,6 +55,10 @@ func (c *TextCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 		_, err = w.Write([]byte(v))
 	case rbxfile.ValueString:
 		_, err = w.Write([]byte(v))
+	case string:
+		_, err = w.Write([]byte(v))
+	case nil:
+		// Write nothing.
 	default:
 		err = NewDataTypeError(data)
 	}

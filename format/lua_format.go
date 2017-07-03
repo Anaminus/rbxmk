@@ -118,6 +118,8 @@ func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 		}
 	case *rbxfile.Instance:
 		script = v
+	case nil:
+		data = ""
 	}
 	if script != nil {
 		switch script.ClassName {
@@ -133,6 +135,8 @@ func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	case rbxfile.ValueBinaryString:
 		_, err = w.Write([]byte(v))
 	case rbxfile.ValueString:
+		_, err = w.Write([]byte(v))
+	case string:
 		_, err = w.Write([]byte(v))
 	default:
 		err = NewDataTypeError(data)
