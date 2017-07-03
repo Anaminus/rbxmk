@@ -158,7 +158,7 @@ map{A, X, B, Y}
 -- 4: B -> Y
 ```
 
-### map
+### delete
 
 `delete{...output}`
 
