@@ -38,6 +38,7 @@ This document provides details on how `rbxmk` works, for regular usage.
 		<li><a href="#user-content-text-formats">Text formats</a></li>
 		<li><a href="#user-content-property-formats">Property formats</a></li>
 	</ol></li>
+	<li><a href="#user-content-filters">Filters</a></li>
 </ol></td></tr></tbody>
 </table>
 
@@ -432,6 +433,8 @@ xml              | `[string]Value`   | `[]Instance*`, `Instance`, `[string]Value
 
 ## Schemes
 
+This section lists the schemes that `rbxmk` has available by default.
+
 ### file
 
 The `file` scheme is used to refer to files on the operating system. It is
@@ -649,6 +652,11 @@ preserved within a string.
 
 ## Formats
 
+This section lists the formats that `rbxmk` has available by default.
+
+[Format types table](#user-content-format-types-table) shows the Data types
+each format can encode and decode.
+
 ### Roblox formats
 
 These formats describe official Roblox file formats.
@@ -692,5 +700,8 @@ Name | Extension | Description
 JSON | `json`    | A file containing properties in JSON format.
 XML  | `xml`     | A file containing properties in XML format.
 
+## Filters
 
+This section lists the filters that `rbxmk` has available by default.
 
+*Not implemented*
