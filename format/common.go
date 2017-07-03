@@ -9,6 +9,8 @@ import (
 	"strconv"
 )
 
+var Formats = rbxmk.NewFormats()
+
 // Property is a Data type pointing to a value within a property map.
 type Property struct {
 	Properties map[string]rbxfile.Value

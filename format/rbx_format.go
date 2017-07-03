@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "RBXL",
 		Ext:  "rbxl",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
@@ -20,7 +20,7 @@ func init() {
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		Merger:       MergeInstance,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "RBXLX",
 		Ext:  "rbxlx",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
@@ -30,7 +30,7 @@ func init() {
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		Merger:       MergeInstance,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "RBXM",
 		Ext:  "rbxm",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
@@ -40,7 +40,7 @@ func init() {
 		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
 		Merger:       MergeInstance,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "RBXMX",
 		Ext:  "rbxmx",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {

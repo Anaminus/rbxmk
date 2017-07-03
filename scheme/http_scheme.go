@@ -15,12 +15,10 @@ func init() {
 		Handler:   httpOutputSchemeHandler,
 		Finalizer: httpOutputFinalizer,
 	}
-
-	registerInput("http", input)
-	registerOutput("http", output)
-
-	registerInput("https", input)
-	registerOutput("https", output)
+	Schemes.Register(
+		rbxmk.Scheme{Name: "http", Input: &input, Output: &output},
+		rbxmk.Scheme{Name: "https", Input: &input, Output: &output},
+	)
 }
 
 func httpInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {

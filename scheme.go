@@ -1,5 +1,16 @@
 package rbxmk
 
+import (
+	"fmt"
+	"sort"
+)
+
+type Scheme struct {
+	Name   string
+	Input  *InputScheme
+	Output *OutputScheme
+}
+
 type InputScheme struct {
 	Handler InputSchemeHandler
 }
@@ -47,27 +58,77 @@ func NewSchemes() *Schemes {
 	}
 }
 
-func (s *Schemes) RegisterInput(name string, scheme InputScheme) {
-	if scheme.Handler == nil {
-		panic("input scheme must have handler")
+func (s *Schemes) Register(schemes ...Scheme) error {
+	for _, scheme := range schemes {
+		if scheme.Input == nil && scheme.Output == nil {
+			return fmt.Errorf("cannot register empty scheme \"%s\"", scheme.Name)
+		}
+		if scheme.Input != nil {
+			if _, registered := s.input[scheme.Name]; registered {
+				return fmt.Errorf("input scheme \"%s\" is already registered", scheme.Name)
+			}
+			if scheme.Input.Handler == nil {
+				return fmt.Errorf("input scheme \"%s\" must have Handler function", scheme.Name)
+			}
+		}
+		if scheme.Output != nil {
+			if _, registered := s.output[scheme.Name]; registered {
+				return fmt.Errorf("output scheme \"%s\" is already registered", scheme.Name)
+			}
+			if scheme.Output.Handler == nil {
+				return fmt.Errorf("output scheme \"%s\" must have Handler function", scheme.Name)
+			}
+			if scheme.Output.Finalizer == nil {
+				return fmt.Errorf("output scheme \"%s\" must have Finalizer function", scheme.Name)
+			}
+		}
 	}
-	if _, registered := s.input[name]; registered {
-		panic("scheme already registered")
+	for _, scheme := range schemes {
+		if scheme.Input != nil {
+			input := *scheme.Input
+			s.input[scheme.Name] = &input
+		}
+		if scheme.Output != nil {
+			output := *scheme.Output
+			s.output[scheme.Name] = &output
+		}
 	}
-	s.input[name] = &scheme
+
+	return nil
 }
 
-func (s *Schemes) RegisterOutput(name string, scheme OutputScheme) {
-	if scheme.Handler == nil {
-		panic("output scheme must have handler")
+func (s *Schemes) List() []Scheme {
+	var schemes map[string]Scheme
+	if len(s.input) > len(s.output) {
+		schemes = make(map[string]Scheme, len(s.input))
+	} else {
+		schemes = make(map[string]Scheme, len(s.output))
 	}
-	if scheme.Finalizer == nil {
-		panic("output scheme must have finalizer")
+	for name, inp := range s.input {
+		scheme := schemes[name]
+		scheme.Name = name
+		input := *inp
+		scheme.Input = &input
+		schemes[name] = scheme
 	}
-	if _, registered := s.output[name]; registered {
-		panic("scheme already registered")
+	for name, out := range s.output {
+		scheme := schemes[name]
+		scheme.Name = name
+		output := *out
+		scheme.Output = &output
+		schemes[name] = scheme
 	}
-	s.output[name] = &scheme
+
+	l := make([]Scheme, len(schemes))
+	i := 0
+	for _, scheme := range schemes {
+		l[i] = scheme
+		i++
+	}
+	sort.Slice(l, func(i, j int) bool {
+		return l[i].Name < l[j].Name
+	})
+	return l
 }
 
 func (s *Schemes) Input(name string) *InputScheme {

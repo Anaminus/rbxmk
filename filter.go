@@ -1,13 +1,20 @@
 package rbxmk
 
 import (
+	"fmt"
 	"runtime"
+	"sort"
 )
 
-type Filter func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{})
+type Filter struct {
+	Name string
+	Func FilterFunc
+}
 
-// FilterArgs is used by a Filter to indicate that it is done processing its
-// arguments.
+type FilterFunc func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{})
+
+// FilterArgs is used by a FilterFunc to indicate that it is done processing
+// its arguments.
 type FilterArgs interface {
 	ProcessedArgs()
 }
@@ -18,7 +25,7 @@ func (f *filterArgs) ProcessedArgs() {
 	*f = true
 }
 
-func CallFilter(filter Filter, opt Options, arguments ...interface{}) (results []interface{}, err error) {
+func CallFilter(filter FilterFunc, opt Options, arguments ...interface{}) (results []interface{}, err error) {
 	var argsProcessed filterArgs
 	defer func() {
 		if !argsProcessed {
@@ -30,23 +37,41 @@ func CallFilter(filter Filter, opt Options, arguments ...interface{}) (results [
 }
 
 type Filters struct {
-	f map[string]Filter
+	f map[string]FilterFunc
 }
 
 func NewFilters() *Filters {
-	return &Filters{f: map[string]Filter{}}
+	return &Filters{f: map[string]FilterFunc{}}
 }
 
-func (fs *Filters) Register(name string, filter Filter) {
-	if filter == nil {
-		panic("cannot register nil filter")
+func (fs *Filters) Register(filters ...Filter) error {
+	for _, f := range filters {
+		if _, registered := fs.f[f.Name]; registered {
+			return fmt.Errorf("filter \"%s\" is already registered", f.Name)
+		}
+		if f.Func == nil {
+			return fmt.Errorf("filter \"%s\" must have Func function", f.Name)
+		}
 	}
-	if _, registered := fs.f[name]; registered {
-		panic("filter already registered")
+	for _, f := range filters {
+		fs.f[f.Name] = f.Func
 	}
-	fs.f[name] = filter
+	return nil
 }
 
-func (fs *Filters) Filter(name string) Filter {
+func (fs *Filters) List() []Filter {
+	l := make([]Filter, len(fs.f))
+	i := 0
+	for name, fn := range fs.f {
+		l[i] = Filter{Name: name, Func: fn}
+		i++
+	}
+	sort.Slice(l, func(i, j int) bool {
+		return l[i].Name < l[j].Name
+	})
+	return l
+}
+
+func (fs *Filters) Filter(name string) FilterFunc {
 	return fs.f[name]
 }

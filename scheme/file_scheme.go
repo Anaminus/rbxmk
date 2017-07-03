@@ -7,12 +7,15 @@ import (
 )
 
 func init() {
-	registerInput("file", rbxmk.InputScheme{
-		Handler: fileInputSchemeHandler,
-	})
-	registerOutput("file", rbxmk.OutputScheme{
-		Handler:   fileOutputSchemeHandler,
-		Finalizer: fileOutputFinalizer,
+	Schemes.Register(rbxmk.Scheme{
+		Name: "file",
+		Input: &rbxmk.InputScheme{
+			Handler: fileInputSchemeHandler,
+		},
+		Output: &rbxmk.OutputScheme{
+			Handler:   fileOutputSchemeHandler,
+			Finalizer: fileOutputFinalizer,
+		},
 	})
 }
 

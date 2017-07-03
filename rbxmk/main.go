@@ -47,9 +47,15 @@ func main() {
 	}
 
 	options := rbxmk.NewOptions()
-	scheme.Register(options.Schemes)
-	format.Register(options.Formats)
-	filter.Register(options.Filters)
+	if err := options.Schemes.Register(scheme.Schemes.List()...); err != nil {
+		Fatalf("%s", err)
+	}
+	if err := options.Formats.Register(format.Formats.List()...); err != nil {
+		Fatalf("%s", err)
+	}
+	if err := options.Filters.Register(filter.Filters.List()...); err != nil {
+		Fatalf("%s", err)
+	}
 
 	state := NewLuaState(options)
 

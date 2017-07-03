@@ -23,7 +23,7 @@ func getFileNameCtx(opt rbxmk.Options, ctx interface{}) string {
 }
 
 func init() {
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Lua",
 		Ext:  "lua",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
@@ -33,7 +33,7 @@ func init() {
 		OutputDrills: nil,
 		Merger:       MergeOverwrite,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Lua Script",
 		Ext:  "script.lua",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
@@ -43,7 +43,7 @@ func init() {
 		OutputDrills: nil,
 		Merger:       MergeOverwrite,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Lua LocalScript",
 		Ext:  "localscript.lua",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
@@ -53,7 +53,7 @@ func init() {
 		OutputDrills: nil,
 		Merger:       MergeOverwrite,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Lua ModuleScript",
 		Ext:  "modulescript.lua",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {

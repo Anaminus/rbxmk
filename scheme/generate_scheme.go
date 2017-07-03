@@ -13,8 +13,11 @@ import (
 )
 
 func init() {
-	registerInput("generate", rbxmk.InputScheme{
-		Handler: generateInputSchemeHandler,
+	Schemes.Register(rbxmk.Scheme{
+		Name: "generate",
+		Input: &rbxmk.InputScheme{
+			Handler: generateInputSchemeHandler,
+		},
 	})
 }
 

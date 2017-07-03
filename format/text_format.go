@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Text",
 		Ext:  "txt",
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
@@ -18,7 +18,7 @@ func init() {
 		OutputDrills: nil,
 		Merger:       MergeOverwrite,
 	})
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "Binary",
 		Ext:  "bin",
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {

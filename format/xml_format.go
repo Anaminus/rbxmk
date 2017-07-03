@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	register(rbxmk.Format{
+	Formats.Register(rbxmk.Format{
 		Name: "XML Properties",
 		Ext:  "properties.xml",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {

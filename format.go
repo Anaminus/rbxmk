@@ -2,7 +2,9 @@ package rbxmk
 
 import (
 	"errors"
+	"fmt"
 	"io"
+	"sort"
 )
 
 type Data interface{}
@@ -64,23 +66,44 @@ func NewFormats() *Formats {
 	return &Formats{f: map[string]*Format{}}
 }
 
-func (fs *Formats) Register(f Format) {
-	if _, registered := fs.f[f.Ext]; registered {
-		panic("format already registered")
+func (fs *Formats) Register(formats ...Format) error {
+	for i, f := range formats {
+		if f.Ext == "" {
+			return fmt.Errorf("format #%d must have non-empty Ext", i)
+		}
+		if _, registered := fs.f[f.Ext]; registered {
+			return fmt.Errorf("format \"%s\" is already registered", f.Ext)
+		}
+		if f.Codec == nil {
+			return fmt.Errorf("format \"%s\" must have Codec function", f.Ext)
+		}
 	}
-	if f.Codec == nil {
-		panic("format must have Codec function")
+	for _, f := range formats {
+		format := f
+		id := make([]Drill, len(format.InputDrills))
+		copy(id, format.InputDrills)
+		format.InputDrills = id
+
+		od := make([]Drill, len(format.OutputDrills))
+		copy(od, format.OutputDrills)
+		format.OutputDrills = od
+
+		fs.f[format.Ext] = &format
 	}
+	return nil
+}
 
-	id := make([]Drill, len(f.InputDrills))
-	copy(id, f.InputDrills)
-	f.InputDrills = id
-
-	od := make([]Drill, len(f.OutputDrills))
-	copy(od, f.OutputDrills)
-	f.OutputDrills = od
-
-	fs.f[f.Ext] = &f
+func (fs *Formats) List() []Format {
+	l := make([]Format, len(fs.f))
+	i := 0
+	for _, f := range fs.f {
+		l[i] = *f
+		i++
+	}
+	sort.Slice(l, func(i, j int) bool {
+		return l[i].Ext < l[j].Ext
+	})
+	return l
 }
 
 func (fs *Formats) Registered(ext string) (registered bool) {
