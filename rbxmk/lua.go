@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/format"
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
 	"os"
@@ -212,52 +211,6 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 
 	{
 		mt := l.NewTypeMetatable(luaTypeInput)
-		SetIndexFunctions(l, mt, map[string]lua.LGFunction{
-			"CheckInstance": func(l *lua.LState) int {
-				ldata := l.Get(1)
-				if typeOf(l, ldata) != luaTypeInput {
-					l.ArgError(1, "input expected")
-				}
-				t := GetArgs(l, tableMethodArg)
-
-				nt := t.Len()
-				ref := make([]string, nt)
-				for i := 1; i <= nt; i++ {
-					ref[i-1] = t.IndexString(i, false)
-				}
-
-				data := ldata.(*lua.LUserData).Value.(rbxmk.Data)
-				var err error
-				if data, ref, err = format.DrillInstance(st.options, data, ref); err != nil && err != rbxmk.EOD {
-					l.Push(lua.LFalse)
-					return 1
-				}
-				if data, ref, err = format.DrillInstanceProperty(st.options, data, ref); err != nil && err != rbxmk.EOD {
-					l.Push(lua.LFalse)
-					return 1
-				}
-				l.Push(lua.LTrue)
-				return 1
-			},
-			"CheckProperty": func(l *lua.LState) int {
-				ldata := l.Get(1)
-				if typeOf(l, ldata) != luaTypeInput {
-					l.ArgError(1, "input expected")
-				}
-				t := GetArgs(l, tableMethodArg)
-
-				ref := []string{t.IndexString(1, false)}
-
-				data := ldata.(*lua.LUserData).Value.(rbxmk.Data)
-				var err error
-				if data, ref, err = format.DrillProperty(st.options, data, ref); err != nil && err != rbxmk.EOD {
-					l.Push(lua.LFalse)
-					return 1
-				}
-				l.Push(lua.LTrue)
-				return 1
-			},
-		})
 		l.SetFuncs(mt, map[string]lua.LGFunction{
 			"__type": func(l *lua.LState) int {
 				l.Push(lua.LString(luaTypeInput))
