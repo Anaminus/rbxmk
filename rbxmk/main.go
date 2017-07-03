@@ -71,11 +71,11 @@ func main() {
 
 	if flagOptions.File != "" {
 		if err := state.DoFile(flagOptions.File, len(args)); err != nil {
-			Fatalf("error running file %q: %s", flagOptions.File, err)
+			Fatalf("%s", err)
 		}
 	} else {
 		if err := state.DoFileHandle(os.Stdin, len(args)); err != nil {
-			Fatalf("error running stdin: %s", err)
+			Fatalf("%s", err)
 		}
 	}
 }
