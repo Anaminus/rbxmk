@@ -7,7 +7,9 @@ This document provides details on how `rbxmk` works, for regular usage.
 <tbody><tr><td><ol>
 	<li><a href="#user-content-command-options">Command options</a></li>
 	<li><a href="#user-content-lua-environment">Lua environment</a></li>
-	<li><a href="#user-content-lua-functions-table">Lua functions table</a></li>
+	<li><a href="#user-content-lua-functions-table">Lua functions table</a><ol>
+		<li><a href="#user-content-configure-options-table">Configure options table</a></li>
+	</ol></li>
 	<li><a href="#user-content-resolve-chain">Resolve chain</a><ol>
 		<li><a href="#user-content-input-procedure">Input procedure</a></li>
 		<li><a href="#user-content-output-procedure">Output procedure</a></li>
@@ -96,12 +98,12 @@ The following functions are available:
 
 Name                                 | Description
 -------------------------------------|------------
+[configure](#user-content-configure) | Configure the behavior of rbxmk.
 [delete](#user-content-delete)       | Delete an output node.
 [error](#user-content-error)         | Throw an error.
 [exit](#user-content-exit)           | Force the program to exit.
 [**filter**](#user-content-filter)   | Transform nodes.
 [getenv](#user-content-getenv)       | Get the value of an environment variable.
-[globalapi](#user-content-globalapi) | Set an API as the default for all functions.
 [**input**](#user-content-input)     | Create an input node.
 [load](#user-content-load)           | Load and execute a script.
 [loadapi](#user-content-loadapi)     | Load an API file.
@@ -271,15 +273,18 @@ as [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
 a value representing the API. This can be passed to certain functions to
 enhance how the function handles instances and properties.
 
-### globalapi
+### configure
 
-`globalapi{api}`
+`configure{...}`
 
-`globalapi` sets the default API value to be used by all applicable functions.
-Several functions have an `api` argument, which can be used to override the
-default API for that call.
+`configure` changes the behavior of rbxmk. Each named argument specifies an
+option to change. The following options are available:
 
-Initially, the default API is nil.
+#### Configure options table
+
+Name  | Type | Default | Description
+------|------|---------|------------
+`api` | api  |  nil    | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
 
 ## Resolve chain
 

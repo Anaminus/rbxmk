@@ -13,7 +13,7 @@ func init() {
 		Name: "XML Properties",
 		Ext:  "properties.xml",
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
-			return &XMLCodec{API: opt.API}
+			return &XMLCodec{API: opt.Config.API}
 		},
 		InputDrills:  []rbxmk.Drill{DrillProperty},
 		OutputDrills: []rbxmk.Drill{DrillProperty},

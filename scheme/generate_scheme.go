@@ -46,7 +46,7 @@ func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref 
 }
 
 func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
-	p := &genParser{s: s, refs: make(rbxfile.References), api: opt.API}
+	p := &genParser{s: s, refs: make(rbxfile.References), api: opt.Config.API}
 	if !p.parseClasses() {
 		return nil, p.errmsg
 	}

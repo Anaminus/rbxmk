@@ -7,11 +7,15 @@ import (
 	"os"
 )
 
+type Config struct {
+	API *rbxapi.API
+}
+
 type Options struct {
 	Schemes *Schemes
 	Formats *Formats
 	Filters *Filters
-	API     *rbxapi.API
+	Config  Config
 }
 
 func NewOptions() Options {
@@ -19,7 +23,9 @@ func NewOptions() Options {
 		Schemes: NewSchemes(),
 		Formats: NewFormats(),
 		Filters: NewFilters(),
-		API:     nil,
+		Config: Config{
+			API: nil,
+		},
 	}
 }
 

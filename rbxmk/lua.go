@@ -301,7 +301,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			t := GetArgs(l, 1)
 
 			opt := st.options
-			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+			opt.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 			node := &rbxmk.InputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
@@ -331,7 +331,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			t := GetArgs(l, 1)
 
 			opt := st.options
-			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+			opt.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 			node := &rbxmk.OutputNode{}
 			node.Format, _ = t.FieldString(formatIndex, true)
@@ -356,7 +356,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			t := GetArgs(l, 1)
 
 			opt := st.options
-			opt.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+			opt.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 			const filterNameIndex = "name"
 			var i int = 1
@@ -613,10 +613,11 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			}
 			return returnTypedValue(l, api, luaTypeAPI)
 		},
-		"globalapi": func(l *lua.LState) int {
+		"configure": func(l *lua.LState) int {
 			t := GetArgs(l, 1)
-			api, _ := t.IndexTyped(1, luaTypeAPI, true).(*rbxapi.API)
-			st.options.API = api
+			if v := t.FieldValue("api"); v != nil {
+				st.options.Config.API, _ = v.(*rbxapi.API)
+			}
 			return 0
 		},
 	})
