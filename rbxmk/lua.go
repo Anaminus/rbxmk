@@ -7,6 +7,7 @@ import (
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 )
@@ -536,6 +537,33 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 				l.Push(lua.LString(value))
 			} else {
 				l.Push(lua.LNil)
+			}
+			return 1
+		},
+		"path": func(l *lua.LState) int {
+			t := GetArgs(l, 1)
+			switch t.IndexString(1, false) {
+			case "file_name", "fn":
+				n := len(st.fileStack)
+				if n == 0 {
+					l.Push(lua.LString(""))
+					break
+				}
+				path, _ := filepath.Abs(st.fileStack[n-1].path)
+				l.Push(lua.LString(filepath.Base(path)))
+			case "file_dir", "fd":
+				n := len(st.fileStack)
+				if n == 0 {
+					l.Push(lua.LString(""))
+					break
+				}
+				path, _ := filepath.Abs(st.fileStack[n-1].path)
+				l.Push(lua.LString(filepath.Dir(path)))
+			case "working_dir", "wd":
+				wd, _ := os.Getwd()
+				l.Push(lua.LString(wd))
+			default:
+				l.Push(lua.LString(""))
 			}
 			return 1
 		},

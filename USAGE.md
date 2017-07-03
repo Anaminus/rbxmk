@@ -107,6 +107,7 @@ Name                                 | Description
 [loadapi](#user-content-loadapi)     | Load an API file.
 [**map**](#user-content-map)         | Map one or more inputs to one or more outputs.
 [**output**](#user-content-output)   | Create an output node.
+[path](#user-content-path)           | Get a file path.
 [pcall](#user-content-pcall)         | Call a function in protected mode.
 [print](#user-content-print)         | Print values to stdout.
 [printf](#user-content-printf)       | Print a formatted string to stdout.
@@ -222,6 +223,21 @@ return true, followed by any values returned by the called function.
 
 `getenv` returns the value of an environment variable of the given name.
 Returns nil if the variable is not present.
+
+### path
+
+`string = path{string}`
+
+`path` returns file path information based on a given argument:
+
+Argument            | Description
+--------------------|------------
+`file_dir`, `fd`    | Returns the directory of the script currently running.
+`file_name`, `fn`   | Returns the base name of the script currently running.
+`working_dir`, `wd` | Returns the working directory.
+
+Any other argument returns an empty string. An empty string will also be
+returned if the path could not be located.
 
 ### print
 
