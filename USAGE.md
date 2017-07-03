@@ -124,28 +124,6 @@ forces the file format, if needed.
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
 
-An input node returned by `input` has two methods:
-
-Name                                           | Description
------------------------------------------------|------------
-[`CheckInstance`](#user-content-checkinstance) | Check if an instance exists.
-[`CheckProperty`](#user-content-checkproperty) | Check if a property exists.
-
-#### CheckInstance
-
-`bool = inputNode:CheckInstance{string...}`
-
-`CheckInstance` returns whether an instance exists within the node. It may
-also be used to check whether an instance has a property. The arguments to
-`CheckInstance` are a reference, which can drill into instances.
-
-#### CheckProperty
-
-`bool = inputNode:CheckProperty{string}`
-
-`CheckProperty` returns whether a property of the given name exists within the
-node.
-
 ### output
 
 ```lua
