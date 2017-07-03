@@ -273,7 +273,13 @@ func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 // MergeOverwrite is a rbxmk.Merger that overrides the output data with
 // the input data.
 func MergeOverwrite(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outdata rbxmk.Data, err error) {
-	return indata, nil
+	switch indata := drilldata.(type) {
+	case rbxmk.DeleteData:
+		outdata = nil
+	default:
+		outdata = indata
+	}
+	return outdata, nil
 }
 
 func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outdata rbxmk.Data, err error) {
