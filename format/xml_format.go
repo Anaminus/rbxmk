@@ -56,7 +56,7 @@ func (c *XMLCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 
 	props, ok := data.(map[string]rbxfile.Value)
 	if !ok {
-		return NewDataTypeError(data)
+		return rbxmk.NewDataTypeError(data)
 	}
 
 	doc := &xml.Document{Indent: "\t"}

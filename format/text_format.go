@@ -60,7 +60,7 @@ func (c *TextCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	case nil:
 		// Write nothing.
 	default:
-		err = NewDataTypeError(data)
+		err = rbxmk.NewDataTypeError(data)
 	}
 	return err
 }

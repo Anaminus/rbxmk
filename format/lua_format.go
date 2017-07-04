@@ -139,7 +139,7 @@ func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	case string:
 		_, err = w.Write([]byte(v))
 	default:
-		err = NewDataTypeError(data)
+		err = rbxmk.NewDataTypeError(data)
 	}
 	return err
 }

@@ -3,7 +3,6 @@ package filter
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/format"
 	"github.com/robloxapi/rbxfile"
 	"github.com/yuin/gopher-lua"
 	"io/ioutil"
@@ -44,7 +43,7 @@ func doMinify(method string, data rbxmk.Data) rbxmk.Data {
 		data = doMinifyString(method, v)
 	case nil:
 	default:
-		panic(format.NewDataTypeError(data))
+		panic(rbxmk.NewDataTypeError(data))
 	}
 	return data
 }

@@ -84,7 +84,7 @@ func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	case nil:
 		root = &rbxfile.Root{}
 	default:
-		return NewDataTypeError(data)
+		return rbxmk.NewDataTypeError(data)
 	}
 	if c.xml {
 		err = xml.Serialize(w, c.api, root)

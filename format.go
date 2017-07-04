@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"reflect"
 	"sort"
 )
 
@@ -32,6 +33,40 @@ type Merger func(opt Options, rootdata, drilldata, indata Data) (outdata Data, e
 type DeleteData struct{}
 
 var EOD = errors.New("end of drill")
+
+type DataTypeError struct {
+	dataName string
+}
+
+func (err DataTypeError) Error() string {
+	return fmt.Sprintf("unexpected Data type: %s", err.dataName)
+}
+
+func NewDataTypeError(data Data) error {
+	if data == nil {
+		return DataTypeError{dataName: "nil"}
+	}
+	return DataTypeError{dataName: reflect.TypeOf(data).String()}
+}
+
+type MergeError struct {
+	drilldata, indata string
+}
+
+func (err *MergeError) Error() string {
+	return fmt.Sprintf("cannot merge type %s into %s", err.indata, err.drilldata)
+}
+
+func NewMergeError(drilldata, indata Data) error {
+	err := &MergeError{"nil", "nil"}
+	if drilldata != nil {
+		err.drilldata = reflect.TypeOf(drilldata).String()
+	}
+	if indata != nil {
+		err.indata = reflect.TypeOf(indata).String()
+	}
+	return err
+}
 
 type Format struct {
 	Name         string

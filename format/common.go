@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
-	"reflect"
 	"strconv"
 )
 
@@ -37,40 +36,6 @@ func (err ParseError) Error() string {
 	return fmt.Sprintf("@%d: %s", err.Index, err.Err)
 }
 
-type DataTypeError struct {
-	dataName string
-}
-
-func (err DataTypeError) Error() string {
-	return fmt.Sprintf("unexpected Data type: %s", err.dataName)
-}
-
-func NewDataTypeError(data rbxmk.Data) error {
-	if data == nil {
-		return DataTypeError{dataName: "nil"}
-	}
-	return DataTypeError{dataName: reflect.TypeOf(data).String()}
-}
-
-type MergeError struct {
-	drilldata, indata string
-}
-
-func (err *MergeError) Error() string {
-	return fmt.Sprintf("cannot merge type %s into %s", err.indata, err.drilldata)
-}
-
-func NewMergeError(drilldata, indata rbxmk.Data) error {
-	err := &MergeError{"nil", "nil"}
-	if drilldata != nil {
-		err.drilldata = reflect.TypeOf(drilldata).String()
-	}
-	if indata != nil {
-		err.indata = reflect.TypeOf(indata).String()
-	}
-	return err
-}
-
 func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
@@ -89,7 +54,7 @@ func DrillInstance(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 		}
 		instance = v
 	default:
-		return indata, inref, NewDataTypeError(indata)
+		return indata, inref, rbxmk.NewDataTypeError(indata)
 	}
 
 	i := 0
@@ -233,7 +198,7 @@ func DrillInstanceProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string)
 		}
 		instance = v
 	default:
-		err = NewDataTypeError(indata)
+		err = rbxmk.NewDataTypeError(indata)
 		return indata, inref, err
 	}
 
@@ -262,7 +227,7 @@ func DrillProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdat
 
 	props, ok := indata.(map[string]rbxfile.Value)
 	if !ok {
-		return indata, inref, NewDataTypeError(indata)
+		return indata, inref, rbxmk.NewDataTypeError(indata)
 	}
 	if _, exists := props[inref[0]]; !exists {
 		return indata, inref, fmt.Errorf("property %q not present in instance", inref[0])
@@ -370,5 +335,5 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 			return rootdata, nil
 		}
 	}
-	return nil, NewMergeError(drilldata, indata)
+	return nil, rbxmk.NewMergeError(drilldata, indata)
 }
