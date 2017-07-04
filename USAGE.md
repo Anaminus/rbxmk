@@ -110,7 +110,7 @@ Name                                 | Description
 [loadapi](#user-content-loadapi)     | Load an API file.
 [**map**](#user-content-map)         | Map one or more inputs to one or more outputs.
 [**output**](#user-content-output)   | Create an output node.
-[path](#user-content-path)           | Get a file path.
+[path](#user-content-path)           | Join file paths.
 [pcall](#user-content-pcall)         | Call a function in protected mode.
 [print](#user-content-print)         | Print values to stdout.
 [printf](#user-content-printf)       | Print a formatted string to stdout.
@@ -229,18 +229,25 @@ Returns nil if the variable is not present.
 
 ### path
 
-`string = path{string}`
+`string = path{...}`
 
-`path` returns file path information based on a given argument:
+`path` receives a number of strings, and joins them together into a single
+file path, adding separators as necessary.
 
-Argument            | Description
---------------------|------------
-`file_dir`, `fd`    | Returns the directory of the script currently running.
-`file_name`, `fn`   | Returns the base name of the script currently running.
-`working_dir`, `wd` | Returns the working directory.
+A string may contain variables, which begin with a `$` followed by a sequence
+of letters, digits, and underscores. Variables will be expanded into their
+final values before the string is joined.
 
-Any other argument returns an empty string. An empty string will also be
-returned if the path could not be located.
+The following variables are available:
+
+Variable                                 | Description
+-----------------------------------------|------------
+`script_directory`, `script_dir`, `sd`   | Expands to the directory of the script currently running.
+`script_name`, `sn`                      | Expands to the base name of the script currently running.
+`working_directory`, `working_dir`, `wd` | Expands to the current working directory.
+
+Any other variable returns an empty string. An empty string will also be
+returned if a path could not be located.
 
 ### print
 

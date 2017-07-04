@@ -542,29 +542,34 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 		},
 		"path": func(l *lua.LState) int {
 			t := GetArgs(l, 1)
-			switch t.IndexString(1, false) {
-			case "file_name", "fn":
-				n := len(st.fileStack)
-				if n == 0 {
-					l.Push(lua.LString(""))
-					break
-				}
-				path, _ := filepath.Abs(st.fileStack[n-1].path)
-				l.Push(lua.LString(filepath.Base(path)))
-			case "file_dir", "fd":
-				n := len(st.fileStack)
-				if n == 0 {
-					l.Push(lua.LString(""))
-					break
-				}
-				path, _ := filepath.Abs(st.fileStack[n-1].path)
-				l.Push(lua.LString(filepath.Dir(path)))
-			case "working_dir", "wd":
-				wd, _ := os.Getwd()
-				l.Push(lua.LString(wd))
-			default:
-				l.Push(lua.LString(""))
+			s := make([]string, t.Len())
+			for i := 1; i <= t.Len(); i++ {
+				s[i-1] = os.Expand(t.IndexString(i, false), func(v string) string {
+					switch v {
+					case "script_name", "sn":
+						n := len(st.fileStack)
+						if n == 0 {
+							l.Push(lua.LString(""))
+							break
+						}
+						path, _ := filepath.Abs(st.fileStack[n-1].path)
+						return filepath.Base(path)
+					case "script_directory", "script_dir", "sd":
+						n := len(st.fileStack)
+						if n == 0 {
+							l.Push(lua.LString(""))
+							break
+						}
+						path, _ := filepath.Abs(st.fileStack[n-1].path)
+						return filepath.Dir(path)
+					case "working_directory", "working_dir", "wd":
+						wd, _ := os.Getwd()
+						return wd
+					}
+					return ""
+				})
 			}
+			l.Push(lua.LString(filepath.Join(s...)))
 			return 1
 		},
 		"print": func(l *lua.LState) int {
