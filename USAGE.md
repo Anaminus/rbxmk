@@ -704,4 +704,34 @@ XML  | `xml`     | A file containing properties in XML format.
 
 This section lists the filters that `rbxmk` has available by default.
 
-*Not implemented*
+Name                               | Description
+-----------------------------------|------------
+[minify](#user-content-minify)     | Configure the behavior of rbxmk.
+[unminify](#user-content-unminify) | Delete an output node.
+
+### minify
+
+`data = filter{"minify", data}`
+
+`minify` uses [lua-minify](https://github.com/stravant/lua-minify) to minify a
+Lua script. It recieves a single Data, and returns the modified result.
+
+Data can be one of the following types:
+
+Type         | Description
+-------------|------------
+`Instance`   | If the instance is script-like, then its Source property is modified, if it exists.
+`[]Instance` | Each script-like instance is modified.
+`Value`      | Only if the value is string-like.
+`string`     | Modifies the string.
+
+### unminify
+
+`data = filter{"unminify", data}`
+
+`unminify` uses [lua-minify](https://github.com/stravant/lua-minify) to
+unminify a Lua script. It recieves a single Data, and returns the modified
+result.
+
+`unminify` receives the same Data types as the
+[`minify`](#user-content-minify) filter.
