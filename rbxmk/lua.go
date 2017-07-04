@@ -397,18 +397,18 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 					lv = lua.LString(v)
 				case uint:
 					lv = lua.LNumber(uint(v))
-				case rbxmk.Data:
-					lu := l.NewUserData()
-					lu.Value = v
-					l.SetMetatable(lu, l.GetTypeMetatable(luaTypeInput))
-					lv = lu
+				case nil:
+					lv = lua.LNil
 				case *rbxmk.OutputNode:
 					lu := l.NewUserData()
 					lu.Value = v
 					l.SetMetatable(lu, l.GetTypeMetatable(luaTypeOutput))
 					lv = lu
-				default:
-					lv = lua.LNil
+				default: // Assume rbxmk.Data.
+					lu := l.NewUserData()
+					lu.Value = v
+					l.SetMetatable(lu, l.GetTypeMetatable(luaTypeInput))
+					lv = lu
 				}
 				l.Push(lv)
 			}
