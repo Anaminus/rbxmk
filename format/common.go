@@ -213,9 +213,6 @@ func DrillInstanceProperty(opt rbxmk.Options, indata rbxmk.Data, inref []string)
 
 	// TODO: API?
 
-	if _, exists := instance.Properties[ref]; !exists {
-		return indata, inref, fmt.Errorf("property %q not present in instance", ref)
-	}
 	return Property{Properties: instance.Properties, Name: ref}, inref[1:], nil
 }
 
@@ -285,7 +282,11 @@ func MergeInstance(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (o
 			}
 			return rootdata, nil
 		case Property:
-			drilldata.Properties[indata.Name] = indata.Properties[indata.Name]
+			value, exists := indata.Properties[indata.Name]
+			if !exists {
+				return nil, fmt.Errorf("property %q not present in instance", indata.Name)
+			}
+			drilldata.Properties[indata.Name] = value
 			return rootdata, nil
 		case rbxmk.DeleteData:
 			drilldata.SetParent(nil)
@@ -312,7 +313,11 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 			}
 			return rootdata, nil
 		case Property:
-			drilldata[indata.Name] = indata.Properties[indata.Name]
+			value, exists := indata.Properties[indata.Name]
+			if !exists {
+				return nil, fmt.Errorf("property %q not present in instance", indata.Name)
+			}
+			drilldata[indata.Name] = value
 			return rootdata, nil
 		case rbxmk.DeleteData:
 			for k := range drilldata {
@@ -323,7 +328,11 @@ func MergeProperties(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) 
 	case Property:
 		switch indata := indata.(type) {
 		case Property:
-			drilldata.Properties[drilldata.Name] = indata.Properties[indata.Name]
+			value, exists := indata.Properties[indata.Name]
+			if !exists {
+				return nil, fmt.Errorf("property %q not present in instance", indata.Name)
+			}
+			drilldata.Properties[drilldata.Name] = value
 			return rootdata, nil
 		case rbxfile.Value:
 			drilldata.Properties[drilldata.Name] = indata
