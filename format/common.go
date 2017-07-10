@@ -460,6 +460,10 @@ func DrillRegion(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata 
 	for i, j := 0, 0; i < len(ref); i++ {
 		switch c := ref[i]; {
 		case isAlnum(c):
+			if i == len(ref)-1 {
+				section = append(section, string(ref[j:]))
+				j = i + 1
+			}
 		case c == '.':
 			section = append(section, string(ref[j:i]))
 			j = i + 1
