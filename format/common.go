@@ -418,9 +418,9 @@ func (r *Region) Set(p []byte) {
 			r.RegB = r.SelB
 		}
 		b := make([]byte, len(prefix)+len(p)+len(suffix))
-		copy(b, prefix)
-		copy(b, p)
-		copy(b, suffix)
+		copy(b[0:], prefix)
+		copy(b[len(prefix):], p)
+		copy(b[len(prefix)+len(p):], suffix)
 
 		r.Value.Bytes = b
 	}
