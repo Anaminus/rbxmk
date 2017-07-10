@@ -29,9 +29,9 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaValue, Name: getFileNameCtx(opt, ctx)}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		InputDrills:  []rbxmk.Drill{DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillRegion},
+		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Lua Script",
@@ -39,9 +39,9 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaScript, Name: getFileNameCtx(opt, ctx)}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		InputDrills:  []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Lua LocalScript",
@@ -49,9 +49,9 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaLocalScript, Name: getFileNameCtx(opt, ctx)}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		InputDrills:  []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Lua ModuleScript",
@@ -59,9 +59,9 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &LuaCodec{Type: LuaModuleScript, Name: getFileNameCtx(opt, ctx)}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		InputDrills:  []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstanceProperty, DrillRegion},
+		Merger:       MergeTable,
 	})
 }
 
@@ -97,7 +97,7 @@ func (c LuaCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 		return err
 	}
 	if c.Type.ClassName() == "" {
-		*data = rbxfile.ValueProtectedString(b)
+		*data = &Stringlike{Type: rbxfile.TypeProtectedString, Bytes: b}
 		return nil
 	}
 	script := rbxfile.NewInstance(c.Type.ClassName(), nil)
@@ -118,26 +118,25 @@ func (c LuaCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 		}
 	case *rbxfile.Instance:
 		script = v
-	case nil:
-		data = ""
 	}
 	if script != nil {
 		switch script.ClassName {
 		case "Script", "LocalScript", "ModuleScript":
 			if source, ok := script.Properties["Source"]; ok {
-				data = source
+				s := &Stringlike{}
+				s.SetFrom(source)
+				data = s
 			}
 		}
 	}
+	if s := NewStringlike(data); s != nil {
+		data = s
+	}
 	switch v := data.(type) {
-	case rbxfile.ValueProtectedString:
-		_, err = w.Write([]byte(v))
-	case rbxfile.ValueBinaryString:
-		_, err = w.Write([]byte(v))
-	case rbxfile.ValueString:
-		_, err = w.Write([]byte(v))
-	case string:
-		_, err = w.Write([]byte(v))
+	case *Stringlike:
+		_, err = w.Write(v.Bytes)
+	case nil:
+		// Write nothing.
 	default:
 		err = rbxmk.NewDataTypeError(data)
 	}

@@ -51,14 +51,18 @@ func NewDataTypeError(data Data) error {
 
 type MergeError struct {
 	drilldata, indata string
+	msg               error
 }
 
 func (err *MergeError) Error() string {
+	if err.msg == nil {
+		return fmt.Sprintf("cannot merge type %s into %s: %s", err.indata, err.drilldata, err.msg.Error())
+	}
 	return fmt.Sprintf("cannot merge type %s into %s", err.indata, err.drilldata)
 }
 
-func NewMergeError(drilldata, indata Data) error {
-	err := &MergeError{"nil", "nil"}
+func NewMergeError(drilldata, indata Data, msg error) error {
+	err := &MergeError{"nil", "nil", msg}
 	if drilldata != nil {
 		err.drilldata = reflect.TypeOf(drilldata).String()
 	}

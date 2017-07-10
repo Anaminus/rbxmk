@@ -16,7 +16,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Binary",
@@ -26,7 +26,7 @@ func init() {
 		},
 		InputDrills:  nil,
 		OutputDrills: nil,
-		Merger:       MergeOverwrite,
+		Merger:       MergeTable,
 	})
 }
 
@@ -40,23 +40,20 @@ func (c *TextCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 		return err
 	}
 	if c.Binary {
-		*data = rbxfile.ValueBinaryString(b)
+		*data = &Stringlike{Type: rbxfile.TypeBinaryString, Bytes: b}
 	} else {
-		*data = rbxfile.ValueString(b)
+		*data = &Stringlike{Type: rbxfile.TypeString, Bytes: b}
 	}
 	return nil
 }
 
 func (c *TextCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
+	if s := NewStringlike(data); s != nil {
+		data = s
+	}
 	switch v := data.(type) {
-	case rbxfile.ValueProtectedString:
-		_, err = w.Write([]byte(v))
-	case rbxfile.ValueBinaryString:
-		_, err = w.Write([]byte(v))
-	case rbxfile.ValueString:
-		_, err = w.Write([]byte(v))
-	case string:
-		_, err = w.Write([]byte(v))
+	case *Stringlike:
+		_, err = w.Write(v.Bytes)
 	case nil:
 		// Write nothing.
 	default:

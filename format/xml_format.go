@@ -17,7 +17,7 @@ func init() {
 		},
 		InputDrills:  []rbxmk.Drill{DrillProperty},
 		OutputDrills: []rbxmk.Drill{DrillProperty},
-		Merger:       MergeProperties,
+		Merger:       MergeTable,
 	})
 }
 
