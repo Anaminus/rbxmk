@@ -15,8 +15,8 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &XMLCodec{API: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillProperty},
-		OutputDrills: []rbxmk.Drill{DrillProperty},
+		InputDrills:  []rbxmk.Drill{DrillProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillProperty, DrillRegion},
 		Merger:       MergeTable,
 	})
 }

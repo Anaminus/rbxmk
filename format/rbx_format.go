@@ -16,8 +16,8 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: false, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
 		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
@@ -26,8 +26,8 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: true, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
 		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
@@ -36,8 +36,8 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: false, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
 		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
@@ -46,8 +46,8 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: true, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty},
+		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
 		Merger:       MergeTable,
 	})
 }

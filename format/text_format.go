@@ -14,8 +14,8 @@ func init() {
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: false}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
+		InputDrills:  []rbxmk.Drill{DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillRegion},
 		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
@@ -24,8 +24,8 @@ func init() {
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: true}
 		},
-		InputDrills:  nil,
-		OutputDrills: nil,
+		InputDrills:  []rbxmk.Drill{DrillRegion},
+		OutputDrills: []rbxmk.Drill{DrillRegion},
 		Merger:       MergeTable,
 	})
 }
