@@ -121,21 +121,18 @@ func (s *Stringlike) AssignToValue(value *rbxfile.Value, force bool) bool {
 // possible.
 func (s *Stringlike) SetFrom(data rbxmk.Data) bool {
 	switch data := data.(type) {
-	case *rbxfile.Value:
-		switch value := (*data).(type) {
-		case rbxfile.ValueString:
-			s.Type = value.Type()
-			s.Bytes = []byte(value)
-			return true
-		case rbxfile.ValueBinaryString:
-			s.Type = value.Type()
-			s.Bytes = []byte(value)
-			return true
-		case rbxfile.ValueProtectedString:
-			s.Type = value.Type()
-			s.Bytes = []byte(value)
-			return true
-		}
+	case rbxfile.ValueString:
+		s.Type = data.Type()
+		s.Bytes = []byte(data)
+		return true
+	case rbxfile.ValueBinaryString:
+		s.Type = data.Type()
+		s.Bytes = []byte(data)
+		return true
+	case rbxfile.ValueProtectedString:
+		s.Type = data.Type()
+		s.Bytes = []byte(data)
+		return true
 	case *Stringlike:
 		s.Type = data.Type
 		s.Bytes = data.Bytes
