@@ -690,7 +690,7 @@ func MergeTable(opt rbxmk.Options, rootdata, drilldata, indata rbxmk.Data) (outd
 	case nil:
 		return rootdata, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeInstances(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *[]*rbxfile.Instance) (outdata rbxmk.Data, err error) {
@@ -723,7 +723,7 @@ func mergeInstances(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *[
 	case nil:
 		return indata, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeInstance(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *rbxfile.Instance) (outdata rbxmk.Data, err error) {
@@ -742,7 +742,7 @@ func mergeInstance(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *rb
 	case Property:
 		if typeOfProperty(opt.Config.API, indata.ClassName, drilldata.Name) == rbxfile.TypeReference ||
 			drilldata.Properties[drilldata.Name].Type() != rbxfile.TypeReference {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("property must be a Reference"))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("property must be a Reference"))
 		}
 		drilldata.Properties[drilldata.Name] = rbxfile.ValueReference{Instance: indata}
 		return rootdata, nil
@@ -759,7 +759,7 @@ func mergeInstance(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *rb
 	case nil:
 		return indata, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeProperties(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata map[string]rbxfile.Value) (outdata rbxmk.Data, err error) {
@@ -793,22 +793,22 @@ func mergeProperties(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata m
 	case Property:
 		value, ok := indata[drilldata.Name]
 		if !ok {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("\"%s\" not found in properties", drilldata.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("\"%s\" not found in properties", drilldata.Name))
 		}
 		drilldata.Properties[drilldata.Name] = value
 		return rootdata, nil
 
 	case *Region:
 		if drilldata.Property == nil {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("Region must have Property"))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("Region must have Property"))
 		}
 		value, ok := indata[drilldata.Property.Name]
 		if !ok {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("\"%s\" not found in properties", drilldata.Property.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("\"%s\" not found in properties", drilldata.Property.Name))
 		}
 		s := NewStringlike(value)
 		if s == nil {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("value of \"%s\" must be stringlike", drilldata.Property.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("value of \"%s\" must be stringlike", drilldata.Property.Name))
 		}
 		drilldata.Set(s.Bytes)
 		return rootdata, nil
@@ -822,13 +822,13 @@ func mergeProperties(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata m
 	case nil:
 		return indata, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeProperty(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata Property) (outdata rbxmk.Data, err error) {
 	value := indata.Properties[indata.Name]
 	if value == nil {
-		return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("input property \"%s\" cannot be nil", indata.Name))
+		return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("input property \"%s\" cannot be nil", indata.Name))
 	}
 	switch drilldata := drilldata.(type) {
 	case *[]*rbxfile.Instance:
@@ -855,7 +855,7 @@ func mergeProperty(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata Pro
 		if v, _ := drilldata.Properties[drilldata.Name]; v == nil || v.Type() == value.Type() {
 			drilldata.Properties[drilldata.Name] = value
 		} else {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf(
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf(
 				"input property \"%s\" cannot be assigned to output property \"%s\": expected %s, got %s",
 				indata.Name, drilldata.Name, v.Type(), value.Type(),
 			))
@@ -865,7 +865,7 @@ func mergeProperty(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata Pro
 	case *Region:
 		s := NewStringlike(value)
 		if s == nil {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("input property \"%s\" must be stringlike", indata.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("input property \"%s\" must be stringlike", indata.Name))
 		}
 		drilldata.Set(s.Bytes)
 		if drilldata.Property == nil {
@@ -875,20 +875,20 @@ func mergeProperty(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata Pro
 
 	case *Stringlike:
 		if !drilldata.SetFrom(value) {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("input property \"%s\" must be stringlike", indata.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("input property \"%s\" must be stringlike", indata.Name))
 		}
 		return drilldata, nil
 
 	case rbxfile.Value:
 		if drilldata.Type() != value.Type() {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("expected input type %s, got %s", drilldata.Type(), value.Type()))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("expected input type %s, got %s", drilldata.Type(), value.Type()))
 		}
 		return value, nil
 
 	case nil:
 		return indata.Properties[indata.Name], nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeStringlike(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *Stringlike) (outdata rbxmk.Data, err error) {
@@ -905,7 +905,7 @@ func mergeStringlike(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *
 	case Property:
 		v := drilldata.Properties[drilldata.Name]
 		if !indata.AssignToValue(&v, false) {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("output property \"%s\" must be stringlike", drilldata.Name))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("output property \"%s\" must be stringlike", drilldata.Name))
 		}
 		drilldata.Properties[drilldata.Name] = v
 		return rootdata, nil
@@ -923,28 +923,28 @@ func mergeStringlike(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata *
 
 	case rbxfile.Value:
 		if !indata.AssignToValue(&drilldata, false) {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("output value must be stringlike"))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("output value must be stringlike"))
 		}
 		return drilldata, nil
 
 	case nil:
 		return indata, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
 func mergeValue(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata rbxfile.Value) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case Property:
 		if v := drilldata.Properties[drilldata.Name]; v != nil && indata.Type() != v.Type() {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("expected input type %s, got %s", v.Type(), indata.Type()))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("expected input type %s, got %s", v.Type(), indata.Type()))
 		}
 		drilldata.Properties[drilldata.Name] = indata
 		return rootdata, nil
 
 	case rbxfile.Value:
 		if drilldata != nil && indata.Type() != drilldata.Type() {
-			return nil, rbxmk.NewMergeError(drilldata, indata, fmt.Errorf("expected input type %s, got %s", drilldata.Type(), indata.Type()))
+			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("expected input type %s, got %s", drilldata.Type(), indata.Type()))
 		}
 		return indata, nil
 
@@ -953,7 +953,7 @@ func mergeValue(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata rbxfil
 	}
 	s := NewStringlike(indata)
 	if s == nil {
-		return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+		return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 	}
 	return mergeStringlike(opt, rootdata, drilldata, s)
 }
@@ -1008,5 +1008,5 @@ func mergeDelete(opt rbxmk.Options, rootdata, drilldata rbxmk.Data, indata rbxmk
 	case nil:
 		return nil, nil
 	}
-	return nil, rbxmk.NewMergeError(drilldata, indata, nil)
+	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
