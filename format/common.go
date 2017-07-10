@@ -570,10 +570,19 @@ scanTagLoop:
 finishScanTag:
 	if !eof {
 		if end {
+			last := current
 			for !bytes.Equal(name, current.name) {
 				current = current.parent
 				if current == root || current == nil {
-					goto scanTag
+					// Unmatched end tag; create one from scratch.
+					current = &tag{
+						name:   name,
+						regA:   tagA,
+						selA:   tagA,
+						parent: last,
+					}
+					last.sub = append(last.sub, current)
+					break
 				}
 			}
 			current.selB = tagA
