@@ -497,21 +497,22 @@ scanTag:
 	tagB := 0
 scanTagLoop:
 	for ; i < len(v); i++ {
-		j := 0
+		j := i
 		eq := 0
 		switch {
 		case prefix(v[i:], []byte("--#")):
 			j += 3
 			inline = false
 		case prefix(v[i:], []byte("--[")):
-			j := i + 3
+			j += 3
 			for ; prefix(v[j+eq:], []byte("=")); eq++ {
 			}
 			j += eq
 			if !prefix(v[j:], []byte("[#")) {
-				continue scanTagLoop
+				i++
+				goto scanTag
 			}
-			j++
+			j += 2
 			inline = true
 		default:
 			continue scanTagLoop
@@ -527,26 +528,40 @@ scanTagLoop:
 		}
 		name = v[j : j+k]
 		if len(name) == 0 {
-			continue scanTagLoop
+			i++
+			goto scanTag
 		}
 		j += k
 		if inline {
 			if !prefix(v[j:], []byte("]")) {
-				continue scanTagLoop
+				i++
+				goto scanTag
 			}
 			j++
-			b := bytes.Repeat([]byte("="), eq)
-			if !prefix(v[j:], b) {
-				continue scanTagLoop
+			if eq > 0 {
+				b := bytes.Repeat([]byte("="), eq)
+				if !prefix(v[j:], b) {
+					i++
+					goto scanTag
+				}
+				j += len(b)
 			}
-			j += len(b)
 			if !prefix(v[j:], []byte("]")) {
-				continue scanTagLoop
+				i++
+				goto scanTag
 			}
 			j++
+		} else if !end {
+			if bytes.HasPrefix(v[j:], []byte("\r")) {
+				j++
+			}
+			if bytes.HasPrefix(v[j:], []byte("\n")) {
+				j++
+			}
 		}
 		tagA = i
 		tagB = j
+		i = j
 		goto finishScanTag
 	}
 	eof = true
@@ -571,17 +586,10 @@ finishScanTag:
 				selB: len(v),
 				regB: len(v),
 			}
-			if !inline {
-				if bytes.HasPrefix(v[tag.selA:], []byte("\r")) {
-					tag.selA++
-				}
-				if bytes.HasPrefix(v[tag.selA:], []byte("\n")) {
-					tag.selA++
-				}
-			}
 			tag.parent = current
 			current.sub = append(current.sub, tag)
 			current = tag
+			goto scanTag
 		}
 	}
 
