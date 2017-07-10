@@ -465,6 +465,8 @@ func DrillRegion(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata 
 			section = append(section, string(ref[j:i]))
 			j = i + 1
 		case c == '+' && i == len(ref)-1:
+			section = append(section, string(ref[j:i]))
+			j = i + 1
 			region.Append = true
 		default:
 			return indata, inref, ParseError{Index: i, Err: fmt.Errorf("expected '.' or alphanumeric character")}
