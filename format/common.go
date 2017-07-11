@@ -561,7 +561,7 @@ scanTagLoop:
 				goto scanTag
 			}
 			j++
-		} else if !end {
+		} else {
 			if bytes.HasPrefix(v[j:], []byte("\r")) {
 				j++
 			}
