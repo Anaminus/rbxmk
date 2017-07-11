@@ -431,6 +431,12 @@ func (r *Region) Set(p []byte) {
 	}
 }
 
+type RegionError string
+
+func (err RegionError) Error() string {
+	return fmt.Sprintf("failed to find region \"%s\"", string(err))
+}
+
 func DrillRegion(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
@@ -619,7 +625,7 @@ loop:
 		break
 	}
 	if current == root || current == nil {
-		return indata, inref, fmt.Errorf("failed to find region \"%s\"", strings.Join(section, "."))
+		return indata, inref, RegionError(strings.Join(section, "."))
 	}
 	region.RegA = current.regA
 	region.RegB = current.regB
