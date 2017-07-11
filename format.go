@@ -56,9 +56,9 @@ type MergeError struct {
 
 func (err *MergeError) Error() string {
 	if err.msg == nil {
-		return fmt.Sprintf("cannot merge type %s into %s", err.indata, err.drilldata)
+		return fmt.Sprintf("cannot merge %s into %s", err.indata, err.drilldata)
 	}
-	return fmt.Sprintf("cannot merge type %s into %s: %s", err.indata, err.drilldata, err.msg.Error())
+	return fmt.Sprintf("cannot merge %s into %s: %s", err.indata, err.drilldata, err.msg.Error())
 }
 
 func NewMergeError(indata, drilldata Data, msg error) error {
