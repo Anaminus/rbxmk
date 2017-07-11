@@ -713,8 +713,8 @@ This section lists the filters that `rbxmk` has available by default.
 
 Name                               | Description
 -----------------------------------|------------
-[minify](#user-content-minify)     | Configure the behavior of rbxmk.
-[unminify](#user-content-unminify) | Delete an output node.
+[minify](#user-content-minify)     | Shrink the content of a Lua script.
+[unminify](#user-content-unminify) | Expand the content of a Lua script.
 
 ### minify
 
