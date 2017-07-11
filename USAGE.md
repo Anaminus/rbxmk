@@ -714,6 +714,7 @@ This section lists the filters that `rbxmk` has available by default.
 Name                               | Description
 -----------------------------------|------------
 [minify](#user-content-minify)     | Shrink the content of a Lua script.
+[region](#user-content-region)     | Replace regions of a Lua script.
 [unminify](#user-content-unminify) | Expand the content of a Lua script.
 
 ### minify
@@ -731,6 +732,21 @@ Type         | Description
 `[]Instance` | Each script-like instance is modified.
 `Value`      | Only if the value is string-like.
 `string`     | Modifies the string.
+
+### region
+
+`data = filter{"region", data, string, data}`
+
+`region` works like the Region drill; it searches for a region of text within
+a script, and replaces it.
+
+The first argument is the value to modify. This can be a script or any
+stringlike value. The second argument is the name of the region to select,
+which has the same rules a reference given to the Region drill. The third
+argument is any value capable of being merged into a region.
+
+`region` returns the first argument after it has been modified. If the region
+could not be found, then the first argument is returned unchanged.
 
 ### unminify
 
