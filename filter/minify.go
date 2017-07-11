@@ -17,63 +17,71 @@ func init() {
 	)
 }
 
-func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}) {
+func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	data := arguments[0].(rbxmk.Data)
 	f.ProcessedArgs()
-	return []interface{}{doMinify("minify", data)}
+	v, err := doMinify("minify", data)
+	return []interface{}{v}, err
 }
 
-func Unminify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}) {
+func Unminify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	data := arguments[0].(rbxmk.Data)
 	f.ProcessedArgs()
-	return []interface{}{doMinify("unminify", data)}
+	v, err := doMinify("unminify", data)
+	return []interface{}{v}, err
 }
 
-func doMinify(method string, data rbxmk.Data) rbxmk.Data {
+func doMinify(method string, data rbxmk.Data) (out rbxmk.Data, err error) {
 	switch v := data.(type) {
 	case *[]*rbxfile.Instance:
 		for _, inst := range *v {
-			doMinifyInstance(method, inst, false)
+			if err := doMinifyInstance(method, inst, false); err != nil {
+				return nil, err
+			}
 		}
 	case *rbxfile.Instance:
-		doMinifyInstance(method, v, true)
+		err = doMinifyInstance(method, v, true)
 	case rbxfile.Value:
-		data = doMinifyValue(method, v)
+		out, err = doMinifyValue(method, v)
 	case string:
-		data = doMinifyString(method, v)
+		out, err = doMinifyString(method, v)
 	case nil:
 	default:
-		panic(rbxmk.NewDataTypeError(data))
+		return nil, rbxmk.NewDataTypeError(data)
 	}
-	return data
+	return out, err
 }
 
-func doMinifyInstance(method string, inst *rbxfile.Instance, fail bool) {
+func doMinifyInstance(method string, inst *rbxfile.Instance, fail bool) (err error) {
 	switch inst.ClassName {
 	case "Script", "LocalScript", "ModuleScript":
 		if source, ok := inst.Properties["Source"]; ok {
-			inst.Properties["Source"] = doMinifyValue(method, source)
+			inst.Properties["Source"], err = doMinifyValue(method, source)
 		}
-		return
+		return nil
 	}
 	if fail {
-		panic(fmt.Errorf("instance must be script-like"))
+		return fmt.Errorf("instance must be script-like")
 	}
+	return nil
 }
 
-func doMinifyValue(method string, value rbxfile.Value) rbxfile.Value {
+func doMinifyValue(method string, value rbxfile.Value) (rbxfile.Value, error) {
 	switch v := value.(type) {
 	case rbxfile.ValueString:
-		return rbxfile.ValueString(doMinifyString(method, string(v)))
+		s, err := doMinifyString(method, string(v))
+		return rbxfile.ValueString(s), err
 	case rbxfile.ValueBinaryString:
-		return rbxfile.ValueBinaryString(doMinifyString(method, string(v)))
+		s, err := doMinifyString(method, string(v))
+		return rbxfile.ValueBinaryString(s), err
 	case rbxfile.ValueProtectedString:
-		return rbxfile.ValueProtectedString(doMinifyString(method, string(v)))
+		s, err := doMinifyString(method, string(v))
+		return rbxfile.ValueProtectedString(s), err
 	}
-	panic(fmt.Errorf("value must be string-like"))
+	return nil, fmt.Errorf("value must be string-like")
 }
 
-func doMinifyString(method string, s string) string {
+func doMinifyString(method string, s string) (string, error) {
 	var l *lua.LState
 	{
 		l = lua.NewState()
@@ -82,14 +90,14 @@ func doMinifyString(method string, s string) string {
 		src.Close()
 		fn, err := l.LoadString(string(b))
 		if err != nil {
-			panic(err)
+			return "", err
 		}
 		l.Push(fn)
 	}
 	l.Push(lua.LString(method))
 	l.Push(lua.LString(s))
 	if err := l.PCall(2, 1, nil); err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(l.Get(-1).(lua.LString))
+	return string(l.Get(-1).(lua.LString)), nil
 }

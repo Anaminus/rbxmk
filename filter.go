@@ -11,7 +11,7 @@ type Filter struct {
 	Func FilterFunc
 }
 
-type FilterFunc func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{})
+type FilterFunc func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{}, err error)
 
 // FilterArgs is used by a FilterFunc to indicate that it is done processing
 // its arguments.
@@ -29,10 +29,12 @@ func CallFilter(filter FilterFunc, opt Options, arguments ...interface{}) (resul
 	var argsProcessed filterArgs
 	defer func() {
 		if !argsProcessed {
-			err = recover().(runtime.Error)
+			if e := recover().(runtime.Error); e != nil {
+				err = e
+			}
 		}
 	}()
-	results = filter(&argsProcessed, opt, arguments)
+	results, err = filter(&argsProcessed, opt, arguments)
 	return
 }
 
