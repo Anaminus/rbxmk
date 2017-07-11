@@ -9,6 +9,7 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/yuin/gopher-lua"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -76,7 +77,7 @@ func main() {
 	}
 
 	if flagOptions.File != "" {
-		if err := state.DoFile(flagOptions.File, len(args)); err != nil {
+		if err := state.DoFile(filepath.Clean(flagOptions.File), len(args)); err != nil {
 			Fatalf("%s", err)
 		}
 	} else {
