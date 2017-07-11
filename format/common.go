@@ -445,6 +445,8 @@ func DrillRegion(opt rbxmk.Options, indata rbxmk.Data, inref []string) (outdata 
 		region.Value.SetFrom(v.Properties[v.Name])
 	case *Stringlike:
 		region.Value = v
+	default:
+		return indata, inref, rbxmk.NewDataTypeError(indata)
 	}
 
 	region.RegA = 0
