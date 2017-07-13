@@ -4,35 +4,32 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"reflect"
 	"sort"
 )
 
-type Data interface{}
-
-// Drill receives a Data and drills into it using inref, returning a Data to
-// represent the result. It also returns the reference after it has been
-// parsed. In case of an error, the original Data and inref is returned. If
-// inref is empty, then an EOD error is returned.
-type Drill func(opt Options, indata Data, inref []string) (outdata Data, outref []string, err error)
-
-// Merger is used to merge input Data into output Data. Three kinds of Data
-// are received. rootdata is the top-level data returned by an output scheme
-// handler. drilldata is a value within the rootdata, which was selected by
-// one or more Drills. If no drills were used, then drilldata will be equal to
-// rootdata. Depending on the scheme, both rootdata and drilldata may be nil.
-// indata is the data to be merged. Merger returns the resulting Data after it
-// has been merged.
-//
-// If indata is of the type DeleteData, then the value of drilldata should be
-// removed such that it is no longer present under rootdata.
-type Merger func(opt Options, rootdata, drilldata, indata Data) (outdata Data, err error)
-
-// DeleteData is passed as indata to a Merger to indicate that drilldata
-// should be deleted.
-type DeleteData struct{}
-
+// EOD indicates that a Data cannot be drilled into.
 var EOD = errors.New("end of drill")
+
+type Data interface {
+	// Type returns a string representation of the Data's type.
+	Type() string
+
+	// Drill drills into the Data using inref, returning another Data that
+	// represents the result. It also returns the reference after it has been
+	// processed. In case of an error, the original Data and inref is
+	// returned. If inref is empty, or the Data cannot be drilled into, then
+	// an EOD error is returned.
+	Drill(opt Options, inref []string) (outdata Data, outref []string, err error)
+
+	// Merge is used to merge input Data into output Data. Three kinds of Data
+	// are received. rootdata is the top-level data returned by an output
+	// scheme handler. drilldata is a value within the rootdata, which was
+	// selected by one or more Drills. If no drills were used, then drilldata
+	// will be equal to rootdata. Depending on the scheme, both rootdata and
+	// drilldata may be nil. The receiver is the data to be merged. Merge
+	// returns the resulting Data after it has been merged.
+	Merge(opt Options, rootdata, drilldata Data) (outdata Data, err error)
+}
 
 type DataTypeError struct {
 	dataName string
@@ -46,7 +43,7 @@ func NewDataTypeError(data Data) error {
 	if data == nil {
 		return DataTypeError{dataName: "nil"}
 	}
-	return DataTypeError{dataName: reflect.TypeOf(data).String()}
+	return DataTypeError{dataName: data.Type()}
 }
 
 type MergeError struct {
@@ -64,21 +61,18 @@ func (err *MergeError) Error() string {
 func NewMergeError(indata, drilldata Data, msg error) error {
 	err := &MergeError{"nil", "nil", msg}
 	if indata != nil {
-		err.indata = reflect.TypeOf(indata).String()
+		err.indata = indata.Type()
 	}
 	if drilldata != nil {
-		err.drilldata = reflect.TypeOf(drilldata).String()
+		err.drilldata = drilldata.Type()
 	}
 	return err
 }
 
 type Format struct {
-	Name         string
-	Ext          string
-	Codec        InitFormatCodec
-	InputDrills  []Drill
-	OutputDrills []Drill
-	Merger       Merger
+	Name  string
+	Ext   string
+	Codec InitFormatCodec
 	// CanEncode    func(data Data) bool
 }
 
@@ -119,14 +113,6 @@ func (fs *Formats) Register(formats ...Format) error {
 	}
 	for _, f := range formats {
 		format := f
-		id := make([]Drill, len(format.InputDrills))
-		copy(id, format.InputDrills)
-		format.InputDrills = id
-
-		od := make([]Drill, len(format.OutputDrills))
-		copy(od, format.OutputDrills)
-		format.OutputDrills = od
-
 		fs.f[format.Ext] = &format
 	}
 	return nil
@@ -188,32 +174,4 @@ func (fs *Formats) Encode(ext string, opt Options, ctx interface{}, w io.Writer,
 		return nil
 	}
 	return f.Codec(opt, ctx).Encode(w, data)
-}
-
-func (fs *Formats) InputDrills(ext string) (drills []Drill) {
-	f, registered := fs.f[ext]
-	if !registered {
-		return nil
-	}
-	drills = make([]Drill, len(f.InputDrills))
-	copy(drills, f.InputDrills)
-	return drills
-}
-
-func (fs *Formats) OutputDrills(ext string) (drills []Drill) {
-	f, registered := fs.f[ext]
-	if !registered {
-		return nil
-	}
-	drills = make([]Drill, len(f.OutputDrills))
-	copy(drills, f.OutputDrills)
-	return f.OutputDrills
-}
-
-func (fs *Formats) Merger(ext string) (merger Merger) {
-	f, registered := fs.f[ext]
-	if !registered {
-		return nil
-	}
-	return f.Merger
 }

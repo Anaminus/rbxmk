@@ -49,10 +49,8 @@ func (err *NodeError) Error() string {
 func (node *InputNode) ResolveReference() (data Data, err error) {
 	opt := node.Options
 	ref := node.Reference
-	var ext string
 	if node.Data != nil {
 		data = node.Data
-		ext = node.Format
 	} else {
 		if len(ref) < 1 {
 			return nil, &NodeError{"input", "", fmt.Errorf("node requires at least one reference argument")}
@@ -69,24 +67,15 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 		modref := make([]string, len(ref))
 		copy(modref[1:], ref[1:])
 		modref[0] = nextPart
-		if ext, ref, data, err = scheme.Handler(opt, node, modref); err != nil {
+		if ref, data, err = scheme.Handler(opt, node, modref); err != nil {
 			err = &NodeError{"input", fmt.Sprintf("%s scheme, Handler", schemeName), err}
 			return nil, err
 		}
 	}
 
-	if ext == "" {
-		return data, nil
-	}
-	if !opt.Formats.Registered(ext) {
-		return nil, &NodeError{"input", "", fmt.Errorf("unknown format %s", ext)}
-	}
-	for i, drill := range opt.Formats.InputDrills(ext) {
-		if data, ref, err = drill(opt, data, ref); err != nil && err != EOD {
-			err = &NodeError{"input", fmt.Sprintf("%s format, Drill #%d", opt.Formats.Name(ext), i+1), err}
-			return nil, err
-		} else if err == EOD {
-			break
+	for i := 1; err != EOD; i++ {
+		if data, ref, err = data.Drill(opt, ref); err != nil && err != EOD {
+			return nil, &NodeError{"input", fmt.Sprintf("Drill #%d", i), err}
 		}
 	}
 	return data, nil
@@ -102,10 +91,8 @@ type OutputNode struct {
 func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	opt := node.Options
 	ref := node.Reference
-	var ext string
 	if node.Data != nil {
-		ext = node.Format
-		_, err = node.drillOutput(opt, node.Data, ref, ext, indata)
+		_, err = node.drillOutput(opt, node.Data, ref, indata)
 		return err
 	}
 
@@ -125,12 +112,13 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	copy(modref[1:], ref[1:])
 	modref[0] = nextPart
 	var rootdata Data
+	var ext string
 	if ext, ref, rootdata, err = scheme.Handler(opt, node, modref); err != nil {
 		err = &NodeError{"output", fmt.Sprintf("%s scheme, Handler", schemeName), err}
 		return err
 	}
 	var outdata Data
-	if outdata, err = node.drillOutput(opt, rootdata, ref, ext, indata); err != nil {
+	if outdata, err = node.drillOutput(opt, rootdata, ref, indata); err != nil {
 		return err
 	}
 	if err = scheme.Finalizer(opt, node, modref, ext, outdata); err != nil {
@@ -139,22 +127,15 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	return err
 }
 
-func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, ext string, indata Data) (outdata Data, err error) {
-	if !opt.Formats.Registered(ext) {
-		return nil, &NodeError{"output", "", fmt.Errorf("invalid format %s", ext)}
-	}
+func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, indata Data) (outdata Data, err error) {
 	drilldata := rootdata
-	for i, drill := range opt.Formats.OutputDrills(ext) {
-		if drilldata, ref, err = drill(opt, drilldata, ref); err != nil && err != EOD {
-			err = &NodeError{"output", fmt.Sprintf("%s format, Drill #%d", opt.Formats.Name(ext), i+1), err}
-			return nil, err
-		} else if err == EOD {
-			break
+	for i := 1; err != EOD; i++ {
+		if drilldata, ref, err = drilldata.Drill(opt, ref); err != nil && err != EOD {
+			return nil, &NodeError{"output", fmt.Sprintf("Drill #%d", i), err}
 		}
 	}
-	merger := opt.Formats.Merger(ext)
-	if outdata, err = merger(opt, rootdata, drilldata, indata); err != nil {
-		err = &NodeError{"output", fmt.Sprintf("%s format, Merger", opt.Formats.Name(ext)), err}
+	if outdata, err = indata.Merge(opt, rootdata, drilldata); err != nil {
+		err = &NodeError{"output", "Merge", err}
 	}
 	return outdata, err
 }

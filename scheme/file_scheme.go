@@ -50,29 +50,30 @@ func GuessFileExtension(opt rbxmk.Options, format, filename string) (ext string)
 	return ext
 }
 
-func fileInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
+func fileInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
+	var ext string
 	if ext = GuessFileExtension(opt, node.Format, inref[0]); ext == "" {
-		return "", nil, nil, errors.New("failed to guess format")
+		return nil, nil, errors.New("failed to guess format")
 	}
 
 	// Find format.
 	if !opt.Formats.Registered(ext) {
-		return "", nil, nil, errors.New("format is not registered")
+		return nil, nil, errors.New("format is not registered")
 	}
 
 	// Open file.
 	file, err := os.Open(inref[0])
 	if err != nil {
-		return "", nil, nil, err
+		return nil, nil, err
 	}
 	defer file.Close()
 
 	// Decode file with format.
 	if err = opt.Formats.Decode(ext, opt, file.Name(), file, &data); err != nil {
-		return "", nil, nil, err
+		return nil, nil, err
 	}
 
-	return ext, inref[1:], data, nil
+	return inref[1:], data, nil
 }
 
 func fileOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {

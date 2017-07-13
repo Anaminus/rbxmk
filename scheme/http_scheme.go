@@ -21,25 +21,25 @@ func init() {
 	)
 }
 
-func httpInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
-	ext = node.Format
+func httpInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
+	ext := node.Format
 	if !opt.Formats.Registered(ext) {
-		return "", nil, nil, errors.New("format is not registered")
+		return nil, nil, errors.New("format is not registered")
 	}
 
 	resp, err := http.Get(node.Reference[0])
 	if err != nil {
-		return "", nil, nil, err
+		return nil, nil, err
 	}
 	defer resp.Body.Close()
 	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return "", nil, nil, errors.New(resp.Status)
+		return nil, nil, errors.New(resp.Status)
 	}
 
 	if err := opt.Formats.Decode(ext, opt, nil, resp.Body, &data); err != nil {
-		return "", nil, nil, err
+		return nil, nil, err
 	}
-	return ext, inref[1:], data, err
+	return inref[1:], data, err
 }
 
 func httpOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {

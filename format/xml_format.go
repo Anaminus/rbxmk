@@ -1,7 +1,9 @@
 package format
 
 import (
+	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/rbxfile/xml"
@@ -15,9 +17,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &XMLCodec{API: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 }
 
@@ -31,30 +30,29 @@ func (c *XMLCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 		return err
 	}
 	if doc.Root == nil || doc.Root.StartName != "Properties" {
-		*data = nil
-		return nil
+		return fmt.Errorf("expected Properties tag")
 	}
 	inst := &rbxfile.Instance{Properties: make(map[string]rbxfile.Value, len(doc.Root.Tags))}
 	xml.RobloxCodec{API: c.API}.DecodeProperties(doc.Root.Tags, inst, nil)
-	*data = inst.Properties
+	*data = types.Properties(inst.Properties)
 	return nil
 }
 
 func (c *XMLCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	switch v := data.(type) {
-	case *[]*rbxfile.Instance:
+	case *types.Instances:
 		if len(*v) > 0 {
-			data = (*v)[0].Properties
+			data = types.Properties((*v)[0].Properties)
 		}
-	case *rbxfile.Instance:
-		data = v.Properties
-	case Property:
-		data = map[string]rbxfile.Value{v.Name: v.Properties[v.Name]}
+	case *types.Instance:
+		data = types.Properties(v.Properties)
+	case types.Property:
+		data = types.Properties{v.Name: v.Properties[v.Name]}
 	case nil:
-		data = map[string]rbxfile.Value{}
+		data = types.Properties{}
 	}
 
-	props, ok := data.(map[string]rbxfile.Value)
+	props, ok := data.(types.Properties)
 	if !ok {
 		return rbxmk.NewDataTypeError(data)
 	}
@@ -63,7 +61,7 @@ func (c *XMLCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	root := &xml.Tag{StartName: "Properties"}
 	doc.Root = root
 
-	inst := &rbxfile.Instance{Properties: props}
+	inst := &rbxfile.Instance{Properties: map[string]rbxfile.Value(props)}
 	root.Tags = xml.RobloxCodec{API: c.API}.EncodeProperties(inst)
 	_, err = doc.WriteTo(w)
 	return err

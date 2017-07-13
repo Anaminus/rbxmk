@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
 	"os"
@@ -453,7 +454,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 				return throwError(l, errors.New("at least 1 output is expected"))
 			}
 
-			return st.mapNodes([]rbxmk.Data{rbxmk.DeleteData{}}, outputs)
+			return st.mapNodes([]rbxmk.Data{types.Delete{}}, outputs)
 		},
 		"load": func(l *lua.LState) int {
 			t := GetArgs(l, 1)

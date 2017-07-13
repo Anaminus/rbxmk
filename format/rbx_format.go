@@ -2,6 +2,7 @@ package format
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/rbxfile/bin"
@@ -16,9 +17,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: false, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXLX",
@@ -26,9 +24,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: false, xml: true, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXM",
@@ -36,9 +31,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: false, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXMX",
@@ -46,9 +38,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
 			return &RBXCodec{model: true, xml: true, api: opt.Config.API}
 		},
-		InputDrills:  []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillInstance, DrillInstanceProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 }
 
@@ -72,15 +61,16 @@ func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	if err != nil {
 		return err
 	}
-	*data = &root.Instances
+	instances := types.Instances(root.Instances)
+	*data = &instances
 	return nil
 }
 
 func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	var root *rbxfile.Root
 	switch v := data.(type) {
-	case *[]*rbxfile.Instance:
-		root = &rbxfile.Root{Instances: *v}
+	case *types.Instances:
+		root = &rbxfile.Root{Instances: []*rbxfile.Instance(*v)}
 	case nil:
 		root = &rbxfile.Root{}
 	default:

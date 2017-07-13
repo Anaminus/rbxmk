@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/rbxfile/declare"
@@ -21,8 +22,7 @@ func init() {
 	})
 }
 
-func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
-	ext = node.Format
+func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
 	switch inref[0] {
 	case "Instance":
 		if len(inref) < 2 {
@@ -45,7 +45,7 @@ func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref 
 		}
 		data, err = generateValue(opt, inref[1])
 	}
-	return ext, inref[2:], data, err
+	return inref[2:], data, err
 }
 
 func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
@@ -60,7 +60,8 @@ func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) 
 		return nil, p.errmsg
 	}
 	p.processRefs()
-	return &p.instances, nil
+	instances := types.Instances(p.instances)
+	return &instances, nil
 }
 
 func generateProperty(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
@@ -74,7 +75,7 @@ func generateProperty(opt rbxmk.Options, s string) (data rbxmk.Data, err error) 
 		}
 		return nil, p.errmsg
 	}
-	return p.instances[0].Properties, nil
+	return types.Properties(p.instances[0].Properties), nil
 }
 
 func generateValue(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
@@ -101,7 +102,7 @@ func generateValue(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
 		}
 		return nil, p.errmsg
 	}
-	return declare.Property("", typ, comp...).Declare(), nil
+	return types.Value{declare.Property("", typ, comp...).Declare()}, nil
 }
 
 // GenError represents an error that occurred with the generate scheme parser.

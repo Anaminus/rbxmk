@@ -20,10 +20,7 @@ type InputScheme struct {
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given. Returns the retrieved Source, as well as node.Reference after
 // it has been processed.
-//
-// If InputSchemeHandler used a Format to retrieve the source, then it ensures
-// that node.Format is set to the Format's extension.
-type InputSchemeHandler func(opt Options, node *InputNode, inref []string) (ext string, outref []string, data Data, err error)
+type InputSchemeHandler func(opt Options, node *InputNode, inref []string) (outref []string, data Data, err error)
 
 type OutputScheme struct {
 	Handler   OutputSchemeHandler // Get current state of output source from location (if needed)

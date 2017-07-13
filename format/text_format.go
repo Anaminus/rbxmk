@@ -2,6 +2,7 @@ package format
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxfile"
 	"io"
 	"io/ioutil"
@@ -14,9 +15,6 @@ func init() {
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: false}
 		},
-		InputDrills:  []rbxmk.Drill{DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillRegion},
-		Merger:       MergeTable,
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Binary",
@@ -24,9 +22,6 @@ func init() {
 		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: true}
 		},
-		InputDrills:  []rbxmk.Drill{DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillRegion},
-		Merger:       MergeTable,
 	})
 }
 
@@ -40,19 +35,19 @@ func (c *TextCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 		return err
 	}
 	if c.Binary {
-		*data = &Stringlike{Type: rbxfile.TypeBinaryString, Bytes: b}
+		*data = &types.Stringlike{ValueType: rbxfile.TypeBinaryString, Bytes: b}
 	} else {
-		*data = &Stringlike{Type: rbxfile.TypeString, Bytes: b}
+		*data = &types.Stringlike{ValueType: rbxfile.TypeString, Bytes: b}
 	}
 	return nil
 }
 
 func (c *TextCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
-	if s := NewStringlike(data); s != nil {
+	if s := types.NewStringlike(data); s != nil {
 		data = s
 	}
 	switch v := data.(type) {
-	case *Stringlike:
+	case *types.Stringlike:
 		_, err = w.Write(v.Bytes)
 	case nil:
 		// Write nothing.

@@ -3,6 +3,7 @@ package format
 import (
 	"encoding/json"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxfile"
 	rbxfilejson "github.com/robloxapi/rbxfile/json"
 	"io"
@@ -15,9 +16,6 @@ func init() {
 		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &JSONCodec{}
 		},
-		InputDrills:  []rbxmk.Drill{DrillProperty, DrillRegion},
-		OutputDrills: []rbxmk.Drill{DrillProperty, DrillRegion},
-		Merger:       MergeTable,
 	})
 }
 
@@ -34,7 +32,7 @@ func (c JSONCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 	if err := json.NewDecoder(r).Decode(&jprops); err != nil {
 		return err
 	}
-	props := make(map[string]rbxfile.Value, len(jprops))
+	props := make(types.Properties, len(jprops))
 	for name, prop := range jprops {
 		value := rbxfilejson.ValueFromJSONInterface(rbxfile.TypeFromString(prop.typ), prop.value)
 		if value == nil {
@@ -48,19 +46,19 @@ func (c JSONCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {
 
 func (c JSONCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	switch v := data.(type) {
-	case *[]*rbxfile.Instance:
+	case *types.Instances:
 		if len(*v) > 0 {
-			data = (*v)[0].Properties
+			data = types.Properties((*v)[0].Properties)
 		}
-	case *rbxfile.Instance:
-		data = v.Properties
-	case Property:
-		data = map[string]rbxfile.Value{v.Name: v.Properties[v.Name]}
+	case types.Instance:
+		data = types.Properties(v.Properties)
+	case types.Property:
+		data = types.Properties{v.Name: v.Properties[v.Name]}
 	case nil:
-		data = map[string]rbxfile.Value{}
+		data = types.Properties{}
 	}
 
-	props, ok := data.(map[string]rbxfile.Value)
+	props, ok := data.(types.Properties)
 	if !ok {
 		return rbxmk.NewDataTypeError(data)
 	}
