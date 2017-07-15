@@ -1,4 +1,4 @@
-# Usage details
+# Usage
 
 This document provides an overview of how rbxmk is used. For a detailed
 reference, see [DOCUMENTATION.md](DOCUMENTATION.md).
