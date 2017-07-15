@@ -36,4 +36,6 @@ For more information, see the [go-flags](https://godoc.org/github.com/jessevdk/g
 
 ## Usage
 
-See [USAGE.md](USAGE.md) for details on how to use `rbxmk`.
+See [USAGE.md](rbxmk/doc/USAGE.md) for an overview on how to use rbxmk. See
+[DOCUMENTATION.md](rbxmk/doc/DOCUMENTATION.md) for full details on how rbxmk
+works.
