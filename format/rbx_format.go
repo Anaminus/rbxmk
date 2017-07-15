@@ -71,6 +71,8 @@ func (c *RBXCodec) Encode(w io.Writer, data rbxmk.Data) (err error) {
 	switch v := data.(type) {
 	case *types.Instances:
 		root = &rbxfile.Root{Instances: []*rbxfile.Instance(*v)}
+	case types.Instance:
+		root = &rbxfile.Root{Instances: []*rbxfile.Instance{v.Instance}}
 	case nil:
 		root = &rbxfile.Root{}
 	default:
