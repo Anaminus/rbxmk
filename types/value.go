@@ -11,7 +11,10 @@ type Value struct {
 }
 
 func (indata Value) Type() string {
-	return "Value"
+	if indata.Value == nil {
+		return "Value<nil>"
+	}
+	return "Value<" + indata.Value.Type().String() + ">"
 }
 
 func (indata Value) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
