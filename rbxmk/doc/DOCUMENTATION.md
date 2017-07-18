@@ -500,6 +500,8 @@ Output type | Result
 ------------|-------
 Property    | If the value type matches the property type, then the value is assigned to the property.
 Value       | If the value types match, the input values replaces the output value.
+Stringlike  | If the value is string-like, then it replaces the output.
+Region      | If the value is string-like, then it is set to the region.
 
 ### `Stringlike` type
 
@@ -519,9 +521,9 @@ As an input, `Stringlike` can be merged into the following types:
 Output type | Result
 ------------|-------
 Property    | If the property is string-like or nil, then the string is assigned to the property.
-Region      | The string is set to the region.
-Stringlike  | The input string replaces the output string.
 Value       | If the value is string-like, then the string replaces the value.
+Stringlike  | The input string replaces the output string.
+Region      | The string is set to the region.
 
 ### `Region` type
 
@@ -621,9 +623,9 @@ Instances   | Removes all instances from the list.
 Instance    | Sets the parent of the instance to nil.
 Properties  | Removes the all properties from the table.
 Property    | Removes the property from the table.
-Region      | Replaces the content of the region with nothing.
-Stringlike  | Replaces the string with an empty string.
 Value       | Replaces the value with nil.
+Stringlike  | Replaces the string with an empty string.
+Region      | Replaces the content of the region with nothing.
 
 ## Formats
 

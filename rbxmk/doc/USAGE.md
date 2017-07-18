@@ -41,11 +41,16 @@ If the `-f` option is not given, then the script is read from stdin.
 
 Options after any valid flags will be passed to the script as arguments.
 Numbers, bools, and nil are parsed into their respective types in Lua, and any
-other values are read as strings. A script can read these arguments with the
-`...` operator.
+other values are read as strings.
+
+```shell
+rbxmk -f script.lua hello world 123
+```
+
+A script can read these arguments with the `...` operator.
 
 ```lua
-Arg1, Arg2, Arg3 = ...
+Arg1, Arg2, Arg3 = ... -- "hello", "world", 123
 AllArgs = {...}
 ```
 
@@ -115,7 +120,7 @@ available in [DOCUMENTATION.md](DOCUMENTATION.md#resolve-chain).*
 
 A **reference** is a list of strings that specify a location to read data from
 (in the case of `input`), or to write data to (in the case of `output`).
-Generally, each successive string specifies a piece of data within the data
+Usually, each successive string specifies a piece of data within the data
 referred to by the previous string.
 
 For example, the first string can refer to the location of a file in the file
@@ -154,7 +159,7 @@ describe what happens:
 
 ## Schemes
 
-The first string of a reference is always a URI. It begins with a scheme
+The first string of a Reference is always a URI. It begins with a scheme
 (`scheme-name://`), which specifies the type of resource being identified. The
 remainder of the URI depends on the scheme. Here are a few of them:
 
@@ -264,7 +269,7 @@ input{"workspace.properties.json", "FilteringEnabled"}
 ```
 
 A complete list of types and how they work can be found in
-[DOCUMENTATION.md](DOCUMENTATION.md#user-content-types).
+[DOCUMENTATION.md](DOCUMENTATION.md#user-content-data-types).
 
 ## Functions
 
