@@ -14,6 +14,7 @@ This document provides details on how rbxmk works. For a basic overview, see
 	</ol></li>
 	<li><a href="#user-content-reference">Reference</a></li>
 	<li><a href="#user-content-data-types">Data types</a><ol>
+		<li><a href="#user-content-merging-overview">Merging overview</a></li>
 		<li><a href="#user-content-instances-type">Instances type</a></li>
 		<li><a href="#user-content-instance-type">Instance type</a></li>
 		<li><a href="#user-content-properties-type">Properties type</a></li>
@@ -375,6 +376,25 @@ Type                                        | Description
 [Stringlike](#user-content-stringlike-type) | A string-like value.
 [Region](#user-content-region-type)         | A subsection of a string-like value.
 [Delete](#user-content-delete-type)         | A special type that removes values it is merged with.
+
+### Merging overview
+
+The following table provides an overview of which types can be merged.
+
+| <sub>in</sub>╲<sup>out</sup> | Instances  | Instance | Properties | Property | Value | Stringlike | Region | Delete |
+|------------------------------|------------|----------|------------|----------|-------|------------|--------|--------|
+| Instances                    | YES        | YES      | NO         | NO       | NO    | NO         | NO     | NO     |
+| Instance                     | YES        | YES      | NO         | COND     | NO    | NO         | NO     | NO     |
+| Properties                   | YES        | YES      | YES        | YES      | NO    | NO         | COND   | NO     |
+| Property                     | YES        | YES      | YES        | YES      | YES   | YES        | YES    | NO     |
+| Value                        | NO         | NO       | NO         | YES      | YES   | COND       | COND   | NO     |
+| Stringlike                   | NO         | NO       | NO         | YES      | YES   | YES        | YES    | NO     |
+| Region                       | COND       | COND     | COND       | YES      | YES   | YES        | YES    | NO     |
+| Delete                       |  YES       | YES      | YES        | YES      | YES   | YES        | YES    | NO     |
+
+- `NO`: The types canot be merged.
+- `YES`: The types can be merged.
+- `COND`: The types can be merged under certain conditions.
 
 ### `Instances` type
 
