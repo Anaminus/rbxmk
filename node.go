@@ -129,9 +129,11 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 
 func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, indata Data) (outdata Data, err error) {
 	drilldata := rootdata
-	for i := 1; err != EOD; i++ {
-		if drilldata, ref, err = drilldata.Drill(opt, ref); err != nil && err != EOD {
-			return nil, &NodeError{"output", fmt.Sprintf("Drill #%d", i), err}
+	if drilldata != nil {
+		for i := 1; err != EOD; i++ {
+			if drilldata, ref, err = drilldata.Drill(opt, ref); err != nil && err != EOD {
+				return nil, &NodeError{"output", fmt.Sprintf("Drill #%d", i), err}
+			}
 		}
 	}
 	if outdata, err = indata.Merge(opt, rootdata, drilldata); err != nil {
