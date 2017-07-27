@@ -189,13 +189,7 @@ func (indata *Stringlike) Drill(opt rbxmk.Options, inref []string) (outdata rbxm
 		return indata, inref, err
 	}
 
-	region := &Region{
-		Value: indata,
-		RegA:  0,
-		SelA:  0,
-		SelB:  len(indata.Bytes),
-		RegB:  len(indata.Bytes),
-	}
+	region := &Region{Value: indata}
 
 	ref := inref[0]
 	section := []string{}
@@ -230,7 +224,12 @@ func (indata *Stringlike) Drill(opt rbxmk.Options, inref []string) (outdata rbxm
 		parent     *tag
 	}
 	prefix := bytes.HasPrefix
-	root := &tag{}
+	root := &tag{
+		regA: 0,
+		selA: 0,
+		selB: len(indata.Bytes),
+		regB: len(indata.Bytes),
+	}
 	current := root
 	v := region.Value.Bytes
 
@@ -349,26 +348,28 @@ finishScanTag:
 		}
 	}
 
-	current = root
-loop:
-	for _, sec := range section {
-		for _, tag := range current.sub {
-			if string(tag.name) == sec {
-				current = tag
-				continue loop
+	var recurseTags func(current *tag, sec []string)
+	recurseTags = func(current *tag, sec []string) {
+		if len(sec) == 0 {
+			region.Range = append(region.Range, RegionRange{
+				RegA: current.regA,
+				RegB: current.regB,
+				SelA: current.selA,
+				SelB: current.selB,
+			})
+			return
+		}
+		for _, sub := range current.sub {
+			if string(sub.name) == sec[0] {
+				recurseTags(sub, sec[1:])
 			}
 		}
-		current = root
-		break
 	}
-	if current == root || current == nil {
+	recurseTags(root, section)
+
+	if len(region.Range) == 0 {
 		return indata, inref, RegionError(strings.Join(section, "."))
 	}
-	region.RegA = current.regA
-	region.RegB = current.regB
-	region.SelA = current.selA
-	region.SelB = current.selB
-
 	return region, inref[1:], nil
 }
 

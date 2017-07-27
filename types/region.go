@@ -5,19 +5,26 @@ import (
 	"github.com/robloxapi/rbxfile"
 )
 
-type Region struct {
-	Property   *Property
-	Value      *Stringlike
+type RegionRange struct {
 	RegA, RegB int
 	SelA, SelB int
-	Append     bool
+}
+
+type Region struct {
+	Property *Property
+	Value    *Stringlike
+	Range    []RegionRange
+	Append   bool
 }
 
 func (r *Region) Get() []byte {
 	if r.Value == nil {
 		return nil
 	}
-	return r.Value.Bytes[r.SelA:r.SelB]
+	if len(r.Range) == 0 {
+		return r.Value.Bytes
+	}
+	return r.Value.Bytes[r.Range[0].SelA:r.Range[0].SelB]
 }
 
 func (r *Region) GetStringlike() *Stringlike {
@@ -26,7 +33,7 @@ func (r *Region) GetStringlike() *Stringlike {
 		return s
 	}
 	s.ValueType = r.Value.ValueType
-	s.Bytes = r.Value.Bytes[r.SelA:r.SelB]
+	s.Bytes = r.Get()
 	return s
 }
 
@@ -34,29 +41,35 @@ func (r *Region) Set(p []byte) {
 	if r.Value == nil {
 		r.Value = &Stringlike{Bytes: p}
 	} else {
-		var prefix []byte
-		var suffix []byte
-		if r.Append {
-			prefix = r.Value.Bytes[:r.SelB]
-			suffix = r.Value.Bytes[r.SelB:]
-			r.RegA = r.RegA
-			r.SelA = r.SelA
-			r.SelB = r.SelB + len(p)
-			r.RegB = r.RegB + len(p)
-		} else {
-			prefix = r.Value.Bytes[:r.RegA]
-			suffix = r.Value.Bytes[r.RegB:]
-			r.RegA = r.RegA
-			r.SelA = r.RegA
-			r.SelB = r.SelA + len(p)
-			r.RegB = r.SelB
+		var dst []byte
+		{
+			n := len(r.Value.Bytes) + len(p)*len(r.Range)
+			if !r.Append {
+				for _, rng := range r.Range {
+					n -= rng.RegB - rng.RegA
+				}
+			}
+			dst = make([]byte, n)
 		}
-		b := make([]byte, len(prefix)+len(p)+len(suffix))
-		copy(b[0:], prefix)
-		copy(b[len(prefix):], p)
-		copy(b[len(prefix)+len(p):], suffix)
-
-		r.Value.Bytes = b
+		src := r.Value.Bytes
+		dstoff := 0
+		srcoff := 0
+		if r.Append {
+			for _, rng := range r.Range {
+				dstoff += copy(dst[dstoff:], src[srcoff:rng.SelB])
+				dstoff += copy(dst[dstoff:], p)
+				dstoff += copy(dst[dstoff:], src[rng.SelB:rng.RegB])
+				srcoff = rng.RegB
+			}
+		} else {
+			for _, rng := range r.Range {
+				dstoff += copy(dst[dstoff:], src[srcoff:rng.RegA])
+				dstoff += copy(dst[dstoff:], p)
+				srcoff = rng.RegB
+			}
+		}
+		copy(dst[dstoff:], src[srcoff:])
+		r.Value.Bytes = dst
 	}
 	if r.Property != nil {
 		value := Value{r.Property.Properties[r.Property.Name]}
