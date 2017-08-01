@@ -77,7 +77,8 @@ func main() {
 	}
 
 	if flagOptions.File != "" {
-		if err := state.DoFile(filepath.Clean(flagOptions.File), len(args)); err != nil {
+		filename := shortenPath(filepath.Clean(flagOptions.File))
+		if err := state.DoFile(filename, len(args)); err != nil {
 			Fatalf("%s", err)
 		}
 	} else {

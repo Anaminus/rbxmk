@@ -460,6 +460,7 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			t := GetArgs(l, 1)
 
 			fileName := t.IndexString(1, false)
+			fileName = shortenPath(filepath.Clean(fileName))
 			fi, err := os.Stat(fileName)
 			if err != nil {
 				return throwError(l, err)
@@ -570,7 +571,8 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 					return ""
 				})
 			}
-			l.Push(lua.LString(filepath.Join(s...)))
+			filename := shortenPath(filepath.Join(s...))
+			l.Push(lua.LString(filename))
 			return 1
 		},
 		"print": func(l *lua.LState) int {
