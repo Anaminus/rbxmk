@@ -633,7 +633,7 @@ function CreateLuaParser(text)
 	end
 
 	-- List of identifiers
-	local function varlist()
+	local function varlist(funcArgs)
 		local varList = {}
 		local commaList = {}
 		if peek().Type == 'Ident' then
@@ -641,6 +641,11 @@ function CreateLuaParser(text)
 		end
 		while peek().Source == ',' do
 			table.insert(commaList, get())
+			if funcArgs and peek().Source == '...' then
+				local id = get()
+				table.insert(varList, id)
+				break
+			end
 			local id = expect('Ident')
 			table.insert(varList, id)
 		end
@@ -684,7 +689,7 @@ function CreateLuaParser(text)
 		end
 		--
 		local oparenTk = expect('Symbol', '(')
-		local argList, argCommaList = varlist()
+		local argList, argCommaList = varlist(true)
 		local cparenTk = expect('Symbol', ')')
 		local fbody, enTk = blockbody('end')
 		--
