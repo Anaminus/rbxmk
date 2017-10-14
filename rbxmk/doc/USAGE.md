@@ -295,7 +295,7 @@ script = input{"generate://Instance", [[
 		";
 	}
 ]]}
-script = filter("minify", script}
+script = filter{"minify", script}
 -- Value of Source is now "for a=1,10 do print(a)end"
 ```
 
