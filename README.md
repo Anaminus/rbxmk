@@ -2,11 +2,10 @@
 
 `rbxmk` is a command-line tool for manipulating Roblox files.
 
-The general workflow is that **inputs** are specified, transformed somehow,
-then mapped to **outputs**.
-
-[Lua](https://lua.org) scripts are used to perform actions. Scripts are run in
-a stripped-down environment, with only a small set of functions available.
+rbxmk is useful for development workflows that involve many separate files. If
+your project is organized into a number of files, such as Lua files for
+scripting and model files for assets, rbxmk makes it simple to combine these
+files into a final product, be it a game, plugin, model, and so on.
 
 ## Installation
 
