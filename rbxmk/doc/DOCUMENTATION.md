@@ -61,6 +61,7 @@ Name                                          | Description
 [delete](#user-content-delete-function)       | Delete an output node.
 [error](#user-content-error-function)         | Throw an error.
 [exit](#user-content-exit-function)           | Force the program to exit.
+[filename](#user-content-filename-function)   | Get parts of a file name.
 [filter](#user-content-filter-function)       | Transform nodes.
 [getenv](#user-content-getenv-function)       | Get the value of an environment variable.
 [input](#user-content-input-function)         | Create an input node.
@@ -108,6 +109,23 @@ node.
 
 `exit` forces the program to exit. An optional message can be given, which
 will be passed to the program.
+
+### `filename` function
+
+`filename{string, string}`
+
+`filename` returns a part of a file path. The first argument is a string
+specifying the part of the path to return. The second argument is the file
+path.
+
+The following parts are possible:
+
+- `dir`: The directory part of the path.
+- `name`: The file name part of the path.
+- `ext`: The extension.
+- `base`: The file name without the extension.
+- `fext`: The format extension, as determined by `schemes.GuessFileExtension`.
+- `fbase`: The file name without the format extension.
 
 ### `filter` function
 

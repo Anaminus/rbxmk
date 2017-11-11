@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
@@ -594,6 +595,39 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 				tnames.Append(lua.LString(name))
 			}
 			l.Push(tnames)
+			return 1
+		},
+		"filename": func(l *lua.LState) int {
+			t := GetArgs(l, 1)
+			typ := t.IndexString(1, false)
+			path := t.IndexString(2, false)
+			var result string
+			switch typ {
+			case "dir":
+				result = filepath.Dir(path)
+			case "name":
+				result = filepath.Base(path)
+			case "base":
+				result = filepath.Base(path)
+				result = result[:len(result)-len(filepath.Ext(path))]
+			case "ext":
+				result = filepath.Ext(path)
+			case "fbase":
+				ext := scheme.GuessFileExtension(opt, "", path)
+				if ext != "" && ext != "." {
+					ext = "." + ext
+				}
+				result = filepath.Base(path)
+				result = result[:len(result)-len(ext)]
+			case "fext":
+				result = scheme.GuessFileExtension(opt, "", path)
+				if result != "" && result != "." {
+					result = "." + result
+				}
+			default:
+				return throwError(l, fmt.Errorf("unknown argument %q", typ))
+			}
+			l.Push(lua.LString(result))
 			return 1
 		},
 		"print": func(l *lua.LState) int {
