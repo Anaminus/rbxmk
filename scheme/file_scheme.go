@@ -23,27 +23,23 @@ func GuessFileExtension(opt rbxmk.Options, format, filename string) (ext string)
 	ext = format
 	if ext == "" {
 		// Try to guess the format.
-		if fi, err := os.Stat(filename); err == nil && fi.IsDir() {
-			ext = "directory"
-		} else {
-			{
-				i := len(filename) - 1
-				for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
-				}
-				filename = filename[i+1:]
+		{
+			i := len(filename) - 1
+			for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
 			}
-			for {
-				for i := 0; i < len(filename); i++ {
-					if filename[i] == '.' {
-						filename = filename[i+1:]
-						goto check
-					}
+			filename = filename[i+1:]
+		}
+		for {
+			for i := 0; i < len(filename); i++ {
+				if filename[i] == '.' {
+					filename = filename[i+1:]
+					goto check
 				}
-				return ""
-			check:
-				if opt.Formats.Registered(filename) {
-					return filename
-				}
+			}
+			return ""
+		check:
+			if opt.Formats.Registered(filename) {
+				return filename
 			}
 		}
 	}
