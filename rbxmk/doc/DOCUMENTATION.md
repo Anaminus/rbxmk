@@ -72,6 +72,7 @@ Name                                          | Description
 [pcall](#user-content-pcall-function)         | Call a function in protected mode.
 [print](#user-content-print-function)         | Print values to stdout.
 [printf](#user-content-printf-function)       | Print a formatted string to stdout.
+[readdir](#user-content-readdir-function)     | List the files in a directory.
 [sprintf](#user-content-sprintf-function)     | Return a formatted string.
 [type](#user-content-type-function)           | Return the type of a value as a string.
 
@@ -233,6 +234,13 @@ return true, followed by any values returned by the called function.
 `printf` receives a number of values, formats them according to the first
 argument, and writes the result to standard output. `printf` follows the same
 rules as Golang's [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
+
+### `readdir` function
+
+`readdir{string}`
+
+`readdir` receives a directory path and returns a list of files within the
+directory.
 
 ### `sprintf` function
 

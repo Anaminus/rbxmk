@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -573,6 +574,26 @@ func NewLuaState(opt rbxmk.Options) *LuaState {
 			}
 			filename := shortenPath(filepath.Join(s...))
 			l.Push(lua.LString(filename))
+			return 1
+		},
+		"readdir": func(l *lua.LState) int {
+			t := GetArgs(l, 1)
+			dirname := t.IndexString(1, false)
+			f, err := os.Open(dirname)
+			if err != nil {
+				return throwError(l, err)
+			}
+			defer f.Close()
+			names, err := f.Readdirnames(-1)
+			if err != nil {
+				return throwError(l, err)
+			}
+			sort.Strings(names)
+			tnames := l.CreateTable(len(names), 0)
+			for _, name := range names {
+				tnames.Append(lua.LString(name))
+			}
+			l.Push(tnames)
 			return 1
 		},
 		"print": func(l *lua.LState) int {
