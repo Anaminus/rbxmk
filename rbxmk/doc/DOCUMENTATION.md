@@ -6,7 +6,8 @@ This document provides details on how rbxmk works. For a basic overview, see
 <table>
 <thead><tr><th>Table of Contents</th></tr></thead>
 <tbody><tr><td><ol>
-	<li><a href="#user-content-lua-functions">Lua functions</a></li>
+	<li><a href="#user-content-standard-library">Standard library</a></li>
+	<li><a href="#user-content-rbxmk-library">rbxmk library</a></li>
 	<li><a href="#user-content-resolve-chain">Resolve chain</a><ol>
 		<li><a href="#user-content-input-procedure">Input procedure</a></li>
 		<li><a href="#user-content-output-procedure">Output procedure</a></li>
@@ -51,9 +52,36 @@ This document provides details on how rbxmk works. For a basic overview, see
 </table>
 
 
-## Lua functions
+## Standard library
 
-The Lua environment contains the following functions:
+The following items from the standard library are included:
+
+- `_G`
+- `_VERSION`
+- `assert`
+- `error`
+- `ipairs`
+- `next`
+- `pairs`
+- `pcall`
+- `print`
+- `select`
+- `tonumber`
+- `tostring`
+- `type`
+- `unpack`
+- `xpcall`
+- Entire `math` library
+- Entire `string` library except `string.dump`
+- Entire `table` library
+- `os.clock`
+- `os.date`
+- `os.difftime`
+- `os.time`
+
+## rbxmk library
+
+The `rbxmk` library contains the following functions:
 
 Name                                          | Description
 ----------------------------------------------|------------
@@ -79,7 +107,7 @@ Name                                          | Description
 
 ### `configure` function
 
-`configure{...}`
+`rbxmk.configure{...}`
 
 `configure` changes the behavior of rbxmk. Each named argument specifies an
 option to change. The following options are available:
@@ -92,27 +120,27 @@ Name  | Type | Default | Description
 
 ### `delete` function
 
-`delete{...output}`
+`rbxmk.delete{...output}`
 
 For each output node received, `delete` removes the data pointed to by the
 node.
 
 ### `error` function
 
-`error{string}`
+`rbxmk.error{string}`
 
 `error` throws an error, with the first argument as the error message.
 
 ### `exit` function
 
-`exit{string}`
+`rbxmk.exit{string}`
 
 `exit` forces the program to exit. An optional message can be given, which
 will be passed to the program.
 
 ### `filename` function
 
-`filename{string, string}`
+`rbxmk.filename{string, string}`
 
 `filename` returns a part of a file path. The first argument is a string
 specifying the part of the path to return. The second argument is the file
@@ -129,7 +157,7 @@ The following parts are possible:
 
 ### `filter` function
 
-`... = filter{api=nil, string, ...}`
+`... = rbxmk.filter{api=nil, string, ...}`
 
 `filter` transforms nodes. The first argument specifies the filter name.
 Subsequent arguments and return values depend on the filter. See
@@ -141,14 +169,14 @@ The API is used only by applicable filters.
 
 ### `getenv` function
 
-`string = getenv{string}`
+`string = rbxmk.getenv{string}`
 
 `getenv` returns the value of an environment variable of the given name.
 Returns nil if the variable is not present.
 
 ### `input` function
 
-`node = input{format=string, api=nil, ...string}`
+`node = rbxmk.input{format=string, api=nil, ...string}`
 
 `input` creates an input node. The arguments specify the
 [Reference](#user-content-reference) to the input. The `format` argument
@@ -159,7 +187,7 @@ instances and properties. Specifying a non-nil API overrides the default API.
 
 ### `load` function
 
-`... = load{string, ...}`
+`... = rbxmk.load{string, ...}`
 
 `load` executes a file as a script. The first argument is the file name.
 Subsequent arguments are passed to the script (which may be received with the
@@ -167,7 +195,7 @@ Subsequent arguments are passed to the script (which may be received with the
 
 ### `loadapi` function
 
-`api = loadapi{string}`
+`api = rbxmk.loadapi{string}`
 
 `loadapi` receives a path to a file containing an API dump. `loadapi` returns
 a value representing the API. This can be passed to certain functions to
@@ -175,7 +203,7 @@ enhance how the function handles instances and properties.
 
 ### `map` function
 
-`map{...node}`
+`rbxmk.map{...node}`
 
 `map` maps one or more input nodes to one or more output nodes. Either kind of
 node may be passed to `map`.
@@ -185,9 +213,9 @@ in one list, and outputs are gathered in another. Then each node in the input
 list is mapped to each node in the output list, in order. For example:
 
 ```lua
-A,B = input{...},input{...}
-X,Y = output{...},output{...}
-map{A, X, B, Y}
+A,B = rbxmk.input{...},rbxmk.input{...}
+X,Y = rbxmk.output{...},rbxmk.output{...}
+rbxmk.map{A, X, B, Y}
 -- 1: A -> X
 -- 2: A -> Y
 -- 3: B -> X
@@ -197,7 +225,7 @@ map{A, X, B, Y}
 ### `output` function
 
 ```lua
-node = output{format=string, api=nil, ...string}
+node = rbxmk.output{format=string, api=nil, ...string}
 ```
 
 `output` creates an output node. The arguments specify the
@@ -209,7 +237,7 @@ instances and properties. Specifying a non-nil API overrides the default API.
 
 ### `path` function
 
-`string = path{...}`
+`string = rbxmk.path{...}`
 
 `path` receives a number of strings, and joins them together into a single
 file path, adding separators as necessary.
@@ -231,7 +259,7 @@ returned if a path could not be located.
 
 ### `pcall` function
 
-`pcall{function, ...}`
+`rbxmk.pcall{function, ...}`
 
 `pcall` calls a function with the given arguments. If an error occurs, `pcall`
 returns false, followed by the error message. If no errors occur, `pcall`
@@ -239,7 +267,7 @@ return true, followed by any values returned by the called function.
 
 ### `print` function
 
-`print{...}`
+`rbxmk.print{...}`
 
 `print` receives a number of values and writes them to standard output.
 `print` follows the same rules as Golang's
@@ -247,7 +275,7 @@ return true, followed by any values returned by the called function.
 
 ### `printf` function
 
-`printf{string, ...}`
+`rbxmk.printf{string, ...}`
 
 `printf` receives a number of values, formats them according to the first
 argument, and writes the result to standard output. `printf` follows the same
@@ -255,14 +283,14 @@ rules as Golang's [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
 
 ### `readdir` function
 
-`readdir{string}`
+`rbxmk.readdir{string}`
 
 `readdir` receives a directory path and returns a list of files within the
 directory.
 
 ### `sprintf` function
 
-`string = sprintf{string, ...}`
+`string = rbxmk.sprintf{string, ...}`
 
 `sprintf` receives a number of values, formats them according to the first
 argument, and returns the resulting string. `sprintf` follows the same rules
@@ -270,7 +298,7 @@ as Golang's [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
 
 ### `type` function
 
-`string = type{value}`
+`string = rbxmk.type{value}`
 
 `type` returns the type of the given value as a string. In addition to the
 regular Lua types, the following types are available:
@@ -335,9 +363,9 @@ This procedure is used when mapping an input node to an output node.
 
 ### Deletion procedure
 
-The `delete` function works exactly like mapping an input to an output, where
-the input is a special `Delete` type. This type merges into other types by
-deleting content instead of adding to or replacing it.
+The `rbxmk.delete` function works exactly like mapping an input to an output,
+where the input is a special `Delete` type. This type merges into other types
+by deleting content instead of adding to or replacing it.
 
 ## Reference
 
@@ -362,11 +390,11 @@ This continues until and EOD (end-of-drill) marker is received. This happens
 when there are no more Reference strings to process, or when the Data simply
 cannot be drilled into.
 
-Here's an example. Each unnamed argument to the `input` function is a string
-of a Reference.
+Here's an example. Each unnamed argument to the `rbxmk.input` function is a
+string of a Reference.
 
 ```
-input{"file://place.rbxl", "Workspace.Model.Script", "Source"}
+rbxmk.input{"file://place.rbxl", "Workspace.Model.Script", "Source"}
 ```
 
 1. From the first string, the scheme is determined to be `file`.
@@ -991,7 +1019,7 @@ Name                                      | Description
 
 ### Minify filter
 
-`data = filter{"minify", data}`
+`data = rbxmk.filter{"minify", data}`
 
 `minify` uses [lua-minify](https://github.com/stravant/lua-minify) to minify a
 Lua script. It receives a single Data, and returns the modified result.
@@ -1007,7 +1035,7 @@ Type           | Description
 
 ### Region filter
 
-`data = filter{"region", data, string, data}`
+`data = rbxmk.filter{"region", data, string, data}`
 
 `region` works like the Region drill; it searches for a region of text within
 a script, and replaces it.
@@ -1022,7 +1050,7 @@ could not be found, then the first argument is returned unchanged.
 
 ### Unminify filter
 
-`data = filter{"unminify", data}`
+`data = rbxmk.filter{"unminify", data}`
 
 `unminify` uses [lua-minify](https://github.com/stravant/lua-minify) to
 unminify a Lua script. It receives a single Data, and returns the modified

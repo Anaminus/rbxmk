@@ -57,12 +57,14 @@ AllArgs = {...}
 ## Lua environment
 
 [Lua](https://lua.org) scripts are used to perform actions. Scripts are run in
-a stripped-down environment; none of the regular base functions and libraries
-are loaded. Instead, a set of new functions is made available.
+a modified environment, with most of the standard functions and libraries
+being available. A complete list of included items can be found in
+[DOCUMENTATION.md](DOCUMENTATION.md#user-content-standard-library).
 
-Each function accepts a table as its only argument. Lua has the following bit
-of syntax sugar to support this: if a constructed table is the only argument
-to a function, then the function's parentheses may be omitted:
+Also included is the `rbxmk` library. Each function in this library accepts a
+table as its only argument. Lua has the following bit of syntax sugar to
+support this: if a constructed table is the only argument to a function, then
+the function's parentheses may be omitted:
 
 ```lua
 func({arg1, arg2})
@@ -86,16 +88,15 @@ func{arg1=value, arg2=value}
 
 ## Workflow
 
-
-The primary functions used in every script are the `input`, `output`, and
-`map` functions.
+The primary functions used in every script are the `rbxmk.input`,
+`rbxmk.output`, and `rbxmk.map` functions.
 
 The `input` and `output` functions each refer to some piece of **data**,
 returning a representation of the data.
 
 ```lua
-input_data = input{reference...}
-output_data = output{reference...}
+input_data = rbxmk.input{reference...}
+output_data = rbxmk.output{reference...}
 ```
 
 Data is retrieved from some location referred to by the arguments of each
@@ -106,7 +107,7 @@ The `map` function receives a number of inputs and a number of outputs, then
 maps each input to each output.
 
 ```lua
-map{input_data, output_data}
+rbxmk.map{input_data, output_data}
 ```
 
 At this point, the output reference is resolved, then merged with the input
@@ -119,16 +120,16 @@ available in [DOCUMENTATION.md](DOCUMENTATION.md#resolve-chain).*
 ## References
 
 A **reference** is a list of strings that specify a location to read data from
-(in the case of `input`), or to write data to (in the case of `output`).
-Usually, each successive string specifies a piece of data within the data
-referred to by the previous string.
+(in the case of `rbxmk.input`), or to write data to (in the case of
+`rbxmk.output`). Usually, each successive string specifies a piece of data
+within the data referred to by the previous string.
 
 For example, the first string can refer to the location of a file in the file
 system. Depending on the format of the file, the next string in the reference
 will **drill** down into the file, selecting a piece of data within it.
 
 ```lua
-input_source = input{"Documents/Roblox/place.rbxl", "Workspace.Model.Part.Script", "Source"}
+input_source = rbxmk.input{"Documents/Roblox/place.rbxl", "Workspace.Model.Part.Script", "Source"}
 ```
 
 This example selects the "place.rbxl" file, then drills into this `rbxl` file
@@ -141,8 +142,8 @@ where data will be written to. For example, we can select another script in
 another file, and write `input_source` to there.
 
 ```lua
-output_source = output{"another_place.rbxlx", "ServerScriptService.ModuleScript", "Source"}
-map{input_source, output_source}
+output_source = rbxmk.output{"another_place.rbxlx", "ServerScriptService.ModuleScript", "Source"}
+rbxmk.map{input_source, output_source}
 ```
 
 In this example, mapping `input_source` to the output causes the file to be
@@ -178,8 +179,8 @@ can be omitted.
 
 ```lua
 -- These two are equivalent.
-place = input{"Documents/Roblox/place.rbxl"}
-place = input{"file://Documents/Roblox/place.rbxl"}
+place = rbxmk.input{"Documents/Roblox/place.rbxl"}
+place = rbxmk.input{"file://Documents/Roblox/place.rbxl"}
 ```
 
 A complete list of schemes and how they work can be found in
@@ -196,25 +197,26 @@ how to encode data.
 Some schemes are able to guess the format, others require it to be specified
 explicitly. Some don't require a format at all.
 
-The `input` and `output` functions have a named argument called `format`. When
-specified, it will override whatever format is guessed by the scheme.
+The `rbxmk.input` and `rbxmk.output` functions have a named argument called
+`format`. When specified, it will override whatever format is guessed by the
+scheme.
 
 ```lua
 -- Read a regular Lua file as a ModuleScript Lua file.
-script = input{format="modulescript.lua", "file.lua"}
+script = rbxmk.input{format="modulescript.lua", "file.lua"}
 ```
 ```lua
-map{
+rbxmk.map{
 	-- The http scheme cannot guess the format, so it must be provided by the
 	-- user.
-	output{format="rbxl", "https://www.roblox.com/Data/Upload.aspx?assetid=1818"},
-	input{"crossroads.rbxl"},
+	rbxmk.output{format="rbxl", "https://www.roblox.com/Data/Upload.aspx?assetid=1818"},
+	rbxmk.input{"crossroads.rbxl"},
 }
 ```
 ```lua
 -- The generate scheme does not require a format, because no raw data needs to
 -- be decoded.
-props = input{format="properties.json", "generate://Property", "Size:Vector3=4,1,2;Anchored=true"}
+props = rbxmk.input{format="properties.json", "generate://Property", "Size:Vector3=4,1,2;Anchored=true"}
 ```
 
 Here is a selection from the many available formats:
@@ -259,13 +261,13 @@ Input type   | Output type  | Reference
 Examples:
 ```lua
 -- Instances -> Instance -> Property
-input{"place.rbxl", "Workspace.Model.Part", "Anchored"}
+rbxmk.input{"place.rbxl", "Workspace.Model.Part", "Anchored"}
 
 -- Instances -> Instance -> Properties -> Property
-input{"place.rbxl", "Workspace.Model.Part", "*", "Size"}
+rbxmk.input{"place.rbxl", "Workspace.Model.Part", "*", "Size"}
 
 -- Properties -> Property
-input{"workspace.properties.json", "FilteringEnabled"}
+rbxmk.input{"workspace.properties.json", "FilteringEnabled"}
 ```
 
 A complete list of types and how they work can be found in
@@ -273,11 +275,12 @@ A complete list of types and how they work can be found in
 
 ## Functions
 
-There are a handful of other functions beside `input`, `output`, and `map`.
+There are a handful of other functions beside `rbxmk.input`, `rbxmk.output`,
+and `rbxmk.map`.
 
 ### Filters
 
-The `filter` function is used to transform values in some way. The first
+The `rbxmk.filter` function is used to transform values in some way. The first
 argument is a string specifying the name of the filter to use. The remaining
 arguments, as well as the return values, depend on the selected filter.
 
@@ -285,7 +288,7 @@ For example, the "minify" filter receives a value and, assuming it's the
 source of a Lua script, minifies the content, returning the modified value.
 
 ```lua
-script = input{"generate://Instance", [[
+script = rbxmk.input{"generate://Instance", [[
 	Script{
 		Name:string = "Script";
 		Source:string = "
@@ -295,7 +298,7 @@ script = input{"generate://Instance", [[
 		";
 	}
 ]]}
-script = filter("minify", script}
+script = rbxmk.filter{"minify", script}
 -- Value of Source is now "for a=1,10 do print(a)end"
 ```
 
@@ -304,13 +307,14 @@ A complete list of filters and how they work can be found in
 
 ### Path
 
-The `path` function is used to join file paths, adding separators as needed.
+The `rbxmk.path` function is used to join file paths, adding separators as
+needed.
 
 ```lua
 projects = "C:/Users/John/Documents/Roblox"
 project_name = "Crossroads"
 place_name = "crossroads.rbxl"
-result = path{projects, project_name, place_name}
+result = rbxmk.path{projects, project_name, place_name}
 -- "C:\Users\John\Documents\Roblox\Crossroads\crossroads.rbxl"
 ```
 
@@ -323,25 +327,25 @@ included somewhere in an argument.
 
 ```lua
 -- Get place file in same directory as running script.
-place = input{path{"$script_directory/place.rbxl"}}
+place = rbxmk.input{rbxmk.path{"$script_directory/place.rbxl"}}
 
 -- These are technically the same.
-place = input{path{"$working_directory/place.rbxl"}}
-place = input{path{"place.rbxl"}}
+place = rbxmk.input{rbxmk.path{"$working_directory/place.rbxl"}}
+place = rbxmk.input{rbxmk.path{"place.rbxl"}}
 ```
 
 ### Loading
 
-The `load` function allows you to run other scripts from within a script. The
-first argument is the path to the script file. Remaining arguments are passed
-to the script, which can be received with the `...` operator. Any values
-returned by the script are returned by `load`.
+The `rbxmk.load` function allows you to run other scripts from within a
+script. The first argument is the path to the script file. Remaining arguments
+are passed to the script, which can be received with the `...` operator. Any
+values returned by the script are returned by `load`.
 
 ```lua
 -- template.lua: Make a template.
 local template_type = ...
 if template_type == "Part" then
-	template = input{"generate://Instance", [[
+	template = rbxmk.input{"generate://Instance", [[
 		Part{
 			Name:string = "Part";
 			Anchored:bool = true;
@@ -350,7 +354,7 @@ if template_type == "Part" then
 		}
 	]]}
 elseif template_type == "Folder" then
-	template = input{"generate://Instance", [[
+	template = rbxmk.input{"generate://Instance", [[
 		Folder{Name:string = "Folder"}
 	]]}
 end
@@ -359,25 +363,25 @@ return template
 
 ```lua
 -- Create some templates.
-part   = load{"template.lua", "Part"}
-folder = load{"template.lua", "Folder"}
+part   = rbxmk.load{"template.lua", "Part"}
+folder = rbxmk.load{"template.lua", "Folder"}
 ```
 
 ### Deletion
 
 Sometimes you may want to remove a value instead of replacing or adding to it.
-This can be accomplished with the `delete` function. This function receives
-one or more outputs, each of which will be removed.
+This can be accomplished with the `rbxmk.delete` function. This function
+receives one or more outputs, each of which will be removed.
 
 ```lua
 -- Remove Position property from a Part instance.
-delete{output{"place.rbxl", "Workspace.Model.Part", "Position"}}
+rbxmk.delete{rbxmk.output{"place.rbxl", "Workspace.Model.Part", "Position"}}
 
 -- Remove a Part instance.
-delete{output{"place.rbxl", "Workspace.Model.Part"}}
+rbxmk.delete{rbxmk.output{"place.rbxl", "Workspace.Model.Part"}}
 
 -- Remove all instances in the file.
-delete{output{"place.rbxl"}}
+rbxmk.delete{rbxmk.output{"place.rbxl"}}
 ```
 
 Note that, when deleting an output that points to an entire file, the file
@@ -387,4 +391,4 @@ result of the file's format encoding zero values.
 ### Other functions
 
 A complete list of functions and how they work can be found in
-[DOCUMENTATION.md](DOCUMENTATION.md#user-content-lua-functions).
+[DOCUMENTATION.md](DOCUMENTATION.md#user-content-rbxmk-library).
