@@ -10,7 +10,6 @@ import (
 	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
-	"reflect"
 	"sort"
 	"strings"
 )
@@ -33,15 +32,11 @@ var mainFuncs = map[string]lua.LGFunction{
 	"map":       mainMap,
 	"delete":    mainDelete,
 	"load":      mainLoad,
-	"error":     mainError,
-	"exit":      mainExit,
 	"type":      mainType,
-	"pcall":     mainPCall,
 	"getenv":    mainGetenv,
 	"path":      mainPath,
 	"readdir":   mainReaddir,
 	"filename":  mainFilename,
-	"print":     mainPrint,
 	"sprintf":   mainSprintf,
 	"printf":    mainPrintf,
 	"loadapi":   mainLoadAPI,
@@ -273,48 +268,10 @@ func mainLoad(l *lua.LState) int {
 	return l.GetTop() - 1
 }
 
-func mainError(l *lua.LState) int {
-	return throwError(l, errors.New(GetArgs(l, 1).IndexString(1, false)))
-}
-
-func mainExit(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	v := t.IndexTyped(1, luaTypeError, false)
-	err, _ := v.(error)
-	panic(exitMarker{err: err})
-}
-
 func mainType(l *lua.LState) int {
 	t := GetArgs(l, 1)
 	l.Push(lua.LString(typeOf(l, t.RawGetInt(1))))
 	return 1
-}
-
-func mainPCall(l *lua.LState) int {
-	t := GetArgs(l, 1)
-
-	lv := t.RawGetInt(1)
-	fn, ok := lv.(*lua.LFunction)
-	if !ok {
-		t.ErrorIndex(1, "function", lv.Type().String())
-	}
-	l.Push(fn)
-
-	nt := t.Len()
-	for i := 2; i < nt; i++ {
-		l.Push(t.RawGetInt(i))
-	}
-	if err := l.PCall(nt-1, lua.MultRet, nil); err != nil {
-		l.Push(lua.LFalse)
-		if aerr, ok := err.(*lua.ApiError); ok {
-			l.Push(aerr.Object)
-		} else {
-			l.Push(lua.LString(err.Error()))
-		}
-		return 2
-	}
-	l.Insert(lua.LTrue, 1)
-	return l.GetTop()
 }
 
 func mainGetenv(l *lua.LState) int {
@@ -419,29 +376,6 @@ func mainFilename(l *lua.LState) int {
 	}
 	l.Push(lua.LString(result))
 	return 1
-}
-
-func mainPrint(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	nt := t.Len()
-	s := make([]interface{}, nt)
-	for i := 1; i <= nt; i++ {
-		typ := t.TypeOfIndex(i)
-		switch typ {
-		case "input":
-			if typ := reflect.TypeOf(t.IndexValue(i)); typ == nil {
-				s[i-1] = "<input(nil)>"
-			} else {
-				s[i-1] = "<input(" + typ.String() + ")>"
-			}
-		case "output":
-			s[i-1] = "<output>"
-		default:
-			s[i-1] = t.IndexValue(i)
-		}
-	}
-	fmt.Println(s...)
-	return 0
 }
 
 func mainSprintf(l *lua.LState) int {

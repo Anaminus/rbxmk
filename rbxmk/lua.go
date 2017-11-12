@@ -52,14 +52,6 @@ func typeOf(l *lua.LState, v lua.LValue) string {
 const tableArg = 1
 const tableMethodArg = 1
 
-type exitMarker struct {
-	err error
-}
-
-func (exitMarker) Error() string {
-	return "ExitMarker"
-}
-
 type tArgs struct {
 	l *lua.LState
 	*lua.LTable

@@ -87,8 +87,6 @@ Name                                          | Description
 ----------------------------------------------|------------
 [configure](#user-content-configure-function) | Configure the behavior of rbxmk.
 [delete](#user-content-delete-function)       | Delete an output node.
-[error](#user-content-error-function)         | Throw an error.
-[exit](#user-content-exit-function)           | Force the program to exit.
 [filename](#user-content-filename-function)   | Get parts of a file name.
 [filter](#user-content-filter-function)       | Transform nodes.
 [getenv](#user-content-getenv-function)       | Get the value of an environment variable.
@@ -98,8 +96,6 @@ Name                                          | Description
 [map](#user-content-map-function)             | Map one or more inputs to one or more outputs.
 [output](#user-content-output-function)       | Create an output node.
 [path](#user-content-path-function)           | Join file paths.
-[pcall](#user-content-pcall-function)         | Call a function in protected mode.
-[print](#user-content-print-function)         | Print values to stdout.
 [printf](#user-content-printf-function)       | Print a formatted string to stdout.
 [readdir](#user-content-readdir-function)     | List the files in a directory.
 [sprintf](#user-content-sprintf-function)     | Return a formatted string.
@@ -124,19 +120,6 @@ Name  | Type | Default | Description
 
 For each output node received, `delete` removes the data pointed to by the
 node.
-
-### `error` function
-
-`rbxmk.error{string}`
-
-`error` throws an error, with the first argument as the error message.
-
-### `exit` function
-
-`rbxmk.exit{string}`
-
-`exit` forces the program to exit. An optional message can be given, which
-will be passed to the program.
 
 ### `filename` function
 
@@ -256,22 +239,6 @@ Variable                                 | Description
 
 Any other variable returns an empty string. An empty string will also be
 returned if a path could not be located.
-
-### `pcall` function
-
-`rbxmk.pcall{function, ...}`
-
-`pcall` calls a function with the given arguments. If an error occurs, `pcall`
-returns false, followed by the error message. If no errors occur, `pcall`
-return true, followed by any values returned by the called function.
-
-### `print` function
-
-`rbxmk.print{...}`
-
-`print` receives a number of values and writes them to standard output.
-`print` follows the same rules as Golang's
-[fmt.Println](https://golang.org/pkg/fmt/#Println).
 
 ### `printf` function
 
