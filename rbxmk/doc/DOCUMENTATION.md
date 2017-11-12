@@ -140,7 +140,7 @@ will be passed to the program.
 
 ### `filename` function
 
-`rbxmk.filename{string, string}`
+`string = rbxmk.filename{string, string}`
 
 `filename` returns a part of a file path. The first argument is a string
 specifying the part of the path to return. The second argument is the file
@@ -283,7 +283,7 @@ rules as Golang's [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
 
 ### `readdir` function
 
-`rbxmk.readdir{string}`
+`table = rbxmk.readdir{string}`
 
 `readdir` receives a directory path and returns a list of files within the
 directory.
