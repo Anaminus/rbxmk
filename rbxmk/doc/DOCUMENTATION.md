@@ -115,7 +115,7 @@ option to change. The following options are available:
 Name     | Type  | Default | Description
 ---------|-------|---------|------------
 `api`    | api   | nil     | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
-`define` | table | -       | Defines a number of variables to be used by the [preprocessor](#user-content-preprocess-filter). Each key-value pair in the given table is merged with the existing set of variables. Keys must be variable-like strings, and values can be either bools, numbers, or strings.
+`define` | table | -       | Defines a number of variables to be used by the [preprocessor](#user-content-preprocess-filter). Each key-value pair in the given table is merged with the existing set of variables. Keys must be variable-like strings, and values can be either bools, numbers, or strings.<br>Note that variables defined by `configure` cannot override variables defined by the [`--define`](USAGE.md#user-content-command-options) command option.
 `undef`  | table | -       | Undefines a number of [preprocessor](#user-content-preprocess-filter) variables. The given table is a list of variable names to be undefined.<br>If both `define` and `undef` configs are given, then `undef` is applied first.
 
 ### `delete` function
@@ -1071,7 +1071,8 @@ library is not included).
 Also included are the variables specified by the
 [`--define`](USAGE.md#user-content-command-options) command option and the
 [`rbxmk.configure`](#user-content-configure-function) function. These
-variables cannot be modified by the preprocessor.
+variables cannot be modified by the preprocessor. Note that variables defined
+with the command option take precedence over variables defined by `configure`.
 
 For example, the `condition` variable can be defined via the shell:
 

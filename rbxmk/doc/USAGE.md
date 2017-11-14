@@ -44,7 +44,9 @@ The `-d` option takes the form `-d Name:Value`, and can be specified more than
 once. The variable name must be a string of digits, letters, and underscore,
 which doesn't start with a digit. The value is a string parsed into a Lua
 value. This may be a number, a bool ("true" or "false"), or "nil" (which
-undefines the variable). Any other value is read as a string.
+undefines the variable). Any other value is read as a string. Note that
+variables defined by the command option will take precedence over variables
+defined elsewhere.
 
 ```shell
 rbxmk --file script.lua --define DEBUG:true --define LOGLEVEL:3
