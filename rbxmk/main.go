@@ -18,7 +18,7 @@ func Fatalf(f string, v ...interface{}) {
 }
 
 const CommandName = "rbxmk"
-const CommandUsage = `[ -h ] [ -f FILE ] [ ARGS... ]
+const CommandUsage = `[ -h ] [ -f FILE ] [ -d NAME:VALUE ] [ ARGS... ]
 
 Options after any valid flags will be passed to the script as arguments.
 Numbers, bools, and nil are parsed into their respective types in Lua, and any
