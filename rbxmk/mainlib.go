@@ -512,5 +512,35 @@ func mainConfigure(l *lua.LState) int {
 	if v := t.FieldValue("api"); v != nil {
 		ctx.Options.Config.API, _ = v.(*rbxapi.API)
 	}
+	if v := t.FieldValue("undef"); v != nil {
+		undefs := v.(*lua.LTable)
+		for i := 1; i <= undefs.Len(); i++ {
+			k := undefs.RawGetInt(i)
+			if k.Type() != lua.LTString {
+				continue
+			}
+			key := string(k.(lua.LString))
+			if !checkStringVar(key) {
+				continue
+			}
+			ctx.Options.Config.PreprocessorEnv.RawSetString(key, lua.LNil)
+		}
+	}
+	if v := t.FieldValue("define"); v != nil {
+		defs := v.(*lua.LTable)
+		defs.ForEach(func(k, v lua.LValue) {
+			if k.Type() != lua.LTString {
+				return
+			}
+			key := string(k.(lua.LString))
+			if !checkStringVar(key) {
+				return
+			}
+			switch v.Type() {
+			case lua.LTBool, lua.LTNumber, lua.LTString:
+				ctx.Options.Config.PreprocessorEnv.RawSetString(key, v)
+			}
+		})
+	}
 	return 0
 }

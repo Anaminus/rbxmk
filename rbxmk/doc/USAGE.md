@@ -29,15 +29,26 @@ Since almost all actions are done in Lua, the `rbxmk` command has only a few
 options:
 
 ```
-rbxmk [ -h ] [ -f FILE ] [ ARGS... ]
+rbxmk [ -h ] [ -f FILE ] [ -d NAME:VALUE ] [ ARGS... ]
 ```
 
 Options          | Description
 -----------------|------------
 `-h`, `--help`   | Display a help message.
 `-f`, `--file`   | Run a Lua script from a file.
+`-d`, `--define` | Define a variable to be used by the [preprocessor](DOCUMENTATION.md#user-content-preprocess-filter).
 
 If the `-f` option is not given, then the script is read from stdin.
+
+The `-d` option takes the form `-d Name:Value`, and can be specified more than
+once. The variable name must be a string of digits, letters, and underscore,
+which doesn't start with a digit. The value is a string parsed into a Lua
+value. This may be a number, a bool ("true" or "false"), or "nil" (which
+undefines the variable). Any other value is read as a string.
+
+```shell
+rbxmk --file script.lua --define DEBUG:true --define LOGLEVEL:3
+```
 
 Options after any valid flags will be passed to the script as arguments.
 Numbers, bools, and nil are parsed into their respective types in Lua, and any

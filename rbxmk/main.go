@@ -26,7 +26,8 @@ other values are read as strings.
 `
 
 type FlagOptions struct {
-	File string `short:"f" long:"file" description:"A file to be executed as a Lua script. If not specified, then the script will be read from stdin instead." long-description:"" value-name:"FILE"`
+	File   string            `short:"f" long:"file" description:"A file to be executed as a Lua script. If not specified, then the script will be read from stdin instead." long-description:"" value-name:"FILE"`
+	Define map[string]string `short:"d" long:"define" description:"Defines a variable to be used by the preprocessor. Can be specified multiple times for multiple variables. The value may be a Lua bool, number, string, or nil." long-description:"" value-name:"NAME:VALUE"`
 }
 
 func main() {
@@ -61,7 +62,7 @@ func main() {
 		if !checkStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
-		options.Config.PPEnv.RawSetString(k, luautil.ParseLuaValue(v))
+		options.Config.PreprocessorEnv.RawSetString(k, luautil.ParseLuaValue(v))
 	}
 
 	ctx := luautil.NewLuaContext(options)

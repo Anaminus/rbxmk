@@ -47,7 +47,9 @@ This document provides details on how rbxmk works. For a basic overview, see
 			<li><a href="#user-content-example">Example</a></li>
 		</ol></li>
 	</ol></li>
-	<li><a href="#user-content-filters">Filters</a></li>
+	<li><a href="#user-content-filters">Filters</a><ol>
+		<li><a href="#user-content-preprocess-filter">Preprocess filter</a></li>
+	</ol></li>
 </ol></td></tr></tbody>
 </table>
 
@@ -110,9 +112,11 @@ option to change. The following options are available:
 
 #### Configure options table
 
-Name  | Type | Default | Description
-------|------|---------|------------
-`api` | api  |  nil    | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
+Name     | Type  | Default | Description
+---------|-------|---------|------------
+`api`    | api   | nil     | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
+`define` | table | -       | Defines a number of variables to be used by the [preprocessor](#user-content-preprocess-filter). Each key-value pair in the given table is merged with the existing set of variables. Keys must be variable-like strings, and values can be either bools, numbers, or strings.
+`undef`  | table | -       | Undefines a number of [preprocessor](#user-content-preprocess-filter) variables. The given table is a list of variable names to be undefined.<br>If both `define` and `undef` configs are given, then `undef` is applied first.
 
 ### `delete` function
 
@@ -978,11 +982,12 @@ outputs and transforms them in some way, hence the name "filter".
 
 This section lists and describes the filters that rbxmk includes by default.
 
-Name                                      | Description
-------------------------------------------|------------
-[minify](#user-content-minify-filter)     | Shrink the content of a Lua script.
-[region](#user-content-region-filter)     | Replace regions of a Lua script.
-[unminify](#user-content-unminify-filter) | Expand the content of a Lua script.
+Name                                          | Description
+----------------------------------------------|------------
+[minify](#user-content-minify-filter)         | Shrink the content of a Lua script.
+[preprocess](#user-content-preprocess-filter) | Run the preprocessor on some text.
+[region](#user-content-region-filter)         | Replace regions of a Lua script.
+[unminify](#user-content-unminify-filter)     | Expand the content of a Lua script.
 
 ### Minify filter
 
@@ -999,6 +1004,90 @@ Type           | Description
 `Instance`     | If the instance is script-like, then its Source property is modified, if it exists.
 `Value`        | Only if the value is string-like.
 `string` (Lua) | Modifies the string.
+
+### Preprocess filter
+
+`data = rbxmk.filter{"preprocess", data}`
+
+`preprocess` runs a preprocessor on a string-like value. It receives a single
+Data, and returns the modified result.
+
+`preprocess` receives the same Data types as the
+[`minify`](#user-content-minify-filter) filter.
+
+Within a string, a preprocessor can be signaled with two syntaxes:
+
+- A line starting with a `#` character is treated as Lua.
+- Text enclosed within `$()` is treated as Lua. Note that this syntax counts
+  only if parentheses within the text are balanced.
+
+The `$()` syntax has several specific features:
+
+- `$(explist)`: Evalutes a Lua expression list and outputs each result as a
+  string. Note that the results are concatenated directly. Nil values output
+  nothing.
+- `$(chunk)`: Evaluates the chunk and outputs nothing.
+- `$('$')`: Outputs a literal `$` character to the output file.
+- `$('#')`: Outputs a literal `#` character to the output file.
+
+Each successive preprocessor creates a continuous chunk of Lua code. Any
+non-preprocessor portion of the input file is outputted directly if it is
+reached in the Lua code. For example, with the following input file:
+
+```text
+#if condition then
+Hello
+#else
+Goodbye
+#end
+```
+
+If `condition` is true, then the content of the output file will be "Hello".
+Otherwise, it will be "Goodbye".
+
+Any valid Lua syntax may be used. This example preprocesses a Lua file to
+unroll a loop:
+
+```text
+#for i = 1, 4 do
+print($(i))
+#end
+```
+
+This evaluates to the following file:
+
+```text
+print(1)
+print(2)
+print(3)
+print(4)
+```
+
+The Lua code runs in its own isolated environment, which exists only for the
+duration of the preprocess filter call. The environment contains the same
+[standard library](#user-content-standard-library) as rbxmk scripts (the rbxmk
+library is not included).
+
+Also included are the variables specified by the
+[`--define`](USAGE.md#user-content-command-options) command option and the
+[`rbxmk.configure`](#user-content-configure-function) function. These
+variables cannot be modified by the preprocessor.
+
+For example, the `condition` variable can be defined via the shell:
+
+```shell
+rbxmk -f script.lua --define condition:true
+```
+
+Or from a script:
+
+```lua
+rbxmk.configure{define={condition=true}}
+```
+
+Finally included is the `_put` function. Any arguments passed to this function
+are converted to strings and written to the output file. Nil values output
+nothing.
 
 ### Region filter
 
