@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
+	"github.com/robloxapi/rbxapi/dump"
 	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
@@ -497,10 +498,14 @@ func mainPrintf(l *lua.LState) int {
 
 func mainLoadAPI(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
-	path := t.IndexString(1, false)
-	api, err := rbxmk.LoadAPI(path)
+	file, err := os.Open(t.IndexString(1, false))
 	if err != nil {
-		return throwError(l, err)
+		return throwError(l, fmt.Errorf("failed to open API file: %s", err))
+	}
+	defer file.Close()
+	api, err := dump.Decode(file)
+	if err != nil {
+		return throwError(l, fmt.Errorf("failed to decode API file: %s", err))
 	}
 	return returnTypedValue(l, api, luaTypeAPI)
 }
