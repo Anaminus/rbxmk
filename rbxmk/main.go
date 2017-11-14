@@ -5,12 +5,11 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/filter"
 	"github.com/anaminus/rbxmk/format"
+	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
-	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 func Fatalf(f string, v ...interface{}) {
@@ -58,31 +57,32 @@ func main() {
 		Fatalf("%s", err)
 	}
 
-	state := NewLuaState(options)
+	for k, v := range flagOptions.Define {
+		if !checkStringVar(k) {
+			Fatalf("invalid variable name %q", k)
+		}
+		options.Config.PPEnv.RawSetString(k, luautil.ParseLuaValue(v))
+	}
+
+	ctx := luautil.NewLuaContext(options)
+	luautil.OpenFilteredLibs(ctx.State(), luautil.GetFilteredStdLib())
+	uctx := ctx.State().NewUserData()
+	uctx.Value = ctx
+	luautil.OpenFilteredLibs(ctx.State(), []luautil.LibFilter{
+		{MainLibName, OpenMain, nil},
+	}, uctx)
 
 	for _, arg := range args {
-		number, err := strconv.ParseFloat(arg, 64)
-		switch {
-		case err == nil:
-			state.state.Push(lua.LNumber(number))
-		case arg == "true":
-			state.state.Push(lua.LTrue)
-		case arg == "false":
-			state.state.Push(lua.LFalse)
-		case arg == "nil":
-			state.state.Push(lua.LNil)
-		default:
-			state.state.Push(lua.LString(arg))
-		}
+		ctx.State().Push(luautil.ParseLuaValue(arg))
 	}
 
 	if flagOptions.File != "" {
 		filename := shortenPath(filepath.Clean(flagOptions.File))
-		if err := state.DoFile(filename, len(args)); err != nil {
+		if err := ctx.DoFile(filename, len(args)); err != nil {
 			Fatalf("%s", err)
 		}
 	} else {
-		if err := state.DoFileHandle(os.Stdin, len(args)); err != nil {
+		if err := ctx.DoFileHandle(os.Stdin, len(args)); err != nil {
 			Fatalf("%s", err)
 		}
 	}

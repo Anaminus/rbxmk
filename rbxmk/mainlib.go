@@ -4,24 +4,114 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"strings"
 )
 
 const MainLibName = "rbxmk"
 
+const (
+	luaTypeInput  = "input"
+	luaTypeOutput = "output"
+	luaTypeError  = "error"
+	luaTypeAPI    = "api"
+)
+
+func returnTypedValue(l *lua.LState, value interface{}, valueType string) int {
+	ud := l.NewUserData()
+	ud.Value = value
+	l.SetMetatable(ud, l.GetTypeMetatable(valueType))
+	l.Push(ud)
+	return 1
+}
+
+func getLuaContextUpvalue(l *lua.LState, index int) *luautil.LuaContext {
+	return l.CheckUserData(lua.UpvalueIndex(index)).Value.(*luautil.LuaContext)
+}
+
 func OpenMain(l *lua.LState) int {
-	// Expect a LuaState as the second argument.
-	st := l.CheckUserData(2)
-	_ = st.Value.(*LuaState)
-	// Set LuaState as upvalue to each function in library.
-	l.SetFuncs(l.RegisterModule(MainLibName, nil).(*lua.LTable), mainFuncs, st)
+	// Expect a LuaContext as an upvalue.
+	ctx := l.CheckUserData(lua.UpvalueIndex(1))
+
+	// Metatables for custom types.
+	l.SetFuncs(l.NewTypeMetatable(luaTypeInput), map[string]lua.LGFunction{
+		"__type": func(l *lua.LState) int {
+			l.Push(lua.LString(luaTypeInput))
+			return 1
+		},
+		"__tostring": func(l *lua.LState) int {
+			if typ := reflect.TypeOf(luautil.GetLuaValue(l.Get(1))); typ == nil {
+				l.Push(lua.LString("<input(nil)>"))
+			} else {
+				l.Push(lua.LString("<input(" + typ.String() + ")>"))
+			}
+			return 1
+		},
+		"__metatable": func(l *lua.LState) int {
+			l.Push(lua.LString("the metatable is locked"))
+			return 1
+		},
+	})
+	l.SetFuncs(l.NewTypeMetatable(luaTypeOutput), map[string]lua.LGFunction{
+		"__type": func(l *lua.LState) int {
+			l.Push(lua.LString(luaTypeOutput))
+			return 1
+		},
+		"__tostring": func(l *lua.LState) int {
+			l.Push(lua.LString("<output>"))
+			return 1
+		},
+		"__metatable": func(l *lua.LState) int {
+			l.Push(lua.LString("the metatable is locked"))
+			return 1
+		},
+	})
+	l.SetFuncs(l.NewTypeMetatable(luaTypeError), map[string]lua.LGFunction{
+		"__type": func(l *lua.LState) int {
+			l.Push(lua.LString(luaTypeError))
+			return 1
+		},
+		"__tostring": func(l *lua.LState) int {
+			lu := l.ToUserData(1)
+			if lu != nil {
+				if err, ok := lu.Value.(error); ok {
+					l.Push(lua.LString(err.Error()))
+					return 1
+				}
+			}
+			l.Push(lua.LString("<error>"))
+			return 1
+		},
+		"__metatable": func(l *lua.LState) int {
+			l.Push(lua.LString("the metatable is locked"))
+			return 1
+		},
+	})
+	l.SetFuncs(l.NewTypeMetatable(luaTypeAPI), map[string]lua.LGFunction{
+		"__type": func(l *lua.LState) int {
+			l.Push(lua.LString(luaTypeAPI))
+			return 1
+		},
+		"__tostring": func(l *lua.LState) int {
+			l.Push(lua.LString("<api>"))
+			return 1
+		},
+		"__metatable": func(l *lua.LState) int {
+			l.Push(lua.LString("the metatable is locked"))
+			return 1
+		},
+	})
+
+	// Set LuaContext as upvalue to each function in library.
+	l.SetFuncs(l.RegisterModule(MainLibName, nil).(*lua.LTable), mainFuncs, ctx)
 	return 1
 }
 
@@ -46,8 +136,9 @@ var mainFuncs = map[string]lua.LGFunction{
 const formatIndex = "format"
 const apiIndex = "api"
 
-func getLuaStateUpvalue(l *lua.LState, index int) *LuaState {
-	return l.CheckUserData(lua.UpvalueIndex(index)).Value.(*LuaState)
+func throwError(l *lua.LState, err error) int {
+	l.Error(lua.LString(err.Error()), 1)
+	return 0
 }
 
 func string_Format(l *lua.LState) int {
@@ -66,14 +157,14 @@ func string_Format(l *lua.LState) int {
 }
 
 func mainInput(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
-	st.options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	ctx.Options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 	node := &rbxmk.InputNode{}
 	node.Format, _ = t.FieldString(formatIndex, true)
-	node.Options = st.options
+	node.Options = ctx.Options
 
 	nt := t.Len()
 	if nt == 0 {
@@ -97,14 +188,14 @@ func mainInput(l *lua.LState) int {
 }
 
 func mainOutput(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
-	st.options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	ctx.Options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 	node := &rbxmk.OutputNode{}
 	node.Format, _ = t.FieldString(formatIndex, true)
-	node.Options = st.options
+	node.Options = ctx.Options
 
 	nt := t.Len()
 	if nt == 0 {
@@ -123,10 +214,10 @@ func mainOutput(l *lua.LState) int {
 }
 
 func mainFilter(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
-	st.options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	ctx.Options.Config.API, _ = t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 
 	const filterNameIndex = "name"
 	var i int = 1
@@ -136,7 +227,7 @@ func mainFilter(l *lua.LState) int {
 		i = 2
 	}
 
-	filterFunc := st.options.Filters.Filter(filterName)
+	filterFunc := ctx.Options.Filters.Filter(filterName)
 	if filterFunc == nil {
 		return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 	}
@@ -147,7 +238,7 @@ func mainFilter(l *lua.LState) int {
 		arguments[i-o] = t.IndexValue(i)
 	}
 
-	results, err := rbxmk.CallFilter(filterFunc, st.options, arguments...)
+	results, err := rbxmk.CallFilter(filterFunc, ctx.Options, arguments...)
 	if err != nil {
 		return throwError(l, err)
 	}
@@ -185,9 +276,19 @@ func mainFilter(l *lua.LState) int {
 	return len(results)
 }
 
+func mapNodes(l *lua.LState, inputs []rbxmk.Data, outputs []*rbxmk.OutputNode) int {
+	for _, input := range inputs {
+		for _, output := range outputs {
+			if err := output.ResolveReference(input); err != nil {
+				return throwError(l, err)
+			}
+		}
+	}
+	return 0
+}
+
 func mainMap(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
 
 	inputs := make([]rbxmk.Data, 0, 1)
 	outputs := make([]*rbxmk.OutputNode, 0, 1)
@@ -208,12 +309,11 @@ func mainMap(l *lua.LState) int {
 		return throwError(l, errors.New("at least 1 output is expected"))
 	}
 
-	return st.mapNodes(inputs, outputs)
+	return mapNodes(l, inputs, outputs)
 }
 
 func mainDelete(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
 
 	outputs := make([]*rbxmk.OutputNode, 0, 1)
 	nt := t.Len()
@@ -227,12 +327,12 @@ func mainDelete(l *lua.LState) int {
 		return throwError(l, errors.New("at least 1 output is expected"))
 	}
 
-	return st.mapNodes([]rbxmk.Data{types.Delete{}}, outputs)
+	return mapNodes(l, []rbxmk.Data{types.Delete{}}, outputs)
 }
 
 func mainLoad(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
 	fileName := t.IndexString(1, false)
 	fileName = shortenPath(filepath.Clean(fileName))
@@ -240,14 +340,14 @@ func mainLoad(l *lua.LState) int {
 	if err != nil {
 		return throwError(l, err)
 	}
-	if err = st.pushFile(&fileInfo{fileName, fi}); err != nil {
+	if err = ctx.PushFile(luautil.FileInfo{fileName, fi}); err != nil {
 		return throwError(l, err)
 	}
 
 	// Load file as function.
 	fn, err := l.LoadFile(fileName)
 	if err != nil {
-		st.popFile()
+		ctx.PopFile()
 		return throwError(l, err)
 	}
 	l.Push(fn) // +function
@@ -261,7 +361,7 @@ func mainLoad(l *lua.LState) int {
 
 	// Call loaded function.
 	err = l.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
-	st.popFile()
+	ctx.PopFile()
 	if err != nil {
 		return throwError(l, err)
 	}
@@ -269,13 +369,13 @@ func mainLoad(l *lua.LState) int {
 }
 
 func mainType(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	l.Push(lua.LString(typeOf(l, t.RawGetInt(1))))
+	t := luautil.GetArgs(l, 1)
+	l.Push(lua.LString(t.TypeOfIndex(1)))
 	return 1
 }
 
 func mainGetenv(l *lua.LState) int {
-	t := GetArgs(l, 1)
+	t := luautil.GetArgs(l, 1)
 	value, ok := os.LookupEnv(t.IndexString(1, false))
 	if ok {
 		l.Push(lua.LString(value))
@@ -286,28 +386,28 @@ func mainGetenv(l *lua.LState) int {
 }
 
 func mainPath(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
 	s := make([]string, t.Len())
 	for i := 1; i <= t.Len(); i++ {
 		s[i-1] = os.Expand(t.IndexString(i, false), func(v string) string {
 			switch v {
 			case "script_name", "sn":
-				n := len(st.fileStack)
-				if n == 0 {
+				fi, ok := ctx.PeekFile()
+				if !ok {
 					l.Push(lua.LString(""))
 					break
 				}
-				path, _ := filepath.Abs(st.fileStack[n-1].path)
+				path, _ := filepath.Abs(fi.Path)
 				return filepath.Base(path)
 			case "script_directory", "script_dir", "sd":
-				n := len(st.fileStack)
-				if n == 0 {
+				fi, ok := ctx.PeekFile()
+				if !ok {
 					l.Push(lua.LString(""))
 					break
 				}
-				path, _ := filepath.Abs(st.fileStack[n-1].path)
+				path, _ := filepath.Abs(fi.Path)
 				return filepath.Dir(path)
 			case "working_directory", "working_dir", "wd":
 				wd, _ := os.Getwd()
@@ -322,7 +422,7 @@ func mainPath(l *lua.LState) int {
 }
 
 func mainReaddir(l *lua.LState) int {
-	t := GetArgs(l, 1)
+	t := luautil.GetArgs(l, 1)
 	dirname := t.IndexString(1, false)
 	f, err := os.Open(dirname)
 	if err != nil {
@@ -343,8 +443,8 @@ func mainReaddir(l *lua.LState) int {
 }
 
 func mainFilename(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
 	typ := t.IndexString(1, false)
 	path := t.IndexString(2, false)
@@ -360,14 +460,14 @@ func mainFilename(l *lua.LState) int {
 	case "ext":
 		result = filepath.Ext(path)
 	case "fbase":
-		ext := scheme.GuessFileExtension(st.options, "", path)
+		ext := scheme.GuessFileExtension(ctx.Options, "", path)
 		if ext != "" && ext != "." {
 			ext = "." + ext
 		}
 		result = filepath.Base(path)
 		result = result[:len(result)-len(ext)]
 	case "fext":
-		result = scheme.GuessFileExtension(st.options, "", path)
+		result = scheme.GuessFileExtension(ctx.Options, "", path)
 		if result != "" && result != "." {
 			result = "." + result
 		}
@@ -379,14 +479,14 @@ func mainFilename(l *lua.LState) int {
 }
 
 func mainSprintf(l *lua.LState) int {
-	t := GetArgs(l, 1)
+	t := luautil.GetArgs(l, 1)
 	t.PushAsArgs()
 	string_Format(l)
 	return 1
 }
 
 func mainPrintf(l *lua.LState) int {
-	t := GetArgs(l, 1)
+	t := luautil.GetArgs(l, 1)
 	t.PushAsArgs()
 	string_Format(l)
 	s := l.ToString(-1)
@@ -396,7 +496,7 @@ func mainPrintf(l *lua.LState) int {
 }
 
 func mainLoadAPI(l *lua.LState) int {
-	t := GetArgs(l, 1)
+	t := luautil.GetArgs(l, 1)
 	path := t.IndexString(1, false)
 	api, err := rbxmk.LoadAPI(path)
 	if err != nil {
@@ -406,11 +506,11 @@ func mainLoadAPI(l *lua.LState) int {
 }
 
 func mainConfigure(l *lua.LState) int {
-	t := GetArgs(l, 1)
-	st := getLuaStateUpvalue(l, 1)
+	t := luautil.GetArgs(l, 1)
+	ctx := getLuaContextUpvalue(l, 1)
 
 	if v := t.FieldValue("api"); v != nil {
-		st.options.Config.API, _ = v.(*rbxapi.API)
+		ctx.Options.Config.API, _ = v.(*rbxapi.API)
 	}
 	return 0
 }
