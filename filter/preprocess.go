@@ -19,7 +19,7 @@ func init() {
 func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := ProcessStringlikeInterface(preprocessStringCallback(opt.Config.PreprocessorEnv), value)
+	out, err := ProcessStringlikeInterface(preprocessStringCallback(opt.Config.PreprocessorEnvs), value)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) 
 
 const putFuncName = "_put"
 
-func preprocessStringCallback(env *lua.LTable) ProcessStringlikeCallback {
+func preprocessStringCallback(envs []*lua.LTable) ProcessStringlikeCallback {
 	return func(s *types.Stringlike) error {
 		l := lua.NewState(lua.Options{SkipOpenLibs: true})
 		// Parse preprocessors into Lua source.
@@ -37,12 +37,20 @@ func preprocessStringCallback(env *lua.LTable) ProcessStringlikeCallback {
 		// Load standard library and readonly environment.
 		luautil.OpenFilteredLibs(l, luautil.GetFilteredStdLib())
 		{
+			varEnv := l.NewTable()
+			for _, env := range envs {
+				env.ForEach(func(k, v lua.LValue) {
+					varEnv.RawSet(k, v)
+				})
+			}
+
 			mt := l.CreateTable(0, 2)
-			mt.RawSetString("__index", env)
+			mt.RawSetString("__index", varEnv)
 			mt.RawSetString("__metatable", lua.LString("The metatable is locked"))
 			globals := l.Get(lua.GlobalsIndex).(*lua.LTable)
 			l.SetMetatable(globals, mt)
 		}
+
 		// Add Put function.
 		output := make([]string, 0, 64)
 		l.SetGlobal(putFuncName, l.NewFunction(func(l *lua.LState) int {

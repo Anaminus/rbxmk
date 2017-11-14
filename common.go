@@ -9,8 +9,8 @@ import (
 )
 
 type Config struct {
-	API             *rbxapi.API
-	PreprocessorEnv *lua.LTable
+	API              *rbxapi.API
+	PreprocessorEnvs []*lua.LTable
 }
 
 type Options struct {
@@ -25,10 +25,6 @@ func NewOptions() Options {
 		Schemes: NewSchemes(),
 		Formats: NewFormats(),
 		Filters: NewFilters(),
-		Config: Config{
-			API:             nil,
-			PreprocessorEnv: &lua.LTable{Metatable: lua.LNil},
-		},
 	}
 }
 

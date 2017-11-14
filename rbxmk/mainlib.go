@@ -513,6 +513,7 @@ func mainConfigure(l *lua.LState) int {
 		ctx.Options.Config.API, _ = v.(*rbxapi.API)
 	}
 	if v := t.FieldValue("undef"); v != nil {
+		env := ctx.Options.Config.PreprocessorEnvs[ppEnvScript]
 		undefs := v.(*lua.LTable)
 		for i := 1; i <= undefs.Len(); i++ {
 			k := undefs.RawGetInt(i)
@@ -523,10 +524,11 @@ func mainConfigure(l *lua.LState) int {
 			if !luautil.CheckStringVar(key) {
 				continue
 			}
-			ctx.Options.Config.PreprocessorEnv.RawSetString(key, lua.LNil)
+			env.RawSetString(key, lua.LNil)
 		}
 	}
 	if v := t.FieldValue("define"); v != nil {
+		env := ctx.Options.Config.PreprocessorEnvs[ppEnvScript]
 		defs := v.(*lua.LTable)
 		defs.ForEach(func(k, v lua.LValue) {
 			if k.Type() != lua.LTString {
@@ -538,7 +540,7 @@ func mainConfigure(l *lua.LState) int {
 			}
 			switch v.Type() {
 			case lua.LTBool, lua.LTNumber, lua.LTString:
-				ctx.Options.Config.PreprocessorEnv.RawSetString(key, v)
+				env.RawSetString(key, v)
 			}
 		})
 	}
