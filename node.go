@@ -46,6 +46,8 @@ func (err *NodeError) Error() string {
 	return fmt.Sprintf("%s node error: %s: %s", err.Type, err.Func, err.Err.Error())
 }
 
+// ResolveReference resolves the reference of the input node, returning a
+// representation of the data pointed to by the reference.
 func (node *InputNode) ResolveReference() (data Data, err error) {
 	opt := node.Options
 	ref := node.Reference
@@ -88,6 +90,8 @@ type OutputNode struct {
 	Format    string   // Forced file format. If empty, it is filled in after being guessed.
 }
 
+// ResolveReference resolves the reference of the output node, writing the
+// received data to the location pointed to by the reference.
 func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	opt := node.Options
 	ref := node.Reference
@@ -127,6 +131,7 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 	return err
 }
 
+// drillOutput drills into the Data which resolved from the node's reference.
 func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, indata Data) (outdata Data, err error) {
 	drilldata := rootdata
 	if drilldata != nil {

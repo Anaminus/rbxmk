@@ -31,6 +31,7 @@ type Data interface {
 	Merge(opt Options, rootdata, drilldata Data) (outdata Data, err error)
 }
 
+// DataTypeError is returned when a Data of an unexpected type is received.
 type DataTypeError struct {
 	dataName string
 }
@@ -39,6 +40,8 @@ func (err DataTypeError) Error() string {
 	return fmt.Sprintf("unexpected Data type: %s", err.dataName)
 }
 
+// NewDataTypeError returns a DataTypeError with the given Data as the
+// unexpected type.
 func NewDataTypeError(data Data) error {
 	if data == nil {
 		return DataTypeError{dataName: "nil"}
@@ -46,6 +49,7 @@ func NewDataTypeError(data Data) error {
 	return DataTypeError{dataName: data.Type()}
 }
 
+// MergeError is returned when two Data could not be merged.
 type MergeError struct {
 	indata, drilldata string
 	msg               error
@@ -58,6 +62,8 @@ func (err *MergeError) Error() string {
 	return fmt.Sprintf("cannot merge %s into %s: %s", err.indata, err.drilldata, err.msg.Error())
 }
 
+// NewMergeError returns a MergeError with the two given Data values, and an
+// optional message indicating why the merge failed.
 func NewMergeError(indata, drilldata Data, msg error) error {
 	err := &MergeError{"nil", "nil", msg}
 	if indata != nil {
@@ -69,6 +75,7 @@ func NewMergeError(indata, drilldata Data, msg error) error {
 	return err
 }
 
+// Format represents a rbxmk format.
 type Format struct {
 	Name  string
 	Ext   string
@@ -76,29 +83,42 @@ type Format struct {
 	// CanEncode    func(data Data) bool
 }
 
+// FormatDecoder is the interface that wraps the format Decode method.
 type FormatDecoder interface {
+	// Decode receives a Reader, decodes it, and sets the results to `data`.
 	Decode(r io.Reader, data *Data) (err error)
 }
 
+// FormatEncoder is the interface that wrap the format Encode method.
 type FormatEncoder interface {
+	// Encode receives `data`, encodes it, and write the results to a Writer.
 	Encode(w io.Writer, data Data) (err error)
 }
 
+// FormatCodec is the interface that groups the Decode and Encode methods,
+// representing an object that can both decode and encode a format.
 type FormatCodec interface {
 	FormatDecoder
 	FormatEncoder
 }
 
+// InitFormatCodec is a function that initializes a FormatCodec. The ctx
+// argument is a value passed in from a scheme, which may be used by the
+// format to provide context.
 type InitFormatCodec func(opt Options, ctx interface{}) (codec FormatCodec)
 
+// Formats is a container of rbxmk formats.
 type Formats struct {
 	f map[string]*Format
 }
 
+// NewFormats creates and initializes a new Formats container.
 func NewFormats() *Formats {
 	return &Formats{f: map[string]*Format{}}
 }
 
+// Register registers a number of rbxmk formats with the container. An error
+// is returned if a format of the same extension is already registered.
 func (fs *Formats) Register(formats ...Format) error {
 	for i, f := range formats {
 		if f.Ext == "" {
@@ -118,6 +138,8 @@ func (fs *Formats) Register(formats ...Format) error {
 	return nil
 }
 
+// List returns a list of rbxmk formats registered with the container. The
+// list is sorted by extension.
 func (fs *Formats) List() []Format {
 	l := make([]Format, len(fs.f))
 	i := 0
@@ -131,11 +153,14 @@ func (fs *Formats) List() []Format {
 	return l
 }
 
+// Registered returns whether a given extension is registered.
 func (fs *Formats) Registered(ext string) (registered bool) {
 	_, registered = fs.f[ext]
 	return registered
 }
 
+// Name returns the name of a format from a given extension. Returns an empty
+// string if the extension is not registered.
 func (fs *Formats) Name(ext string) (name string) {
 	f, registered := fs.f[ext]
 	if !registered {
@@ -144,6 +169,8 @@ func (fs *Formats) Name(ext string) (name string) {
 	return f.Name
 }
 
+// Decoder returns a FormatDecoder from a given extension. Returns nil if the
+// extension is not registered.
 func (fs *Formats) Decoder(ext string, opt Options, ctx interface{}) (dec FormatDecoder) {
 	f, registered := fs.f[ext]
 	if !registered {
@@ -152,6 +179,7 @@ func (fs *Formats) Decoder(ext string, opt Options, ctx interface{}) (dec Format
 	return f.Codec(opt, ctx)
 }
 
+// Decode directly calls a format codec's Decode method.
 func (fs *Formats) Decode(ext string, opt Options, ctx interface{}, r io.Reader, data *Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
@@ -160,6 +188,8 @@ func (fs *Formats) Decode(ext string, opt Options, ctx interface{}, r io.Reader,
 	return f.Codec(opt, ctx).Decode(r, data)
 }
 
+// Encoder returns a FormatEncoder from a given extension. Returns nil if the
+// extension is not registered.
 func (fs *Formats) Encoder(ext string, opt Options, ctx interface{}) (enc FormatEncoder) {
 	f, registered := fs.f[ext]
 	if !registered {
@@ -168,6 +198,7 @@ func (fs *Formats) Encoder(ext string, opt Options, ctx interface{}) (enc Format
 	return f.Codec(opt, ctx)
 }
 
+// Encode directly calls a format codec's Encode method.
 func (fs *Formats) Encode(ext string, opt Options, ctx interface{}, w io.Writer, data Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {

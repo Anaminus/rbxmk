@@ -5,12 +5,15 @@ import (
 	"sort"
 )
 
+// Scheme represents a rbxmk scheme, either an input scheme, output scheme, or
+// both.
 type Scheme struct {
 	Name   string
 	Input  *InputScheme
 	Output *OutputScheme
 }
 
+// InputScheme represents a rbxmk input scheme.
 type InputScheme struct {
 	Handler InputSchemeHandler
 }
@@ -22,6 +25,7 @@ type InputScheme struct {
 // it has been processed.
 type InputSchemeHandler func(opt Options, node *InputNode, inref []string) (outref []string, data Data, err error)
 
+// OutputScheme represents a rbxmk output scheme.
 type OutputScheme struct {
 	Handler   OutputSchemeHandler // Get current state of output source from location (if needed)
 	Finalizer OutputFinalizer     // Write final source to location
@@ -43,11 +47,13 @@ type OutputSchemeHandler func(opt Options, node *OutputNode, inref []string) (ex
 // it was given.
 type OutputFinalizer func(opt Options, node *OutputNode, inref []string, ext string, outdata Data) (err error)
 
+// Schemes is a container of rbxmk schemes.
 type Schemes struct {
 	input  map[string]*InputScheme
 	output map[string]*OutputScheme
 }
 
+// NewSchemes creates and initializes a new Schemes container.
 func NewSchemes() *Schemes {
 	return &Schemes{
 		input:  map[string]*InputScheme{},
@@ -55,6 +61,9 @@ func NewSchemes() *Schemes {
 	}
 }
 
+// Register registers a number of rbxmk schemes with the container. Input and
+// output schemes may be registered independently. An error is returned if a
+// scheme of the same name is already registered.
 func (s *Schemes) Register(schemes ...Scheme) error {
 	for _, scheme := range schemes {
 		if scheme.Input == nil && scheme.Output == nil {
@@ -94,6 +103,8 @@ func (s *Schemes) Register(schemes ...Scheme) error {
 	return nil
 }
 
+// List returns a list of rbxmk schemes registered with the container. The
+// list is sorted by name.
 func (s *Schemes) List() []Scheme {
 	var schemes map[string]Scheme
 	if len(s.input) > len(s.output) {
@@ -128,10 +139,14 @@ func (s *Schemes) List() []Scheme {
 	return l
 }
 
+// Input returns the InputScheme of a registered scheme with the given name.
+// Returns nil if an input scheme is not registered with the name.
 func (s *Schemes) Input(name string) *InputScheme {
 	return s.input[name]
 }
 
+// Output returns the OutputScheme of a registered scheme with the given name.
+// Returns nil if an output scheme is not registered with the name.
 func (s *Schemes) Output(name string) *OutputScheme {
 	return s.output[name]
 }
