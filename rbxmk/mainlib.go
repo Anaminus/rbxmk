@@ -520,7 +520,7 @@ func mainConfigure(l *lua.LState) int {
 				continue
 			}
 			key := string(k.(lua.LString))
-			if !checkStringVar(key) {
+			if !luautil.CheckStringVar(key) {
 				continue
 			}
 			ctx.Options.Config.PreprocessorEnv.RawSetString(key, lua.LNil)
@@ -533,7 +533,7 @@ func mainConfigure(l *lua.LState) int {
 				return
 			}
 			key := string(k.(lua.LString))
-			if !checkStringVar(key) {
+			if !luautil.CheckStringVar(key) {
 				return
 			}
 			switch v.Type() {

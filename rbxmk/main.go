@@ -59,7 +59,7 @@ func main() {
 	}
 
 	for k, v := range flagOptions.Define {
-		if !checkStringVar(k) {
+		if !luautil.CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
 		options.Config.PreprocessorEnv.RawSetString(k, luautil.ParseLuaValue(v))

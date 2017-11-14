@@ -45,20 +45,3 @@ func LoadAPI(path string) (api *rbxapi.API, err error) {
 	}
 	return api, nil
 }
-
-func checkStringVar(s string) bool {
-	if !('A' <= s[0] && s[0] <= 'Z' ||
-		'a' <= s[0] && s[0] <= 'z' ||
-		s[0] == '_') {
-		return false
-	}
-	for i := 1; i < len(s); i++ {
-		if !('0' <= s[i] && s[i] <= '9' ||
-			'A' <= s[i] && s[i] <= 'Z' ||
-			'a' <= s[i] && s[i] <= 'z' ||
-			s[i] == '_') {
-			return false
-		}
-	}
-	return true
-}
