@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -49,7 +50,7 @@ func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref 
 }
 
 func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
-	p := &genParser{s: s, refs: make(rbxfile.References), api: opt.Config.API}
+	p := &genParser{s: s, refs: make(rbxfile.References), api: luautil.ConfigAPI(opt)}
 	if !p.parseClasses() {
 		return nil, p.errmsg
 	}

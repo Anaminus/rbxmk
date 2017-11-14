@@ -1,20 +1,10 @@
 package rbxmk
 
-import (
-	"github.com/robloxapi/rbxapi"
-	"github.com/yuin/gopher-lua"
-)
-
-type Config struct {
-	API              *rbxapi.API
-	PreprocessorEnvs []*lua.LTable
-}
-
 type Options struct {
 	Schemes *Schemes
 	Formats *Formats
 	Filters *Filters
-	Config  Config
+	Config  []interface{}
 }
 
 func NewOptions() Options {

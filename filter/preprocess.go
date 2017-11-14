@@ -19,7 +19,7 @@ func init() {
 func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := ProcessStringlikeInterface(preprocessStringCallback(opt.Config.PreprocessorEnvs), value)
+	out, err := ProcessStringlikeInterface(preprocessStringCallback(luautil.ConfigPPEnvs(opt)), value)
 	if err != nil {
 		return nil, err
 	}

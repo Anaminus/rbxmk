@@ -8,7 +8,6 @@ import (
 	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
-	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
 )
@@ -30,13 +29,6 @@ type FlagOptions struct {
 	File   string            `short:"f" long:"file" description:"A file to be executed as a Lua script. If not specified, then the script will be read from stdin instead." long-description:"" value-name:"FILE"`
 	Define map[string]string `short:"d" long:"define" description:"Defines a variable to be used by the preprocessor. Can be specified multiple times for multiple variables. The value may be a Lua bool, number, string, or nil." long-description:"" value-name:"NAME:VALUE"`
 }
-
-// Order of preprocessor variable environments.
-const (
-	ppEnvScript  = iota // Defined via script (rbxmk.configure).
-	ppEnvCommand        // Defined via --define option.
-	ppEnvLen            // Number of environments.
-)
 
 func main() {
 	var flagOptions FlagOptions
@@ -66,16 +58,14 @@ func main() {
 		Fatalf("%s", err)
 	}
 
-	options.Config.PreprocessorEnvs = make([]*lua.LTable, ppEnvLen)
-	for i := range options.Config.PreprocessorEnvs {
-		options.Config.PreprocessorEnvs[i] = &lua.LTable{Metatable: lua.LNil}
-	}
+	luautil.InitConfig(&options)
 
+	cmdEnv := luautil.ConfigPPEnvs(options)[luautil.PPEnvCommand]
 	for k, v := range flagOptions.Define {
 		if !luautil.CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
-		options.Config.PreprocessorEnvs[ppEnvCommand].RawSetString(k, luautil.ParseLuaValue(v))
+		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v))
 	}
 
 	ctx := luautil.NewLuaContext(options)

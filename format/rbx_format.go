@@ -2,6 +2,7 @@ package format
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -15,28 +16,28 @@ func init() {
 		Name: "RBXL",
 		Ext:  "rbxl",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
-			return &RBXCodec{model: false, xml: false, api: opt.Config.API}
+			return &RBXCodec{model: false, xml: false, api: luautil.ConfigAPI(opt)}
 		},
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXLX",
 		Ext:  "rbxlx",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
-			return &RBXCodec{model: false, xml: true, api: opt.Config.API}
+			return &RBXCodec{model: false, xml: true, api: luautil.ConfigAPI(opt)}
 		},
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXM",
 		Ext:  "rbxm",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
-			return &RBXCodec{model: true, xml: false, api: opt.Config.API}
+			return &RBXCodec{model: true, xml: false, api: luautil.ConfigAPI(opt)}
 		},
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "RBXMX",
 		Ext:  "rbxmx",
 		Codec: func(opt rbxmk.Options, ctx interface{}) (codec rbxmk.FormatCodec) {
-			return &RBXCodec{model: true, xml: true, api: opt.Config.API}
+			return &RBXCodec{model: true, xml: true, api: luautil.ConfigAPI(opt)}
 		},
 	})
 }

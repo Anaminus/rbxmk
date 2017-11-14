@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/luautil"
 )
 
 type Property struct {
@@ -34,14 +35,14 @@ func (indata Property) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) 
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		for _, inst := range *drilldata {
-			if propertyIsOfType(opt.Config.API, inst, indata.Name, value.Type()) {
+			if propertyIsOfType(luautil.ConfigAPI(opt), inst, indata.Name, value.Type()) {
 				inst.Properties[indata.Name] = value
 			}
 		}
 		return rootdata, nil
 
 	case Instance:
-		if propertyIsOfType(opt.Config.API, drilldata.Instance, indata.Name, value.Type()) {
+		if propertyIsOfType(luautil.ConfigAPI(opt), drilldata.Instance, indata.Name, value.Type()) {
 			drilldata.Properties[indata.Name] = value
 		}
 		return rootdata, nil
