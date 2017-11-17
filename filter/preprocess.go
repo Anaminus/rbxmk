@@ -80,26 +80,36 @@ func preprocessStringCallback(envs []*lua.LTable) ProcessStringlikeCallback {
 
 func wrapText(pieces [][]byte, c, eq, text []byte) [][]byte {
 	if len(text) > 0 {
-		// "put[====[text]====]"
-		pieces = append(pieces, []byte(putFuncName)) // "put"
-		pieces = append(pieces, c[0:2])              // "[="
-		if len(eq) > 0 {
-			pieces = append(pieces, eq) // "="...
+		// `_put[====[text]====]`
+		// `_put("\n"..[====[text]====])`
+		pieces = append(pieces, []byte(putFuncName)) // `_put`
+		if text[0] == '\n' {
+			// Add back newline truncated by Lua string literal. Append it
+			// before literal so that line numbers don't get screwed up.
+			pieces = append(pieces, c[4:11]) // `("\n"..`
 		}
-		pieces = append(pieces, c[0:1]) // "["
+		pieces = append(pieces, c[0:2]) // `[=`
+		if len(eq) > 0 {
+			pieces = append(pieces, eq) // `=`...
+		}
+		pieces = append(pieces, c[0:1]) // `[`
 		pieces = append(pieces, text)   // text
-		pieces = append(pieces, c[2:3]) // "]"
+		pieces = append(pieces, c[2:3]) // `]`
 		if len(eq) > 0 {
-			pieces = append(pieces, eq) // "="...
+			pieces = append(pieces, eq) // `=`...
 		}
-		pieces = append(pieces, c[1:3]) // "=]"
+		if text[0] == '\n' {
+			pieces = append(pieces, c[1:4]) // `=])`
+		} else {
+			pieces = append(pieces, c[1:3]) // `=]`
+		}
 	}
 	return pieces
 }
 
 func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFunction, error)) (source []byte) {
 	pieces := make([][]byte, 0)
-	c := []byte("[=]()return ")
+	c := []byte(`[=])("\n"..return `)
 	eq, eqi := 0, 0
 	h := 0
 	for i := 0; i < len(input); i++ {
@@ -125,9 +135,9 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 			text := input[h:i]
 			chunk := input[i+1 : j] // exclude '#'
 			pieces = wrapText(pieces, c, input[eqi:eqi+eq], text)
-			pieces = append(pieces, c[11:12]) // " "
+			pieces = append(pieces, c[17:18]) // ` `
 			pieces = append(pieces, chunk)    // chunk
-			pieces = append(pieces, c[11:12]) // " "
+			pieces = append(pieces, c[17:18]) // ` `
 			h, i = j, j-1
 			eq, eqi = 0, 0
 		case '$':
@@ -159,21 +169,21 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 			text := input[h:i]
 			chunk := input[i+2 : j-1]
 			pieces = wrapText(pieces, c, input[eqi:eqi+eq], text)
-			pieces = append(pieces, c[11:12]) // " "
+			pieces = append(pieces, c[17:18]) // ` `
 			if _, err := checkexp(io.MultiReader(
-				bytes.NewReader(c[5:]),
+				bytes.NewReader(c[11:]),
 				bytes.NewReader(chunk),
 			), "<exp>"); err == nil {
 				// Write as expression list.
-				pieces = append(pieces, []byte(putFuncName)) // "put"
-				pieces = append(pieces, c[3:4])              // "("
+				pieces = append(pieces, []byte(putFuncName)) // `_put`
+				pieces = append(pieces, c[4:5])              // `(`
 				pieces = append(pieces, chunk)               // chunk
-				pieces = append(pieces, c[4:5])              // ")"
+				pieces = append(pieces, c[3:4])              // `)`
 			} else {
 				// Write directly.
 				pieces = append(pieces, chunk) // chunk
 			}
-			pieces = append(pieces, c[11:12]) // " "
+			pieces = append(pieces, c[17:18]) // ` `
 			h, i = j, j-1
 			eq, eqi = 0, 0
 		}
