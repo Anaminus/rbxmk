@@ -110,7 +110,7 @@ func wrapText(pieces [][]byte, c, eq, text []byte) [][]byte {
 func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFunction, error)) (source []byte) {
 	pieces := make([][]byte, 0)
 	c := []byte(`[=])("\n"..return `)
-	eq, eqi := 0, 0
+	eq, eqi, xeq, xeqi := 0, 0, 0, 0
 	h := 0
 	for i := 0; i < len(input); i++ {
 		switch b := input[i]; b {
@@ -120,6 +120,9 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 				eqi = i
 			}
 			eq++
+			if eq > xeq {
+				xeq, xeqi = eq, eqi
+			}
 		case '#':
 			if i > 0 && input[i-1] != '\n' {
 				continue
@@ -134,12 +137,12 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 
 			text := input[h:i]
 			chunk := input[i+1 : j] // exclude '#'
-			pieces = wrapText(pieces, c, input[eqi:eqi+eq], text)
+			pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
 			pieces = append(pieces, c[17:18]) // ` `
 			pieces = append(pieces, chunk)    // chunk
 			pieces = append(pieces, c[17:18]) // ` `
 			h, i = j, j-1
-			eq, eqi = 0, 0
+			eq, eqi, xeq, xeqi = 0, 0, 0, 0
 		case '$':
 			if i < len(input)-1 && input[i+1] != '(' {
 				continue
@@ -168,7 +171,7 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 			// input[i+2:j-1] = ...
 			text := input[h:i]
 			chunk := input[i+2 : j-1]
-			pieces = wrapText(pieces, c, input[eqi:eqi+eq], text)
+			pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
 			pieces = append(pieces, c[17:18]) // ` `
 			if _, err := checkexp(io.MultiReader(
 				bytes.NewReader(c[11:]),
@@ -185,11 +188,11 @@ func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFu
 			}
 			pieces = append(pieces, c[17:18]) // ` `
 			h, i = j, j-1
-			eq, eqi = 0, 0
+			eq, eqi, xeq, xeqi = 0, 0, 0, 0
 		}
 	}
 	if text := input[h:]; len(text) > 0 {
-		pieces = wrapText(pieces, c, input[eqi:eqi+eq], text)
+		pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
 	}
 
 	source = bytes.Join(pieces, nil)
