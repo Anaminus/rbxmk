@@ -173,8 +173,8 @@ func mainInput(l *lua.LState) int {
 		throwError(l, errors.New("at least 1 reference argument is required"))
 	}
 	i := 1
-	if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
-		node.Data = data
+	if t.TypeOfIndex(i) == "input" {
+		node.Data = t.IndexTyped(i, "input", false).(rbxmk.Data)
 		i = 2
 	}
 	for ; i <= nt; i++ {
@@ -196,18 +196,25 @@ func mainOutput(l *lua.LState) int {
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
 	luautil.ConfigSetAPI(ctx.Options, api)
 
-	node := &rbxmk.OutputNode{}
-	node.Format, _ = t.FieldString(formatIndex, true)
-	node.Options = ctx.Options
-
 	nt := t.Len()
 	if nt == 0 {
 		throwError(l, errors.New("at least 1 reference argument is required"))
 	}
+
+	node := &rbxmk.OutputNode{}
+	node.Options = ctx.Options
 	i := 1
-	if data, ok := t.IndexValue(i).(rbxmk.Data); ok {
-		node.Data = data
+	if t.TypeOfIndex(i) == "output" {
+		originNode := t.IndexTyped(i, "output", false).(*rbxmk.OutputNode)
+		node.Format = originNode.Format
+		node.Reference = make([]string, len(originNode.Reference), len(originNode.Reference)+nt-1)
+		copy(node.Reference, originNode.Reference)
 		i = 2
+	} else {
+		node.Reference = make([]string, 0, nt)
+	}
+	if format, ok := t.FieldString(formatIndex, true); ok {
+		node.Format = format
 	}
 	for ; i <= nt; i++ {
 		node.Reference = append(node.Reference, t.IndexString(i, false))
