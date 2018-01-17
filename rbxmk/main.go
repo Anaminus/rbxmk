@@ -35,6 +35,7 @@ type FlagOptions struct {
 }
 
 func main() {
+	// Parse flags.
 	var flagOptions FlagOptions
 	fp := flags.NewParser(&flagOptions, flags.Default|flags.PassAfterNonOption)
 	fp.Usage = CommandUsage
@@ -46,11 +47,14 @@ func main() {
 		}
 		Fatalf("flag parser error: %s", err)
 	}
+
+	// Display help if user does nothing.
 	if stat, _ := os.Stdin.Stat(); stat == nil && len(os.Args) < 2 {
 		fp.WriteHelp(os.Stderr)
 		return
 	}
 
+	// Initialize top-level options.
 	options := rbxmk.NewOptions()
 	if err := options.Schemes.Register(scheme.Schemes.List()...); err != nil {
 		Fatalf("%s", err)
@@ -61,9 +65,9 @@ func main() {
 	if err := options.Filters.Register(filter.Filters.List()...); err != nil {
 		Fatalf("%s", err)
 	}
-
 	luautil.InitConfig(&options)
 
+	// Add preprocessor definitions.
 	cmdEnv := luautil.ConfigPPEnvs(options)[luautil.PPEnvCommand]
 	for k, v := range flagOptions.Define {
 		if !luautil.CheckStringVar(k) {
@@ -72,6 +76,7 @@ func main() {
 		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v))
 	}
 
+	// Initialize context.
 	ctx := luautil.NewLuaContext(options)
 	luautil.OpenFilteredLibs(ctx.State(), luautil.GetFilteredStdLib())
 	uctx := ctx.State().NewUserData()
@@ -80,16 +85,19 @@ func main() {
 		{MainLibName, OpenMain, nil},
 	}, uctx)
 
+	// Add script arguments.
 	for _, arg := range flagOptions.Arguments {
 		ctx.State().Push(luautil.ParseLuaValue(arg))
 	}
 
 	if len(args) > 0 && args[0] != "" {
+		// Run file as script.
 		filename := shortenPath(filepath.Clean(args[0]))
 		if err := ctx.DoFile(filename, len(flagOptions.Arguments)); err != nil {
 			Fatalf("%s", err)
 		}
 	} else {
+		// Run stdin as script.
 		if err := ctx.DoFileHandle(os.Stdin, len(flagOptions.Arguments)); err != nil {
 			Fatalf("%s", err)
 		}
