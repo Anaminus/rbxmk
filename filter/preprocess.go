@@ -20,7 +20,7 @@ func init() {
 func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := ProcessStringlikeInterface(preprocessStringCallback(config.PPEnvs(opt)), value)
+	out, err := types.ProcessStringlikeInterface(preprocessStringCallback(config.PPEnvs(opt)), value)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) 
 
 const putFuncName = "_put"
 
-func preprocessStringCallback(envs []*lua.LTable) ProcessStringlikeCallback {
+func preprocessStringCallback(envs []*lua.LTable) types.ProcessStringlikeCallback {
 	return func(s *types.Stringlike) error {
 		l := lua.NewState(lua.Options{SkipOpenLibs: true})
 		// Parse preprocessors into Lua source.

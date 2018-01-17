@@ -19,7 +19,7 @@ func init() {
 func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := ProcessStringlikeInterface(minifyStringCallback("minify"), value)
+	out, err := types.ProcessStringlikeInterface(minifyStringCallback("minify"), value)
 	if err != nil {
 		return nil, err
 	}
@@ -29,14 +29,14 @@ func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (res
 func Unminify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := ProcessStringlikeInterface(minifyStringCallback("unminify"), value)
+	out, err := types.ProcessStringlikeInterface(minifyStringCallback("unminify"), value)
 	if err != nil {
 		return nil, err
 	}
 	return []interface{}{out}, nil
 }
 
-func minifyStringCallback(method string) ProcessStringlikeCallback {
+func minifyStringCallback(method string) types.ProcessStringlikeCallback {
 	return func(s *types.Stringlike) error {
 		var l *lua.LState
 		{
