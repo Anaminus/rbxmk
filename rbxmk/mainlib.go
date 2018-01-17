@@ -424,6 +424,8 @@ func mainPath(l *lua.LState) int {
 			case "working_directory", "working_dir", "wd":
 				wd, _ := os.Getwd()
 				return wd
+			case "temp_directory", "temp_dir", "tmp":
+				return os.TempDir()
 			}
 			return ""
 		})

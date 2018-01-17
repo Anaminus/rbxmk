@@ -240,6 +240,7 @@ Variable                                 | Description
 `script_directory`, `script_dir`, `sd`   | Expands to the directory of the script currently running.
 `script_name`, `sn`                      | Expands to the base name of the script currently running.
 `working_directory`, `working_dir`, `wd` | Expands to the current working directory.
+`temp_directory`, `temp_dir`, `tmp`      | Expants to the directory for temporary files.
 
 Any other variable returns an empty string. An empty string will also be
 returned if a path could not be located.
