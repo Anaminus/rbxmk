@@ -29,35 +29,32 @@ Since almost all actions are done in Lua, the `rbxmk` command has only a few
 options:
 
 ```
-rbxmk [ -h ] [ -f FILE ] [ -d NAME:VALUE ] [ ARGS... ]
+rbxmk [ -h ] [ -a VALUE ] [ -d NAME:VALUE ] [ FILE ]
 ```
 
-Options          | Description
------------------|------------
-`-h`, `--help`   | Display a help message.
-`-f`, `--file`   | Run a Lua script from a file.
-`-d`, `--define` | Define a variable to be used by the [preprocessor](DOCUMENTATION.md#user-content-preprocess-filter).
+Option           | Value        | Description
+-----------------|--------------|------------
+`-h`, `--help`   |              | Display a help message.
+`-a`, `--arg`    | `VALUE`      | Specify an argument to be passed to the script.
+`-d`, `--define` | `NAME:VALUE` | Define a variable to be used by the [preprocessor](DOCUMENTATION.md#user-content-preprocess-filter).
 
-If the `-f` option is not given, then the script is read from stdin.
-
-The `-d` option takes the form `-d Name:Value`, and can be specified more than
-once. The variable name must be a string of digits, letters, and underscore,
-which doesn't start with a digit. The value is a string parsed into a Lua
-value. This may be a number, a bool ("true" or "false"), or "nil" (which
-undefines the variable). Any other value is read as a string. Note that
-variables defined by the command option will take precedence over variables
-defined elsewhere.
+rbxmk receives `FILE`, which is the file path of a script to be executed.
 
 ```shell
-rbxmk --file script.lua --define DEBUG:true --define LOGLEVEL:3
+rbxmk script.lua
 ```
 
-Options after any valid flags will be passed to the script as arguments.
-Numbers, bools, and nil are parsed into their respective types in Lua, and any
-other values are read as strings.
+If `FILE` is not specified, then the script is read from stdin.
 
 ```shell
-rbxmk -f script.lua hello world 123
+echo print("hello world") | rbxmk
+```
+
+The `-a` option is used to pass arguments to the script. It can be given more
+than once to provide multiple values.
+
+```shell
+rbxmk script.lua -a hello -a world -a 123
 ```
 
 A script can read these arguments with the `...` operator.
@@ -66,6 +63,18 @@ A script can read these arguments with the `...` operator.
 Arg1, Arg2, Arg3 = ... -- "hello", "world", 123
 AllArgs = {...}
 ```
+
+The `-d` option can also be given more than once. For this option, `NAME` must
+be a string of digits, letters, and underscores, which doesn't start with a
+digit. Note that variables defined by this command option will take precedence
+over variables defined elsewhere.
+
+```shell
+rbxmk script.lua --define DEBUG:true --define LOGLEVEL:3
+```
+
+For either option, `VALUE` is parsed into a Lua value. This may be a number, a
+bool ("true" or "false"), or "nil". Any other value is read as a string.
 
 ## Lua environment
 

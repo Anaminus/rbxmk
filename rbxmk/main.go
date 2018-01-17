@@ -18,16 +18,20 @@ func Fatalf(f string, v ...interface{}) {
 }
 
 const CommandName = "rbxmk"
-const CommandUsage = `[ -h ] [ -f FILE ] [ -d NAME:VALUE ] [ ARGS... ]
+const CommandUsage = `[ -h ] [ -a VALUE ] [ -d NAME:VALUE ] [ FILE ]
 
-Options after any valid flags will be passed to the script as arguments.
-Numbers, bools, and nil are parsed into their respective types in Lua, and any
-other values are read as strings.
+Receives a file to be executed as a Lua script. If not specified, then the
+script will be read from stdin instead.
+
+When specifying an argument or definition, a Lua value is received. Numbers,
+bools, and nil are parsed into their respective types in Lua, and any other
+value is read as a string. Either option may be given more than once to
+provide multiple values.
 `
 
 type FlagOptions struct {
-	File   string            `short:"f" long:"file" description:"A file to be executed as a Lua script. If not specified, then the script will be read from stdin instead." long-description:"" value-name:"FILE"`
-	Define map[string]string `short:"d" long:"define" description:"Defines a variable to be used by the preprocessor. Can be specified multiple times for multiple variables. The value may be a Lua bool, number, string, or nil." long-description:"" value-name:"NAME:VALUE"`
+	Arguments []string          `short:"a" long:"arg" description:"An argument to be passed to the script." long-description:"" value-name:"VALUE"`
+	Define    map[string]string `short:"d" long:"define" description:"A variable to be used by the preprocessor." long-description:"" value-name:"NAME:VALUE"`
 }
 
 func main() {
@@ -76,17 +80,17 @@ func main() {
 		{MainLibName, OpenMain, nil},
 	}, uctx)
 
-	for _, arg := range args {
+	for _, arg := range flagOptions.Arguments {
 		ctx.State().Push(luautil.ParseLuaValue(arg))
 	}
 
-	if flagOptions.File != "" {
-		filename := shortenPath(filepath.Clean(flagOptions.File))
-		if err := ctx.DoFile(filename, len(args)); err != nil {
+	if len(args) > 0 && args[0] != "" {
+		filename := shortenPath(filepath.Clean(args[0]))
+		if err := ctx.DoFile(filename, len(flagOptions.Arguments)); err != nil {
 			Fatalf("%s", err)
 		}
 	} else {
-		if err := ctx.DoFileHandle(os.Stdin, len(args)); err != nil {
+		if err := ctx.DoFileHandle(os.Stdin, len(flagOptions.Arguments)); err != nil {
 			Fatalf("%s", err)
 		}
 	}
