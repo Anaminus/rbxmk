@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
@@ -162,7 +163,7 @@ func mainInput(l *lua.LState) int {
 	ctx := getLuaContextUpvalue(l, 1)
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
-	luautil.ConfigSetAPI(ctx.Options, api)
+	config.SetAPI(ctx.Options, api)
 
 	node := &rbxmk.InputNode{}
 	node.Format, _ = t.FieldString(formatIndex, true)
@@ -194,7 +195,7 @@ func mainOutput(l *lua.LState) int {
 	ctx := getLuaContextUpvalue(l, 1)
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
-	luautil.ConfigSetAPI(ctx.Options, api)
+	config.SetAPI(ctx.Options, api)
 
 	nt := t.Len()
 	if nt == 0 {
@@ -228,7 +229,7 @@ func mainFilter(l *lua.LState) int {
 	ctx := getLuaContextUpvalue(l, 1)
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
-	luautil.ConfigSetAPI(ctx.Options, api)
+	config.SetAPI(ctx.Options, api)
 
 	const filterNameIndex = "name"
 	var i int = 1
@@ -526,10 +527,10 @@ func mainConfigure(l *lua.LState) int {
 
 	if v := t.FieldValue("api"); v != nil {
 		api, _ := v.(*rbxapi.API)
-		luautil.ConfigSetAPI(ctx.Options, api)
+		config.SetAPI(ctx.Options, api)
 	}
 	if v := t.FieldValue("undef"); v != nil {
-		env := luautil.ConfigPPEnvs(ctx.Options)[luautil.PPEnvScript]
+		env := config.PPEnvs(ctx.Options)[config.PPEnvScript]
 		undefs := v.(*lua.LTable)
 		for i := 1; i <= undefs.Len(); i++ {
 			k := undefs.RawGetInt(i)
@@ -544,7 +545,7 @@ func mainConfigure(l *lua.LState) int {
 		}
 	}
 	if v := t.FieldValue("define"); v != nil {
-		env := luautil.ConfigPPEnvs(ctx.Options)[luautil.PPEnvScript]
+		env := config.PPEnvs(ctx.Options)[config.PPEnvScript]
 		defs := v.(*lua.LTable)
 		defs.ForEach(func(k, v lua.LValue) {
 			if k.Type() != lua.LTString {

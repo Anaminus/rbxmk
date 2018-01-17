@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/luautil"
+	"github.com/anaminus/rbxmk/config"
 	"github.com/robloxapi/rbxfile"
 )
 
@@ -53,7 +53,7 @@ func (indata Instance) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) 
 		return rootdata, nil
 
 	case Property:
-		if typeOfProperty(luautil.ConfigAPI(opt), indata.ClassName, drilldata.Name) == rbxfile.TypeReference ||
+		if typeOfProperty(config.API(opt), indata.ClassName, drilldata.Name) == rbxfile.TypeReference ||
 			drilldata.Properties[drilldata.Name].Type() != rbxfile.TypeReference {
 			return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("property must be a Reference"))
 		}

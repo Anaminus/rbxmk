@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/luautil"
+	"github.com/anaminus/rbxmk/config"
 	"github.com/robloxapi/rbxfile"
 )
 
@@ -30,7 +30,7 @@ func (indata Properties) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data
 	case *Instances:
 		for _, inst := range *drilldata {
 			for name, value := range indata {
-				if propertyIsOfType(luautil.ConfigAPI(opt), inst, name, value.Type()) {
+				if propertyIsOfType(config.API(opt), inst, name, value.Type()) {
 					inst.Properties[name] = value
 				}
 			}
@@ -39,7 +39,7 @@ func (indata Properties) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data
 
 	case Instance:
 		for name, value := range indata {
-			if propertyIsOfType(luautil.ConfigAPI(opt), drilldata.Instance, name, value.Type()) {
+			if propertyIsOfType(config.API(opt), drilldata.Instance, name, value.Type()) {
 				drilldata.Properties[name] = value
 			}
 		}

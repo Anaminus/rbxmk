@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/filter"
 	"github.com/anaminus/rbxmk/format"
 	"github.com/anaminus/rbxmk/luautil"
@@ -65,10 +66,10 @@ func main() {
 	if err := options.Filters.Register(filter.Filters.List()...); err != nil {
 		Fatalf("%s", err)
 	}
-	luautil.InitConfig(&options)
+	config.Init(&options)
 
 	// Add preprocessor definitions.
-	cmdEnv := luautil.ConfigPPEnvs(options)[luautil.PPEnvCommand]
+	cmdEnv := config.PPEnvs(options)[config.PPEnvCommand]
 	for k, v := range flagOptions.Define {
 		if !luautil.CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
