@@ -137,7 +137,10 @@ func GetLuaValue(lv lua.LValue) interface{} {
 	return nil
 }
 
-func ParseLuaValue(s string) lua.LValue {
+// Stand-in for nil that can be used to cause a table entry to be removed.
+var ForceNil = new(lua.LUserData)
+
+func ParseLuaValue(s string, forceNil bool) lua.LValue {
 	number, err := strconv.ParseFloat(s, 64)
 	switch {
 	case err == nil:
@@ -147,6 +150,9 @@ func ParseLuaValue(s string) lua.LValue {
 	case s == "false":
 		return lua.LFalse
 	case s == "nil":
+		if forceNil {
+			return ForceNil
+		}
 		return lua.LNil
 	default:
 		return lua.LString(s)

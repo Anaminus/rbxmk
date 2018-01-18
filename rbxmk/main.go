@@ -74,7 +74,7 @@ func main() {
 		if !luautil.CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
-		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v))
+		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v, true))
 	}
 
 	// Initialize context.
@@ -88,7 +88,7 @@ func main() {
 
 	// Add script arguments.
 	for _, arg := range flagOptions.Arguments {
-		ctx.State().Push(luautil.ParseLuaValue(arg))
+		ctx.State().Push(luautil.ParseLuaValue(arg, false))
 	}
 
 	if len(args) > 0 && args[0] != "" {

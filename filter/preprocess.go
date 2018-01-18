@@ -41,7 +41,11 @@ func preprocessStringCallback(envs []*lua.LTable) types.ProcessStringlikeCallbac
 			varEnv := l.NewTable()
 			for _, env := range envs {
 				env.ForEach(func(k, v lua.LValue) {
-					varEnv.RawSet(k, v)
+					if v == luautil.ForceNil {
+						varEnv.RawSet(k, lua.LNil)
+					} else {
+						varEnv.RawSet(k, v)
+					}
 				})
 			}
 
