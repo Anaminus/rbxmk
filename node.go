@@ -2,6 +2,7 @@ package rbxmk
 
 import (
 	"fmt"
+	"github.com/anaminus/rbxauth"
 )
 
 // parseScheme separates a string into scheme and path parts.
@@ -28,9 +29,10 @@ func parseScheme(s string) (scheme, path string) {
 
 type InputNode struct {
 	Options   Options
-	Reference []string // Raw strings that refer to data.
-	Data      Data     // Pre-resolved Data.
-	Format    string   // Forced file format.
+	Reference []string     // Raw strings that refer to data.
+	Data      Data         // Pre-resolved Data.
+	Format    string       // Forced file format.
+	User      rbxauth.Cred // An identifier associated with a user account.
 }
 
 type NodeError struct {
@@ -85,9 +87,10 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 
 type OutputNode struct {
 	Options   Options
-	Reference []string // Raw string that refers to data.
-	Data      Data     // Pre-resolved Data.
-	Format    string   // Forced file format. If empty, it is filled in after being guessed.
+	Reference []string     // Raw string that refers to data.
+	Data      Data         // Pre-resolved Data.
+	Format    string       // Forced file format. If empty, it is filled in after being guessed.
+	User      rbxauth.Cred // An identifier associated with a user account.
 }
 
 // ResolveReference resolves the reference of the output node, writing the

@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/luautil"
@@ -11,6 +12,7 @@ import (
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxapi/dump"
 	"github.com/yuin/gopher-lua"
+	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -562,6 +564,56 @@ func mainConfigure(l *lua.LState) int {
 				env.RawSetString(key, v)
 			}
 		})
+	}
+	if v := t.FieldValue("rbxauth"); v != nil {
+		users := config.RobloxAuth(ctx.Options)
+		defs := v.(*lua.LTable)
+		var terr error
+		defs.ForEach(func(k, v lua.LValue) {
+			if terr != nil {
+				return
+			}
+			if k.Type() != lua.LTString && k.Type() != lua.LTNumber {
+				return
+			}
+			ident := k.String()
+			t, ok := v.(*lua.LTable)
+			if !ok {
+				return
+			}
+
+			cred := rbxauth.Cred{
+				Type:  t.RawGetString("type").String(),
+				Ident: ident,
+			}
+
+			var cookies []*http.Cookie
+			if path := t.RawGetString("file"); path.Type() == lua.LTString {
+				f, err := os.Open(path.String())
+				if err != nil {
+					terr = err
+				}
+				cookies, err = rbxauth.ReadCookies(f)
+				f.Close()
+				if err != nil {
+					terr = err
+					return
+				}
+			} else if prompt := t.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
+				auth := &rbxauth.Config{Host: "roblox.com"} // TODO: derive from somewhere
+				var err error
+				if cred, cookies, err = auth.PromptCred(cred); err != nil {
+					terr = err
+					return
+				}
+			}
+			if len(cookies) > 0 {
+				users[cred] = cookies
+			}
+		})
+		if terr != nil {
+			return throwError(l, terr)
+		}
 	}
 	return 0
 }

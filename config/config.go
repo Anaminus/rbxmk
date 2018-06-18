@@ -2,9 +2,11 @@
 package config
 
 import (
+	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxapi"
 	"github.com/yuin/gopher-lua"
+	"net/http"
 )
 
 // Indicies of config values.
@@ -15,6 +17,9 @@ const (
 	// PPEnvs specifies a list of environment tables to be used by the
 	// preprocessor.
 	fieldPPEnvs
+
+	// RobloxAuth is a table used to authenticate a request.
+	fieldRobloxAuth
 
 	// Len is the number of configuration values.
 	fieldLen
@@ -38,6 +43,8 @@ func Init(opt *rbxmk.Options) {
 		envs[i] = &lua.LTable{Metatable: lua.LNil}
 	}
 	opt.Config[fieldPPEnvs] = envs
+
+	opt.Config[fieldRobloxAuth] = map[rbxauth.Cred][]*http.Cookie{}
 }
 
 // API gets the API config value.
@@ -53,4 +60,14 @@ func SetAPI(opt rbxmk.Options, api *rbxapi.API) {
 // PPEnvs gets the PPEnv config value.
 func PPEnvs(opt rbxmk.Options) []*lua.LTable {
 	return opt.Config[fieldPPEnvs].([]*lua.LTable)
+}
+
+// RobloxAuth gets the RobloxAuth config value.
+func RobloxAuth(opt rbxmk.Options) map[rbxauth.Cred][]*http.Cookie {
+	return opt.Config[fieldRobloxAuth].(map[rbxauth.Cred][]*http.Cookie)
+}
+
+// SetRobloxAuth sets the RobloxAuth config value.
+func SetRobloxAuth(opt rbxmk.Options, users map[rbxauth.Cred][]*http.Cookie) {
+	opt.Config[fieldRobloxAuth] = users
 }
