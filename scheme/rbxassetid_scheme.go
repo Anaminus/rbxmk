@@ -79,7 +79,36 @@ func rbxassetidInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inre
 }
 
 func rbxassetidOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
-	return node.Format, inref[1:], nil, nil
+	ext = node.Format
+	if !opt.Formats.Registered(ext) {
+		return "", nil, nil, errors.New("format is not registered")
+	}
+
+	assetURL := url.URL{
+		Scheme:   "https",
+		Host:     wwwSubdomain + "." + config.Host(opt),
+		Path:     rbxassetidDownloadPath,
+		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
+	}
+	req, _ := http.NewRequest("GET", assetURL.String(), nil)
+	if err := setCookies(req, opt, node.User); err != nil {
+		return "", nil, nil, err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", nil, nil, err
+	}
+	defer resp.Body.Close()
+	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
+		return "", nil, nil, errors.New(resp.Status)
+	}
+
+	if err := opt.Formats.Decode(ext, opt, nil, resp.Body, &data); err != nil {
+		return "", nil, nil, err
+	}
+	return node.Format, inref[1:], data, err
 }
 
 func rbxassetidOutputFinalizer(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
