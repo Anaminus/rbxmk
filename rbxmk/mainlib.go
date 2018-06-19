@@ -568,51 +568,49 @@ func mainConfigure(l *lua.LState) int {
 	if v := t.FieldValue("rbxauth"); v != nil {
 		users := config.RobloxAuth(ctx.Options)
 		defs := v.(*lua.LTable)
-		var terr error
-		defs.ForEach(func(k, v lua.LValue) {
-			if terr != nil {
-				return
-			}
-			if k.Type() != lua.LTString && k.Type() != lua.LTNumber {
-				return
-			}
-			ident := k.String()
-			identOpt, ok := v.(*lua.LTable)
+		for i := 1; i <= defs.Len(); i++ {
+			entry, ok := defs.RawGetInt(i).(*lua.LTable)
 			if !ok {
-				return
+				continue
 			}
 
 			cred := rbxauth.Cred{
-				Type:  identOpt.RawGetString("type").String(),
-				Ident: ident,
+				Type:  entry.RawGetString("type").String(),
+				Ident: entry.RawGetString("ident").String(),
+			}
+
+			if logout, ok := entry.RawGetString("logout").(lua.LBool); ok && logout == lua.LTrue {
+				cookies := users[cred]
+				if len(cookies) == 0 {
+					return throwError(l, errors.New("cannot logout: unknown credentials"))
+				}
+				auth := &rbxauth.Config{Host: config.Host(ctx.Options)}
+				if err := auth.Logout(cookies); err != nil {
+					return throwError(l, fmt.Errorf("Error logging out: %s", err))
+				}
 			}
 
 			var cookies []*http.Cookie
-			if path := identOpt.RawGetString("file"); path.Type() == lua.LTString {
+			if path := entry.RawGetString("file"); path.Type() == lua.LTString {
 				f, err := os.Open(path.String())
 				if err != nil {
-					terr = err
+					return throwError(l, err)
 				}
 				cookies, err = rbxauth.ReadCookies(f)
 				f.Close()
 				if err != nil {
-					terr = err
-					return
+					return throwError(l, err)
 				}
-			} else if prompt := identOpt.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
+			} else if prompt := entry.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
 				auth := &rbxauth.Config{Host: config.Host(ctx.Options)}
 				var err error
 				if cred, cookies, err = auth.PromptCred(cred); err != nil {
-					terr = err
-					return
+					return throwError(l, err)
 				}
 			}
 			if len(cookies) > 0 {
 				users[cred] = cookies
 			}
-		})
-		if terr != nil {
-			return throwError(l, terr)
 		}
 	}
 	if v := t.FieldValue("host"); v != nil {
