@@ -600,7 +600,7 @@ func mainConfigure(l *lua.LState) int {
 					return
 				}
 			} else if prompt := identOpt.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
-				auth := &rbxauth.Config{Host: "roblox.com"} // TODO: derive from somewhere
+				auth := &rbxauth.Config{Host: config.Host(ctx.Options)}
 				var err error
 				if cred, cookies, err = auth.PromptCred(cred); err != nil {
 					terr = err
@@ -614,6 +614,9 @@ func mainConfigure(l *lua.LState) int {
 		if terr != nil {
 			return throwError(l, terr)
 		}
+	}
+	if v := t.FieldValue("host"); v != nil {
+		config.SetHost(ctx.Options, string(v.(lua.LString)))
 	}
 	return 0
 }

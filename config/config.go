@@ -21,6 +21,10 @@ const (
 	// RobloxAuth is a table used to authenticate a request.
 	fieldRobloxAuth
 
+	// Host specifies the domain through which downloads and uploads will
+	// occur.
+	fieldHost
+
 	// Len is the number of configuration values.
 	fieldLen
 )
@@ -45,6 +49,8 @@ func Init(opt *rbxmk.Options) {
 	opt.Config[fieldPPEnvs] = envs
 
 	opt.Config[fieldRobloxAuth] = map[rbxauth.Cred][]*http.Cookie{}
+
+	opt.Config[fieldHost] = "roblox.com"
 }
 
 // API gets the API config value.
@@ -70,4 +76,14 @@ func RobloxAuth(opt rbxmk.Options) map[rbxauth.Cred][]*http.Cookie {
 // SetRobloxAuth sets the RobloxAuth config value.
 func SetRobloxAuth(opt rbxmk.Options, users map[rbxauth.Cred][]*http.Cookie) {
 	opt.Config[fieldRobloxAuth] = users
+}
+
+// Host gets the Host config value.
+func Host(opt rbxmk.Options) string {
+	return opt.Config[fieldHost].(string)
+}
+
+// SetHost sets the Host config value.
+func SetHost(opt rbxmk.Options, host string) {
+	opt.Config[fieldHost] = host
 }

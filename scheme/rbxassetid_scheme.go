@@ -23,7 +23,6 @@ func init() {
 	})
 }
 
-const robloxHost = "roblox.com"
 const wwwSubdomain = "www"
 const rbxassetidDownloadPath = "/asset"
 const rbxassetidUploadPath = "/ide/publish/uploadexistingasset"
@@ -32,7 +31,7 @@ func setCookies(req *http.Request, opt rbxmk.Options, cred rbxauth.Cred) (err er
 	users := config.RobloxAuth(opt)
 	cookies := users[cred]
 	if len(cookies) == 0 {
-		auth := &rbxauth.Config{Host: robloxHost}
+		auth := &rbxauth.Config{Host: config.Host(opt)}
 		if cred, cookies, err = auth.PromptCred(cred); err != nil {
 			return err
 		}
@@ -54,7 +53,7 @@ func rbxassetidInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inre
 
 	assetURL := url.URL{
 		Scheme:   "https",
-		Host:     wwwSubdomain + "." + robloxHost,
+		Host:     wwwSubdomain + "." + config.Host(opt),
 		Path:     rbxassetidDownloadPath,
 		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
 	}
@@ -94,7 +93,7 @@ func rbxassetidOutputFinalizer(opt rbxmk.Options, node *rbxmk.OutputNode, inref 
 
 	uploadURL := url.URL{
 		Scheme:   "https",
-		Host:     wwwSubdomain + "." + robloxHost,
+		Host:     wwwSubdomain + "." + config.Host(opt),
 		Path:     rbxassetidUploadPath,
 		RawQuery: url.Values{"assetID": []string{node.Reference[0]}}.Encode(),
 	}
