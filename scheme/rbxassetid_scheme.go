@@ -84,6 +84,11 @@ func rbxassetidOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, in
 		return "", nil, nil, errors.New("format is not registered")
 	}
 
+	if len(inref[1:]) == 0 {
+		// Avoid downloading if the output is not drilled into.
+		return ext, inref[1:], nil, nil
+	}
+
 	assetURL := url.URL{
 		Scheme:   "https",
 		Host:     wwwSubdomain + "." + config.Host(opt),
