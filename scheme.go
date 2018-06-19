@@ -18,10 +18,10 @@ type InputScheme struct {
 	Handler InputSchemeHandler
 }
 
-// InputSchemeHandler is used to retrieve a Source from a location. ref is the
+// InputSchemeHandler is used to retrieve a Data from a location. ref is the
 // first value of node.Reference after it has been parsed by the protocol
 // detector, and excludes the scheme ("scheme://") portion of the string, if
-// it was given. Returns the retrieved Source, as well as node.Reference after
+// it was given. Returns the retrieved Data, as well as node.Reference after
 // it has been processed.
 type InputSchemeHandler func(opt Options, node *InputNode, inref []string) (outref []string, data Data, err error)
 
@@ -31,18 +31,18 @@ type OutputScheme struct {
 	Finalizer OutputFinalizer     // Write final source to location
 }
 
-// OutputSchemeHandler is used to retrieve a Source from a location. ref is
-// the first value of node.Reference after it has been parsed by the protocol
+// OutputSchemeHandler is used to retrieve a Data from a location. ref is the
+// first value of node.Reference after it has been parsed by the protocol
 // detector, and excludes the scheme ("scheme://") portion of the string, if
-// it was given. Returns the retrieved Source, as well as node.Reference after
+// it was given. Returns the retrieved Data, as well as node.Reference after
 // it has been processed.
 //
 // If retrieving the current state of the location is not applicable, then an
-// empty or nil Source may be returned.
+// empty or nil Data may be returned.
 type OutputSchemeHandler func(opt Options, node *OutputNode, inref []string) (ext string, outref []string, data Data, err error)
 
-// OutputFinalizer is used to write a modified Source to a location. ref is
-// the first value of node.Reference after it has been parsed by the protocol
+// OutputFinalizer is used to write a modified Data to a location. ref is the
+// first value of node.Reference after it has been parsed by the protocol
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given.
 type OutputFinalizer func(opt Options, node *OutputNode, inref []string, ext string, outdata Data) (err error)
