@@ -138,6 +138,7 @@ var mainFuncs = map[string]lua.LGFunction{
 }
 
 const formatIndex = "format"
+const userIndex = "user"
 const apiIndex = "api"
 
 func throwError(l *lua.LState, err error) int {
@@ -160,6 +161,26 @@ func string_Format(l *lua.LState) int {
 	return 1
 }
 
+func getUserCred(v interface{}) (cred rbxauth.Cred, err error) {
+	switch user := v.(type) {
+	case *lua.LTable:
+		cred = rbxauth.Cred{
+			Type:  user.RawGetString("type").String(),
+			Ident: user.RawGetString("ident").String(),
+		}
+	case lua.LString:
+		// Assume Username.
+		cred = rbxauth.Cred{Type: "Username", Ident: string(user)}
+	case lua.LNumber:
+		// Assume UserID.
+		cred = rbxauth.Cred{Type: "UserID", Ident: user.String()}
+	case nil:
+	default:
+		err = fmt.Errorf("'%s' field must be a table, string, or number", userIndex)
+	}
+	return cred, err
+}
+
 func mainInput(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
@@ -169,6 +190,11 @@ func mainInput(l *lua.LState) int {
 
 	node := &rbxmk.InputNode{}
 	node.Format, _ = t.FieldString(formatIndex, true)
+	if user, err := getUserCred(t.FieldValue(userIndex)); err != nil {
+		return throwError(l, err)
+	} else {
+		node.User = user
+	}
 	node.Options = ctx.Options
 
 	nt := t.Len()
@@ -210,6 +236,7 @@ func mainOutput(l *lua.LState) int {
 	if t.TypeOfIndex(i) == "output" {
 		originNode := t.IndexTyped(i, "output", false).(*rbxmk.OutputNode)
 		node.Format = originNode.Format
+		node.User = originNode.User
 		node.Reference = make([]string, len(originNode.Reference), len(originNode.Reference)+nt-1)
 		copy(node.Reference, originNode.Reference)
 		i = 2
@@ -219,6 +246,12 @@ func mainOutput(l *lua.LState) int {
 	if format, ok := t.FieldString(formatIndex, true); ok {
 		node.Format = format
 	}
+	if user, err := getUserCred(t.FieldValue(userIndex)); err != nil {
+		return throwError(l, err)
+	} else {
+		node.User = user
+	}
+
 	for ; i <= nt; i++ {
 		node.Reference = append(node.Reference, t.IndexString(i, false))
 	}
