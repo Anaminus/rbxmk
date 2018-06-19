@@ -577,18 +577,18 @@ func mainConfigure(l *lua.LState) int {
 				return
 			}
 			ident := k.String()
-			t, ok := v.(*lua.LTable)
+			identOpt, ok := v.(*lua.LTable)
 			if !ok {
 				return
 			}
 
 			cred := rbxauth.Cred{
-				Type:  t.RawGetString("type").String(),
+				Type:  identOpt.RawGetString("type").String(),
 				Ident: ident,
 			}
 
 			var cookies []*http.Cookie
-			if path := t.RawGetString("file"); path.Type() == lua.LTString {
+			if path := identOpt.RawGetString("file"); path.Type() == lua.LTString {
 				f, err := os.Open(path.String())
 				if err != nil {
 					terr = err
@@ -599,7 +599,7 @@ func mainConfigure(l *lua.LState) int {
 					terr = err
 					return
 				}
-			} else if prompt := t.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
+			} else if prompt := identOpt.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
 				auth := &rbxauth.Config{Host: "roblox.com"} // TODO: derive from somewhere
 				var err error
 				if cred, cookies, err = auth.PromptCred(cred); err != nil {
