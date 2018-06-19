@@ -36,6 +36,7 @@ This document provides details on how rbxmk works. For a basic overview, see
 	<li><a href="#user-content-schemes">Schemes</a><ol>
 		<li><a href="#user-content-file-scheme">File scheme</a></li>
 		<li><a href="#user-content-http-scheme">HTTP scheme</a></li>
+		<li><a href="#user-content-roblox-asset-id-scheme">Roblox asset ID scheme</a></li>
 		<li><a href="#user-content-generate-scheme">Generate scheme</a><ol>
 			<li><a href="#user-content-instance-syntax">Instance syntax</a><ol>
 				<li><a href="#user-content-instance-item">Instance item</a></li>
@@ -112,11 +113,27 @@ option to change. The following options are available:
 
 #### Configure options table
 
-Name     | Type  | Default | Description
----------|-------|---------|------------
-`api`    | api   | nil     | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
-`define` | table | -       | Defines a number of variables to be used by the [preprocessor](#user-content-preprocess-filter). Each key-value pair in the given table is merged with the existing set of variables. Keys must be variable-like strings, and values can be either bools, numbers, or strings.<br>Note that variables defined by `configure` cannot override variables defined by the [`--define`](USAGE.md#user-content-command-options) command option.
-`undef`  | table | -       | Undefines a number of [preprocessor](#user-content-preprocess-filter) variables. The given table is a list of variable names to be undefined.<br>If both `define` and `undef` configs are given, then `undef` is applied first.
+Name      | Type   | Default      | Description
+----------|--------|--------------|------------
+`api`     | api    | nil          | Sets the default API value to be used by all applicable functions. Several functions have an `api` argument, which can be used to override the default API for that call.
+`define`  | table  | -            | Defines a number of variables to be used by the [preprocessor](#user-content-preprocess-filter). Each key-value pair in the given table is merged with the existing set of variables. Keys must be variable-like strings, and values can be either bools, numbers, or strings.<br>Note that variables defined by `configure` cannot override variables defined by the [`--define`](USAGE.md#user-content-command-options) command option.
+`host`    | string | "roblox.com" | The website used for interacting with Roblox web APIs.
+`rbxauth` | table  | -            | Specifies a number of Roblox user accounts to authenticate. [(More)](#user-content-config-rbxauth)
+`undef`   | table  | -            | Undefines a number of [preprocessor](#user-content-preprocess-filter) variables. The given table is a list of variable names to be undefined.<br>If both `define` and `undef` configs are given, then `undef` is applied first.
+
+#### Config `rbxauth`
+
+The `rbxauth` config is a table specifying a number of Roblox user accounts to
+authenticate. Each entry is a table with the following fields (of which each
+are optional unless otherwise specified):
+
+Field    | Type          | Description
+---------|---------------|------------
+`type`   | string        | Specifies the type of identifier. Can be either "Username", "Email", "PhoneNumber", or "UserID".
+`ident`  | string/number | The identifier itself. In the case of UserID, the value is interpreted as an integer. Otherwise, the value is interpreted as a string.
+`prompt` | boolean       | If true, then the user will be prompted to login. An unspecified type or identifier will be prompted for as necessary.
+`file`   | string        | Specifies the path to a file, which contains cookies representing an authenticated session. The file must be formatted as a list of "Set-Cookie" HTTP headers. This overrides the `prompt` option.
+`logout` | boolean       | If true, then the user of the specified credentials will be logged out. In this case, the "type" and "ident" fields must be specified.
 
 ### `delete` function
 
@@ -163,7 +180,7 @@ Returns nil if the variable is not present.
 
 ### `input` function
 
-`node = rbxmk.input{format=string, api=nil, ...string}`
+`node = rbxmk.input{format=string, api=nil, user=nil, ...string}`
 
 `input` creates an input node. The arguments specify the
 [Reference](#user-content-reference) to the input. The `format` argument
@@ -171,6 +188,16 @@ forces the file format, if needed.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
+
+The optional `user` argument specifies user credentials when authentication is
+required (when downloading from a website, for example). The argument can be
+one of the following types:
+
+Type   | Description
+-------|------------
+table  | The "type" field is a string specifying the identifier type, and the "ident" field is the identifier itself, which is interpreted as a string.
+string | A user name identifier. The type is set as "Username".
+number | A user ID identifier. The type is set as "UserID".
 
 ### `load` function
 
@@ -212,7 +239,7 @@ rbxmk.map{A, X, B, Y}
 ### `output` function
 
 ```lua
-node = rbxmk.output{format=string, api=nil, ...string}
+node = rbxmk.output{format=string, api=nil, user=nil, ...string}
 ```
 
 `output` creates an output node. The arguments specify the
@@ -221,6 +248,10 @@ forces the file format, if needed.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
+
+The optional `user` argument specifies user credentials when authentication is
+required (when uploading to a website, for example). The argument behaves the
+same as with the [input](#user-content-input-function) function.
 
 ### `path` function
 
@@ -800,6 +831,37 @@ possible to receive data from the output location.
 
 This scheme cannot determine the Format automatically, so it must be provided
 explicitly.
+
+#### Roblox asset ID scheme
+
+The `rbxassetid` scheme downloads and uploads asset files from the Roblox
+website. It is defined for both inputs and outputs.
+
+The syntax is the ID of the asset:
+
+```
+rbxassetid://1818
+```
+
+An input node with this scheme will download the specified asset from the
+website. Authentication is required for private assets, but not for public
+assets.
+
+An output node with this scheme will update the specified asset on the
+website. The output node can be drilled into, in which case the asset is first
+downloaded. Note that this method cannot be used to create new assets.
+
+When uploading to or downloading from the website, the `user` argument of an
+input or output node can be used when authentication is required. The argument
+refers to a user configured with the [`rbxauth`](#user-content-config-rbxauth)
+configuration option. If no user has been specified or configured, then the
+user will be prompted to login when the node is mapped. This session will
+persist until the program ends or the user is explicitly logged out. See the
+[input](#user-content-input-function) function for details on the `user`
+argument.
+
+This scheme cannot determine the Format automatically, so it must be provided
+explicitly. The format should correspond to the type of the target asset.
 
 ### Generate scheme
 
