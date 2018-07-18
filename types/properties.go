@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
+	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
 )
 
@@ -26,11 +26,12 @@ func (indata Properties) Drill(opt *rbxmk.Options, inref []string) (outdata rbxm
 }
 
 func (indata Properties) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+	api, _ := opt.Config["API"].(rbxapi.Root)
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		for _, inst := range *drilldata {
 			for name, value := range indata {
-				if propertyIsOfType(config.API(opt), inst, name, value.Type()) {
+				if propertyIsOfType(api, inst, name, value.Type()) {
 					inst.Properties[name] = value
 				}
 			}
@@ -39,7 +40,7 @@ func (indata Properties) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Dat
 
 	case Instance:
 		for name, value := range indata {
-			if propertyIsOfType(config.API(opt), drilldata.Instance, name, value.Type()) {
+			if propertyIsOfType(api, drilldata.Instance, name, value.Type()) {
 				drilldata.Properties[name] = value
 			}
 		}

@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
+	"github.com/robloxapi/rbxapi"
 )
 
 type Property struct {
@@ -32,17 +32,18 @@ func (indata Property) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data)
 	if value == nil {
 		return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("input property \"%s\" cannot be nil", indata.Name))
 	}
+	api, _ := opt.Config["API"].(rbxapi.Root)
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		for _, inst := range *drilldata {
-			if propertyIsOfType(config.API(opt), inst, indata.Name, value.Type()) {
+			if propertyIsOfType(api, inst, indata.Name, value.Type()) {
 				inst.Properties[indata.Name] = value
 			}
 		}
 		return rootdata, nil
 
 	case Instance:
-		if propertyIsOfType(config.API(opt), drilldata.Instance, indata.Name, value.Type()) {
+		if propertyIsOfType(api, drilldata.Instance, indata.Name, value.Type()) {
 			drilldata.Properties[indata.Name] = value
 		}
 		return rootdata, nil

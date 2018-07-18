@@ -3,7 +3,6 @@ package filter
 import (
 	"bytes"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/yuin/gopher-lua"
@@ -20,7 +19,8 @@ func init() {
 func Preprocess(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	out, err := types.ProcessStringlikeInterface(preprocessStringCallback(config.PPEnvs(opt)), value)
+	envs, _ := opt.Config["PPEnvs"].([]*lua.LTable)
+	out, err := types.ProcessStringlikeInterface(preprocessStringCallback(envs), value)
 	if err != nil {
 		return nil, err
 	}

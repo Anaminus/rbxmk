@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
@@ -189,7 +188,7 @@ func mainInput(l *lua.LState) int {
 	node.Options = ctx.Options.Copy()
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(node.Options, api)
+	node.Options.Config["API"] = api
 
 	node.Format, _ = t.FieldString(formatIndex, true)
 	if user, err := getUserCred(t.FieldValue(userIndex)); err != nil {
@@ -232,7 +231,7 @@ func mainOutput(l *lua.LState) int {
 	node.Options = ctx.Options.Copy()
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(node.Options, api)
+	node.Options.Config["API"] = api
 
 	i := 1
 	if t.TypeOfIndex(i) == "output" {
@@ -268,7 +267,7 @@ func mainFilter(l *lua.LState) int {
 	opt := ctx.Options.Copy()
 
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(opt, api)
+	opt.Config["API"] = api
 
 	const filterNameIndex = "name"
 	var i int = 1
@@ -568,10 +567,10 @@ func mainConfigure(l *lua.LState) int {
 
 	if v := t.FieldValue("api"); v != nil {
 		api, _ := v.(rbxapi.Root)
-		config.SetAPI(ctx.Options, api)
+		ctx.Options.Config["API"] = api
 	}
 	if v := t.FieldValue("undef"); v != nil {
-		env := config.PPEnvs(ctx.Options)[config.PPEnvScript]
+		env := ctx.Options.Config["PPEnv"].([]*lua.LTable)[PPEnvScript]
 		undefs := v.(*lua.LTable)
 		for i := 1; i <= undefs.Len(); i++ {
 			k := undefs.RawGetInt(i)
@@ -586,7 +585,7 @@ func mainConfigure(l *lua.LState) int {
 		}
 	}
 	if v := t.FieldValue("define"); v != nil {
-		env := config.PPEnvs(ctx.Options)[config.PPEnvScript]
+		env := ctx.Options.Config["PPEnv"].([]*lua.LTable)[PPEnvScript]
 		defs := v.(*lua.LTable)
 		defs.ForEach(func(k, v lua.LValue) {
 			if k.Type() != lua.LTString {
@@ -603,7 +602,7 @@ func mainConfigure(l *lua.LState) int {
 		})
 	}
 	if v := t.FieldValue("rbxauth"); v != nil {
-		users := config.RobloxAuth(ctx.Options)
+		users, _ := ctx.Options.Config["RobloxAuth"].(map[rbxauth.Cred][]*http.Cookie)
 		defs := v.(*lua.LTable)
 		for i := 1; i <= defs.Len(); i++ {
 			entry, ok := defs.RawGetInt(i).(*lua.LTable)
@@ -621,7 +620,7 @@ func mainConfigure(l *lua.LState) int {
 				if len(cookies) == 0 {
 					return throwError(l, errors.New("cannot logout: unknown credentials"))
 				}
-				auth := &rbxauth.Config{Host: config.Host(ctx.Options)}
+				auth := &rbxauth.Config{Host: ctx.Options.Config["Host"].(string)}
 				if err := auth.Logout(cookies); err != nil {
 					return throwError(l, fmt.Errorf("Error logging out: %s", err))
 				}
@@ -639,19 +638,23 @@ func mainConfigure(l *lua.LState) int {
 					return throwError(l, err)
 				}
 			} else if prompt := entry.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
-				auth := &rbxauth.Config{Host: config.Host(ctx.Options)}
+				auth := &rbxauth.Config{Host: ctx.Options.Config["Host"].(string)}
 				var err error
 				if cred, cookies, err = auth.PromptCred(cred); err != nil {
 					return throwError(l, err)
 				}
 			}
 			if len(cookies) > 0 {
+				if users == nil {
+					users = make(map[rbxauth.Cred][]*http.Cookie)
+					ctx.Options.Config["RobloxAuth"] = users
+				}
 				users[cred] = cookies
 			}
 		}
 	}
 	if v := t.FieldValue("host"); v != nil {
-		config.SetHost(ctx.Options, string(v.(lua.LString)))
+		ctx.Options.Config["Host"] = string(v.(lua.LString))
 	}
 	return 0
 }

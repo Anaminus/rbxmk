@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/filter"
 	"github.com/anaminus/rbxmk/format"
 	"github.com/anaminus/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
+	"github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
 )
@@ -34,6 +34,15 @@ type FlagOptions struct {
 	Arguments []string          `short:"a" long:"arg" description:"An argument to be passed to the script." long-description:"" value-name:"VALUE"`
 	Define    map[string]string `short:"d" long:"define" description:"A variable to be used by the preprocessor." long-description:"" value-name:"NAME:VALUE"`
 }
+
+// Order of preprocessor variable environments.
+const (
+	PPEnvScript  = iota // Defined via script (rbxmk.configure).
+	PPEnvCommand        // Defined via --define option.
+	PPEnvLen            // Number of environments.
+)
+
+const DefaultHost = `roblox.com`
 
 func main() {
 	// Parse flags.
@@ -66,16 +75,24 @@ func main() {
 	if err := options.Filters.Register(filter.Filters.List()...); err != nil {
 		Fatalf("%s", err)
 	}
-	config.Init(options)
 
+	// Initialize preprocessor environments.
+	var envs [PPEnvLen]*lua.LTable
+	for i := range envs {
+		envs[i] = &lua.LTable{Metatable: lua.LNil}
+	}
 	// Add preprocessor definitions.
-	cmdEnv := config.PPEnvs(options)[config.PPEnvCommand]
+	cmdEnv := envs[PPEnvCommand]
 	for k, v := range flagOptions.Define {
 		if !luautil.CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
 		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v, true))
 	}
+	options.Config["PPEnv"] = envs[:]
+
+	// Initialize Host config.
+	options.Config["Host"] = DefaultHost
 
 	// Initialize context.
 	ctx := luautil.NewLuaContext(options)

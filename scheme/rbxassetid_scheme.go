@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
 	"net/http"
 	"net/url"
 )
@@ -24,18 +23,31 @@ func init() {
 }
 
 const wwwSubdomain = "www"
+const defaultHost = "roblox.com"
 const rbxassetidDownloadPath = "/asset"
 const rbxassetidUploadPath = "/ide/publish/uploadexistingasset"
 
+func getHost(opt *rbxmk.Options) (host string) {
+	host, _ = opt.Config["Host"].(string)
+	if host == "" {
+		host = defaultHost
+	}
+	return
+}
+
 func setCookies(req *http.Request, opt *rbxmk.Options, cred rbxauth.Cred) (err error) {
-	users := config.RobloxAuth(opt)
+	users, _ := opt.Config["RobloxAuth"].(map[rbxauth.Cred][]*http.Cookie)
 	cookies := users[cred]
 	if len(cookies) == 0 {
-		auth := &rbxauth.Config{Host: config.Host(opt)}
+		auth := &rbxauth.Config{Host: getHost(opt)}
 		if cred, cookies, err = auth.PromptCred(cred); err != nil {
 			return err
 		}
 		if len(cookies) > 0 {
+			if users == nil {
+				users = make(map[rbxauth.Cred][]*http.Cookie)
+				opt.Config["RobloxAuth"] = users
+			}
 			users[cred] = cookies
 		}
 	}
@@ -53,7 +65,7 @@ func rbxassetidInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inr
 
 	assetURL := url.URL{
 		Scheme:   "https",
-		Host:     wwwSubdomain + "." + config.Host(opt),
+		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidDownloadPath,
 		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
 	}
@@ -91,7 +103,7 @@ func rbxassetidOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, i
 
 	assetURL := url.URL{
 		Scheme:   "https",
-		Host:     wwwSubdomain + "." + config.Host(opt),
+		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidDownloadPath,
 		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
 	}
@@ -127,7 +139,7 @@ func rbxassetidOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref
 
 	uploadURL := url.URL{
 		Scheme:   "https",
-		Host:     wwwSubdomain + "." + config.Host(opt),
+		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidUploadPath,
 		RawQuery: url.Values{"assetID": []string{node.Reference[0]}}.Encode(),
 	}

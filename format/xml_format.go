@@ -3,7 +3,6 @@ package format
 import (
 	"fmt"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/config"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxfile"
@@ -16,7 +15,8 @@ func init() {
 		Name: "XML Properties",
 		Ext:  "properties.xml",
 		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
-			return &XMLCodec{API: config.API(opt)}
+			api, _ := opt.Config["API"].(rbxapi.Root)
+			return &XMLCodec{API: api}
 		},
 	})
 }
