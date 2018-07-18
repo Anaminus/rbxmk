@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/luautil"
+	"github.com/anaminus/rbxmk/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/yuin/gopher-lua"
 	"io"

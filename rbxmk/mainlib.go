@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/luautil"
+	"github.com/anaminus/rbxmk/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
