@@ -120,7 +120,7 @@ type genParser struct {
 	s         string
 	i         int
 	errmsg    error
-	api       *rbxapi.API
+	api       rbxapi.Root
 	instances []*rbxfile.Instance
 	refs      rbxfile.References
 	prefs     []rbxfile.PropRef
@@ -520,11 +520,11 @@ func (p *genParser) parseClass(name string) (inst *rbxfile.Instance, ok bool) {
 	}
 	if p.api != nil {
 		// Fill in properties from API.
-		if classAPI := p.api.Classes[name]; classAPI != nil {
-			for _, member := range classAPI.MemberList() {
-				if prop, _ := member.(*rbxapi.Property); prop != nil {
-					if typ := rbxfile.TypeFromAPIString(p.api, prop.ValueType); typ != rbxfile.TypeInvalid {
-						inst.Properties[prop.MemberName] = rbxfile.NewValue(typ)
+		if classAPI := p.api.GetClass(name); classAPI != nil {
+			for _, member := range classAPI.GetMembers() {
+				if prop, _ := member.(rbxapi.Property); prop != nil {
+					if typ := rbxfile.TypeFromAPIString(p.api, prop.GetValueType().GetName()); typ != rbxfile.TypeInvalid {
+						inst.Properties[prop.GetName()] = rbxfile.NewValue(typ)
 					}
 				}
 			}
@@ -652,21 +652,21 @@ func (p *genParser) parseProperties() bool {
 func (p *genParser) parseProperty(name string, parent *rbxfile.Instance) (value rbxfile.Value, ok bool) {
 	var propType string
 	if p.api != nil && parent != nil {
-		var propDesc *rbxapi.Property
-		if classDesc := p.api.Classes[parent.ClassName]; classDesc != nil {
-			propDesc, _ = classDesc.Members[name].(*rbxapi.Property)
+		var propDesc rbxapi.Property
+		if classDesc := p.api.GetClass(parent.ClassName); classDesc != nil {
+			propDesc, _ = classDesc.GetMember(name).(rbxapi.Property)
 		}
 		if p.try(":") {
 			if propType, ok = p.parseName("type"); !ok {
 				return nil, false
 			}
 			propType = rbxfile.TypeFromAPIString(p.api, propType).String()
-			if propDesc != nil && propType != rbxfile.TypeFromAPIString(p.api, propDesc.ValueType).String() {
-				p.err(fmt.Errorf("expected type %s for property %s.%s (got %s)", propDesc.ValueType, parent.ClassName, name, propType))
+			if propDesc != nil && propType != rbxfile.TypeFromAPIString(p.api, propDesc.GetValueType().GetName()).String() {
+				p.err(fmt.Errorf("expected type %s for property %s.%s (got %s)", propDesc.GetValueType(), parent.ClassName, name, propType))
 				return nil, false
 			}
 		} else if propDesc != nil {
-			propType = rbxfile.TypeFromAPIString(p.api, propDesc.ValueType).String()
+			propType = rbxfile.TypeFromAPIString(p.api, propDesc.GetValueType().GetName()).String()
 		} else {
 			p.err(fmt.Errorf("expected ':'"))
 			return nil, false

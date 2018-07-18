@@ -45,7 +45,7 @@ func init() {
 type RBXCodec struct {
 	model bool // Model or Place
 	xml   bool // XML or Binary
-	api   *rbxapi.API
+	api   rbxapi.Root
 }
 
 func (c *RBXCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {

@@ -11,7 +11,7 @@ import (
 
 // Indicies of config values.
 const (
-	// API specifies a default rbxapi.API to be used by all functions.
+	// API specifies a default rbxapi.Root to be used by all functions.
 	fieldAPI = iota
 
 	// PPEnvs specifies a list of environment tables to be used by the
@@ -40,7 +40,7 @@ const (
 func Init(opt *rbxmk.Options) {
 	opt.Config = make([]interface{}, fieldLen)
 
-	opt.Config[fieldAPI] = (*rbxapi.API)(nil)
+	opt.Config[fieldAPI] = (rbxapi.Root)(nil)
 
 	envs := make([]*lua.LTable, PPEnvLen)
 	for i := range envs {
@@ -54,12 +54,12 @@ func Init(opt *rbxmk.Options) {
 }
 
 // API gets the API config value.
-func API(opt rbxmk.Options) *rbxapi.API {
-	return opt.Config[fieldAPI].(*rbxapi.API)
+func API(opt rbxmk.Options) rbxapi.Root {
+	return opt.Config[fieldAPI].(rbxapi.Root)
 }
 
 // SetAPI sets the API config value.
-func SetAPI(opt rbxmk.Options, api *rbxapi.API) {
+func SetAPI(opt rbxmk.Options, api rbxapi.Root) {
 	opt.Config[fieldAPI] = api
 }
 

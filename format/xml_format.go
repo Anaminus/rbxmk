@@ -22,7 +22,7 @@ func init() {
 }
 
 type XMLCodec struct {
-	API *rbxapi.API
+	API rbxapi.Root
 }
 
 func (c *XMLCodec) Decode(r io.Reader, data *rbxmk.Data) (err error) {

@@ -10,7 +10,7 @@ import (
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/robloxapi/rbxapi"
-	"github.com/robloxapi/rbxapi/dump"
+	"github.com/robloxapi/rbxapi/rbxapidump"
 	"github.com/yuin/gopher-lua"
 	"net/http"
 	"os"
@@ -185,7 +185,7 @@ func mainInput(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
 	config.SetAPI(ctx.Options, api)
 
 	node := &rbxmk.InputNode{}
@@ -222,7 +222,7 @@ func mainOutput(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
 	config.SetAPI(ctx.Options, api)
 
 	nt := t.Len()
@@ -263,7 +263,7 @@ func mainFilter(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(*rbxapi.API)
+	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
 	config.SetAPI(ctx.Options, api)
 
 	const filterNameIndex = "name"
@@ -551,7 +551,7 @@ func mainLoadAPI(l *lua.LState) int {
 		return throwError(l, fmt.Errorf("failed to open API file: %s", err))
 	}
 	defer file.Close()
-	api, err := dump.Decode(file)
+	api, err := rbxapidump.Decode(file)
 	if err != nil {
 		return throwError(l, fmt.Errorf("failed to decode API file: %s", err))
 	}
@@ -563,7 +563,7 @@ func mainConfigure(l *lua.LState) int {
 	ctx := getLuaContextUpvalue(l, 1)
 
 	if v := t.FieldValue("api"); v != nil {
-		api, _ := v.(*rbxapi.API)
+		api, _ := v.(rbxapi.Root)
 		config.SetAPI(ctx.Options, api)
 	}
 	if v := t.FieldValue("undef"); v != nil {
