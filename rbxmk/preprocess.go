@@ -1,4 +1,4 @@
-package filter
+package main
 
 import (
 	"bytes"
@@ -10,11 +10,12 @@ import (
 	"strings"
 )
 
-func init() {
-	Filters.Register(
-		rbxmk.Filter{Name: "preprocess", Func: Preprocess},
-	)
-}
+// Order of preprocessor variable environments.
+const (
+	PPEnvScript  = iota // Defined via script (rbxmk.configure).
+	PPEnvCommand        // Defined via --define option.
+	PPEnvLen            // Number of environments.
+)
 
 func Preprocess(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})

@@ -35,13 +35,6 @@ type FlagOptions struct {
 	Define    map[string]string `short:"d" long:"define" description:"A variable to be used by the preprocessor." long-description:"" value-name:"NAME:VALUE"`
 }
 
-// Order of preprocessor variable environments.
-const (
-	PPEnvScript  = iota // Defined via script (rbxmk.configure).
-	PPEnvCommand        // Defined via --define option.
-	PPEnvLen            // Number of environments.
-)
-
 const DefaultHost = `roblox.com`
 
 func main() {
@@ -76,11 +69,15 @@ func main() {
 		Fatalf("%s", err)
 	}
 
-	// Initialize preprocessor environments.
+	// Initialize preprocessor.
+	if err := options.Filters.Register(rbxmk.Filter{Name: "preprocess", Func: Preprocess}); err != nil {
+		Fatalf("%s", err)
+	}
 	var envs [PPEnvLen]*lua.LTable
 	for i := range envs {
 		envs[i] = &lua.LTable{Metatable: lua.LNil}
 	}
+
 	// Add preprocessor definitions.
 	cmdEnv := envs[PPEnvCommand]
 	for k, v := range flagOptions.Define {
