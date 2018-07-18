@@ -23,7 +23,7 @@ type InputScheme struct {
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given. Returns the retrieved Data, as well as node.Reference after
 // it has been processed.
-type InputSchemeHandler func(opt Options, node *InputNode, inref []string) (outref []string, data Data, err error)
+type InputSchemeHandler func(opt *Options, node *InputNode, inref []string) (outref []string, data Data, err error)
 
 // OutputScheme represents a rbxmk output scheme.
 type OutputScheme struct {
@@ -39,13 +39,13 @@ type OutputScheme struct {
 //
 // If retrieving the current state of the location is not applicable, then an
 // empty or nil Data may be returned.
-type OutputSchemeHandler func(opt Options, node *OutputNode, inref []string) (ext string, outref []string, data Data, err error)
+type OutputSchemeHandler func(opt *Options, node *OutputNode, inref []string) (ext string, outref []string, data Data, err error)
 
 // OutputFinalizer is used to write a modified Data to a location. ref is the
 // first value of node.Reference after it has been parsed by the protocol
 // detector, and excludes the scheme ("scheme://") portion of the string, if
 // it was given.
-type OutputFinalizer func(opt Options, node *OutputNode, inref []string, ext string, outdata Data) (err error)
+type OutputFinalizer func(opt *Options, node *OutputNode, inref []string, ext string, outdata Data) (err error)
 
 // Schemes is a container of rbxmk schemes.
 type Schemes struct {
@@ -59,6 +59,22 @@ func NewSchemes() *Schemes {
 		input:  map[string]*InputScheme{},
 		output: map[string]*OutputScheme{},
 	}
+}
+
+// Copy returns a copy of Schemes. Changes to the copy will not affect the
+// original.
+func (s *Schemes) Copy() *Schemes {
+	c := Schemes{
+		input:  make(map[string]*InputScheme, len(s.input)),
+		output: make(map[string]*OutputScheme, len(s.output)),
+	}
+	for k, v := range s.input {
+		c.input[k] = v
+	}
+	for k, v := range s.output {
+		c.output[k] = v
+	}
+	return &c
 }
 
 // Register registers a number of rbxmk schemes with the container. Input and

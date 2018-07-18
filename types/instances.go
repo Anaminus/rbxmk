@@ -13,7 +13,7 @@ func (indata *Instances) Type() string {
 	return "Instances"
 }
 
-func (indata *Instances) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata *Instances) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -143,7 +143,7 @@ Error:
 	return indata, inref, ParseError{Index: i, Err: err}
 }
 
-func (indata *Instances) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata *Instances) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		*drilldata = append(*drilldata, *indata...)

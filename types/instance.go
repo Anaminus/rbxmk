@@ -18,7 +18,7 @@ func (indata Instance) Type() string {
 	return "Instance<" + indata.ClassName + ">"
 }
 
-func (indata Instance) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata Instance) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -42,7 +42,7 @@ func (indata Instance) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.D
 	return Property{Properties: indata.Properties, Name: ref}, inref[1:], nil
 }
 
-func (indata Instance) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata Instance) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		*drilldata = append(*drilldata, indata.Instance)

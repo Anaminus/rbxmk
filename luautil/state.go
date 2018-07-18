@@ -9,7 +9,7 @@ import (
 )
 
 type LuaContext struct {
-	Options   rbxmk.Options
+	Options   *rbxmk.Options
 	state     *lua.LState
 	fileStack []FileInfo
 }
@@ -19,7 +19,7 @@ type FileInfo struct {
 	os.FileInfo
 }
 
-func NewLuaContext(opt rbxmk.Options) *LuaContext {
+func NewLuaContext(opt *rbxmk.Options) *LuaContext {
 	ctx := &LuaContext{}
 	l := lua.NewState(lua.Options{SkipOpenLibs: true})
 

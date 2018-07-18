@@ -28,7 +28,7 @@ func parseScheme(s string) (scheme, path string) {
 }
 
 type InputNode struct {
-	Options   Options
+	Options   *Options
 	Reference []string     // Raw strings that refer to data.
 	Data      Data         // Pre-resolved Data.
 	Format    string       // Forced file format.
@@ -86,7 +86,7 @@ func (node *InputNode) ResolveReference() (data Data, err error) {
 }
 
 type OutputNode struct {
-	Options   Options
+	Options   *Options
 	Reference []string     // Raw string that refers to data.
 	Data      Data         // Pre-resolved Data.
 	Format    string       // Forced file format. If empty, it is filled in after being guessed.
@@ -135,7 +135,7 @@ func (node *OutputNode) ResolveReference(indata Data) (err error) {
 }
 
 // drillOutput drills into the Data which resolved from the node's reference.
-func (node *OutputNode) drillOutput(opt Options, rootdata Data, ref []string, indata Data) (outdata Data, err error) {
+func (node *OutputNode) drillOutput(opt *Options, rootdata Data, ref []string, indata Data) (outdata Data, err error) {
 	drilldata := rootdata
 	if drilldata != nil {
 		for i := 1; err != EOD; i++ {

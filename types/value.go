@@ -17,14 +17,14 @@ func (indata Value) Type() string {
 	return "Value<" + indata.Value.Type().String() + ">"
 }
 
-func (indata Value) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata Value) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if s := NewStringlike(indata); s != nil {
 		return s.Drill(opt, inref)
 	}
 	return indata, inref, rbxmk.EOD
 }
 
-func (indata Value) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata Value) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case Property:
 		if v := drilldata.Properties[drilldata.Name]; v != nil && indata.Value.Type() != v.Type() {

@@ -17,7 +17,7 @@ func init() {
 	)
 }
 
-func Preprocess(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
+func Preprocess(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
 	out, err := types.ProcessStringlikeInterface(preprocessStringCallback(config.PPEnvs(opt)), value)

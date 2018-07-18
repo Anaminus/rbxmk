@@ -66,7 +66,7 @@ func main() {
 	if err := options.Filters.Register(filter.Filters.List()...); err != nil {
 		Fatalf("%s", err)
 	}
-	config.Init(&options)
+	config.Init(options)
 
 	// Add preprocessor definitions.
 	cmdEnv := config.PPEnvs(options)[config.PPEnvCommand]

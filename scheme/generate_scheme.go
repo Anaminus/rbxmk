@@ -23,7 +23,7 @@ func init() {
 	})
 }
 
-func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
+func generateInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
 	switch inref[0] {
 	case "Instance":
 		if len(inref) < 2 {
@@ -49,7 +49,7 @@ func generateInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref 
 	return inref[2:], data, err
 }
 
-func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
+func generateInstance(opt *rbxmk.Options, s string) (data rbxmk.Data, err error) {
 	p := &genParser{s: s, refs: make(rbxfile.References), api: config.API(opt)}
 	if !p.parseClasses() {
 		return nil, p.errmsg
@@ -65,7 +65,7 @@ func generateInstance(opt rbxmk.Options, s string) (data rbxmk.Data, err error) 
 	return &instances, nil
 }
 
-func generateProperty(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
+func generateProperty(opt *rbxmk.Options, s string) (data rbxmk.Data, err error) {
 	p := &genParser{s: s}
 	if !p.parseProperties() {
 		return nil, p.errmsg
@@ -79,7 +79,7 @@ func generateProperty(opt rbxmk.Options, s string) (data rbxmk.Data, err error) 
 	return types.Properties(p.instances[0].Properties), nil
 }
 
-func generateValue(opt rbxmk.Options, s string) (data rbxmk.Data, err error) {
+func generateValue(opt *rbxmk.Options, s string) (data rbxmk.Data, err error) {
 	p := &genParser{s: s}
 	var propType string
 	propType, ok := p.parseName("type")

@@ -15,7 +15,7 @@ func (indata Property) Type() string {
 	return "Property"
 }
 
-func (indata Property) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata Property) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if s := NewStringlike(indata.Properties[indata.Name]); s != nil {
 		if outdata, outref, err = s.Drill(opt, inref); err != nil {
 			return indata, inref, err
@@ -27,7 +27,7 @@ func (indata Property) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.D
 	return indata, inref, rbxmk.EOD
 }
 
-func (indata Property) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata Property) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	value := indata.Properties[indata.Name]
 	if value == nil {
 		return nil, rbxmk.NewMergeError(indata, drilldata, fmt.Errorf("input property \"%s\" cannot be nil", indata.Name))

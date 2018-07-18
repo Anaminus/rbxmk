@@ -13,7 +13,7 @@ func (indata Properties) Type() string {
 	return "Properties"
 }
 
-func (indata Properties) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata Properties) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -25,7 +25,7 @@ func (indata Properties) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk
 	return Property{Properties: indata, Name: inref[0]}, inref[1:], nil
 }
 
-func (indata Properties) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata Properties) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		for _, inst := range *drilldata {

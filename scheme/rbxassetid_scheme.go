@@ -27,7 +27,7 @@ const wwwSubdomain = "www"
 const rbxassetidDownloadPath = "/asset"
 const rbxassetidUploadPath = "/ide/publish/uploadexistingasset"
 
-func setCookies(req *http.Request, opt rbxmk.Options, cred rbxauth.Cred) (err error) {
+func setCookies(req *http.Request, opt *rbxmk.Options, cred rbxauth.Cred) (err error) {
 	users := config.RobloxAuth(opt)
 	cookies := users[cred]
 	if len(cookies) == 0 {
@@ -45,7 +45,7 @@ func setCookies(req *http.Request, opt rbxmk.Options, cred rbxauth.Cred) (err er
 	return nil
 }
 
-func rbxassetidInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
+func rbxassetidInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
 	ext := node.Format
 	if !opt.Formats.Registered(ext) {
 		return nil, nil, errors.New("format is not registered")
@@ -78,7 +78,7 @@ func rbxassetidInputSchemeHandler(opt rbxmk.Options, node *rbxmk.InputNode, inre
 	return inref[1:], data, err
 }
 
-func rbxassetidOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
+func rbxassetidOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string) (ext string, outref []string, data rbxmk.Data, err error) {
 	ext = node.Format
 	if !opt.Formats.Registered(ext) {
 		return "", nil, nil, errors.New("format is not registered")
@@ -116,7 +116,7 @@ func rbxassetidOutputSchemeHandler(opt rbxmk.Options, node *rbxmk.OutputNode, in
 	return node.Format, inref[1:], data, err
 }
 
-func rbxassetidOutputFinalizer(opt rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
+func rbxassetidOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref []string, ext string, outdata rbxmk.Data) (err error) {
 	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}

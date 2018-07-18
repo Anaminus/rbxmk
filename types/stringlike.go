@@ -183,7 +183,7 @@ func (indata *Stringlike) Type() string {
 	return "Stringlike"
 }
 
-func (indata *Stringlike) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata *Stringlike) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	if len(inref) == 0 {
 		err = rbxmk.EOD
 		return indata, inref, err
@@ -373,7 +373,7 @@ finishScanTag:
 	return region, inref[1:], nil
 }
 
-func (indata *Stringlike) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata *Stringlike) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case Property:
 		v := Value{drilldata.Properties[drilldata.Name]}

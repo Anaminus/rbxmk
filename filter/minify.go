@@ -16,7 +16,7 @@ func init() {
 	)
 }
 
-func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
+func Minify(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
 	out, err := types.ProcessStringlikeInterface(minifyStringCallback("minify"), value)
@@ -26,7 +26,7 @@ func Minify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (res
 	return []interface{}{out}, nil
 }
 
-func Unminify(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
+func Unminify(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
 	out, err := types.ProcessStringlikeInterface(minifyStringCallback("unminify"), value)

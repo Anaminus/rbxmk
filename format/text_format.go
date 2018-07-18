@@ -12,14 +12,14 @@ func init() {
 	Formats.Register(rbxmk.Format{
 		Name: "Text",
 		Ext:  "txt",
-		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
+		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: false}
 		},
 	})
 	Formats.Register(rbxmk.Format{
 		Name: "Binary",
 		Ext:  "bin",
-		Codec: func(rbxmk.Options, interface{}) rbxmk.FormatCodec {
+		Codec: func(*rbxmk.Options, interface{}) rbxmk.FormatCodec {
 			return &TextCodec{Binary: true}
 		},
 	})

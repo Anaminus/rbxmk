@@ -12,7 +12,7 @@ func init() {
 	)
 }
 
-func Region(f rbxmk.FilterArgs, opt rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
+func Region(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	output := arguments[0].(rbxmk.Data)
 	region := arguments[1].(string)
 	input := arguments[2].(interface{})

@@ -18,13 +18,13 @@ type Filter struct {
 // panics that occur will be recovered and returned as an error. After
 // f.ProcessedArgs is called, panics go back to being handled as usual.
 //
-//     func SomeFilter(f FilterArgs, opt Options, arguments []interface{}) (results []interface{}, err error) {
+//     func SomeFilter(f FilterArgs, opt *Options, arguments []interface{}) (results []interface{}, err error) {
 //         index := arguments[0].(int)
 //         value := arguments[1].(string)
 //         f.ProcessedArgs()
 //         ...
 //
-type FilterFunc func(f FilterArgs, opt Options, arguments []interface{}) (results []interface{}, err error)
+type FilterFunc func(f FilterArgs, opt *Options, arguments []interface{}) (results []interface{}, err error)
 
 // FilterArgs is used by a FilterFunc to indicate that it is done processing
 // its arguments.
@@ -40,7 +40,7 @@ func (f *filterArgs) ProcessedArgs() {
 
 // CallFilter invokes a FilterFunc, allowing arguments to be processed without
 // panicking.
-func CallFilter(filter FilterFunc, opt Options, arguments ...interface{}) (results []interface{}, err error) {
+func CallFilter(filter FilterFunc, opt *Options, arguments ...interface{}) (results []interface{}, err error) {
 	var argsProcessed filterArgs
 	defer func() {
 		if !argsProcessed {
@@ -61,6 +61,18 @@ type Filters struct {
 // NewFilters creates and initializes a new Filters container.
 func NewFilters() *Filters {
 	return &Filters{f: map[string]FilterFunc{}}
+}
+
+// Copy returns a copy of Filters. Changes to the copy will not affect the
+// original.
+func (fs *Filters) Copy() *Filters {
+	c := Filters{
+		f: make(map[string]FilterFunc, len(fs.f)),
+	}
+	for k, v := range fs.f {
+		c.f[k] = v
+	}
+	return &c
 }
 
 // Register registers a number of rbxmk filters with the container. An error

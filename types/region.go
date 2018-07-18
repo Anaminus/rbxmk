@@ -82,11 +82,11 @@ func (indata *Region) Type() string {
 	return "Region"
 }
 
-func (indata *Region) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata *Region) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	return indata, inref, rbxmk.EOD
 }
 
-func (indata *Region) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata *Region) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	if indata.Property == nil {
 		return indata.GetStringlike().Merge(opt, rootdata, drilldata)
 	}

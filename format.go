@@ -19,7 +19,7 @@ type Data interface {
 	// processed. In case of an error, the original Data and inref is
 	// returned. If inref is empty, or the Data cannot be drilled into, then
 	// an EOD error is returned.
-	Drill(opt Options, inref []string) (outdata Data, outref []string, err error)
+	Drill(opt *Options, inref []string) (outdata Data, outref []string, err error)
 
 	// Merge is used to merge input Data into output Data. Three kinds of Data
 	// are received. rootdata is the top-level data returned by an output
@@ -28,7 +28,7 @@ type Data interface {
 	// will be equal to rootdata. Depending on the scheme, both rootdata and
 	// drilldata may be nil. The receiver is the data to be merged. Merge
 	// returns the resulting Data after it has been merged.
-	Merge(opt Options, rootdata, drilldata Data) (outdata Data, err error)
+	Merge(opt *Options, rootdata, drilldata Data) (outdata Data, err error)
 }
 
 // DataTypeError is returned when a Data of an unexpected type is received.
@@ -105,7 +105,7 @@ type FormatCodec interface {
 // InitFormatCodec is a function that initializes a FormatCodec. The ctx
 // argument is a value passed in from a scheme, which may be used by the
 // format to provide context.
-type InitFormatCodec func(opt Options, ctx interface{}) (codec FormatCodec)
+type InitFormatCodec func(opt *Options, ctx interface{}) (codec FormatCodec)
 
 // Formats is a container of rbxmk formats.
 type Formats struct {
@@ -115,6 +115,18 @@ type Formats struct {
 // NewFormats creates and initializes a new Formats container.
 func NewFormats() *Formats {
 	return &Formats{f: map[string]*Format{}}
+}
+
+// Copy returns a copy of Formats. Changes to the copy will not affect the
+// original.
+func (fs *Formats) Copy() *Formats {
+	c := Formats{
+		f: make(map[string]*Format, len(fs.f)),
+	}
+	for k, v := range fs.f {
+		c.f[k] = v
+	}
+	return &c
 }
 
 // Register registers a number of rbxmk formats with the container. An error
@@ -171,7 +183,7 @@ func (fs *Formats) Name(ext string) (name string) {
 
 // Decoder returns a FormatDecoder from a given extension. Returns nil if the
 // extension is not registered.
-func (fs *Formats) Decoder(ext string, opt Options, ctx interface{}) (dec FormatDecoder) {
+func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec FormatDecoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -180,7 +192,7 @@ func (fs *Formats) Decoder(ext string, opt Options, ctx interface{}) (dec Format
 }
 
 // Decode directly calls a format codec's Decode method.
-func (fs *Formats) Decode(ext string, opt Options, ctx interface{}, r io.Reader, data *Data) (err error) {
+func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader, data *Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -190,7 +202,7 @@ func (fs *Formats) Decode(ext string, opt Options, ctx interface{}, r io.Reader,
 
 // Encoder returns a FormatEncoder from a given extension. Returns nil if the
 // extension is not registered.
-func (fs *Formats) Encoder(ext string, opt Options, ctx interface{}) (enc FormatEncoder) {
+func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc FormatEncoder) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil
@@ -199,7 +211,7 @@ func (fs *Formats) Encoder(ext string, opt Options, ctx interface{}) (enc Format
 }
 
 // Encode directly calls a format codec's Encode method.
-func (fs *Formats) Encode(ext string, opt Options, ctx interface{}, w io.Writer, data Data) (err error) {
+func (fs *Formats) Encode(ext string, opt *Options, ctx interface{}, w io.Writer, data Data) (err error) {
 	f, registered := fs.f[ext]
 	if !registered {
 		return nil

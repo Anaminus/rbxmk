@@ -15,7 +15,7 @@ func init() {
 	Formats.Register(rbxmk.Format{
 		Name: "XML Properties",
 		Ext:  "properties.xml",
-		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &XMLCodec{API: config.API(opt)}
 		},
 	})

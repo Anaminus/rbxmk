@@ -11,11 +11,11 @@ func (indata Delete) Type() string {
 	return "Delete"
 }
 
-func (indata Delete) Drill(opt rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
+func (indata Delete) Drill(opt *rbxmk.Options, inref []string) (outdata rbxmk.Data, outref []string, err error) {
 	return indata, inref, rbxmk.EOD
 }
 
-func (indata Delete) Merge(opt rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
+func (indata Delete) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Data) (outdata rbxmk.Data, err error) {
 	switch drilldata := drilldata.(type) {
 	case *Instances:
 		*drilldata = (*drilldata)[:0]

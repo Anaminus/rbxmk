@@ -13,7 +13,7 @@ func init() {
 	Formats.Register(rbxmk.Format{
 		Name: "JSON Properties",
 		Ext:  "properties.json",
-		Codec: func(opt rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
+		Codec: func(opt *rbxmk.Options, ctx interface{}) rbxmk.FormatCodec {
 			return &JSONCodec{}
 		},
 	})

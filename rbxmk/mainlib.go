@@ -185,17 +185,18 @@ func mainInput(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(ctx.Options, api)
-
 	node := &rbxmk.InputNode{}
+	node.Options = ctx.Options.Copy()
+
+	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
+	config.SetAPI(node.Options, api)
+
 	node.Format, _ = t.FieldString(formatIndex, true)
 	if user, err := getUserCred(t.FieldValue(userIndex)); err != nil {
 		return throwError(l, err)
 	} else {
 		node.User = user
 	}
-	node.Options = ctx.Options
 
 	nt := t.Len()
 	if nt == 0 {
@@ -222,16 +223,17 @@ func mainOutput(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(ctx.Options, api)
-
 	nt := t.Len()
 	if nt == 0 {
 		throwError(l, errors.New("at least 1 reference argument is required"))
 	}
 
 	node := &rbxmk.OutputNode{}
-	node.Options = ctx.Options
+	node.Options = ctx.Options.Copy()
+
+	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
+	config.SetAPI(node.Options, api)
+
 	i := 1
 	if t.TypeOfIndex(i) == "output" {
 		originNode := t.IndexTyped(i, "output", false).(*rbxmk.OutputNode)
@@ -263,8 +265,10 @@ func mainFilter(l *lua.LState) int {
 	t := luautil.GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
+	opt := ctx.Options.Copy()
+
 	api, _ := t.FieldTyped(apiIndex, luaTypeAPI, true).(rbxapi.Root)
-	config.SetAPI(ctx.Options, api)
+	config.SetAPI(opt, api)
 
 	const filterNameIndex = "name"
 	var i int = 1
@@ -274,7 +278,7 @@ func mainFilter(l *lua.LState) int {
 		i = 2
 	}
 
-	filterFunc := ctx.Options.Filters.Filter(filterName)
+	filterFunc := opt.Filters.Filter(filterName)
 	if filterFunc == nil {
 		return throwError(l, fmt.Errorf("unknown filter %q", filterName))
 	}
@@ -285,7 +289,7 @@ func mainFilter(l *lua.LState) int {
 		arguments[i-o] = t.IndexValue(i)
 	}
 
-	results, err := rbxmk.CallFilter(filterFunc, ctx.Options, arguments...)
+	results, err := rbxmk.CallFilter(filterFunc, opt, arguments...)
 	if err != nil {
 		return throwError(l, err)
 	}
