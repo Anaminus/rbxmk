@@ -635,35 +635,35 @@ A **region** can be defined as a slice of a string, delimited by **tags**. A
 tag has specific markers, and is designed to be contained within a Lua
 comment, which means it shares a similar syntax:
 
-- `--#Name`: A start tag.
-- `--#/Name`: An end tag.
-- `--[[#Name]]`: An inline start tag.
-- `--[[#/Name]]`: An inline end tag.
+- `--@Name`: A start tag.
+- `--@/Name`: An end tag.
+- `--[[@Name]]`: An inline start tag.
+- `--[[@/Name]]`: An inline end tag.
 
 A region can have sub-regions, which is indicated by opening a region with a
 start tag before the previous start tag is closed.
 
 ```lua
---#Region
---#SubRegion
---#/SubRegion
---#/Region
+--@Region
+--@SubRegion
+--@/SubRegion
+--@/Region
 ```
 
 Closing a region will also close all subregions.
 
 ```lua
---#Region
---#SubRegion
---#/Region
+--@Region
+--@SubRegion
+--@/Region
 ```
 
 An unmatched end tag is interpreted as a region of size 0.
 
 ```lua
---#Region
---#/EmptySubRegion
---#/Region
+--@Region
+--@/EmptySubRegion
+--@/Region
 ```
 
 A region may have any content between the tags. When a Region type is merged

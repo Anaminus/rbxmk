@@ -246,7 +246,7 @@ scanTagLoop:
 		j := i
 		eq := 0
 		switch {
-		case prefix(v[i:], []byte("--#")):
+		case prefix(v[i:], []byte("--@")):
 			j += 3
 			inline = false
 		case prefix(v[i:], []byte("--[")):
@@ -254,7 +254,7 @@ scanTagLoop:
 			for ; prefix(v[j+eq:], []byte("=")); eq++ {
 			}
 			j += eq
-			if !prefix(v[j:], []byte("[#")) {
+			if !prefix(v[j:], []byte("[@")) {
 				i++
 				goto scanTag
 			}
