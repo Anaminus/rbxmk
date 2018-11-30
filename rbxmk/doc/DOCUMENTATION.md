@@ -1078,31 +1078,28 @@ Data, and returns the modified result.
 `preprocess` receives the same Data types as the
 [`minify`](#user-content-minify-filter) filter.
 
-Within a string, a preprocessor can be signaled with two syntaxes:
+Within a string, a preprocessor can be signaled with the following syntax:
+when the first character of a Lua comment is a `#` character, the rest of the
+comment is treated as Lua. This includes long comments.
 
-- A line starting with a `#` character is treated as Lua.
-- Text enclosed within `$()` is treated as Lua. Note that this syntax counts
-  only if parentheses within the text are balanced.
+The long comment form has several specific features:
 
-The `$()` syntax has several specific features:
-
-- `$(explist)`: Evalutes a Lua expression list and outputs each result as a
-  string. Note that the results are concatenated directly. Nil values output
+- `--[[#explist]]`: Evalutes a Lua expression list and outputs each result as
+  a string. Note that the results are concatenated directly. Nil values output
   nothing.
-- `$(chunk)`: Evaluates the chunk and outputs nothing.
-- `$('$')`: Outputs a literal `$` character to the output file.
-- `$('#')`: Outputs a literal `#` character to the output file.
+- `--[[#chunk]]`: Evaluates the chunk and outputs nothing.
+- `--[[#'#']]`: Outputs a literal `#` character to the output file.
 
 Each successive preprocessor creates a continuous chunk of Lua code. Any
 non-preprocessor portion of the input file is outputted directly if it is
 reached in the Lua code. For example, with the following input file:
 
 ```text
-#if condition then
+--#if condition then
 Hello
-#else
+--#else
 Goodbye
-#end
+--#end
 ```
 
 If `condition` is true, then the content of the output file will be "Hello".
@@ -1111,15 +1108,15 @@ Otherwise, it will be "Goodbye".
 Any valid Lua syntax may be used. This example preprocesses a Lua file to
 unroll a loop:
 
-```text
-#for i = 1, 4 do
-print($(i))
-#end
+```lua
+--#for i = 1, 4 do
+print(--[[#i]])
+--#end
 ```
 
 This evaluates to the following file:
 
-```text
+```lua
 print(1)
 print(2)
 print(3)

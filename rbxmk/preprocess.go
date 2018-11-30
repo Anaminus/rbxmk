@@ -70,7 +70,7 @@ func preprocessStringCallback(envs []*lua.LTable) types.ProcessStringlikeCallbac
 			}
 			return 0
 		}))
-		fn, err := l.Load(bytes.NewReader(source), "<preprocess>")
+		fn, err := l.Load(strings.NewReader(source), "<preprocess>")
 		if err != nil {
 			return err
 		}
@@ -84,123 +84,155 @@ func preprocessStringCallback(envs []*lua.LTable) types.ProcessStringlikeCallbac
 	}
 }
 
-func wrapText(pieces [][]byte, c, eq, text []byte) [][]byte {
-	if len(text) > 0 {
-		// `_put[====[text]====]`
-		// `_put("\n"..[====[text]====])`
-		pieces = append(pieces, []byte(putFuncName)) // `_put`
-		if text[0] == '\n' {
-			// Add back newline truncated by Lua string literal. Append it
-			// before literal so that line numbers don't get screwed up.
-			pieces = append(pieces, c[4:11]) // `("\n"..`
-		}
-		pieces = append(pieces, c[0:2]) // `[=`
-		if len(eq) > 0 {
-			pieces = append(pieces, eq) // `=`...
-		}
-		pieces = append(pieces, c[0:1]) // `[`
-		pieces = append(pieces, text)   // text
-		pieces = append(pieces, c[2:3]) // `]`
-		if len(eq) > 0 {
-			pieces = append(pieces, eq) // `=`...
-		}
-		if text[0] == '\n' {
-			pieces = append(pieces, c[1:4]) // `=])`
+// Parse a Lua comment. Starts after `--` characters.
+func parseComment(b []byte, i int) (j, k int) {
+	var c rune
+	k = i
+	next := func() {
+		if k+1 < len(b) {
+			k++
+			c = rune(b[k])
 		} else {
-			pieces = append(pieces, c[1:3]) // `=]`
+			k = len(b)
+			c = -1
 		}
 	}
-	return pieces
-}
-
-func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFunction, error)) (source []byte) {
-	pieces := make([][]byte, 0)
-	c := []byte(`[=])("\n"..return `)
-	eq, eqi, xeq, xeqi := 0, 0, 0, 0
-	h := 0
-	for i := 0; i < len(input); i++ {
-		switch b := input[i]; b {
-		case '=':
-			if i > 0 && input[i-1] != '=' {
-				eq = 0
-				eqi = i
-			}
+	next()
+	if c == '[' {
+		next()
+		eq := 0
+		for c == '=' {
 			eq++
-			if eq > xeq {
-				xeq, xeqi = eq, eqi
+			next()
+		}
+		if c != '[' {
+			return -1, -1
+		}
+		next()
+		j = k
+	loop:
+		for {
+			if c == -1 {
+				return -1, -1
 			}
-		case '#':
-			if i > 0 && input[i-1] != '\n' {
-				continue
-			}
-			j := i
-			for ; j < len(input); j++ {
-				if input[j] == '\n' {
-					j++
+			if c == ']' {
+				next()
+				for i := 0; i < eq; i++ {
+					if c != '=' {
+						continue loop
+					}
+					next()
+				}
+				if c == ']' {
+					next()
 					break
 				}
 			}
+			next()
+		}
+		return j, k
+	}
+	j = k
+	for c != '\n' && c != -1 {
+		next()
+	}
+	if c != -1 {
+		k++
+	}
+	return j, k
+}
 
-			text := input[h:i]
-			chunk := input[i+1 : j] // exclude '#'
-			pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
-			pieces = append(pieces, c[17:18]) // ` `
-			pieces = append(pieces, chunk)    // chunk
-			pieces = append(pieces, c[17:18]) // ` `
-			h, i = j, j-1
-			eq, eqi, xeq, xeqi = 0, 0, 0, 0
-		case '$':
-			if i < len(input)-1 && input[i+1] != '(' {
-				continue
+// Find shortest closing bracket not in the string.
+func shortestEnclosingBracket(b []byte) (eq int) {
+loop:
+	for i := 0; i < len(b); i++ {
+		if b[i] == ']' {
+			i++
+			count := 0
+			for ; b[i] == '='; i++ {
+				count++
 			}
-			j := i + 2
-			n := 1
-		loop:
-			for ; j < len(input); j++ {
-				switch b := input[j]; b {
-				case '(':
-					n++
-				case ')':
-					n--
-					if n == 0 {
-						j++
-						break loop
-					}
-				}
+			if b[i] == ']' && count == eq {
+				eq++
+				goto loop
 			}
-			if n > 0 {
-				// Unmatched bracket.
-				continue
-			}
-
-			// input[i:j] = $(...)
-			// input[i+2:j-1] = ...
-			text := input[h:i]
-			chunk := input[i+2 : j-1]
-			pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
-			pieces = append(pieces, c[17:18]) // ` `
-			if _, err := checkexp(io.MultiReader(
-				bytes.NewReader(c[11:]),
-				bytes.NewReader(chunk),
-			), "<exp>"); err == nil {
-				// Write as expression list.
-				pieces = append(pieces, []byte(putFuncName)) // `_put`
-				pieces = append(pieces, c[4:5])              // `(`
-				pieces = append(pieces, chunk)               // chunk
-				pieces = append(pieces, c[3:4])              // `)`
-			} else {
-				// Write directly.
-				pieces = append(pieces, chunk) // chunk
-			}
-			pieces = append(pieces, c[17:18]) // ` `
-			h, i = j, j-1
-			eq, eqi, xeq, xeqi = 0, 0, 0, 0
 		}
 	}
-	if text := input[h:]; len(text) > 0 {
-		pieces = wrapText(pieces, c, input[xeqi:xeqi+xeq], text)
-	}
+	return eq
+}
 
-	source = bytes.Join(pieces, nil)
-	return
+func wrapText(builder *strings.Builder, text []byte) {
+	if len(text) == 0 {
+		return
+	}
+	// `_put[====[text]====]`
+	// `_put("\n"..[====[text]====])`
+	builder.WriteString(putFuncName)
+	if text[0] == '\n' {
+		// Add back newline truncated by Lua string literal. Append it
+		// before literal so that line numbers don't get screwed up.
+		builder.WriteString(`("\n"..`)
+	}
+	eq := shortestEnclosingBracket(text)
+	builder.WriteByte('[')
+	for i := 0; i < eq; i++ {
+		builder.WriteByte('=')
+	}
+	builder.WriteByte('[')
+	builder.Write(text)
+	builder.WriteByte(']')
+	for i := 0; i < eq; i++ {
+		builder.WriteByte('=')
+	}
+	builder.WriteByte(']')
+	if text[0] == '\n' {
+		builder.WriteByte(')')
+	}
+}
+
+func parsePreprocessors(input []byte, checkexp func(io.Reader, string) (*lua.LFunction, error)) (source string) {
+	var builder strings.Builder
+	h := 0
+
+	for i := 0; i < len(input)-2; i++ {
+		if input[i] != '-' || input[i+1] != '-' {
+			continue
+		}
+		j, k := parseComment(input, i+1)
+		if j < 0 {
+			continue
+		}
+		if input[j] == '#' {
+			wrapText(&builder, input[h:i])
+			if j-i > 2 {
+				// Long comment.
+				chunk := input[j+1 : k-(j-i-2)]
+				builder.WriteByte(' ')
+				if _, err := checkexp(io.MultiReader(
+					strings.NewReader("return "),
+					bytes.NewReader(chunk),
+				), "<exp>"); err == nil {
+					// Write as expression list.
+					builder.WriteString(putFuncName)
+					builder.WriteByte('(')
+					builder.Write(chunk)
+					builder.WriteByte(')')
+				} else {
+					// Write directly.
+					builder.Write(chunk)
+				}
+				builder.WriteByte(' ')
+			} else {
+				// Comment.
+				builder.WriteByte(' ')
+				builder.Write(input[j+1 : k])
+				builder.WriteByte(' ')
+			}
+		} else {
+			continue
+		}
+		h, i = k, k-1
+	}
+	wrapText(&builder, input[h:])
+	return builder.String()
 }
