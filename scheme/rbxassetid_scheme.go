@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/anaminus/rbxauth"
 	"github.com/anaminus/rbxmk"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -35,10 +36,10 @@ func getHost(opt *rbxmk.Options) (host string) {
 	return
 }
 
-func setCookies(req *http.Request, opt *rbxmk.Options, cred rbxauth.Cred) (err error) {
+func setCookies(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred, force bool) (err error) {
 	users, _ := opt.Config["RobloxAuth"].(map[rbxauth.Cred][]*http.Cookie)
 	cookies := users[cred]
-	if len(cookies) == 0 {
+	if len(cookies) == 0 && force {
 		auth := &rbxauth.Config{Host: getHost(opt)}
 		if cred, cookies, err = auth.PromptCred(cred); err != nil {
 			return err
@@ -57,6 +58,40 @@ func setCookies(req *http.Request, opt *rbxmk.Options, cred rbxauth.Cred) (err e
 	return nil
 }
 
+func requestWithAuth(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred) (io.ReadCloser, error) {
+	client := &http.Client{}
+	for force := false; ; {
+		req.Header.Del("Cookie")
+		if err := setCookies(opt, req, cred, force); err != nil {
+			return nil, err
+		}
+
+		resp, err := client.Do(req)
+		if err != nil {
+			return nil, err
+		}
+
+		// Sent by Roblox when user is not authorized to download asset.
+		if resp.StatusCode == 409 {
+			// Retry, forcing the user to login.
+			resp.Body.Close()
+			if force {
+				// Failed with supplied creds, retry with full prompt.
+				cred = rbxauth.Cred{}
+			}
+			force = true
+			continue
+		}
+
+		if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
+			resp.Body.Close()
+			return nil, errors.New(resp.Status)
+		}
+
+		return resp.Body, nil
+	}
+}
+
 func rbxassetidInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref []string) (outref []string, data rbxmk.Data, err error) {
 	ext := node.Format
 	if !opt.Formats.Registered(ext) {
@@ -67,24 +102,17 @@ func rbxassetidInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inr
 		Scheme:   "https",
 		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidDownloadPath,
-		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
+		RawQuery: url.Values{"id": []string{inref[0]}}.Encode(),
 	}
 	req, _ := http.NewRequest("GET", assetURL.String(), nil)
-	if err := setCookies(req, opt, node.User); err != nil {
-		return nil, nil, err
-	}
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := requestWithAuth(opt, req, node.User)
 	if err != nil {
 		return nil, nil, err
 	}
-	defer resp.Body.Close()
-	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return nil, nil, errors.New(resp.Status)
-	}
+	defer resp.Close()
 
-	if err := opt.Formats.Decode(ext, opt, nil, resp.Body, &data); err != nil {
+	if err := opt.Formats.Decode(ext, opt, nil, resp, &data); err != nil {
 		return nil, nil, err
 	}
 	return inref[1:], data, err
@@ -105,24 +133,17 @@ func rbxassetidOutputSchemeHandler(opt *rbxmk.Options, node *rbxmk.OutputNode, i
 		Scheme:   "https",
 		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidDownloadPath,
-		RawQuery: url.Values{"id": []string{node.Reference[0]}}.Encode(),
+		RawQuery: url.Values{"id": []string{inref[0]}}.Encode(),
 	}
 	req, _ := http.NewRequest("GET", assetURL.String(), nil)
-	if err := setCookies(req, opt, node.User); err != nil {
-		return "", nil, nil, err
-	}
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := requestWithAuth(opt, req, node.User)
 	if err != nil {
 		return "", nil, nil, err
 	}
-	defer resp.Body.Close()
-	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return "", nil, nil, errors.New(resp.Status)
-	}
+	defer resp.Close()
 
-	if err := opt.Formats.Decode(ext, opt, nil, resp.Body, &data); err != nil {
+	if err := opt.Formats.Decode(ext, opt, nil, resp, &data); err != nil {
 		return "", nil, nil, err
 	}
 	return node.Format, inref[1:], data, err
@@ -141,21 +162,15 @@ func rbxassetidOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref
 		Scheme:   "https",
 		Host:     wwwSubdomain + "." + getHost(opt),
 		Path:     rbxassetidUploadPath,
-		RawQuery: url.Values{"assetID": []string{node.Reference[0]}}.Encode(),
+		RawQuery: url.Values{"assetID": []string{inref[0]}}.Encode(),
 	}
 	req, _ := http.NewRequest("GET", uploadURL.String(), &buf)
-	if err := setCookies(req, opt, node.User); err != nil {
-		return err
-	}
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := requestWithAuth(opt, req, node.User)
 	if err != nil {
-		return err
+		return nil
 	}
-	defer resp.Body.Close()
-	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return errors.New(resp.Status)
-	}
+	defer resp.Close()
+
 	return nil
 }
