@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/types"
 	"github.com/yuin/gopher-lua"
 	"io"
@@ -37,12 +36,12 @@ func preprocessStringCallback(envs []*lua.LTable) types.ProcessStringlikeCallbac
 		source := parsePreprocessors(s.Bytes, l.Load)
 
 		// Load standard library and readonly environment.
-		luautil.OpenFilteredLibs(l, luautil.GetFilteredStdLib())
+		OpenFilteredLibs(l, GetFilteredStdLib())
 		{
 			varEnv := l.NewTable()
 			for _, env := range envs {
 				env.ForEach(func(k, v lua.LValue) {
-					if v == luautil.ForceNil {
+					if v == ForceNil {
 						varEnv.RawSet(k, lua.LNil)
 					} else {
 						varEnv.RawSet(k, v)

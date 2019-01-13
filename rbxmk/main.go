@@ -5,7 +5,6 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/filter"
 	"github.com/anaminus/rbxmk/format"
-	"github.com/anaminus/rbxmk/rbxmk/luautil"
 	"github.com/anaminus/rbxmk/scheme"
 	"github.com/jessevdk/go-flags"
 	"github.com/yuin/gopher-lua"
@@ -81,10 +80,10 @@ func main() {
 	// Add preprocessor definitions.
 	cmdEnv := envs[PPEnvCommand]
 	for k, v := range flagOptions.Define {
-		if !luautil.CheckStringVar(k) {
+		if !CheckStringVar(k) {
 			Fatalf("invalid variable name %q", k)
 		}
-		cmdEnv.RawSetString(k, luautil.ParseLuaValue(v, true))
+		cmdEnv.RawSetString(k, ParseLuaValue(v, true))
 	}
 	options.Config["PPEnv"] = envs[:]
 
@@ -92,17 +91,17 @@ func main() {
 	options.Config["Host"] = DefaultHost
 
 	// Initialize context.
-	ctx := luautil.NewLuaContext(options)
-	luautil.OpenFilteredLibs(ctx.State(), luautil.GetFilteredStdLib())
+	ctx := NewLuaContext(options)
+	OpenFilteredLibs(ctx.State(), GetFilteredStdLib())
 	uctx := ctx.State().NewUserData()
 	uctx.Value = ctx
-	luautil.OpenFilteredLibs(ctx.State(), []luautil.LibFilter{
+	OpenFilteredLibs(ctx.State(), []LibFilter{
 		{MainLibName, OpenMain, nil},
 	}, uctx)
 
 	// Add script arguments.
 	for _, arg := range flagOptions.Arguments {
-		ctx.State().Push(luautil.ParseLuaValue(arg, false))
+		ctx.State().Push(ParseLuaValue(arg, false))
 	}
 
 	if len(args) > 0 && args[0] != "" {

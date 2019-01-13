@@ -1,4 +1,4 @@
-package luautil
+package main
 
 import (
 	"fmt"
