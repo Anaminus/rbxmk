@@ -241,6 +241,9 @@ func mainOutput(l *lua.LState) int {
 		node.Reference = make([]string, len(originNode.Reference), len(originNode.Reference)+nt-1)
 		copy(node.Reference, originNode.Reference)
 		i = 2
+	} else if t.TypeOfIndex(i) == "input" {
+		node.Data = t.IndexTyped(i, "input", false).(rbxmk.Data)
+		i = 2
 	} else {
 		node.Reference = make([]string, 0, nt)
 	}
