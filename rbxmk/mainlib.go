@@ -235,6 +235,7 @@ func mainOutput(l *lua.LState) int {
 	i := 1
 	if t.TypeOfIndex(i) == "output" {
 		originNode := t.IndexTyped(i, "output", false).(*rbxmk.OutputNode)
+		node.Data = originNode.Data
 		node.Format = originNode.Format
 		node.User = originNode.User
 		node.Reference = make([]string, len(originNode.Reference), len(originNode.Reference)+nt-1)
