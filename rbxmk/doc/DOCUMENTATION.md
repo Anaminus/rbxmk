@@ -143,19 +143,22 @@ For each output node received, `delete` removes the data pointed to by the node.
 
 ### `filename` function
 
-`string = rbxmk.filename{string, string}`
+`string = rbxmk.filename{string, ...string}`
 
-`filename` returns a part of a file path. The first argument is a string
-specifying the part of the path to return. The second argument is the file path.
+`filename` returns parts of a file path. The first argument is the path. Each
+remaining argument is a string specifying a part of the path to return. Each
+return value corresponds to each specified part.
 
-The following parts are possible:
+The following part values are available:
 
-- `dir`: The directory part of the path.
-- `name`: The file name part of the path.
-- `ext`: The extension.
-- `base`: The file name without the extension.
-- `fext`: The format extension, as determined by `schemes.GuessFileExtension`.
-- `fbase`: The file name without the format extension.
+Option  | `project/scripts/main.script.lua` | Description
+--------|-----------------------------------|------------
+`dir`   | `project/scripts`                 | The directory; all but the last element of the path.
+`base`  | `main.script.lua`                 | The file name; the last element of the path.
+`ext`   | `.lua`                            | The extension; the suffix starting at the last dot of the last element of the path.
+`stem`  | `main.script`                     | The base without the extension.
+`fext`  | `.script.lua`                     | The format extension, as determined by `schemes.GuessFileExtension`.
+`fstem` | `main`                            | The base without the format extension.
 
 ### `filter` function
 

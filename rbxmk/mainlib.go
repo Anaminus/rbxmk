@@ -500,36 +500,37 @@ func mainFilename(l *lua.LState) int {
 	t := GetArgs(l, 1)
 	ctx := getLuaContextUpvalue(l, 1)
 
-	typ := t.IndexString(1, false)
-	path := t.IndexString(2, false)
-	var result string
-	switch typ {
-	case "dir":
-		result = filepath.Dir(path)
-	case "name":
-		result = filepath.Base(path)
-	case "base":
-		result = filepath.Base(path)
-		result = result[:len(result)-len(filepath.Ext(path))]
-	case "ext":
-		result = filepath.Ext(path)
-	case "fbase":
-		ext := scheme.GuessFileExtension(ctx.Options, "", path)
-		if ext != "" && ext != "." {
-			ext = "." + ext
+	path := t.IndexString(1, false)
+	for i := 2; i <= t.Len(); i++ {
+		var result string
+		switch typ := t.IndexString(i, false); typ {
+		case "dir":
+			result = filepath.Dir(path)
+		case "base":
+			result = filepath.Base(path)
+		case "ext":
+			result = filepath.Ext(path)
+		case "stem":
+			result = filepath.Base(path)
+			result = result[:len(result)-len(filepath.Ext(path))]
+		case "fext":
+			result = scheme.GuessFileExtension(ctx.Options, "", path)
+			if result != "" && result != "." {
+				result = "." + result
+			}
+		case "fstem":
+			ext := scheme.GuessFileExtension(ctx.Options, "", path)
+			if ext != "" && ext != "." {
+				ext = "." + ext
+			}
+			result = filepath.Base(path)
+			result = result[:len(result)-len(ext)]
+		default:
+			return throwError(l, fmt.Errorf("unknown argument %q", typ))
 		}
-		result = filepath.Base(path)
-		result = result[:len(result)-len(ext)]
-	case "fext":
-		result = scheme.GuessFileExtension(ctx.Options, "", path)
-		if result != "" && result != "." {
-			result = "." + result
-		}
-	default:
-		return throwError(l, fmt.Errorf("unknown argument %q", typ))
+		l.Push(lua.LString(result))
 	}
-	l.Push(lua.LString(result))
-	return 1
+	return t.Len() - 1
 }
 
 func mainSprintf(l *lua.LState) int {
