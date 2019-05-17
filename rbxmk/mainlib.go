@@ -10,11 +10,11 @@ import (
 	"github.com/robloxapi/rbxapi"
 	"github.com/robloxapi/rbxapi/rbxapidump"
 	"github.com/yuin/gopher-lua"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
-	"sort"
 	"strings"
 )
 
@@ -479,21 +479,20 @@ func mainPath(l *lua.LState) int {
 func mainReaddir(l *lua.LState) int {
 	t := GetArgs(l, 1)
 	dirname := t.IndexString(1, false)
-	f, err := os.Open(dirname)
+	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
 		return throwError(l, err)
 	}
-	defer f.Close()
-	names, err := f.Readdirnames(-1)
-	if err != nil {
-		return throwError(l, err)
+	tfiles := l.CreateTable(len(files), 0)
+	for _, info := range files {
+		tinfo := l.CreateTable(0, 4)
+		tinfo.RawSetString("name", lua.LString(info.Name()))
+		tinfo.RawSetString("isdir", lua.LBool(info.IsDir()))
+		tinfo.RawSetString("size", lua.LNumber(info.Size()))
+		tinfo.RawSetString("modtime", lua.LNumber(info.ModTime().Unix()))
+		tfiles.Append(tinfo)
 	}
-	sort.Strings(names)
-	tnames := l.CreateTable(len(names), 0)
-	for _, name := range names {
-		tnames.Append(lua.LString(name))
-	}
-	l.Push(tnames)
+	l.Push(tfiles)
 	return 1
 }
 

@@ -287,7 +287,14 @@ rules as Golang's [fmt.Printf](https://golang.org/pkg/fmt/#Printf).
 `table = rbxmk.readdir{string}`
 
 `readdir` receives a directory path and returns a list of files within the
-directory.
+directory. Each file is represented by a table with the following fields:
+
+Field     | Description
+----------|------------
+`name`    | The name of the file.
+`isdir`   | Whether the file is a directory.
+`size`    | The size of the file.
+`modtime` | The modification time, in Unix time.
 
 ### `sprintf` function
 
