@@ -26,8 +26,7 @@ script will be read from stdin instead.
 When specifying an argument or definition, a Lua value is received. Numbers,
 bools, and nil are parsed into their respective types in Lua, and any other
 value is read as a string. Either option may be given more than once to
-provide multiple values.
-`
+provide multiple values.`
 
 type FlagOptions struct {
 	Arguments []string          `short:"a" long:"arg" description:"An argument to be passed to the script." long-description:"" value-name:"VALUE"`
@@ -44,7 +43,6 @@ func main() {
 	args, err := fp.Parse()
 	if err != nil {
 		if err, ok := err.(*flags.Error); ok && err.Type == flags.ErrHelp {
-			fmt.Fprintln(os.Stdout, err)
 			return
 		}
 		Fatalf("flag parser error: %s", err)
