@@ -1,5 +1,4 @@
 # Usage
-
 This document provides an overview of how rbxmk is used. For a detailed
 reference, see [DOCUMENTATION.md](DOCUMENTATION.md).
 
@@ -24,7 +23,6 @@ reference, see [DOCUMENTATION.md](DOCUMENTATION.md).
 </table>
 
 ## Command options
-
 Since almost all actions are done in Lua, the `rbxmk` command has only a few
 options:
 
@@ -73,13 +71,13 @@ over variables defined elsewhere.
 rbxmk script.lua --define DEBUG:true --define LOGLEVEL:3
 ```
 
-For either option, `VALUE` is parsed into a Lua value. This may be a number, a
-bool ("true" or "false"), or "nil". Any other value is read as a string.
+For either option, `VALUE` is parsed into a Lua value. This may be a number,
+"true" or "false" for bool, or "nil" for nil. Any other value is read as a
+string.
 
 ## Lua environment
-
 [Lua](https://lua.org) scripts are used to perform actions. Scripts are run in a
-modified environment, with most of the standard functions and libraries being
+modified environment, where most of the standard functions and libraries are
 available. A complete list of included items can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-standard-library).
 
@@ -94,8 +92,8 @@ func{arg1, arg2}
 -- Both calls are equivalent
 ```
 
-Henceforth, an "argument", in the context of these Lua functions, will refer to
-a value within this kind of table.
+Henceforth, an "argument", in the context of these functions, will refer to a
+value within this kind of table.
 
 Because of how tables work, there can be two kinds of arguments: named and
 unnamed.
@@ -109,7 +107,6 @@ func{arg1=value, arg2=value}
 ```
 
 ## Workflow
-
 The primary functions used in every script are the `rbxmk.input`,
 `rbxmk.output`, and `rbxmk.map` functions.
 
@@ -140,11 +137,10 @@ output reference.
 available in [DOCUMENTATION.md](DOCUMENTATION.md#resolve-chain).*
 
 ## References
-
 A **reference** is a list of strings that specify a location to read data from
-(in the case of `rbxmk.input`), or to write data to (in the case of
-`rbxmk.output`). Usually, each successive string specifies a piece of data
-within the data referred to by the previous string.
+(`rbxmk.input`), or to write data to (`rbxmk.output`). Usually, each successive
+string specifies a piece of data within the data referred to by the previous
+string.
 
 For example, the first string can refer to the location of a file in the file
 system. Depending on the format of the file, the next string in the reference
@@ -181,7 +177,6 @@ describe what happens:
 4. Write the entire tree (with the modifications) back to the file.
 
 ## Schemes
-
 The first string of a Reference is always a URI. It begins with a scheme
 (`scheme-name://`), which specifies the type of resource being identified. The
 remainder of the URI depends on the scheme. Here are a few of them:
@@ -209,7 +204,6 @@ A complete list of schemes and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-schemes).
 
 ## Formats
-
 Once the scheme has been resolved, we are left with the raw data retrieved from
 the resource. This isn't very useful on its own, so the raw data is processed
 further by using a **format**. A format defines how to decode raw data into
@@ -238,22 +232,25 @@ rbxmk.map{
 ```lua
 -- The generate scheme does not require a format, because no raw data needs to
 -- be decoded.
-props = rbxmk.input{format="properties.json", "generate://Property", "Size:Vector3=4,1,2;Anchored=true"}
+props = rbxmk.input{
+	format="properties.json", -- Unnecessary.
+	"generate://Property",
+	"Size:Vector3=4,1,2;Anchored=true",
+}
 ```
 
 Here is a selection from the many available formats:
 
-- `rbxl`: A Roblox place file.
-- `rbxmx`: A Roblox model file in XML format.
-- `lua`: An untyped Lua file.
-- `script.lua`: A Lua file decoded into a Script instance.
-- `properties.json`: A list of property name-value pairs.
+- `.rbxl`: A Roblox place file.
+- `.rbxmx`: A Roblox model file in XML format.
+- `.lua`: An untyped Lua file.
+- `.script.lua`: A Lua file decoded into a Script instance.
+- `.properties.json`: A list of property name-value pairs.
 
 A complete list of formats and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-formats).
 
 ## Data types
-
 After a format has decoded the raw data, it returns typed data that rbxmk knows
 how to handle. Here are some examples of the types returned by several formats:
 
@@ -295,15 +292,14 @@ A complete list of types and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-data-types).
 
 ## Functions
-
 There are a handful of other functions beside `rbxmk.input`, `rbxmk.output`, and
 `rbxmk.map`.
 
 ### Filters
-
-The `rbxmk.filter` function is used to transform values in some way. The first
-argument is a string specifying the name of the filter to use. The remaining
-arguments, as well as the return values, depend on the selected filter.
+The [`rbxmk.filter`](#user-content-filter-function) function is used to
+transform values in some way. The first argument is a string specifying the name
+of the filter to use. The remaining arguments, as well as the return values,
+depend on the selected filter.
 
 For example, the "minify" filter receives a value and, assuming it's the source
 of a Lua script, minifies the content, returning the modified value.
@@ -327,20 +323,19 @@ A complete list of filters and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-filters).
 
 ### Path
-
-The `rbxmk.path` function is used to join file paths, adding separators as
-needed.
+The [`rbxmk.path`](#user-content-path-function) function is used to join file
+paths, adding separators as needed.
 
 ```lua
 projects = "C:/Users/John/Documents/Roblox"
-project_name = "Crossroads"
-place_name = "crossroads.rbxl"
+project_name = "Sword Fights on the Heights"
+place_name = "SFOTH.rbxl"
 result = rbxmk.path{projects, project_name, place_name}
--- "C:\Users\John\Documents\Roblox\Crossroads\crossroads.rbxl"
+-- "C:\Users\John\Documents\Roblox\Sword Fights on the Heights\SFOTH.rbxl"
 ```
 
 `path` also recognizes several variables that will be expanded when they are
-included somewhere in an argument.
+included somewhere in an argument:
 
 - `$script_directory`: Expands to the directory of the script currently running.
 - `$script_name`: Expands to the base name of the script currently running.
@@ -356,11 +351,10 @@ place = rbxmk.input{rbxmk.path{"place.rbxl"}}
 ```
 
 ### Loading
-
-The `rbxmk.load` function allows you to run other scripts from within a script.
-The first argument is the path to the script file. Remaining arguments are
-passed to the script, which can be received with the `...` operator. Any values
-returned by the script are returned by `load`.
+The [`rbxmk.load`](#user-content-load-function) function allows other scripts to
+be run from within a script. The first argument is the path to the script file.
+Remaining arguments are passed to the script, which can be received with the
+`...` operator. Any values returned by the script are returned by `load`.
 
 ```lua
 -- template.lua: Make a template.
@@ -389,10 +383,9 @@ folder = rbxmk.load{"template.lua", "Folder"}
 ```
 
 ### Deletion
-
-Sometimes you may want to remove a value instead of replacing or adding to it.
-This can be accomplished with the `rbxmk.delete` function. This function
-receives one or more outputs, each of which will be removed.
+Sometimes a value needs to be removed rather than replaced or added to. This can
+be accomplished with the [`rbxmk.delete`](#user-content-delete-function)
+function. This receives one or more outputs, each of which will be removed.
 
 ```lua
 -- Remove Position property from a Part instance.
@@ -410,6 +403,5 @@ itself will not be removed. It will still exist, and its content will be the
 result of the file's format encoding zero values.
 
 ### Other functions
-
 A complete list of functions and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-rbxmk-library).
