@@ -124,8 +124,8 @@ Name      | Type   | Default      | Description
 #### Config `rbxauth`
 
 The `rbxauth` config is a table specifying a number of Roblox user accounts to
-authenticate. Each entry is a table with the following fields (of which each
-are optional unless otherwise specified):
+authenticate. Each entry is a table with the following fields (of which each are
+optional unless otherwise specified):
 
 Field    | Type          | Description
 ---------|---------------|------------
@@ -139,16 +139,14 @@ Field    | Type          | Description
 
 `rbxmk.delete{...output}`
 
-For each output node received, `delete` removes the data pointed to by the
-node.
+For each output node received, `delete` removes the data pointed to by the node.
 
 ### `filename` function
 
 `string = rbxmk.filename{string, string}`
 
 `filename` returns a part of a file path. The first argument is a string
-specifying the part of the path to return. The second argument is the file
-path.
+specifying the part of the path to return. The second argument is the file path.
 
 The following parts are possible:
 
@@ -175,23 +173,23 @@ The API is used only by applicable filters.
 
 `string = rbxmk.getenv{string}`
 
-`getenv` returns the value of an environment variable of the given name.
-Returns nil if the variable is not present.
+`getenv` returns the value of an environment variable of the given name. Returns
+nil if the variable is not present.
 
 ### `input` function
 
 `node = rbxmk.input{format=string, api=nil, user=nil, ...string}`
 
 `input` creates an input node. The arguments specify the
-[Reference](#user-content-reference) to the input. The `format` argument
-forces the file format, if needed.
+[Reference](#user-content-reference) to the input. The `format` argument forces
+the file format, if needed.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
 
 The optional `user` argument specifies user credentials when authentication is
-required (when downloading from a website, for example). The argument can be
-one of the following types:
+required (when downloading from a website, for example). The argument can be one
+of the following types:
 
 Type   | Description
 -------|------------
@@ -211,9 +209,9 @@ Subsequent arguments are passed to the script (which may be received with the
 
 `api = rbxmk.loadapi{string}`
 
-`loadapi` receives a path to a file containing an API dump. `loadapi` returns
-a value representing the API. This can be passed to certain functions to
-enhance how the function handles instances and properties.
+`loadapi` receives a path to a file containing an API dump. `loadapi` returns a
+value representing the API. This can be passed to certain functions to enhance
+how the function handles instances and properties.
 
 ### `map` function
 
@@ -222,9 +220,9 @@ enhance how the function handles instances and properties.
 `map` maps one or more input nodes to one or more output nodes. Either kind of
 node may be passed to `map`.
 
-Nodes are mapped in the order they are received. That is, inputs are gathered
-in one list, and outputs are gathered in another. Then each node in the input
-list is mapped to each node in the output list, in order. For example:
+Nodes are mapped in the order they are received. That is, inputs are gathered in
+one list, and outputs are gathered in another. Then each node in the input list
+is mapped to each node in the output list, in order. For example:
 
 ```lua
 A,B = rbxmk.input{...},rbxmk.input{...}
@@ -243,8 +241,8 @@ node = rbxmk.output{format=string, api=nil, user=nil, ...string}
 ```
 
 `output` creates an output node. The arguments specify the
-[Reference](#user-content-reference) to the output. The `format` argument
-forces the file format, if needed.
+[Reference](#user-content-reference) to the output. The `format` argument forces
+the file format, if needed.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
@@ -257,12 +255,12 @@ same as with the [input](#user-content-input-function) function.
 
 `string = rbxmk.path{...}`
 
-`path` receives a number of strings, and joins them together into a single
-file path, adding separators as necessary.
+`path` receives a number of strings, and joins them together into a single file
+path, adding separators as necessary.
 
-A string may contain variables, which begin with a `$` followed by a sequence
-of letters, digits, and underscores. Variables will be expanded into their
-final values before the string is joined.
+A string may contain variables, which begin with a `$` followed by a sequence of
+letters, digits, and underscores. Variables will be expanded into their final
+values before the string is joined.
 
 The following variables are available:
 
@@ -296,8 +294,8 @@ directory.
 `string = rbxmk.sprintf{string, ...}`
 
 `sprintf` receives a number of values, formats them according to the first
-argument, and returns the resulting string. `sprintf` follows the same rules
-as Golang's [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
+argument, and returns the resulting string. `sprintf` follows the same rules as
+Golang's [fmt.Sprintf](https://golang.org/pkg/fmt/#Sprintf).
 
 ### `type` function
 
@@ -312,8 +310,8 @@ regular Lua types, the following types are available:
 ## Resolve chain
 
 When creating or mapping an input or output node, rbxmk has a procedure that
-chains together predefined components in order to resolve the node. In its
-most basic form, the procedure looks like this:
+chains together predefined components in order to resolve the node. In its most
+basic form, the procedure looks like this:
 
 ```
 Scheme -> Format -> Drills
@@ -338,8 +336,8 @@ This procedure is used when creating an input node.
 4. Decode the file using Format.
 	- Format returns Data of a known type.
 5. Drill into Data using Data's Drill function.
-	- Data has a Drill function that drills into itself, returning another
-	  Data which, in turn, may also have Drill function.
+	- Data has a Drill function that drills into itself, returning another Data
+	  which, in turn, may also have Drill function.
 
 ### Output procedure
 
@@ -347,8 +345,8 @@ This procedure is used when mapping an input node to an output node.
 
 1. Determine the Scheme.
 	- Uses the first string of the [Reference](#user-content-reference).
-2. Use Scheme to get current state of the output from a specified location;
-   may be skipped if not applicable to the Scheme.
+2. Use Scheme to get current state of the output from a specified location; may
+   be skipped if not applicable to the Scheme.
 	1. Use Scheme to get a file from a specified location.
 	2. Determine the Format.
 		- Provided by the `format` argument, or guessed, depending on the
@@ -359,30 +357,30 @@ This procedure is used when mapping an input node to an output node.
 		- Data has a Drill function that drills into itself, returning another
 		  Data which, in turn, may also have Drill function.
 3. Merge input Data into decoded Data using Format.
-	- Input Data has a Merge function that knows how to merge the input into
-	  an output of another type.
+	- Input Data has a Merge function that knows how to merge the input into an
+	  output of another type.
 4. Encode resulting Data into a file using Format.
 5. Use Scheme to write the file to the specified location.
 
 ### Deletion procedure
 
 The `rbxmk.delete` function works exactly like mapping an input to an output,
-where the input is a special `Delete` type. This type merges into other types
-by deleting content instead of adding to or replacing it.
+where the input is a special `Delete` type. This type merges into other types by
+deleting content instead of adding to or replacing it.
 
 ## Reference
 
 A Reference is a list of strings used to specify a piece of Data. It is passed
-into an input or output resolve chain. Each step of the chain processes a
-number of strings, then passes the remaining strings to the next step.
+into an input or output resolve chain. Each step of the chain processes a number
+of strings, then passes the remaining strings to the next step.
 
 The first string in the reference is a URI pointing to a location that usually
 contains a file. This URI is resolved depending on the scheme (e.g. `file://`,
-`http://`, etc). If the scheme part (`scheme://`) of the URI is omitted, the
-the URI is assumed to be of the `file` scheme.
+`http://`, etc). If the scheme part (`scheme://`) of the URI is omitted, the the
+URI is assumed to be of the `file` scheme.
 
-While schemes deal primarily with the first string, they may process any
-number of strings.
+While schemes deal primarily with the first string, they may process any number
+of strings.
 
 After the format has been decoded into a Data, the remaining Reference is
 continuously passed to the Data's Drill; the drill returns another Data, which
@@ -403,14 +401,14 @@ rbxmk.input{"file://place.rbxl", "Workspace.Model.Script", "Source"}
 1. From the first string, the scheme is determined to be `file`.
 2. The `file` scheme reads the `place.rbxl` from the file system, guessing the
    format as `rbxl` based on the file's extension.
-3. Using the `rbxl` format, the contents of the file are decoded into some
-   kind of Data (in this case, a list of Instances).
+3. Using the `rbxl` format, the contents of the file are decoded into some kind
+   of Data (in this case, a list of Instances).
 4. The next string is used by the Instances drill, which selects a descendant
-   instance within the tree of instances. In this case, the "Script" instance
-   is selected, which is of the Instance type.
+   instance within the tree of instances. In this case, the "Script" instance is
+   selected, which is of the Instance type.
 5. The string after that is used by the Instance's drill, which selects a
-   property within an instance. In this case, the value of the script's
-   "Source" property is selected, which is of the Property type.
+   property within an instance. In this case, the value of the script's "Source"
+   property is selected, which is of the Property type.
 6. There are no more strings to process, so the Property's drill returns EOD,
    signalling the end of the drill.
 
@@ -418,8 +416,8 @@ rbxmk.input{"file://place.rbxl", "Workspace.Model.Script", "Source"}
 
 Data is a value with a type known by rbxmk. Each type has a Drill and Merge
 function. A Drill function selects a piece of data within the current Data. A
-Merge function detimines how, as an input, the Data will be merged into
-another Data, which is an output.
+Merge function detimines how, as an input, the Data will be merged into another
+Data, which is an output.
 
 This section lists and describes the types that rbxmk recognizes by default.
 
@@ -462,17 +460,17 @@ The following table provides an overview of which types can be merged.
 Drilling into an `Instances` type selects an `Instance` type.
 
 A single Reference string is processed. This string contains a number of
-identifiers, separated by `.` characters. Each successive identifier refers to
-a child instance in the instance of the previous identifier.
+identifiers, separated by `.` characters. Each successive identifier refers to a
+child instance in the instance of the previous identifier.
 
 An identifier can be a sequence of letters, numbers, and underscores, which
 doesn't start with a number. This matches the Name property of an instance. An
-identifier may also be a positive integer number, which selects the *n*th
-child instance, starting at 0.
+identifier may also be a positive integer number, which selects the *n*th child
+instance, starting at 0.
 
 For example, `Workspace.0.Part` selects an instance named `Part`, which is the
-first child of an instance, which is the child of an instance named
-`Workspace`, which is in the list.
+first child of an instance, which is the child of an instance named `Workspace`,
+which is in the list.
 
 #### Merging
 
@@ -489,13 +487,13 @@ Instance    | Each input instance is added as a child to the output instance.
 
 #### Drilling
 
-Drilling into an `Instance` type can select either a `Property` or
-`Properties` type.
+Drilling into an `Instance` type can select either a `Property` or `Properties`
+type.
 
 A single Reference string is processed. This string can be the name of a
 property in the instance, which selects the property as a `Property` type. The
-string may also be the literal `*`, which selects all properties in the
-instance as a `Properties` type.
+string may also be the literal `*`, which selects all properties in the instance
+as a `Properties` type.
 
 #### Merging
 
@@ -612,28 +610,27 @@ The `Region` type cannot be drilled into.
 
 #### Merging
 
-As an input, `Region` can be merged depending on where the region originates.
-If it originates from a Property, then it is merged in the same way as a
-[Property](#user-content-merging-3). Otherwise, it is merged in the same way
-as a [Stringlike](#user-content-merging-5).
+As an input, `Region` can be merged depending on where the region originates. If
+it originates from a Property, then it is merged in the same way as a
+[Property](#user-content-merging-3). Otherwise, it is merged in the same way as
+a [Stringlike](#user-content-merging-5).
 
 #### Region drilling
 
-Several types can be drilled into to select a Region. The values of these
-types must be string-like. This section describes how to drill, and what is
-selected.
+Several types can be drilled into to select a Region. The values of these types
+must be string-like. This section describes how to drill, and what is selected.
 
 When drilling, a single Reference string is processed. This string contains a
 number of identifiers, separated by `.` characters. If the string ends with a
 `+` character, then the Region will be in Append mode.
 
 Each successive identifier refers to a subregion in the region of the previous
-identifier. An identifier can be a sequence of letters and numbers. This
-matches the name of a region.
+identifier. An identifier can be a sequence of letters and numbers. This matches
+the name of a region.
 
-A **region** can be defined as a slice of a string, delimited by **tags**. A
-tag has specific markers, and is designed to be contained within a Lua
-comment, which means it shares a similar syntax:
+A **region** can be defined as a slice of a string, delimited by **tags**. A tag
+has specific markers, and is designed to be contained within a Lua comment,
+which means it shares a similar syntax:
 
 - `--@Name`: A start tag.
 - `--@/Name`: An end tag.
@@ -683,8 +680,8 @@ content to end with a newline.
 
 ### `Delete` type
 
-`Delete` represents the absence of a value; when merged as an input, it
-removes the output value.
+`Delete` represents the absence of a value; when merged as an input, it removes
+the output value.
 
 #### Drilling
 
@@ -735,8 +732,8 @@ Format Name                                      | Decoded type             | En
 
 ### Roblox formats
 
-These formats describe official Roblox file formats. Each format contains a
-list of Roblox instances.
+These formats describe official Roblox file formats. Each format contains a list
+of Roblox instances.
 
 Name    | Description
 --------|------------
@@ -749,9 +746,8 @@ Name    | Description
 
 These formats describe Lua script files.
 
-When using the `file` scheme, the formats that decode into script-like
-instances use the base of the file name to set the Name property of the
-script.
+When using the `file` scheme, the formats that decode into script-like instances
+use the base of the file name to set the Name property of the script.
 
 Name               | Description
 -------------------|------------
@@ -847,16 +843,16 @@ An input node with this scheme will download the specified asset from the
 website. Authentication is required for private assets, but not for public
 assets.
 
-An output node with this scheme will update the specified asset on the
-website. The output node can be drilled into, in which case the asset is first
+An output node with this scheme will update the specified asset on the website.
+The output node can be drilled into, in which case the asset is first
 downloaded. Note that this method cannot be used to create new assets.
 
 When uploading to or downloading from the website, the `user` argument of an
 input or output node can be used when authentication is required. The argument
 refers to a user configured with the [`rbxauth`](#user-content-config-rbxauth)
-configuration option. If no user has been specified or configured, then the
-user will be prompted to login when the node is mapped. This session will
-persist until the program ends or the user is explicitly logged out. See the
+configuration option. If no user has been specified or configured, then the user
+will be prompted to login when the node is mapped. This session will persist
+until the program ends or the user is explicitly logged out. See the
 [input](#user-content-input-function) function for details on the `user`
 argument.
 
@@ -882,9 +878,9 @@ whitespace is ignored.
 
 #### Instance syntax
 
-Specifying `Instance` generates a list of instances. Each instance is
-described by a class name, followed by curly brackets enclosing the content of
-the instance. Each instance is separated by a semi-colon.
+Specifying `Instance` generates a list of instances. Each instance is described
+by a class name, followed by curly brackets enclosing the content of the
+instance. Each instance is separated by a semi-colon.
 
 ```
 ClassName{}; ClassName{}
@@ -901,8 +897,8 @@ Each item is separated by a semi-colon.
 
 ##### Instance item
 
-An instance item describes a child instance of the current instance. It has
-the same syntax as an instance.
+An instance item describes a child instance of the current instance. It has the
+same syntax as an instance.
 
 ```
 Instance{ChildInstance{}; ChildInstance{}}
@@ -917,8 +913,8 @@ following syntax:
 PropertyName : PropertyType = PropertyValue
 ```
 
-If an API has been specified, then the type can be omitted. The API will be
-used to discover the type automatically.
+If an API has been specified, then the type can be omitted. The API will be used
+to discover the type automatically.
 
 ```
 PropertyName = PropertyValue
@@ -951,10 +947,10 @@ Instance{
 }
 ```
 
-`IsService` is a bool that determines whether the instance is meant to be
-loaded as a service. `Reference` is a string that may be used by properties of
-type "Reference". Properties cannot refer to instances outside of the
-generated content.
+`IsService` is a bool that determines whether the instance is meant to be loaded
+as a service. `Reference` is a string that may be used by properties of type
+"Reference". Properties cannot refer to instances outside of the generated
+content.
 
 ```
 ObjectValue{
@@ -971,8 +967,8 @@ Part{
 #### Property syntax
 
 Specifying `Property` generates a set of properties, where a property name is
-mapped to a Value. It shares the same syntax as a property item in the
-Instance syntax:
+mapped to a Value. It shares the same syntax as a property item in the Instance
+syntax:
 
 ```
 PropertyName : PropertyType = PropertyValue
@@ -1031,10 +1027,10 @@ Vector3 = 4,1,2
 ```
 
 In cases where a name is required, either an identifier or a quoted string can
-be used. An identifier is a sequence of letters, digits, and underscores,
-which doesn't begin with a digit. A string is delimited with either single or
-double quotes, and may use a backslash to escape characters. Whitespace is
-preserved within a string.
+be used. An identifier is a sequence of letters, digits, and underscores, which
+doesn't begin with a digit. A string is delimited with either single or double
+quotes, and may use a backslash to escape characters. Whitespace is preserved
+within a string.
 
 ## Filters
 
@@ -1078,14 +1074,14 @@ Data, and returns the modified result.
 `preprocess` receives the same Data types as the
 [`minify`](#user-content-minify-filter) filter.
 
-Within a string, a preprocessor can be signaled with the following syntax:
-when the first character of a Lua comment is a `#` character, the rest of the
-comment is treated as Lua. This includes long comments.
+Within a string, a preprocessor can be signaled with the following syntax: when
+the first character of a Lua comment is a `#` character, the rest of the comment
+is treated as Lua. This includes long comments.
 
 The long comment form has several specific features:
 
-- `--[[#explist]]`: Evalutes a Lua expression list and outputs each result as
-  a string. Note that the results are concatenated directly. Nil values output
+- `--[[#explist]]`: Evalutes a Lua expression list and outputs each result as a
+  string. Note that the results are concatenated directly. Nil values output
   nothing.
 - `--[[#chunk]]`: Evaluates the chunk and outputs nothing.
 - `--[[#'#']]`: Outputs a literal `#` character to the output file.
@@ -1105,8 +1101,8 @@ Goodbye
 If `condition` is true, then the content of the output file will be "Hello".
 Otherwise, it will be "Goodbye".
 
-Any valid Lua syntax may be used. This example preprocesses a Lua file to
-unroll a loop:
+Any valid Lua syntax may be used. This example preprocesses a Lua file to unroll
+a loop:
 
 ```lua
 --#for i = 1, 4 do
@@ -1130,9 +1126,9 @@ library is not included).
 
 Also included are the variables specified by the
 [`--define`](USAGE.md#user-content-command-options) command option and the
-[`rbxmk.configure`](#user-content-configure-function) function. These
-variables cannot be modified by the preprocessor. Note that variables defined
-with the command option take precedence over variables defined by `configure`.
+[`rbxmk.configure`](#user-content-configure-function) function. These variables
+cannot be modified by the preprocessor. Note that variables defined with the
+command option take precedence over variables defined by `configure`.
 
 For example, the `condition` variable can be defined via the shell:
 
@@ -1154,13 +1150,13 @@ nothing.
 
 `data = rbxmk.filter{"region", data, string, data}`
 
-`region` works like the Region drill; it searches for a region of text within
-a script, and replaces it.
+`region` works like the Region drill; it searches for a region of text within a
+script, and replaces it.
 
-The first argument is the value to modify. This can be a script-like instance
-or any string-like value. The second argument is the name of the region to
-select, which has the same rules a Reference string given to the Region drill.
-The third argument is any value capable of being merged into a region.
+The first argument is the value to modify. This can be a script-like instance or
+any string-like value. The second argument is the name of the region to select,
+which has the same rules a Reference string given to the Region drill. The third
+argument is any value capable of being merged into a region.
 
 `region` returns the first argument after it has been modified. If the region
 could not be found, then the first argument is returned unchanged.
@@ -1169,9 +1165,8 @@ could not be found, then the first argument is returned unchanged.
 
 `data = rbxmk.filter{"unminify", data}`
 
-`unminify` uses [lua-minify](https://github.com/stravant/lua-minify) to
-unminify a Lua script. It receives a single Data, and returns the modified
-result.
+`unminify` uses [lua-minify](https://github.com/stravant/lua-minify) to unminify
+a Lua script. It receives a single Data, and returns the modified result.
 
 `unminify` receives the same Data types as the
 [`minify`](#user-content-minify-filter) filter.

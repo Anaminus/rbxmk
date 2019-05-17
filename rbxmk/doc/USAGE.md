@@ -78,15 +78,15 @@ bool ("true" or "false"), or "nil". Any other value is read as a string.
 
 ## Lua environment
 
-[Lua](https://lua.org) scripts are used to perform actions. Scripts are run in
-a modified environment, with most of the standard functions and libraries
-being available. A complete list of included items can be found in
+[Lua](https://lua.org) scripts are used to perform actions. Scripts are run in a
+modified environment, with most of the standard functions and libraries being
+available. A complete list of included items can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-standard-library).
 
 Also included is the `rbxmk` library. Each function in this library accepts a
-table as its only argument. Lua has the following bit of syntax sugar to
-support this: if a constructed table is the only argument to a function, then
-the function's parentheses may be omitted:
+table as its only argument. Lua has the following bit of syntax sugar to support
+this: if a constructed table is the only argument to a function, then the
+function's parentheses may be omitted:
 
 ```lua
 func({arg1, arg2})
@@ -94,8 +94,8 @@ func{arg1, arg2}
 -- Both calls are equivalent
 ```
 
-Henceforth, an "argument", in the context of these Lua functions, will refer
-to a value within this kind of table.
+Henceforth, an "argument", in the context of these Lua functions, will refer to
+a value within this kind of table.
 
 Because of how tables work, there can be two kinds of arguments: named and
 unnamed.
@@ -122,8 +122,8 @@ output_data = rbxmk.output{reference...}
 ```
 
 Data is retrieved from some location referred to by the arguments of each
-function. In the case of `output`, the returned value is a reference that
-merely points to the data, which can be resolved at a later time.
+function. In the case of `output`, the returned value is a reference that merely
+points to the data, which can be resolved at a later time.
 
 The `map` function receives a number of inputs and a number of outputs, then
 maps each input to each output.
@@ -154,10 +154,10 @@ will **drill** down into the file, selecting a piece of data within it.
 input_source = rbxmk.input{"Documents/Roblox/place.rbxl", "Workspace.Model.Part.Script", "Source"}
 ```
 
-This example selects the "place.rbxl" file, then drills into this `rbxl` file
-to select a Script instance, then drills into the Script to select its
-"Source" property. The `input_source` variable now contains the Source
-property's value, which is a string.
+This example selects the "place.rbxl" file, then drills into this `rbxl` file to
+select a Script instance, then drills into the Script to select its "Source"
+property. The `input_source` variable now contains the Source property's value,
+which is a string.
 
 The same procedure applies to outputs, except that they refer to the location
 where data will be written to. For example, we can select another script in
@@ -192,9 +192,9 @@ remainder of the URI depends on the scheme. Here are a few of them:
   string in the reference defines the value itself.
 
 As this list suggests, while most schemes deal primarily with the first string
-of the reference, some schemes may process more than one. Some schemes may
-also be defined only for inputs or outputs. For example, the "generate" scheme
-cannot be used as an output.
+of the reference, some schemes may process more than one. Some schemes may also
+be defined only for inputs or outputs. For example, the "generate" scheme cannot
+be used as an output.
 
 Since the file scheme is the most commonly used, the scheme portion of its URI
 can be omitted.
@@ -210,11 +210,11 @@ A complete list of schemes and how they work can be found in
 
 ## Formats
 
-Once the scheme has been resolved, we are left with the raw data retrieved
-from the resource. This isn't very useful on its own, so the raw data is
-processed further by using a **format**. A format defines how to decode raw
-data into **data** of a known type that is easier to handle. It also defines
-how to encode data.
+Once the scheme has been resolved, we are left with the raw data retrieved from
+the resource. This isn't very useful on its own, so the raw data is processed
+further by using a **format**. A format defines how to decode raw data into
+**data** of a known type that is easier to handle. It also defines how to encode
+data.
 
 Some schemes are able to guess the format, others require it to be specified
 explicitly. Some don't require a format at all.
@@ -254,9 +254,8 @@ A complete list of formats and how they work can be found in
 
 ## Data types
 
-After a format has decoded the raw data, it returns typed data that rbxmk
-knows how to handle. Here are some examples of the types returned by several
-formats:
+After a format has decoded the raw data, it returns typed data that rbxmk knows
+how to handle. Here are some examples of the types returned by several formats:
 
 Format            | Data Type    | Description
 ------------------|--------------|------------
@@ -264,12 +263,12 @@ Format            | Data Type    | Description
 `lua`             | `Stringlike` | A string.
 `properties.json` | `Properties` | A table of property name-value pairs.
 
-The power of a type is that it can be **drilled** into. As previously
-mentioned, a `rbxl` file can be drilled into to select a single Instance. What
-this really means is that `rbxl` returns an `Instances` type, which returns an
-`Instance` type when it is drilled into. This `Instance` type can also be
-drilled into, to select a `Property` type. Depending on the value, even this
-can be drilled further.
+The power of a type is that it can be **drilled** into. As previously mentioned,
+a `rbxl` file can be drilled into to select a single Instance. What this really
+means is that `rbxl` returns an `Instances` type, which returns an `Instance`
+type when it is drilled into. This `Instance` type can also be drilled into, to
+select a `Property` type. Depending on the value, even this can be drilled
+further.
 
 Here's a list of several types and how they can be drilled into:
 
@@ -297,8 +296,8 @@ A complete list of types and how they work can be found in
 
 ## Functions
 
-There are a handful of other functions beside `rbxmk.input`, `rbxmk.output`,
-and `rbxmk.map`.
+There are a handful of other functions beside `rbxmk.input`, `rbxmk.output`, and
+`rbxmk.map`.
 
 ### Filters
 
@@ -306,8 +305,8 @@ The `rbxmk.filter` function is used to transform values in some way. The first
 argument is a string specifying the name of the filter to use. The remaining
 arguments, as well as the return values, depend on the selected filter.
 
-For example, the "minify" filter receives a value and, assuming it's the
-source of a Lua script, minifies the content, returning the modified value.
+For example, the "minify" filter receives a value and, assuming it's the source
+of a Lua script, minifies the content, returning the modified value.
 
 ```lua
 script = rbxmk.input{"generate://Instance", [[
@@ -358,10 +357,10 @@ place = rbxmk.input{rbxmk.path{"place.rbxl"}}
 
 ### Loading
 
-The `rbxmk.load` function allows you to run other scripts from within a
-script. The first argument is the path to the script file. Remaining arguments
-are passed to the script, which can be received with the `...` operator. Any
-values returned by the script are returned by `load`.
+The `rbxmk.load` function allows you to run other scripts from within a script.
+The first argument is the path to the script file. Remaining arguments are
+passed to the script, which can be received with the `...` operator. Any values
+returned by the script are returned by `load`.
 
 ```lua
 -- template.lua: Make a template.
