@@ -19,7 +19,7 @@ const (
 func Preprocess(f rbxmk.FilterArgs, opt *rbxmk.Options, arguments []interface{}) (results []interface{}, err error) {
 	value := arguments[0].(interface{})
 	f.ProcessedArgs()
-	envs, _ := opt.Config["PPEnvs"].([]*lua.LTable)
+	envs, _ := opt.Config["PPEnv"].([]*lua.LTable)
 	out, err := types.ProcessStringlikeInterface(preprocessStringCallback(envs), value)
 	if err != nil {
 		return nil, err
