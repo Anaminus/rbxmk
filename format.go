@@ -129,9 +129,20 @@ func (fs *Formats) Copy() *Formats {
 	return &c
 }
 
+// Remove leading dot character.
+func normalizeExt(ext string) string {
+	if len(ext) > 0 && ext[0] == '.' {
+		ext = ext[1:]
+	}
+	return ext
+}
+
 // Register registers a number of rbxmk formats with the container. An error
 // is returned if a format of the same extension is already registered.
 func (fs *Formats) Register(formats ...Format) error {
+	for i := range formats {
+		formats[i].Ext = normalizeExt(formats[i].Ext)
+	}
 	for i, f := range formats {
 		if f.Ext == "" {
 			return fmt.Errorf("format #%d must have non-empty Ext", i)
@@ -167,14 +178,14 @@ func (fs *Formats) List() []Format {
 
 // Registered returns whether a given extension is registered.
 func (fs *Formats) Registered(ext string) (registered bool) {
-	_, registered = fs.f[ext]
+	_, registered = fs.f[normalizeExt(ext)]
 	return registered
 }
 
 // Name returns the name of a format from a given extension. Returns an empty
 // string if the extension is not registered.
 func (fs *Formats) Name(ext string) (name string) {
-	f, registered := fs.f[ext]
+	f, registered := fs.f[normalizeExt(ext)]
 	if !registered {
 		return ""
 	}
@@ -184,7 +195,7 @@ func (fs *Formats) Name(ext string) (name string) {
 // Decoder returns a FormatDecoder from a given extension. Returns nil if the
 // extension is not registered.
 func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec FormatDecoder) {
-	f, registered := fs.f[ext]
+	f, registered := fs.f[normalizeExt(ext)]
 	if !registered {
 		return nil
 	}
@@ -193,7 +204,7 @@ func (fs *Formats) Decoder(ext string, opt *Options, ctx interface{}) (dec Forma
 
 // Decode directly calls a format codec's Decode method.
 func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader, data *Data) (err error) {
-	f, registered := fs.f[ext]
+	f, registered := fs.f[normalizeExt(ext)]
 	if !registered {
 		return nil
 	}
@@ -203,7 +214,7 @@ func (fs *Formats) Decode(ext string, opt *Options, ctx interface{}, r io.Reader
 // Encoder returns a FormatEncoder from a given extension. Returns nil if the
 // extension is not registered.
 func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc FormatEncoder) {
-	f, registered := fs.f[ext]
+	f, registered := fs.f[normalizeExt(ext)]
 	if !registered {
 		return nil
 	}
@@ -212,7 +223,7 @@ func (fs *Formats) Encoder(ext string, opt *Options, ctx interface{}) (enc Forma
 
 // Encode directly calls a format codec's Encode method.
 func (fs *Formats) Encode(ext string, opt *Options, ctx interface{}, w io.Writer, data Data) (err error) {
-	f, registered := fs.f[ext]
+	f, registered := fs.f[normalizeExt(ext)]
 	if !registered {
 		return nil
 	}

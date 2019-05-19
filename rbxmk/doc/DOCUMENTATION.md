@@ -175,7 +175,9 @@ nil if the variable is not present.
 `input` creates an input node. The arguments specify the
 [Reference](#user-content-reference) to the input.
 
-The optional `format` argument forces the file format, if needed.
+The optional `format` argument forces the file format, if needed. This can be
+either a format name or format extension. That is, the leading dot character
+(`.`) is optional.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.
@@ -232,7 +234,9 @@ node = rbxmk.output{format=string, api=nil, user=nil, ...string}
 `output` creates an output node. The arguments specify the
 [Reference](#user-content-reference) to the output.
 
-The optional `format` argument forces the file format, if needed.
+The optional `format` argument forces the file format, if needed. This can be
+either a format name or format extension. That is, the leading dot character
+(`.`) is optional.
 
 The optional `api` argument specifies an API value to enhance the handling of
 instances and properties. Specifying a non-nil API overrides the default API.

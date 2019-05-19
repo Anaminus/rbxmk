@@ -214,12 +214,15 @@ Some schemes are able to guess the format, others require it to be specified
 explicitly. Some don't require a format at all.
 
 The `rbxmk.input` and `rbxmk.output` functions have a named argument called
-`format`. When specified, it will override whatever format is guessed by the
-scheme.
+`format`. When specified with a format name or extension (the leading dot is
+optional), it will override whatever format is guessed by the scheme.
 
 ```lua
 -- Read a regular Lua file as a ModuleScript Lua file.
 script = rbxmk.input{format="modulescript.lua", "file.lua"}
+
+-- The format extension also works.
+script = rbxmk.input{format=".modulescript.lua", "file.lua"}
 ```
 ```lua
 rbxmk.map{
