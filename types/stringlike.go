@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
@@ -406,13 +407,17 @@ func (indata *Stringlike) Merge(opt *rbxmk.Options, rootdata, drilldata rbxmk.Da
 	return nil, rbxmk.NewMergeError(indata, drilldata, nil)
 }
 
-// ProcessStringlikeCallback receives and modifies a Stringlike value.
-type ProcessStringlikeCallback func(s *Stringlike) error
+// Cancel can be returned by AsStringCallback to cancel processing without
+// writing any data. AsString never returns this error.
+var Cancel = errors.New("canceled string processing")
 
-// ProcessStringlikeInterface receives an arbitrary value, and converts it
-// into a types.Stringlike, if possible. The Stringlike is processed by a
-// callback, and the result is applied back to the original location of the
-// value. Returns the result as a rbxmk.Data.
+// AsStringCallback receives and modifies a Stringlike value.
+type AsStringCallback func(s *Stringlike) error
+
+// AsString receives an arbitrary value, and converts it into a Stringlike, if
+// possible. The Stringlike is processed by a callback, and the result is
+// applied back to the original location of the value. Returns the result as a
+// rbxmk.Data.
 //
 // The following types are handled:
 //
@@ -423,7 +428,15 @@ type ProcessStringlikeCallback func(s *Stringlike) error
 //     - *types.Stringlike
 //     - string (returns as a Stringlike)
 //     - []byte (returns as a Stringlike)
-func ProcessStringlikeInterface(cb ProcessStringlikeCallback, v interface{}) (out rbxmk.Data, err error) {
+//
+// If the callback returns Cancel, then no data is written or returned. AsString
+// never returns Cancel.
+func AsString(cb AsStringCallback, v interface{}) (out rbxmk.Data, err error) {
+	defer func() {
+		if err == Cancel {
+			err = nil
+		}
+	}()
 	switch v := v.(type) {
 	case rbxmk.Data:
 		switch v := v.(type) {
@@ -468,11 +481,14 @@ func ProcessStringlikeInterface(cb ProcessStringlikeCallback, v interface{}) (ou
 	return nil, fmt.Errorf("unexpected type")
 }
 
-func processStringlikeInstance(cb ProcessStringlikeCallback, inst *rbxfile.Instance, fail bool) (err error) {
+func processStringlikeInstance(cb AsStringCallback, inst *rbxfile.Instance, fail bool) (err error) {
 	switch inst.ClassName {
 	case "Script", "LocalScript", "ModuleScript":
 		if source, ok := inst.Properties["Source"]; ok {
-			value, _ := processStringlikeValue(cb, Value{source})
+			value, err := processStringlikeValue(cb, Value{source})
+			if err != nil {
+				return err
+			}
 			inst.Properties["Source"] = value.Value
 		}
 		return nil
@@ -483,7 +499,7 @@ func processStringlikeInstance(cb ProcessStringlikeCallback, inst *rbxfile.Insta
 	return nil
 }
 
-func processStringlikeValue(cb ProcessStringlikeCallback, value Value) (out Value, err error) {
+func processStringlikeValue(cb AsStringCallback, value Value) (out Value, err error) {
 	if s := NewStringlike(value); s != nil {
 		if err := cb(s); err != nil {
 			return out, err
@@ -491,4 +507,11 @@ func processStringlikeValue(cb ProcessStringlikeCallback, value Value) (out Valu
 		return s.GetValue(true), nil
 	}
 	return out, fmt.Errorf("value must be string-like")
+}
+
+// ToString uses AsString to retrieve a value as a Stringlike without writing
+// any data.
+func ToString(v interface{}) (str *Stringlike, err error) {
+	_, err = AsString(func(s *Stringlike) error { str = s; return Cancel }, v)
+	return str, err
 }
