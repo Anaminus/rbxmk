@@ -601,6 +601,14 @@ func mainConfigure(l *lua.LState) int {
 			switch v.Type() {
 			case lua.LTBool, lua.LTNumber, lua.LTString:
 				env.RawSetString(key, v)
+			default:
+				if typeOf(l, v) == "input" {
+					str, err := types.ToString(v.(*lua.LUserData).Value)
+					if err != nil {
+						return
+					}
+					env.RawSetString(key, lua.LString(str.GetString()))
+				}
 			}
 		})
 	}
