@@ -698,10 +698,10 @@ of Roblox instances.
 
 Name    | Description
 --------|------------
-`.rbxl`  | A Roblox place file.
-`.rbxlx` | A Roblox place file in XML format.
-`.rbxm`  | A Roblox model file.
-`.rbxmx` | A Roblox model file in XML format.
+`rbxl`  | A Roblox place file.
+`rbxlx` | A Roblox place file in XML format.
+`rbxm`  | A Roblox model file.
+`rbxmx` | A Roblox model file in XML format.
 
 ### Lua formats
 These formats describe Lua script files.
@@ -711,26 +711,26 @@ use the base of the file name to set the Name property of the script.
 
 Name               | Description
 -------------------|------------
-`.lua`              | A Lua script unassociated with any type of script instance.
-`.script.lua`       | A Lua script decoded as a Script instance.
-`.localscript.lua`  | A Lua script decoded as a LocalScript instance.
-`.modulescript.lua` | A Lua script decoded as a ModuleScript instance.
+`lua`              | A Lua script unassociated with any type of script instance.
+`script.lua`       | A Lua script decoded as a Script instance.
+`localscript.lua`  | A Lua script decoded as a LocalScript instance.
+`modulescript.lua` | A Lua script decoded as a ModuleScript instance.
 
 ### Text formats
 These formats describe generic text or data.
 
 Name  | Description
 ------|------------
-`.txt` | A file containing text.
-`.bin` | A file containing binary data.
+`txt` | A file containing text.
+`bin` | A file containing binary data.
 
 ### Property formats
 These formats describe mappings of property names to values.
 
 Name              | Description
 ------------------|------------
-`.properties.json` | A file containing properties in JSON format.
-`.properties.xml`  | A file containing properties in XML format.
+`properties.json` | A file containing properties in JSON format.
+`properties.xml`  | A file containing properties in XML format.
 
 ## Schemes
 A Scheme describes how to retrieve raw data from a resource.

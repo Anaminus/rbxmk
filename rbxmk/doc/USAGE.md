@@ -244,11 +244,11 @@ props = rbxmk.input{
 
 Here is a selection from the many available formats:
 
-- `.rbxl`: A Roblox place file.
-- `.rbxmx`: A Roblox model file in XML format.
-- `.lua`: An untyped Lua file.
-- `.script.lua`: A Lua file decoded into a Script instance.
-- `.properties.json`: A list of property name-value pairs.
+- `rbxl`: A Roblox place file.
+- `rbxmx`: A Roblox model file in XML format.
+- `lua`: An untyped Lua file.
+- `script.lua`: A Lua file decoded into a Script instance.
+- `properties.json`: A list of property name-value pairs.
 
 A complete list of formats and how they work can be found in
 [DOCUMENTATION.md](DOCUMENTATION.md#user-content-formats).
