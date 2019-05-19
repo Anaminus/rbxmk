@@ -361,6 +361,10 @@ place = rbxmk.input{rbxmk.path{"$working_directory/place.rbxl"}}
 place = rbxmk.input{rbxmk.path{"place.rbxl"}}
 ```
 
+Paths are formatted according to the current platform, so parsing paths directly
+should be avoided. Instead, use the file-related functions provided by the rbxmk
+library.
+
 ### Loading
 The [`rbxmk.load`](#user-content-load-function) function allows other scripts to
 be run from within a script. The first argument is the path to the script file.
