@@ -213,6 +213,14 @@ data.
 Some schemes are able to guess the format, others require it to be specified
 explicitly. Some don't require a format at all.
 
+The file scheme uses the name of a file to determine the format by matching a
+format name to the "format extension" of the file. This is almost like a regular
+file extension, except more than the last dot (`.`) character can be matched.
+
+For example, `Workspace.properties.json` has the `.json` extension, but also the
+`.properties.json` *format* extension, which corresponds to the
+`properties.json` format.
+
 The `rbxmk.input` and `rbxmk.output` functions have a named argument called
 `format`. When specified with a format name or extension (the leading dot is
 optional), it will override whatever format is guessed by the scheme.

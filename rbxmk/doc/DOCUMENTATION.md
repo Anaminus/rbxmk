@@ -763,7 +763,14 @@ C:/Users/user/projects/project/file.rbxl
 ```
 
 The Format of the selected file, if not provided, is determined by the file
-extension. The extension name is the same as the name of the Format.
+name, which matches a format by the "format extension". Unlike a regular file
+extension, which is determined by the last dot (`.`) character, a format
+extension is matched by looking after each dot in sequence, starting at the
+first. This means that more specific format names will be matched first.
+
+For example, `Workspace.properties.json` has both the `.json` and
+`.properties.json` format extensions. Because it is more specific, the
+`properties.json` format is selected before the `json` format.
 
 When encoding or decoding, the file name is passed to the format as context.
 
