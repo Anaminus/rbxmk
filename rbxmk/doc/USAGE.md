@@ -93,7 +93,8 @@ func{arg1, arg2}
 ```
 
 Henceforth, an "argument", in the context of these functions, will refer to a
-value within this kind of table.
+value within this kind of table. Unnamed arguments are referred to in sequence
+("first", "second", etc), and named arguments are referred to by name.
 
 Because of how tables work, there can be two kinds of arguments: named and
 unnamed.
