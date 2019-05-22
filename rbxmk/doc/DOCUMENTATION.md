@@ -175,6 +175,11 @@ nil if the variable is not present.
 `input` creates an input node. The arguments specify the
 [Reference](#user-content-reference) to the input.
 
+Optionally, instead of a string, the first argument may be another input node.
+Instead of resolving through a scheme, this node is used directly. The remaining
+arguments drill into the node as usual. Note that changes to one node can affect
+the other.
+
 The optional `format` argument forces the file format, if needed. This can be
 either a format name or format extension. That is, the leading dot character
 (`.`) is optional.
@@ -233,6 +238,13 @@ node = rbxmk.output{format=string, api=nil, user=nil, ...string}
 
 `output` creates an output node. The arguments specify the
 [Reference](#user-content-reference) to the output.
+
+Optionally, instead of a string, the first argument may be either an input or
+output node. For an input, instead of resolving through a scheme, the node is
+used directly. Note that mapping to this output node modifies the original input
+node. For an output, the remaining arguments are effectively appended to the
+reference of the original node, and other named arguments are inherited, unless
+overridden.
 
 The optional `format` argument forces the file format, if needed. This can be
 either a format name or format extension. That is, the leading dot character
