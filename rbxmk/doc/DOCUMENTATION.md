@@ -1008,10 +1008,18 @@ This section lists and describes the filters that rbxmk includes by default.
 
 Name                                          | Description
 ----------------------------------------------|------------
+[exec](#user-content-execute-filter)          | Pipe a string through an external program.
 [minify](#user-content-minify-filter)         | Shrink the content of a Lua script.
 [preprocess](#user-content-preprocess-filter) | Run the preprocessor on some text.
 [region](#user-content-region-filter)         | Replace regions of a Lua script.
 [unminify](#user-content-unminify-filter)     | Expand the content of a Lua script.
+
+### Execute filter
+`string = rbxmk.filter{"exec", string, command, ...options}`
+
+`exec` runs a stringlike value through a command-line program. The string is
+piped into the program's standard input. After the program finishes, `exec`
+returns the value transformed by the program's standard output.
 
 ### Minify filter
 `data = rbxmk.filter{"minify", data}`
