@@ -1,7 +1,6 @@
 package scheme
 
 import (
-	"errors"
 	"fmt"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/types"
@@ -26,22 +25,22 @@ func generateInputSchemeHandler(opt *rbxmk.Options, node *rbxmk.InputNode, inref
 	switch inref[0] {
 	case "Instance":
 		if len(inref) < 2 {
-			err = errors.New("expected Instance reference")
-			break
+			data = &types.Instances{}
+			return inref[1:], data, nil
 		}
 		data, err = generateInstance(opt, inref[1])
 
 	case "Property":
 		if len(inref) < 2 {
-			err = errors.New("expected Property reference")
-			break
+			data = types.Properties{}
+			return inref[1:], data, nil
 		}
 		data, err = generateProperty(opt, inref[1])
 
 	case "Value":
 		if len(inref) < 2 {
-			err = errors.New("expected Value reference")
-			break
+			data = types.Value{}
+			return inref[1:], data, nil
 		}
 		data, err = generateValue(opt, inref[1])
 	}

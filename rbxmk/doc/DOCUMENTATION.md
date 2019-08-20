@@ -846,7 +846,7 @@ Reference                                              | Data type
 
 This scheme processes the next string in the Reference. This string describes
 the data, and has a specific syntax for each type of data. In general,
-whitespace is ignored.
+whitespace is ignored. If no string is given, then an empty value is generated.
 
 #### Instance syntax
 Specifying `Instance` generates a list of instances. Each instance is described
