@@ -1,13 +1,15 @@
 package scheme
 
 import (
-	"bytes"
 	"errors"
-	"github.com/anaminus/rbxauth"
-	"github.com/anaminus/rbxmk"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
+
+	"github.com/anaminus/rbxauth"
+	"github.com/anaminus/rbxmk"
 )
 
 func init() {
@@ -40,8 +42,8 @@ func setCookies(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred, force 
 	users, _ := opt.Config["RobloxAuth"].(map[rbxauth.Cred][]*http.Cookie)
 	cookies := users[cred]
 	if len(cookies) == 0 && force {
-		auth := &rbxauth.Config{Host: getHost(opt)}
-		if cred, cookies, err = auth.PromptCred(cred); err != nil {
+		stream := rbxauth.StandardStream()
+		if cred, cookies, err = stream.PromptCred(cred); err != nil {
 			return err
 		}
 		if len(cookies) > 0 {
@@ -60,6 +62,7 @@ func setCookies(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred, force 
 
 func requestWithAuth(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred) (io.ReadCloser, error) {
 	client := &http.Client{}
+	token := false
 	for force := false; ; {
 		req.Header.Del("Cookie")
 		if err := setCookies(opt, req, cred, force); err != nil {
@@ -71,15 +74,29 @@ func requestWithAuth(opt *rbxmk.Options, req *http.Request, cred rbxauth.Cred) (
 			return nil, err
 		}
 
-		// Sent by Roblox when user is not authorized to download asset.
-		if resp.StatusCode == 409 {
+		switch resp.StatusCode {
+		case 409: // Sent by Roblox when user is not authorized to download asset.
 			// Retry, forcing the user to login.
 			resp.Body.Close()
+			if req.GetBody != nil {
+				req.Body, _ = req.GetBody()
+			}
 			if force {
 				// Failed with supplied creds, retry with full prompt.
 				cred = rbxauth.Cred{}
 			}
 			force = true
+			continue
+		case 403: // Sent when token is required.
+			if token {
+				break
+			}
+			token = true
+			resp.Body.Close()
+			req.Header.Add("X-CSRF-TOKEN", resp.Header.Get("X-CSRF-TOKEN"))
+			if req.GetBody != nil {
+				req.Body, _ = req.GetBody()
+			}
 			continue
 		}
 
@@ -153,7 +170,7 @@ func rbxassetidOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref
 	if !opt.Formats.Registered(ext) {
 		return errors.New("format is not registered")
 	}
-	var buf bytes.Buffer
+	var buf strings.Builder
 	if err = opt.Formats.Encode(ext, opt, nil, &buf, outdata); err != nil {
 		return err
 	}
@@ -164,11 +181,14 @@ func rbxassetidOutputFinalizer(opt *rbxmk.Options, node *rbxmk.OutputNode, inref
 		Path:     rbxassetidUploadPath,
 		RawQuery: url.Values{"assetID": []string{inref[0]}}.Encode(),
 	}
-	req, _ := http.NewRequest("GET", uploadURL.String(), &buf)
+	req, _ := http.NewRequest("POST", uploadURL.String(), strings.NewReader(buf.String()))
+	req.GetBody = func() (io.ReadCloser, error) {
+		return ioutil.NopCloser(strings.NewReader(buf.String())), nil
+	}
 
 	resp, err := requestWithAuth(opt, req, node.User)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer resp.Close()
 

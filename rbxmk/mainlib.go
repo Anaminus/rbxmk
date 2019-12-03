@@ -621,9 +621,12 @@ func mainConfigure(l *lua.LState) int {
 				continue
 			}
 
-			cred := rbxauth.Cred{
-				Type:  entry.RawGetString("type").String(),
-				Ident: entry.RawGetString("ident").String(),
+			cred := rbxauth.Cred{}
+			if v, ok := entry.RawGetString("type").(lua.LString); ok {
+				cred.Type = string(v)
+			}
+			if v, ok := entry.RawGetString("ident").(lua.LString); ok {
+				cred.Type = string(v)
 			}
 
 			if logout, ok := entry.RawGetString("logout").(lua.LBool); ok && logout == lua.LTrue {
@@ -631,8 +634,8 @@ func mainConfigure(l *lua.LState) int {
 				if len(cookies) == 0 {
 					return throwError(l, errors.New("cannot logout: unknown credentials"))
 				}
-				auth := &rbxauth.Config{Host: ctx.Options.Config["Host"].(string)}
-				if err := auth.Logout(cookies); err != nil {
+				stream := rbxauth.StandardStream()
+				if err := stream.Logout(cookies); err != nil {
 					return throwError(l, fmt.Errorf("Error logging out: %s", err))
 				}
 			}
@@ -649,9 +652,9 @@ func mainConfigure(l *lua.LState) int {
 					return throwError(l, err)
 				}
 			} else if prompt := entry.RawGetString("prompt"); prompt.Type() == lua.LTBool && prompt.(lua.LBool) == lua.LTrue {
-				auth := &rbxauth.Config{Host: ctx.Options.Config["Host"].(string)}
+				stream := rbxauth.StandardStream()
 				var err error
-				if cred, cookies, err = auth.PromptCred(cred); err != nil {
+				if cred, cookies, err = stream.PromptCred(cred); err != nil {
 					return throwError(l, err)
 				}
 			}
