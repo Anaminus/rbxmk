@@ -30,7 +30,7 @@ func Array() Type {
 				if err != nil {
 					return nil, err
 				}
-				table.RawSetInt(i, lv[0])
+				table.RawSetInt(i+1, lv[0])
 			}
 			return []lua.LValue{table}, nil
 		},
@@ -51,7 +51,7 @@ func Array() Type {
 			n := table.Len()
 			array := make([]Value, n)
 			for i := 1; i <= n; i++ {
-				if array[i], err = variantType.ReflectFrom(s, variantType, table.RawGetInt(i)); err != nil {
+				if array[i-1], err = variantType.ReflectFrom(s, variantType, table.RawGetInt(i)); err != nil {
 					return nil, err
 				}
 			}
