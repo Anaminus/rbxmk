@@ -217,11 +217,12 @@ func (s State) PullAnyOf(n int, t ...string) Value {
 	// <0 indicates an arbitrary number of values.
 	max := 1
 	types := make([]Type, 0, 4)
-	for i, t := range t {
-		types[i] = s.Type(t)
-		if types[i].Count > 1 {
-			max = types[i].Count
-		} else if types[i].Count < 0 {
+	for _, t := range t {
+		typ := s.Type(t)
+		types = append(types, typ)
+		if typ.Count > 1 {
+			max = typ.Count
+		} else if typ.Count < 0 {
 			max = -1
 			break
 		}
