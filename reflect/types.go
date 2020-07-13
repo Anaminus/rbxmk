@@ -29,6 +29,7 @@ func AllTypes() []func() rbxmk.Type {
 		NumberRange,
 		NumberSequence,
 		NumberSequenceKeypoint,
+		Objects,
 		PhysicalProperties,
 		ProtectedString,
 		Ray,
