@@ -39,9 +39,12 @@ func (w *World) RegisterType(t Type) {
 	w.types[t.Name] = t
 
 	var mt *lua.LTable
+	var index Metamethod
+	var newindex Metamethod
 	if t.Metatable != nil {
 		mt = w.l.CreateTable(0, len(t.Metatable)+3)
 		for name, method := range t.Metatable {
+			m := method
 			mt.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
 				u := l.CheckUserData(1)
 				if u.Metatable != mt {
@@ -53,7 +56,7 @@ func (w *World) RegisterType(t Type) {
 					TypeError(l, 1, t.Name)
 					return 0
 				}
-				return method(State{World: w, L: l}, v)
+				return m(State{World: w, L: l}, v)
 			}))
 		}
 		if t.Metatable["__tostring"] == nil {
@@ -62,9 +65,8 @@ func (w *World) RegisterType(t Type) {
 				return 1
 			}))
 		}
-		if t.Metatable["__index"] != nil || t.Metatable["__newindex"] != nil {
-			goto finish
-		}
+		index = t.Metatable["__index"]
+		newindex = t.Metatable["__newindex"]
 	}
 	if t.Members != nil {
 		for _, member := range t.Members {
@@ -89,6 +91,9 @@ func (w *World) RegisterType(t Type) {
 			name := l.CheckString(2)
 			member, ok := t.Members[name]
 			if !ok {
+				if index != nil {
+					return index(State{World: w, L: l}, v)
+				}
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)
 				return 0
 			}
@@ -100,9 +105,8 @@ func (w *World) RegisterType(t Type) {
 					return member.Get(State{World: w, L: l}, v)
 				}))
 				return 1
-			} else {
-				return member.Get(State{World: w, L: l}, v)
 			}
+			return member.Get(State{World: w, L: l}, v)
 		}))
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
 			u := l.CheckUserData(1)
@@ -118,6 +122,9 @@ func (w *World) RegisterType(t Type) {
 			name := l.CheckString(2)
 			member, ok := t.Members[name]
 			if !ok {
+				if newindex != nil {
+					return newindex(State{World: w, L: l}, v)
+				}
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)
 				return 0
 			}
@@ -128,7 +135,6 @@ func (w *World) RegisterType(t Type) {
 			return 0
 		}))
 	}
-finish:
 	if mt != nil {
 		w.l.SetField(w.l.Get(lua.RegistryIndex), t.Name, mt)
 	}
