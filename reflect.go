@@ -326,7 +326,7 @@ func ReflectTypeTo(s State, t Type, v Value) (lvs []lua.LValue, err error) {
 // with a type metatable registered as t.Name.
 func ReflectTypeFrom(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
 	u, ok := lvs[0].(*lua.LUserData)
-	if ok {
+	if !ok {
 		return nil, TypeError(nil, 0, t.Name)
 	}
 	if u.Metatable != s.L.GetTypeMetatable(t.Name) {
