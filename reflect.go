@@ -129,6 +129,9 @@ func (s State) Count() int {
 // results to s.L.
 func (s State) Push(t string, v Value) int {
 	typ := s.Type(t)
+	if typ.Name == "" {
+		panic("unregistered type " + t)
+	}
 	lvs, err := typ.ReflectTo(s, typ, v)
 	if err != nil {
 		s.L.RaiseError(err.Error())
