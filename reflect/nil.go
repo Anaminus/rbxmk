@@ -15,7 +15,7 @@ func Nil() Type {
 			if lvs[0] == lua.LNil {
 				return nil, nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, TypeError(nil, 0, "nil")
 		},
 	}
 }
