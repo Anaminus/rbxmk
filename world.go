@@ -2,14 +2,17 @@ package rbxmk
 
 import (
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/robloxapi/rbxfile"
 	"github.com/yuin/gopher-lua"
 )
 
 type World struct {
-	l     *lua.LState
-	types map[string]Type
+	l         *lua.LState
+	types     map[string]Type
+	fileStack []FileInfo
 }
 
 func NewWorld(l *lua.LState) *World {
@@ -219,4 +222,94 @@ func (w *World) PullAnyOf(n int, t ...string) Value {
 	return State{World: w, L: w.l}.PullAnyOf(n, t...)
 }
 
+type FileInfo struct {
+	Path string
+	os.FileInfo
+}
+
+// PushFile marks a file as the currently running file.
+func (w *World) PushFile(fi FileInfo) error {
+	for _, f := range w.fileStack {
+		if os.SameFile(fi.FileInfo, f.FileInfo) {
+			return fmt.Errorf("\"%s\" is already running", fi.Path)
+		}
+	}
+	w.fileStack = append(w.fileStack, fi)
+	return nil
+}
+
+// PopFile unmarks the currently running file.
+func (w *World) PopFile() {
+	if len(w.fileStack) > 0 {
+		w.fileStack[len(w.fileStack)-1] = FileInfo{}
+		w.fileStack = w.fileStack[:len(w.fileStack)-1]
+	}
+}
+
+// PeekFile returns the info of the currently running file. Returns false if
+// there is no running file.
+func (w *World) PeekFile() (fi FileInfo, ok bool) {
+	if len(w.fileStack) == 0 {
+		return
+	}
+	fi = w.fileStack[len(w.fileStack)-1]
+	ok = true
+	return
+}
+
+// DoString executes string s as Lua. args is the number of arguments currently
+// on the stack that should be passed in.
+func (w *World) DoString(s, name string, args int) (err error) {
+	fn, err := w.l.Load(strings.NewReader(s), name)
+	if err != nil {
+		return err
+	}
+	w.l.Insert(fn, -args-1)
+	return w.l.PCall(args, lua.MultRet, nil)
+}
+
+// DoFile executes the contents of the file at fileName as Lua. args is the
+// number of arguments currently on the stack that should be passed in. The file
+// is marked as actively running, and is unmarked when the file returns.
+func (w *World) DoFile(fileName string, args int) error {
+	fi, err := os.Stat(fileName)
+	if err != nil {
+		return err
+	}
+	if err = w.PushFile(FileInfo{fileName, fi}); err != nil {
+		return err
+	}
+
+	fn, err := w.l.LoadFile(fileName)
+	if err != nil {
+		w.PopFile()
+		return err
+	}
+	w.l.Insert(fn, -args-1)
+	err = w.l.PCall(args, lua.MultRet, nil)
+	w.PopFile()
+	return err
+}
+
+// DoFile executes the contents of file f as Lua. args is the number of
+// arguments currently on the stack that should be passed in. The file is marked
+// as actively running, and is unmarked when the file returns.
+func (w *World) DoFileHandle(f *os.File, args int) error {
+	fi, err := f.Stat()
+	if err != nil {
+		return err
+	}
+	if err = w.PushFile(FileInfo{f.Name(), fi}); err != nil {
+		return err
+	}
+
+	fn, err := w.l.Load(f, fi.Name())
+	if err != nil {
+		w.PopFile()
+		return err
+	}
+	w.l.Insert(fn, -args-1)
+	err = w.l.PCall(args, lua.MultRet, nil)
+	w.PopFile()
+	return err
 }
