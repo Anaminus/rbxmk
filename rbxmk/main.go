@@ -1,0 +1,93 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+
+	"github.com/anaminus/but"
+	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/reflect"
+	"github.com/yuin/gopher-lua"
+)
+
+// shortenPath transforms the given path so that it is relative to the working
+// directory. Returns the original path if that fails.
+func shortenPath(filename string) string {
+	if wd, err := os.Getwd(); err == nil {
+		if abs, err := filepath.Abs(filename); err == nil {
+			if r, err := filepath.Rel(wd, abs); err == nil {
+				filename = r
+			}
+		}
+	}
+	return filename
+}
+
+// ParseLuaValue parses a string into a Lua value. Numbers, bools, and nil are
+// parsed into their respective types, and any other value is interpreted as a
+// string.
+func ParseLuaValue(s string) lua.LValue {
+	switch s {
+	case "true":
+		return lua.LTrue
+	case "false":
+		return lua.LFalse
+	case "nil":
+		return lua.LNil
+	}
+	if number, err := strconv.ParseFloat(s, 64); err == nil {
+		return lua.LNumber(number)
+	}
+	return lua.LString(s)
+}
+
+const CommandUsage = `rbxmk [ FILE ] [ ...VALUE ]
+
+Receives a file to be executed as a Lua script. If "-" is given, then the script
+will be read from stdin instead.
+
+Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
+nil are parsed into their respective types in Lua, and any other value is
+interpreted as a string.`
+
+func main() {
+	// Parse flags.
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), CommandUsage)
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+	args := flag.Args()
+	if len(args) == 0 {
+		flag.Usage()
+		return
+	}
+	file := args[0]
+	args = args[1:]
+
+	// Initialize world.
+	state := lua.NewState(lua.Options{SkipOpenLibs: true})
+	world := rbxmk.NewWorld(state)
+	OpenFilteredLibs(world.State(), GetFilteredStdLib())
+	for _, t := range reflect.AllTypes() {
+		world.RegisterType(t())
+	}
+
+	// Add script arguments.
+	for _, arg := range args {
+		world.State().Push(ParseLuaValue(arg))
+	}
+
+	// Run stdin as script.
+	if file == "-" {
+		but.IfFatal(world.DoFileHandle(os.Stdin, len(args)))
+		return
+	}
+
+	// Run file as script.
+	filename := shortenPath(filepath.Clean(file))
+	but.IfFatal(world.DoFile(filename, len(args)))
+}
