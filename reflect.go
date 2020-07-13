@@ -125,7 +125,8 @@ func (s State) Count() int {
 	return s.L.GetTop()
 }
 
-// Push reflects v according to t, then pushes the results to s.L.
+// Push reflects v according to type t registered with s.World, then pushes the
+// results to s.L.
 func (s State) Push(t string, v Value) int {
 	typ := s.Type(t)
 	lvs, err := typ.ReflectTo(s, typ, v)
@@ -139,8 +140,8 @@ func (s State) Push(t string, v Value) int {
 	return len(lvs)
 }
 
-// Pull gets from the Lua state the values starting from n, and reflects a value
-// from them according to t.
+// Pull gets from s.L the values starting from n, and reflects a value from them
+// according to type t registered with s.World.
 func (s State) Pull(n int, t string) Value {
 	typ := s.Type(t)
 	var v Value
@@ -167,8 +168,9 @@ func (s State) Pull(n int, t string) Value {
 	return v
 }
 
-// PullOpt gets from the Lua state the value at n, and reflects a value from it
-// according to t. If the value is nil, d is returned instead.
+// PullOpt gets from s.L the value at n, and reflects a value from it according
+// to type t registered with s.World. If the value is nil, d is returned
+// instead.
 func (s State) PullOpt(n int, t string, d Value) Value {
 	typ := s.Type(t)
 	if typ.Count < 0 {
@@ -200,9 +202,10 @@ func listTypes(types []string) string {
 	return strings.Join(types[:len(types)-2], ", ") + ", or " + types[len(types)-1]
 }
 
-// PullAnyOf gets from the Lua state the values starting from n, and reflects a
-// value from them according to t. Returns the first successful reflection among
-// the types in t. If no types succeeded, then a type error is thrown.
+// PullAnyOf gets from s.L the values starting from n, and reflects a value from
+// them according to any of the types in t registered with s.World. Returns the
+// first successful reflection among the types in t. If no types succeeded, then
+// a type error is thrown.
 func (s State) PullAnyOf(n int, t ...string) Value {
 	if n > s.L.GetTop() {
 		// Every type must reflect at least one value, so no values is an

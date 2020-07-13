@@ -146,6 +146,7 @@ func (w *World) State() *lua.LState {
 	return w.l
 }
 
+// ReflectTo reflects v to lvs using registered type t.
 func (w *World) ReflectTo(t string, v Value) (lvs []lua.LValue, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
@@ -157,6 +158,7 @@ func (w *World) ReflectTo(t string, v Value) (lvs []lua.LValue, err error) {
 	return typ.ReflectTo(State{World: w, L: w.l}, typ, v)
 }
 
+// ReflectFrom reflects lvs to v using registered type t.
 func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v Value, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
@@ -190,14 +192,31 @@ func (w *World) Deserialize(s State, t string, sv rbxfile.Value) (v Value, err e
 	return typ.Deserialize(State{World: w, L: w.l}, sv)
 }
 
-func (w *World) PushValue(t string, v Value) int {
-	return State{World: w, L: w.l}.PushValue(t, v)
+// Push reflects v according to registered type t, then pushes the results to
+// the world's state.
+func (w *World) Push(t string, v Value) int {
+	return State{World: w, L: w.l}.Push(t, v)
 }
 
-func (w *World) PullValue(n int, t string) Value {
-	return State{World: w, L: w.l}.PullValue(n, t)
+// Pull gets from the world's Lua state the values starting from n, and reflects
+// a value from them according to registered type t.
+func (w *World) Pull(n int, t string) Value {
+	return State{World: w, L: w.l}.Pull(n, t)
 }
 
-func (w *World) PullOptValue(n int, t ...string) Value {
-	return State{World: w, L: w.l}.PullOptValue(n, t...)
+// PullOpt gets from the world's Lua state the value at n, and reflects a value
+// from it according to registered type t. If the value is nil, d is returned
+// instead.
+func (w *World) PullOpt(n int, t string, d Value) Value {
+	return State{World: w, L: w.l}.PullOpt(n, t, d)
+}
+
+// PullAnyOf gets from the world's Lua state the values starting from n, and
+// reflects a value from them according to any of the registered types in t.
+// Returns the first successful reflection among the types in t. If no types
+// succeeded, then a type error is thrown.
+func (w *World) PullAnyOf(n int, t ...string) Value {
+	return State{World: w, L: w.l}.PullAnyOf(n, t...)
+}
+
 }
