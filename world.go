@@ -91,25 +91,34 @@ func (w *World) RegisterType(t Type) {
 				TypeError(l, 1, t.Name)
 				return 0
 			}
-			name := l.CheckString(2)
-			member, ok := t.Members[name]
-			if !ok {
-				if index != nil {
-					return index(State{World: w, L: l}, v)
+			idx := l.Get(2)
+			name, ok := idx.(lua.LString)
+			if ok {
+				member, ok := t.Members[string(name)]
+				if !ok {
+					goto customIndex
 				}
+				if member.Method {
+					// Push as method.
+					l.Push(l.NewFunction(func(l *lua.LState) int {
+						// TODO: validate that s.L.Get(1) matches v, or at least has
+						// the expected type.
+						return member.Get(State{World: w, L: l}, v)
+					}))
+					return 1
+				}
+				return member.Get(State{World: w, L: l}, v)
+			}
+		customIndex:
+			if index != nil {
+				return index(State{World: w, L: l}, v)
+			}
+			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)
-				return 0
+			} else {
+				l.ArgError(2, "string expected, got "+idx.Type().String())
 			}
-			if member.Method {
-				// Push as method.
-				l.Push(l.NewFunction(func(l *lua.LState) int {
-					// TODO: validate that s.L.Get(1) matches v, or at least has
-					// the expected type.
-					return member.Get(State{World: w, L: l}, v)
-				}))
-				return 1
-			}
-			return member.Get(State{World: w, L: l}, v)
+			return 0
 		}))
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
 			u := l.CheckUserData(1)
@@ -122,19 +131,27 @@ func (w *World) RegisterType(t Type) {
 				TypeError(l, 1, t.Name)
 				return 0
 			}
-			name := l.CheckString(2)
-			member, ok := t.Members[name]
-			if !ok {
-				if newindex != nil {
-					return newindex(State{World: w, L: l}, v)
+			idx := l.Get(2)
+			name, ok := idx.(lua.LString)
+			if ok {
+				member, ok := t.Members[string(name)]
+				if !ok {
+					goto customNewindex
 				}
+				if member.Method || member.Set == nil {
+					l.RaiseError("%s cannot be assigned to", name)
+				}
+				member.Set(State{World: w, L: l}, v)
+			}
+		customNewindex:
+			if newindex != nil {
+				return newindex(State{World: w, L: l}, v)
+			}
+			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)
-				return 0
+			} else {
+				l.ArgError(2, "string expected, got "+idx.Type().String())
 			}
-			if member.Method || member.Set == nil {
-				l.RaiseError("%s cannot be assigned to", name)
-			}
-			member.Set(State{World: w, L: l}, v)
 			return 0
 		}))
 	}

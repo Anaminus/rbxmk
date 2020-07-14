@@ -25,8 +25,26 @@ func Instance() Type {
 				return s.Push("bool", v.(*types.Instance) == op)
 			},
 			"__index": func(s State, v Value) int {
+				inst := v.(*types.Instance)
+
+				// Try symbol.
+				if typ := s.Type("Symbol"); typ.Name != "" {
+					if sym, err := typ.ReflectFrom(s, typ, s.L.CheckAny(2)); err == nil {
+						switch name := sym.(SymbolType).Name; name {
+						case "Reference":
+							return s.Push("string", inst.Reference)
+						case "IsService":
+							return s.Push("bool", inst.IsService)
+						default:
+							s.L.RaiseError("symbol %s is not a valid member", name)
+							return 0
+						}
+					}
+				}
+
+				// Try property.
 				name := s.Pull(2, "string").(string)
-				value := v.(*types.Instance).Get(name)
+				value := inst.Get(name)
 				if value.Type == "" {
 					// s.L.RaiseError("%s is not a valid member", name)
 					return s.Push("nil", nil)
@@ -34,9 +52,31 @@ func Instance() Type {
 				return s.Push(value.Type, value.Value)
 			},
 			"__newindex": func(s State, v Value) int {
+				inst := v.(*types.Instance)
+
+				// Try symbol.
+				if typ := s.Type("Symbol"); typ.Name != "" {
+					if sym, err := typ.ReflectFrom(s, typ, s.L.CheckAny(2)); err == nil {
+						switch name := sym.(SymbolType).Name; name {
+						case "Reference":
+							value := s.Pull(3, "string").(string)
+							inst.Reference = value
+							return 0
+						case "IsService":
+							value := s.Pull(3, "bool").(bool)
+							inst.IsService = value
+							return 0
+						default:
+							s.L.RaiseError("symbol %s is not a valid member", name)
+							return 0
+						}
+					}
+				}
+
+				// Try property.
 				name := s.Pull(2, "string").(string)
 				value, typ := PullVariant(s, 3)
-				v.(*types.Instance).Set(name, TValue{Type: typ.Name, Value: value})
+				inst.Set(name, TValue{Type: typ.Name, Value: value})
 				return 0
 			},
 		},
