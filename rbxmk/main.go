@@ -44,6 +44,12 @@ func ParseLuaValue(s string) lua.LValue {
 	return lua.LString(s)
 }
 
+type Std struct {
+	in  *os.File
+	out *os.File
+	err *os.File
+}
+
 const CommandUsage = `rbxmk [ FILE ] [ ...VALUE ]
 
 Receives a file to be executed as a Lua script. If "-" is given, then the script
@@ -53,23 +59,27 @@ Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
 nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string.`
 
-func main() {
+func Main(args []string, std Std) error {
 	// Parse flags.
-	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), CommandUsage)
-		flag.PrintDefaults()
+	flagset := flag.NewFlagSet(args[0], flag.ExitOnError)
+	flagset.Usage = func() {
+		fmt.Fprintf(flagset.Output(), CommandUsage)
+		flagset.PrintDefaults()
 	}
-	flag.Parse()
-	args := flag.Args()
+	flagset.Parse(args[1:])
+	args = flagset.Args()
 	if len(args) == 0 {
-		flag.Usage()
-		return
+		flagset.Usage()
+		return nil
 	}
 	file := args[0]
 	args = args[1:]
 
 	// Initialize world.
-	state := lua.NewState(lua.Options{SkipOpenLibs: true})
+	state := lua.NewState(lua.Options{
+		SkipOpenLibs:        true,
+		IncludeGoStackTrace: false,
+	})
 	world := rbxmk.NewWorld(state)
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
 	for _, t := range reflect.AllTypes() {
@@ -83,11 +93,18 @@ func main() {
 
 	// Run stdin as script.
 	if file == "-" {
-		but.IfFatal(world.DoFileHandle(os.Stdin, len(args)))
-		return
+		return world.DoFileHandle(std.in, len(args))
 	}
 
 	// Run file as script.
 	filename := shortenPath(filepath.Clean(file))
-	but.IfFatal(world.DoFile(filename, len(args)))
+	return world.DoFile(filename, len(args))
+}
+
+func main() {
+	but.IfFatal(Main(os.Args, Std{
+		in:  os.Stdin,
+		out: os.Stdout,
+		err: os.Stderr,
+	}))
 }
