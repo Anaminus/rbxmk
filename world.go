@@ -319,10 +319,17 @@ func (w *World) DoFile(fileName string, args int) error {
 	return err
 }
 
+type File interface {
+	Name() string
+	Stat() (os.FileInfo, error)
+	Read([]byte) (int, error)
+	Write([]byte) (int, error)
+}
+
 // DoFile executes the contents of file f as Lua. args is the number of
 // arguments currently on the stack that should be passed in. The file is marked
 // as actively running, and is unmarked when the file returns.
-func (w *World) DoFileHandle(f *os.File, args int) error {
+func (w *World) DoFileHandle(f File, args int) error {
 	fi, err := f.Stat()
 	if err != nil {
 		return err

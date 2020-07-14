@@ -45,9 +45,9 @@ func ParseLuaValue(s string) lua.LValue {
 }
 
 type Std struct {
-	in  *os.File
-	out *os.File
-	err *os.File
+	in  rbxmk.File
+	out rbxmk.File
+	err rbxmk.File
 }
 
 const CommandUsage = `rbxmk [ FILE ] [ ...VALUE ]
