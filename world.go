@@ -22,6 +22,24 @@ func NewWorld(l *lua.LState) *World {
 	}
 }
 
+func (w *World) Init() {
+	w.l.SetGlobal("typeof", w.l.NewFunction(func(l *lua.LState) int {
+		v := l.CheckAny(1)
+		u, ok := v.(*lua.LUserData)
+		if !ok {
+			l.Push(lua.LString(v.Type().String()))
+			return 1
+		}
+		t, ok := l.GetMetaField(u, "__type").(lua.LString)
+		if !ok {
+			l.Push(lua.LString(u.Type().String()))
+			return 1
+		}
+		l.Push(lua.LString(t))
+		return 1
+	}))
+}
+
 // Type returns the Type registered with the given name. If the name is not
 // registered, then Type.Name will be an empty string.
 func (w *World) Type(name string) Type {
@@ -59,6 +77,7 @@ func (w *World) RegisterType(t Type) {
 				return m(State{World: w, L: l}, v)
 			}))
 		}
+		mt.RawSetString("__type", lua.LString(t.Name))
 		if t.Metatable["__tostring"] == nil {
 			mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
 				l.Push(lua.LString(t.Name))

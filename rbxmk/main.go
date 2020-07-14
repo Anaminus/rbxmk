@@ -82,6 +82,7 @@ func Main(args []string, std Std) error {
 	})
 	world := rbxmk.NewWorld(state)
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
+	world.Init()
 	for _, t := range reflect.AllTypes() {
 		world.RegisterType(t())
 	}
