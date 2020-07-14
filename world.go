@@ -148,8 +148,7 @@ func (w *World) RegisterType(t Type) {
 				return ctor(State{World: w, L: w.l})
 			}))
 		}
-		globals := w.l.Get(lua.GlobalsIndex)
-		w.l.SetField(globals, t.Name, ctors)
+		w.l.SetGlobal(t.Name, ctors)
 	}
 }
 
