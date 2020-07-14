@@ -65,6 +65,9 @@ func (w *World) RegisterType(t Type) {
 				return 1
 			}))
 		}
+		if t.Metatable["__metatable"] == nil {
+			mt.RawSetString("__metatable", lua.LString("the metatable is locked"))
+		}
 		index = t.Metatable["__index"]
 		newindex = t.Metatable["__newindex"]
 	}
