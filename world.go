@@ -150,6 +150,9 @@ func (w *World) RegisterType(t Type) {
 		}
 		w.l.SetGlobal(t.Name, ctors)
 	}
+	if t.Environment != nil {
+		t.Environment(State{World: w, L: w.l})
+	}
 }
 
 // State returns the underlying Lua state.

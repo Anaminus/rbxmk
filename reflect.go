@@ -60,6 +60,10 @@ type Type struct {
 	// table containing each constructor is created and set as a global
 	// referenced by Name.
 	Constructors Constructors
+
+	// Environment is called after the type is registered to provide additional
+	// setup.
+	Environment func(s State)
 }
 
 // ValueCount returns the normalized number of Lua values that the type reflects
