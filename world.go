@@ -142,6 +142,7 @@ func (w *World) RegisterType(t Type) {
 					l.RaiseError("%s cannot be assigned to", name)
 				}
 				member.Set(State{World: w, L: l}, v)
+				return 0
 			}
 		customNewindex:
 			if newindex != nil {
