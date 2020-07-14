@@ -3,6 +3,7 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/types"
+	"github.com/yuin/gopher-lua"
 )
 
 func Instance() Type {
@@ -184,6 +185,14 @@ func Instance() Type {
 				inst := types.NewInstance(className)
 				return s.Push("Instance", inst)
 			},
+		},
+		Environment: func(s State) {
+			t := s.L.CreateTable(0, 1)
+			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
+				dataModel := types.NewDataModel()
+				return s.Push("Instance", dataModel)
+			}))
+			s.L.SetGlobal("DataModel", t)
 		},
 	}
 }
