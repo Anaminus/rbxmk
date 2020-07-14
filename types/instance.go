@@ -14,6 +14,7 @@ type Instance struct {
 	properties map[string]rbxmk.TValue
 	children   []*Instance
 	parent     *Instance
+	root       bool
 }
 
 func NewInstance(className string) *Instance {
@@ -23,10 +24,23 @@ func NewInstance(className string) *Instance {
 	}
 }
 
+func NewDataModel() *Instance {
+	return &Instance{
+		root:       true,
+		ClassName:  "DataModel",
+		properties: make(map[string]rbxmk.TValue, 0),
+	}
+}
+
 type propRef struct {
 	Instance *Instance
 	Property string
 	Value    *Instance
+}
+
+// IsDataModel returns whether the instance is a root DataModel.
+func (inst *Instance) IsDataModel() bool {
+	return inst.root
 }
 
 // clone returns a deep copy of the instance while managing references.
@@ -266,6 +280,9 @@ func (inst *Instance) Descendants() []*Instance {
 // Parent returns the parent of the instance. Can return nil if the instance
 // has no parent.
 func (inst *Instance) Parent() *Instance {
+	if inst.root {
+		return nil
+	}
 	return inst.parent
 }
 
@@ -276,6 +293,10 @@ func (inst *Instance) Parent() *Instance {
 // new parent is the same as the old parent, then the position of the instance
 // in the parent's children is unchanged.
 func (inst *Instance) SetParent(parent *Instance) error {
+	if inst.root {
+		// Error: The Parent property of <Name> is locked, current parent: NULL, new parent <Parent>
+		return errors.New("cannot set parent of DataModel")
+	}
 	if inst.parent == parent {
 		return nil
 	}
@@ -389,7 +410,7 @@ func (inst *Instance) GetFullName() string {
 	// includes every ancestor.
 	names := make([]string, 0, 8)
 	object := inst
-	for object != nil {
+	for object != nil && !object.root {
 		names = append(names, object.Name())
 		object = object.Parent()
 	}
