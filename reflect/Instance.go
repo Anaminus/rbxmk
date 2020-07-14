@@ -43,8 +43,34 @@ func Instance() Type {
 					}
 				}
 
-				// Try property.
 				name := s.Pull(2, "string").(string)
+				// Try GetService.
+				if inst.IsDataModel() && name == "GetService" {
+					s.L.Push(s.L.NewFunction(func(l *lua.LState) int {
+						u := l.CheckUserData(1)
+						if u.Metatable != l.GetTypeMetatable("Instance") {
+							TypeError(l, 1, "Instance")
+							return 0
+						}
+						inst, ok := u.Value.(*types.Instance)
+						if !ok {
+							TypeError(l, 1, "Instance")
+							return 0
+						}
+						s := State{World: s.World, L: l}
+						className := s.Pull(2, "string").(string)
+						service := inst.FindFirstChildOfClass(className, false)
+						if service == nil {
+							service = types.NewInstance(className)
+							service.IsService = true
+							service.SetName(className)
+							service.SetParent(inst)
+						}
+						return s.Push("Instance", service)
+					}))
+					return 1
+				}
+				// Try property.
 				value := inst.Get(name)
 				if value.Type == "" {
 					// s.L.RaiseError("%s is not a valid member", name)
@@ -74,8 +100,13 @@ func Instance() Type {
 					}
 				}
 
-				// Try property.
 				name := s.Pull(2, "string").(string)
+				// Try GetService.
+				if inst.IsDataModel() && name == "GetService" {
+					s.L.RaiseError("%s cannot be assigned to", name)
+					return 0
+				}
+				// Try property.
 				value, typ := PullVariant(s, 3)
 				inst.Set(name, TValue{Type: typ.Name, Value: value})
 				return 0
