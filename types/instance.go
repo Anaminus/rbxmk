@@ -32,15 +32,15 @@ func NewDataModel() *Instance {
 	}
 }
 
+// IsDataModel returns whether the instance is a root DataModel.
+func (inst *Instance) IsDataModel() bool {
+	return inst.root
+}
+
 type propRef struct {
 	Instance *Instance
 	Property string
 	Value    *Instance
-}
-
-// IsDataModel returns whether the instance is a root DataModel.
-func (inst *Instance) IsDataModel() bool {
-	return inst.root
 }
 
 // clone returns a deep copy of the instance while managing references.
