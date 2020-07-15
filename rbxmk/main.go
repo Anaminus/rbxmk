@@ -9,6 +9,7 @@ import (
 
 	"github.com/anaminus/but"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/yuin/gopher-lua"
 )
@@ -76,16 +77,15 @@ func Main(args []string, std Std) error {
 	args = args[1:]
 
 	// Initialize world.
-	state := lua.NewState(lua.Options{
+	world := rbxmk.NewWorld(lua.NewState(lua.Options{
 		SkipOpenLibs:        true,
 		IncludeGoStackTrace: false,
-	})
-	world := rbxmk.NewWorld(state)
+	}))
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
-	world.Init()
 	for _, t := range reflect.AllTypes() {
 		world.RegisterType(t())
 	}
+	world.Open(library.Base)
 
 	// Add script arguments.
 	for _, arg := range args {
