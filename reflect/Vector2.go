@@ -69,7 +69,7 @@ func Vector2() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Vector2").(types.Vector2)
-				alpha := s.Pull(3, "double").(float64)
+				alpha := s.Pull(3, "number").(float64)
 				return s.Push("Vector2", v.(types.Vector2).Lerp(goal, alpha))
 			}},
 			"Dot": {Method: true, Get: func(s State, v Value) int {

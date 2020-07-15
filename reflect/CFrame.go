@@ -128,7 +128,7 @@ func CFrame() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "CFrame").(types.CFrame)
-				alpha := s.Pull(3, "double").(float64)
+				alpha := s.Pull(3, "number").(float64)
 				return s.Push("CFrame", v.(types.CFrame).Lerp(goal, alpha))
 			}},
 			"ToWorldSpace": {Method: true, Get: func(s State, v Value) int {

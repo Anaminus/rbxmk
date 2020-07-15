@@ -16,7 +16,7 @@ func Float() Type {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return float32(n), nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, TypeError(nil, 0, "float")
 		},
 		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
 			if v, ok := v.(float32); ok {
@@ -43,7 +43,7 @@ func Double() Type {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return float64(n), nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, TypeError(nil, 0, "double")
 		},
 		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
 			if v, ok := v.(float64); ok {
@@ -61,9 +61,30 @@ func Double() Type {
 }
 
 func Number() Type {
-	t := Double()
-	t.Name = "number"
-	return t
+	return Type{
+		Name: "number",
+		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+			return []lua.LValue{lua.LNumber(v.(float64))}, nil
+		},
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+			if n, ok := lvs[0].(lua.LNumber); ok {
+				return float64(n), nil
+			}
+			return nil, TypeError(nil, 0, "number")
+		},
+		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
+			if v, ok := v.(float64); ok {
+				return rbxfile.ValueDouble(v), nil
+			}
+			return nil, TypeError(nil, 0, "float64")
+		},
+		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
+			if sv, ok := sv.(rbxfile.ValueDouble); ok {
+				return float64(sv), nil
+			}
+			return nil, TypeError(nil, 0, "ValueDouble")
+		},
+	}
 }
 
 func Int() Type {
@@ -76,7 +97,7 @@ func Int() Type {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return int(n), nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, TypeError(nil, 0, "int")
 		},
 		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
 			if v, ok := v.(int); ok {
@@ -103,7 +124,7 @@ func Int64() Type {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return int64(n), nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, TypeError(nil, 0, "int64")
 		},
 		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
 			if v, ok := v.(int64); ok {

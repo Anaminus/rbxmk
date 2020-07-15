@@ -85,7 +85,7 @@ func Vector3() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Vector3").(types.Vector3)
-				alpha := s.Pull(3, "double").(float64)
+				alpha := s.Pull(3, "number").(float64)
 				return s.Push("Vector3", v.(types.Vector3).Lerp(goal, alpha))
 			}},
 			"Dot": {Method: true, Get: func(s State, v Value) int {
@@ -98,7 +98,7 @@ func Vector3() Type {
 			}},
 			"FuzzyEq": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				epsilon := s.Pull(3, "double").(float64)
+				epsilon := s.Pull(3, "number").(float64)
 				return s.Push("Vector3", v.(types.Vector3).FuzzyEq(op, epsilon))
 			}},
 		},

@@ -71,9 +71,9 @@ func BrickColor() Type {
 					}
 				case 3:
 					v = types.NewBrickColorFromColor(
-						s.Pull(1, "double").(float64),
-						s.Pull(2, "double").(float64),
-						s.Pull(3, "double").(float64),
+						s.Pull(1, "number").(float64),
+						s.Pull(2, "number").(float64),
+						s.Pull(3, "number").(float64),
 					)
 				default:
 					s.L.RaiseError("expected 1 or 3 arguments")

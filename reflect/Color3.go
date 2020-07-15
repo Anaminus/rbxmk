@@ -46,7 +46,7 @@ func Color3() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Color3").(types.Color3)
-				alpha := s.Pull(3, "double").(float64)
+				alpha := s.Pull(3, "number").(float64)
 				return s.Push("Color3", v.(types.Color3).Lerp(goal, alpha))
 			}},
 			"ToHSV": {Method: true, Get: func(s State, v Value) int {
