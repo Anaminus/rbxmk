@@ -1,9 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-	"strings"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -16,23 +13,7 @@ func ColorSequence() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.ColorSequence)
-				var b strings.Builder
-				for i, v := range u {
-					if i > 0 {
-						b.WriteString("; ")
-					}
-					b.WriteString(strconv.FormatFloat(float64(v.Time), 'g', -1, 32))
-					b.WriteString(", (")
-					b.WriteString(strconv.FormatFloat(float64(v.Value.R), 'g', -1, 32))
-					b.WriteString(", ")
-					b.WriteString(strconv.FormatFloat(float64(v.Value.G), 'g', -1, 32))
-					b.WriteString(", ")
-					b.WriteString(strconv.FormatFloat(float64(v.Value.B), 'g', -1, 32))
-					b.WriteString("), ")
-					b.WriteString(strconv.FormatFloat(float64(v.Envelope), 'g', -1, 32))
-				}
-				s.L.Push(lua.LString(b.String()))
+				s.L.Push(lua.LString(v.(types.ColorSequence).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

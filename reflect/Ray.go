@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,15 +13,7 @@ func Ray() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Ray)
-				var b string
-				b += strconv.FormatFloat(float64(u.Origin.X), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Origin.Y), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Origin.Z), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Direction.X), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Direction.Y), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Direction.Z), 'g', -1, 32)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Ray).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

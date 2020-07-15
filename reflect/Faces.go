@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
@@ -28,15 +26,7 @@ func Faces() Type {
 		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Faces)
-				var b string
-				b += "Right:" + strconv.FormatBool(u.Right) + ", "
-				b += "Top:" + strconv.FormatBool(u.Top) + ", "
-				b += "Back:" + strconv.FormatBool(u.Back) + ", "
-				b += "Left:" + strconv.FormatBool(u.Left) + ", "
-				b += "Bottom:" + strconv.FormatBool(u.Bottom) + ", "
-				b += "Front:" + strconv.FormatBool(u.Front)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Faces).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

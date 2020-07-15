@@ -28,8 +28,7 @@ func BrickColor() Type {
 		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.BrickColor)
-				s.L.Push(lua.LString(u.Name()))
+				s.L.Push(lua.LString(v.(types.BrickColor).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

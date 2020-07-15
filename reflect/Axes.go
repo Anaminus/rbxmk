@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
@@ -28,12 +26,7 @@ func Axes() Type {
 		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Axes)
-				var b string
-				b += "X:" + strconv.FormatBool(u.X) + ", "
-				b += "Y:" + strconv.FormatBool(u.Y) + ", "
-				b += "Z:" + strconv.FormatBool(u.Z)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Axes).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

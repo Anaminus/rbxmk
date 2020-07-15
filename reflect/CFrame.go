@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
@@ -34,21 +32,7 @@ func CFrame() Type {
 		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.CFrame)
-				var b string
-				b += strconv.FormatFloat(float64(u.Position.X), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Position.Y), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Position.Z), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[0]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[1]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[2]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[3]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[4]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[5]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[6]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[7]), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Rotation[8]), 'g', -1, 32)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.CFrame).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

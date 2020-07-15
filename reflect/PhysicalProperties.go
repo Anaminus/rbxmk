@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,18 +13,7 @@ func PhysicalProperties() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.PhysicalProperties)
-				var b string
-				if u.CustomPhysics {
-					b += strconv.FormatFloat(float64(u.Density), 'g', -1, 32) + ", "
-					b += strconv.FormatFloat(float64(u.Friction), 'g', -1, 32) + ", "
-					b += strconv.FormatFloat(float64(u.Elasticity), 'g', -1, 32) + ", "
-					b += strconv.FormatFloat(float64(u.FrictionWeight), 'g', -1, 32) + ", "
-					b += strconv.FormatFloat(float64(u.ElasticityWeight), 'g', -1, 32)
-				} else {
-					b = "nil"
-				}
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.PhysicalProperties).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

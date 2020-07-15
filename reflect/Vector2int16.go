@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,11 +13,7 @@ func Vector2int16() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Vector2int16)
-				var b string
-				b += strconv.FormatInt(int64(u.X), 10) + ", "
-				b += strconv.FormatInt(int64(u.Y), 10)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Vector2int16).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,11 +13,7 @@ func UDim() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.UDim)
-				var b string
-				b += strconv.FormatFloat(float64(u.Scale), 'g', -1, 32) + ", "
-				b += strconv.FormatInt(int64(u.Offset), 10)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.UDim).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

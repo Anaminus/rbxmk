@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
@@ -28,12 +26,7 @@ func Color3() Type {
 		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Color3)
-				var b string
-				b += strconv.FormatFloat(float64(u.R), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.G), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.B), 'g', -1, 32)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Color3).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

@@ -13,13 +13,8 @@ func Instance() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				inst := v.(*types.Instance)
-				b := inst.Name()
-				if b != "" {
-					b += " "
-				}
-				b += "(" + inst.ClassName + ")"
-				return s.Push("string", b)
+				s.L.Push(lua.LString(v.(*types.Instance).String()))
+				return 1
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Instance").(*types.Instance)

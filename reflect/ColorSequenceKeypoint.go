@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,14 +13,7 @@ func ColorSequenceKeypoint() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.ColorSequenceKeypoint)
-				var b string
-				b += strconv.FormatFloat(float64(u.Time), 'g', -1, 32) + ", ("
-				b += strconv.FormatFloat(float64(u.Value.R), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Value.G), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Value.B), 'g', -1, 32) + "), "
-				b += strconv.FormatFloat(float64(u.Envelope), 'g', -1, 32)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.ColorSequenceKeypoint).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {

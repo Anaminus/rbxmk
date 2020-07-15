@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"strconv"
-
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
@@ -15,15 +13,7 @@ func Region3int16() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				u := v.(types.Region3int16)
-				var b string
-				b += strconv.FormatFloat(float64(u.Min.X), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Min.Y), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Min.Z), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Max.X), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Max.Y), 'g', -1, 32) + ", "
-				b += strconv.FormatFloat(float64(u.Max.Z), 'g', -1, 32)
-				s.L.Push(lua.LString(b))
+				s.L.Push(lua.LString(v.(types.Region3int16).String()))
 				return 1
 			},
 			"__eq": func(s State, v Value) int {
