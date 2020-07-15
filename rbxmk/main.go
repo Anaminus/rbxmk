@@ -86,6 +86,8 @@ func Main(args []string, std Std) error {
 		world.RegisterType(t())
 	}
 	world.Open(library.Base)
+	world.Open(library.RBXMK)
+	world.Open(library.OS)
 
 	// Add script arguments.
 	for _, arg := range args {

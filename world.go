@@ -183,6 +183,12 @@ func (w *World) State() *lua.LState {
 	return w.l
 }
 
+func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
+	return w.l.NewFunction(func(l *lua.LState) int {
+		return f(State{World: w, L: l})
+	})
+}
+
 // ReflectTo reflects v to lvs using registered type t.
 func (w *World) ReflectTo(t string, v Value) (lvs []lua.LValue, err error) {
 	typ := w.types[t]
