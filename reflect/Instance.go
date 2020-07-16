@@ -114,7 +114,12 @@ func Instance() Type {
 				},
 				// Allowed to be set for convenience.
 				Set: func(s State, v Value) {
-					v.(*types.Instance).ClassName = s.Pull(3, "string").(string)
+					inst := v.(*types.Instance)
+					if inst.IsDataModel() {
+						s.L.RaiseError("%s cannot be assigned to", "ClassName")
+						return
+					}
+					inst.ClassName = s.Pull(3, "string").(string)
 				},
 			},
 			"Name": Member{
