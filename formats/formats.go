@@ -9,10 +9,16 @@ import (
 func All() []func() rbxmk.Format {
 	return []func() rbxmk.Format{
 		Binary,
+		LocalLua,
+		LocalScriptLua,
+		Lua,
+		ModuleScriptLua,
 		RBXL,
 		RBXLX,
 		RBXM,
 		RBXMX,
+		ScriptLua,
+		ServerLua,
 		Text,
 	}
 }
