@@ -1,5 +1,6 @@
 github.com/anaminus/but v0.2.0 h1:UPKY6UtvTZH8seod0rfVRsQxP8qssz+P6VE9a2AYeNY=
 github.com/anaminus/but v0.2.0/go.mod h1:44z5qYo/3MWnZDi6ifH3IgrFWa1VFfdTttL3IYN/9R4=
+github.com/bkaradzic/go-lz4 v1.0.0 h1:RXc4wYsyz985CkXXeX04y4VnZFGG8Rd43pRaHsOXAKk=
 github.com/bkaradzic/go-lz4 v1.0.0/go.mod h1:0YdlkowM3VswSROI7qDxhRvJ3sLhlFrRRwjwegp5jy4=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
