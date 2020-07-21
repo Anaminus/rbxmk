@@ -7,8 +7,8 @@ github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5P
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/robloxapi/rbxfile v0.2.0 h1:7/w5yxcOtgFsOXYEdhNYt2yeKhHvXe0bJE8o/3SA/m8=
 github.com/robloxapi/rbxfile v0.2.0/go.mod h1:78q5X+Fmlr+MJd/LIxVBwfmVp1pMrVGS+Py4GqFr1GQ=
-github.com/robloxapi/types v0.0.0-20200715010758-702e18dcfa96 h1:p500YUXSFBih6VLo2IH8F7tHeopN+VHuR0to1ix3BBQ=
-github.com/robloxapi/types v0.0.0-20200715010758-702e18dcfa96/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
+github.com/robloxapi/types v0.0.0-20200721055313-4c20ca834bd0 h1:n2GRul/gm6NtOeU5XixJdumtIfFisMb79k/9O4XMSnI=
+github.com/robloxapi/types v0.0.0-20200721055313-4c20ca834bd0/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
 github.com/yuin/gopher-lua v0.0.0-20200603152657-dc2b0ca8b37e h1:oIpIX9VKxSCFrfjsKpluGbNPBGq9iNnT9crH781j9wY=
 github.com/yuin/gopher-lua v0.0.0-20200603152657-dc2b0ca8b37e/go.mod h1:gqRgreBUhTSL0GeU64rtZ3Uq3wtjOa/TB2YfrtkCbVQ=
 golang.org/x/sys v0.0.0-20190204203706-41f3e6584952/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
