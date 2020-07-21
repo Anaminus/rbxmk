@@ -15,6 +15,8 @@ func (f Floatlike) Floatlike() (v float64, ok bool) {
 		return float64(v), true
 	case uint64:
 		return float64(v), true
+	case uint:
+		return float64(v), true
 	case int8:
 		return float64(v), true
 	case int16:
@@ -22,6 +24,8 @@ func (f Floatlike) Floatlike() (v float64, ok bool) {
 	case int32:
 		return float64(v), true
 	case int64:
+		return float64(v), true
+	case int:
 		return float64(v), true
 	case float32:
 		return float64(v), true

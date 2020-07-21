@@ -15,6 +15,8 @@ func (s Stringlike) Stringlike() (v []byte, ok bool) {
 		return v, true
 	case string:
 		return []byte(v), true
+	case []rune:
+		return []byte(string(v)), true
 	case rbxmk.TValue:
 		return Stringlike{Value: v.Value}.Stringlike()
 	case *Instance:
