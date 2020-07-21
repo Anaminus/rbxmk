@@ -2,7 +2,6 @@ package formats
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 
 	"github.com/anaminus/rbxmk"
@@ -110,7 +109,7 @@ func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.TValu
 	case rbxfile.ValueSharedString:
 		return rbxmk.TValue{Type: "SharedString", Value: []byte(r)}, nil
 	default:
-		return rbxmk.TValue{}, fmt.Errorf("cannot encode %T", r)
+		return rbxmk.TValue{}, cannotEncode(r, false)
 	}
 }
 
@@ -268,7 +267,7 @@ func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Valu
 	case "SharedString":
 		return rbxfile.ValueSharedString(t.Value.([]byte)), nil
 	default:
-		return nil, fmt.Errorf("cannot encode %s", t.Type)
+		return nil, cannotEncode(t.Type, true)
 	}
 }
 
@@ -353,7 +352,7 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v rbxmk
 			t.AddChild(inst)
 		}
 	default:
-		return nil, fmt.Errorf("cannot encode %T", v)
+		return nil, cannotEncode(v, false)
 	}
 	r, err := encodeDataModel(t)
 	if err != nil {
