@@ -67,7 +67,8 @@ func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.TValu
 			Position: types.Vector3(r.Position),
 			Rotation: r.Rotation,
 		}}, nil
-	// TODO: case rbxfile.ValueToken:
+	case rbxfile.ValueToken:
+		return rbxmk.TValue{Type: "token", Value: uint32(r)}, nil
 	case rbxfile.ValueVector3int16:
 		return rbxmk.TValue{Type: "Vector3int16", Value: types.Vector3int16(r)}, nil
 	case rbxfile.ValueVector2int16:
@@ -208,7 +209,8 @@ func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Valu
 			Position: rbxfile.ValueVector3(t.Value.(types.CFrame).Position),
 			Rotation: t.Value.(types.CFrame).Rotation,
 		}, nil
-	// TODO: case token:
+	case "token":
+		return rbxfile.ValueToken(t.Value.(uint32)), nil
 	case "Vector3int16":
 		return rbxfile.ValueVector3int16(t.Value.(types.Vector3int16)), nil
 	case "Vector2int16":
