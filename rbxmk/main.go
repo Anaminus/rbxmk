@@ -12,6 +12,7 @@ import (
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/reflect"
+	"github.com/anaminus/rbxmk/sources"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -88,6 +89,9 @@ func Main(args []string, std Std) error {
 	}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
+	}
+	for _, s := range sources.All() {
+		world.RegisterSource(s())
 	}
 	world.Open(library.Base)
 	world.Open(library.RBXMK)

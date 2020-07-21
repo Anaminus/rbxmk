@@ -13,6 +13,8 @@ func RBXMK(s rbxmk.State) {
 	lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
 	lib.RawSetString("encodeformat", s.WrapFunc(rbxmkEncodeFormat))
 	lib.RawSetString("decodeformat", s.WrapFunc(rbxmkDecodeFormat))
+	lib.RawSetString("readsource", s.WrapFunc(rbxmkReadSource))
+	lib.RawSetString("writesource", s.WrapFunc(rbxmkWriteSource))
 	s.L.SetGlobal("rbxmk", lib)
 }
 
@@ -90,4 +92,50 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		return 0
 	}
 	return s.Push("Variant", v)
+}
+
+func rbxmkReadSource(s rbxmk.State) int {
+	name := s.Pull(1, "string").(string)
+	source := s.Source(name)
+	if source.Name == "" {
+		s.L.RaiseError("unknown source %q", name)
+		return 0
+	}
+	if source.Read == nil {
+		s.L.RaiseError("cannot read with format %s", name)
+		return 0
+	}
+	options := make([]interface{}, s.L.GetTop()-1)
+	for i := 2; i <= s.L.GetTop(); i++ {
+		options[i-2] = s.Pull(i, "Variant")
+	}
+	b, err := source.Read(options...)
+	if err != nil {
+		s.L.RaiseError(err.Error())
+		return 0
+	}
+	return s.Push("BinaryString", b)
+}
+
+func rbxmkWriteSource(s rbxmk.State) int {
+	name := s.Pull(1, "string").(string)
+	source := s.Source(name)
+	if source.Name == "" {
+		s.L.RaiseError("unknown source %q", name)
+		return 0
+	}
+	if source.Write == nil {
+		s.L.RaiseError("cannot write with format %s", name)
+		return 0
+	}
+	b := s.Pull(2, "BinaryString").([]byte)
+	options := make([]interface{}, s.L.GetTop()-2)
+	for i := 3; i <= s.L.GetTop(); i++ {
+		options[i-3] = s.Pull(i, "Variant")
+	}
+	if err := source.Write(b, options...); err != nil {
+		s.L.RaiseError(err.Error())
+		return 0
+	}
+	return 0
 }

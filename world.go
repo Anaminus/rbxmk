@@ -13,6 +13,7 @@ type World struct {
 	fileStack []FileInfo
 	types     map[string]Type
 	formats   map[string]Format
+	sources   map[string]Source
 }
 
 func NewWorld(l *lua.LState) *World {
@@ -181,12 +182,13 @@ func (w *World) RegisterType(t Type) {
 // Format returns the Format registered with the given name. If the name is not
 // registered, then Format.Name will be an empty string.
 func (w *World) Format(name string) Format {
-	return w.formats[name]
+	return w.formats[strings.TrimPrefix(name, ".")]
 }
 
 // RegisterFormat registers a format. Panics if the format is already
 // registered.
 func (w *World) RegisterFormat(f Format) {
+	f.Name = strings.TrimPrefix(f.Name, ".")
 	if _, ok := w.formats[f.Name]; ok {
 		panic("format " + f.Name + " already registered")
 	}
@@ -194,6 +196,24 @@ func (w *World) RegisterFormat(f Format) {
 		w.formats = map[string]Format{}
 	}
 	w.formats[f.Name] = f
+}
+
+// Source returns the Source registered with the given name. If the name is not
+// registered, then Source.Name will be an empty string.
+func (w *World) Source(name string) Source {
+	return w.sources[name]
+}
+
+// RegisterSource registers a source. Panics if the source is already
+// registered.
+func (w *World) RegisterSource(s Source) {
+	if _, ok := w.sources[s.Name]; ok {
+		panic("source " + s.Name + " already registered")
+	}
+	if w.sources == nil {
+		w.sources = map[string]Source{}
+	}
+	w.sources[s.Name] = s
 }
 
 // State returns the underlying Lua state.
