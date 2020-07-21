@@ -13,9 +13,35 @@ func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
 		return lua.LNil, s.Type("nil"), nil
 	case bool:
 		return lua.LBool(v), s.Type("bool"), nil
+	case uint8:
+		return lua.LNumber(v), s.Type("number"), nil
+	case uint16:
+		return lua.LNumber(v), s.Type("number"), nil
+	case uint32:
+		return lua.LNumber(v), s.Type("number"), nil
+	case uint64:
+		return lua.LNumber(v), s.Type("number"), nil
+	case uint:
+		return lua.LNumber(v), s.Type("number"), nil
+	case int8:
+		return lua.LNumber(v), s.Type("number"), nil
+	case int16:
+		return lua.LNumber(v), s.Type("number"), nil
+	case int32:
+		return lua.LNumber(v), s.Type("number"), nil
+	case int64:
+		return lua.LNumber(v), s.Type("number"), nil
+	case int:
+		return lua.LNumber(v), s.Type("number"), nil
+	case float32:
+		return lua.LNumber(v), s.Type("number"), nil
 	case float64:
 		return lua.LNumber(v), s.Type("number"), nil
 	case string:
+		return lua.LString(v), s.Type("string"), nil
+	case []byte:
+		return lua.LString(v), s.Type("string"), nil
+	case []rune:
 		return lua.LString(v), s.Type("string"), nil
 	case []Value:
 		typ := s.Type("Array")
