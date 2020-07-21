@@ -73,8 +73,22 @@ func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.TValu
 		return rbxmk.TValue{Type: "Vector3int16", Value: types.Vector3int16(r)}, nil
 	case rbxfile.ValueVector2int16:
 		return rbxmk.TValue{Type: "Vector2int16", Value: types.Vector2int16(r)}, nil
-	// TODO: case rbxfile.ValueNumberSequence:
-	// TODO: case rbxfile.ValueColorSequence:
+	case rbxfile.ValueNumberSequence:
+		t := make(types.NumberSequence, len(r))
+		for i, k := range r {
+			t[i] = types.NumberSequenceKeypoint(k)
+		}
+		return rbxmk.TValue{Type: "NumberSequence", Value: t}, nil
+	case rbxfile.ValueColorSequence:
+		t := make(types.ColorSequence, len(r))
+		for i, k := range r {
+			t[i] = types.ColorSequenceKeypoint{
+				Time:     k.Time,
+				Value:    types.Color3(k.Value),
+				Envelope: k.Envelope,
+			}
+		}
+		return rbxmk.TValue{Type: "ColorSequence", Value: t}, nil
 	case rbxfile.ValueNumberRange:
 		return rbxmk.TValue{Type: "NumberRange", Value: types.NumberRange(r)}, nil
 	case rbxfile.ValueRect2D:
@@ -215,8 +229,24 @@ func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Valu
 		return rbxfile.ValueVector3int16(t.Value.(types.Vector3int16)), nil
 	case "Vector2int16":
 		return rbxfile.ValueVector2int16(t.Value.(types.Vector2int16)), nil
-	// TODO: case NumberSequence:
-	// TODO: case ColorSequence:
+	case "NumberSequence":
+		t := t.Value.(rbxfile.ValueNumberSequence)
+		r := make(rbxfile.ValueNumberSequence, len(t))
+		for i, k := range t {
+			r[i] = rbxfile.ValueNumberSequenceKeypoint(k)
+		}
+		return r, nil
+	case "ColorSequence":
+		t := t.Value.(rbxfile.ValueColorSequence)
+		r := make(rbxfile.ValueColorSequence, len(t))
+		for i, k := range t {
+			r[i] = rbxfile.ValueColorSequenceKeypoint{
+				Time:     k.Time,
+				Value:    rbxfile.ValueColor3(k.Value),
+				Envelope: k.Envelope,
+			}
+		}
+		return r, nil
 	case "NumberRange":
 		return rbxfile.ValueNumberRange(t.Value.(types.NumberRange)), nil
 	case "Rect":
