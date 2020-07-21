@@ -3,6 +3,7 @@ package formats
 import (
 	"bytes"
 	"fmt"
+	"io"
 
 	"github.com/anaminus/rbxmk"
 	rtypes "github.com/anaminus/rbxmk/types"
@@ -328,43 +329,63 @@ func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 	return
 }
 
+func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), b []byte) (v rbxmk.Value, err error) {
+	root, err := method(bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+	return decodeDataModel(root)
+}
+
+func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v rbxmk.Value) (b []byte, err error) {
+	var t *rtypes.Instance
+	switch v := v.(type) {
+	case *rtypes.Instance:
+		if !v.IsDataModel() {
+			t = rtypes.NewDataModel()
+			t.AddChild(v)
+			break
+		}
+		t = v
+	case []*rtypes.Instance:
+		t = rtypes.NewDataModel()
+		for _, inst := range v {
+			t.AddChild(inst)
+		}
+	default:
+		return nil, fmt.Errorf("cannot encode %T", v)
+	}
+	r, err := encodeDataModel(t)
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	if err := method(&buf, r); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxl",
 		Decode: func(b []byte) (v rbxmk.Value, err error) {
-			root, err := rbxl.DeserializePlace(bytes.NewReader(b))
-			if err != nil {
-				return nil, err
-			}
-			return decodeDataModel(root)
+			return decodeRBX(rbxl.DeserializePlace, b)
 		},
 		Encode: func(v rbxmk.Value) (b []byte, err error) {
-			var t *rtypes.Instance
-			switch v := v.(type) {
-			case *rtypes.Instance:
-				if !v.IsDataModel() {
-					t = rtypes.NewDataModel()
-					t.AddChild(v)
-					break
-				}
-				t = v
-			case []*rtypes.Instance:
-				t = rtypes.NewDataModel()
-				for _, inst := range v {
-					t.AddChild(inst)
-				}
-			default:
-				return nil, fmt.Errorf("cannot encode %T", v)
-			}
-			r, err := encodeDataModel(t)
-			if err != nil {
-				return nil, err
-			}
-			var buf bytes.Buffer
-			if err := rbxl.SerializePlace(&buf, r); err != nil {
-				return nil, err
-			}
-			return buf.Bytes(), nil
+			return encodeRBX(rbxl.SerializePlace, v)
+		},
+	}
+}
+
+func RBXM() rbxmk.Format {
+	return rbxmk.Format{
+		Name: "rbxm",
+		Decode: func(b []byte) (v rbxmk.Value, err error) {
+			return decodeRBX(rbxl.DeserializeModel, b)
+		},
+		Encode: func(v rbxmk.Value) (b []byte, err error) {
+			return encodeRBX(rbxl.SerializeModel, v)
 		},
 	}
 }
@@ -373,39 +394,22 @@ func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxlx",
 		Decode: func(b []byte) (v rbxmk.Value, err error) {
-			root, err := rbxlx.Deserialize(bytes.NewReader(b))
-			if err != nil {
-				return nil, err
-			}
-			return decodeDataModel(root)
+			return decodeRBX(rbxlx.Deserialize, b)
 		},
 		Encode: func(v rbxmk.Value) (b []byte, err error) {
-			var t *rtypes.Instance
-			switch v := v.(type) {
-			case *rtypes.Instance:
-				if !v.IsDataModel() {
-					t = rtypes.NewDataModel()
-					t.AddChild(v)
-					break
-				}
-				t = v
-			case []*rtypes.Instance:
-				t = rtypes.NewDataModel()
-				for _, inst := range v {
-					t.AddChild(inst)
-				}
-			default:
-				return nil, fmt.Errorf("cannot encode %T", v)
-			}
-			r, err := encodeDataModel(t)
-			if err != nil {
-				return nil, err
-			}
-			var buf bytes.Buffer
-			if err := rbxlx.Serialize(&buf, r); err != nil {
-				return nil, err
-			}
-			return buf.Bytes(), nil
+			return encodeRBX(rbxlx.Serialize, v)
+		},
+	}
+}
+
+func RBXMX() rbxmk.Format {
+	return rbxmk.Format{
+		Name: "rbxmx",
+		Decode: func(b []byte) (v rbxmk.Value, err error) {
+			return decodeRBX(rbxlx.Deserialize, b)
+		},
+		Encode: func(v rbxmk.Value) (b []byte, err error) {
+			return encodeRBX(rbxlx.Serialize, v)
 		},
 	}
 }
