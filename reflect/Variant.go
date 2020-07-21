@@ -82,6 +82,19 @@ func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
 		if len(values) > 0 {
 			return values[0], typ, nil
 		}
+	case interface{ Type() string }:
+		typ := s.Type(v.Type())
+		if typ.Name == "" {
+			return nil, s.Type("Variant"), fmt.Errorf("unknown type %q", string(v.Type()))
+		}
+		if typ.ReflectTo == nil {
+			return nil, s.Type("Variant"), fmt.Errorf("unable to cast %s to Variant", typ.Name)
+		}
+		values, err := typ.ReflectTo(s, typ, v)
+		if err != nil {
+			return nil, typ, err
+		}
+		return values[0], typ, nil
 	}
 	return nil, s.Type("Variant"), fmt.Errorf("unable to cast value to Variant")
 }
