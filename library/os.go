@@ -22,9 +22,30 @@ func OS(s rbxmk.State) {
 	lib.RawSetString("dir", s.WrapFunc(osDir))
 }
 
+func guessExt(s rbxmk.State, filename string) (ext string) {
+	i := len(filename) - 1
+	for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
+	}
+	filename = filename[i+1:]
+	for {
+		for i := 0; i < len(filename); i++ {
+			if filename[i] == '.' {
+				filename = filename[i+1:]
+				goto check
+			}
+		}
+		return ""
+	check:
+		if s.Format(filename).Name != "" {
+			return filename
+		}
+	}
+}
+
 func osSplit(s rbxmk.State) int {
 	path := s.L.CheckString(1)
-	for i := 2; i <= s.L.GetTop(); i++ {
+	n := s.L.GetTop()
+	for i := 2; i <= n; i++ {
 		var result string
 		switch typ := s.L.CheckString(i); typ {
 		case "dir":
@@ -37,24 +58,24 @@ func osSplit(s rbxmk.State) int {
 			result = filepath.Base(path)
 			result = result[:len(result)-len(filepath.Ext(path))]
 		case "fext":
-			// result = scheme.GuessFileExtension(ctx.Options, "", path)
-			// if result != "" && result != "." {
-			// 	result = "." + result
-			// }
+			result = guessExt(s, path)
+			if result != "" && result != "." {
+				result = "." + result
+			}
 		case "fstem":
-			// ext := scheme.GuessFileExtension(ctx.Options, "", path)
-			// if ext != "" && ext != "." {
-			// 	ext = "." + ext
-			// }
-			// result = filepath.Base(path)
-			// result = result[:len(result)-len(ext)]
+			ext := guessExt(s, path)
+			if ext != "" && ext != "." {
+				ext = "." + ext
+			}
+			result = filepath.Base(path)
+			result = result[:len(result)-len(ext)]
 		default:
 			s.L.RaiseError("unknown argument %q", typ)
 			return 0
 		}
 		s.L.Push(lua.LString(result))
 	}
-	return s.L.GetTop() - 1
+	return n - 1
 }
 
 func osJoin(s rbxmk.State) int {
