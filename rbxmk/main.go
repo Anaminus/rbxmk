@@ -82,7 +82,7 @@ func Main(args []string, std Std) error {
 		IncludeGoStackTrace: false,
 	}))
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
-	for _, t := range reflect.AllTypes() {
+	for _, t := range reflect.All() {
 		world.RegisterType(t())
 	}
 	world.Open(library.Base)

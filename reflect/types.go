@@ -4,7 +4,7 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
-func AllTypes() []func() rbxmk.Type {
+func All() []func() rbxmk.Type {
 	return []func() rbxmk.Type{
 		Array,
 		Axes,
