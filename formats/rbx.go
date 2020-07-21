@@ -224,7 +224,7 @@ func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Valu
 		}, nil
 	case "PhysicalProperties":
 		return rbxfile.ValuePhysicalProperties(t.Value.(types.PhysicalProperties)), nil
-	case "Color3uint8": // TODO: no such reflection type
+	case "Color3uint8":
 		return rbxfile.ValueColor3uint8{
 			R: byte(t.Value.(types.Color3).R * 255),
 			G: byte(t.Value.(types.Color3).G * 255),
