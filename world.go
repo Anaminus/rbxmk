@@ -188,7 +188,7 @@ func (w *World) Format(name string) Format {
 // registered.
 func (w *World) RegisterFormat(f Format) {
 	if _, ok := w.formats[f.Name]; ok {
-		panic("type " + f.Name + " already registered")
+		panic("format " + f.Name + " already registered")
 	}
 	if w.formats == nil {
 		w.formats = map[string]Format{}
