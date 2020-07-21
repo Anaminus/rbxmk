@@ -10,6 +10,8 @@ func All() []func() rbxmk.Format {
 	return []func() rbxmk.Format{
 		RBXL,
 		RBXLX,
+		RBXM,
+		RBXMX,
 
 func cannotEncode(v interface{}, s bool) error {
 	if s {
