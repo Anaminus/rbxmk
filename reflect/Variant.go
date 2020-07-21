@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/types"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -57,6 +58,18 @@ func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
 			return nil, typ, err
 		}
 		return values[0], typ, nil
+	case types.Stringlike:
+		if v, ok := v.Stringlike(); ok {
+			return lua.LString(v), s.Type("string"), nil
+		}
+	case types.Floatlike:
+		if v, ok := v.Floatlike(); ok {
+			return lua.LNumber(v), s.Type("number"), nil
+		}
+	case types.Intlike:
+		if v, ok := v.Intlike(); ok {
+			return lua.LNumber(v), s.Type("int"), nil
+		}
 	case TValue:
 		typ := s.Type(v.Type)
 		if typ.ReflectTo == nil {
