@@ -11,6 +11,8 @@ import (
 func RBXMK(s rbxmk.State) {
 	lib := s.L.CreateTable(0, 1)
 	lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
+	lib.RawSetString("encodeformat", s.WrapFunc(rbxmkEncodeFormat))
+	lib.RawSetString("decodeformat", s.WrapFunc(rbxmkDecodeFormat))
 	s.L.SetGlobal("rbxmk", lib)
 }
 
@@ -50,4 +52,42 @@ func rbxmkLoad(s rbxmk.State) int {
 		return 0
 	}
 	return s.L.GetTop() - 1
+}
+
+func rbxmkEncodeFormat(s rbxmk.State) int {
+	name := s.Pull(1, "string").(string)
+	format := s.Format(name)
+	if format.Name == "" {
+		s.L.RaiseError("unknown format %q", name)
+		return 0
+	}
+	if format.Encode == nil {
+		s.L.RaiseError("cannot encode with format %q", name)
+		return 0
+	}
+	b, err := format.Encode(s.Pull(2, "Variant"))
+	if err != nil {
+		s.L.RaiseError(err.Error())
+		return 0
+	}
+	return s.Push("BinaryString", b)
+}
+
+func rbxmkDecodeFormat(s rbxmk.State) int {
+	name := s.Pull(1, "string").(string)
+	format := s.Format(name)
+	if format.Name == "" {
+		s.L.RaiseError("unknown format %q", name)
+		return 0
+	}
+	if format.Decode == nil {
+		s.L.RaiseError("cannot decode with format %q", name)
+		return 0
+	}
+	v, err := format.Decode(s.Pull(2, "BinaryString").([]byte))
+	if err != nil {
+		s.L.RaiseError(err.Error())
+		return 0
+	}
+	return s.Push("Variant", v)
 }

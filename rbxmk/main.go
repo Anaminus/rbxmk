@@ -9,6 +9,7 @@ import (
 
 	"github.com/anaminus/but"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/yuin/gopher-lua"
@@ -84,6 +85,9 @@ func Main(args []string, std Std) error {
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
 	for _, t := range reflect.All() {
 		world.RegisterType(t())
+	}
+	for _, f := range formats.All() {
+		world.RegisterFormat(f())
 	}
 	world.Open(library.Base)
 	world.Open(library.RBXMK)
