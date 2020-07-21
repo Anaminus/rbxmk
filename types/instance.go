@@ -423,6 +423,11 @@ func (inst *Instance) GetFullName() string {
 	return string(full)
 }
 
+// Type returns a string identifying the type.
+func (*Instance) Type() string {
+	return "Instance"
+}
+
 // String implements the fmt.Stringer interface by returning the Name of the
 // instance, or the ClassName if Name isn't defined.
 func (inst *Instance) String() string {
