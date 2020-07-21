@@ -5,5 +5,7 @@ import (
 )
 
 func All() []func() rbxmk.Source {
-	return []func() rbxmk.Source{}
+	return []func() rbxmk.Source{
+		File,
+	}
 }
