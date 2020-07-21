@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/robloxapi/rbxfile"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -230,28 +229,6 @@ func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v Value, err error) {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
 	return typ.ReflectFrom(State{World: w, L: w.l}, typ, lvs...)
-}
-
-func (w *World) Serialize(s State, t string, v Value) (sv rbxfile.Value, err error) {
-	typ := w.types[t]
-	if typ.Name == "" {
-		return nil, fmt.Errorf("unknown type %q", t)
-	}
-	if typ.Serialize == nil {
-		return nil, fmt.Errorf("cannot serialize type %q", t)
-	}
-	return typ.Serialize(State{World: w, L: w.l}, v)
-}
-
-func (w *World) Deserialize(s State, t string, sv rbxfile.Value) (v Value, err error) {
-	typ := w.types[t]
-	if typ.Name == "" {
-		return nil, fmt.Errorf("unknown type %q", t)
-	}
-	if typ.Serialize == nil {
-		return nil, fmt.Errorf("cannot deserialize type %q", t)
-	}
-	return typ.Deserialize(State{World: w, L: w.l}, sv)
 }
 
 // Push reflects v according to registered type t, then pushes the results to

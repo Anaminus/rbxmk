@@ -3,7 +3,6 @@ package rbxmk
 import (
 	"strings"
 
-	"github.com/robloxapi/rbxfile"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -39,12 +38,6 @@ type Type struct {
 	// ReflectFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lvs must have a length of 1 or greater.
 	ReflectFrom func(s State, t Type, lvs ...lua.LValue) (v Value, err error)
-
-	// Serialize serializes a value.
-	Serialize func(s State, v Value) (sv rbxfile.Value, err error)
-
-	// Deserialize deserializes a value.
-	Deserialize func(s State, sv rbxfile.Value) (v Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type

@@ -2,7 +2,6 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -12,24 +11,6 @@ func CFrame() Type {
 		Name:        "CFrame",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.CFrame); ok {
-				return rbxfile.ValueCFrame{
-					Position: rbxfile.ValueVector3(v.Position),
-					Rotation: v.Rotation,
-				}, nil
-			}
-			return nil, TypeError(nil, 0, "CFrame")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueCFrame); ok {
-				return types.CFrame{
-					Position: types.Vector3(sv.Position),
-					Rotation: sv.Rotation,
-				}, nil
-			}
-			return nil, TypeError(nil, 0, "CFrame")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.CFrame).String()))

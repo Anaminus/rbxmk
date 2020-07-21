@@ -2,7 +2,6 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -12,18 +11,6 @@ func Axes() Type {
 		Name:        "Axes",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.Axes); ok {
-				return rbxfile.ValueAxes(v), nil
-			}
-			return nil, TypeError(nil, 0, "Axes")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueAxes); ok {
-				return types.Axes(sv), nil
-			}
-			return nil, TypeError(nil, 0, "Axes")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.Axes).String()))

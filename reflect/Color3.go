@@ -2,7 +2,6 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -12,18 +11,6 @@ func Color3() Type {
 		Name:        "Color3",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.Color3); ok {
-				return rbxfile.ValueColor3(v), nil
-			}
-			return nil, TypeError(nil, 0, "Color3")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueColor3); ok {
-				return types.Color3(sv), nil
-			}
-			return nil, TypeError(nil, 0, "Color3")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.Color3).String()))
@@ -87,31 +74,8 @@ func Color3() Type {
 	}
 }
 
-// TODO: Serialization should be separated from reflection. Color3uint8 is not a
-// reflected type, but a serialized type.
-
 func Color3uint8() Type {
 	t := Color3()
 	t.Name = "Color3uint8"
-	t.Serialize = func(s State, v Value) (sv rbxfile.Value, err error) {
-		if v, ok := v.(types.Color3); ok {
-			return rbxfile.ValueColor3uint8{
-				R: byte(v.R * 255),
-				G: byte(v.G * 255),
-				B: byte(v.B * 255),
-			}, nil
-		}
-		return nil, TypeError(nil, 0, "Color3uint8")
-	}
-	t.Deserialize = func(s State, sv rbxfile.Value) (v Value, err error) {
-		if sv, ok := sv.(rbxfile.ValueColor3uint8); ok {
-			return types.Color3{
-				R: float32(sv.R) / 255,
-				G: float32(sv.G) / 255,
-				B: float32(sv.B) / 255,
-			}, nil
-		}
-		return nil, TypeError(nil, 0, "Color3uint8")
-	}
 	return t
 }

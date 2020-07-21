@@ -2,7 +2,6 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -12,18 +11,6 @@ func Faces() Type {
 		Name:        "Faces",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.Faces); ok {
-				return rbxfile.ValueFaces(v), nil
-			}
-			return nil, TypeError(nil, 0, "Faces")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueFaces); ok {
-				return types.Faces(sv), nil
-			}
-			return nil, TypeError(nil, 0, "Faces")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.Faces).String()))

@@ -4,7 +4,6 @@ import (
 	"math/rand"
 
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -14,18 +13,6 @@ func BrickColor() Type {
 		Name:        "BrickColor",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.BrickColor); ok {
-				return rbxfile.ValueBrickColor(v), nil
-			}
-			return nil, TypeError(nil, 0, "BrickColor")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueBrickColor); ok {
-				return types.BrickColor(sv), nil
-			}
-			return nil, TypeError(nil, 0, "BrickColor")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.BrickColor).String()))

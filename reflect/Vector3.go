@@ -2,7 +2,6 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -12,18 +11,6 @@ func Vector3() Type {
 		Name:        "Vector3",
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
-		Serialize: func(s State, v Value) (sv rbxfile.Value, err error) {
-			if v, ok := v.(types.Vector3); ok {
-				return rbxfile.ValueVector3(v), nil
-			}
-			return nil, TypeError(nil, 0, "Vector3")
-		},
-		Deserialize: func(s State, sv rbxfile.Value) (v Value, err error) {
-			if sv, ok := sv.(rbxfile.ValueVector3); ok {
-				return types.Vector3(sv), nil
-			}
-			return nil, TypeError(nil, 0, "Vector3")
-		},
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
 				s.L.Push(lua.LString(v.(types.Vector3).String()))
