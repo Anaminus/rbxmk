@@ -57,47 +57,66 @@ func (d *dummyInfo) IsDir() bool        { return d.isdir }
 func (d *dummyInfo) Sys() interface{}   { return d }
 
 func initMain(s rbxmk.State) {
-	// PASS calls the first argument. If the call errors or returns a falsy
-	// value, then an error is thrown. Returning no value counts as truthy. The
-	// second argument is an optional message to display with the error.
+	// PASS makes a positive assertion. If the first argument is a non-function,
+	// then an error is thrown if the value is falsy. Otherwise, the function is
+	// called. If the call errors or returns a falsy value, then an error is
+	// thrown. Returning no value counts as truthy. The second argument is an
+	// optional message to display with the error.
 	s.L.SetGlobal("PASS", s.L.NewFunction(func(l *lua.LState) int {
-		fn := l.CheckFunction(1)
+		v := l.CheckAny(1)
 		msg := l.OptString(2, "expected pass")
-		n := s.L.GetTop()
-		s.L.Push(fn)
-		if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
-			s.L.RaiseError("%s: %s", msg, err.Error())
-			return 0
-		}
-		if s.L.GetTop() > n {
-			if !s.L.ToBool(n + 1) {
+		switch v := v.(type) {
+		case *lua.LFunction:
+			n := s.L.GetTop()
+			s.L.Push(v)
+			if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
+				s.L.RaiseError("%s: %s", msg, err.Error())
+				return 0
+			}
+			if s.L.GetTop() > n {
+				if !s.L.ToBool(n + 1) {
+					s.L.RaiseError(msg)
+					return 0
+				}
+			}
+		default:
+			if !lua.LVAsBool(v) {
 				s.L.RaiseError(msg)
 				return 0
 			}
 		}
 		return 0
 	}))
-	// FAIL calls the first argument. If the call does not error or returns a
-	// truthy value, then an error is thrown. Returning no value counts as
-	// falsy. The second argument is an optional message to display with the
-	// error.
+	// FAIL makes a negative assertion. If the first argument is a non-function,
+	// then an error is thrown if the value is truthy. Otherwise, the function
+	// is called. If the call does not error or returns a truthy value, then an
+	// error is thrown. Returning no value counts as falsy. The second argument
+	// is an optional message to display with the error.
 	s.L.SetGlobal("FAIL", s.L.NewFunction(func(l *lua.LState) int {
-		fn := l.CheckFunction(1)
+		v := l.CheckAny(1)
 		msg := l.OptString(2, "expected fail")
-		n := s.L.GetTop()
-		s.L.Push(fn)
-		if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
-			if s.L.GetTop() > n {
-				if s.L.ToBool(n + 1) {
-					s.L.RaiseError(msg)
+		switch v := v.(type) {
+		case *lua.LFunction:
+			n := s.L.GetTop()
+			s.L.Push(v)
+			if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
+				if s.L.GetTop() > n {
+					if s.L.ToBool(n + 1) {
+						s.L.RaiseError(msg)
+						return 0
+					}
 					return 0
 				}
+				s.L.RaiseError(msg)
+				return 0
+			} else if lua.LVAsBool(s.L.GetGlobal("SHOW_ERRORS")) {
+				fmt.Printf("ERROR: %s\n", err)
+			}
+		default:
+			if lua.LVAsBool(v) {
+				s.L.RaiseError(msg)
 				return 0
 			}
-			s.L.RaiseError(msg)
-			return 0
-		} else if lua.LVAsBool(s.L.GetGlobal("SHOW_ERRORS")) {
-			fmt.Printf("ERROR: %s\n", err)
 		}
 		return 0
 	}))
