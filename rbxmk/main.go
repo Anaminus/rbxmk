@@ -60,7 +60,8 @@ will be read from stdin instead.
 
 Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
 nil are parsed into their respective types in Lua, and any other value is
-interpreted as a string.`
+interpreted as a string. Within the script, these arguments can be received from
+the ... operator.`
 
 func Main(args []string, std Std) error {
 	// Parse flags.
