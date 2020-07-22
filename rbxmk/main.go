@@ -63,7 +63,7 @@ nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string. Within the script, these arguments can be received from
 the ... operator.`
 
-func Main(args []string, std Std) error {
+func Main(args []string, std Std, init func(rbxmk.State)) error {
 	// Parse flags.
 	flagset := flag.NewFlagSet(args[0], flag.ExitOnError)
 	flagset.Usage = func() {
@@ -104,6 +104,10 @@ func Main(args []string, std Std) error {
 		world.State().Push(ParseLuaValue(arg))
 	}
 
+	if init != nil {
+		init(rbxmk.State{World: world, L: world.State()})
+	}
+
 	// Run stdin as script.
 	if file == "-" {
 		return world.DoFileHandle(std.in, len(args))
@@ -119,5 +123,5 @@ func main() {
 		in:  os.Stdin,
 		out: os.Stdout,
 		err: os.Stderr,
-	}))
+	}, nil))
 }
