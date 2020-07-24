@@ -20,27 +20,27 @@ func BrickColor() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "BrickColor").(types.BrickColor)
-				return s.Push("bool", types.Bool(s.Pull(1, "BrickColor").(types.BrickColor) == op))
+				return s.Push(types.Bool(s.Pull(1, "BrickColor").(types.BrickColor) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Name": {Get: func(s State, v types.Value) int {
-				return s.Push("string", types.String(v.(types.BrickColor).Name()))
+				return s.Push(types.String(v.(types.BrickColor).Name()))
 			}},
 			"Number": {Get: func(s State, v types.Value) int {
-				return s.Push("int", types.Int(v.(types.BrickColor).Number()))
+				return s.Push(types.Int(v.(types.BrickColor).Number()))
 			}},
 			"R": {Get: func(s State, v types.Value) int {
-				return s.Push("number", types.Double(v.(types.BrickColor).R()))
+				return s.Push(types.Double(v.(types.BrickColor).R()))
 			}},
 			"G": {Get: func(s State, v types.Value) int {
-				return s.Push("number", types.Double(v.(types.BrickColor).G()))
+				return s.Push(types.Double(v.(types.BrickColor).G()))
 			}},
 			"B": {Get: func(s State, v types.Value) int {
-				return s.Push("number", types.Double(v.(types.BrickColor).B()))
+				return s.Push(types.Double(v.(types.BrickColor).B()))
 			}},
 			"Color": {Get: func(s State, v types.Value) int {
-				return s.Push("Color3", v.(types.BrickColor).Color())
+				return s.Push(v.(types.BrickColor).Color())
 			}},
 		},
 		Constructors: Constructors{
@@ -66,39 +66,39 @@ func BrickColor() Type {
 					s.L.RaiseError("expected 1 or 3 arguments")
 					return 0
 				}
-				return s.Push("BrickColor", v)
+				return s.Push(v)
 			},
 			"palette": func(s State) int {
 				index := int(s.Pull(1, "int").(types.Int))
-				return s.Push("BrickColor", types.NewBrickColorFromPalette(index))
+				return s.Push(types.NewBrickColorFromPalette(index))
 			},
 			"random": func(s State) int {
 				index := rand.Intn(types.BrickColorIndexSize)
-				return s.Push("BrickColor", types.NewBrickColorFromIndex(index))
+				return s.Push(types.NewBrickColorFromIndex(index))
 			},
 			"White": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("White"))
+				return s.Push(types.NewBrickColorFromName("White"))
 			},
 			"Gray": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Medium stone grey"))
+				return s.Push(types.NewBrickColorFromName("Medium stone grey"))
 			},
 			"DarkGray": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Dark stone grey"))
+				return s.Push(types.NewBrickColorFromName("Dark stone grey"))
 			},
 			"Black": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Black"))
+				return s.Push(types.NewBrickColorFromName("Black"))
 			},
 			"Red": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Bright red"))
+				return s.Push(types.NewBrickColorFromName("Bright red"))
 			},
 			"Yellow": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Bright yellow"))
+				return s.Push(types.NewBrickColorFromName("Bright yellow"))
 			},
 			"Green": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Dark green"))
+				return s.Push(types.NewBrickColorFromName("Dark green"))
 			},
 			"Blue": func(s State) int {
-				return s.Push("BrickColor", types.NewBrickColorFromName("Bright blue"))
+				return s.Push(types.NewBrickColorFromName("Bright blue"))
 			},
 		},
 	}

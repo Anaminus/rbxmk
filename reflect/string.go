@@ -58,19 +58,19 @@ func BinaryString() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)))
+				return s.Push(types.String(pullString(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) == pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) < pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) <= pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
 			},
 			"__concat": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)+pullString(s, 2)))
+				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
 			},
 		},
 	}
@@ -101,19 +101,19 @@ func ProtectedString() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)))
+				return s.Push(types.String(pullString(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) == pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) < pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) <= pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
 			},
 			"__concat": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)+pullString(s, 2)))
+				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
 			},
 		},
 	}
@@ -144,19 +144,19 @@ func Content() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)))
+				return s.Push(types.String(pullString(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) == pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) < pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) <= pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
 			},
 			"__concat": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)+pullString(s, 2)))
+				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
 			},
 		},
 	}
@@ -187,19 +187,19 @@ func SharedString() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)))
+				return s.Push(types.String(pullString(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) == pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) < pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(pullString(s, 1) <= pullString(s, 2)))
+				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
 			},
 			"__concat": func(s State) int {
-				return s.Push("string", types.String(pullString(s, 1)+pullString(s, 2)))
+				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
 			},
 		},
 	}

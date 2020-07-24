@@ -19,27 +19,27 @@ func Color3() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Color3").(types.Color3)
-				return s.Push("bool", types.Bool(s.Pull(1, "Color3").(types.Color3) == op))
+				return s.Push(types.Bool(s.Pull(1, "Color3").(types.Color3) == op))
 			},
 		},
 		Members: map[string]Member{
 			"R": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Color3).R))
+				return s.Push(types.Float(v.(types.Color3).R))
 			}},
 			"G": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Color3).G))
+				return s.Push(types.Float(v.(types.Color3).G))
 			}},
 			"B": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Color3).B))
+				return s.Push(types.Float(v.(types.Color3).B))
 			}},
 			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
 				goal := s.Pull(2, "Color3").(types.Color3)
 				alpha := float64(s.Pull(3, "number").(types.Double))
-				return s.Push("Color3", v.(types.Color3).Lerp(goal, alpha))
+				return s.Push(v.(types.Color3).Lerp(goal, alpha))
 			}},
 			"ToHSV": {Method: true, Get: func(s State, v types.Value) int {
 				hue, sat, val := v.(types.Color3).ToHSV()
-				return s.Push("Tuple", rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
+				return s.Push(rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
 			}},
 		},
 		Constructors: Constructors{
@@ -55,17 +55,17 @@ func Color3() Type {
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0
 				}
-				return s.Push("Color3", v)
+				return s.Push(v)
 			},
 			"fromRGB": func(s State) int {
-				return s.Push("Color3", types.NewColor3FromRGB(
+				return s.Push(types.NewColor3FromRGB(
 					int(s.Pull(1, "int").(types.Int)),
 					int(s.Pull(2, "int").(types.Int)),
 					int(s.Pull(3, "int").(types.Int)),
 				))
 			},
 			"fromHSV": func(s State) int {
-				return s.Push("Color3", types.NewColor3FromHSV(
+				return s.Push(types.NewColor3FromHSV(
 					float64(s.Pull(1, "number").(types.Double)),
 					float64(s.Pull(2, "number").(types.Double)),
 					float64(s.Pull(3, "number").(types.Double)),

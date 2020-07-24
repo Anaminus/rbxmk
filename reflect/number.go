@@ -64,45 +64,45 @@ func Float() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("number", types.Double(pullNumber(s, 1)))
+				return s.Push(types.Double(pullNumber(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(types.Float(pullNumber(s, 1)) == types.Float(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Float(pullNumber(s, 1)) == types.Float(pullNumber(s, 2))))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(types.Float(pullNumber(s, 1)) < types.Float(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Float(pullNumber(s, 1)) < types.Float(pullNumber(s, 2))))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(types.Float(pullNumber(s, 1)) <= types.Float(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Float(pullNumber(s, 1)) <= types.Float(pullNumber(s, 2))))
 			},
 			"__add": func(s State) int {
-				return s.Push("float", types.Float(pullNumber(s, 1))+types.Float(pullNumber(s, 2)))
+				return s.Push(types.Float(pullNumber(s, 1)) + types.Float(pullNumber(s, 2)))
 			},
 			"__sub": func(s State) int {
-				return s.Push("float", types.Float(pullNumber(s, 1))-types.Float(pullNumber(s, 2)))
+				return s.Push(types.Float(pullNumber(s, 1)) - types.Float(pullNumber(s, 2)))
 			},
 			"__mul": func(s State) int {
-				return s.Push("float", types.Float(pullNumber(s, 1))*types.Float(pullNumber(s, 2)))
+				return s.Push(types.Float(pullNumber(s, 1)) * types.Float(pullNumber(s, 2)))
 			},
 			"__div": func(s State) int {
 				a := types.Float(pullNumber(s, 1))
 				b := types.Float(pullNumber(s, 1))
 				if b == 0 {
 					if a == 0 {
-						return s.Push("float", types.Float(math.NaN()))
+						return s.Push(types.Float(math.NaN()))
 					}
-					return s.Push("float", types.Float(math.Inf(int(a))))
+					return s.Push(types.Float(math.Inf(int(a))))
 				}
-				return s.Push("float", a/b)
+				return s.Push(a / b)
 			},
 			"__mod": func(s State) int {
-				return s.Push("float", types.Float(math.Mod(pullNumber(s, 1), pullNumber(s, 2))))
+				return s.Push(types.Float(math.Mod(pullNumber(s, 1), pullNumber(s, 2))))
 			},
 			"__pow": func(s State) int {
-				return s.Push("float", types.Float(math.Pow(pullNumber(s, 1), pullNumber(s, 2))))
+				return s.Push(types.Float(math.Pow(pullNumber(s, 1), pullNumber(s, 2))))
 			},
 			"__unm": func(s State) int {
-				return s.Push("float", -types.Float(pullNumber(s, 1)))
+				return s.Push(-types.Float(pullNumber(s, 1)))
 			},
 		},
 	}
@@ -133,45 +133,45 @@ func Double() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("number", types.Double(pullNumber(s, 1)))
+				return s.Push(types.Double(pullNumber(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(types.Double(pullNumber(s, 1)) == types.Double(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Double(pullNumber(s, 1)) == types.Double(pullNumber(s, 2))))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(types.Double(pullNumber(s, 1)) < types.Double(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Double(pullNumber(s, 1)) < types.Double(pullNumber(s, 2))))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(types.Double(pullNumber(s, 1)) <= types.Double(pullNumber(s, 2))))
+				return s.Push(types.Bool(types.Double(pullNumber(s, 1)) <= types.Double(pullNumber(s, 2))))
 			},
 			"__add": func(s State) int {
-				return s.Push("double", types.Double(pullNumber(s, 1))+types.Double(pullNumber(s, 2)))
+				return s.Push(types.Double(pullNumber(s, 1)) + types.Double(pullNumber(s, 2)))
 			},
 			"__sub": func(s State) int {
-				return s.Push("double", types.Double(pullNumber(s, 1))-types.Double(pullNumber(s, 2)))
+				return s.Push(types.Double(pullNumber(s, 1)) - types.Double(pullNumber(s, 2)))
 			},
 			"__mul": func(s State) int {
-				return s.Push("double", types.Double(pullNumber(s, 1))*types.Double(pullNumber(s, 2)))
+				return s.Push(types.Double(pullNumber(s, 1)) * types.Double(pullNumber(s, 2)))
 			},
 			"__div": func(s State) int {
 				a := types.Double(pullNumber(s, 1))
 				b := types.Double(pullNumber(s, 1))
 				if b == 0 {
 					if a == 0 {
-						return s.Push("double", types.Double(math.NaN()))
+						return s.Push(types.Double(math.NaN()))
 					}
-					return s.Push("double", types.Double(math.Inf(int(a))))
+					return s.Push(types.Double(math.Inf(int(a))))
 				}
-				return s.Push("double", a/b)
+				return s.Push(a / b)
 			},
 			"__mod": func(s State) int {
-				return s.Push("double", types.Double(math.Mod(pullNumber(s, 1), pullNumber(s, 2))))
+				return s.Push(types.Double(math.Mod(pullNumber(s, 1), pullNumber(s, 2))))
 			},
 			"__pow": func(s State) int {
-				return s.Push("double", types.Double(math.Pow(pullNumber(s, 1), pullNumber(s, 2))))
+				return s.Push(types.Double(math.Pow(pullNumber(s, 1), pullNumber(s, 2))))
 			},
 			"__unm": func(s State) int {
-				return s.Push("double", -types.Double(pullNumber(s, 1)))
+				return s.Push(-types.Double(pullNumber(s, 1)))
 			},
 		},
 	}
@@ -217,45 +217,45 @@ func Int() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("number", types.Double(pullInt(s, 1)))
+				return s.Push(types.Double(pullInt(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int(pullInt(s, 1)) == types.Int(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int(pullInt(s, 1)) == types.Int(pullInt(s, 2))))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int(pullInt(s, 1)) < types.Int(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int(pullInt(s, 1)) < types.Int(pullInt(s, 2))))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int(pullInt(s, 1)) <= types.Int(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int(pullInt(s, 1)) <= types.Int(pullInt(s, 2))))
 			},
 			"__add": func(s State) int {
-				return s.Push("int", types.Int(pullInt(s, 1))+types.Int(pullInt(s, 2)))
+				return s.Push(types.Int(pullInt(s, 1)) + types.Int(pullInt(s, 2)))
 			},
 			"__sub": func(s State) int {
-				return s.Push("int", types.Int(pullInt(s, 1))-types.Int(pullInt(s, 2)))
+				return s.Push(types.Int(pullInt(s, 1)) - types.Int(pullInt(s, 2)))
 			},
 			"__mul": func(s State) int {
-				return s.Push("int", types.Int(pullInt(s, 1))*types.Int(pullInt(s, 2)))
+				return s.Push(types.Int(pullInt(s, 1)) * types.Int(pullInt(s, 2)))
 			},
 			"__div": func(s State) int {
 				a := types.Int(pullInt(s, 1))
 				b := types.Int(pullInt(s, 1))
 				if b == 0 {
 					if a == 0 {
-						return s.Push("double", types.Double(math.NaN()))
+						return s.Push(types.Double(math.NaN()))
 					}
-					return s.Push("double", types.Double(math.Inf(int(a))))
+					return s.Push(types.Double(math.Inf(int(a))))
 				}
-				return s.Push("int", a/b)
+				return s.Push(a / b)
 			},
 			"__mod": func(s State) int {
-				return s.Push("int", types.Int(pullInt(s, 1))%types.Int(pullInt(s, 2)))
+				return s.Push(types.Int(pullInt(s, 1)) % types.Int(pullInt(s, 2)))
 			},
 			"__pow": func(s State) int {
-				return s.Push("int", types.Int(math.Pow(float64(types.Int(pullInt(s, 1))), float64(types.Int(pullInt(s, 2))))))
+				return s.Push(types.Int(math.Pow(float64(types.Int(pullInt(s, 1))), float64(types.Int(pullInt(s, 2))))))
 			},
 			"__unm": func(s State) int {
-				return s.Push("int", -types.Int(pullInt(s, 1)))
+				return s.Push(-types.Int(pullInt(s, 1)))
 			},
 		},
 	}
@@ -286,45 +286,45 @@ func Int64() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("number", types.Double(pullInt(s, 1)))
+				return s.Push(types.Double(pullInt(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int64(pullInt(s, 1)) == types.Int64(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int64(pullInt(s, 1)) == types.Int64(pullInt(s, 2))))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int64(pullInt(s, 1)) < types.Int64(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int64(pullInt(s, 1)) < types.Int64(pullInt(s, 2))))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(types.Int64(pullInt(s, 1)) <= types.Int64(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Int64(pullInt(s, 1)) <= types.Int64(pullInt(s, 2))))
 			},
 			"__add": func(s State) int {
-				return s.Push("int64", types.Int64(pullInt(s, 1))+types.Int64(pullInt(s, 2)))
+				return s.Push(types.Int64(pullInt(s, 1)) + types.Int64(pullInt(s, 2)))
 			},
 			"__sub": func(s State) int {
-				return s.Push("int64", types.Int64(pullInt(s, 1))-types.Int64(pullInt(s, 2)))
+				return s.Push(types.Int64(pullInt(s, 1)) - types.Int64(pullInt(s, 2)))
 			},
 			"__mul": func(s State) int {
-				return s.Push("int64", types.Int64(pullInt(s, 1))*types.Int64(pullInt(s, 2)))
+				return s.Push(types.Int64(pullInt(s, 1)) * types.Int64(pullInt(s, 2)))
 			},
 			"__div": func(s State) int {
 				a := types.Int64(pullInt(s, 1))
 				b := types.Int64(pullInt(s, 1))
 				if b == 0 {
 					if a == 0 {
-						return s.Push("double", types.Double(math.NaN()))
+						return s.Push(types.Double(math.NaN()))
 					}
-					return s.Push("double", types.Double(math.Inf(int(a))))
+					return s.Push(types.Double(math.Inf(int(a))))
 				}
-				return s.Push("int64", a/b)
+				return s.Push(a / b)
 			},
 			"__mod": func(s State) int {
-				return s.Push("int64", types.Int64(pullInt(s, 1))%types.Int64(pullInt(s, 2)))
+				return s.Push(types.Int64(pullInt(s, 1)) % types.Int64(pullInt(s, 2)))
 			},
 			"__pow": func(s State) int {
-				return s.Push("int64", types.Int64(math.Pow(float64(types.Int64(pullInt(s, 1))), float64(types.Int64(pullInt(s, 2))))))
+				return s.Push(types.Int64(math.Pow(float64(types.Int64(pullInt(s, 1))), float64(types.Int64(pullInt(s, 2))))))
 			},
 			"__unm": func(s State) int {
-				return s.Push("int64", -types.Int64(pullInt(s, 1)))
+				return s.Push(-types.Int64(pullInt(s, 1)))
 			},
 		},
 	}
@@ -355,45 +355,45 @@ func Token() Type {
 				return 1
 			},
 			"__call": func(s State) int {
-				return s.Push("number", types.Double(pullInt(s, 1)))
+				return s.Push(types.Double(pullInt(s, 1)))
 			},
 			"__eq": func(s State) int {
-				return s.Push("bool", types.Bool(types.Token(pullInt(s, 1)) == types.Token(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Token(pullInt(s, 1)) == types.Token(pullInt(s, 2))))
 			},
 			"__lt": func(s State) int {
-				return s.Push("bool", types.Bool(types.Token(pullInt(s, 1)) < types.Token(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Token(pullInt(s, 1)) < types.Token(pullInt(s, 2))))
 			},
 			"__le": func(s State) int {
-				return s.Push("bool", types.Bool(types.Token(pullInt(s, 1)) <= types.Token(pullInt(s, 2))))
+				return s.Push(types.Bool(types.Token(pullInt(s, 1)) <= types.Token(pullInt(s, 2))))
 			},
 			"__add": func(s State) int {
-				return s.Push("token", types.Token(pullInt(s, 1))+types.Token(pullInt(s, 2)))
+				return s.Push(types.Token(pullInt(s, 1)) + types.Token(pullInt(s, 2)))
 			},
 			"__sub": func(s State) int {
-				return s.Push("token", types.Token(pullInt(s, 1))-types.Token(pullInt(s, 2)))
+				return s.Push(types.Token(pullInt(s, 1)) - types.Token(pullInt(s, 2)))
 			},
 			"__mul": func(s State) int {
-				return s.Push("token", types.Token(pullInt(s, 1))*types.Token(pullInt(s, 2)))
+				return s.Push(types.Token(pullInt(s, 1)) * types.Token(pullInt(s, 2)))
 			},
 			"__div": func(s State) int {
 				a := types.Token(pullInt(s, 1))
 				b := types.Token(pullInt(s, 1))
 				if b == 0 {
 					if a == 0 {
-						return s.Push("double", types.Double(math.NaN()))
+						return s.Push(types.Double(math.NaN()))
 					}
-					return s.Push("double", types.Double(math.Inf(int(a))))
+					return s.Push(types.Double(math.Inf(int(a))))
 				}
-				return s.Push("token", a/b)
+				return s.Push(a / b)
 			},
 			"__mod": func(s State) int {
-				return s.Push("token", types.Token(pullInt(s, 1))%types.Token(pullInt(s, 2)))
+				return s.Push(types.Token(pullInt(s, 1)) % types.Token(pullInt(s, 2)))
 			},
 			"__pow": func(s State) int {
-				return s.Push("token", types.Token(math.Pow(float64(types.Token(pullInt(s, 1))), float64(types.Token(pullInt(s, 2))))))
+				return s.Push(types.Token(math.Pow(float64(types.Token(pullInt(s, 1))), float64(types.Token(pullInt(s, 2))))))
 			},
 			"__unm": func(s State) int {
-				return s.Push("token", -types.Token(pullInt(s, 1)))
+				return s.Push(-types.Token(pullInt(s, 1)))
 			},
 		},
 	}

@@ -46,7 +46,7 @@ func fileRead(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("Variant", v)
+	return s.Push(v)
 }
 
 func fileWrite(s rbxmk.State) int {

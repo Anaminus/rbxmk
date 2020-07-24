@@ -73,7 +73,7 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("BinaryString", types.BinaryString(b))
+	return s.Push(types.BinaryString(b))
 }
 
 func rbxmkDecodeFormat(s rbxmk.State) int {
@@ -92,7 +92,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("Variant", v)
+	return s.Push(v)
 }
 
 func rbxmkReadSource(s rbxmk.State) int {
@@ -115,7 +115,7 @@ func rbxmkReadSource(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("BinaryString", types.BinaryString(b))
+	return s.Push(types.BinaryString(b))
 }
 
 func rbxmkWriteSource(s rbxmk.State) int {

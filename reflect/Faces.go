@@ -18,27 +18,27 @@ func Faces() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Faces").(types.Faces)
-				return s.Push("bool", types.Bool(s.Pull(1, "Faces").(types.Faces) == op))
+				return s.Push(types.Bool(s.Pull(1, "Faces").(types.Faces) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Right": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Right))
+				return s.Push(types.Bool(v.(types.Faces).Right))
 			}},
 			"Top": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Top))
+				return s.Push(types.Bool(v.(types.Faces).Top))
 			}},
 			"Back": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Back))
+				return s.Push(types.Bool(v.(types.Faces).Back))
 			}},
 			"Left": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Left))
+				return s.Push(types.Bool(v.(types.Faces).Left))
 			}},
 			"Bottom": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Bottom))
+				return s.Push(types.Bool(v.(types.Faces).Bottom))
 			}},
 			"Front": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Faces).Front))
+				return s.Push(types.Bool(v.(types.Faces).Front))
 			}},
 		},
 		Constructors: Constructors{
@@ -57,7 +57,7 @@ func Faces() Type {
 					s.L.RaiseError("expected 0 or 6 arguments")
 					return 0
 				}
-				return s.Push("Faces", v)
+				return s.Push(v)
 			},
 		},
 	}

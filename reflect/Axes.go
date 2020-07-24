@@ -18,18 +18,18 @@ func Axes() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Axes").(types.Axes)
-				return s.Push("bool", types.Bool(s.Pull(1, "Axes").(types.Axes) == op))
+				return s.Push(types.Bool(s.Pull(1, "Axes").(types.Axes) == op))
 			},
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Axes).X))
+				return s.Push(types.Bool(v.(types.Axes).X))
 			}},
 			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Axes).Y))
+				return s.Push(types.Bool(v.(types.Axes).Y))
 			}},
 			"Z": {Get: func(s State, v types.Value) int {
-				return s.Push("bool", types.Bool(v.(types.Axes).Z))
+				return s.Push(types.Bool(v.(types.Axes).Z))
 			}},
 		},
 		Constructors: Constructors{
@@ -45,7 +45,7 @@ func Axes() Type {
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0
 				}
-				return s.Push("Axes", v)
+				return s.Push(v)
 			},
 		},
 	}

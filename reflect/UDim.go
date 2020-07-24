@@ -18,31 +18,31 @@ func UDim() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("bool", types.Bool(s.Pull(1, "UDim").(types.UDim) == op))
+				return s.Push(types.Bool(s.Pull(1, "UDim").(types.UDim) == op))
 			},
 			"__add": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Add(op))
+				return s.Push(s.Pull(1, "UDim").(types.UDim).Add(op))
 			},
 			"__sub": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Sub(op))
+				return s.Push(s.Pull(1, "UDim").(types.UDim).Sub(op))
 			},
 			"__unm": func(s State) int {
-				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Neg())
+				return s.Push(s.Pull(1, "UDim").(types.UDim).Neg())
 			},
 		},
 		Members: map[string]Member{
 			"Scale": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.UDim).Scale))
+				return s.Push(types.Float(v.(types.UDim).Scale))
 			}},
 			"Offset": {Get: func(s State, v types.Value) int {
-				return s.Push("int", types.Int(v.(types.UDim).Offset))
+				return s.Push(types.Int(v.(types.UDim).Offset))
 			}},
 		},
 		Constructors: Constructors{
 			"new": func(s State) int {
-				return s.Push("UDim", types.UDim{
+				return s.Push(types.UDim{
 					Scale:  float32(s.Pull(1, "float").(types.Float)),
 					Offset: int32(s.Pull(2, "int").(types.Int)),
 				})

@@ -107,12 +107,12 @@ func (s State) Count() int {
 	return s.L.GetTop()
 }
 
-// Push reflects v according to type t registered with s.World, then pushes the
-// results to s.L.
-func (s State) Push(t string, v types.Value) int {
-	typ := s.Type(t)
+// Push reflects v according to its type as registered with s.World, then pushes
+// the results to s.L.
+func (s State) Push(v types.Value) int {
+	typ := s.Type(v.Type())
 	if typ.Name == "" {
-		panic("unregistered type " + t)
+		panic("unregistered type " + v.Type())
 	}
 	lvs, err := typ.ReflectTo(s, typ, v)
 	if err != nil {

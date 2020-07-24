@@ -18,22 +18,22 @@ func Vector2int16() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
-				return s.Push("bool", types.Bool(s.Pull(1, "Vector2int16").(types.Vector2int16) == op))
+				return s.Push(types.Bool(s.Pull(1, "Vector2int16").(types.Vector2int16) == op))
 			},
 			"__add": func(s State) int {
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
-				return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).Add(op))
+				return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).Add(op))
 			},
 			"__sub": func(s State) int {
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
-				return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).Sub(op))
+				return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).Sub(op))
 			},
 			"__mul": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
 				case types.Double:
-					return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).MulN(float64(op)))
+					return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).MulN(float64(op)))
 				case types.Vector2int16:
-					return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).Mul(op))
+					return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).Mul(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector2int16 with an incompatible value type or nil")
 					return 0
@@ -42,24 +42,24 @@ func Vector2int16() Type {
 			"__div": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
 				case types.Double:
-					return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).DivN(float64(op)))
+					return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).DivN(float64(op)))
 				case types.Vector2int16:
-					return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).Div(op))
+					return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).Div(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector2int16 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__unm": func(s State) int {
-				return s.Push("Vector2int16", s.Pull(1, "Vector2int16").(types.Vector2int16).Neg())
+				return s.Push(s.Pull(1, "Vector2int16").(types.Vector2int16).Neg())
 			},
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v types.Value) int {
-				return s.Push("int", types.Int(v.(types.Vector2int16).X))
+				return s.Push(types.Int(v.(types.Vector2int16).X))
 			}},
 			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push("int", types.Int(v.(types.Vector2int16).Y))
+				return s.Push(types.Int(v.(types.Vector2int16).Y))
 			}},
 		},
 		Constructors: Constructors{
@@ -74,7 +74,7 @@ func Vector2int16() Type {
 					s.L.RaiseError("expected 0 or 2 arguments")
 					return 0
 				}
-				return s.Push("Vector2int16", v)
+				return s.Push(v)
 			},
 		},
 	}

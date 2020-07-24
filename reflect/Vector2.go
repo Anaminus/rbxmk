@@ -18,22 +18,22 @@ func Vector2() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("bool", types.Bool(s.Pull(1, "Vector2").(types.Vector2) == op))
+				return s.Push(types.Bool(s.Pull(1, "Vector2").(types.Vector2) == op))
 			},
 			"__add": func(s State) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).Add(op))
+				return s.Push(s.Pull(1, "Vector2").(types.Vector2).Add(op))
 			},
 			"__sub": func(s State) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).Sub(op))
+				return s.Push(s.Pull(1, "Vector2").(types.Vector2).Sub(op))
 			},
 			"__mul": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
 				case types.Double:
-					return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).MulN(float64(op)))
+					return s.Push(s.Pull(1, "Vector2").(types.Vector2).MulN(float64(op)))
 				case types.Vector2:
-					return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).Mul(op))
+					return s.Push(s.Pull(1, "Vector2").(types.Vector2).Mul(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector2 with an incompatible value type or nil")
 					return 0
@@ -42,43 +42,43 @@ func Vector2() Type {
 			"__div": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
 				case types.Double:
-					return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).DivN(float64(op)))
+					return s.Push(s.Pull(1, "Vector2").(types.Vector2).DivN(float64(op)))
 				case types.Vector2:
-					return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).Div(op))
+					return s.Push(s.Pull(1, "Vector2").(types.Vector2).Div(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector2 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__unm": func(s State) int {
-				return s.Push("Vector2", s.Pull(1, "Vector2").(types.Vector2).Neg())
+				return s.Push(s.Pull(1, "Vector2").(types.Vector2).Neg())
 			},
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Vector2).X))
+				return s.Push(types.Float(v.(types.Vector2).X))
 			}},
 			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Vector2).Y))
+				return s.Push(types.Float(v.(types.Vector2).Y))
 			}},
 			"Magnitude": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.Vector2).Magnitude()))
+				return s.Push(types.Float(v.(types.Vector2).Magnitude()))
 			}},
 			"Unit": {Get: func(s State, v types.Value) int {
-				return s.Push("Vector2", v.(types.Vector2).Unit())
+				return s.Push(v.(types.Vector2).Unit())
 			}},
 			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
 				goal := s.Pull(2, "Vector2").(types.Vector2)
 				alpha := float64(s.Pull(3, "number").(types.Double))
-				return s.Push("Vector2", v.(types.Vector2).Lerp(goal, alpha))
+				return s.Push(v.(types.Vector2).Lerp(goal, alpha))
 			}},
 			"Dot": {Method: true, Get: func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("number", types.Double(v.(types.Vector2).Dot(op)))
+				return s.Push(types.Double(v.(types.Vector2).Dot(op)))
 			}},
 			"Cross": {Method: true, Get: func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("number", types.Double(v.(types.Vector2).Cross(op)))
+				return s.Push(types.Double(v.(types.Vector2).Cross(op)))
 			}},
 		},
 		Constructors: Constructors{
@@ -93,7 +93,7 @@ func Vector2() Type {
 					s.L.RaiseError("expected 0 or 2 arguments")
 					return 0
 				}
-				return s.Push("Vector2", v)
+				return s.Push(v)
 			},
 		},
 	}

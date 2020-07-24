@@ -18,24 +18,24 @@ func PhysicalProperties() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "PhysicalProperties").(types.PhysicalProperties)
-				return s.Push("bool", types.Bool(s.Pull(1, "PhysicalProperties").(types.PhysicalProperties) == op))
+				return s.Push(types.Bool(s.Pull(1, "PhysicalProperties").(types.PhysicalProperties) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Density": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.PhysicalProperties).Density))
+				return s.Push(types.Float(v.(types.PhysicalProperties).Density))
 			}},
 			"Friction": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.PhysicalProperties).Friction))
+				return s.Push(types.Float(v.(types.PhysicalProperties).Friction))
 			}},
 			"Elasticity": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.PhysicalProperties).Elasticity))
+				return s.Push(types.Float(v.(types.PhysicalProperties).Elasticity))
 			}},
 			"FrictionWeight": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.PhysicalProperties).FrictionWeight))
+				return s.Push(types.Float(v.(types.PhysicalProperties).FrictionWeight))
 			}},
 			"ElasticityWeight": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.PhysicalProperties).ElasticityWeight))
+				return s.Push(types.Float(v.(types.PhysicalProperties).ElasticityWeight))
 			}},
 		},
 		Constructors: Constructors{
@@ -56,7 +56,7 @@ func PhysicalProperties() Type {
 					s.L.RaiseError("expected 3 or 5 arguments")
 					return 0
 				}
-				return s.Push("PhysicalProperties", v)
+				return s.Push(v)
 			},
 		},
 	}

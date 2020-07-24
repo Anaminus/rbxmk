@@ -240,10 +240,10 @@ func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v types.Value, err err
 	return typ.ReflectFrom(State{World: w, L: w.l}, typ, lvs...)
 }
 
-// Push reflects v according to registered type t, then pushes the results to
-// the world's state.
-func (w *World) Push(t string, v types.Value) int {
-	return State{World: w, L: w.l}.Push(t, v)
+// Push reflects v according to its type as registered, then pushes the results
+// to the world's state.
+func (w *World) Push(v types.Value) int {
+	return State{World: w, L: w.l}.Push(v)
 }
 
 // Pull gets from the world's Lua state the values starting from n, and reflects

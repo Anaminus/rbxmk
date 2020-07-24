@@ -27,11 +27,11 @@ func Symbol() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				return s.Push("string", types.String(s.Pull(1, "Symbol").(SymbolType).String()))
+				return s.Push(types.String(s.Pull(1, "Symbol").(SymbolType).String()))
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Symbol").(SymbolType)
-				return s.Push("bool", types.Bool(s.Pull(1, "Symbol").(SymbolType) == op))
+				return s.Push(types.Bool(s.Pull(1, "Symbol").(SymbolType) == op))
 			},
 		},
 		Environment: func(s State) {

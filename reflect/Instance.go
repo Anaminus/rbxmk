@@ -62,7 +62,7 @@ func Instance() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push("bool", types.Bool(s.Pull(1, "Instance").(*rtypes.Instance) == op))
+				return s.Push(types.Bool(s.Pull(1, "Instance").(*rtypes.Instance) == op))
 			},
 			"__index": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -72,9 +72,9 @@ func Instance() Type {
 					if sym, err := typ.ReflectFrom(s, typ, s.L.CheckAny(2)); err == nil {
 						switch name := sym.(SymbolType).Name; name {
 						case "Reference":
-							return s.Push("string", types.String(inst.Reference))
+							return s.Push(types.String(inst.Reference))
 						case "IsService":
-							return s.Push("bool", types.Bool(inst.IsService))
+							return s.Push(types.Bool(inst.IsService))
 						default:
 							s.L.RaiseError("symbol %s is not a valid member", name)
 							return 0
@@ -105,7 +105,7 @@ func Instance() Type {
 							service.SetName(className)
 							service.SetParent(inst)
 						}
-						return s.Push("Instance", service)
+						return s.Push(service)
 					}))
 					return 1
 				}
@@ -113,7 +113,7 @@ func Instance() Type {
 				value := inst.Get(name)
 				if value == nil {
 					// s.L.RaiseError("%s is not a valid member", name)
-					return s.Push("nil", nil)
+					return s.Push(nil)
 				}
 				lv, err := reflectPropertyTo(s, value)
 				if err != nil {
@@ -165,7 +165,7 @@ func Instance() Type {
 		Members: Members{
 			"ClassName": Member{
 				Get: func(s State, v types.Value) int {
-					return s.Push("string", types.String(v.(*rtypes.Instance).ClassName))
+					return s.Push(types.String(v.(*rtypes.Instance).ClassName))
 				},
 				// Allowed to be set for convenience.
 				Set: func(s State, v types.Value) {
@@ -179,7 +179,7 @@ func Instance() Type {
 			},
 			"Name": Member{
 				Get: func(s State, v types.Value) int {
-					return s.Push("string", types.String(v.(*rtypes.Instance).Name()))
+					return s.Push(types.String(v.(*rtypes.Instance).Name()))
 				},
 				Set: func(s State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
@@ -188,9 +188,9 @@ func Instance() Type {
 			"Parent": Member{
 				Get: func(s State, v types.Value) int {
 					if parent := v.(*rtypes.Instance).Parent(); parent != nil {
-						return s.Push("Instance", parent)
+						return s.Push(parent)
 					}
-					return s.Push("nil", nil)
+					return s.Push(nil)
 				},
 				Set: func(s State, v types.Value) {
 					var err error
@@ -210,7 +210,7 @@ func Instance() Type {
 				return 0
 			}},
 			"Clone": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push("Instance", v.(*rtypes.Instance).Clone())
+				return s.Push(v.(*rtypes.Instance).Clone())
 			}},
 			"Destroy": Member{Method: true, Get: func(s State, v types.Value) int {
 				v.(*rtypes.Instance).SetParent(nil)
@@ -219,64 +219,64 @@ func Instance() Type {
 			"FindFirstAncestor": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
-					return s.Push("Instance", ancestor)
+					return s.Push(ancestor)
 				}
-				return s.Push("nil", nil)
+				return s.Push(nil)
 			}},
 			"FindFirstAncestorOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
-					return s.Push("Instance", ancestor)
+					return s.Push(ancestor)
 				}
-				return s.Push("nil", nil)
+				return s.Push(nil)
 			}},
 			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
 				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
-					return s.Push("Instance", child)
+					return s.Push(child)
 				}
-				return s.Push("nil", nil)
+				return s.Push(nil)
 			}},
 			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
 				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
-					return s.Push("Instance", child)
+					return s.Push(child)
 				}
-				return s.Push("nil", nil)
+				return s.Push(nil)
 			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
-				return s.Push("Instances", rtypes.Instances(t))
+				return s.Push(rtypes.Instances(t))
 			}},
 			"GetDescendants": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push("Instances", rtypes.Instances(v.(*rtypes.Instance).Descendants()))
+				return s.Push(rtypes.Instances(v.(*rtypes.Instance).Descendants()))
 			}},
 			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push("string", types.String(v.(*rtypes.Instance).GetFullName()))
+				return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
 			}},
 			"IsAncestorOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				descendant := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push("bool", types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
+				return s.Push(types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
 			}},
 			"IsDescendantOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push("bool", types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
+				return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
 			}},
 		},
 		Constructors: Constructors{
 			"new": func(s State) int {
 				className := string(s.Pull(1, "string").(types.String))
 				inst := rtypes.NewInstance(className)
-				return s.Push("Instance", inst)
+				return s.Push(inst)
 			},
 		},
 		Environment: func(s State) {
 			t := s.L.CreateTable(0, 1)
 			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
 				dataModel := rtypes.NewDataModel()
-				return s.Push("Instance", dataModel)
+				return s.Push(dataModel)
 			}))
 			s.L.SetGlobal("DataModel", t)
 		},

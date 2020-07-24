@@ -18,28 +18,28 @@ func Ray() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Ray").(types.Ray)
-				return s.Push("bool", types.Bool(s.Pull(1, "Ray").(types.Ray) == op))
+				return s.Push(types.Bool(s.Pull(1, "Ray").(types.Ray) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Origin": {Get: func(s State, v types.Value) int {
-				return s.Push("Vector", v.(types.Ray).Origin)
+				return s.Push(v.(types.Ray).Origin)
 			}},
 			"Direction": {Get: func(s State, v types.Value) int {
-				return s.Push("Vector", v.(types.Ray).Direction)
+				return s.Push(v.(types.Ray).Direction)
 			}},
 			"ClosestPoint": {Method: true, Get: func(s State, v types.Value) int {
 				point := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("Vector3", v.(types.Ray).ClosestPoint(point))
+				return s.Push(v.(types.Ray).ClosestPoint(point))
 			}},
 			"Distance": {Method: true, Get: func(s State, v types.Value) int {
 				point := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("number", types.Double(v.(types.Ray).Distance(point)))
+				return s.Push(types.Double(v.(types.Ray).Distance(point)))
 			}},
 		},
 		Constructors: Constructors{
 			"new": func(s State) int {
-				return s.Push("Ray", types.Ray{
+				return s.Push(types.Ray{
 					Origin:    s.Pull(1, "Vector3").(types.Vector3),
 					Direction: s.Pull(2, "Vector3").(types.Vector3),
 				})

@@ -18,18 +18,18 @@ func ColorSequenceKeypoint() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)
-				return s.Push("bool", types.Bool(s.Pull(1, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint) == op))
+				return s.Push(types.Bool(s.Pull(1, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Time": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.ColorSequenceKeypoint).Time))
+				return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Time))
 			}},
 			"Value": {Get: func(s State, v types.Value) int {
-				return s.Push("Color3", v.(types.ColorSequenceKeypoint).Value)
+				return s.Push(v.(types.ColorSequenceKeypoint).Value)
 			}},
 			"Envelope": {Get: func(s State, v types.Value) int {
-				return s.Push("float", types.Float(v.(types.ColorSequenceKeypoint).Envelope))
+				return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Envelope))
 			}},
 		},
 		Constructors: Constructors{
@@ -47,7 +47,7 @@ func ColorSequenceKeypoint() Type {
 					s.L.RaiseError("expected 2 or 3 arguments")
 					return 0
 				}
-				return s.Push("ColorSequenceKeypoint", v)
+				return s.Push(v)
 			},
 		},
 	}

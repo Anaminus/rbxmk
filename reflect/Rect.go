@@ -18,21 +18,21 @@ func Rect() Type {
 			},
 			"__eq": func(s State) int {
 				op := s.Pull(2, "Rect").(types.Rect)
-				return s.Push("bool", types.Bool(s.Pull(1, "Rect").(types.Rect) == op))
+				return s.Push(types.Bool(s.Pull(1, "Rect").(types.Rect) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Min": {Get: func(s State, v types.Value) int {
-				return s.Push("Vector2", v.(types.Rect).Min)
+				return s.Push(v.(types.Rect).Min)
 			}},
 			"Max": {Get: func(s State, v types.Value) int {
-				return s.Push("Vector2", v.(types.Rect).Max)
+				return s.Push(v.(types.Rect).Max)
 			}},
 			"Width": {Get: func(s State, v types.Value) int {
-				return s.Push("number", types.Double(v.(types.Rect).Width()))
+				return s.Push(types.Double(v.(types.Rect).Width()))
 			}},
 			"Height": {Get: func(s State, v types.Value) int {
-				return s.Push("number", types.Double(v.(types.Rect).Height()))
+				return s.Push(types.Double(v.(types.Rect).Height()))
 			}},
 		},
 		Constructors: Constructors{
@@ -51,7 +51,7 @@ func Rect() Type {
 					s.L.RaiseError("expected 2 or 4 arguments")
 					return 0
 				}
-				return s.Push("Rect", v)
+				return s.Push(v)
 			},
 		},
 	}

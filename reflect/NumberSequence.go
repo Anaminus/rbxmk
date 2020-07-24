@@ -21,14 +21,14 @@ func NumberSequence() Type {
 				u := s.Pull(1, "NumberSequence").(types.NumberSequence)
 				op := s.Pull(2, "NumberSequence").(types.NumberSequence)
 				if len(op) != len(u) {
-					return s.Push("bool", types.False)
+					return s.Push(types.False)
 				}
 				for i, v := range u {
 					if v != op[i] {
-						return s.Push("bool", types.False)
+						return s.Push(types.False)
 					}
 				}
-				return s.Push("bool", types.True)
+				return s.Push(types.True)
 			},
 		},
 		Members: map[string]Member{
@@ -94,7 +94,7 @@ func NumberSequence() Type {
 					s.L.RaiseError("expected 1 or 2 arguments")
 					return 0
 				}
-				return s.Push("NumberSequence", v)
+				return s.Push(v)
 			},
 		},
 	}
