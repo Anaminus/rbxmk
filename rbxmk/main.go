@@ -96,6 +96,7 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 	}
 	world.Open(library.Base)
 	world.Open(library.RBXMK)
+	world.Open(library.Types)
 	world.Open(library.OS)
 	world.Open(library.File)
 
