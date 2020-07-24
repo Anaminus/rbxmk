@@ -9,7 +9,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
+func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, t Type, err error) {
 	switch v := v.(type) {
 	case nil:
 		return lua.LNil, s.Type("nil"), nil
@@ -50,7 +50,7 @@ func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
 	return values[0], typ, nil
 }
 
-func ReflectVariantFrom(s State, lv lua.LValue) (v Value, t Type, err error) {
+func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, t Type, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return nil, s.Type("nil"), nil
@@ -90,7 +90,7 @@ func ReflectVariantFrom(s State, lv lua.LValue) (v Value, t Type, err error) {
 
 // PullVariant gets from the Lua state the value at n, and reflects a value from
 // it according to the Variant type.
-func PullVariant(s State, n int) (v Value, t Type) {
+func PullVariant(s State, n int) (v types.Value, t Type) {
 	v, t, err := ReflectVariantFrom(s, s.L.CheckAny(n))
 	if err != nil {
 		s.L.ArgError(n, err.Error())
@@ -102,14 +102,14 @@ func PullVariant(s State, n int) (v Value, t Type) {
 func Variant() Type {
 	return Type{
 		Name: "Variant",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			lv, _, err := ReflectVariantTo(s, v)
 			if err != nil {
 				return nil, err
 			}
 			return []lua.LValue{lv}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			v, _, err = ReflectVariantFrom(s, lvs[0])
 			return v, err
 		},

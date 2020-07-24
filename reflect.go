@@ -7,15 +7,6 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-// Value is a value.
-type Value = types.Value
-
-// Stringer is any Value that has a string-representation.
-type Stringer = types.Stringer
-
-// PropValue is a Value that can be copied.
-type PropValue = types.PropValue
-
 type Type struct {
 	// Name is the name of the type.
 	Name string
@@ -28,11 +19,11 @@ type Type struct {
 	// ReflectTo converts v to a number of Lua values. l must be used only for
 	// the conversion of values as needed. If err is nil, then lvs must have a
 	// length of 1 or greater.
-	ReflectTo func(s State, t Type, v Value) (lvs []lua.LValue, err error)
+	ReflectTo func(s State, t Type, v types.Value) (lvs []lua.LValue, err error)
 
 	// ReflectFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lvs must have a length of 1 or greater.
-	ReflectFrom func(s State, t Type, lvs ...lua.LValue) (v Value, err error)
+	ReflectFrom func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -71,7 +62,7 @@ type Metatable map[string]Metamethod
 
 // Metamethod is called when a metamethod is invoked. v is the receiver, which
 // was successfully reflected from the first argument to the metamethod.
-type Metamethod func(s State, v Value) int
+type Metamethod func(s State, v types.Value) int
 
 // Members is a set of members keyed by name.
 type Members map[string]Member
@@ -86,10 +77,10 @@ type Member struct {
 	// Get gets the value of a member from v and pushes it onto l. The index is
 	// the 2nd argument in s.L. If Method is true, the function is pushed as a
 	// method. The first argument will be the same value as v.
-	Get func(s State, v Value) int
+	Get func(s State, v types.Value) int
 	// Set gets a value from l and sets it to a member of v. The index and value
 	// are the 2nd and 3rd arguments in s.L.
-	Set func(s State, v Value)
+	Set func(s State, v types.Value)
 	// Method marks the member as being a method.
 	Method bool
 }
@@ -119,7 +110,7 @@ func (s State) Count() int {
 
 // Push reflects v according to type t registered with s.World, then pushes the
 // results to s.L.
-func (s State) Push(t string, v Value) int {
+func (s State) Push(t string, v types.Value) int {
 	typ := s.Type(t)
 	if typ.Name == "" {
 		panic("unregistered type " + t)
@@ -137,9 +128,9 @@ func (s State) Push(t string, v Value) int {
 
 // Pull gets from s.L the values starting from n, and reflects a value from them
 // according to type t registered with s.World.
-func (s State) Pull(n int, t string) Value {
+func (s State) Pull(n int, t string) types.Value {
 	typ := s.Type(t)
-	var v Value
+	var v types.Value
 	var err error
 	if typ.Count < 0 {
 		lvs := make([]lua.LValue, 0, 4)
@@ -166,7 +157,7 @@ func (s State) Pull(n int, t string) Value {
 // PullOpt gets from s.L the value at n, and reflects a value from it according
 // to type t registered with s.World. If the value is nil, d is returned
 // instead.
-func (s State) PullOpt(n int, t string, d Value) Value {
+func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	typ := s.Type(t)
 	if typ.Count < 0 {
 		panic("PullOpt cannot pull variable types")
@@ -201,7 +192,7 @@ func listTypes(types []string) string {
 // them according to any of the types in t registered with s.World. Returns the
 // first successful reflection among the types in t. If no types succeeded, then
 // a type error is thrown.
-func (s State) PullAnyOf(n int, t ...string) Value {
+func (s State) PullAnyOf(n int, t ...string) types.Value {
 	if n > s.L.GetTop() {
 		// Every type must reflect at least one value, so no values is an
 		// immediate error.
@@ -211,10 +202,10 @@ func (s State) PullAnyOf(n int, t ...string) Value {
 	// Find the maximum count among the given types. 0 is treated the same as 1.
 	// <0 indicates an arbitrary number of values.
 	max := 1
-	types := make([]Type, 0, 4)
+	ts := make([]Type, 0, 4)
 	for _, t := range t {
 		typ := s.Type(t)
-		types = append(types, typ)
+		ts = append(ts, typ)
 		if typ.Count > 1 {
 			max = typ.Count
 		} else if typ.Count < 0 {
@@ -225,16 +216,16 @@ func (s State) PullAnyOf(n int, t ...string) Value {
 	switch max {
 	case 1: // All types have 1 value.
 		v := s.L.CheckAny(n)
-		for _, t := range types {
+		for _, t := range ts {
 			if v, err := t.ReflectFrom(s, t, v); err == nil {
 				return v
 			}
 		}
 	case -1: // At least one type has arbitrary values.
 		lvs := make([]lua.LValue, 0, 4)
-		for _, t := range types {
+		for _, t := range ts {
 			lvs = lvs[:0]
-			var v Value
+			var v types.Value
 			var err error
 			if t.Count < 0 {
 				// Append all values.
@@ -259,7 +250,7 @@ func (s State) PullAnyOf(n int, t ...string) Value {
 		}
 	default: // Constant maximum.
 		lvs := make([]lua.LValue, 0, 4)
-		for _, t := range types {
+		for _, t := range ts {
 			lvs = lvs[:0]
 			n := t.Count
 			if n == 0 {
@@ -307,7 +298,7 @@ func (c *Cycle) Put(t interface{}) {
 
 // ReflectTypeTo is a Type.ReflectTo that converts v to a userdata set with a
 // type metatable registered as t.Name.
-func ReflectTypeTo(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+func ReflectTypeTo(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 	u := s.L.NewUserData()
 	u.Value = v
 	s.L.SetMetatable(u, s.L.GetTypeMetatable(t.Name))
@@ -316,7 +307,7 @@ func ReflectTypeTo(s State, t Type, v Value) (lvs []lua.LValue, err error) {
 
 // ReflectTypeFrom is a Type.ReflectFrom that converts v from a userdata set
 // with a type metatable registered as t.Name.
-func ReflectTypeFrom(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+func ReflectTypeFrom(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 	u, ok := lvs[0].(*lua.LUserData)
 	if !ok {
 		return nil, TypeError(nil, 0, t.Name)
@@ -324,7 +315,7 @@ func ReflectTypeFrom(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
 	if u.Metatable != s.L.GetTypeMetatable(t.Name) {
 		return nil, TypeError(nil, 0, t.Name)
 	}
-	if v, ok = u.Value.(Value); !ok {
+	if v, ok = u.Value.(types.Value); !ok {
 		return nil, TypeError(nil, 0, t.Name)
 	}
 	return v, nil

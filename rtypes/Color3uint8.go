@@ -1,7 +1,6 @@
 package rtypes
 
 import (
-	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -17,7 +16,7 @@ func NewColor3uint8(c types.Color3) Color3uint8 {
 
 func (Color3uint8) Type() string            { return "Color3uint8" }
 func (c Color3uint8) String() string        { return c.Color3().String() }
-func (c Color3uint8) Copy() rbxmk.PropValue { return c }
+func (c Color3uint8) Copy() types.PropValue { return c }
 func (c Color3uint8) Color3() types.Color3 {
 	return types.Color3{
 		R: float32(c.R) / 255,

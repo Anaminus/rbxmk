@@ -5,20 +5,21 @@ import (
 
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
 func Array() Type {
 	return Type{
 		Name: "Array",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
 			array, ok := v.(rtypes.Array)
 			if !ok {
-				return nil, TypeError(nil, 0, "[]Value")
+				return nil, TypeError(nil, 0, "Array")
 			}
 			if s.Cycle.Has(&array) {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
@@ -35,7 +36,7 @@ func Array() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()

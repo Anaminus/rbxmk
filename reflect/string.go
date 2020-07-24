@@ -9,10 +9,10 @@ import (
 func String() Type {
 	return Type{
 		Name: "string",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.String))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.String(n), nil
 			}
@@ -24,10 +24,10 @@ func String() Type {
 func BinaryString() Type {
 	return Type{
 		Name: "BinaryString",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.BinaryString))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.BinaryString(n), nil
 			}
@@ -39,10 +39,10 @@ func BinaryString() Type {
 func ProtectedString() Type {
 	return Type{
 		Name: "ProtectedString",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.ProtectedString))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.ProtectedString(n), nil
 			}
@@ -54,10 +54,10 @@ func ProtectedString() Type {
 func Content() Type {
 	return Type{
 		Name: "Content",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.Content))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.Content(n), nil
 			}
@@ -69,10 +69,10 @@ func Content() Type {
 func SharedString() Type {
 	return Type{
 		Name: "SharedString",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.SharedString))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.SharedString(n), nil
 			}

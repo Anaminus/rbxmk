@@ -14,32 +14,32 @@ func BrickColor() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.BrickColor).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "BrickColor").(types.BrickColor)
 				return s.Push("bool", types.Bool(v.(types.BrickColor) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Name": {Get: func(s State, v Value) int {
+			"Name": {Get: func(s State, v types.Value) int {
 				return s.Push("string", types.String(v.(types.BrickColor).Name()))
 			}},
-			"Number": {Get: func(s State, v Value) int {
+			"Number": {Get: func(s State, v types.Value) int {
 				return s.Push("int", types.Int(v.(types.BrickColor).Number()))
 			}},
-			"R": {Get: func(s State, v Value) int {
+			"R": {Get: func(s State, v types.Value) int {
 				return s.Push("number", types.Double(v.(types.BrickColor).R()))
 			}},
-			"G": {Get: func(s State, v Value) int {
+			"G": {Get: func(s State, v types.Value) int {
 				return s.Push("number", types.Double(v.(types.BrickColor).G()))
 			}},
-			"B": {Get: func(s State, v Value) int {
+			"B": {Get: func(s State, v types.Value) int {
 				return s.Push("number", types.Double(v.(types.BrickColor).B()))
 			}},
-			"Color": {Get: func(s State, v Value) int {
+			"Color": {Get: func(s State, v types.Value) int {
 				return s.Push("Color3", v.(types.BrickColor).Color())
 			}},
 		},

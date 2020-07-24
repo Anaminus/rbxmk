@@ -9,10 +9,10 @@ import (
 func Token() Type {
 	return Type{
 		Name: "token",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Token))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return types.Token(n), nil
 			}

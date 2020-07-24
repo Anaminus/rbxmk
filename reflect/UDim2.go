@@ -12,40 +12,40 @@ func UDim2() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.UDim2).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
 				return s.Push("bool", types.Bool(v.(types.UDim2) == op))
 			},
-			"__add": func(s State, v Value) int {
+			"__add": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
 				return s.Push("UDim2", v.(types.UDim2).Add(op))
 			},
-			"__sub": func(s State, v Value) int {
+			"__sub": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
 				return s.Push("UDim2", v.(types.UDim2).Sub(op))
 			},
-			"__unm": func(s State, v Value) int {
+			"__unm": func(s State, v types.Value) int {
 				return s.Push("UDim2", v.(types.UDim2).Neg())
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v Value) int {
+			"X": {Get: func(s State, v types.Value) int {
 				return s.Push("UDim", v.(types.UDim2).X)
 			}},
-			"Y": {Get: func(s State, v Value) int {
+			"Y": {Get: func(s State, v types.Value) int {
 				return s.Push("UDim", v.(types.UDim2).Y)
 			}},
-			"Width": {Get: func(s State, v Value) int {
+			"Width": {Get: func(s State, v types.Value) int {
 				return s.Push("UDim", v.(types.UDim2).X)
 			}},
-			"Height": {Get: func(s State, v Value) int {
+			"Height": {Get: func(s State, v types.Value) int {
 				return s.Push("UDim", v.(types.UDim2).Y)
 			}},
-			"Lerp": {Method: true, Get: func(s State, v Value) int {
+			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
 				goal := s.Pull(2, "UDim2").(types.UDim2)
 				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("UDim2", v.(types.UDim2).Lerp(goal, alpha))

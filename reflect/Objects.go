@@ -3,13 +3,14 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
 func Objects() Type {
 	return Type{
 		Name: "Objects",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
 				return nil, TypeError(nil, 0, "Objects")
@@ -25,7 +26,7 @@ func Objects() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, TypeError(nil, 0, "table")

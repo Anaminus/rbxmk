@@ -9,10 +9,10 @@ import (
 func Binary() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "bin",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return types.BinaryString(b), nil
 		},
-		Encode: func(v rbxmk.Value) (b []byte, err error) {
+		Encode: func(v types.Value) (b []byte, err error) {
 			s := rtypes.Stringlike{Value: v}
 			if !s.IsStringlike() {
 				return nil, cannotEncode(v)

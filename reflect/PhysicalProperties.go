@@ -12,29 +12,29 @@ func PhysicalProperties() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.PhysicalProperties).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "PhysicalProperties").(types.PhysicalProperties)
 				return s.Push("bool", types.Bool(v.(types.PhysicalProperties) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Density": {Get: func(s State, v Value) int {
+			"Density": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.PhysicalProperties).Density))
 			}},
-			"Friction": {Get: func(s State, v Value) int {
+			"Friction": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.PhysicalProperties).Friction))
 			}},
-			"Elasticity": {Get: func(s State, v Value) int {
+			"Elasticity": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.PhysicalProperties).Elasticity))
 			}},
-			"FrictionWeight": {Get: func(s State, v Value) int {
+			"FrictionWeight": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.PhysicalProperties).FrictionWeight))
 			}},
-			"ElasticityWeight": {Get: func(s State, v Value) int {
+			"ElasticityWeight": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.PhysicalProperties).ElasticityWeight))
 			}},
 		},

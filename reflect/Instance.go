@@ -13,15 +13,15 @@ func Instance() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(*rtypes.Instance).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Instance").(*rtypes.Instance)
 				return s.Push("bool", types.Bool(v.(*rtypes.Instance) == op))
 			},
-			"__index": func(s State, v Value) int {
+			"__index": func(s State, v types.Value) int {
 				inst := v.(*rtypes.Instance)
 
 				// Try symbol.
@@ -74,7 +74,7 @@ func Instance() Type {
 				}
 				return s.Push("Variant", value)
 			},
-			"__newindex": func(s State, v Value) int {
+			"__newindex": func(s State, v types.Value) int {
 				inst := v.(*rtypes.Instance)
 
 				// Try symbol.
@@ -115,11 +115,11 @@ func Instance() Type {
 		},
 		Members: Members{
 			"ClassName": Member{
-				Get: func(s State, v Value) int {
+				Get: func(s State, v types.Value) int {
 					return s.Push("string", types.String(v.(*rtypes.Instance).ClassName))
 				},
 				// Allowed to be set for convenience.
-				Set: func(s State, v Value) {
+				Set: func(s State, v types.Value) {
 					inst := v.(*rtypes.Instance)
 					if inst.IsDataModel() {
 						s.L.RaiseError("%s cannot be assigned to", "ClassName")
@@ -129,21 +129,21 @@ func Instance() Type {
 				},
 			},
 			"Name": Member{
-				Get: func(s State, v Value) int {
+				Get: func(s State, v types.Value) int {
 					return s.Push("string", types.String(v.(*rtypes.Instance).Name()))
 				},
-				Set: func(s State, v Value) {
+				Set: func(s State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
 				},
 			},
 			"Parent": Member{
-				Get: func(s State, v Value) int {
+				Get: func(s State, v types.Value) int {
 					if parent := v.(*rtypes.Instance).Parent(); parent != nil {
 						return s.Push("Instance", parent)
 					}
 					return s.Push("nil", nil)
 				},
-				Set: func(s State, v Value) {
+				Set: func(s State, v types.Value) {
 					var err error
 					switch parent := s.PullAnyOf(3, "Instance", "nil").(type) {
 					case *rtypes.Instance:
@@ -156,32 +156,32 @@ func Instance() Type {
 					}
 				},
 			},
-			"ClearAllChildren": Member{Method: true, Get: func(s State, v Value) int {
+			"ClearAllChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				v.(*rtypes.Instance).RemoveAll()
 				return 0
 			}},
-			"Clone": Member{Method: true, Get: func(s State, v Value) int {
+			"Clone": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push("Instance", v.(*rtypes.Instance).Clone())
 			}},
-			"Destroy": Member{Method: true, Get: func(s State, v Value) int {
+			"Destroy": Member{Method: true, Get: func(s State, v types.Value) int {
 				v.(*rtypes.Instance).SetParent(nil)
 				return 0
 			}},
-			"FindFirstAncestor": Member{Method: true, Get: func(s State, v Value) int {
+			"FindFirstAncestor": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
 					return s.Push("Instance", ancestor)
 				}
 				return s.Push("nil", nil)
 			}},
-			"FindFirstAncestorOfClass": Member{Method: true, Get: func(s State, v Value) int {
+			"FindFirstAncestorOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
 					return s.Push("Instance", ancestor)
 				}
 				return s.Push("nil", nil)
 			}},
-			"FindFirstChild": Member{Method: true, Get: func(s State, v Value) int {
+			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
 				recurse := bool(s.PullOpt(3, "bool", types.Bool(false)).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
@@ -189,7 +189,7 @@ func Instance() Type {
 				}
 				return s.Push("nil", nil)
 			}},
-			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v Value) int {
+			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
 				recurse := bool(s.PullOpt(3, "bool", types.Bool(false)).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
@@ -197,21 +197,21 @@ func Instance() Type {
 				}
 				return s.Push("nil", nil)
 			}},
-			"GetChildren": Member{Method: true, Get: func(s State, v Value) int {
+			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
 				return s.Push("Objects", rtypes.Objects(t))
 			}},
-			"GetDescendants": Member{Method: true, Get: func(s State, v Value) int {
+			"GetDescendants": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push("Objects", rtypes.Objects(v.(*rtypes.Instance).Descendants()))
 			}},
-			"GetFullName": Member{Method: true, Get: func(s State, v Value) int {
+			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push("string", types.String(v.(*rtypes.Instance).GetFullName()))
 			}},
-			"IsAncestorOf": Member{Method: true, Get: func(s State, v Value) int {
+			"IsAncestorOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				descendant := s.Pull(2, "Instance").(*rtypes.Instance)
 				return s.Push("bool", types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
 			}},
-			"IsDescendantOf": Member{Method: true, Get: func(s State, v Value) int {
+			"IsDescendantOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
 				return s.Push("bool", types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
 			}},

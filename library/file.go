@@ -52,7 +52,7 @@ func fileRead(s rbxmk.State) int {
 func fileWrite(s rbxmk.State) int {
 	var fileName string
 	var formatName string
-	var value rbxmk.Value
+	var value types.Value
 	switch s.L.GetTop() {
 	case 2:
 		fileName = string(s.Pull(1, "string").(types.String))

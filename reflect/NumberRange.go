@@ -12,20 +12,20 @@ func NumberRange() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.NumberRange).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "NumberRange").(types.NumberRange)
 				return s.Push("bool", types.Bool(v.(types.NumberRange) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Min": {Get: func(s State, v Value) int {
+			"Min": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.NumberRange).Min))
 			}},
-			"Max": {Get: func(s State, v Value) int {
+			"Max": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.NumberRange).Max))
 			}},
 		},

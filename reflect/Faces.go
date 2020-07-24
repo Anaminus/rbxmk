@@ -12,32 +12,32 @@ func Faces() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Faces).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Faces").(types.Faces)
 				return s.Push("bool", types.Bool(v.(types.Faces) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Right": {Get: func(s State, v Value) int {
+			"Right": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Right))
 			}},
-			"Top": {Get: func(s State, v Value) int {
+			"Top": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Top))
 			}},
-			"Back": {Get: func(s State, v Value) int {
+			"Back": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Back))
 			}},
-			"Left": {Get: func(s State, v Value) int {
+			"Left": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Left))
 			}},
-			"Bottom": {Get: func(s State, v Value) int {
+			"Bottom": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Bottom))
 			}},
-			"Front": {Get: func(s State, v Value) int {
+			"Front": {Get: func(s State, v types.Value) int {
 				return s.Push("bool", types.Bool(v.(types.Faces).Front))
 			}},
 		},

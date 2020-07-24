@@ -13,11 +13,11 @@ func NumberSequence() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.NumberSequence).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				u := v.(types.NumberSequence)
 				op := s.Pull(2, "NumberSequence").(types.NumberSequence)
 				if len(op) != len(u) {
@@ -32,7 +32,7 @@ func NumberSequence() Type {
 			},
 		},
 		Members: map[string]Member{
-			"Keypoints": {Get: func(s State, v Value) int {
+			"Keypoints": {Get: func(s State, v types.Value) int {
 				u := v.(types.NumberSequence)
 				keypointType := s.Type("NumberSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)

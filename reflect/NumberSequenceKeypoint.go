@@ -12,23 +12,23 @@ func NumberSequenceKeypoint() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.NumberSequenceKeypoint).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint)
 				return s.Push("bool", types.Bool(v.(types.NumberSequenceKeypoint) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Time": {Get: func(s State, v Value) int {
+			"Time": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Time))
 			}},
-			"Value": {Get: func(s State, v Value) int {
+			"Value": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Value))
 			}},
-			"Envelope": {Get: func(s State, v Value) int {
+			"Envelope": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Envelope))
 			}},
 		},

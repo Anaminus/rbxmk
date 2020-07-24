@@ -6,13 +6,13 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func decodeScript(b []byte, className string) (v rbxmk.Value, err error) {
+func decodeScript(b []byte, className string) (v types.Value, err error) {
 	script := rtypes.NewInstance(className)
 	script.Set("Source", types.ProtectedString(b))
 	return script, nil
 }
 
-func encodeScript(v rbxmk.Value) (b []byte, err error) {
+func encodeScript(v types.Value) (b []byte, err error) {
 	s := rtypes.Stringlike{Value: v}
 	if !s.IsStringlike() {
 		return nil, cannotEncode(v)
@@ -23,7 +23,7 @@ func encodeScript(v rbxmk.Value) (b []byte, err error) {
 func ModuleScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "modulescript.lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "ModuleScript")
 		},
 		Encode: encodeScript,
@@ -33,7 +33,7 @@ func ModuleScriptLua() rbxmk.Format {
 func ScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "script.lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "Script")
 		},
 		Encode: encodeScript,
@@ -43,7 +43,7 @@ func ScriptLua() rbxmk.Format {
 func LocalScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "localscript.lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "LocalScript")
 		},
 		Encode: encodeScript,
@@ -53,7 +53,7 @@ func LocalScriptLua() rbxmk.Format {
 func Lua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "ModuleScript")
 		},
 		Encode: encodeScript,
@@ -63,7 +63,7 @@ func Lua() rbxmk.Format {
 func ServerLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "server.lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "Script")
 		},
 		Encode: encodeScript,
@@ -73,7 +73,7 @@ func ServerLua() rbxmk.Format {
 func LocalLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "local.lua",
-		Decode: func(b []byte) (v rbxmk.Value, err error) {
+		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "LocalScript")
 		},
 		Encode: encodeScript,

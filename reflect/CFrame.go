@@ -13,51 +13,51 @@ func CFrame() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.CFrame).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "CFrame").(types.CFrame)
 				return s.Push("bool", types.Bool(v.(types.CFrame) == op))
 			},
-			"__add": func(s State, v Value) int {
+			"__add": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("CFrame", v.(types.CFrame).AddVec(op))
 			},
-			"__sub": func(s State, v Value) int {
+			"__sub": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("CFrame", v.(types.CFrame).SubVec(op))
 			},
-			"__mul": func(s State, v Value) int {
+			"__mul": func(s State, v types.Value) int {
 				switch op := s.PullAnyOf(2, "CFrame", "Vector3").(type) {
 				case types.CFrame:
 					return s.Push("CFrame", v.(types.CFrame).Mul(op))
 				case types.Vector3:
 					return s.Push("Vector3", v.(types.CFrame).MulVec(op))
 				default:
-					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible value type or nil")
+					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible types.value type or nil")
 					return 0
 				}
 			},
 		},
 		Members: map[string]Member{
-			"P": {Get: func(s State, v Value) int {
+			"P": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector3", v.(types.CFrame).Position)
 			}},
-			"Position": {Get: func(s State, v Value) int {
+			"Position": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector3", v.(types.CFrame).Position)
 			}},
-			"X": {Get: func(s State, v Value) int {
+			"X": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.CFrame).X()))
 			}},
-			"Y": {Get: func(s State, v Value) int {
+			"Y": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.CFrame).Y()))
 			}},
-			"Z": {Get: func(s State, v Value) int {
+			"Z": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.CFrame).Z()))
 			}},
-			"LookVector": {Get: func(s State, v Value) int {
+			"LookVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[2],
@@ -65,7 +65,7 @@ func CFrame() Type {
 					Z: -cf.Rotation[8],
 				})
 			}},
-			"RightVector": {Get: func(s State, v Value) int {
+			"RightVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[0],
@@ -73,7 +73,7 @@ func CFrame() Type {
 					Z: -cf.Rotation[6],
 				})
 			}},
-			"UpVector": {Get: func(s State, v Value) int {
+			"UpVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[1],
@@ -81,7 +81,7 @@ func CFrame() Type {
 					Z: -cf.Rotation[7],
 				})
 			}},
-			"XVector": {Get: func(s State, v Value) int {
+			"XVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[0],
@@ -89,7 +89,7 @@ func CFrame() Type {
 					Z: -cf.Rotation[6],
 				})
 			}},
-			"YVector": {Get: func(s State, v Value) int {
+			"YVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[1],
@@ -97,7 +97,7 @@ func CFrame() Type {
 					Z: -cf.Rotation[7],
 				})
 			}},
-			"ZVector": {Get: func(s State, v Value) int {
+			"ZVector": {Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Vector3", types.Vector3{
 					X: -cf.Rotation[2],
@@ -105,39 +105,39 @@ func CFrame() Type {
 					Z: -cf.Rotation[8],
 				})
 			}},
-			"Inverse": {Method: true, Get: func(s State, v Value) int {
+			"Inverse": {Method: true, Get: func(s State, v types.Value) int {
 				return s.Push("float", v.(types.CFrame).Inverse())
 			}},
-			"Lerp": {Method: true, Get: func(s State, v Value) int {
+			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
 				goal := s.Pull(2, "CFrame").(types.CFrame)
 				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("CFrame", v.(types.CFrame).Lerp(goal, alpha))
 			}},
-			"ToWorldSpace": {Method: true, Get: func(s State, v Value) int {
+			"ToWorldSpace": {Method: true, Get: func(s State, v types.Value) int {
 				cf := s.Pull(2, "CFrame").(types.CFrame)
 				return s.Push("CFrame", v.(types.CFrame).ToWorldSpace(cf))
 			}},
-			"ToObjectSpace": {Method: true, Get: func(s State, v Value) int {
+			"ToObjectSpace": {Method: true, Get: func(s State, v types.Value) int {
 				cf := s.Pull(2, "CFrame").(types.CFrame)
 				return s.Push("CFrame", v.(types.CFrame).ToObjectSpace(cf))
 			}},
-			"PointToWorldSpace": {Method: true, Get: func(s State, v Value) int {
+			"PointToWorldSpace": {Method: true, Get: func(s State, v types.Value) int {
 				v3 := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.CFrame).PointToWorldSpace(v3))
 			}},
-			"PointToObjectSpace": {Method: true, Get: func(s State, v Value) int {
+			"PointToObjectSpace": {Method: true, Get: func(s State, v types.Value) int {
 				v3 := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.CFrame).PointToObjectSpace(v3))
 			}},
-			"VectorToWorldSpace": {Method: true, Get: func(s State, v Value) int {
+			"VectorToWorldSpace": {Method: true, Get: func(s State, v types.Value) int {
 				v3 := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.CFrame).VectorToWorldSpace(v3))
 			}},
-			"VectorToObjectSpace": {Method: true, Get: func(s State, v Value) int {
+			"VectorToObjectSpace": {Method: true, Get: func(s State, v types.Value) int {
 				v3 := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.CFrame).VectorToObjectSpace(v3))
 			}},
-			"GetComponents": {Method: true, Get: func(s State, v Value) int {
+			"GetComponents": {Method: true, Get: func(s State, v types.Value) int {
 				cf := v.(types.CFrame)
 				return s.Push("Tuple", rtypes.Tuple{
 					types.Float(cf.Position.X),
@@ -154,19 +154,19 @@ func CFrame() Type {
 					types.Float(cf.Rotation[8]),
 				})
 			}},
-			"ToEulerAnglesXYZ": {Method: true, Get: func(s State, v Value) int {
+			"ToEulerAnglesXYZ": {Method: true, Get: func(s State, v types.Value) int {
 				x, y, z := v.(types.CFrame).Angles()
 				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
-			"ToEulerAnglesYXZ": {Method: true, Get: func(s State, v Value) int {
+			"ToEulerAnglesYXZ": {Method: true, Get: func(s State, v types.Value) int {
 				x, y, z := v.(types.CFrame).Orientation()
 				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
-			"ToOrientation": {Method: true, Get: func(s State, v Value) int {
+			"ToOrientation": {Method: true, Get: func(s State, v types.Value) int {
 				x, y, z := v.(types.CFrame).Orientation()
 				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
-			"ToAxisAngle": {Method: true, Get: func(s State, v Value) int {
+			"ToAxisAngle": {Method: true, Get: func(s State, v types.Value) int {
 				axis, rotation := v.(types.CFrame).AxisAngle()
 				return s.Push("Tuple", rtypes.Tuple{axis, types.Float(rotation)})
 			}},

@@ -12,27 +12,27 @@ func Ray() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Ray).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Ray").(types.Ray)
 				return s.Push("bool", types.Bool(v.(types.Ray) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Origin": {Get: func(s State, v Value) int {
+			"Origin": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector", v.(types.Ray).Origin)
 			}},
-			"Direction": {Get: func(s State, v Value) int {
+			"Direction": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector", v.(types.Ray).Direction)
 			}},
-			"ClosestPoint": {Method: true, Get: func(s State, v Value) int {
+			"ClosestPoint": {Method: true, Get: func(s State, v types.Value) int {
 				point := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.Ray).ClosestPoint(point))
 			}},
-			"Distance": {Method: true, Get: func(s State, v Value) int {
+			"Distance": {Method: true, Get: func(s State, v types.Value) int {
 				point := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("number", types.Double(v.(types.Ray).Distance(point)))
 			}},

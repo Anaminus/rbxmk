@@ -5,20 +5,21 @@ import (
 
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
 func Dictionary() Type {
 	return Type{
 		Name: "Dictionary",
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
-				return nil, TypeError(nil, 0, "map[string]Value")
+				return nil, TypeError(nil, 0, "Dictionary")
 			}
 			if s.Cycle.Has(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
@@ -35,7 +36,7 @@ func Dictionary() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -54,7 +55,7 @@ func Dictionary() Type {
 				if err != nil {
 					return
 				}
-				var v Value
+				var v types.Value
 				if v, err = variantType.ReflectFrom(s, variantType, lv); err == nil {
 					dict[k.String()] = v
 				}

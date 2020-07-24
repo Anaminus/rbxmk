@@ -12,26 +12,26 @@ func Rect() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Rect).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Rect").(types.Rect)
 				return s.Push("bool", types.Bool(v.(types.Rect) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Min": {Get: func(s State, v Value) int {
+			"Min": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector2", v.(types.Rect).Min)
 			}},
-			"Max": {Get: func(s State, v Value) int {
+			"Max": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector2", v.(types.Rect).Max)
 			}},
-			"Width": {Get: func(s State, v Value) int {
+			"Width": {Get: func(s State, v types.Value) int {
 				return s.Push("number", types.Double(v.(types.Rect).Width()))
 			}},
-			"Height": {Get: func(s State, v Value) int {
+			"Height": {Get: func(s State, v types.Value) int {
 				return s.Push("number", types.Double(v.(types.Rect).Height()))
 			}},
 		},

@@ -12,23 +12,23 @@ func Vector3() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Vector3).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("bool", types.Bool(v.(types.Vector3) == op))
 			},
-			"__add": func(s State, v Value) int {
+			"__add": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.Vector3).Add(op))
 			},
-			"__sub": func(s State, v Value) int {
+			"__sub": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.Vector3).Sub(op))
 			},
-			"__mul": func(s State, v Value) int {
+			"__mul": func(s State, v types.Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
 					return s.Push("Vector3", v.(types.Vector3).MulN(float64(op)))
@@ -39,7 +39,7 @@ func Vector3() Type {
 					return 0
 				}
 			},
-			"__div": func(s State, v Value) int {
+			"__div": func(s State, v types.Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
 					return s.Push("Vector3", v.(types.Vector3).DivN(float64(op)))
@@ -50,40 +50,40 @@ func Vector3() Type {
 					return 0
 				}
 			},
-			"__unm": func(s State, v Value) int {
+			"__unm": func(s State, v types.Value) int {
 				return s.Push("Vector3", v.(types.Vector3).Neg())
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v Value) int {
+			"X": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3).X))
 			}},
-			"Y": {Get: func(s State, v Value) int {
+			"Y": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3).Y))
 			}},
-			"Z": {Get: func(s State, v Value) int {
+			"Z": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3).Z))
 			}},
-			"Magnitude": {Get: func(s State, v Value) int {
+			"Magnitude": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3).Magnitude()))
 			}},
-			"Unit": {Get: func(s State, v Value) int {
+			"Unit": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector3", v.(types.Vector3).Unit())
 			}},
-			"Lerp": {Method: true, Get: func(s State, v Value) int {
+			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
 				goal := s.Pull(2, "Vector3").(types.Vector3)
 				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("Vector3", v.(types.Vector3).Lerp(goal, alpha))
 			}},
-			"Dot": {Method: true, Get: func(s State, v Value) int {
+			"Dot": {Method: true, Get: func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("float", types.Float(v.(types.Vector3).Dot(op)))
 			}},
-			"Cross": {Method: true, Get: func(s State, v Value) int {
+			"Cross": {Method: true, Get: func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push("Vector3", v.(types.Vector3).Cross(op))
 			}},
-			"FuzzyEq": {Method: true, Get: func(s State, v Value) int {
+			"FuzzyEq": {Method: true, Get: func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				epsilon := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("bool", types.Bool(v.(types.Vector3).FuzzyEq(op, epsilon)))

@@ -12,23 +12,23 @@ func Region3() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Region3).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Region3").(types.Region3)
 				return s.Push("bool", types.Bool(v.(types.Region3) == op))
 			},
 		},
 		Members: map[string]Member{
-			"CFrame": {Get: func(s State, v Value) int {
+			"CFrame": {Get: func(s State, v types.Value) int {
 				return s.Push("CFrame", v.(types.Region3).CFrame())
 			}},
-			"Size": {Get: func(s State, v Value) int {
+			"Size": {Get: func(s State, v types.Value) int {
 				return s.Push("Vector3", v.(types.Region3).Size())
 			}},
-			"ExpandToGrid": {Method: true, Get: func(s State, v Value) int {
+			"ExpandToGrid": {Method: true, Get: func(s State, v types.Value) int {
 				region := int(s.Pull(2, "int").(types.Int))
 				return s.Push("Region3", v.(types.Region3).ExpandToGrid(region))
 			}},

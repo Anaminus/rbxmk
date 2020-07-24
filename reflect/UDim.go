@@ -12,31 +12,31 @@ func UDim() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.UDim).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim").(types.UDim)
 				return s.Push("bool", types.Bool(v.(types.UDim) == op))
 			},
-			"__add": func(s State, v Value) int {
+			"__add": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim").(types.UDim)
 				return s.Push("UDim", v.(types.UDim).Add(op))
 			},
-			"__sub": func(s State, v Value) int {
+			"__sub": func(s State, v types.Value) int {
 				op := s.Pull(2, "UDim").(types.UDim)
 				return s.Push("UDim", v.(types.UDim).Sub(op))
 			},
-			"__unm": func(s State, v Value) int {
+			"__unm": func(s State, v types.Value) int {
 				return s.Push("UDim", v.(types.UDim).Neg())
 			},
 		},
 		Members: map[string]Member{
-			"Scale": {Get: func(s State, v Value) int {
+			"Scale": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.UDim).Scale))
 			}},
-			"Offset": {Get: func(s State, v Value) int {
+			"Offset": {Get: func(s State, v types.Value) int {
 				return s.Push("int", types.Int(v.(types.UDim).Offset))
 			}},
 		},

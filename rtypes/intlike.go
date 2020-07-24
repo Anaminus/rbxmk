@@ -1,7 +1,7 @@
 package rtypes
 
 import (
-	"github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 )
 
 // Intlike implements rbxmk.Intlike for a number of types.
@@ -14,7 +14,7 @@ func (i Intlike) IsIntlike() bool {
 	case uint8, uint16, uint32, uint64, uint,
 		int8, int16, int32, int64, int,
 		float32, float64,
-		rbxmk.Intlike, rbxmk.Numberlike:
+		types.Intlike, types.Numberlike:
 		return true
 	}
 	return false
@@ -46,9 +46,9 @@ func (i Intlike) Intlike() int64 {
 		return int64(v)
 	case float64:
 		return int64(v)
-	case rbxmk.Intlike:
+	case types.Intlike:
 		return v.Intlike()
-	case rbxmk.Numberlike:
+	case types.Numberlike:
 		return int64(v.Numberlike())
 	}
 	return 0

@@ -12,23 +12,23 @@ func ColorSequenceKeypoint() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.ColorSequenceKeypoint).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)
 				return s.Push("bool", types.Bool(v.(types.ColorSequenceKeypoint) == op))
 			},
 		},
 		Members: map[string]Member{
-			"Time": {Get: func(s State, v Value) int {
+			"Time": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.ColorSequenceKeypoint).Time))
 			}},
-			"Value": {Get: func(s State, v Value) int {
+			"Value": {Get: func(s State, v types.Value) int {
 				return s.Push("Color3", v.(types.ColorSequenceKeypoint).Value)
 			}},
-			"Envelope": {Get: func(s State, v Value) int {
+			"Envelope": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.ColorSequenceKeypoint).Envelope))
 			}},
 		},

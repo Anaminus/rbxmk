@@ -3,6 +3,7 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -10,7 +11,7 @@ func Tuple() Type {
 	return Type{
 		Name:  "Tuple",
 		Count: -1,
-		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
+		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			values := v.(rtypes.Tuple)
 			lvs = make([]lua.LValue, len(values))
 			variantType := s.Type("Variant")
@@ -23,7 +24,7 @@ func Tuple() Type {
 			}
 			return lvs, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v Value, err error) {
+		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			vs := make(rtypes.Tuple, len(lvs))
 			variantType := s.Type("Variant")
 			for i, lv := range lvs {

@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -56,7 +57,7 @@ func (w *World) RegisterType(t Type) {
 					TypeError(l, 1, t.Name)
 					return 0
 				}
-				v, ok := u.Value.(Value)
+				v, ok := u.Value.(types.Value)
 				if !ok {
 					TypeError(l, 1, t.Name)
 					return 0
@@ -92,7 +93,7 @@ func (w *World) RegisterType(t Type) {
 				TypeError(l, 1, t.Name)
 				return 0
 			}
-			v, ok := u.Value.(Value)
+			v, ok := u.Value.(types.Value)
 			if !ok {
 				TypeError(l, 1, t.Name)
 				return 0
@@ -132,7 +133,7 @@ func (w *World) RegisterType(t Type) {
 				TypeError(l, 1, t.Name)
 				return 0
 			}
-			v, ok := u.Value.(Value)
+			v, ok := u.Value.(types.Value)
 			if !ok {
 				TypeError(l, 1, t.Name)
 				return 0
@@ -228,7 +229,7 @@ func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 }
 
 // ReflectTo reflects v to lvs using registered type t.
-func (w *World) ReflectTo(t string, v Value) (lvs []lua.LValue, err error) {
+func (w *World) ReflectTo(t string, v types.Value) (lvs []lua.LValue, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
@@ -240,7 +241,7 @@ func (w *World) ReflectTo(t string, v Value) (lvs []lua.LValue, err error) {
 }
 
 // ReflectFrom reflects lvs to v using registered type t.
-func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v Value, err error) {
+func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v types.Value, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
@@ -253,20 +254,20 @@ func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v Value, err error) {
 
 // Push reflects v according to registered type t, then pushes the results to
 // the world's state.
-func (w *World) Push(t string, v Value) int {
+func (w *World) Push(t string, v types.Value) int {
 	return State{World: w, L: w.l}.Push(t, v)
 }
 
 // Pull gets from the world's Lua state the values starting from n, and reflects
 // a value from them according to registered type t.
-func (w *World) Pull(n int, t string) Value {
+func (w *World) Pull(n int, t string) types.Value {
 	return State{World: w, L: w.l}.Pull(n, t)
 }
 
 // PullOpt gets from the world's Lua state the value at n, and reflects a value
 // from it according to registered type t. If the value is nil, d is returned
 // instead.
-func (w *World) PullOpt(n int, t string, d Value) Value {
+func (w *World) PullOpt(n int, t string, d types.Value) types.Value {
 	return State{World: w, L: w.l}.PullOpt(n, t, d)
 }
 
@@ -274,7 +275,7 @@ func (w *World) PullOpt(n int, t string, d Value) Value {
 // reflects a value from them according to any of the registered types in t.
 // Returns the first successful reflection among the types in t. If no types
 // succeeded, then a type error is thrown.
-func (w *World) PullAnyOf(n int, t ...string) Value {
+func (w *World) PullAnyOf(n int, t ...string) types.Value {
 	return State{World: w, L: w.l}.PullAnyOf(n, t...)
 }
 

@@ -3,7 +3,6 @@ package rtypes
 import (
 	"errors"
 
-	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -12,7 +11,7 @@ type Instance struct {
 	Reference string
 	IsService bool
 
-	properties map[string]rbxmk.PropValue
+	properties map[string]types.PropValue
 	children   []*Instance
 	parent     *Instance
 	root       bool
@@ -21,7 +20,7 @@ type Instance struct {
 func NewInstance(className string) *Instance {
 	return &Instance{
 		ClassName:  className,
-		properties: make(map[string]rbxmk.PropValue, 0),
+		properties: make(map[string]types.PropValue, 0),
 	}
 }
 
@@ -29,7 +28,7 @@ func NewDataModel() *Instance {
 	return &Instance{
 		root:       true,
 		ClassName:  "DataModel",
-		properties: make(map[string]rbxmk.PropValue, 0),
+		properties: make(map[string]types.PropValue, 0),
 	}
 }
 
@@ -51,7 +50,7 @@ func (inst *Instance) clone(refs map[*Instance]*Instance, propRefs *[]propRef) *
 		Reference:  inst.Reference,
 		IsService:  inst.IsService,
 		children:   make([]*Instance, len(inst.children)),
-		properties: make(map[string]rbxmk.PropValue, len(inst.properties)),
+		properties: make(map[string]types.PropValue, len(inst.properties)),
 	}
 	refs[inst] = clone
 	for name, v := range inst.properties {
@@ -63,7 +62,7 @@ func (inst *Instance) clone(refs map[*Instance]*Instance, propRefs *[]propRef) *
 				Value:    v,
 			})
 			continue
-		case rbxmk.PropValue:
+		case types.PropValue:
 			clone.properties[name] = v.Copy()
 		}
 		clone.properties[name] = v
@@ -365,13 +364,13 @@ func (inst *Instance) FindFirstChildOfClass(class string, recurse bool) *Instanc
 
 // Get returns the value of a property in the instance. The value will be nil
 // if the property is not defined.
-func (inst *Instance) Get(property string) (value rbxmk.Value) {
+func (inst *Instance) Get(property string) (value types.Value) {
 	return inst.properties[property]
 }
 
 // Set sets the value of a property in the instance. If value is nil, then the
 // value will be deleted from the Properties map.
-func (inst *Instance) Set(property string, value rbxmk.PropValue) {
+func (inst *Instance) Set(property string, value types.PropValue) {
 	if value == nil {
 		delete(inst.properties, property)
 	} else {
@@ -379,8 +378,8 @@ func (inst *Instance) Set(property string, value rbxmk.PropValue) {
 	}
 }
 
-func (inst *Instance) Properties() map[string]rbxmk.PropValue {
-	props := make(map[string]rbxmk.PropValue, len(inst.properties))
+func (inst *Instance) Properties() map[string]types.PropValue {
+	props := make(map[string]types.PropValue, len(inst.properties))
 	for name, value := range inst.properties {
 		props[name] = value
 	}
@@ -390,7 +389,7 @@ func (inst *Instance) Properties() map[string]rbxmk.PropValue {
 // Name returns the Name property of the instance, or an empty string if it is
 // invalid or not defined.
 func (inst *Instance) Name() string {
-	if v, ok := inst.properties["Name"].(rbxmk.Stringlike); ok {
+	if v, ok := inst.properties["Name"].(types.Stringlike); ok {
 		return v.Stringlike()
 	}
 	return ""
@@ -431,13 +430,13 @@ func (*Instance) Type() string {
 // String implements the fmt.Stringer interface by returning the Name of the
 // instance, or the ClassName if Name isn't defined.
 func (inst *Instance) String() string {
-	if v, ok := (inst.properties["Name"]).(rbxmk.Stringlike); ok {
+	if v, ok := (inst.properties["Name"]).(types.Stringlike); ok {
 		return v.Stringlike()
 	}
 	return inst.ClassName
 }
 
-// Copy implements rbxmk.PropertyValue.
-func (inst *Instance) Copy() rbxmk.PropValue {
+// Copy implements types.PropValue.
+func (inst *Instance) Copy() types.PropValue {
 	return inst.Clone()
 }

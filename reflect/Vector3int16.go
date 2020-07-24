@@ -12,23 +12,23 @@ func Vector3int16() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v Value) int {
+			"__tostring": func(s State, v types.Value) int {
 				s.L.Push(lua.LString(v.(types.Vector3int16).String()))
 				return 1
 			},
-			"__eq": func(s State, v Value) int {
+			"__eq": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
 				return s.Push("bool", types.Bool(v.(types.Vector3int16) == op))
 			},
-			"__add": func(s State, v Value) int {
+			"__add": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
 				return s.Push("Vector3int16", v.(types.Vector3int16).Add(op))
 			},
-			"__sub": func(s State, v Value) int {
+			"__sub": func(s State, v types.Value) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
 				return s.Push("Vector3int16", v.(types.Vector3int16).Sub(op))
 			},
-			"__mul": func(s State, v Value) int {
+			"__mul": func(s State, v types.Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
 					return s.Push("Vector3int16", v.(types.Vector3int16).MulN(float64(op)))
@@ -39,7 +39,7 @@ func Vector3int16() Type {
 					return 0
 				}
 			},
-			"__div": func(s State, v Value) int {
+			"__div": func(s State, v types.Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
 					return s.Push("Vector3int16", v.(types.Vector3int16).DivN(float64(op)))
@@ -50,18 +50,18 @@ func Vector3int16() Type {
 					return 0
 				}
 			},
-			"__unm": func(s State, v Value) int {
+			"__unm": func(s State, v types.Value) int {
 				return s.Push("Vector3int16", v.(types.Vector3int16).Neg())
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v Value) int {
+			"X": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3int16).X))
 			}},
-			"Y": {Get: func(s State, v Value) int {
+			"Y": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3int16).Y))
 			}},
-			"Z": {Get: func(s State, v Value) int {
+			"Z": {Get: func(s State, v types.Value) int {
 				return s.Push("float", types.Float(v.(types.Vector3int16).Z))
 			}},
 		},
