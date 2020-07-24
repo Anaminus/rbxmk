@@ -94,11 +94,9 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 	for _, s := range sources.All() {
 		world.RegisterSource(s())
 	}
-	world.Open(library.Base)
-	world.Open(library.RBXMK)
-	world.Open(library.Types)
-	world.Open(library.OS)
-	world.Open(library.File)
+	for _, lib := range library.All() {
+		world.Open(lib)
+	}
 
 	// Add script arguments.
 	for _, arg := range args {
