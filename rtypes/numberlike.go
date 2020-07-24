@@ -9,7 +9,7 @@ type Numberlike struct {
 	Value interface{}
 }
 
-func (n Numberlike) IsIntlike() bool {
+func (n Numberlike) IsNumberlike() bool {
 	switch n.Value.(type) {
 	case uint8, uint16, uint32, uint64, uint,
 		int8, int16, int32, int64, int,
