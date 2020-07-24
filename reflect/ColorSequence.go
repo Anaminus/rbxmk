@@ -13,12 +13,12 @@ func ColorSequence() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.ColorSequence).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "ColorSequence").(types.ColorSequence).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
-				u := v.(types.ColorSequence)
+			"__eq": func(s State) int {
+				u := s.Pull(1, "ColorSequence").(types.ColorSequence)
 				op := s.Pull(2, "ColorSequence").(types.ColorSequence)
 				if len(op) != len(u) {
 					return s.Push("bool", types.False)

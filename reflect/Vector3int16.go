@@ -12,46 +12,46 @@ func Vector3int16() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Vector3int16).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Vector3int16").(types.Vector3int16).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push("bool", types.Bool(v.(types.Vector3int16) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Vector3int16").(types.Vector3int16) == op))
 			},
-			"__add": func(s State, v types.Value) int {
+			"__add": func(s State) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push("Vector3int16", v.(types.Vector3int16).Add(op))
+				return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).Add(op))
 			},
-			"__sub": func(s State, v types.Value) int {
+			"__sub": func(s State) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push("Vector3int16", v.(types.Vector3int16).Sub(op))
+				return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).Sub(op))
 			},
-			"__mul": func(s State, v types.Value) int {
+			"__mul": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
-					return s.Push("Vector3int16", v.(types.Vector3int16).MulN(float64(op)))
+					return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).MulN(float64(op)))
 				case types.Vector3int16:
-					return s.Push("Vector3int16", v.(types.Vector3int16).Mul(op))
+					return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).Mul(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3int16 with an incompatible value type or nil")
 					return 0
 				}
 			},
-			"__div": func(s State, v types.Value) int {
+			"__div": func(s State) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
-					return s.Push("Vector3int16", v.(types.Vector3int16).DivN(float64(op)))
+					return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).DivN(float64(op)))
 				case types.Vector3int16:
-					return s.Push("Vector3int16", v.(types.Vector3int16).Div(op))
+					return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).Div(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3int16 with an incompatible value type or nil")
 					return 0
 				}
 			},
-			"__unm": func(s State, v types.Value) int {
-				return s.Push("Vector3int16", v.(types.Vector3int16).Neg())
+			"__unm": func(s State) int {
+				return s.Push("Vector3int16", s.Pull(1, "Vector3int16").(types.Vector3int16).Neg())
 			},
 		},
 		Members: map[string]Member{

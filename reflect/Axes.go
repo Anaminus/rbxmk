@@ -12,13 +12,13 @@ func Axes() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Axes).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Axes").(types.Axes).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Axes").(types.Axes)
-				return s.Push("bool", types.Bool(v.(types.Axes) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Axes").(types.Axes) == op))
 			},
 		},
 		Members: map[string]Member{

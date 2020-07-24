@@ -13,28 +13,28 @@ func CFrame() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.CFrame).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "CFrame").(types.CFrame).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "CFrame").(types.CFrame)
-				return s.Push("bool", types.Bool(v.(types.CFrame) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "CFrame").(types.CFrame) == op))
 			},
-			"__add": func(s State, v types.Value) int {
+			"__add": func(s State) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("CFrame", v.(types.CFrame).AddVec(op))
+				return s.Push("CFrame", s.Pull(1, "CFrame").(types.CFrame).AddVec(op))
 			},
-			"__sub": func(s State, v types.Value) int {
+			"__sub": func(s State) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("CFrame", v.(types.CFrame).SubVec(op))
+				return s.Push("CFrame", s.Pull(1, "CFrame").(types.CFrame).SubVec(op))
 			},
-			"__mul": func(s State, v types.Value) int {
+			"__mul": func(s State) int {
 				switch op := s.PullAnyOf(2, "CFrame", "Vector3").(type) {
 				case types.CFrame:
-					return s.Push("CFrame", v.(types.CFrame).Mul(op))
+					return s.Push("CFrame", s.Pull(1, "CFrame").(types.CFrame).Mul(op))
 				case types.Vector3:
-					return s.Push("Vector3", v.(types.CFrame).MulVec(op))
+					return s.Push("Vector3", s.Pull(1, "CFrame").(types.CFrame).MulVec(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible types.value type or nil")
 					return 0

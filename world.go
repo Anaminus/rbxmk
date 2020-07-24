@@ -51,19 +51,7 @@ func (w *World) RegisterType(t Type) {
 		mt = w.l.CreateTable(0, len(t.Metatable)+3)
 		for name, method := range t.Metatable {
 			m := method
-			mt.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
-				u := l.CheckUserData(1)
-				if u.Metatable != mt {
-					TypeError(l, 1, t.Name)
-					return 0
-				}
-				v, ok := u.Value.(types.Value)
-				if !ok {
-					TypeError(l, 1, t.Name)
-					return 0
-				}
-				return m(State{World: w, L: l}, v)
-			}))
+			mt.RawSetString(name, w.WrapFunc(m))
 		}
 		mt.RawSetString("__type", lua.LString(t.Name))
 		if t.Metatable["__tostring"] == nil {
@@ -118,7 +106,7 @@ func (w *World) RegisterType(t Type) {
 			}
 		customIndex:
 			if index != nil {
-				return index(State{World: w, L: l}, v)
+				return index(State{World: w, L: l})
 			}
 			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)
@@ -153,7 +141,7 @@ func (w *World) RegisterType(t Type) {
 			}
 		customNewindex:
 			if newindex != nil {
-				return newindex(State{World: w, L: l}, v)
+				return newindex(State{World: w, L: l})
 			}
 			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, t.Name)

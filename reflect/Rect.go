@@ -12,13 +12,13 @@ func Rect() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Rect).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Rect").(types.Rect).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Rect").(types.Rect)
-				return s.Push("bool", types.Bool(v.(types.Rect) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Rect").(types.Rect) == op))
 			},
 		},
 		Members: map[string]Member{

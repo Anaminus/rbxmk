@@ -12,13 +12,13 @@ func Region3() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Region3).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Region3").(types.Region3).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Region3").(types.Region3)
-				return s.Push("bool", types.Bool(v.(types.Region3) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Region3").(types.Region3) == op))
 			},
 		},
 		Members: map[string]Member{

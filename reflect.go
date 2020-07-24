@@ -60,9 +60,8 @@ func (t Type) ValueCount() int {
 // Metatable defines the metamethods of a custom type.
 type Metatable map[string]Metamethod
 
-// Metamethod is called when a metamethod is invoked. v is the receiver, which
-// was successfully reflected from the first argument to the metamethod.
-type Metamethod func(s State, v types.Value) int
+// Metamethod is called when a metamethod is invoked.
+type Metamethod func(s State) int
 
 // Members is a set of members keyed by name.
 type Members map[string]Member

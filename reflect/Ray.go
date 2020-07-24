@@ -12,13 +12,13 @@ func Ray() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Ray).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Ray").(types.Ray).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Ray").(types.Ray)
-				return s.Push("bool", types.Bool(v.(types.Ray) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Ray").(types.Ray) == op))
 			},
 		},
 		Members: map[string]Member{

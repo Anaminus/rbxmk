@@ -14,13 +14,13 @@ func BrickColor() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.BrickColor).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "BrickColor").(types.BrickColor).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "BrickColor").(types.BrickColor)
-				return s.Push("bool", types.Bool(v.(types.BrickColor) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "BrickColor").(types.BrickColor) == op))
 			},
 		},
 		Members: map[string]Member{

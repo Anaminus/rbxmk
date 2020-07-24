@@ -13,16 +13,16 @@ func Instance() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(*rtypes.Instance).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Instance").(*rtypes.Instance).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push("bool", types.Bool(v.(*rtypes.Instance) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Instance").(*rtypes.Instance) == op))
 			},
-			"__index": func(s State, v types.Value) int {
-				inst := v.(*rtypes.Instance)
+			"__index": func(s State) int {
+				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 
 				// Try symbol.
 				if typ := s.Type("Symbol"); typ.Name != "" {
@@ -74,8 +74,8 @@ func Instance() Type {
 				}
 				return s.Push("Variant", value)
 			},
-			"__newindex": func(s State, v types.Value) int {
-				inst := v.(*rtypes.Instance)
+			"__newindex": func(s State) int {
+				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 
 				// Try symbol.
 				if typ := s.Type("Symbol"); typ.Name != "" {

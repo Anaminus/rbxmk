@@ -12,24 +12,24 @@ func UDim2() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.UDim2).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "UDim2").(types.UDim2).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push("bool", types.Bool(v.(types.UDim2) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "UDim2").(types.UDim2) == op))
 			},
-			"__add": func(s State, v types.Value) int {
+			"__add": func(s State) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push("UDim2", v.(types.UDim2).Add(op))
+				return s.Push("UDim2", s.Pull(1, "UDim2").(types.UDim2).Add(op))
 			},
-			"__sub": func(s State, v types.Value) int {
+			"__sub": func(s State) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push("UDim2", v.(types.UDim2).Sub(op))
+				return s.Push("UDim2", s.Pull(1, "UDim2").(types.UDim2).Sub(op))
 			},
-			"__unm": func(s State, v types.Value) int {
-				return s.Push("UDim2", v.(types.UDim2).Neg())
+			"__unm": func(s State) int {
+				return s.Push("UDim2", s.Pull(1, "UDim2").(types.UDim2).Neg())
 			},
 		},
 		Members: map[string]Member{

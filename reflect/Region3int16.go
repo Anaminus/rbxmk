@@ -12,13 +12,13 @@ func Region3int16() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.Region3int16).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "Region3int16").(types.Region3int16).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "Region3int16").(types.Region3int16)
-				return s.Push("bool", types.Bool(v.(types.Region3int16) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "Region3int16").(types.Region3int16) == op))
 			},
 		},
 		Members: map[string]Member{

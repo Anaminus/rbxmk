@@ -13,12 +13,12 @@ func NumberSequence() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.NumberSequence).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "NumberSequence").(types.NumberSequence).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
-				u := v.(types.NumberSequence)
+			"__eq": func(s State) int {
+				u := s.Pull(1, "NumberSequence").(types.NumberSequence)
 				op := s.Pull(2, "NumberSequence").(types.NumberSequence)
 				if len(op) != len(u) {
 					return s.Push("bool", types.False)

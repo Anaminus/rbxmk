@@ -12,24 +12,24 @@ func UDim() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.UDim).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "UDim").(types.UDim).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("bool", types.Bool(v.(types.UDim) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "UDim").(types.UDim) == op))
 			},
-			"__add": func(s State, v types.Value) int {
+			"__add": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("UDim", v.(types.UDim).Add(op))
+				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Add(op))
 			},
-			"__sub": func(s State, v types.Value) int {
+			"__sub": func(s State) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("UDim", v.(types.UDim).Sub(op))
+				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Sub(op))
 			},
-			"__unm": func(s State, v types.Value) int {
-				return s.Push("UDim", v.(types.UDim).Neg())
+			"__unm": func(s State) int {
+				return s.Push("UDim", s.Pull(1, "UDim").(types.UDim).Neg())
 			},
 		},
 		Members: map[string]Member{

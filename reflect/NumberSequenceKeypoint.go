@@ -12,13 +12,13 @@ func NumberSequenceKeypoint() Type {
 		ReflectTo:   ReflectTypeTo,
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
-			"__tostring": func(s State, v types.Value) int {
-				s.L.Push(lua.LString(v.(types.NumberSequenceKeypoint).String()))
+			"__tostring": func(s State) int {
+				s.L.Push(lua.LString(s.Pull(1, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint).String()))
 				return 1
 			},
-			"__eq": func(s State, v types.Value) int {
+			"__eq": func(s State) int {
 				op := s.Pull(2, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint)
-				return s.Push("bool", types.Bool(v.(types.NumberSequenceKeypoint) == op))
+				return s.Push("bool", types.Bool(s.Pull(1, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint) == op))
 			},
 		},
 		Members: map[string]Member{
