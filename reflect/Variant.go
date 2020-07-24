@@ -11,7 +11,7 @@ import (
 
 func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
-	case nil:
+	case rtypes.NilType:
 		return lua.LNil, nil
 	case types.Bool:
 		return lua.LBool(v), nil
@@ -53,7 +53,7 @@ func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
-		return nil, nil
+		return rtypes.Nil, nil
 	case lua.LBool:
 		return types.Bool(lv), nil
 	case lua.LNumber:

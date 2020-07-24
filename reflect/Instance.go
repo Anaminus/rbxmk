@@ -113,7 +113,7 @@ func Instance() Type {
 				value := inst.Get(name)
 				if value == nil {
 					// s.L.RaiseError("%s is not a valid member", name)
-					return s.Push(nil)
+					return s.Push(rtypes.Nil)
 				}
 				lv, err := reflectPropertyTo(s, value)
 				if err != nil {
@@ -190,7 +190,7 @@ func Instance() Type {
 					if parent := v.(*rtypes.Instance).Parent(); parent != nil {
 						return s.Push(parent)
 					}
-					return s.Push(nil)
+					return s.Push(rtypes.Nil)
 				},
 				Set: func(s State, v types.Value) {
 					var err error
@@ -221,14 +221,14 @@ func Instance() Type {
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
 					return s.Push(ancestor)
 				}
-				return s.Push(nil)
+				return s.Push(rtypes.Nil)
 			}},
 			"FindFirstAncestorOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
 				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
 					return s.Push(ancestor)
 				}
-				return s.Push(nil)
+				return s.Push(rtypes.Nil)
 			}},
 			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
@@ -236,7 +236,7 @@ func Instance() Type {
 				if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
 					return s.Push(child)
 				}
-				return s.Push(nil)
+				return s.Push(rtypes.Nil)
 			}},
 			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
@@ -244,7 +244,7 @@ func Instance() Type {
 				if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
 					return s.Push(child)
 				}
-				return s.Push(nil)
+				return s.Push(rtypes.Nil)
 			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
