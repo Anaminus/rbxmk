@@ -1,11 +1,54 @@
 package reflect
 
 import (
+	"fmt"
+
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
+
+func setUserdata(s State, t string) int {
+	u := s.L.NewUserData()
+	u.Value = s.Pull(1, t)
+	s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
+	s.L.Push(u)
+	return 1
+}
+
+func typesInt(s State) int {
+	return setUserdata(s, "int")
+}
+
+// reflectPropertyTo behaves like ReflectVariantTo, except that exprims types
+// are reflected as userdata.
+func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, t Type, err error) {
+	switch v.(type) {
+	case types.Int,
+		types.Int64,
+		types.Float,
+		types.Double,
+		types.Token,
+		types.BinaryString,
+		types.ProtectedString,
+		types.Content,
+		types.SharedString:
+	default:
+		return ReflectVariantTo(s, v)
+	}
+	typ := s.Type(v.Type())
+	if typ.Name == "" {
+		return nil, s.Type("Variant"), fmt.Errorf("unknown type %q", string(v.Type()))
+	}
+	if typ.ReflectTo == nil {
+		return nil, s.Type("Variant"), fmt.Errorf("unable to cast %s to Variant", typ.Name)
+	}
+	u := s.L.NewUserData()
+	u.Value = v
+	s.L.SetMetatable(u, s.L.GetTypeMetatable(typ.Name))
+	return u, typ, nil
+}
 
 func Instance() Type {
 	return Type{
@@ -72,7 +115,13 @@ func Instance() Type {
 					// s.L.RaiseError("%s is not a valid member", name)
 					return s.Push("nil", nil)
 				}
-				return s.Push("Variant", value)
+				lv, _, err := reflectPropertyTo(s, value)
+				if err != nil {
+					s.L.RaiseError(err.Error())
+					return 0
+				}
+				s.L.Push(lv)
+				return 1
 			},
 			"__newindex": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
