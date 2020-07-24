@@ -82,7 +82,7 @@ represents *data*, and only data.
 
 Consider the RBXL file format. Files of this format contain information used to
 reconstruct the instances that make up a place or model. Such files are static:
-they contain only data, but are difficult to manipulate in place. Instances in
+they contain only data, but are difficult to manipulate in-place. Instances in
 rbxmk are like this, except that they are also interactive: the user can freely
 modify data and move it around.
 
@@ -128,6 +128,8 @@ Instances in rbxmk implement a subset of Roblox's Instance members:
 - `:GetFullName()`
 - `:IsAncestorOf()`
 - `:IsDescendantOf()`
+
+<!-- TODO: links to DevHub -->
 
 ### DataModel
 rbxmk has no singular game tree that contains all objects. Instead, any number
@@ -221,7 +223,7 @@ folder.Name = "Modules"
 
 local data = rbxmk.encodeformat("rbxmx", folder) --> string containing XML model data
 local folderCopy = rbxmk.decodeformat("rbxmx", data) --> Folder instance
-print(folderCopy.Name) --> Folder
+print(folderCopy.Name) --> Modules
 ```
 
 ## Sources
@@ -241,7 +243,7 @@ rbxmk.writesource("file", data, "folder.rbxmx") -- data written to folder.rbxmx
 
 local dataCopy = rbxmk.readsource("file", "folder.rbxmx") -- dataCopy read from folder.rbxmx
 local folderCopy = rbxmk.decodeformat("rbxmx", dataCopy)
-print(folderCopy.Name) --> Folder
+print(folderCopy.Name) --> Modules
 ```
 
 ## Libraries
