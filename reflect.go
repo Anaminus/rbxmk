@@ -3,23 +3,18 @@ package rbxmk
 import (
 	"strings"
 
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
 // Value is a value.
-type Value interface{}
+type Value = types.Value
 
-// Copier is a Value that can be copied.
-type Copier interface {
-	Value
-	Copy() Value
-}
+// Stringer is any Value that has a string-representation.
+type Stringer = types.Stringer
 
-// TValue is a value annotated with a type.
-type TValue struct {
-	Type string
-	Value
-}
+// PropValue is a Value that can be copied.
+type PropValue = types.PropValue
 
 type Type struct {
 	// Name is the name of the type.

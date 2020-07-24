@@ -18,7 +18,7 @@ func Rect() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Rect").(types.Rect)
-				return s.Push("bool", v.(types.Rect) == op)
+				return s.Push("bool", types.Bool(v.(types.Rect) == op))
 			},
 		},
 		Members: map[string]Member{
@@ -29,10 +29,10 @@ func Rect() Type {
 				return s.Push("Vector2", v.(types.Rect).Max)
 			}},
 			"Width": {Get: func(s State, v Value) int {
-				return s.Push("number", v.(types.Rect).Width())
+				return s.Push("number", types.Double(v.(types.Rect).Width()))
 			}},
 			"Height": {Get: func(s State, v Value) int {
-				return s.Push("number", v.(types.Rect).Height())
+				return s.Push("number", types.Double(v.(types.Rect).Height()))
 			}},
 		},
 		Constructors: Constructors{
@@ -43,10 +43,10 @@ func Rect() Type {
 					v.Min = s.Pull(1, "Vector2").(types.Vector2)
 					v.Max = s.Pull(2, "Vector2").(types.Vector2)
 				case 4:
-					v.Min.X = s.Pull(1, "float").(float32)
-					v.Min.Y = s.Pull(2, "float").(float32)
-					v.Max.Y = s.Pull(3, "float").(float32)
-					v.Max.Y = s.Pull(4, "float").(float32)
+					v.Min.X = float32(s.Pull(1, "float").(types.Float))
+					v.Min.Y = float32(s.Pull(2, "float").(types.Float))
+					v.Max.Y = float32(s.Pull(3, "float").(types.Float))
+					v.Max.Y = float32(s.Pull(4, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 2 or 4 arguments")
 					return 0

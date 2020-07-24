@@ -18,27 +18,27 @@ func Faces() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Faces").(types.Faces)
-				return s.Push("bool", v.(types.Faces) == op)
+				return s.Push("bool", types.Bool(v.(types.Faces) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Right": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Right)
+				return s.Push("bool", types.Bool(v.(types.Faces).Right))
 			}},
 			"Top": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Top)
+				return s.Push("bool", types.Bool(v.(types.Faces).Top))
 			}},
 			"Back": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Back)
+				return s.Push("bool", types.Bool(v.(types.Faces).Back))
 			}},
 			"Left": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Left)
+				return s.Push("bool", types.Bool(v.(types.Faces).Left))
 			}},
 			"Bottom": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Bottom)
+				return s.Push("bool", types.Bool(v.(types.Faces).Bottom))
 			}},
 			"Front": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Faces).Front)
+				return s.Push("bool", types.Bool(v.(types.Faces).Front))
 			}},
 		},
 		Constructors: Constructors{
@@ -47,12 +47,12 @@ func Faces() Type {
 				var v types.Faces
 				switch s.Count() {
 				case 6:
-					v.Right = s.Pull(1, "bool").(bool)
-					v.Top = s.Pull(2, "bool").(bool)
-					v.Back = s.Pull(3, "bool").(bool)
-					v.Left = s.Pull(4, "bool").(bool)
-					v.Bottom = s.Pull(5, "bool").(bool)
-					v.Front = s.Pull(6, "bool").(bool)
+					v.Right = bool(s.Pull(1, "bool").(types.Bool))
+					v.Top = bool(s.Pull(2, "bool").(types.Bool))
+					v.Back = bool(s.Pull(3, "bool").(types.Bool))
+					v.Left = bool(s.Pull(4, "bool").(types.Bool))
+					v.Bottom = bool(s.Pull(5, "bool").(types.Bool))
+					v.Front = bool(s.Pull(6, "bool").(types.Bool))
 				default:
 					s.L.RaiseError("expected 0 or 6 arguments")
 					return 0

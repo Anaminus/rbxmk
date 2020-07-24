@@ -18,7 +18,7 @@ func Region3() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Region3").(types.Region3)
-				return s.Push("bool", v.(types.Region3) == op)
+				return s.Push("bool", types.Bool(v.(types.Region3) == op))
 			},
 		},
 		Members: map[string]Member{
@@ -29,7 +29,7 @@ func Region3() Type {
 				return s.Push("Vector3", v.(types.Region3).Size())
 			}},
 			"ExpandToGrid": {Method: true, Get: func(s State, v Value) int {
-				region := s.Pull(2, "int").(int)
+				region := int(s.Pull(2, "int").(types.Int))
 				return s.Push("Region3", v.(types.Region3).ExpandToGrid(region))
 			}},
 		},

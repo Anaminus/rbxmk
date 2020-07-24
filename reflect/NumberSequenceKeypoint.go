@@ -18,18 +18,18 @@ func NumberSequenceKeypoint() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint)
-				return s.Push("bool", v.(types.NumberSequenceKeypoint) == op)
+				return s.Push("bool", types.Bool(v.(types.NumberSequenceKeypoint) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Time": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.NumberSequenceKeypoint).Time)
+				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Time))
 			}},
 			"Value": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.NumberSequenceKeypoint).Value)
+				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Value))
 			}},
 			"Envelope": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.NumberSequenceKeypoint).Envelope)
+				return s.Push("float", types.Float(v.(types.NumberSequenceKeypoint).Envelope))
 			}},
 		},
 		Constructors: Constructors{
@@ -37,12 +37,12 @@ func NumberSequenceKeypoint() Type {
 				var v types.NumberSequenceKeypoint
 				switch s.Count() {
 				case 2:
-					v.Time = s.Pull(1, "float").(float32)
-					v.Value = s.Pull(2, "float").(float32)
+					v.Time = float32(s.Pull(1, "float").(types.Float))
+					v.Value = float32(s.Pull(2, "float").(types.Float))
 				case 3:
-					v.Time = s.Pull(1, "float").(float32)
-					v.Value = s.Pull(2, "float").(float32)
-					v.Envelope = s.Pull(3, "float").(float32)
+					v.Time = float32(s.Pull(1, "float").(types.Float))
+					v.Value = float32(s.Pull(2, "float").(types.Float))
+					v.Envelope = float32(s.Pull(3, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 2 or 3 arguments")
 					return 0

@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 )
 
 func File(s rbxmk.State) {
@@ -14,8 +15,8 @@ func File(s rbxmk.State) {
 }
 
 func fileRead(s rbxmk.State) int {
-	fileName := s.Pull(1, "string").(string)
-	formatName := s.PullOpt(2, "string", "").(string)
+	fileName := string(s.Pull(1, "string").(types.String))
+	formatName := string(s.PullOpt(2, "string", types.String("")).(types.String))
 	if formatName == "" {
 		f := guessExt(s, fileName)
 		if f == "" {
@@ -54,7 +55,7 @@ func fileWrite(s rbxmk.State) int {
 	var value rbxmk.Value
 	switch s.L.GetTop() {
 	case 2:
-		fileName = s.Pull(1, "string").(string)
+		fileName = string(s.Pull(1, "string").(types.String))
 		value = s.Pull(2, "Variant")
 		f := guessExt(s, fileName)
 		if f == "" {
@@ -63,8 +64,8 @@ func fileWrite(s rbxmk.State) int {
 		}
 		formatName = f
 	case 3:
-		fileName = s.Pull(1, "string").(string)
-		formatName = s.Pull(2, "string").(string)
+		fileName = string(s.Pull(1, "string").(types.String))
+		formatName = string(s.Pull(2, "string").(types.String))
 		value = s.Pull(3, "Variant")
 	default:
 		s.L.RaiseError("expected 2 or 3 arguments")

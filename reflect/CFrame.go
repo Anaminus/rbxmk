@@ -2,6 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -18,7 +19,7 @@ func CFrame() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "CFrame").(types.CFrame)
-				return s.Push("bool", v.(types.CFrame) == op)
+				return s.Push("bool", types.Bool(v.(types.CFrame) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
@@ -48,13 +49,13 @@ func CFrame() Type {
 				return s.Push("Vector3", v.(types.CFrame).Position)
 			}},
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.CFrame).X())
+				return s.Push("float", types.Float(v.(types.CFrame).X()))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.CFrame).Y())
+				return s.Push("float", types.Float(v.(types.CFrame).Y()))
 			}},
 			"Z": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.CFrame).Z())
+				return s.Push("float", types.Float(v.(types.CFrame).Z()))
 			}},
 			"LookVector": {Get: func(s State, v Value) int {
 				cf := v.(types.CFrame)
@@ -109,7 +110,7 @@ func CFrame() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "CFrame").(types.CFrame)
-				alpha := s.Pull(3, "number").(float64)
+				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("CFrame", v.(types.CFrame).Lerp(goal, alpha))
 			}},
 			"ToWorldSpace": {Method: true, Get: func(s State, v Value) int {
@@ -138,36 +139,36 @@ func CFrame() Type {
 			}},
 			"GetComponents": {Method: true, Get: func(s State, v Value) int {
 				cf := v.(types.CFrame)
-				return s.Push("Tuple", []Value{
-					cf.Position.X,
-					cf.Position.Y,
-					cf.Position.Z,
-					cf.Rotation[0],
-					cf.Rotation[1],
-					cf.Rotation[2],
-					cf.Rotation[3],
-					cf.Rotation[4],
-					cf.Rotation[5],
-					cf.Rotation[6],
-					cf.Rotation[7],
-					cf.Rotation[8],
+				return s.Push("Tuple", rtypes.Tuple{
+					types.Float(cf.Position.X),
+					types.Float(cf.Position.Y),
+					types.Float(cf.Position.Z),
+					types.Float(cf.Rotation[0]),
+					types.Float(cf.Rotation[1]),
+					types.Float(cf.Rotation[2]),
+					types.Float(cf.Rotation[3]),
+					types.Float(cf.Rotation[4]),
+					types.Float(cf.Rotation[5]),
+					types.Float(cf.Rotation[6]),
+					types.Float(cf.Rotation[7]),
+					types.Float(cf.Rotation[8]),
 				})
 			}},
 			"ToEulerAnglesXYZ": {Method: true, Get: func(s State, v Value) int {
 				x, y, z := v.(types.CFrame).Angles()
-				return s.Push("Tuple", []Value{x, y, z})
+				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
 			"ToEulerAnglesYXZ": {Method: true, Get: func(s State, v Value) int {
 				x, y, z := v.(types.CFrame).Orientation()
-				return s.Push("Tuple", []Value{x, y, z})
+				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
 			"ToOrientation": {Method: true, Get: func(s State, v Value) int {
 				x, y, z := v.(types.CFrame).Orientation()
-				return s.Push("Tuple", []Value{x, y, z})
+				return s.Push("Tuple", rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 			}},
 			"ToAxisAngle": {Method: true, Get: func(s State, v Value) int {
 				axis, rotation := v.(types.CFrame).AxisAngle()
-				return s.Push("Tuple", []Value{TValue{Type: "Vector3", Value: axis}, rotation})
+				return s.Push("Tuple", rtypes.Tuple{axis, types.Float(rotation)})
 			}},
 		},
 		Constructors: Constructors{
@@ -185,34 +186,34 @@ func CFrame() Type {
 					v = types.NewCFrameFromLook(pos, lookAt)
 				case 3:
 					v = types.NewCFrameFromPosition(
-						s.Pull(1, "number").(float64),
-						s.Pull(2, "number").(float64),
-						s.Pull(3, "number").(float64),
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
 					)
 				case 7:
 					v = types.NewCFrameFromQuat(
-						s.Pull(1, "number").(float64),
-						s.Pull(2, "number").(float64),
-						s.Pull(3, "number").(float64),
-						s.Pull(4, "number").(float64),
-						s.Pull(5, "number").(float64),
-						s.Pull(6, "number").(float64),
-						s.Pull(7, "number").(float64),
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(4, "number").(types.Double)),
+						float64(s.Pull(5, "number").(types.Double)),
+						float64(s.Pull(6, "number").(types.Double)),
+						float64(s.Pull(7, "number").(types.Double)),
 					)
 				case 12:
 					v = types.NewCFrameFromComponents(
-						s.Pull(1, "number").(float64),
-						s.Pull(2, "number").(float64),
-						s.Pull(3, "number").(float64),
-						s.Pull(4, "number").(float64),
-						s.Pull(5, "number").(float64),
-						s.Pull(6, "number").(float64),
-						s.Pull(7, "number").(float64),
-						s.Pull(8, "number").(float64),
-						s.Pull(9, "number").(float64),
-						s.Pull(10, "number").(float64),
-						s.Pull(11, "number").(float64),
-						s.Pull(12, "number").(float64),
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(4, "number").(types.Double)),
+						float64(s.Pull(5, "number").(types.Double)),
+						float64(s.Pull(6, "number").(types.Double)),
+						float64(s.Pull(7, "number").(types.Double)),
+						float64(s.Pull(8, "number").(types.Double)),
+						float64(s.Pull(9, "number").(types.Double)),
+						float64(s.Pull(10, "number").(types.Double)),
+						float64(s.Pull(11, "number").(types.Double)),
+						float64(s.Pull(12, "number").(types.Double)),
 					)
 				default:
 					s.L.RaiseError("unexpected number of arguments")
@@ -222,36 +223,36 @@ func CFrame() Type {
 			},
 			"fromEulerAnglesXYZ": func(s State) int {
 				return s.Push("CFrame", types.NewCFrameFromAngles(
-					s.Pull(1, "number").(float64),
-					s.Pull(2, "number").(float64),
-					s.Pull(3, "number").(float64),
+					float64(s.Pull(1, "number").(types.Double)),
+					float64(s.Pull(2, "number").(types.Double)),
+					float64(s.Pull(3, "number").(types.Double)),
 				))
 			},
 			"fromEulerAnglesYXZ": func(s State) int {
 				return s.Push("CFrame", types.NewCFrameFromOrientation(
-					s.Pull(1, "number").(float64),
-					s.Pull(2, "number").(float64),
-					s.Pull(3, "number").(float64),
+					float64(s.Pull(1, "number").(types.Double)),
+					float64(s.Pull(2, "number").(types.Double)),
+					float64(s.Pull(3, "number").(types.Double)),
 				))
 			},
 			"Angles": func(s State) int {
 				return s.Push("CFrame", types.NewCFrameFromAngles(
-					s.Pull(1, "number").(float64),
-					s.Pull(2, "number").(float64),
-					s.Pull(3, "number").(float64),
+					float64(s.Pull(1, "number").(types.Double)),
+					float64(s.Pull(2, "number").(types.Double)),
+					float64(s.Pull(3, "number").(types.Double)),
 				))
 			},
 			"fromOrientation": func(s State) int {
 				return s.Push("CFrame", types.NewCFrameFromOrientation(
-					s.Pull(1, "number").(float64),
-					s.Pull(2, "number").(float64),
-					s.Pull(3, "number").(float64),
+					float64(s.Pull(1, "number").(types.Double)),
+					float64(s.Pull(2, "number").(types.Double)),
+					float64(s.Pull(3, "number").(types.Double)),
 				))
 			},
 			"fromAxisAngle": func(s State) int {
 				return s.Push("CFrame", types.NewCFrameFromAxisAngle(
 					s.Pull(1, "Vector3").(types.Vector3),
-					s.Pull(2, "number").(float64),
+					float64(s.Pull(2, "number").(types.Double)),
 				))
 			},
 			"fromMatrix": func(s State) int {

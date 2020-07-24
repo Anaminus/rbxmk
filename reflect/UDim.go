@@ -18,7 +18,7 @@ func UDim() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "UDim").(types.UDim)
-				return s.Push("bool", v.(types.UDim) == op)
+				return s.Push("bool", types.Bool(v.(types.UDim) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "UDim").(types.UDim)
@@ -34,17 +34,17 @@ func UDim() Type {
 		},
 		Members: map[string]Member{
 			"Scale": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.UDim).Scale)
+				return s.Push("float", types.Float(v.(types.UDim).Scale))
 			}},
 			"Offset": {Get: func(s State, v Value) int {
-				return s.Push("int", v.(types.UDim).Offset)
+				return s.Push("int", types.Int(v.(types.UDim).Offset))
 			}},
 		},
 		Constructors: Constructors{
 			"new": func(s State) int {
 				return s.Push("UDim", types.UDim{
-					Scale:  s.Pull(1, "float").(float32),
-					Offset: int32(s.Pull(2, "int").(int)),
+					Scale:  float32(s.Pull(1, "float").(types.Float)),
+					Offset: int32(s.Pull(2, "int").(types.Int)),
 				})
 			},
 		},

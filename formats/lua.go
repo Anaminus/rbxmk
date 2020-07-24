@@ -2,21 +2,22 @@ package formats
 
 import (
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/types"
+	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 )
 
 func decodeScript(b []byte, className string) (v rbxmk.Value, err error) {
-	script := types.NewInstance(className)
-	script.Set("Source", rbxmk.TValue{Type: "ProtectedString", Value: string(b)})
+	script := rtypes.NewInstance(className)
+	script.Set("Source", types.ProtectedString(b))
 	return script, nil
 }
 
 func encodeScript(v rbxmk.Value) (b []byte, err error) {
-	b, ok := types.Stringlike{Value: v}.Stringlike()
-	if !ok {
-		return nil, cannotEncode(v, false)
+	s := rtypes.Stringlike{Value: v}
+	if !s.IsStringlike() {
+		return nil, cannotEncode(v)
 	}
-	return b, nil
+	return []byte(s.Stringlike()), nil
 }
 
 func ModuleScriptLua() rbxmk.Format {

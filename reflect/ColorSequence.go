@@ -2,6 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -20,14 +21,14 @@ func ColorSequence() Type {
 				u := v.(types.ColorSequence)
 				op := s.Pull(2, "ColorSequence").(types.ColorSequence)
 				if len(op) != len(u) {
-					return s.Push("bool", false)
+					return s.Push("bool", types.Bool(false))
 				}
 				for i, v := range u {
 					if v != op[i] {
-						return s.Push("bool", false)
+						return s.Push("bool", types.Bool(false))
 					}
 				}
-				return s.Push("bool", true)
+				return s.Push("bool", types.Bool(true))
 			},
 		},
 		Members: map[string]Member{
@@ -58,7 +59,7 @@ func ColorSequence() Type {
 							types.ColorSequenceKeypoint{Time: 0, Value: c},
 							types.ColorSequenceKeypoint{Time: 1, Value: c},
 						}
-					case *lua.LTable:
+					case rtypes.Table:
 						n := c.Len()
 						if n < 2 {
 							s.L.RaiseError("ColorSequence requires at least 2 keypoints")

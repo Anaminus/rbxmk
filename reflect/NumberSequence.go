@@ -2,6 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -20,14 +21,14 @@ func NumberSequence() Type {
 				u := v.(types.NumberSequence)
 				op := s.Pull(2, "NumberSequence").(types.NumberSequence)
 				if len(op) != len(u) {
-					return s.Push("bool", false)
+					return s.Push("bool", types.Bool(false))
 				}
 				for i, v := range u {
 					if v != op[i] {
-						return s.Push("bool", false)
+						return s.Push("bool", types.Bool(false))
 					}
 				}
-				return s.Push("bool", true)
+				return s.Push("bool", types.Bool(true))
 			},
 		},
 		Members: map[string]Member{
@@ -53,12 +54,12 @@ func NumberSequence() Type {
 				switch s.Count() {
 				case 1:
 					switch c := s.PullAnyOf(1, "float", "table").(type) {
-					case float32:
+					case types.Float:
 						v = types.NumberSequence{
-							types.NumberSequenceKeypoint{Time: 0, Value: c},
-							types.NumberSequenceKeypoint{Time: 1, Value: c},
+							types.NumberSequenceKeypoint{Time: 0, Value: float32(c)},
+							types.NumberSequenceKeypoint{Time: 1, Value: float32(c)},
 						}
-					case *lua.LTable:
+					case rtypes.Table:
 						n := c.Len()
 						if n < 2 {
 							s.L.RaiseError("NumberSequence requires at least 2 keypoints")
@@ -86,8 +87,8 @@ func NumberSequence() Type {
 					}
 				case 2:
 					v = types.NumberSequence{
-						types.NumberSequenceKeypoint{Time: 0, Value: s.Pull(1, "float").(float32)},
-						types.NumberSequenceKeypoint{Time: 1, Value: s.Pull(2, "float").(float32)},
+						types.NumberSequenceKeypoint{Time: 0, Value: float32(s.Pull(1, "float").(types.Float))},
+						types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, "float").(types.Float))},
 					}
 				default:
 					s.L.RaiseError("expected 1 or 2 arguments")

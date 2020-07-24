@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -15,7 +16,7 @@ func Array() Type {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
-			array, ok := v.([]Value)
+			array, ok := v.(rtypes.Array)
 			if !ok {
 				return nil, TypeError(nil, 0, "[]Value")
 			}
@@ -49,7 +50,7 @@ func Array() Type {
 			s.Cycle.Put(table)
 			variantType := s.Type("Variant")
 			n := table.Len()
-			array := make([]Value, n)
+			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {
 				if array[i-1], err = variantType.ReflectFrom(s, variantType, table.RawGetInt(i)); err != nil {
 					return nil, err

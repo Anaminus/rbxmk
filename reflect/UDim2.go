@@ -18,7 +18,7 @@ func UDim2() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push("bool", v.(types.UDim2) == op)
+				return s.Push("bool", types.Bool(v.(types.UDim2) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "UDim2").(types.UDim2)
@@ -47,7 +47,7 @@ func UDim2() Type {
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "UDim2").(types.UDim2)
-				alpha := s.Pull(3, "number").(float64)
+				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("UDim2", v.(types.UDim2).Lerp(goal, alpha))
 			}},
 		},
@@ -59,10 +59,10 @@ func UDim2() Type {
 					v.X = s.Pull(1, "UDim").(types.UDim)
 					v.Y = s.Pull(2, "UDim").(types.UDim)
 				case 4:
-					v.X.Scale = s.Pull(1, "float").(float32)
-					v.X.Offset = int32(s.Pull(2, "int").(int))
-					v.Y.Scale = s.Pull(3, "float").(float32)
-					v.Y.Offset = int32(s.Pull(4, "int").(int))
+					v.X.Scale = float32(s.Pull(1, "float").(types.Float))
+					v.X.Offset = int32(s.Pull(2, "int").(types.Int))
+					v.Y.Scale = float32(s.Pull(3, "float").(types.Float))
+					v.Y.Offset = int32(s.Pull(4, "int").(types.Int))
 				default:
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0
@@ -71,14 +71,14 @@ func UDim2() Type {
 			},
 			"fromScale": func(s State) int {
 				return s.Push("UDim2", types.UDim2{
-					X: types.UDim{Scale: s.Pull(1, "float").(float32)},
-					Y: types.UDim{Scale: s.Pull(2, "float").(float32)},
+					X: types.UDim{Scale: float32(s.Pull(1, "float").(types.Float))},
+					Y: types.UDim{Scale: float32(s.Pull(2, "float").(types.Float))},
 				})
 			},
 			"fromOffset": func(s State) int {
 				return s.Push("UDim2", types.UDim2{
-					X: types.UDim{Offset: int32(s.Pull(1, "int").(int))},
-					Y: types.UDim{Offset: int32(s.Pull(2, "int").(int))},
+					X: types.UDim{Offset: int32(s.Pull(1, "int").(types.Int))},
+					Y: types.UDim{Offset: int32(s.Pull(2, "int").(types.Int))},
 				})
 			},
 		},

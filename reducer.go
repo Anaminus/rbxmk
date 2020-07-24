@@ -1,16 +1,14 @@
 package rbxmk
 
-// Stringlike is any value that can be converted to a sequence of bytes.
-type Stringlike interface {
-	Stringlike() (v []byte, ok bool)
-}
+import "github.com/robloxapi/types"
 
-// Floatlike is any value that can be converted to a floating-point number.
-type Floatlike interface {
-	Floatlike() (v float64, ok bool)
-}
+// Stringlike is any Value that is string-like. Note that this is distinct from
+// a string-representation of the value. Rather, Stringlike indicates that the
+// value has string-like properties.
+type Stringlike = types.Stringlike
+
+// Numberlike is any value that can be converted to a floating-point number.
+type Numberlike = types.Numberlike
 
 // Intlike is any value that can be converted to an integer.
-type Intlike interface {
-	Intlike() (v int64, ok bool)
-}
+type Intlike = types.Intlike

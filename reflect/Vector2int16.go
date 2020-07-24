@@ -18,7 +18,7 @@ func Vector2int16() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
-				return s.Push("bool", v.(types.Vector2int16) == op)
+				return s.Push("bool", types.Bool(v.(types.Vector2int16) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
@@ -30,8 +30,8 @@ func Vector2int16() Type {
 			},
 			"__mul": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
-				case float64:
-					return s.Push("Vector2int16", v.(types.Vector2int16).MulN(op))
+				case types.Double:
+					return s.Push("Vector2int16", v.(types.Vector2int16).MulN(float64(op)))
 				case types.Vector2int16:
 					return s.Push("Vector2int16", v.(types.Vector2int16).Mul(op))
 				default:
@@ -41,8 +41,8 @@ func Vector2int16() Type {
 			},
 			"__div": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
-				case float64:
-					return s.Push("Vector2int16", v.(types.Vector2int16).DivN(op))
+				case types.Double:
+					return s.Push("Vector2int16", v.(types.Vector2int16).DivN(float64(op)))
 				case types.Vector2int16:
 					return s.Push("Vector2int16", v.(types.Vector2int16).Div(op))
 				default:
@@ -56,10 +56,10 @@ func Vector2int16() Type {
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("int", v.(types.Vector2int16).X)
+				return s.Push("int", types.Int(v.(types.Vector2int16).X))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("int", v.(types.Vector2int16).Y)
+				return s.Push("int", types.Int(v.(types.Vector2int16).Y))
 			}},
 		},
 		Constructors: Constructors{
@@ -68,8 +68,8 @@ func Vector2int16() Type {
 				switch s.Count() {
 				case 0:
 				case 2:
-					v.X = int16(s.Pull(1, "int").(int))
-					v.Y = int16(s.Pull(2, "int").(int))
+					v.X = int16(s.Pull(1, "int").(types.Int))
+					v.Y = int16(s.Pull(2, "int").(types.Int))
 				default:
 					s.L.RaiseError("expected 0 or 2 arguments")
 					return 0

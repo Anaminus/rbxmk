@@ -18,7 +18,7 @@ func Region3int16() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Region3int16").(types.Region3int16)
-				return s.Push("bool", v.(types.Region3int16) == op)
+				return s.Push("bool", types.Bool(v.(types.Region3int16) == op))
 			},
 		},
 		Members: map[string]Member{

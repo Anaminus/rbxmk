@@ -18,15 +18,15 @@ func NumberRange() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "NumberRange").(types.NumberRange)
-				return s.Push("bool", v.(types.NumberRange) == op)
+				return s.Push("bool", types.Bool(v.(types.NumberRange) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Min": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.NumberRange).Min)
+				return s.Push("float", types.Float(v.(types.NumberRange).Min))
 			}},
 			"Max": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.NumberRange).Max)
+				return s.Push("float", types.Float(v.(types.NumberRange).Max))
 			}},
 		},
 		Constructors: Constructors{
@@ -34,11 +34,11 @@ func NumberRange() Type {
 				var v types.NumberRange
 				switch s.Count() {
 				case 1:
-					v.Min = s.Pull(1, "float").(float32)
+					v.Min = float32(s.Pull(1, "float").(types.Float))
 					v.Max = v.Min
 				case 2:
-					v.Min = s.Pull(1, "float").(float32)
-					v.Max = s.Pull(2, "float").(float32)
+					v.Min = float32(s.Pull(1, "float").(types.Float))
+					v.Max = float32(s.Pull(2, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 1 or 2 arguments")
 					return 0

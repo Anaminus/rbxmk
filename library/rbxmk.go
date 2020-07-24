@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -57,7 +58,7 @@ func rbxmkLoad(s rbxmk.State) int {
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {
-	name := s.Pull(1, "string").(string)
+	name := string(s.Pull(1, "string").(types.String))
 	format := s.Format(name)
 	if format.Name == "" {
 		s.L.RaiseError("unknown format %q", name)
@@ -72,11 +73,11 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("BinaryString", b)
+	return s.Push("BinaryString", types.BinaryString(b))
 }
 
 func rbxmkDecodeFormat(s rbxmk.State) int {
-	name := s.Pull(1, "string").(string)
+	name := string(s.Pull(1, "string").(types.String))
 	format := s.Format(name)
 	if format.Name == "" {
 		s.L.RaiseError("unknown format %q", name)
@@ -86,7 +87,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		s.L.RaiseError("cannot decode with format %s", name)
 		return 0
 	}
-	v, err := format.Decode(s.Pull(2, "BinaryString").([]byte))
+	v, err := format.Decode([]byte(s.Pull(2, "BinaryString").(types.BinaryString)))
 	if err != nil {
 		s.L.RaiseError(err.Error())
 		return 0
@@ -95,7 +96,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 }
 
 func rbxmkReadSource(s rbxmk.State) int {
-	name := s.Pull(1, "string").(string)
+	name := string(s.Pull(1, "string").(types.String))
 	source := s.Source(name)
 	if source.Name == "" {
 		s.L.RaiseError("unknown source %q", name)
@@ -114,11 +115,11 @@ func rbxmkReadSource(s rbxmk.State) int {
 		s.L.RaiseError(err.Error())
 		return 0
 	}
-	return s.Push("BinaryString", b)
+	return s.Push("BinaryString", types.BinaryString(b))
 }
 
 func rbxmkWriteSource(s rbxmk.State) int {
-	name := s.Pull(1, "string").(string)
+	name := string(s.Pull(1, "string").(types.String))
 	source := s.Source(name)
 	if source.Name == "" {
 		s.L.RaiseError("unknown source %q", name)
@@ -128,7 +129,7 @@ func rbxmkWriteSource(s rbxmk.State) int {
 		s.L.RaiseError("cannot write with format %s", name)
 		return 0
 	}
-	b := s.Pull(2, "BinaryString").([]byte)
+	b := []byte(s.Pull(2, "BinaryString").(types.BinaryString))
 	options := make([]interface{}, s.L.GetTop()-2)
 	for i := 3; i <= s.L.GetTop(); i++ {
 		options[i-3] = s.Pull(i, "Variant")

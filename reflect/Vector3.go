@@ -18,7 +18,7 @@ func Vector3() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("bool", v.(types.Vector3) == op)
+				return s.Push("bool", types.Bool(v.(types.Vector3) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
@@ -30,8 +30,8 @@ func Vector3() Type {
 			},
 			"__mul": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
-				case float64:
-					return s.Push("Vector3", v.(types.Vector3).MulN(op))
+				case types.Double:
+					return s.Push("Vector3", v.(types.Vector3).MulN(float64(op)))
 				case types.Vector3:
 					return s.Push("Vector3", v.(types.Vector3).Mul(op))
 				default:
@@ -41,8 +41,8 @@ func Vector3() Type {
 			},
 			"__div": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
-				case float64:
-					return s.Push("Vector3", v.(types.Vector3).DivN(op))
+				case types.Double:
+					return s.Push("Vector3", v.(types.Vector3).DivN(float64(op)))
 				case types.Vector3:
 					return s.Push("Vector3", v.(types.Vector3).Div(op))
 				default:
@@ -56,28 +56,28 @@ func Vector3() Type {
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3).X)
+				return s.Push("float", types.Float(v.(types.Vector3).X))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3).Y)
+				return s.Push("float", types.Float(v.(types.Vector3).Y))
 			}},
 			"Z": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3).Z)
+				return s.Push("float", types.Float(v.(types.Vector3).Z))
 			}},
 			"Magnitude": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3).Magnitude())
+				return s.Push("float", types.Float(v.(types.Vector3).Magnitude()))
 			}},
 			"Unit": {Get: func(s State, v Value) int {
 				return s.Push("Vector3", v.(types.Vector3).Unit())
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Vector3").(types.Vector3)
-				alpha := s.Pull(3, "number").(float64)
+				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("Vector3", v.(types.Vector3).Lerp(goal, alpha))
 			}},
 			"Dot": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("Vector3", v.(types.Vector3).Dot(op))
+				return s.Push("float", types.Float(v.(types.Vector3).Dot(op)))
 			}},
 			"Cross": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
@@ -85,8 +85,8 @@ func Vector3() Type {
 			}},
 			"FuzzyEq": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				epsilon := s.Pull(3, "number").(float64)
-				return s.Push("Vector3", v.(types.Vector3).FuzzyEq(op, epsilon))
+				epsilon := float64(s.Pull(3, "number").(types.Double))
+				return s.Push("bool", types.Bool(v.(types.Vector3).FuzzyEq(op, epsilon)))
 			}},
 		},
 		Constructors: Constructors{
@@ -95,9 +95,9 @@ func Vector3() Type {
 				switch s.Count() {
 				case 0:
 				case 3:
-					v.X = s.Pull(1, "float").(float32)
-					v.Y = s.Pull(2, "float").(float32)
-					v.Z = s.Pull(3, "float").(float32)
+					v.X = float32(s.Pull(1, "float").(types.Float))
+					v.Y = float32(s.Pull(2, "float").(types.Float))
+					v.Z = float32(s.Pull(3, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0

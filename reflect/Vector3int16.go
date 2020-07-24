@@ -18,7 +18,7 @@ func Vector3int16() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push("bool", v.(types.Vector3int16) == op)
+				return s.Push("bool", types.Bool(v.(types.Vector3int16) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
@@ -30,8 +30,8 @@ func Vector3int16() Type {
 			},
 			"__mul": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
-				case float64:
-					return s.Push("Vector3int16", v.(types.Vector3int16).MulN(op))
+				case types.Double:
+					return s.Push("Vector3int16", v.(types.Vector3int16).MulN(float64(op)))
 				case types.Vector3int16:
 					return s.Push("Vector3int16", v.(types.Vector3int16).Mul(op))
 				default:
@@ -41,8 +41,8 @@ func Vector3int16() Type {
 			},
 			"__div": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
-				case float64:
-					return s.Push("Vector3int16", v.(types.Vector3int16).DivN(op))
+				case types.Double:
+					return s.Push("Vector3int16", v.(types.Vector3int16).DivN(float64(op)))
 				case types.Vector3int16:
 					return s.Push("Vector3int16", v.(types.Vector3int16).Div(op))
 				default:
@@ -56,13 +56,13 @@ func Vector3int16() Type {
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3int16).X)
+				return s.Push("float", types.Float(v.(types.Vector3int16).X))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3int16).Y)
+				return s.Push("float", types.Float(v.(types.Vector3int16).Y))
 			}},
 			"Z": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector3int16).Z)
+				return s.Push("float", types.Float(v.(types.Vector3int16).Z))
 			}},
 		},
 		Constructors: Constructors{
@@ -71,9 +71,9 @@ func Vector3int16() Type {
 				switch s.Count() {
 				case 0:
 				case 3:
-					v.X = int16(s.Pull(1, "int").(int))
-					v.Y = int16(s.Pull(2, "int").(int))
-					v.Z = int16(s.Pull(3, "int").(int))
+					v.X = int16(s.Pull(1, "int").(types.Int))
+					v.Y = int16(s.Pull(2, "int").(types.Int))
+					v.Z = int16(s.Pull(3, "int").(types.Int))
 				default:
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0

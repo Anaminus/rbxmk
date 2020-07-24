@@ -2,21 +2,22 @@ package formats
 
 import (
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/types"
+	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 )
 
 func Text() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "txt",
 		Decode: func(b []byte) (v rbxmk.Value, err error) {
-			return string(b), nil
+			return types.String(b), nil
 		},
 		Encode: func(v rbxmk.Value) (b []byte, err error) {
-			b, ok := types.Stringlike{Value: v}.Stringlike()
-			if !ok {
-				return nil, cannotEncode(v, false)
+			s := rtypes.Stringlike{Value: v}
+			if !s.IsStringlike() {
+				return nil, cannotEncode(v)
 			}
-			return b, nil
+			return []byte(s.Stringlike()), nil
 		},
 	}
 }

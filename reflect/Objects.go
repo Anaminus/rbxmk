@@ -2,7 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/types"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -10,9 +10,9 @@ func Objects() Type {
 	return Type{
 		Name: "Objects",
 		ReflectTo: func(s State, t Type, v Value) (lvs []lua.LValue, err error) {
-			objects, ok := v.([]*types.Instance)
+			objects, ok := v.(rtypes.Objects)
 			if !ok {
-				return nil, TypeError(nil, 0, "[]*types.Instance")
+				return nil, TypeError(nil, 0, "Objects")
 			}
 			instType := s.Type("Instance")
 			table := s.L.CreateTable(len(objects), 0)
@@ -32,11 +32,13 @@ func Objects() Type {
 			}
 			instType := s.Type("Instance")
 			n := table.Len()
-			objects := make([]Value, n)
+			objects := make(rtypes.Objects, n)
 			for i := 1; i <= n; i++ {
-				if objects[i-1], err = instType.ReflectFrom(s, instType, table.RawGetInt(i)); err != nil {
+				v, err := instType.ReflectFrom(s, instType, table.RawGetInt(i))
+				if err != nil {
 					return nil, err
 				}
+				objects[i-1] = v.(*rtypes.Instance)
 			}
 			return objects, nil
 		},

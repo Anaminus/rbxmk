@@ -18,7 +18,7 @@ func Ray() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Ray").(types.Ray)
-				return s.Push("bool", v.(types.Ray) == op)
+				return s.Push("bool", types.Bool(v.(types.Ray) == op))
 			},
 		},
 		Members: map[string]Member{
@@ -34,7 +34,7 @@ func Ray() Type {
 			}},
 			"Distance": {Method: true, Get: func(s State, v Value) int {
 				point := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push("number", v.(types.Ray).Distance(point))
+				return s.Push("number", types.Double(v.(types.Ray).Distance(point)))
 			}},
 		},
 		Constructors: Constructors{

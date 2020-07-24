@@ -20,24 +20,24 @@ func BrickColor() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "BrickColor").(types.BrickColor)
-				return s.Push("bool", v.(types.BrickColor) == op)
+				return s.Push("bool", types.Bool(v.(types.BrickColor) == op))
 			},
 		},
 		Members: map[string]Member{
 			"Name": {Get: func(s State, v Value) int {
-				return s.Push("string", v.(types.BrickColor).Name())
+				return s.Push("string", types.String(v.(types.BrickColor).Name()))
 			}},
 			"Number": {Get: func(s State, v Value) int {
-				return s.Push("int", v.(types.BrickColor).Number())
+				return s.Push("int", types.Int(v.(types.BrickColor).Number()))
 			}},
 			"R": {Get: func(s State, v Value) int {
-				return s.Push("number", v.(types.BrickColor).R())
+				return s.Push("number", types.Double(v.(types.BrickColor).R()))
 			}},
 			"G": {Get: func(s State, v Value) int {
-				return s.Push("number", v.(types.BrickColor).G())
+				return s.Push("number", types.Double(v.(types.BrickColor).G()))
 			}},
 			"B": {Get: func(s State, v Value) int {
-				return s.Push("number", v.(types.BrickColor).B())
+				return s.Push("number", types.Double(v.(types.BrickColor).B()))
 			}},
 			"Color": {Get: func(s State, v Value) int {
 				return s.Push("Color3", v.(types.BrickColor).Color())
@@ -49,18 +49,18 @@ func BrickColor() Type {
 				switch s.Count() {
 				case 1:
 					switch arg := s.PullAnyOf(1, "int", "string", "Color3").(type) {
-					case int:
-						v = types.NewBrickColor(arg)
-					case string:
-						v = types.NewBrickColorFromName(arg)
+					case types.Int:
+						v = types.NewBrickColor(int(arg))
+					case types.String:
+						v = types.NewBrickColorFromName(string(arg))
 					case types.Color3:
 						v = types.NewBrickColorFromColor3(arg)
 					}
 				case 3:
 					v = types.NewBrickColorFromColor(
-						s.Pull(1, "number").(float64),
-						s.Pull(2, "number").(float64),
-						s.Pull(3, "number").(float64),
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
 					)
 				default:
 					s.L.RaiseError("expected 1 or 3 arguments")
@@ -69,7 +69,7 @@ func BrickColor() Type {
 				return s.Push("BrickColor", v)
 			},
 			"palette": func(s State) int {
-				index := s.Pull(1, "int").(int)
+				index := int(s.Pull(1, "int").(types.Int))
 				return s.Push("BrickColor", types.NewBrickColorFromPalette(index))
 			},
 			"random": func(s State) int {

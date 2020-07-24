@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	. "github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/types"
+	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -12,91 +13,41 @@ func ReflectVariantTo(s State, v Value) (lv lua.LValue, t Type, err error) {
 	switch v := v.(type) {
 	case nil:
 		return lua.LNil, s.Type("nil"), nil
-	case bool:
+	case types.Bool:
 		return lua.LBool(v), s.Type("bool"), nil
-	case uint8:
-		return lua.LNumber(v), s.Type("number"), nil
-	case uint16:
-		return lua.LNumber(v), s.Type("number"), nil
-	case uint32:
-		return lua.LNumber(v), s.Type("number"), nil
-	case uint64:
-		return lua.LNumber(v), s.Type("number"), nil
-	case uint:
-		return lua.LNumber(v), s.Type("number"), nil
-	case int8:
-		return lua.LNumber(v), s.Type("number"), nil
-	case int16:
-		return lua.LNumber(v), s.Type("number"), nil
-	case int32:
-		return lua.LNumber(v), s.Type("number"), nil
-	case int64:
-		return lua.LNumber(v), s.Type("number"), nil
-	case int:
-		return lua.LNumber(v), s.Type("number"), nil
-	case float32:
-		return lua.LNumber(v), s.Type("number"), nil
-	case float64:
-		return lua.LNumber(v), s.Type("number"), nil
-	case string:
-		return lua.LString(v), s.Type("string"), nil
-	case []byte:
-		return lua.LString(v), s.Type("string"), nil
-	case []rune:
-		return lua.LString(v), s.Type("string"), nil
-	case []Value:
+	case types.Numberlike:
+		return lua.LNumber(v.Numberlike()), s.Type("number"), nil
+	case types.Intlike:
+		return lua.LNumber(v.Intlike()), s.Type("number"), nil
+	case types.Stringlike:
+		return lua.LString(v.Stringlike()), s.Type("string"), nil
+	case rtypes.Array:
 		typ := s.Type("Array")
 		values, err := typ.ReflectTo(s, typ, v)
 		if err != nil {
 			return nil, typ, err
 		}
 		return values[0], typ, nil
-	case map[string]Value:
+	case rtypes.Dictionary:
 		typ := s.Type("Dictionary")
 		values, err := typ.ReflectTo(s, typ, v)
 		if err != nil {
 			return nil, typ, err
 		}
 		return values[0], typ, nil
-	case types.Stringlike:
-		if v, ok := v.Stringlike(); ok {
-			return lua.LString(v), s.Type("string"), nil
-		}
-	case types.Floatlike:
-		if v, ok := v.Floatlike(); ok {
-			return lua.LNumber(v), s.Type("number"), nil
-		}
-	case types.Intlike:
-		if v, ok := v.Intlike(); ok {
-			return lua.LNumber(v), s.Type("int"), nil
-		}
-	case TValue:
-		typ := s.Type(v.Type)
-		if typ.ReflectTo == nil {
-			return nil, typ, fmt.Errorf("unknown type %q", v.Type)
-		}
-		values, err := typ.ReflectTo(s, typ, v.Value)
-		if err != nil {
-			return nil, typ, err
-		}
-		if len(values) > 0 {
-			return values[0], typ, nil
-		}
-	case interface{ Type() string }:
-		typ := s.Type(v.Type())
-		if typ.Name == "" {
-			return nil, s.Type("Variant"), fmt.Errorf("unknown type %q", string(v.Type()))
-		}
-		if typ.ReflectTo == nil {
-			return nil, s.Type("Variant"), fmt.Errorf("unable to cast %s to Variant", typ.Name)
-		}
-		values, err := typ.ReflectTo(s, typ, v)
-		if err != nil {
-			return nil, typ, err
-		}
-		return values[0], typ, nil
 	}
-	return nil, s.Type("Variant"), fmt.Errorf("unable to cast value to Variant")
+	typ := s.Type(v.Type())
+	if typ.Name == "" {
+		return nil, s.Type("Variant"), fmt.Errorf("unknown type %q", string(v.Type()))
+	}
+	if typ.ReflectTo == nil {
+		return nil, s.Type("Variant"), fmt.Errorf("unable to cast %s to Variant", typ.Name)
+	}
+	values, err := typ.ReflectTo(s, typ, v)
+	if err != nil {
+		return nil, typ, err
+	}
+	return values[0], typ, nil
 }
 
 func ReflectVariantFrom(s State, lv lua.LValue) (v Value, t Type, err error) {
@@ -104,11 +55,11 @@ func ReflectVariantFrom(s State, lv lua.LValue) (v Value, t Type, err error) {
 	case *lua.LNilType:
 		return nil, s.Type("nil"), nil
 	case lua.LBool:
-		return bool(lv), s.Type("bool"), nil
+		return types.Bool(lv), s.Type("bool"), nil
 	case lua.LNumber:
-		return float64(lv), s.Type("number"), nil
+		return types.Double(lv), s.Type("number"), nil
 	case lua.LString:
-		return string(lv), s.Type("string"), nil
+		return types.String(lv), s.Type("string"), nil
 	case *lua.LTable:
 		if lv.Len() > 0 {
 			arrayType := s.Type("Array")

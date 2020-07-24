@@ -2,6 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -18,27 +19,27 @@ func Color3() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Color3").(types.Color3)
-				return s.Push("bool", v.(types.Color3) == op)
+				return s.Push("bool", types.Bool(v.(types.Color3) == op))
 			},
 		},
 		Members: map[string]Member{
 			"R": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Color3).R)
+				return s.Push("float", types.Float(v.(types.Color3).R))
 			}},
 			"G": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Color3).G)
+				return s.Push("float", types.Float(v.(types.Color3).G))
 			}},
 			"B": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Color3).B)
+				return s.Push("float", types.Float(v.(types.Color3).B))
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Color3").(types.Color3)
-				alpha := s.Pull(3, "number").(float64)
+				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("Color3", v.(types.Color3).Lerp(goal, alpha))
 			}},
 			"ToHSV": {Method: true, Get: func(s State, v Value) int {
 				hue, sat, val := v.(types.Color3).ToHSV()
-				return s.Push("Tuple", []Value{hue, sat, val})
+				return s.Push("Tuple", rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
 			}},
 		},
 		Constructors: Constructors{
@@ -47,9 +48,9 @@ func Color3() Type {
 				switch s.Count() {
 				case 0:
 				case 3:
-					v.R = s.Pull(1, "float").(float32)
-					v.G = s.Pull(2, "float").(float32)
-					v.B = s.Pull(3, "float").(float32)
+					v.R = float32(s.Pull(1, "float").(types.Float))
+					v.G = float32(s.Pull(2, "float").(types.Float))
+					v.B = float32(s.Pull(3, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0
@@ -58,16 +59,16 @@ func Color3() Type {
 			},
 			"fromRGB": func(s State) int {
 				return s.Push("Color3", types.NewColor3FromRGB(
-					s.Pull(1, "int").(int),
-					s.Pull(2, "int").(int),
-					s.Pull(3, "int").(int),
+					int(s.Pull(1, "int").(types.Int)),
+					int(s.Pull(2, "int").(types.Int)),
+					int(s.Pull(3, "int").(types.Int)),
 				))
 			},
 			"fromHSV": func(s State) int {
 				return s.Push("Color3", types.NewColor3FromHSV(
-					s.Pull(1, "number").(float64),
-					s.Pull(2, "number").(float64),
-					s.Pull(3, "number").(float64),
+					float64(s.Pull(1, "number").(types.Double)),
+					float64(s.Pull(2, "number").(types.Double)),
+					float64(s.Pull(3, "number").(types.Double)),
 				))
 			},
 		},

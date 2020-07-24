@@ -18,7 +18,7 @@ func Vector2() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("bool", v.(types.Vector2) == op)
+				return s.Push("bool", types.Bool(v.(types.Vector2) == op))
 			},
 			"__add": func(s State, v Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
@@ -30,8 +30,8 @@ func Vector2() Type {
 			},
 			"__mul": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
-				case float64:
-					return s.Push("Vector2", v.(types.Vector2).MulN(op))
+				case types.Double:
+					return s.Push("Vector2", v.(types.Vector2).MulN(float64(op)))
 				case types.Vector2:
 					return s.Push("Vector2", v.(types.Vector2).Mul(op))
 				default:
@@ -41,8 +41,8 @@ func Vector2() Type {
 			},
 			"__div": func(s State, v Value) int {
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
-				case float64:
-					return s.Push("Vector2", v.(types.Vector2).DivN(op))
+				case types.Double:
+					return s.Push("Vector2", v.(types.Vector2).DivN(float64(op)))
 				case types.Vector2:
 					return s.Push("Vector2", v.(types.Vector2).Div(op))
 				default:
@@ -56,29 +56,29 @@ func Vector2() Type {
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector2).X)
+				return s.Push("float", types.Float(v.(types.Vector2).X))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector2).Y)
+				return s.Push("float", types.Float(v.(types.Vector2).Y))
 			}},
 			"Magnitude": {Get: func(s State, v Value) int {
-				return s.Push("float", v.(types.Vector2).Magnitude())
+				return s.Push("float", types.Float(v.(types.Vector2).Magnitude()))
 			}},
 			"Unit": {Get: func(s State, v Value) int {
 				return s.Push("Vector2", v.(types.Vector2).Unit())
 			}},
 			"Lerp": {Method: true, Get: func(s State, v Value) int {
 				goal := s.Pull(2, "Vector2").(types.Vector2)
-				alpha := s.Pull(3, "number").(float64)
+				alpha := float64(s.Pull(3, "number").(types.Double))
 				return s.Push("Vector2", v.(types.Vector2).Lerp(goal, alpha))
 			}},
 			"Dot": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("Vector2", v.(types.Vector2).Dot(op))
+				return s.Push("number", types.Double(v.(types.Vector2).Dot(op)))
 			}},
 			"Cross": {Method: true, Get: func(s State, v Value) int {
 				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push("number", v.(types.Vector2).Cross(op))
+				return s.Push("number", types.Double(v.(types.Vector2).Cross(op)))
 			}},
 		},
 		Constructors: Constructors{
@@ -87,8 +87,8 @@ func Vector2() Type {
 				switch s.Count() {
 				case 0:
 				case 2:
-					v.X = s.Pull(1, "float").(float32)
-					v.Y = s.Pull(2, "float").(float32)
+					v.X = float32(s.Pull(1, "float").(types.Float))
+					v.Y = float32(s.Pull(2, "float").(types.Float))
 				default:
 					s.L.RaiseError("expected 0 or 2 arguments")
 					return 0

@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
-	rtypes "github.com/anaminus/rbxmk/types"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/rbxfile/rbxl"
 	"github.com/robloxapi/rbxfile/rbxlx"
@@ -20,65 +20,65 @@ type decprop struct {
 	Value    *rbxfile.Instance
 }
 
-func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.TValue, err error) {
+func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.PropValue, err error) {
 	switch r := r.(type) {
 	case rbxfile.ValueString:
-		return rbxmk.TValue{Type: "string", Value: string(r)}, nil
+		return types.String(r), nil
 	case rbxfile.ValueBinaryString:
-		return rbxmk.TValue{Type: "BinaryString", Value: []byte(r)}, nil
+		return types.BinaryString(r), nil
 	case rbxfile.ValueProtectedString:
-		return rbxmk.TValue{Type: "ProtectedString", Value: string(r)}, nil
+		return types.ProtectedString(r), nil
 	case rbxfile.ValueContent:
-		return rbxmk.TValue{Type: "Content", Value: string(r)}, nil
+		return types.Content(r), nil
 	case rbxfile.ValueBool:
-		return rbxmk.TValue{Type: "bool", Value: bool(r)}, nil
+		return types.Bool(r), nil
 	case rbxfile.ValueInt:
-		return rbxmk.TValue{Type: "int", Value: int(r)}, nil
+		return types.Int(r), nil
 	case rbxfile.ValueFloat:
-		return rbxmk.TValue{Type: "float", Value: float32(r)}, nil
+		return types.Float(r), nil
 	case rbxfile.ValueDouble:
-		return rbxmk.TValue{Type: "double", Value: float64(r)}, nil
+		return types.Double(r), nil
 	case rbxfile.ValueUDim:
-		return rbxmk.TValue{Type: "UDim", Value: types.UDim(r)}, nil
+		return types.UDim(r), nil
 	case rbxfile.ValueUDim2:
-		return rbxmk.TValue{Type: "UDim2", Value: types.UDim2{
+		return types.UDim2{
 			X: types.UDim(r.X),
 			Y: types.UDim(r.Y),
-		}}, nil
+		}, nil
 	case rbxfile.ValueRay:
-		return rbxmk.TValue{Type: "Ray", Value: types.Ray{
+		return types.Ray{
 			Origin:    types.Vector3(r.Origin),
 			Direction: types.Vector3(r.Direction),
-		}}, nil
+		}, nil
 	case rbxfile.ValueFaces:
-		return rbxmk.TValue{Type: "Faces", Value: types.Faces(r)}, nil
+		return types.Faces(r), nil
 	case rbxfile.ValueAxes:
-		return rbxmk.TValue{Type: "Axes", Value: types.Axes(r)}, nil
+		return types.Axes(r), nil
 	case rbxfile.ValueBrickColor:
-		return rbxmk.TValue{Type: "BrickColor", Value: types.BrickColor(r)}, nil
+		return types.BrickColor(r), nil
 	case rbxfile.ValueColor3:
-		return rbxmk.TValue{Type: "Color3", Value: types.Color3(r)}, nil
+		return types.Color3(r), nil
 	case rbxfile.ValueVector2:
-		return rbxmk.TValue{Type: "Vector2", Value: types.Vector2(r)}, nil
+		return types.Vector2(r), nil
 	case rbxfile.ValueVector3:
-		return rbxmk.TValue{Type: "Vector3", Value: types.Vector3(r)}, nil
+		return types.Vector3(r), nil
 	case rbxfile.ValueCFrame:
-		return rbxmk.TValue{Type: "CFrame", Value: types.CFrame{
+		return types.CFrame{
 			Position: types.Vector3(r.Position),
 			Rotation: r.Rotation,
-		}}, nil
+		}, nil
 	case rbxfile.ValueToken:
-		return rbxmk.TValue{Type: "token", Value: uint32(r)}, nil
+		return types.Token(r), nil
 	case rbxfile.ValueVector3int16:
-		return rbxmk.TValue{Type: "Vector3int16", Value: types.Vector3int16(r)}, nil
+		return types.Vector3int16(r), nil
 	case rbxfile.ValueVector2int16:
-		return rbxmk.TValue{Type: "Vector2int16", Value: types.Vector2int16(r)}, nil
+		return types.Vector2int16(r), nil
 	case rbxfile.ValueNumberSequence:
 		t := make(types.NumberSequence, len(r))
 		for i, k := range r {
 			t[i] = types.NumberSequenceKeypoint(k)
 		}
-		return rbxmk.TValue{Type: "NumberSequence", Value: t}, nil
+		return t, nil
 	case rbxfile.ValueColorSequence:
 		t := make(types.ColorSequence, len(r))
 		for i, k := range r {
@@ -88,28 +88,28 @@ func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t rbxmk.TValu
 				Envelope: k.Envelope,
 			}
 		}
-		return rbxmk.TValue{Type: "ColorSequence", Value: t}, nil
+		return t, nil
 	case rbxfile.ValueNumberRange:
-		return rbxmk.TValue{Type: "NumberRange", Value: types.NumberRange(r)}, nil
+		return types.NumberRange(r), nil
 	case rbxfile.ValueRect2D:
-		return rbxmk.TValue{Type: "Rect", Value: types.Rect{
+		return types.Rect{
 			Min: types.Vector2(r.Min),
 			Max: types.Vector2(r.Max),
-		}}, nil
+		}, nil
 	case rbxfile.ValuePhysicalProperties:
-		return rbxmk.TValue{Type: "PhysicalProperties", Value: types.PhysicalProperties(r)}, nil
+		return types.PhysicalProperties(r), nil
 	case rbxfile.ValueColor3uint8:
-		return rbxmk.TValue{Type: "Color3", Value: types.Color3{
+		return types.Color3{
 			R: float32(r.R) / 255,
 			G: float32(r.G) / 255,
 			B: float32(r.B) / 255,
-		}}, nil
+		}, nil
 	case rbxfile.ValueInt64:
-		return rbxmk.TValue{Type: "int64", Value: int64(r)}, nil
+		return types.Int64(r), nil
 	case rbxfile.ValueSharedString:
-		return rbxmk.TValue{Type: "SharedString", Value: []byte(r)}, nil
+		return types.SharedString(r), nil
 	default:
-		return rbxmk.TValue{}, cannotEncode(r, false)
+		return nil, cannotEncode(r)
 	}
 }
 
@@ -149,7 +149,7 @@ func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rty
 func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
 	t = rtypes.NewDataModel()
 	for k, v := range r.Metadata {
-		t.Set(k, rbxmk.TValue{Type: "string", Value: v})
+		t.Set(k, types.String(v))
 	}
 	refs := decinst{}
 	prefs := []decprop{}
@@ -162,7 +162,7 @@ func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
 	}
 	for _, pref := range prefs {
 		if t, ok := refs[pref.Value]; ok {
-			pref.Instance.Set(pref.Property, rbxmk.TValue{Type: "Instance", Value: t})
+			pref.Instance.Set(pref.Property, t)
 		}
 	}
 	return t, nil
@@ -176,68 +176,66 @@ type encprop struct {
 	Value    *rtypes.Instance
 }
 
-func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Value, err error) {
-	switch t.Type {
-	case "string":
-		return rbxfile.ValueString(t.Value.(string)), nil
-	case "BinaryString":
-		return rbxfile.ValueBinaryString(t.Value.([]byte)), nil
-	case "ProtectedString":
-		return rbxfile.ValueProtectedString(t.Value.(string)), nil
-	case "Content":
-		return rbxfile.ValueContent(t.Value.(string)), nil
-	case "bool":
-		return rbxfile.ValueBool(t.Value.(bool)), nil
-	case "int":
-		return rbxfile.ValueInt(t.Value.(int)), nil
-	case "float":
-		return rbxfile.ValueFloat(t.Value.(float32)), nil
-	case "double":
-		return rbxfile.ValueDouble(t.Value.(float64)), nil
-	case "UDim":
-		return rbxfile.ValueUDim(t.Value.(types.UDim)), nil
-	case "UDim2":
+func encodeValue(t rbxmk.PropValue, refs encinst, prefs *[]encprop) (r rbxfile.Value, err error) {
+	switch t := t.(type) {
+	case types.String:
+		return rbxfile.ValueString(t), nil
+	case types.BinaryString:
+		return rbxfile.ValueBinaryString(t), nil
+	case types.ProtectedString:
+		return rbxfile.ValueProtectedString(t), nil
+	case types.Content:
+		return rbxfile.ValueContent(t), nil
+	case types.Bool:
+		return rbxfile.ValueBool(t), nil
+	case types.Int:
+		return rbxfile.ValueInt(t), nil
+	case types.Float:
+		return rbxfile.ValueFloat(t), nil
+	case types.Double:
+		return rbxfile.ValueDouble(t), nil
+	case types.UDim:
+		return rbxfile.ValueUDim(t), nil
+	case types.UDim2:
 		return rbxfile.ValueUDim2{
-			X: rbxfile.ValueUDim(t.Value.(types.UDim2).X),
-			Y: rbxfile.ValueUDim(t.Value.(types.UDim2).Y),
+			X: rbxfile.ValueUDim(t.X),
+			Y: rbxfile.ValueUDim(t.Y),
 		}, nil
-	case "Ray":
+	case types.Ray:
 		return rbxfile.ValueRay{
-			Origin:    rbxfile.ValueVector3(t.Value.(types.Ray).Origin),
-			Direction: rbxfile.ValueVector3(t.Value.(types.Ray).Direction),
+			Origin:    rbxfile.ValueVector3(t.Origin),
+			Direction: rbxfile.ValueVector3(t.Direction),
 		}, nil
-	case "Faces":
-		return rbxfile.ValueFaces(t.Value.(types.Faces)), nil
-	case "Axes":
-		return rbxfile.ValueAxes(t.Value.(types.Axes)), nil
-	case "BrickColor":
-		return rbxfile.ValueBrickColor(t.Value.(types.BrickColor)), nil
-	case "Color3":
-		return rbxfile.ValueColor3(t.Value.(types.Color3)), nil
-	case "Vector2":
-		return rbxfile.ValueVector2(t.Value.(types.Vector2)), nil
-	case "Vector3":
-		return rbxfile.ValueVector3(t.Value.(types.Vector3)), nil
-	case "CFrame":
+	case types.Faces:
+		return rbxfile.ValueFaces(t), nil
+	case types.Axes:
+		return rbxfile.ValueAxes(t), nil
+	case types.BrickColor:
+		return rbxfile.ValueBrickColor(t), nil
+	case types.Color3:
+		return rbxfile.ValueColor3(t), nil
+	case types.Vector2:
+		return rbxfile.ValueVector2(t), nil
+	case types.Vector3:
+		return rbxfile.ValueVector3(t), nil
+	case types.CFrame:
 		return rbxfile.ValueCFrame{
-			Position: rbxfile.ValueVector3(t.Value.(types.CFrame).Position),
-			Rotation: t.Value.(types.CFrame).Rotation,
+			Position: rbxfile.ValueVector3(t.Position),
+			Rotation: t.Rotation,
 		}, nil
-	case "token":
-		return rbxfile.ValueToken(t.Value.(uint32)), nil
-	case "Vector3int16":
-		return rbxfile.ValueVector3int16(t.Value.(types.Vector3int16)), nil
-	case "Vector2int16":
-		return rbxfile.ValueVector2int16(t.Value.(types.Vector2int16)), nil
-	case "NumberSequence":
-		t := t.Value.(rbxfile.ValueNumberSequence)
+	case types.Token:
+		return rbxfile.ValueToken(t), nil
+	case types.Vector3int16:
+		return rbxfile.ValueVector3int16(t), nil
+	case types.Vector2int16:
+		return rbxfile.ValueVector2int16(t), nil
+	case types.NumberSequence:
 		r := make(rbxfile.ValueNumberSequence, len(t))
 		for i, k := range t {
 			r[i] = rbxfile.ValueNumberSequenceKeypoint(k)
 		}
 		return r, nil
-	case "ColorSequence":
-		t := t.Value.(rbxfile.ValueColorSequence)
+	case types.ColorSequence:
 		r := make(rbxfile.ValueColorSequence, len(t))
 		for i, k := range t {
 			r[i] = rbxfile.ValueColorSequenceKeypoint{
@@ -247,27 +245,27 @@ func encodeValue(t rbxmk.TValue, refs encinst, prefs *[]encprop) (r rbxfile.Valu
 			}
 		}
 		return r, nil
-	case "NumberRange":
-		return rbxfile.ValueNumberRange(t.Value.(types.NumberRange)), nil
-	case "Rect":
+	case types.NumberRange:
+		return rbxfile.ValueNumberRange(t), nil
+	case types.Rect:
 		return rbxfile.ValueRect2D{
-			Min: rbxfile.ValueVector2(t.Value.(types.Rect).Min),
-			Max: rbxfile.ValueVector2(t.Value.(types.Rect).Max),
+			Min: rbxfile.ValueVector2(t.Min),
+			Max: rbxfile.ValueVector2(t.Max),
 		}, nil
-	case "PhysicalProperties":
-		return rbxfile.ValuePhysicalProperties(t.Value.(types.PhysicalProperties)), nil
-	case "Color3uint8":
+	case types.PhysicalProperties:
+		return rbxfile.ValuePhysicalProperties(t), nil
+	case rtypes.Color3uint8:
 		return rbxfile.ValueColor3uint8{
-			R: byte(t.Value.(types.Color3).R * 255),
-			G: byte(t.Value.(types.Color3).G * 255),
-			B: byte(t.Value.(types.Color3).B * 255),
+			R: byte(t.R * 255),
+			G: byte(t.G * 255),
+			B: byte(t.B * 255),
 		}, nil
-	case "int64":
-		return rbxfile.ValueInt64(t.Value.(int64)), nil
-	case "SharedString":
-		return rbxfile.ValueSharedString(t.Value.([]byte)), nil
+	case types.Int64:
+		return rbxfile.ValueInt64(t), nil
+	case types.SharedString:
+		return rbxfile.ValueSharedString(t), nil
 	default:
-		return nil, cannotEncode(t.Type, true)
+		return nil, cannotEncode(t)
 	}
 }
 
@@ -280,7 +278,7 @@ func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxf
 	r.Reference = t.Reference
 	refs[t] = r
 	for prop, value := range t.Properties() {
-		if v, ok := value.Value.(*rtypes.Instance); ok {
+		if v, ok := value.(*rtypes.Instance); ok {
 			*prefs = append(*prefs, encprop{
 				Instance: r,
 				Property: prop,
@@ -307,8 +305,8 @@ func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxf
 func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 	r = rbxfile.NewRoot()
 	for prop, value := range t.Properties() {
-		if s, ok := (rtypes.Stringlike{Value: value.Value}.Stringlike()); ok {
-			r.Metadata[prop] = string(s)
+		if s := (rtypes.Stringlike{Value: value}); s.IsStringlike() {
+			r.Metadata[prop] = string(s.Stringlike())
 		}
 	}
 	refs := encinst{}
@@ -346,13 +344,13 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v rbxmk
 			break
 		}
 		t = v
-	case []*rtypes.Instance:
+	case rtypes.Objects:
 		t = rtypes.NewDataModel()
 		for _, inst := range v {
 			t.AddChild(inst)
 		}
 	default:
-		return nil, cannotEncode(v, false)
+		return nil, cannotEncode(v)
 	}
 	r, err := encodeDataModel(t)
 	if err != nil {

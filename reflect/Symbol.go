@@ -2,10 +2,19 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 )
 
 type SymbolType struct {
 	Name string
+}
+
+func (SymbolType) Type() string {
+	return "Symbol"
+}
+
+func (s SymbolType) String() string {
+	return "Symbol<" + s.Name + ">"
 }
 
 var SymbolReference = SymbolType{Name: "Reference"}
@@ -18,11 +27,11 @@ func Symbol() Type {
 		ReflectFrom: ReflectTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State, v Value) int {
-				return s.Push("string", "Symbol<"+v.(SymbolType).Name+">")
+				return s.Push("string", types.String(v.(SymbolType).String()))
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Symbol").(SymbolType)
-				return s.Push("bool", v.(SymbolType) == op)
+				return s.Push("bool", types.Bool(v.(SymbolType) == op))
 			},
 		},
 		Environment: func(s State) {

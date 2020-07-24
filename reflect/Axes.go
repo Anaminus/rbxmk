@@ -18,18 +18,18 @@ func Axes() Type {
 			},
 			"__eq": func(s State, v Value) int {
 				op := s.Pull(2, "Axes").(types.Axes)
-				return s.Push("bool", v.(types.Axes) == op)
+				return s.Push("bool", types.Bool(v.(types.Axes) == op))
 			},
 		},
 		Members: map[string]Member{
 			"X": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Axes).X)
+				return s.Push("bool", types.Bool(v.(types.Axes).X))
 			}},
 			"Y": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Axes).Y)
+				return s.Push("bool", types.Bool(v.(types.Axes).Y))
 			}},
 			"Z": {Get: func(s State, v Value) int {
-				return s.Push("bool", v.(types.Axes).Z)
+				return s.Push("bool", types.Bool(v.(types.Axes).Z))
 			}},
 		},
 		Constructors: Constructors{
@@ -38,9 +38,9 @@ func Axes() Type {
 				var v types.Axes
 				switch s.Count() {
 				case 3:
-					v.X = s.Pull(1, "bool").(bool)
-					v.Y = s.Pull(2, "bool").(bool)
-					v.Z = s.Pull(3, "bool").(bool)
+					v.X = bool(s.Pull(1, "bool").(types.Bool))
+					v.Y = bool(s.Pull(2, "bool").(types.Bool))
+					v.Z = bool(s.Pull(3, "bool").(types.Bool))
 				default:
 					s.L.RaiseError("expected 0 or 3 arguments")
 					return 0

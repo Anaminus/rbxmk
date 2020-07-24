@@ -23,9 +23,6 @@ func All() []func() rbxmk.Format {
 	}
 }
 
-func cannotEncode(v interface{}, s bool) error {
-	if s {
-		return fmt.Errorf("cannot encode %s", v)
-	}
+func cannotEncode(v interface{}) error {
 	return fmt.Errorf("cannot encode %T", v)
 }

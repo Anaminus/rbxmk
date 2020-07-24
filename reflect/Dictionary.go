@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -15,7 +16,7 @@ func Dictionary() Type {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
-			dict, ok := v.(map[string]Value)
+			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
 				return nil, TypeError(nil, 0, "map[string]Value")
 			}
@@ -48,7 +49,7 @@ func Dictionary() Type {
 			}
 			s.Cycle.Put(table)
 			variantType := s.Type("Variant")
-			dict := make(map[string]Value)
+			dict := make(rtypes.Dictionary)
 			table.ForEach(func(k, lv lua.LValue) {
 				if err != nil {
 					return
