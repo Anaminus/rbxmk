@@ -183,7 +183,7 @@ func Instance() Type {
 			}},
 			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
-				recurse := bool(s.PullOpt(3, "bool", types.Bool(false)).(types.Bool))
+				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
 					return s.Push("Instance", child)
 				}
@@ -191,7 +191,7 @@ func Instance() Type {
 			}},
 			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
 				className := string(s.Pull(2, "string").(types.String))
-				recurse := bool(s.PullOpt(3, "bool", types.Bool(false)).(types.Bool))
+				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 				if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
 					return s.Push("Instance", child)
 				}
