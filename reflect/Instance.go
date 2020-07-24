@@ -23,7 +23,7 @@ func typesInt(s State) int {
 
 // reflectPropertyTo behaves like ReflectVariantTo, except that exprims types
 // are reflected as userdata.
-func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, t Type, err error) {
+func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	switch v.(type) {
 	case types.Int,
 		types.Int64,
@@ -39,15 +39,15 @@ func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, t Type, err error
 	}
 	typ := s.Type(v.Type())
 	if typ.Name == "" {
-		return nil, s.Type("Variant"), fmt.Errorf("unknown type %q", string(v.Type()))
+		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
 	if typ.ReflectTo == nil {
-		return nil, s.Type("Variant"), fmt.Errorf("unable to cast %s to Variant", typ.Name)
+		return nil, fmt.Errorf("unable to cast %s to Variant", typ.Name)
 	}
 	u := s.L.NewUserData()
 	u.Value = v
 	s.L.SetMetatable(u, s.L.GetTypeMetatable(typ.Name))
-	return u, typ, nil
+	return u, nil
 }
 
 func Instance() Type {
@@ -115,7 +115,7 @@ func Instance() Type {
 					// s.L.RaiseError("%s is not a valid member", name)
 					return s.Push("nil", nil)
 				}
-				lv, _, err := reflectPropertyTo(s, value)
+				lv, err := reflectPropertyTo(s, value)
 				if err != nil {
 					s.L.RaiseError(err.Error())
 					return 0
@@ -152,7 +152,7 @@ func Instance() Type {
 					return 0
 				}
 				// Try property.
-				value, _ := PullVariant(s, 3)
+				value := PullVariant(s, 3)
 				prop, ok := value.(types.PropValue)
 				if !ok {
 					s.L.RaiseError("cannot assign %s as property", value.Type())
