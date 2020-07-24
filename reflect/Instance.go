@@ -199,10 +199,10 @@ func Instance() Type {
 			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
-				return s.Push("Objects", rtypes.Objects(t))
+				return s.Push("Instances", rtypes.Instances(t))
 			}},
 			"GetDescendants": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push("Objects", rtypes.Objects(v.(*rtypes.Instance).Descendants()))
+				return s.Push("Instances", rtypes.Instances(v.(*rtypes.Instance).Descendants()))
 			}},
 			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push("string", types.String(v.(*rtypes.Instance).GetFullName()))

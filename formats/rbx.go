@@ -344,7 +344,7 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v types
 			break
 		}
 		t = v
-	case rtypes.Objects:
+	case rtypes.Instances:
 		t = rtypes.NewDataModel()
 		for _, inst := range v {
 			t.AddChild(inst)

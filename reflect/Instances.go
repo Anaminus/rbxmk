@@ -7,17 +7,17 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Objects() Type {
+func Instances() Type {
 	return Type{
-		Name: "Objects",
+		Name: "Instances",
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
-			objects, ok := v.(rtypes.Objects)
+			instances, ok := v.(rtypes.Instances)
 			if !ok {
-				return nil, TypeError(nil, 0, "Objects")
+				return nil, TypeError(nil, 0, "Instances")
 			}
 			instType := s.Type("Instance")
-			table := s.L.CreateTable(len(objects), 0)
-			for i, v := range objects {
+			table := s.L.CreateTable(len(instances), 0)
+			for i, v := range instances {
 				lv, err := instType.ReflectTo(s, instType, v)
 				if err != nil {
 					return nil, err
@@ -33,15 +33,15 @@ func Objects() Type {
 			}
 			instType := s.Type("Instance")
 			n := table.Len()
-			objects := make(rtypes.Objects, n)
+			instances := make(rtypes.Instances, n)
 			for i := 1; i <= n; i++ {
 				v, err := instType.ReflectFrom(s, instType, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}
-				objects[i-1] = v.(*rtypes.Instance)
+				instances[i-1] = v.(*rtypes.Instance)
 			}
-			return objects, nil
+			return instances, nil
 		},
 	}
 }
