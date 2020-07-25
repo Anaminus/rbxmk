@@ -40,6 +40,7 @@ func All() []func() rbxmk.Type {
 		String,
 		Symbol,
 		Table,
+		Token,
 		Tuple,
 		UDim,
 		UDim2,
