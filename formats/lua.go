@@ -70,9 +70,9 @@ func ServerLua() rbxmk.Format {
 	}
 }
 
-func LocalLua() rbxmk.Format {
+func ClientLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "local.lua",
+		Name: "client.lua",
 		Decode: func(b []byte) (v types.Value, err error) {
 			return decodeScript(b, "LocalScript")
 		},

@@ -9,7 +9,7 @@ import (
 func All() []func() rbxmk.Format {
 	return []func() rbxmk.Format{
 		Binary,
-		LocalLua,
+		ClientLua,
 		LocalScriptLua,
 		Lua,
 		ModuleScriptLua,
