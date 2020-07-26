@@ -229,6 +229,28 @@ func (w *World) RegisterFormat(f Format) {
 	w.formats[f.Name] = f
 }
 
+// Ext returns the extension of filename that most closely matches the name of a
+// registered format. Returns an empty string if no format was found.
+func (w *World) Ext(filename string) (ext string) {
+	i := len(filename) - 1
+	for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
+	}
+	filename = filename[i+1:]
+	for {
+		for i := 0; i < len(filename); i++ {
+			if filename[i] == '.' {
+				filename = filename[i+1:]
+				goto check
+			}
+		}
+		return ""
+	check:
+		if w.Format(filename).Name != "" {
+			return filename
+		}
+	}
+}
+
 // Source returns the Source registered with the given name. If the name is not
 // registered, then Source.Name will be an empty string.
 func (w *World) Source(name string) Source {

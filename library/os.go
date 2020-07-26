@@ -22,26 +22,6 @@ var OS = rbxmk.Library{
 	},
 }
 
-func guessExt(s rbxmk.State, filename string) (ext string) {
-	i := len(filename) - 1
-	for ; i >= 0 && !os.IsPathSeparator(filename[i]); i-- {
-	}
-	filename = filename[i+1:]
-	for {
-		for i := 0; i < len(filename); i++ {
-			if filename[i] == '.' {
-				filename = filename[i+1:]
-				goto check
-			}
-		}
-		return ""
-	check:
-		if s.Format(filename).Name != "" {
-			return filename
-		}
-	}
-}
-
 func osSplit(s rbxmk.State) int {
 	path := s.L.CheckString(1)
 	n := s.L.GetTop()
@@ -58,12 +38,12 @@ func osSplit(s rbxmk.State) int {
 			result = filepath.Base(path)
 			result = result[:len(result)-len(filepath.Ext(path))]
 		case "fext":
-			result = guessExt(s, path)
+			result = s.Ext(path)
 			if result != "" && result != "." {
 				result = "." + result
 			}
 		case "fstem":
-			ext := guessExt(s, path)
+			ext := s.Ext(path)
 			if ext != "" && ext != "." {
 				ext = "." + ext
 			}

@@ -22,7 +22,7 @@ func fileRead(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
 	formatName := string(s.PullOpt(2, "string", types.String("")).(types.String))
 	if formatName == "" {
-		f := guessExt(s, fileName)
+		f := s.Ext(fileName)
 		if f == "" {
 			s.L.RaiseError("unknown format from %s", filepath.Base(fileName))
 			return 0
@@ -61,7 +61,7 @@ func fileWrite(s rbxmk.State) int {
 	case 2:
 		fileName = string(s.Pull(1, "string").(types.String))
 		value = s.Pull(2, "Variant")
-		f := guessExt(s, fileName)
+		f := s.Ext(fileName)
 		if f == "" {
 			s.L.RaiseError("unknown format from %s", filepath.Base(fileName))
 			return 0
