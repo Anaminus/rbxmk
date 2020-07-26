@@ -258,7 +258,7 @@ func (w *World) Source(name string) Source {
 }
 
 // RegisterSource registers a source. Panics if the source is already
-// registered.
+// registered, or the source's library could not be opened.
 func (w *World) RegisterSource(s Source) {
 	if _, ok := w.sources[s.Name]; ok {
 		panic("source " + s.Name + " already registered")
@@ -267,6 +267,15 @@ func (w *World) RegisterSource(s Source) {
 		w.sources = map[string]Source{}
 	}
 	w.sources[s.Name] = s
+	if s.Library.Open != nil {
+		name := s.Library.Name
+		if name == "" {
+			name = s.Name
+		}
+		if err := w.OpenAs(name, s.Library); err != nil {
+			panic(err.Error())
+		}
+	}
 }
 
 // State returns the underlying Lua state.

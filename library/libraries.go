@@ -10,6 +10,5 @@ func All() []rbxmk.Library {
 		Types,
 		RBXMK,
 		OS,
-		File,
 	}
 }
