@@ -28,7 +28,6 @@ func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	case types.Int,
 		types.Int64,
 		types.Float,
-		types.Double,
 		types.Token,
 		types.BinaryString,
 		types.ProtectedString,

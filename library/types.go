@@ -9,7 +9,6 @@ func Types(s rbxmk.State) {
 	lib.RawSetString("int", s.WrapFunc(typesInt))
 	lib.RawSetString("int64", s.WrapFunc(typesInt64))
 	lib.RawSetString("float", s.WrapFunc(typesFloat))
-	lib.RawSetString("double", s.WrapFunc(typesDouble))
 	lib.RawSetString("token", s.WrapFunc(typesToken))
 	lib.RawSetString("BinaryString", s.WrapFunc(typesBinaryString))
 	lib.RawSetString("ProtectedString", s.WrapFunc(typesProtectedString))
@@ -36,10 +35,6 @@ func typesInt64(s rbxmk.State) int {
 
 func typesFloat(s rbxmk.State) int {
 	return setUserdata(s, "float")
-}
-
-func typesDouble(s rbxmk.State) int {
-	return setUserdata(s, "double")
 }
 
 func typesToken(s rbxmk.State) int {
