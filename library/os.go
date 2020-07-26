@@ -9,17 +9,17 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func OS(s rbxmk.State) {
-	lib, ok := s.L.GetGlobal("os").(*lua.LTable)
-	if !ok {
-		lib = s.L.CreateTable(0, 5)
-		s.L.SetGlobal("os", lib)
-	}
-	lib.RawSetString("split", s.WrapFunc(osSplit))
-	lib.RawSetString("join", s.WrapFunc(osJoin))
-	lib.RawSetString("expand", s.WrapFunc(osExpand))
-	lib.RawSetString("getenv", s.WrapFunc(osGetenv))
-	lib.RawSetString("dir", s.WrapFunc(osDir))
+var OS = rbxmk.Library{
+	Name: "os",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 5)
+		lib.RawSetString("split", s.WrapFunc(osSplit))
+		lib.RawSetString("join", s.WrapFunc(osJoin))
+		lib.RawSetString("expand", s.WrapFunc(osExpand))
+		lib.RawSetString("getenv", s.WrapFunc(osGetenv))
+		lib.RawSetString("dir", s.WrapFunc(osDir))
+		return lib
+	},
 }
 
 func guessExt(s rbxmk.State, filename string) (ext string) {

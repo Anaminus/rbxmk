@@ -95,7 +95,9 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 		world.RegisterSource(s())
 	}
 	for _, lib := range library.All() {
-		world.Open(lib)
+		if err := world.Open(lib); err != nil {
+			but.Fatal(err)
+		}
 	}
 
 	// Add script arguments.

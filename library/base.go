@@ -5,8 +5,13 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Base(s rbxmk.State) {
-	s.L.SetGlobal("typeof", s.L.NewFunction(baseTypeof))
+var Base = rbxmk.Library{
+	Name: "",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 1)
+		lib.RawSetString("typeof", s.L.NewFunction(baseTypeof))
+		return lib
+	},
 }
 
 func baseTypeof(l *lua.LState) int {

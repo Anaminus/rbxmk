@@ -5,13 +5,17 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
+	"github.com/yuin/gopher-lua"
 )
 
-func File(s rbxmk.State) {
-	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("read", s.WrapFunc(fileRead))
-	lib.RawSetString("write", s.WrapFunc(fileWrite))
-	s.L.SetGlobal("file", lib)
+var File = rbxmk.Library{
+	Name: "file",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 2)
+		lib.RawSetString("read", s.WrapFunc(fileRead))
+		lib.RawSetString("write", s.WrapFunc(fileWrite))
+		return lib
+	},
 }
 
 func fileRead(s rbxmk.State) int {

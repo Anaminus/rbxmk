@@ -24,8 +24,50 @@ func NewWorld(l *lua.LState) *World {
 	}
 }
 
-func (w *World) Open(lib func(s State)) {
-	lib(State{World: w, L: w.l})
+// Library represents a Lua library.
+type Library struct {
+	// Name is the default name of the library.
+	Name string
+	// Open returns a table with the contents of the library.
+	Open func(s State) *lua.LTable
+}
+
+// Open opens lib according to OpenAs by using the Name of the library.
+func (w *World) Open(lib Library) error {
+	return w.OpenAs(lib.Name, lib)
+}
+
+// OpenAs opens lib, then merges the result into the world's global table using
+// name. If the name is already present and is a table, then the table of lib is
+// merged into it, preferring the values of lib. If name is an empty string,
+// then lib is merged into the global table itself. An error is returned if the
+// merged value is not a table.
+func (w *World) OpenAs(name string, lib Library) error {
+	t := lib.Open(State{World: w, L: w.l})
+	return w.mergeGlobal(name, t)
+}
+
+// mergeGlobal merges t into the global table according to name. Returns an
+// error if t could not be merged.
+func (w *World) mergeGlobal(name string, t *lua.LTable) error {
+	if name == "" {
+		t.ForEach(func(k, v lua.LValue) {
+			if s, ok := k.(lua.LString); ok {
+				w.l.SetGlobal(string(s), v)
+			}
+		})
+		return nil
+	}
+	u := w.l.GetGlobal(name)
+	switch u := u.(type) {
+	case *lua.LTable:
+		t.ForEach(func(k, v lua.LValue) { u.RawSet(k, v) })
+	case *lua.LNilType:
+		w.l.SetGlobal(name, t)
+	default:
+		return fmt.Errorf("cannot merge %s into %s", name, u.Type().String())
+	}
+	return nil
 }
 
 // Type returns the Type registered with the given name. If the name is not

@@ -2,19 +2,23 @@ package library
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/yuin/gopher-lua"
 )
 
-func Types(s rbxmk.State) {
-	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("int", s.WrapFunc(typesInt))
-	lib.RawSetString("int64", s.WrapFunc(typesInt64))
-	lib.RawSetString("float", s.WrapFunc(typesFloat))
-	lib.RawSetString("token", s.WrapFunc(typesToken))
-	lib.RawSetString("BinaryString", s.WrapFunc(typesBinaryString))
-	lib.RawSetString("ProtectedString", s.WrapFunc(typesProtectedString))
-	lib.RawSetString("Content", s.WrapFunc(typesContent))
-	lib.RawSetString("SharedString", s.WrapFunc(typesSharedString))
-	s.L.SetGlobal("types", lib)
+var Types = rbxmk.Library{
+	Name: "types",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 8)
+		lib.RawSetString("int", s.WrapFunc(typesInt))
+		lib.RawSetString("int64", s.WrapFunc(typesInt64))
+		lib.RawSetString("float", s.WrapFunc(typesFloat))
+		lib.RawSetString("token", s.WrapFunc(typesToken))
+		lib.RawSetString("BinaryString", s.WrapFunc(typesBinaryString))
+		lib.RawSetString("ProtectedString", s.WrapFunc(typesProtectedString))
+		lib.RawSetString("Content", s.WrapFunc(typesContent))
+		lib.RawSetString("SharedString", s.WrapFunc(typesSharedString))
+		return lib
+	},
 }
 
 func setUserdata(s rbxmk.State, t string) int {

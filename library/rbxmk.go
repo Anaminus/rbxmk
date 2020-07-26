@@ -9,14 +9,17 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func RBXMK(s rbxmk.State) {
-	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
-	lib.RawSetString("encodeformat", s.WrapFunc(rbxmkEncodeFormat))
-	lib.RawSetString("decodeformat", s.WrapFunc(rbxmkDecodeFormat))
-	lib.RawSetString("readsource", s.WrapFunc(rbxmkReadSource))
-	lib.RawSetString("writesource", s.WrapFunc(rbxmkWriteSource))
-	s.L.SetGlobal("rbxmk", lib)
+var RBXMK = rbxmk.Library{
+	Name: "rbxmk",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 5)
+		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
+		lib.RawSetString("encodeformat", s.WrapFunc(rbxmkEncodeFormat))
+		lib.RawSetString("decodeformat", s.WrapFunc(rbxmkDecodeFormat))
+		lib.RawSetString("readsource", s.WrapFunc(rbxmkReadSource))
+		lib.RawSetString("writesource", s.WrapFunc(rbxmkWriteSource))
+		return lib
+	},
 }
 
 func rbxmkLoad(s rbxmk.State) int {
