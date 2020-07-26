@@ -9,18 +9,6 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func setUserdata(s State, t string) int {
-	u := s.L.NewUserData()
-	u.Value = s.Pull(1, t)
-	s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
-	s.L.Push(u)
-	return 1
-}
-
-func typesInt(s State) int {
-	return setUserdata(s, "int")
-}
-
 // reflectPropertyTo behaves like ReflectVariantTo, except that exprims types
 // are reflected as userdata.
 func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
