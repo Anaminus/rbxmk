@@ -35,7 +35,8 @@ func String() Type {
 
 func BinaryString() Type {
 	return Type{
-		Name: "BinaryString",
+		Name:  "BinaryString",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.BinaryString))}, nil
 		},
@@ -78,7 +79,8 @@ func BinaryString() Type {
 
 func ProtectedString() Type {
 	return Type{
-		Name: "ProtectedString",
+		Name:  "ProtectedString",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.ProtectedString))}, nil
 		},
@@ -121,7 +123,8 @@ func ProtectedString() Type {
 
 func Content() Type {
 	return Type{
-		Name: "Content",
+		Name:  "Content",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.Content))}, nil
 		},
@@ -164,7 +167,8 @@ func Content() Type {
 
 func SharedString() Type {
 	return Type{
-		Name: "SharedString",
+		Name:  "SharedString",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.SharedString))}, nil
 		},

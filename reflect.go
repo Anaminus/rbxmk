@@ -11,6 +11,8 @@ type Type struct {
 	// Name is the name of the type.
 	Name string
 
+	Flags TypeFlags
+
 	// Count indicates the number of Lua values that the type can reflect to and
 	// from. A Count of 0 is the same as 1. Less than 0 indicates a variable
 	// amount.
@@ -44,6 +46,13 @@ type Type struct {
 	// setup.
 	Environment func(s State)
 }
+
+type TypeFlags uint8
+
+const (
+	_      TypeFlags = (1 << iota) / 2
+	Exprim           // Whether the type is an explicit primitive.
+)
 
 // ValueCount returns the normalized number of Lua values that the type reflects
 // between. Less than 0 means the amount is variable.

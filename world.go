@@ -3,6 +3,7 @@ package rbxmk
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/robloxapi/types"
@@ -208,6 +209,20 @@ func (w *World) RegisterType(t Type) {
 	if t.Environment != nil {
 		t.Environment(State{World: w, L: w.l})
 	}
+}
+
+// Exprims returns a list of types that have the Exprim flag set.
+func (w *World) Exprims() []Type {
+	ts := []Type{}
+	for _, t := range w.types {
+		if t.Flags&Exprim != 0 {
+			ts = append(ts, t)
+		}
+	}
+	sort.Slice(ts, func(i, j int) bool {
+		return ts[i].Name < ts[j].Name
+	})
+	return ts
 }
 
 // Format returns the Format registered with the given name. If the name is not

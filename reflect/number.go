@@ -41,7 +41,8 @@ func pullInt(s State, n int) int64 {
 
 func Float() Type {
 	return Type{
-		Name: "float",
+		Name:  "float",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Float))}, nil
 		},
@@ -194,7 +195,8 @@ func Number() Type {
 
 func Int() Type {
 	return Type{
-		Name: "int",
+		Name:  "int",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int))}, nil
 		},
@@ -263,7 +265,8 @@ func Int() Type {
 
 func Int64() Type {
 	return Type{
-		Name: "int64",
+		Name:  "int64",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int64))}, nil
 		},
@@ -332,7 +335,8 @@ func Int64() Type {
 
 func Token() Type {
 	return Type{
-		Name: "token",
+		Name:  "token",
+		Flags: Exprim,
 		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Token))}, nil
 		},
