@@ -94,7 +94,11 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 		if _, ok := t.Members["Value"]; !ok {
 			t.Members["Value"] = Member{
 				Get: func(s State, v types.Value) int {
-					// Pushes value reflected according to its actual type.
+					if v, ok := v.(types.Aliaser); ok {
+						// Push underlying type.
+						return s.Push(v.Alias())
+					}
+					// Fallback to current value.
 					return s.Push(v)
 				},
 			}
