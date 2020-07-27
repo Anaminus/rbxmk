@@ -200,8 +200,9 @@ func (w *World) RegisterType(t Type) {
 	if t.Constructors != nil {
 		ctors := w.l.CreateTable(0, len(t.Constructors))
 		for name, ctor := range t.Constructors {
+			c := ctor
 			ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
-				return ctor(State{World: w, L: w.l})
+				return c(State{World: w, L: w.l})
 			}))
 		}
 		w.l.SetGlobal(t.Name, ctors)
