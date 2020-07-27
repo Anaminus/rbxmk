@@ -8,9 +8,9 @@ import (
 
 func Region3() Type {
 	return Type{
-		Name:        "Region3",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Region3",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Region3").(types.Region3).String()))

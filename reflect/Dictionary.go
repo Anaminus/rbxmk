@@ -12,7 +12,7 @@ import (
 func Dictionary() Type {
 	return Type{
 		Name: "Dictionary",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -28,7 +28,7 @@ func Dictionary() Type {
 			variantType := s.Type("Variant")
 			table := s.L.CreateTable(0, len(dict))
 			for k, v := range dict {
-				lv, err := variantType.ReflectTo(s, variantType, v)
+				lv, err := variantType.PushTo(s, variantType, v)
 				if err != nil {
 					return nil, err
 				}
@@ -36,7 +36,7 @@ func Dictionary() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -56,7 +56,7 @@ func Dictionary() Type {
 					return
 				}
 				var v types.Value
-				if v, err = variantType.ReflectFrom(s, variantType, lv); err == nil {
+				if v, err = variantType.PullFrom(s, variantType, lv); err == nil {
 					dict[k.String()] = v
 				}
 			})

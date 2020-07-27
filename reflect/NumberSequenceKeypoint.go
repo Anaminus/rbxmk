@@ -8,9 +8,9 @@ import (
 
 func NumberSequenceKeypoint() Type {
 	return Type{
-		Name:        "NumberSequenceKeypoint",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "NumberSequenceKeypoint",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint).String()))

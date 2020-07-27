@@ -8,9 +8,9 @@ import (
 
 func PhysicalProperties() Type {
 	return Type{
-		Name:        "PhysicalProperties",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "PhysicalProperties",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "PhysicalProperties").(types.PhysicalProperties).String()))

@@ -8,9 +8,9 @@ import (
 
 func Rect() Type {
 	return Type{
-		Name:        "Rect",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Rect",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Rect").(types.Rect).String()))

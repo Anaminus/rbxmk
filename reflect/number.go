@@ -10,10 +10,10 @@ func Float() Type {
 	return Type{
 		Name:  "float",
 		Flags: Exprim,
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Float))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Float(v), nil
@@ -32,10 +32,10 @@ func Float() Type {
 func Double() Type {
 	return Type{
 		Name: "double",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Double))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Double(v), nil
@@ -54,10 +54,10 @@ func Double() Type {
 func Number() Type {
 	return Type{
 		Name: "number",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Double))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return types.Double(n), nil
 			}
@@ -70,10 +70,10 @@ func Int() Type {
 	return Type{
 		Name:  "int",
 		Flags: Exprim,
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Int(v), nil
@@ -93,10 +93,10 @@ func Int64() Type {
 	return Type{
 		Name:  "int64",
 		Flags: Exprim,
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int64))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Int64(v), nil
@@ -116,10 +116,10 @@ func Token() Type {
 	return Type{
 		Name:  "token",
 		Flags: Exprim,
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Token))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Token(v), nil

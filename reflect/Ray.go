@@ -8,9 +8,9 @@ import (
 
 func Ray() Type {
 	return Type{
-		Name:        "Ray",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Ray",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Ray").(types.Ray).String()))

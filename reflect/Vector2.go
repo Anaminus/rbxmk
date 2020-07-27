@@ -8,9 +8,9 @@ import (
 
 func Vector2() Type {
 	return Type{
-		Name:        "Vector2",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Vector2",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Vector2").(types.Vector2).String()))

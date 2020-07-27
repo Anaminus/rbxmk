@@ -22,9 +22,9 @@ var SymbolIsService = SymbolType{Name: "IsService"}
 
 func Symbol() Type {
 	return Type{
-		Name:        "Symbol",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Symbol",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				return s.Push(types.String(s.Pull(1, "Symbol").(SymbolType).String()))
@@ -37,10 +37,10 @@ func Symbol() Type {
 		Environment: func(s State) {
 			typ := s.Type("Symbol")
 
-			v, _ := typ.ReflectTo(s, typ, SymbolReference)
+			v, _ := typ.PushTo(s, typ, SymbolReference)
 			s.L.SetGlobal("Reference", v[0])
 
-			v, _ = typ.ReflectTo(s, typ, SymbolIsService)
+			v, _ = typ.PushTo(s, typ, SymbolIsService)
 			s.L.SetGlobal("IsService", v[0])
 		},
 	}

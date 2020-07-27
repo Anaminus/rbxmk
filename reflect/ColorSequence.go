@@ -9,9 +9,9 @@ import (
 
 func ColorSequence() Type {
 	return Type{
-		Name:        "ColorSequence",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "ColorSequence",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "ColorSequence").(types.ColorSequence).String()))
@@ -37,7 +37,7 @@ func ColorSequence() Type {
 				keypointType := s.Type("ColorSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)
 				for i, v := range u {
-					lv, err := keypointType.ReflectTo(s, keypointType, v)
+					lv, err := keypointType.PushTo(s, keypointType, v)
 					if err != nil {
 						s.L.RaiseError(err.Error())
 						return 0
@@ -68,7 +68,7 @@ func ColorSequence() Type {
 						v = make(types.ColorSequence, n)
 						keypointType := s.Type("ColorSequenceKeypoint")
 						for i := 1; i <= n; i++ {
-							k, err := keypointType.ReflectFrom(s, keypointType, c.RawGetInt(i))
+							k, err := keypointType.PullFrom(s, keypointType, c.RawGetInt(i))
 							if err != nil {
 								s.L.RaiseError(err.Error())
 								return 0

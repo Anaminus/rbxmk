@@ -8,9 +8,9 @@ import (
 
 func UDim() Type {
 	return Type{
-		Name:        "UDim",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "UDim",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "UDim").(types.UDim).String()))

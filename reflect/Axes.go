@@ -8,9 +8,9 @@ import (
 
 func Axes() Type {
 	return Type{
-		Name:        "Axes",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Axes",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Axes").(types.Axes).String()))

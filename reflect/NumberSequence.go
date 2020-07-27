@@ -9,9 +9,9 @@ import (
 
 func NumberSequence() Type {
 	return Type{
-		Name:        "NumberSequence",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "NumberSequence",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "NumberSequence").(types.NumberSequence).String()))
@@ -37,7 +37,7 @@ func NumberSequence() Type {
 				keypointType := s.Type("NumberSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)
 				for i, v := range u {
-					lv, err := keypointType.ReflectTo(s, keypointType, v)
+					lv, err := keypointType.PushTo(s, keypointType, v)
 					if err != nil {
 						s.L.RaiseError(err.Error())
 						return 0
@@ -68,7 +68,7 @@ func NumberSequence() Type {
 						v = make(types.NumberSequence, n)
 						keypointType := s.Type("NumberSequenceKeypoint")
 						for i := 1; i <= n; i++ {
-							k, err := keypointType.ReflectFrom(s, keypointType, c.RawGetInt(i))
+							k, err := keypointType.PullFrom(s, keypointType, c.RawGetInt(i))
 							if err != nil {
 								s.L.RaiseError(err.Error())
 								return 0

@@ -8,9 +8,9 @@ import (
 
 func NumberRange() Type {
 	return Type{
-		Name:        "NumberRange",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "NumberRange",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "NumberRange").(types.NumberRange).String()))

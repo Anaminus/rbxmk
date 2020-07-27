@@ -12,7 +12,7 @@ import (
 func Array() Type {
 	return Type{
 		Name: "Array",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -28,7 +28,7 @@ func Array() Type {
 			variantType := s.Type("Variant")
 			table := s.L.CreateTable(len(array), 0)
 			for i, v := range array {
-				lv, err := variantType.ReflectTo(s, variantType, v)
+				lv, err := variantType.PushTo(s, variantType, v)
 				if err != nil {
 					return nil, err
 				}
@@ -36,7 +36,7 @@ func Array() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -53,7 +53,7 @@ func Array() Type {
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {
-				if array[i-1], err = variantType.ReflectFrom(s, variantType, table.RawGetInt(i)); err != nil {
+				if array[i-1], err = variantType.PullFrom(s, variantType, table.RawGetInt(i)); err != nil {
 					return nil, err
 				}
 			}

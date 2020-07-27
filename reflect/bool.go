@@ -9,10 +9,10 @@ import (
 func Bool() Type {
 	return Type{
 		Name: "bool",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LBool(v.(types.Bool))}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LBool); ok {
 				return types.Bool(n), nil
 			}

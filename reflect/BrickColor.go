@@ -10,9 +10,9 @@ import (
 
 func BrickColor() Type {
 	return Type{
-		Name:        "BrickColor",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "BrickColor",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "BrickColor").(types.BrickColor).String()))

@@ -9,9 +9,9 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-// reflectPropertyTo behaves like ReflectVariantTo, except that exprims types
-// are reflected as userdata.
-func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
+// pushPropertyTo behaves like PushVariantTo, except that exprims types are
+// reflected as userdata.
+func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	switch v.(type) {
 	case types.Int,
 		types.Int64,
@@ -22,13 +22,13 @@ func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 		types.Content,
 		types.SharedString:
 	default:
-		return ReflectVariantTo(s, v)
+		return PushVariantTo(s, v)
 	}
 	typ := s.Type(v.Type())
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
-	if typ.ReflectTo == nil {
+	if typ.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", typ.Name)
 	}
 	u := s.L.NewUserData()
@@ -39,9 +39,9 @@ func reflectPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 
 func Instance() Type {
 	return Type{
-		Name:        "Instance",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Instance",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Instance").(*rtypes.Instance).String()))
@@ -56,7 +56,7 @@ func Instance() Type {
 
 				// Try symbol.
 				if typ := s.Type("Symbol"); typ.Name != "" {
-					if sym, err := typ.ReflectFrom(s, typ, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
 						switch name := sym.(SymbolType).Name; name {
 						case "Reference":
 							return s.Push(types.String(inst.Reference))
@@ -102,7 +102,7 @@ func Instance() Type {
 					// s.L.RaiseError("%s is not a valid member", name)
 					return s.Push(rtypes.Nil)
 				}
-				lv, err := reflectPropertyTo(s, value)
+				lv, err := pushPropertyTo(s, value)
 				if err != nil {
 					s.L.RaiseError(err.Error())
 					return 0
@@ -115,7 +115,7 @@ func Instance() Type {
 
 				// Try symbol.
 				if typ := s.Type("Symbol"); typ.Name != "" {
-					if sym, err := typ.ReflectFrom(s, typ, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
 						switch name := sym.(SymbolType).Name; name {
 						case "Reference":
 							value := string(s.Pull(3, "string").(types.String))

@@ -8,9 +8,9 @@ import (
 
 func Vector3int16() Type {
 	return Type{
-		Name:        "Vector3int16",
-		ReflectTo:   ReflectTypeTo,
-		ReflectFrom: ReflectTypeFrom,
+		Name:     "Vector3int16",
+		PushTo:   PushTypeTo,
+		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				s.L.Push(lua.LString(s.Pull(1, "Vector3int16").(types.Vector3int16).String()))

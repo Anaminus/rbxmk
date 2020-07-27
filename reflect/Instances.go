@@ -10,7 +10,7 @@ import (
 func Instances() Type {
 	return Type{
 		Name: "Instances",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 			instances, ok := v.(rtypes.Instances)
 			if !ok {
 				return nil, TypeError(nil, 0, "Instances")
@@ -18,7 +18,7 @@ func Instances() Type {
 			instType := s.Type("Instance")
 			table := s.L.CreateTable(len(instances), 0)
 			for i, v := range instances {
-				lv, err := instType.ReflectTo(s, instType, v)
+				lv, err := instType.PushTo(s, instType, v)
 				if err != nil {
 					return nil, err
 				}
@@ -26,7 +26,7 @@ func Instances() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, TypeError(nil, 0, "table")
@@ -35,7 +35,7 @@ func Instances() Type {
 			n := table.Len()
 			instances := make(rtypes.Instances, n)
 			for i := 1; i <= n; i++ {
-				v, err := instType.ReflectFrom(s, instType, table.RawGetInt(i))
+				v, err := instType.PullFrom(s, instType, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}

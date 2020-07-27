@@ -18,14 +18,14 @@ type Type struct {
 	// amount.
 	Count int
 
-	// ReflectTo converts v to a number of Lua values. l must be used only for
-	// the conversion of values as needed. If err is nil, then lvs must have a
+	// PushTo converts v to a number of Lua values. l must be used only for the
+	// conversion of values as needed. If err is nil, then lvs must have a
 	// length of 1 or greater.
-	ReflectTo func(s State, t Type, v types.Value) (lvs []lua.LValue, err error)
+	PushTo func(s State, t Type, v types.Value) (lvs []lua.LValue, err error)
 
-	// ReflectFrom converts a Lua value to v. l must be used only for the
+	// PullFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lvs must have a length of 1 or greater.
-	ReflectFrom func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error)
+	PullFrom func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -123,7 +123,7 @@ func (s State) Push(v types.Value) int {
 	if typ.Name == "" {
 		panic("unregistered type " + v.Type())
 	}
-	lvs, err := typ.ReflectTo(s, typ, v)
+	lvs, err := typ.PushTo(s, typ, v)
 	if err != nil {
 		s.L.RaiseError(err.Error())
 		return 0
@@ -145,15 +145,15 @@ func (s State) Pull(n int, t string) types.Value {
 		for i := n; i <= s.L.GetTop(); i++ {
 			lvs = append(lvs, s.L.Get(i))
 		}
-		v, err = typ.ReflectFrom(s, typ, lvs...)
+		v, err = typ.PullFrom(s, typ, lvs...)
 	} else if typ.Count > 1 {
 		lvs := make([]lua.LValue, 0, 4)
 		for i := n; i <= typ.Count; i++ {
 			lvs = append(lvs, s.L.CheckAny(i))
 		}
-		v, err = typ.ReflectFrom(s, typ, lvs...)
+		v, err = typ.PullFrom(s, typ, lvs...)
 	} else {
-		v, err = typ.ReflectFrom(s, typ, s.L.CheckAny(n))
+		v, err = typ.PullFrom(s, typ, s.L.CheckAny(n))
 	}
 	if err != nil {
 		s.L.ArgError(n, err.Error())
@@ -176,7 +176,7 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	if lv == lua.LNil {
 		return d
 	}
-	v, err := typ.ReflectFrom(s, typ, lv)
+	v, err := typ.PullFrom(s, typ, lv)
 	if err != nil {
 		s.L.ArgError(n, err.Error())
 		return d
@@ -225,7 +225,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	case 1: // All types have 1 value.
 		v := s.L.CheckAny(n)
 		for _, t := range ts {
-			if v, err := t.ReflectFrom(s, t, v); err == nil {
+			if v, err := t.PullFrom(s, t, v); err == nil {
 				return v
 			}
 		}
@@ -240,16 +240,16 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 				for i := n; i <= s.L.GetTop(); i++ {
 					lvs = append(lvs, s.L.Get(i))
 				}
-				v, err = t.ReflectFrom(s, t, lvs...)
+				v, err = t.PullFrom(s, t, lvs...)
 			} else if t.Count > 1 {
 				// Append up to type count.
 				for i := n; i <= t.Count; i++ {
 					lvs = append(lvs, s.L.CheckAny(i))
 				}
-				v, err = t.ReflectFrom(s, t, lvs...)
+				v, err = t.PullFrom(s, t, lvs...)
 			} else {
 				// Append single value.
-				v, err = t.ReflectFrom(s, t, s.L.CheckAny(n))
+				v, err = t.PullFrom(s, t, s.L.CheckAny(n))
 			}
 			if err != nil {
 				continue
@@ -267,7 +267,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			for i := n; i <= t.Count; i++ {
 				lvs = append(lvs, s.L.CheckAny(i))
 			}
-			v, err := t.ReflectFrom(s, t, lvs...)
+			v, err := t.PullFrom(s, t, lvs...)
 			if err != nil {
 				continue
 			}
@@ -304,18 +304,18 @@ func (c *Cycle) Put(t interface{}) {
 	c.m[t] = struct{}{}
 }
 
-// ReflectTypeTo is a Type.ReflectTo that converts v to a userdata set with a
-// type metatable registered as t.Name.
-func ReflectTypeTo(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+// PushTypeTo is a Type.Push that converts v to a userdata set with a type
+// metatable registered as t.Name.
+func PushTypeTo(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
 	u := s.L.NewUserData()
 	u.Value = v
 	s.L.SetMetatable(u, s.L.GetTypeMetatable(t.Name))
 	return append(lvs, u), nil
 }
 
-// ReflectTypeFrom is a Type.ReflectFrom that converts v from a userdata set
-// with a type metatable registered as t.Name.
-func ReflectTypeFrom(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+// PullTypeFrom is a Type.Pull that converts v from a userdata set with a type
+// metatable registered as t.Name.
+func PullTypeFrom(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 	u, ok := lvs[0].(*lua.LUserData)
 	if !ok {
 		return nil, TypeError(nil, 0, t.Name)

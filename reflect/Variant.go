@@ -9,7 +9,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
+func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return lua.LNil, nil
@@ -23,14 +23,14 @@ func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 		return lua.LString(v.Stringlike()), nil
 	case rtypes.Array:
 		typ := s.Type("Array")
-		values, err := typ.ReflectTo(s, typ, v)
+		values, err := typ.PushTo(s, typ, v)
 		if err != nil {
 			return nil, err
 		}
 		return values[0], nil
 	case rtypes.Dictionary:
 		typ := s.Type("Dictionary")
-		values, err := typ.ReflectTo(s, typ, v)
+		values, err := typ.PushTo(s, typ, v)
 		if err != nil {
 			return nil, err
 		}
@@ -40,17 +40,17 @@ func ReflectVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
-	if typ.ReflectTo == nil {
+	if typ.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", typ.Name)
 	}
-	values, err := typ.ReflectTo(s, typ, v)
+	values, err := typ.PushTo(s, typ, v)
 	if err != nil {
 		return nil, err
 	}
 	return values[0], nil
 }
 
-func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
+func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return rtypes.Nil, nil
@@ -63,12 +63,12 @@ func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 	case *lua.LTable:
 		if lv.Len() > 0 {
 			arrayType := s.Type("Array")
-			if v, err = arrayType.ReflectFrom(s, arrayType, lv); err == nil {
+			if v, err = arrayType.PullFrom(s, arrayType, lv); err == nil {
 				return v, nil
 			}
 		}
 		dictType := s.Type("Dictionary")
-		v, err := dictType.ReflectFrom(s, dictType, lv)
+		v, err := dictType.PullFrom(s, dictType, lv)
 		return v, err
 	case *lua.LUserData:
 		name, ok := s.L.GetMetaField(lv, "__type").(lua.LString)
@@ -79,10 +79,10 @@ func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 		if typ.Name == "" {
 			return nil, fmt.Errorf("unknown type %q", string(name))
 		}
-		if typ.ReflectFrom == nil {
+		if typ.PullFrom == nil {
 			return nil, fmt.Errorf("unable to cast %s to Variant", typ.Name)
 		}
-		v, err := typ.ReflectFrom(s, typ, lv)
+		v, err := typ.PullFrom(s, typ, lv)
 		return v, err
 	}
 	return nil, fmt.Errorf("unable to cast %s to Variant", lv.Type().String())
@@ -91,7 +91,7 @@ func ReflectVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 // PullVariant gets from the Lua state the value at n, and reflects a value from
 // it according to the Variant type.
 func PullVariant(s State, n int) (v types.Value) {
-	v, err := ReflectVariantFrom(s, s.L.CheckAny(n))
+	v, err := PullVariantFrom(s, s.L.CheckAny(n))
 	if err != nil {
 		s.L.ArgError(n, err.Error())
 		return nil
@@ -102,15 +102,15 @@ func PullVariant(s State, n int) (v types.Value) {
 func Variant() Type {
 	return Type{
 		Name: "Variant",
-		ReflectTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
-			lv, err := ReflectVariantTo(s, v)
+		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+			lv, err := PushVariantTo(s, v)
 			if err != nil {
 				return nil, err
 			}
 			return []lua.LValue{lv}, nil
 		},
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
-			v, err = ReflectVariantFrom(s, lvs[0])
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+			v, err = PullVariantFrom(s, lvs[0])
 			return v, err
 		},
 	}

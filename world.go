@@ -357,28 +357,28 @@ func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 	})
 }
 
-// ReflectTo reflects v to lvs using registered type t.
-func (w *World) ReflectTo(t string, v types.Value) (lvs []lua.LValue, err error) {
+// PushTo reflects v to lvs using registered type t.
+func (w *World) PushTo(t string, v types.Value) (lvs []lua.LValue, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
 	}
-	if typ.ReflectTo == nil {
+	if typ.PushTo == nil {
 		return nil, fmt.Errorf("cannot cast type %q to Lua", t)
 	}
-	return typ.ReflectTo(State{World: w, L: w.l}, typ, v)
+	return typ.PushTo(State{World: w, L: w.l}, typ, v)
 }
 
-// ReflectFrom reflects lvs to v using registered type t.
-func (w *World) ReflectFrom(t string, lvs ...lua.LValue) (v types.Value, err error) {
+// PullFrom reflects lvs to v using registered type t.
+func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error) {
 	typ := w.types[t]
 	if typ.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
 	}
-	if typ.ReflectFrom == nil {
+	if typ.PullFrom == nil {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
-	return typ.ReflectFrom(State{World: w, L: w.l}, typ, lvs...)
+	return typ.PullFrom(State{World: w, L: w.l}, typ, lvs...)
 }
 
 // Push reflects v according to its type as registered, then pushes the results

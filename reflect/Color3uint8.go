@@ -9,10 +9,10 @@ import (
 
 func Color3uint8() Type {
 	return Type{
-		Name:      "Color3uint8",
-		Flags:     Exprim,
-		ReflectTo: ReflectTypeTo,
-		ReflectFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		Name:   "Color3uint8",
+		Flags:  Exprim,
+		PushTo: PushTypeTo,
+		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
 			if u, ok := lvs[0].(*lua.LUserData); ok {
 				switch u.Metatable {
 				case s.L.GetTypeMetatable("Color3"):
