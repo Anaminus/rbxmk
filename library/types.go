@@ -19,8 +19,9 @@ var Types = rbxmk.Library{
 		exprims := s.Exprims()
 		lib := s.L.CreateTable(0, len(exprims))
 		for _, t := range exprims {
+			name := t.Name
 			lib.RawSetString(t.Name, s.WrapFunc(func(s rbxmk.State) int {
-				return setUserdata(s, t.Name)
+				return setUserdata(s, name)
 			}))
 		}
 		return lib
