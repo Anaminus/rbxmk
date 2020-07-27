@@ -77,47 +77,79 @@ func (w *World) Type(name string) Type {
 	return w.types[name]
 }
 
-// RegisterType registers a type. Panics if the type is already registered.
-func (w *World) RegisterType(t Type) {
-	if _, ok := w.types[t.Name]; ok {
-		panic("type " + t.Name + " already registered")
+// createMetatable constructs a metatable from the given Type. If Members and
+// Exprim is set, then the Value field will be injected if it does not already
+// exist.
+func (w *World) createMetatable(t Type) (mt *lua.LTable) {
+	if t.Metatable == nil && t.Members == nil && t.Flags&Exprim == 0 {
+		// No metatable.
+		return nil
 	}
-	if w.types == nil {
-		w.types = map[string]Type{}
-	}
-	w.types[t.Name] = t
 
-	var mt *lua.LTable
-	var index Metamethod
-	var newindex Metamethod
-	if t.Metatable != nil {
-		mt = w.l.CreateTable(0, len(t.Metatable)+3)
-		for name, method := range t.Metatable {
-			m := method
-			mt.RawSetString(name, w.WrapFunc(m))
+	if t.Flags&Exprim != 0 {
+		// Inject Value field, if possible.
+		if t.Members == nil {
+			t.Members = make(map[string]Member, 1)
 		}
-		mt.RawSetString("__type", lua.LString(t.Name))
-		if t.Metatable["__tostring"] == nil {
-			mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
-				l.Push(lua.LString(t.Name))
-				return 1
-			}))
+		if _, ok := t.Members["Value"]; !ok {
+			t.Members["Value"] = Member{
+				Get: func(s State, v types.Value) int {
+					// Pushes value reflected according to its actual type.
+					return s.Push(v)
+				},
+			}
 		}
-		if t.Metatable["__metatable"] == nil {
-			mt.RawSetString("__metatable", lua.LString("the metatable is locked"))
-		}
-		index = t.Metatable["__index"]
-		newindex = t.Metatable["__newindex"]
 	}
 	if t.Members != nil {
+		// Validate members.
 		for _, member := range t.Members {
 			if member.Get == nil {
 				panic("member must define Get function")
 			}
 		}
-		if mt == nil {
-			mt = w.l.CreateTable(0, 2)
+	}
+
+	mt = w.l.CreateTable(0, 8)
+
+	// Unconditional fields.
+	mt.RawSetString("__type", lua.LString(t.Name))
+	mt.RawSetString("__metatable", lua.LString("the metatable is locked"))
+
+	if t.Flags&Exprim != 0 {
+		// Show type and value, if possible.
+		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
+			if u, ok := l.Get(1).(*lua.LUserData); ok {
+				if v, ok := u.Value.(types.Stringer); ok {
+					l.Push(lua.LString(t.Name + ": " + v.String()))
+					return 1
+				}
+			}
+			l.Push(lua.LString(t.Name))
+			return 1
+		}))
+	} else {
+		// Just show type.
+		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
+			l.Push(lua.LString(t.Name))
+			return 1
+		}))
+	}
+
+	var index Metamethod
+	var newindex Metamethod
+	if t.Metatable != nil {
+		// Set each defined metamethod, overriding predefined values.
+		for name, method := range t.Metatable {
+			m := method
+			mt.RawSetString(name, w.WrapFunc(m))
 		}
+		// If available, remember index and newindex for member indexing.
+		index = t.Metatable["__index"]
+		newindex = t.Metatable["__newindex"]
+	}
+
+	if t.Members != nil {
+		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
 			u := l.CheckUserData(1)
 			if u.Metatable != mt {
@@ -149,6 +181,7 @@ func (w *World) RegisterType(t Type) {
 			}
 		customIndex:
 			if index != nil {
+				// Fallback to custom index.
 				return index(State{World: w, L: l})
 			}
 			if ok {
@@ -184,6 +217,7 @@ func (w *World) RegisterType(t Type) {
 			}
 		customNewindex:
 			if newindex != nil {
+				// Fallback to custom newindex.
 				return newindex(State{World: w, L: l})
 			}
 			if ok {
@@ -194,7 +228,21 @@ func (w *World) RegisterType(t Type) {
 			return 0
 		}))
 	}
-	if mt != nil {
+
+	return mt
+}
+
+// RegisterType registers a type. Panics if the type is already registered.
+func (w *World) RegisterType(t Type) {
+	if _, ok := w.types[t.Name]; ok {
+		panic("type " + t.Name + " already registered")
+	}
+	if w.types == nil {
+		w.types = map[string]Type{}
+	}
+	w.types[t.Name] = t
+
+	if mt := w.createMetatable(t); mt != nil {
 		w.l.SetField(w.l.Get(lua.RegistryIndex), t.Name, mt)
 	}
 	if t.Constructors != nil {
