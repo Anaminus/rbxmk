@@ -39,6 +39,23 @@ The following items from the are included.
 - `typeof`
 - Roblox types (e.g. Instance, CFrame, Vector3, etc)
 
+## `rbxmk` library
+The `rbxmk` library contains functions related to the rbxmk engine.
+
+Name           | Description
+---------------|------------
+`load`         | Run a script.
+`encodeformat` | Serialize data into bytes.
+`decodeformat` | Deserialize data from bytes.
+`readsource`   | Read bytes from an external source.
+`writesource`  | Write bytes to an external source.
+
+### `load(path: string, args: ...any): (results ...any)`
+### `encodeformat(format: string, value: any): (bytes BinaryString)`
+### `decodeformat(format: string, bytes: BinaryString): (value any)`
+### `readsource(source: string, args: ...any): (bytes: BinaryString)`
+### `writesource(source: string, byte: BinaryString, args: ...any)`
+
 ## `os` library
 The `os` library is an extension to the standard library. The following
 additional functions are included:
@@ -50,6 +67,15 @@ Name     | Description
 `expand` | Expands predefined file path variables.
 `getenv` | Gets an environment variable.
 `dir`    | Gets a list of files in a directory.
+
+### `split(path: string, components: ...string): ...string`
+### `join(paths: ...string) string`
+### `expand(path: string): string`
+### `getenv(name: string?): string | Array<string>`
+The `getenv` function returns the value of the *name* environment variable. If
+*name* is not specified, then a list of environment variables is returned.
+
+### `dir(path: string): Array<File>`
 
 ## `types` library
 The `types` library contains functions for constructing explicit primitives. The
@@ -104,8 +130,8 @@ which also has no exprim.
 
 An exprim userdata supports operations with its underlying primitive type, as
 well as other similar exprims. Numeric exprims can be added, multiplied, etc,
-with Lua numbers, as well as other numeric exprims. Stringlike exprims can be
-concatenated with Lua strings, as well as other stringlike exprims. The result
+with Lua numbers, as well as other numeric exprims. String-like exprims can be
+concatenated with Lua strings, as well as other string-like exprims. The result
 of such operations is always a value of the underlying primitive. For example,
 `types.int(9) + 1` returns 10 as a Lua number.
 
@@ -118,11 +144,21 @@ primitive.
 	local i = types.int(42)
 	print(i() == 42)
 
-## Source libraries
-Formats and sources can be accessed at a low level through functions in the
-`rbxmk` library. A source library wraps this workflow of encoding/decoding a
-format and reading from or writing to a source into a single convenient package.
+# Sources
+A **source** is an external location from which raw data can be read from and
+written to.
 
+A source can be accessed at a low level through the `rbxmk.readsource` and
+`rbxmk.writesource` functions.
+
+A source usually has a corresponding library that provides convenient access for
+common cases.
+
+## `file` source
+The `file` source provides access to the file system.
+
+### Reading
+### Writing
 ### `file` library
 The `file` library handles the `file` source.
 
@@ -132,4 +168,44 @@ Name    | Description
 `write` | Writes data to a file in a certain format.
 
 # Formats
-# Sources
+A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
+into a value.
+
+A format can be accessed at a low level through the `rbxmk.encodeformat` and
+`rbxmk.decodeformat` functions.
+
+The name of a format corresponds to the extension of a file name. For example,
+the `lua` format corresponds to the `.lua` file extension. When determining a
+format from a file extension, format names are greedy; if a file extension is
+`.server.lua`, this will select the `server.lua` format before the `lua` format.
+For convenience, a format name may have an optional leading `.` separator.
+
+## String formats
+Several string formats are defined for encoding string-like values.
+
+Format | Name   | Description
+-------|--------|------------
+`txt`  | Text   | Encodes string-like values to UTF-8 text.
+`bin`  | Binary | Encodes string-like values to raw bytes.
+
+## Lua formats
+Several formats are defined for decoding Lua files into script instances.
+
+Format             | Description
+-------------------|------------
+`modulescript.lua` | Decodes into a ModuleScript instance.
+`script.lua`       | Decodes into a Script instance.
+`localscript.lua`  | Decodes into a LocalScript instance.
+`lua`              | Alias for `modulescript.lua`.
+`server.lua`       | Alias for `script.lua`.
+`client.lua`       | Alias for `localscript.lua`.
+
+## Roblox formats
+Several formats are defined for serializing instances.
+
+Format  | Description
+--------|------------
+`rbxl`  |
+`rbxm`  |
+`rbxlx` |
+`rbxmx` |
