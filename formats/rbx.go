@@ -99,7 +99,7 @@ func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t types.PropV
 	case rbxfile.ValuePhysicalProperties:
 		return types.PhysicalProperties(r), nil
 	case rbxfile.ValueColor3uint8:
-		return types.Color3{
+		return rtypes.Color3uint8{
 			R: float32(r.R) / 255,
 			G: float32(r.G) / 255,
 			B: float32(r.B) / 255,
@@ -256,9 +256,9 @@ func encodeValue(t types.PropValue, refs encinst, prefs *[]encprop) (r rbxfile.V
 		return rbxfile.ValuePhysicalProperties(t), nil
 	case rtypes.Color3uint8:
 		return rbxfile.ValueColor3uint8{
-			R: byte(t.R * 255),
-			G: byte(t.G * 255),
-			B: byte(t.B * 255),
+			R: uint8(t.R * 255),
+			G: uint8(t.G * 255),
+			B: uint8(t.B * 255),
 		}, nil
 	case types.Int64:
 		return rbxfile.ValueInt64(t), nil

@@ -74,9 +74,3 @@ func Color3() Type {
 		},
 	}
 }
-
-func Color3uint8() Type {
-	t := Color3()
-	t.Name = "Color3uint8"
-	return t
-}
