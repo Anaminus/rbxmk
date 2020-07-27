@@ -6,18 +6,6 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func pullString(s State, n int) string {
-	switch v := s.L.CheckAny(n).(type) {
-	case lua.LString:
-		return string(v)
-	case *lua.LUserData:
-		if v, ok := v.Value.(types.Stringlike); ok {
-			return string(v.Stringlike())
-		}
-	}
-	panic("expected string-like type")
-}
-
 func String() Type {
 	return Type{
 		Name: "string",
@@ -53,27 +41,6 @@ func BinaryString() Type {
 			}
 			return nil, TypeError(nil, 0, "BinaryString")
 		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
-				s.L.Push(lua.LString("BinaryString: " + pullString(s, 1)))
-				return 1
-			},
-			"__call": func(s State) int {
-				return s.Push(types.String(pullString(s, 1)))
-			},
-			"__eq": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
-			},
-			"__lt": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
-			},
-			"__le": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
-			},
-			"__concat": func(s State) int {
-				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
-			},
-		},
 	}
 }
 
@@ -96,27 +63,6 @@ func ProtectedString() Type {
 				}
 			}
 			return nil, TypeError(nil, 0, "ProtectedString")
-		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
-				s.L.Push(lua.LString("ProtectedString: " + pullString(s, 1)))
-				return 1
-			},
-			"__call": func(s State) int {
-				return s.Push(types.String(pullString(s, 1)))
-			},
-			"__eq": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
-			},
-			"__lt": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
-			},
-			"__le": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
-			},
-			"__concat": func(s State) int {
-				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
-			},
 		},
 	}
 }
@@ -141,27 +87,6 @@ func Content() Type {
 			}
 			return nil, TypeError(nil, 0, "Content")
 		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
-				s.L.Push(lua.LString("Content: " + pullString(s, 1)))
-				return 1
-			},
-			"__call": func(s State) int {
-				return s.Push(types.String(pullString(s, 1)))
-			},
-			"__eq": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
-			},
-			"__lt": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
-			},
-			"__le": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
-			},
-			"__concat": func(s State) int {
-				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
-			},
-		},
 	}
 }
 
@@ -184,27 +109,6 @@ func SharedString() Type {
 				}
 			}
 			return nil, TypeError(nil, 0, "SharedString")
-		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
-				s.L.Push(lua.LString("SharedString: " + pullString(s, 1)))
-				return 1
-			},
-			"__call": func(s State) int {
-				return s.Push(types.String(pullString(s, 1)))
-			},
-			"__eq": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) == pullString(s, 2)))
-			},
-			"__lt": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) < pullString(s, 2)))
-			},
-			"__le": func(s State) int {
-				return s.Push(types.Bool(pullString(s, 1) <= pullString(s, 2)))
-			},
-			"__concat": func(s State) int {
-				return s.Push(types.String(pullString(s, 1) + pullString(s, 2)))
-			},
 		},
 	}
 }
