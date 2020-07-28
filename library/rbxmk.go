@@ -14,10 +14,10 @@ var RBXMK = rbxmk.Library{
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 5)
 		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
-		lib.RawSetString("encodeformat", s.WrapFunc(rbxmkEncodeFormat))
-		lib.RawSetString("decodeformat", s.WrapFunc(rbxmkDecodeFormat))
-		lib.RawSetString("readsource", s.WrapFunc(rbxmkReadSource))
-		lib.RawSetString("writesource", s.WrapFunc(rbxmkWriteSource))
+		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
+		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
+		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
+		lib.RawSetString("writeSource", s.WrapFunc(rbxmkWriteSource))
 		return lib
 	},
 }

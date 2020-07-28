@@ -45,16 +45,16 @@ The `rbxmk` library contains functions related to the rbxmk engine.
 Name           | Description
 ---------------|------------
 `load`         | Run a script.
-`encodeformat` | Serialize data into bytes.
-`decodeformat` | Deserialize data from bytes.
-`readsource`   | Read bytes from an external source.
-`writesource`  | Write bytes to an external source.
+`encodeFormat` | Serialize data into bytes.
+`decodeFormat` | Deserialize data from bytes.
+`readSource`   | Read bytes from an external source.
+`writeSource`  | Write bytes to an external source.
 
 ### `load(path: string, args: ...any): (results ...any)`
-### `encodeformat(format: string, value: any): (bytes BinaryString)`
-### `decodeformat(format: string, bytes: BinaryString): (value any)`
-### `readsource(source: string, args: ...any): (bytes: BinaryString)`
-### `writesource(source: string, byte: BinaryString, args: ...any)`
+### `encodeFormat(format: string, value: any): (bytes BinaryString)`
+### `decodeFormat(format: string, bytes: BinaryString): (value any)`
+### `readSource(source: string, args: ...any): (bytes: BinaryString)`
+### `writeSource(source: string, byte: BinaryString, args: ...any)`
 
 ## `os` library
 The `os` library is an extension to the standard library. The following
@@ -148,8 +148,8 @@ primitive.
 A **source** is an external location from which raw data can be read from and
 written to.
 
-A source can be accessed at a low level through the `rbxmk.readsource` and
-`rbxmk.writesource` functions.
+A source can be accessed at a low level through the `rbxmk.readSource` and
+`rbxmk.writeSource` functions.
 
 A source usually has a corresponding library that provides convenient access for
 common cases.
@@ -171,8 +171,8 @@ Name    | Description
 A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
 into a value.
 
-A format can be accessed at a low level through the `rbxmk.encodeformat` and
-`rbxmk.decodeformat` functions.
+A format can be accessed at a low level through the `rbxmk.encodeFormat` and
+`rbxmk.decodeFormat` functions.
 
 The name of a format corresponds to the extension of a file name. For example,
 the `lua` format corresponds to the `.lua` file extension. When determining a
