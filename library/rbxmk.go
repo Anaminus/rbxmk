@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -14,6 +15,7 @@ var RBXMK = rbxmk.Library{
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 5)
 		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
+		lib.RawSetString("meta", s.WrapFunc(rbxmkMeta))
 		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
@@ -58,6 +60,39 @@ func rbxmkLoad(s rbxmk.State) int {
 		return 0
 	}
 	return s.L.GetTop() - 1
+}
+
+func metaGet(s rbxmk.State, inst *rtypes.Instance, name string) int {
+	switch name {
+	case "Reference":
+		return s.Push(types.String(inst.Reference))
+	case "IsService":
+		return s.Push(types.Bool(inst.IsService))
+	default:
+		s.L.RaiseError("unknown metadata %q", name)
+	}
+	return 0
+}
+
+func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
+	switch name {
+	case "Reference":
+		inst.Reference = string(s.Pull(3, "string").(types.String))
+	case "IsService":
+		inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
+	default:
+		s.L.RaiseError("unknown metadata %q", name)
+	}
+	return 0
+}
+
+func rbxmkMeta(s rbxmk.State) int {
+	inst := s.Pull(1, "Instance").(*rtypes.Instance)
+	name := string(s.Pull(2, "string").(types.String))
+	if s.Count() == 3 {
+		return metaSet(s, inst, name)
+	}
+	return metaGet(s, inst, name)
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {

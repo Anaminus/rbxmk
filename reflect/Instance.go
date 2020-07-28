@@ -53,23 +53,8 @@ func Instance() Type {
 			},
 			"__index": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
-
-				// Try symbol.
-				if typ := s.Type("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
-						switch name := sym.(SymbolType).Name; name {
-						case "Reference":
-							return s.Push(types.String(inst.Reference))
-						case "IsService":
-							return s.Push(types.Bool(inst.IsService))
-						default:
-							s.L.RaiseError("symbol %s is not a valid member", name)
-							return 0
-						}
-					}
-				}
-
 				name := string(s.Pull(2, "string").(types.String))
+
 				// Try GetService.
 				if inst.IsDataModel() && name == "GetService" {
 					s.L.Push(s.L.NewFunction(func(l *lua.LState) int {
@@ -96,6 +81,7 @@ func Instance() Type {
 					}))
 					return 1
 				}
+
 				// Try property.
 				value := inst.Get(name)
 				if value == nil {
@@ -112,32 +98,14 @@ func Instance() Type {
 			},
 			"__newindex": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
-
-				// Try symbol.
-				if typ := s.Type("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
-						switch name := sym.(SymbolType).Name; name {
-						case "Reference":
-							value := string(s.Pull(3, "string").(types.String))
-							inst.Reference = value
-							return 0
-						case "IsService":
-							value := bool(s.Pull(3, "bool").(types.Bool))
-							inst.IsService = value
-							return 0
-						default:
-							s.L.RaiseError("symbol %s is not a valid member", name)
-							return 0
-						}
-					}
-				}
-
 				name := string(s.Pull(2, "string").(types.String))
+
 				// Try GetService.
 				if inst.IsDataModel() && name == "GetService" {
 					s.L.RaiseError("%s cannot be assigned to", name)
 					return 0
 				}
+
 				// Try property.
 				value := PullVariant(s, 3)
 				prop, ok := value.(types.PropValue)

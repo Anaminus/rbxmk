@@ -38,7 +38,6 @@ func All() []func() rbxmk.Type {
 		Region3int16,
 		SharedString,
 		String,
-		Symbol,
 		Table,
 		Token,
 		Tuple,
