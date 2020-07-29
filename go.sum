@@ -1,10 +1,13 @@
 github.com/anaminus/but v0.2.0 h1:UPKY6UtvTZH8seod0rfVRsQxP8qssz+P6VE9a2AYeNY=
 github.com/anaminus/but v0.2.0/go.mod h1:44z5qYo/3MWnZDi6ifH3IgrFWa1VFfdTttL3IYN/9R4=
+github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/bkaradzic/go-lz4 v1.0.0 h1:RXc4wYsyz985CkXXeX04y4VnZFGG8Rd43pRaHsOXAKk=
 github.com/bkaradzic/go-lz4 v1.0.0/go.mod h1:0YdlkowM3VswSROI7qDxhRvJ3sLhlFrRRwjwegp5jy4=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
+github.com/robloxapi/rbxdump v0.3.0 h1:PhEtEkcC80y0cR2CWSs/PUp5sd5yZU0tDZiD7cFRoKU=
+github.com/robloxapi/rbxdump v0.3.0/go.mod h1:8imPIe5ZmLAhvmNKLu2E2S0QStvvXtt/0m5pxUGdGM0=
 github.com/robloxapi/rbxfile v0.2.0 h1:7/w5yxcOtgFsOXYEdhNYt2yeKhHvXe0bJE8o/3SA/m8=
 github.com/robloxapi/rbxfile v0.2.0/go.mod h1:78q5X+Fmlr+MJd/LIxVBwfmVp1pMrVGS+Py4GqFr1GQ=
 github.com/robloxapi/types v0.0.0-20200727152122-902ed40a1021 h1:+dZnux8Uv4rtTYVjhH5wxAdYP0at8GW30k7Tr6MxgCw=

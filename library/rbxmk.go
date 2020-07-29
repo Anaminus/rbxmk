@@ -13,9 +13,10 @@ import (
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 5)
+		lib := s.L.CreateTable(0, 7)
 		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
 		lib.RawSetString("meta", s.WrapFunc(rbxmkMeta))
+		lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
@@ -93,6 +94,34 @@ func rbxmkMeta(s rbxmk.State) int {
 		return metaSet(s, inst, name)
 	}
 	return metaGet(s, inst, name)
+}
+
+func rbxmkNewDesc(s rbxmk.State) int {
+	switch name := string(s.Pull(1, "string").(types.String)); name {
+	case "Root":
+		return s.Push(rtypes.RootDesc{})
+	case "Class":
+		return s.Push(rtypes.ClassDesc{})
+	case "Property":
+		return s.Push(rtypes.PropertyDesc{})
+	case "Function":
+		return s.Push(rtypes.FunctionDesc{})
+	case "Event":
+		return s.Push(rtypes.EventDesc{})
+	case "Callback":
+		return s.Push(rtypes.CallbackDesc{})
+	case "Parameter":
+		return s.Push(rtypes.ParameterDesc{})
+	case "Type":
+		return s.Push(rtypes.TypeDesc{})
+	case "Enum":
+		return s.Push(rtypes.EnumDesc{})
+	case "EnumItem":
+		return s.Push(rtypes.EnumItemDesc{})
+	default:
+		s.L.RaiseError("unable to create descriptor of type %q", name)
+		return 0
+	}
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {
