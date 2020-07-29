@@ -264,11 +264,11 @@ func (w *World) RegisterType(t Type) {
 	}
 }
 
-// Exprims returns a list of types that have the Exprim flag set.
-func (w *World) Exprims() []Type {
+// Types returns a list of types that have all of the given flags set.
+func (w *World) Types(flags TypeFlags) []Type {
 	ts := []Type{}
 	for _, t := range w.types {
-		if t.Flags&Exprim != 0 {
+		if t.Flags&flags == flags {
 			ts = append(ts, t)
 		}
 	}
