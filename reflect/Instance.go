@@ -5,6 +5,7 @@ import (
 
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -13,14 +14,9 @@ import (
 // reflected as userdata.
 func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	switch v.(type) {
-	case types.Int,
-		types.Int64,
-		types.Float,
-		types.Token,
-		types.BinaryString,
-		types.ProtectedString,
-		types.Content,
-		types.SharedString:
+	case types.Numberlike:
+	case types.Intlike:
+	case types.Stringlike:
 	default:
 		return PushVariantTo(s, v)
 	}
@@ -35,6 +31,88 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	u.Value = v
 	s.L.SetMetatable(u, s.L.GetTypeMetatable(typ.Name))
 	return u, nil
+}
+
+// convertType tries to convert v to t.
+func convertType(s State, t string, v types.Value) (nv types.Value, ok bool) {
+	if v.Type() == t {
+		return v, true
+	}
+	if s.Type(t).Name == "" {
+		return v, false
+	}
+	switch t {
+	case "int":
+		switch v := v.(type) {
+		case types.Intlike:
+			return types.Int(v.Intlike()), true
+		case types.Numberlike:
+			return types.Int(v.Numberlike()), true
+		}
+	case "int64":
+		switch v := v.(type) {
+		case types.Intlike:
+			return types.Int64(v.Intlike()), true
+		case types.Numberlike:
+			return types.Int64(v.Numberlike()), true
+		}
+	case "float":
+		switch v := v.(type) {
+		case types.Numberlike:
+			return types.Float(v.Numberlike()), true
+		case types.Intlike:
+			return types.Float(v.Intlike()), true
+		}
+	case "double":
+		switch v := v.(type) {
+		case types.Numberlike:
+			return types.Double(v.Numberlike()), true
+		case types.Intlike:
+			return types.Double(v.Intlike()), true
+		}
+	case "string":
+		if v, ok := v.(types.Stringlike); ok {
+			return types.String(v.Stringlike()), true
+		}
+	case "BinaryString":
+		if v, ok := v.(types.Stringlike); ok {
+			return types.BinaryString(v.Stringlike()), true
+		}
+	case "ProtectedString":
+		if v, ok := v.(types.Stringlike); ok {
+			return types.ProtectedString(v.Stringlike()), true
+		}
+	case "Content":
+		if v, ok := v.(types.Stringlike); ok {
+			return types.Content(v.Stringlike()), true
+		}
+	case "SharedString":
+		if v, ok := v.(types.Stringlike); ok {
+			return types.SharedString(v.Stringlike()), true
+		}
+	case "Color3":
+		if v, ok := v.(rtypes.Color3uint8); ok {
+			return types.Color3(v), true
+		}
+	case "Color3uint8":
+		if v, ok := v.(types.Color3); ok {
+			return rtypes.Color3uint8(v), true
+		}
+	}
+	return v, false
+}
+
+// getPropDesc gets a property descriptor from a class, or any class it inherits
+// from.
+func getPropDesc(root *rbxdump.Root, class *rbxdump.Class, name string) (prop *rbxdump.Property) {
+	for class != nil {
+		prop, _ = class.Members[name].(*rbxdump.Property)
+		if prop != nil {
+			return prop
+		}
+		class = root.Classes[class.Superclass]
+	}
+	return nil
 }
 
 func Instance() Type {
@@ -54,6 +132,11 @@ func Instance() Type {
 			"__index": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 				name := string(s.Pull(2, "string").(types.String))
+				desc := s.Desc(inst)
+				var classDesc *rbxdump.Class
+				if desc != nil {
+					classDesc = desc.Classes[inst.ClassName]
+				}
 
 				// Try GetService.
 				if inst.IsDataModel() && name == "GetService" {
@@ -70,7 +153,7 @@ func Instance() Type {
 						}
 						s := State{World: s.World, L: l}
 						className := string(s.Pull(2, "string").(types.String))
-						if desc := s.Desc(inst); desc != nil {
+						if desc != nil {
 							classDesc := desc.Classes[className]
 							if classDesc == nil || !classDesc.GetTag("Service") {
 								s.L.RaiseError("%q is not a valid service", className)
@@ -89,12 +172,81 @@ func Instance() Type {
 				}
 
 				// Try property.
+				var lv lua.LValue
+				var err error
 				value := inst.Get(name)
-				if value == nil {
-					// s.L.RaiseError("%s is not a valid member", name)
-					return s.Push(rtypes.Nil)
+				if classDesc != nil {
+					propDesc := getPropDesc(desc, classDesc, name)
+					if propDesc == nil {
+						s.L.RaiseError("%s is not a valid member", name)
+						return 0
+					}
+					if value == nil {
+						s.L.RaiseError("property %s not initialized", name)
+						return 0
+					}
+					switch propDesc.ValueType.Category {
+					case "Class":
+						inst, ok := value.(*rtypes.Instance)
+						if !ok {
+							s.L.RaiseError("stored value type %s is not an instance", value.Type())
+							return 0
+						}
+						cdesc := desc.Classes[propDesc.ValueType.Name]
+						if cdesc == nil {
+							s.L.RaiseError(
+								"value type of property descriptor %s.%s has unknown class type %q",
+								classDesc.Name,
+								propDesc.Name,
+								propDesc.ValueType.Name,
+							)
+							return 0
+						}
+						if inst.ClassName != cdesc.Name {
+							s.L.RaiseError("instance of class %s expected, got %s", cdesc.Name, inst.ClassName)
+							return 0
+						}
+						return s.Push(inst)
+					case "Enum":
+						token, ok := value.(types.Token)
+						if !ok {
+							s.L.RaiseError("stored value type %s is not a token", value.Type())
+							return 0
+						}
+						enumDesc := desc.Enums[propDesc.ValueType.Name]
+						if enumDesc == nil {
+							s.L.RaiseError(
+								"value type of property descriptor %s.%s has unknown enum type %q",
+								classDesc.Name,
+								propDesc.Name,
+								propDesc.ValueType.Name,
+							)
+							return 0
+						}
+						for _, item := range enumDesc.Items {
+							if item.Value == int(token) {
+								goto getEnumToken
+							}
+						}
+						s.L.RaiseError("unknown value (%d) for enum %s", token, enumDesc.Name)
+						return 0
+					getEnumToken:
+						// TODO: Push as enum item.
+						break
+					default:
+						if a, b := value.Type(), propDesc.ValueType.Name; a != b {
+							s.L.RaiseError("stored value type %s does not match property type %s", a, b)
+						}
+					}
+					// Push without converting exprims.
+					lv, err = PushVariantTo(s, value)
+				} else {
+					if value == nil {
+						// Fallback to nil.
+						return s.Push(rtypes.Nil)
+					}
+					lv, err = pushPropertyTo(s, value)
 				}
-				lv, err := pushPropertyTo(s, value)
 				if err != nil {
 					s.L.RaiseError(err.Error())
 					return 0
@@ -114,6 +266,103 @@ func Instance() Type {
 
 				// Try property.
 				value := PullVariant(s, 3)
+				desc := s.Desc(inst)
+				if desc == nil {
+					goto nodesc
+				}
+				if classDesc := desc.Classes[inst.ClassName]; classDesc != nil {
+					propDesc := getPropDesc(desc, classDesc, name)
+					if propDesc == nil {
+						s.L.RaiseError("%s is not a valid member", name)
+						return 0
+					}
+					switch propDesc.ValueType.Category {
+					case "Class":
+						inst, ok := value.(*rtypes.Instance)
+						if !ok {
+							s.L.RaiseError("Instance expected, got %s", value.Type())
+							return 0
+						}
+						cdesc := desc.Classes[propDesc.ValueType.Name]
+						if cdesc == nil {
+							s.L.RaiseError(
+								"value type of property descriptor %s.%s has unknown class type %q",
+								classDesc.Name,
+								propDesc.Name,
+								propDesc.ValueType.Name,
+							)
+							return 0
+						}
+						if inst.ClassName != cdesc.Name {
+							s.L.RaiseError("instance of class %s expected, got %s", cdesc.Name, inst.ClassName)
+							return 0
+						}
+						inst.Set(name, inst)
+						return 0
+					case "Enum":
+						enumDesc := desc.Enums[propDesc.ValueType.Name]
+						if enumDesc == nil {
+							s.L.RaiseError(
+								"value type of property descriptor %s.%s has unknown enum type %q",
+								classDesc.Name,
+								propDesc.Name,
+								propDesc.ValueType.Name,
+							)
+							return 0
+						}
+					setEnum:
+						switch value := value.(type) {
+						case types.Token:
+							for _, item := range enumDesc.Items {
+								if item.Value == int(value) {
+									// TODO: Push as enum item.
+									break setEnum
+								}
+							}
+							s.L.RaiseError("unknown value (%d) for enum %s", value, enumDesc.Name)
+							return 0
+						case types.Intlike:
+							v := int(value.Intlike())
+							for _, item := range enumDesc.Items {
+								if item.Value == v {
+									// TODO: Push as enum item.
+									break setEnum
+								}
+							}
+							s.L.RaiseError("unknown value (%d) for enum %s", value, enumDesc.Name)
+							return 0
+						case types.Numberlike:
+							v := int(value.Numberlike())
+							for _, item := range enumDesc.Items {
+								if item.Value == v {
+									// TODO: Push as enum item.
+									break setEnum
+								}
+							}
+							s.L.RaiseError("unknown value (%d) for enum %s", v, enumDesc.Name)
+							return 0
+						case types.Stringlike:
+							v := value.Stringlike()
+							for _, item := range enumDesc.Items {
+								if item.Name == v {
+									// TODO: Push as enum item.
+									break setEnum
+								}
+							}
+							s.L.RaiseError("unknown value (%q) for enum %s", v, enumDesc.Name)
+							return 0
+						}
+					default:
+						var ok bool
+						value, ok = convertType(s, propDesc.ValueType.Name, value)
+						if !ok {
+							s.L.RaiseError("%s expected, got %s", propDesc.ValueType.Name, value.Type())
+							return 0
+						}
+					}
+				}
+
+			nodesc:
 				prop, ok := value.(types.PropValue)
 				if !ok {
 					s.L.RaiseError("cannot assign %s as property", value.Type())
