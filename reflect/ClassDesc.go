@@ -67,46 +67,34 @@ func ClassDesc() Type {
 			}},
 			"AddMember": Member{Method: true, Get: func(s State, v types.Value) int {
 				desc := v.(rtypes.ClassDesc)
-				member := s.PullAnyOf(2,
+				memberDesc := s.PullAnyOf(2,
 					"PropertyDesc",
 					"FunctionDesc",
 					"EventDesc",
 					"CallbackDesc",
 				)
-				switch member := member.(type) {
+				var member rbxdump.Member
+				switch m := memberDesc.(type) {
 				case rtypes.PropertyDesc:
-					if _, ok := desc.Members[member.Name]; ok {
-						return s.Push(types.False)
-					}
-					if desc.Members == nil {
-						desc.Members = map[string]rbxdump.Member{}
-					}
-					desc.Members[member.Name] = member.Property
+					member = m.Property
 				case rtypes.FunctionDesc:
-					if _, ok := desc.Members[member.Name]; ok {
-						return s.Push(types.False)
-					}
-					if desc.Members == nil {
-						desc.Members = map[string]rbxdump.Member{}
-					}
-					desc.Members[member.Name] = member.Function
+					member = m.Function
 				case rtypes.EventDesc:
-					if _, ok := desc.Members[member.Name]; ok {
-						return s.Push(types.False)
-					}
-					if desc.Members == nil {
-						desc.Members = map[string]rbxdump.Member{}
-					}
-					desc.Members[member.Name] = member.Event
+					member = m.Event
 				case rtypes.CallbackDesc:
-					if _, ok := desc.Members[member.Name]; ok {
-						return s.Push(types.False)
-					}
-					if desc.Members == nil {
-						desc.Members = map[string]rbxdump.Member{}
-					}
-					desc.Members[member.Name] = member.Callback
+					member = m.Callback
 				}
+				if member == nil {
+					return s.Push(types.False)
+				}
+				if _, ok := desc.Members[member.MemberName()]; ok {
+					return s.Push(types.False)
+				}
+				if desc.Members == nil {
+					desc.Members = map[string]rbxdump.Member{}
+				}
+				desc.Members[member.MemberName()] = member
+
 				return s.Push(types.True)
 			}},
 			"RemoveMember": Member{Method: true, Get: func(s State, v types.Value) int {
