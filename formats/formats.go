@@ -10,6 +10,7 @@ func All() []func() rbxmk.Format {
 	return []func() rbxmk.Format{
 		Binary,
 		ClientLua,
+		Desc,
 		LocalScriptLua,
 		Lua,
 		ModuleScriptLua,
