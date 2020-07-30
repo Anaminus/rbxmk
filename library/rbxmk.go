@@ -121,25 +121,32 @@ func rbxmkMeta(s rbxmk.State) int {
 func rbxmkNewDesc(s rbxmk.State) int {
 	switch name := string(s.Pull(1, "string").(types.String)); name {
 	case "Root":
-		return s.Push(rtypes.RootDesc{})
+		return s.Push(rtypes.RootDesc{Root: &rbxdump.Root{
+			Classes: make(map[string]*rbxdump.Class),
+			Enums:   make(map[string]*rbxdump.Enum),
+		}})
 	case "Class":
-		return s.Push(rtypes.ClassDesc{})
+		return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
+			Members: make(map[string]rbxdump.Member),
+		}})
 	case "Property":
-		return s.Push(rtypes.PropertyDesc{})
+		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{}})
 	case "Function":
-		return s.Push(rtypes.FunctionDesc{})
+		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{}})
 	case "Event":
-		return s.Push(rtypes.EventDesc{})
+		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{}})
 	case "Callback":
-		return s.Push(rtypes.CallbackDesc{})
+		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{}})
 	case "Parameter":
-		return s.Push(rtypes.ParameterDesc{})
+		return s.Push(rtypes.ParameterDesc{Parameter: &rbxdump.Parameter{}})
 	case "Type":
-		return s.Push(rtypes.TypeDesc{})
+		return s.Push(rtypes.TypeDesc{Embedded: &rbxdump.Type{}})
 	case "Enum":
-		return s.Push(rtypes.EnumDesc{})
+		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
+			Items: make(map[string]*rbxdump.EnumItem),
+		}})
 	case "EnumItem":
-		return s.Push(rtypes.EnumItemDesc{})
+		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
 	default:
 		s.L.RaiseError("unable to create descriptor of type %q", name)
 		return 0
