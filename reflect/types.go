@@ -19,6 +19,7 @@ func All() []func() rbxmk.Type {
 		ColorSequence,
 		ColorSequenceKeypoint,
 		Content,
+		DescActions,
 		Dictionary,
 		Double,
 		EnumDesc,

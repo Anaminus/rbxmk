@@ -1,7 +1,10 @@
 package rtypes
 
 import (
+	"strings"
+
 	"github.com/robloxapi/rbxdump"
+	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
 )
 
@@ -137,4 +140,19 @@ func (EnumItemDesc) Type() string {
 
 func (d EnumItemDesc) String() string {
 	return "EnumItemDesc"
+}
+
+type DescActions []diff.Action
+
+func (DescActions) Type() string {
+	return "DescActions"
+}
+
+func (a DescActions) String() string {
+	var b strings.Builder
+	for _, action := range a {
+		b.WriteString(action.String())
+		b.WriteByte('\n')
+	}
+	return b.String()
 }

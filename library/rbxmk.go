@@ -6,6 +6,8 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
+	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -17,6 +19,8 @@ var RBXMK = rbxmk.Library{
 		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
 		lib.RawSetString("meta", s.WrapFunc(rbxmkMeta))
 		lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
+		lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
+		lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
@@ -151,6 +155,30 @@ func rbxmkNewDesc(s rbxmk.State) int {
 		s.L.RaiseError("unable to create descriptor of type %q", name)
 		return 0
 	}
+}
+
+func rbxmkDiffDesc(s rbxmk.State) int {
+	var prev *rbxdump.Root
+	var next *rbxdump.Root
+	switch v := s.PullAnyOf(1, "RootDesc", "nil").(type) {
+	case rtypes.NilType:
+	case rtypes.RootDesc:
+		prev = v.Root
+	}
+	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
+	case rtypes.NilType:
+	case rtypes.RootDesc:
+		next = v.Root
+	}
+	actions := diff.Diff{Prev: prev, Next: next}.Diff()
+	return s.Push(rtypes.DescActions(actions))
+}
+
+func rbxmkPatchDesc(s rbxmk.State) int {
+	desc := s.Pull(1, "RootDesc").(rtypes.RootDesc).Root
+	actions := []diff.Action(s.Pull(2, "DescActions").(rtypes.DescActions))
+	diff.Patch{Root: desc}.Patch(actions)
+	return 0
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {
