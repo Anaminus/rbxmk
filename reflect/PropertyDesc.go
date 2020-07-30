@@ -59,7 +59,7 @@ func PropertyDesc() Type {
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
-					desc.CanLoad = bool(s.Pull(3, "string").(types.Bool))
+					desc.CanLoad = bool(s.Pull(3, "bool").(types.Bool))
 				},
 			},
 			"CanSave": Member{
@@ -69,7 +69,7 @@ func PropertyDesc() Type {
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
-					desc.CanSave = bool(s.Pull(3, "string").(types.Bool))
+					desc.CanSave = bool(s.Pull(3, "bool").(types.Bool))
 				},
 			},
 			"Tag": Member{Method: true, Get: func(s State, v types.Value) int {
