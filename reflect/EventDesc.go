@@ -38,7 +38,7 @@ func EventDesc() Type {
 				for i, paramDesc := range array {
 					param, ok := paramDesc.(rtypes.ParameterDesc)
 					if !ok {
-						TypeError(s.L, 3, param.Type())
+						TypeError(s.L, 2, param.Type())
 					}
 					params[i] = param.Parameter
 				}
