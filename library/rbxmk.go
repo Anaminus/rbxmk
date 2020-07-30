@@ -21,6 +21,28 @@ var RBXMK = rbxmk.Library{
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
 		lib.RawSetString("writeSource", s.WrapFunc(rbxmkWriteSource))
+
+		mt := s.L.CreateTable(0, 2)
+		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
+			if field := s.Pull(2, "string").(types.String); field != "desc" {
+				s.L.RaiseError("unknown field %q", field)
+			}
+			desc := s.Desc(nil)
+			return s.Push(rtypes.RootDesc{Root: desc})
+		}))
+		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
+			if field := s.Pull(2, "string").(types.String); field != "desc" {
+				s.L.RaiseError("unknown field %q", field)
+			}
+			desc := s.PullOpt(3, "RootDesc", nil)
+			if desc == nil {
+				s.SetDesc(nil)
+			}
+			s.SetDesc(desc.(rtypes.RootDesc).Root)
+			return 0
+		}))
+		s.L.SetMetatable(lib, mt)
+
 		return lib
 	},
 }
