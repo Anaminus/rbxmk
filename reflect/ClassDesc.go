@@ -5,6 +5,7 @@ import (
 
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -77,20 +78,32 @@ func ClassDesc() Type {
 					if _, ok := desc.Members[member.Name]; ok {
 						return s.Push(types.False)
 					}
+					if desc.Members == nil {
+						desc.Members = map[string]rbxdump.Member{}
+					}
 					desc.Members[member.Name] = member.Property
 				case rtypes.FunctionDesc:
 					if _, ok := desc.Members[member.Name]; ok {
 						return s.Push(types.False)
+					}
+					if desc.Members == nil {
+						desc.Members = map[string]rbxdump.Member{}
 					}
 					desc.Members[member.Name] = member.Function
 				case rtypes.EventDesc:
 					if _, ok := desc.Members[member.Name]; ok {
 						return s.Push(types.False)
 					}
+					if desc.Members == nil {
+						desc.Members = map[string]rbxdump.Member{}
+					}
 					desc.Members[member.Name] = member.Event
 				case rtypes.CallbackDesc:
 					if _, ok := desc.Members[member.Name]; ok {
 						return s.Push(types.False)
+					}
+					if desc.Members == nil {
+						desc.Members = map[string]rbxdump.Member{}
 					}
 					desc.Members[member.Name] = member.Callback
 				}

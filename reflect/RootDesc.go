@@ -5,6 +5,7 @@ import (
 
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -39,6 +40,9 @@ func RootDesc() Type {
 				class := s.Pull(2, "ClassDesc").(rtypes.ClassDesc)
 				if _, ok := desc.Classes[class.Name]; ok {
 					return s.Push(types.False)
+				}
+				if desc.Classes == nil {
+					desc.Classes = map[string]*rbxdump.Class{}
 				}
 				desc.Classes[class.Name] = class.Class
 				return s.Push(types.True)
@@ -77,6 +81,9 @@ func RootDesc() Type {
 				enum := s.Pull(2, "ClassDesc").(rtypes.EnumDesc)
 				if _, ok := desc.Enums[enum.Name]; ok {
 					return s.Push(types.False)
+				}
+				if desc.Enums == nil {
+					desc.Enums = map[string]*rbxdump.Enum{}
 				}
 				desc.Enums[enum.Name] = enum.Enum
 				return s.Push(types.True)
