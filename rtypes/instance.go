@@ -3,6 +3,7 @@ package rtypes
 import (
 	"errors"
 
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -14,6 +15,7 @@ type Instance struct {
 	properties map[string]types.PropValue
 	children   []*Instance
 	parent     *Instance
+	desc       *rbxdump.Root
 	root       bool
 }
 
@@ -49,6 +51,7 @@ func (inst *Instance) clone(refs map[*Instance]*Instance, propRefs *[]propRef) *
 		ClassName:  inst.ClassName,
 		Reference:  inst.Reference,
 		IsService:  inst.IsService,
+		desc:       inst.desc,
 		children:   make([]*Instance, len(inst.children)),
 		properties: make(map[string]types.PropValue, len(inst.properties)),
 	}
@@ -420,6 +423,28 @@ func (inst *Instance) GetFullName() string {
 	}
 	full = append(full, []byte(names[0])...)
 	return string(full)
+}
+
+// Desc returns the nearest root descriptor for the instance. If the current
+// instance does not have a descriptor, then each ancestor is searched. Nil is
+// returned if no descriptors are found.
+func (inst *Instance) Desc() *rbxdump.Root {
+	if inst.desc != nil {
+		return inst.desc
+	}
+	parent := inst.parent
+	for parent != nil {
+		if parent.desc != nil {
+			return parent.desc
+		}
+		parent = parent.parent
+	}
+	return nil
+}
+
+// SetDesc sets root as the root descriptor for the instance.
+func (inst *Instance) SetDesc(root *rbxdump.Root) {
+	inst.desc = root
 }
 
 // Type returns a string identifying the type.
