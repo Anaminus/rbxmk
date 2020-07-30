@@ -70,6 +70,12 @@ func Instance() Type {
 						}
 						s := State{World: s.World, L: l}
 						className := string(s.Pull(2, "string").(types.String))
+						if desc := s.Desc(inst); desc != nil {
+							classDesc := desc.Classes[className]
+							if classDesc == nil || !classDesc.GetTag("Service") {
+								s.L.RaiseError("%q is not a valid service", className)
+							}
+						}
 						service := inst.FindFirstChildOfClass(className, false)
 						if service == nil {
 							service = rtypes.NewInstance(className)
