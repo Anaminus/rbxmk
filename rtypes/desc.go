@@ -92,7 +92,7 @@ func NewMemberDesc(member rbxdump.Member) types.Value {
 }
 
 type ParameterDesc struct {
-	rbxdump.Parameter
+	*rbxdump.Parameter
 }
 
 func (ParameterDesc) Type() string {
@@ -104,7 +104,7 @@ func (d ParameterDesc) String() string {
 }
 
 type TypeDesc struct {
-	Embedded rbxdump.Type
+	Embedded *rbxdump.Type
 }
 
 func (TypeDesc) Type() string {

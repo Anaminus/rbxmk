@@ -27,7 +27,8 @@ func EventDesc() Type {
 				desc := v.(rtypes.EventDesc)
 				array := make(rtypes.Array, len(desc.Parameters))
 				for i, param := range desc.Parameters {
-					array[i] = rtypes.ParameterDesc{Parameter: param}
+					p := param
+					array[i] = rtypes.ParameterDesc{Parameter: &p}
 				}
 				return s.Push(array)
 			}},
@@ -40,7 +41,7 @@ func EventDesc() Type {
 					if !ok {
 						TypeError(s.L, 2, param.Type())
 					}
-					params[i] = param.Parameter
+					params[i] = *param.Parameter
 				}
 				desc.Parameters = params
 				return 0

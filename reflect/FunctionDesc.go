@@ -27,7 +27,8 @@ func FunctionDesc() Type {
 				desc := v.(rtypes.FunctionDesc)
 				array := make(rtypes.Array, len(desc.Parameters))
 				for i, param := range desc.Parameters {
-					array[i] = rtypes.ParameterDesc{Parameter: param}
+					p := param
+					array[i] = rtypes.ParameterDesc{Parameter: &p}
 				}
 				return s.Push(array)
 			}},
@@ -40,7 +41,7 @@ func FunctionDesc() Type {
 					if !ok {
 						TypeError(s.L, 3, param.Type())
 					}
-					params[i] = param.Parameter
+					params[i] = *param.Parameter
 				}
 				desc.Parameters = params
 				return 0
@@ -48,11 +49,12 @@ func FunctionDesc() Type {
 			"ReturnType": Member{
 				Get: func(s State, v types.Value) int {
 					desc := v.(rtypes.FunctionDesc)
-					return s.Push(rtypes.TypeDesc{Embedded: desc.ReturnType})
+					returnType := desc.ReturnType
+					return s.Push(rtypes.TypeDesc{Embedded: &returnType})
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.FunctionDesc)
-					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+					desc.ReturnType = *s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 			},
 			"Security": Member{

@@ -27,7 +27,8 @@ func CallbackDesc() Type {
 				desc := v.(rtypes.CallbackDesc)
 				array := make(rtypes.Array, len(desc.Parameters))
 				for i, param := range desc.Parameters {
-					array[i] = rtypes.ParameterDesc{Parameter: param}
+					p := param
+					array[i] = rtypes.ParameterDesc{Parameter: &p}
 				}
 				return s.Push(array)
 			}},
@@ -40,7 +41,7 @@ func CallbackDesc() Type {
 					if !ok {
 						TypeError(s.L, 3, param.Type())
 					}
-					params[i] = param.Parameter
+					params[i] = *param.Parameter
 				}
 				desc.Parameters = params
 				return 0
@@ -48,11 +49,12 @@ func CallbackDesc() Type {
 			"ReturnType": Member{
 				Get: func(s State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
-					return s.Push(rtypes.TypeDesc{Embedded: desc.ReturnType})
+					returnType := desc.ReturnType
+					return s.Push(rtypes.TypeDesc{Embedded: &returnType})
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.CallbackDesc)
-					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+					desc.ReturnType = *s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 			},
 			"Security": Member{
