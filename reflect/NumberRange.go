@@ -40,8 +40,7 @@ func NumberRange() Type {
 					v.Min = float32(s.Pull(1, "float").(types.Float))
 					v.Max = float32(s.Pull(2, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 1 or 2 arguments")
-					return 0
+					return s.RaiseError("expected 1 or 2 arguments")
 				}
 				return s.Push(v)
 			},

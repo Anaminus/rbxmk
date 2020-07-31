@@ -75,8 +75,7 @@ func Vector3int16() Type {
 					v.Y = int16(s.Pull(2, "int").(types.Int))
 					v.Z = int16(s.Pull(3, "int").(types.Int))
 				default:
-					s.L.RaiseError("expected 0 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 3 arguments")
 				}
 				return s.Push(v)
 			},

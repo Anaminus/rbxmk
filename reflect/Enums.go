@@ -31,15 +31,13 @@ func Enums() Type {
 				enums := s.Pull(1, "Enums").(rtypes.Enums)
 				enum := enums.Enum(name)
 				if enum == nil {
-					s.L.RaiseError("%s is not a valid Enum", name)
-					return 0
+					return s.RaiseError("%s is not a valid Enum", name)
 				}
 				return s.Push(enum)
 			},
 			"__newindex": func(s State) int {
 				name := string(s.Pull(2, "string").(types.String))
-				s.L.RaiseError("%s cannot be assigned to", name)
-				return 0
+				return s.RaiseError("%s cannot be assigned to", name)
 			},
 		},
 	}

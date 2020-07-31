@@ -39,8 +39,7 @@ func NumberSequence() Type {
 				for i, v := range u {
 					lv, err := keypointType.PushTo(s, keypointType, v)
 					if err != nil {
-						s.L.RaiseError(err.Error())
-						return 0
+						return s.RaiseError(err.Error())
 					}
 					table.RawSetInt(i, lv[0])
 				}
@@ -62,27 +61,23 @@ func NumberSequence() Type {
 					case rtypes.Table:
 						n := c.Len()
 						if n < 2 {
-							s.L.RaiseError("NumberSequence requires at least 2 keypoints")
-							return 0
+							return s.RaiseError("NumberSequence requires at least 2 keypoints")
 						}
 						v = make(types.NumberSequence, n)
 						keypointType := s.Type("NumberSequenceKeypoint")
 						for i := 1; i <= n; i++ {
 							k, err := keypointType.PullFrom(s, keypointType, c.RawGetInt(i))
 							if err != nil {
-								s.L.RaiseError(err.Error())
-								return 0
+								return s.RaiseError(err.Error())
 							}
 							v[i] = k.(types.NumberSequenceKeypoint)
 						}
 						const epsilon = 1e-4
 						if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
-							s.L.RaiseError("NumberSequence time must end at 1.0")
-							return 0
+							return s.RaiseError("NumberSequence time must end at 1.0")
 						}
 						if t := v[0].Time; t < -epsilon || t > epsilon {
-							s.L.RaiseError("NumberSequence time must start at 0.0")
-							return 0
+							return s.RaiseError("NumberSequence time must start at 0.0")
 						}
 					}
 				case 2:
@@ -91,8 +86,7 @@ func NumberSequence() Type {
 						types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, "float").(types.Float))},
 					}
 				default:
-					s.L.RaiseError("expected 1 or 2 arguments")
-					return 0
+					return s.RaiseError("expected 1 or 2 arguments")
 				}
 				return s.Push(v)
 			},

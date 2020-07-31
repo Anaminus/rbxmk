@@ -119,7 +119,7 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rt
 	enumValue := desc.EnumTypes.Enum(enum)
 	if enumValue == nil {
 		if desc.Enums[enum] == nil {
-			s.L.RaiseError(
+			s.RaiseError(
 				"no enum descriptor %q for property descriptor %s.%s",
 				enum,
 				class,
@@ -127,7 +127,7 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rt
 			)
 			return nil
 		}
-		s.L.RaiseError(
+		s.RaiseError(
 			"no enum value %q generated for property descriptor %s.%s",
 			enum,
 			class,
@@ -141,7 +141,7 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rt
 func checkClassDesc(s State, desc *rtypes.RootDesc, typ, class, prop string) *rbxdump.Class {
 	classDesc := desc.Classes[typ]
 	if classDesc == nil {
-		s.L.RaiseError(
+		s.RaiseError(
 			"no class descriptor %q for property descriptor %s.%s",
 			typ,
 			class,
@@ -193,7 +193,7 @@ func Instance() Type {
 						if desc != nil {
 							classDesc := desc.Classes[className]
 							if classDesc == nil || !classDesc.GetTag("Service") {
-								s.L.RaiseError("%q is not a valid service", className)
+								return s.RaiseError("%q is not a valid service", className)
 							}
 						}
 						service := inst.FindFirstChildOfClass(className, false)
@@ -215,27 +215,23 @@ func Instance() Type {
 				if classDesc != nil {
 					propDesc := getPropDesc(desc, classDesc, name)
 					if propDesc == nil {
-						s.L.RaiseError("%s is not a valid member", name)
-						return 0
+						return s.RaiseError("%s is not a valid member", name)
 					}
 					if value == nil {
-						s.L.RaiseError("property %s not initialized", name)
-						return 0
+						return s.RaiseError("property %s not initialized", name)
 					}
 					switch propDesc.ValueType.Category {
 					case "Class":
 						inst, ok := value.(*rtypes.Instance)
 						if !ok {
-							s.L.RaiseError("stored value type %s is not an instance", value.Type())
-							return 0
+							return s.RaiseError("stored value type %s is not an instance", value.Type())
 						}
 						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
 						if class == nil {
 							return 0
 						}
 						if inst.ClassName != class.Name {
-							s.L.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
-							return 0
+							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 						}
 						return s.Push(inst)
 					case "Enum":
@@ -245,19 +241,16 @@ func Instance() Type {
 						}
 						token, ok := value.(types.Token)
 						if !ok {
-							s.L.RaiseError("stored value type %s is not a token", value.Type())
-							return 0
+							return s.RaiseError("stored value type %s is not a token", value.Type())
 						}
 						item := enum.Value(int(token))
 						if item == nil {
-							s.L.RaiseError("invalid stored value %d for enum %s", value, enum.Name())
-							return 0
+							return s.RaiseError("invalid stored value %d for enum %s", value, enum.Name())
 						}
 						return s.Push(item)
 					default:
 						if a, b := value.Type(), propDesc.ValueType.Name; a != b {
-							s.L.RaiseError("stored value type %s does not match property type %s", a, b)
-							return 0
+							return s.RaiseError("stored value type %s does not match property type %s", a, b)
 						}
 					}
 					// Push without converting exprims.
@@ -270,8 +263,7 @@ func Instance() Type {
 					lv, err = pushPropertyTo(s, value)
 				}
 				if err != nil {
-					s.L.RaiseError(err.Error())
-					return 0
+					return s.RaiseError(err.Error())
 				}
 				s.L.Push(lv)
 				return 1
@@ -282,8 +274,7 @@ func Instance() Type {
 
 				// Try GetService.
 				if inst.IsDataModel() && name == "GetService" {
-					s.L.RaiseError("%s cannot be assigned to", name)
-					return 0
+					return s.RaiseError("%s cannot be assigned to", name)
 				}
 
 				// Try property.
@@ -297,23 +288,20 @@ func Instance() Type {
 				if classDesc != nil {
 					propDesc := getPropDesc(desc, classDesc, name)
 					if propDesc == nil {
-						s.L.RaiseError("%s is not a valid member", name)
-						return 0
+						return s.RaiseError("%s is not a valid member", name)
 					}
 					switch propDesc.ValueType.Category {
 					case "Class":
 						inst, ok := value.(*rtypes.Instance)
 						if !ok {
-							s.L.RaiseError("Instance expected, got %s", value.Type())
-							return 0
+							return s.RaiseError("Instance expected, got %s", value.Type())
 						}
 						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
 						if class == nil {
 							return 0
 						}
 						if inst.ClassName != class.Name {
-							s.L.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
-							return 0
+							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 						}
 						inst.Set(name, inst)
 						return 0
@@ -326,29 +314,25 @@ func Instance() Type {
 						case types.Token:
 							item := enum.Value(int(value))
 							if item == nil {
-								s.L.RaiseError("invalid value %d for enum %s", value, enum.Name())
-								return 0
+								return s.RaiseError("invalid value %d for enum %s", value, enum.Name())
 							}
 							inst.Set(name, value)
 							return 0
 						case *rtypes.EnumItem:
 							item := enum.Value(value.Value())
 							if item == nil {
-								s.L.RaiseError(
+								return s.RaiseError(
 									"invalid value %s (%d) for enum %s",
 									value.String(),
 									value.Value(),
 									enum.String(),
 								)
-								return 0
 							}
 							if a, b := enum.Name(), value.Enum().Name(); a != b {
-								s.L.RaiseError("expected enum %s, got %s", a, b)
-								return 0
+								return s.RaiseError("expected enum %s, got %s", a, b)
 							}
 							if a, b := item.Name(), value.Name(); a != b {
-								s.L.RaiseError("expected enum item %s, got %s", a, b)
-								return 0
+								return s.RaiseError("expected enum item %s, got %s", a, b)
 							}
 							inst.Set(name, types.Token(item.Value()))
 							return 0
@@ -356,8 +340,7 @@ func Instance() Type {
 							v := int(value.Intlike())
 							item := enum.Value(v)
 							if item == nil {
-								s.L.RaiseError("invalid value %d for enum %s", v, enum.Name())
-								return 0
+								return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
 							}
 							inst.Set(name, types.Token(item.Value()))
 							return 0
@@ -365,8 +348,7 @@ func Instance() Type {
 							v := int(value.Numberlike())
 							item := enum.Value(v)
 							if item == nil {
-								s.L.RaiseError("invalid value %d for enum %s", v, enum.Name())
-								return 0
+								return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
 							}
 							inst.Set(name, types.Token(item.Value()))
 							return 0
@@ -374,28 +356,24 @@ func Instance() Type {
 							v := value.Stringlike()
 							item := enum.Item(v)
 							if item == nil {
-								s.L.RaiseError("invalid value %s for enum %s", v, enum.Name())
-								return 0
+								return s.RaiseError("invalid value %s for enum %s", v, enum.Name())
 							}
 							inst.Set(name, types.Token(item.Value()))
 							return 0
 						default:
-							s.L.RaiseError("invalid value for enum %s", enum.Name())
-							return 0
+							return s.RaiseError("invalid value for enum %s", enum.Name())
 						}
 					default:
 						var ok bool
 						value, ok = convertType(s, propDesc.ValueType.Name, value)
 						if !ok {
-							s.L.RaiseError("%s expected, got %s", propDesc.ValueType.Name, value.Type())
-							return 0
+							return s.RaiseError("%s expected, got %s", propDesc.ValueType.Name, value.Type())
 						}
 					}
 				}
 				prop, ok := value.(types.PropValue)
 				if !ok {
-					s.L.RaiseError("cannot assign %s as property", value.Type())
-					return 0
+					return s.RaiseError("cannot assign %s as property", value.Type())
 				}
 				inst.Set(name, prop)
 				return 0
@@ -410,7 +388,7 @@ func Instance() Type {
 				Set: func(s State, v types.Value) {
 					inst := v.(*rtypes.Instance)
 					if inst.IsDataModel() {
-						s.L.RaiseError("%s cannot be assigned to", "ClassName")
+						s.RaiseError("%s cannot be assigned to", "ClassName")
 						return
 					}
 					inst.ClassName = string(s.Pull(3, "string").(types.String))
@@ -440,7 +418,7 @@ func Instance() Type {
 						err = v.(*rtypes.Instance).SetParent(nil)
 					}
 					if err != nil {
-						s.L.RaiseError(err.Error())
+						s.RaiseError(err.Error())
 					}
 				},
 			},

@@ -35,31 +35,26 @@ func fileRead(s rbxmk.State) int {
 	if formatName == "" {
 		f := s.Ext(fileName)
 		if f == "" {
-			s.L.RaiseError("unknown format from %s", filepath.Base(fileName))
-			return 0
+			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
 		formatName = f
 	}
 
 	format := s.Format(formatName)
 	if format.Name == "" {
-		s.L.RaiseError("unknown format %q", formatName)
-		return 0
+		return s.RaiseError("unknown format %q", formatName)
 	}
 	if format.Decode == nil {
-		s.L.RaiseError("cannot decode with format %s", format.Name)
-		return 0
+		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
 	b, err := s.Source("file").Read(fileName)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	v, err := format.Decode(b)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return s.Push(v)
 }
@@ -74,8 +69,7 @@ func fileWrite(s rbxmk.State) int {
 		value = s.Pull(2, "Variant")
 		f := s.Ext(fileName)
 		if f == "" {
-			s.L.RaiseError("unknown format from %s", filepath.Base(fileName))
-			return 0
+			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
 		formatName = f
 	case 3:
@@ -83,27 +77,22 @@ func fileWrite(s rbxmk.State) int {
 		formatName = string(s.Pull(2, "string").(types.String))
 		value = s.Pull(3, "Variant")
 	default:
-		s.L.RaiseError("expected 2 or 3 arguments")
-		return 0
+		return s.RaiseError("expected 2 or 3 arguments")
 	}
 	format := s.Format(formatName)
 	if format.Name == "" {
-		s.L.RaiseError("unknown format %q", formatName)
-		return 0
+		return s.RaiseError("unknown format %q", formatName)
 	}
 	if format.Encode == nil {
-		s.L.RaiseError("cannot encode with format %s", format.Name)
-		return 0
+		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
 	b, err := format.Encode(value)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	if err := s.Source("file").Write(b, fileName); err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return 0
 }

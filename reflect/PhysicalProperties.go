@@ -53,8 +53,7 @@ func PhysicalProperties() Type {
 					v.FrictionWeight = float32(s.Pull(4, "float").(types.Float))
 					v.ElasticityWeight = float32(s.Pull(5, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 3 or 5 arguments")
-					return 0
+					return s.RaiseError("expected 3 or 5 arguments")
 				}
 				return s.Push(v)
 			},

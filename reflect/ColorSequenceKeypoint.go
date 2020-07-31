@@ -44,8 +44,7 @@ func ColorSequenceKeypoint() Type {
 					v.Value = s.Pull(2, "Color3").(types.Color3)
 					v.Envelope = float32(s.Pull(3, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 2 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 2 or 3 arguments")
 				}
 				return s.Push(v)
 			},

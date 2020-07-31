@@ -70,19 +70,16 @@ func initMain(s rbxmk.State) {
 			n := s.L.GetTop()
 			s.L.Push(v)
 			if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
-				s.L.RaiseError("%s: %s", msg, err.Error())
-				return 0
+				return s.RaiseError("%s: %s", msg, err.Error())
 			}
 			if s.L.GetTop() > n {
 				if !s.L.ToBool(n + 1) {
-					s.L.RaiseError(msg)
-					return 0
+					return s.RaiseError(msg)
 				}
 			}
 		default:
 			if !lua.LVAsBool(v) {
-				s.L.RaiseError(msg)
-				return 0
+				return s.RaiseError(msg)
 			}
 		}
 		return 0
@@ -102,20 +99,17 @@ func initMain(s rbxmk.State) {
 			if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
 				if s.L.GetTop() > n {
 					if s.L.ToBool(n + 1) {
-						s.L.RaiseError(msg)
-						return 0
+						return s.RaiseError(msg)
 					}
 					return 0
 				}
-				s.L.RaiseError(msg)
-				return 0
+				return s.RaiseError(msg)
 			} else if lua.LVAsBool(s.L.GetGlobal("SHOW_ERRORS")) {
 				fmt.Printf("ERROR: %s\n", err)
 			}
 		default:
 			if lua.LVAsBool(v) {
-				s.L.RaiseError(msg)
-				return 0
+				return s.RaiseError(msg)
 			}
 		}
 		return 0

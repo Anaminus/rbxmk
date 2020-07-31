@@ -48,8 +48,7 @@ func Rect() Type {
 					v.Max.Y = float32(s.Pull(3, "float").(types.Float))
 					v.Max.Y = float32(s.Pull(4, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 2 or 4 arguments")
-					return 0
+					return s.RaiseError("expected 2 or 4 arguments")
 				}
 				return s.Push(v)
 			},

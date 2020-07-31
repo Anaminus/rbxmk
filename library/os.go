@@ -50,8 +50,7 @@ func osSplit(s rbxmk.State) int {
 			result = filepath.Base(path)
 			result = result[:len(result)-len(ext)]
 		default:
-			s.L.RaiseError("unknown argument %q", typ)
-			return 0
+			return s.RaiseError("unknown argument %q", typ)
 		}
 		s.L.Push(lua.LString(result))
 	}
@@ -107,8 +106,7 @@ func osDir(s rbxmk.State) int {
 	dirname := s.L.CheckString(1)
 	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
 	for _, info := range files {

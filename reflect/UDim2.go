@@ -64,8 +64,7 @@ func UDim2() Type {
 					v.Y.Scale = float32(s.Pull(3, "float").(types.Float))
 					v.Y.Offset = int32(s.Pull(4, "int").(types.Int))
 				default:
-					s.L.RaiseError("expected 0 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 3 arguments")
 				}
 				return s.Push(v)
 			},

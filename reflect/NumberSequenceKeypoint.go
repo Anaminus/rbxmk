@@ -44,8 +44,7 @@ func NumberSequenceKeypoint() Type {
 					v.Value = float32(s.Pull(2, "float").(types.Float))
 					v.Envelope = float32(s.Pull(3, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 2 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 2 or 3 arguments")
 				}
 				return s.Push(v)
 			},

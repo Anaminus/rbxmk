@@ -71,8 +71,7 @@ func Vector2int16() Type {
 					v.X = int16(s.Pull(1, "int").(types.Int))
 					v.Y = int16(s.Pull(2, "int").(types.Int))
 				default:
-					s.L.RaiseError("expected 0 or 2 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 2 arguments")
 				}
 				return s.Push(v)
 			},

@@ -42,8 +42,7 @@ func Axes() Type {
 					v.Y = bool(s.Pull(2, "bool").(types.Bool))
 					v.Z = bool(s.Pull(3, "bool").(types.Bool))
 				default:
-					s.L.RaiseError("expected 0 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 3 arguments")
 				}
 				return s.Push(v)
 			},

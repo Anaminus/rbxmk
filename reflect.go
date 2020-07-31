@@ -125,8 +125,7 @@ func (s State) Push(v types.Value) int {
 	}
 	lvs, err := typ.PushTo(s, typ, v)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	for _, lv := range lvs {
 		s.L.Push(lv)
@@ -276,6 +275,10 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	TypeError(s.L, n, listTypes(t))
 	return nil
+}
+
+func (s State) RaiseError(format string, args ...interface{}) int {
+	return s.RaiseError(format, args...)
 }
 
 // Cycle is used to detect cyclic references by containing values that have

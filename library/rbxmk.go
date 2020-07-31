@@ -29,14 +29,14 @@ var RBXMK = rbxmk.Library{
 		mt := s.L.CreateTable(0, 2)
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
 			if field := s.Pull(2, "string").(types.String); field != "desc" {
-				s.L.RaiseError("unknown field %q", field)
+				return s.RaiseError("unknown field %q", field)
 			}
 			desc := s.Desc(nil)
 			return s.Push(desc)
 		}))
 		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
 			if field := s.Pull(2, "string").(types.String); field != "desc" {
-				s.L.RaiseError("unknown field %q", field)
+				return s.RaiseError("unknown field %q", field)
 			}
 			desc := s.PullOpt(3, "RootDesc", nil)
 			if desc == nil {
@@ -55,20 +55,17 @@ func rbxmkLoad(s rbxmk.State) int {
 	fileName := filepath.Clean(s.L.CheckString(1))
 	fi, err := os.Stat(fileName)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	if err = s.PushFile(rbxmk.FileInfo{Path: fileName, FileInfo: fi}); err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 
 	// Load file as function.
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
 		s.PopFile()
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	s.L.Push(fn) // +function
 
@@ -83,8 +80,7 @@ func rbxmkLoad(s rbxmk.State) int {
 	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
 	s.PopFile()
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return s.L.GetTop() - 1
 }
@@ -95,22 +91,20 @@ func metaGet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 		return s.Push(types.String(inst.Reference))
 	case "IsService":
 		return s.Push(types.Bool(inst.IsService))
-	default:
-		s.L.RaiseError("unknown metadata %q", name)
 	}
-	return 0
+	return s.RaiseError("unknown metadata %q", name)
 }
 
 func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 	switch name {
 	case "Reference":
 		inst.Reference = string(s.Pull(3, "string").(types.String))
+		return 0
 	case "IsService":
 		inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
-	default:
-		s.L.RaiseError("unknown metadata %q", name)
+		return 0
 	}
-	return 0
+	return s.RaiseError("unknown metadata %q", name)
 }
 
 func rbxmkMeta(s rbxmk.State) int {
@@ -152,8 +146,7 @@ func rbxmkNewDesc(s rbxmk.State) int {
 	case "EnumItem":
 		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
 	default:
-		s.L.RaiseError("unable to create descriptor of type %q", name)
-		return 0
+		return s.RaiseError("unable to create descriptor of type %q", name)
 	}
 }
 
@@ -185,17 +178,14 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 	name := string(s.Pull(1, "string").(types.String))
 	format := s.Format(name)
 	if format.Name == "" {
-		s.L.RaiseError("unknown format %q", name)
-		return 0
+		return s.RaiseError("unknown format %q", name)
 	}
 	if format.Encode == nil {
-		s.L.RaiseError("cannot encode with format %s", name)
-		return 0
+		return s.RaiseError("cannot encode with format %s", name)
 	}
 	b, err := format.Encode(s.Pull(2, "Variant"))
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return s.Push(types.BinaryString(b))
 }
@@ -204,17 +194,14 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 	name := string(s.Pull(1, "string").(types.String))
 	format := s.Format(name)
 	if format.Name == "" {
-		s.L.RaiseError("unknown format %q", name)
-		return 0
+		return s.RaiseError("unknown format %q", name)
 	}
 	if format.Decode == nil {
-		s.L.RaiseError("cannot decode with format %s", name)
-		return 0
+		return s.RaiseError("cannot decode with format %s", name)
 	}
 	v, err := format.Decode([]byte(s.Pull(2, "BinaryString").(types.BinaryString)))
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return s.Push(v)
 }
@@ -223,12 +210,10 @@ func rbxmkReadSource(s rbxmk.State) int {
 	name := string(s.Pull(1, "string").(types.String))
 	source := s.Source(name)
 	if source.Name == "" {
-		s.L.RaiseError("unknown source %q", name)
-		return 0
+		return s.RaiseError("unknown source %q", name)
 	}
 	if source.Read == nil {
-		s.L.RaiseError("cannot read with format %s", name)
-		return 0
+		return s.RaiseError("cannot read with format %s", name)
 	}
 	options := make([]interface{}, s.L.GetTop()-1)
 	for i := 2; i <= s.L.GetTop(); i++ {
@@ -236,8 +221,7 @@ func rbxmkReadSource(s rbxmk.State) int {
 	}
 	b, err := source.Read(options...)
 	if err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return s.Push(types.BinaryString(b))
 }
@@ -246,12 +230,10 @@ func rbxmkWriteSource(s rbxmk.State) int {
 	name := string(s.Pull(1, "string").(types.String))
 	source := s.Source(name)
 	if source.Name == "" {
-		s.L.RaiseError("unknown source %q", name)
-		return 0
+		return s.RaiseError("unknown source %q", name)
 	}
 	if source.Write == nil {
-		s.L.RaiseError("cannot write with format %s", name)
-		return 0
+		return s.RaiseError("cannot write with format %s", name)
 	}
 	b := []byte(s.Pull(2, "BinaryString").(types.BinaryString))
 	options := make([]interface{}, s.L.GetTop()-2)
@@ -259,8 +241,7 @@ func rbxmkWriteSource(s rbxmk.State) int {
 		options[i-3] = s.Pull(i, "Variant")
 	}
 	if err := source.Write(b, options...); err != nil {
-		s.L.RaiseError(err.Error())
-		return 0
+		return s.RaiseError(err.Error())
 	}
 	return 0
 }

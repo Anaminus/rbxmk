@@ -52,8 +52,7 @@ func Color3() Type {
 					v.G = float32(s.Pull(2, "float").(types.Float))
 					v.B = float32(s.Pull(3, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 0 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 3 arguments")
 				}
 				return s.Push(v)
 			},

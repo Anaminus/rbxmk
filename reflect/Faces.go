@@ -54,8 +54,7 @@ func Faces() Type {
 					v.Bottom = bool(s.Pull(5, "bool").(types.Bool))
 					v.Front = bool(s.Pull(6, "bool").(types.Bool))
 				default:
-					s.L.RaiseError("expected 0 or 6 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 6 arguments")
 				}
 				return s.Push(v)
 			},

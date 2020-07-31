@@ -90,8 +90,7 @@ func Vector2() Type {
 					v.X = float32(s.Pull(1, "float").(types.Float))
 					v.Y = float32(s.Pull(2, "float").(types.Float))
 				default:
-					s.L.RaiseError("expected 0 or 2 arguments")
-					return 0
+					return s.RaiseError("expected 0 or 2 arguments")
 				}
 				return s.Push(v)
 			},

@@ -23,13 +23,11 @@ func EnumItem() Type {
 				case "EnumType":
 					return s.Push(item.Enum())
 				}
-				s.L.RaiseError("%s is not a valid member", name)
-				return 0
+				return s.RaiseError("%s is not a valid member", name)
 			},
 			"__newindex": func(s State) int {
 				name := string(s.Pull(2, "string").(types.String))
-				s.L.RaiseError("%s cannot be assigned to", name)
-				return 0
+				return s.RaiseError("%s cannot be assigned to", name)
 			},
 		},
 	}

@@ -63,8 +63,7 @@ func BrickColor() Type {
 						float64(s.Pull(3, "number").(types.Double)),
 					)
 				default:
-					s.L.RaiseError("expected 1 or 3 arguments")
-					return 0
+					return s.RaiseError("expected 1 or 3 arguments")
 				}
 				return s.Push(v)
 			},

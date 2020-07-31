@@ -216,8 +216,7 @@ func CFrame() Type {
 						float64(s.Pull(12, "number").(types.Double)),
 					)
 				default:
-					s.L.RaiseError("unexpected number of arguments")
-					return 0
+					return s.RaiseError("unexpected number of arguments")
 				}
 				return s.Push(v)
 			},
