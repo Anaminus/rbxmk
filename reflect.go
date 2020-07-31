@@ -278,7 +278,8 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 }
 
 func (s State) RaiseError(format string, args ...interface{}) int {
-	return s.RaiseError(format, args...)
+	s.L.RaiseError(format, args...)
+	return 0
 }
 
 // Cycle is used to detect cyclic references by containing values that have
