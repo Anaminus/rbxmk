@@ -18,11 +18,18 @@ type Instance struct {
 	root       bool
 }
 
-func NewInstance(className string) *Instance {
-	return &Instance{
+func NewInstance(className string, parent *Instance, desc *RootDesc) *Instance {
+	inst := &Instance{
 		ClassName:  className,
 		properties: make(map[string]types.PropValue, 0),
 	}
+	if desc != nil {
+		inst.SetDesc(desc)
+	}
+	if parent != nil {
+		inst.SetParent(parent)
+	}
+	return inst
 }
 
 func NewDataModel() *Instance {

@@ -198,7 +198,7 @@ func Instance() Reflector {
 						}
 						service := inst.FindFirstChildOfClass(className, false)
 						if service == nil {
-							service = rtypes.NewInstance(className)
+							service = rtypes.NewInstance(className, nil, desc)
 							service.IsService = true
 							service.SetName(className)
 							service.SetParent(inst)
@@ -485,7 +485,16 @@ func Instance() Reflector {
 		Constructors: Constructors{
 			"new": func(s State) int {
 				className := string(s.Pull(1, "string").(types.String))
-				inst := rtypes.NewInstance(className)
+				parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
+				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
+				if desc == nil {
+					// Use global descriptor, if available.
+					desc = s.Desc(nil)
+				}
+				if desc != nil && desc.Classes[className] == nil {
+					return s.RaiseError("unable to create instance of type %q", className)
+				}
+				inst := rtypes.NewInstance(className, parent, desc)
 				return s.Push(inst)
 			},
 		},

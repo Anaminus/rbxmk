@@ -117,7 +117,7 @@ func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rty
 	if t, ok := refs[r]; ok {
 		return t, nil
 	}
-	t = rtypes.NewInstance(r.ClassName)
+	t = rtypes.NewInstance(r.ClassName, nil, nil)
 	t.IsService = r.IsService
 	t.Reference = r.Reference
 	refs[r] = t
