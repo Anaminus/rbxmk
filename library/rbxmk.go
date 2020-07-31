@@ -32,7 +32,7 @@ var RBXMK = rbxmk.Library{
 				s.L.RaiseError("unknown field %q", field)
 			}
 			desc := s.Desc(nil)
-			return s.Push(rtypes.RootDesc{Root: desc})
+			return s.Push(desc)
 		}))
 		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
 			if field := s.Pull(2, "string").(types.String); field != "desc" {
@@ -42,7 +42,7 @@ var RBXMK = rbxmk.Library{
 			if desc == nil {
 				s.SetDesc(nil)
 			}
-			s.SetDesc(desc.(rtypes.RootDesc).Root)
+			s.SetDesc(desc.(*rtypes.RootDesc))
 			return 0
 		}))
 		s.L.SetMetatable(lib, mt)
@@ -125,7 +125,7 @@ func rbxmkMeta(s rbxmk.State) int {
 func rbxmkNewDesc(s rbxmk.State) int {
 	switch name := string(s.Pull(1, "string").(types.String)); name {
 	case "Root":
-		return s.Push(rtypes.RootDesc{Root: &rbxdump.Root{
+		return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
 			Classes: make(map[string]*rbxdump.Class),
 			Enums:   make(map[string]*rbxdump.Enum),
 		}})
@@ -162,12 +162,12 @@ func rbxmkDiffDesc(s rbxmk.State) int {
 	var next *rbxdump.Root
 	switch v := s.PullAnyOf(1, "RootDesc", "nil").(type) {
 	case rtypes.NilType:
-	case rtypes.RootDesc:
+	case *rtypes.RootDesc:
 		prev = v.Root
 	}
 	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
 	case rtypes.NilType:
-	case rtypes.RootDesc:
+	case *rtypes.RootDesc:
 		next = v.Root
 	}
 	actions := diff.Diff{Prev: prev, Next: next}.Diff()
@@ -175,7 +175,7 @@ func rbxmkDiffDesc(s rbxmk.State) int {
 }
 
 func rbxmkPatchDesc(s rbxmk.State) int {
-	desc := s.Pull(1, "RootDesc").(rtypes.RootDesc).Root
+	desc := s.Pull(1, "RootDesc").(*rtypes.RootDesc).Root
 	actions := []diff.Action(s.Pull(2, "DescActions").(rtypes.DescActions))
 	diff.Patch{Root: desc}.Patch(actions)
 	return 0

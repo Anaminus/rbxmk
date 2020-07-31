@@ -19,10 +19,10 @@ func Desc() rbxmk.Format {
 			if err != nil {
 				return nil, err
 			}
-			return rtypes.RootDesc{Root: root}, nil
+			return &rtypes.RootDesc{Root: root}, nil
 		},
 		Encode: func(v types.Value) (b []byte, err error) {
-			root := v.(rtypes.RootDesc).Root
+			root := v.(*rtypes.RootDesc).Root
 			var buf bytes.Buffer
 			if err := rbxdumpjson.Encode(&buf, root); err != nil {
 				return nil, err

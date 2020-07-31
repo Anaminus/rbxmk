@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 	"github.com/yuin/gopher-lua"
 )
@@ -18,7 +17,7 @@ type World struct {
 	types      map[string]Type
 	formats    map[string]Format
 	sources    map[string]Source
-	globalDesc *rbxdump.Root
+	globalDesc *rtypes.RootDesc
 }
 
 func NewWorld(l *lua.LState) *World {
@@ -512,7 +511,7 @@ func (w *World) DoFileHandle(f File, args int) error {
 
 // Desc returns the root descriptor of an instance. If inst is nil, the global
 // descriptor is returned.
-func (w *World) Desc(inst *rtypes.Instance) *rbxdump.Root {
+func (w *World) Desc(inst *rtypes.Instance) *rtypes.RootDesc {
 	if inst != nil {
 		if desc := inst.Desc(); desc != nil {
 			return desc
@@ -522,6 +521,6 @@ func (w *World) Desc(inst *rtypes.Instance) *rbxdump.Root {
 }
 
 // SetDesc sets root as the global root descriptor for the world.
-func (w *World) SetDesc(root *rbxdump.Root) {
+func (w *World) SetDesc(root *rtypes.RootDesc) {
 	w.globalDesc = root
 }

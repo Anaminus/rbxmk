@@ -104,7 +104,7 @@ func convertType(s State, t string, v types.Value) (nv types.Value, ok bool) {
 
 // getPropDesc gets a property descriptor from a class, or any class it inherits
 // from.
-func getPropDesc(root *rbxdump.Root, class *rbxdump.Class, name string) (prop *rbxdump.Property) {
+func getPropDesc(root *rtypes.RootDesc, class *rbxdump.Class, name string) (prop *rbxdump.Property) {
 	for class != nil {
 		prop, _ = class.Members[name].(*rbxdump.Property)
 		if prop != nil {
@@ -113,6 +113,43 @@ func getPropDesc(root *rbxdump.Root, class *rbxdump.Class, name string) (prop *r
 		class = root.Classes[class.Superclass]
 	}
 	return nil
+}
+
+func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rtypes.Enum {
+	enumValue := desc.EnumTypes.Enum(enum)
+	if enumValue == nil {
+		if desc.Enums[enum] == nil {
+			s.L.RaiseError(
+				"no enum descriptor %q for property descriptor %s.%s",
+				enum,
+				class,
+				prop,
+			)
+			return nil
+		}
+		s.L.RaiseError(
+			"no enum value %q generated for property descriptor %s.%s",
+			enum,
+			class,
+			prop,
+		)
+		return nil
+	}
+	return enumValue
+}
+
+func checkClassDesc(s State, desc *rtypes.RootDesc, typ, class, prop string) *rbxdump.Class {
+	classDesc := desc.Classes[typ]
+	if classDesc == nil {
+		s.L.RaiseError(
+			"no class descriptor %q for property descriptor %s.%s",
+			typ,
+			class,
+			prop,
+		)
+		return nil
+	}
+	return classDesc
 }
 
 func Instance() Type {
@@ -192,50 +229,35 @@ func Instance() Type {
 							s.L.RaiseError("stored value type %s is not an instance", value.Type())
 							return 0
 						}
-						cdesc := desc.Classes[propDesc.ValueType.Name]
-						if cdesc == nil {
-							s.L.RaiseError(
-								"value type of property descriptor %s.%s has unknown class type %q",
-								classDesc.Name,
-								propDesc.Name,
-								propDesc.ValueType.Name,
-							)
+						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if class == nil {
 							return 0
 						}
-						if inst.ClassName != cdesc.Name {
-							s.L.RaiseError("instance of class %s expected, got %s", cdesc.Name, inst.ClassName)
+						if inst.ClassName != class.Name {
+							s.L.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 							return 0
 						}
 						return s.Push(inst)
 					case "Enum":
+						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if enum == nil {
+							return 0
+						}
 						token, ok := value.(types.Token)
 						if !ok {
 							s.L.RaiseError("stored value type %s is not a token", value.Type())
 							return 0
 						}
-						enumDesc := desc.Enums[propDesc.ValueType.Name]
-						if enumDesc == nil {
-							s.L.RaiseError(
-								"value type of property descriptor %s.%s has unknown enum type %q",
-								classDesc.Name,
-								propDesc.Name,
-								propDesc.ValueType.Name,
-							)
+						item := enum.Value(int(token))
+						if item == nil {
+							s.L.RaiseError("invalid stored value %d for enum %s", value, enum.Name())
 							return 0
 						}
-						for _, item := range enumDesc.Items {
-							if item.Value == int(token) {
-								goto getEnumToken
-							}
-						}
-						s.L.RaiseError("unknown value (%d) for enum %s", token, enumDesc.Name)
-						return 0
-					getEnumToken:
-						// TODO: Push as enum item.
-						break
+						return s.Push(item)
 					default:
 						if a, b := value.Type(), propDesc.ValueType.Name; a != b {
 							s.L.RaiseError("stored value type %s does not match property type %s", a, b)
+							return 0
 						}
 					}
 					// Push without converting exprims.
@@ -266,11 +288,13 @@ func Instance() Type {
 
 				// Try property.
 				value := PullVariant(s, 3)
+
 				desc := s.Desc(inst)
-				if desc == nil {
-					goto nodesc
+				var classDesc *rbxdump.Class
+				if desc != nil {
+					classDesc = desc.Classes[inst.ClassName]
 				}
-				if classDesc := desc.Classes[inst.ClassName]; classDesc != nil {
+				if classDesc != nil {
 					propDesc := getPropDesc(desc, classDesc, name)
 					if propDesc == nil {
 						s.L.RaiseError("%s is not a valid member", name)
@@ -283,73 +307,80 @@ func Instance() Type {
 							s.L.RaiseError("Instance expected, got %s", value.Type())
 							return 0
 						}
-						cdesc := desc.Classes[propDesc.ValueType.Name]
-						if cdesc == nil {
-							s.L.RaiseError(
-								"value type of property descriptor %s.%s has unknown class type %q",
-								classDesc.Name,
-								propDesc.Name,
-								propDesc.ValueType.Name,
-							)
+						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if class == nil {
 							return 0
 						}
-						if inst.ClassName != cdesc.Name {
-							s.L.RaiseError("instance of class %s expected, got %s", cdesc.Name, inst.ClassName)
+						if inst.ClassName != class.Name {
+							s.L.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 							return 0
 						}
 						inst.Set(name, inst)
 						return 0
 					case "Enum":
-						enumDesc := desc.Enums[propDesc.ValueType.Name]
-						if enumDesc == nil {
-							s.L.RaiseError(
-								"value type of property descriptor %s.%s has unknown enum type %q",
-								classDesc.Name,
-								propDesc.Name,
-								propDesc.ValueType.Name,
-							)
+						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if enum == nil {
 							return 0
 						}
-					setEnum:
 						switch value := value.(type) {
 						case types.Token:
-							for _, item := range enumDesc.Items {
-								if item.Value == int(value) {
-									// TODO: Push as enum item.
-									break setEnum
-								}
+							item := enum.Value(int(value))
+							if item == nil {
+								s.L.RaiseError("invalid value %d for enum %s", value, enum.Name())
+								return 0
 							}
-							s.L.RaiseError("unknown value (%d) for enum %s", value, enumDesc.Name)
+							inst.Set(name, value)
+							return 0
+						case *rtypes.EnumItem:
+							item := enum.Value(value.Value())
+							if item == nil {
+								s.L.RaiseError(
+									"invalid value %s (%d) for enum %s",
+									value.String(),
+									value.Value(),
+									enum.String(),
+								)
+								return 0
+							}
+							if a, b := enum.Name(), value.Enum().Name(); a != b {
+								s.L.RaiseError("expected enum %s, got %s", a, b)
+								return 0
+							}
+							if a, b := item.Name(), value.Name(); a != b {
+								s.L.RaiseError("expected enum item %s, got %s", a, b)
+								return 0
+							}
+							inst.Set(name, types.Token(item.Value()))
 							return 0
 						case types.Intlike:
 							v := int(value.Intlike())
-							for _, item := range enumDesc.Items {
-								if item.Value == v {
-									// TODO: Push as enum item.
-									break setEnum
-								}
+							item := enum.Value(v)
+							if item == nil {
+								s.L.RaiseError("invalid value %d for enum %s", v, enum.Name())
+								return 0
 							}
-							s.L.RaiseError("unknown value (%d) for enum %s", value, enumDesc.Name)
+							inst.Set(name, types.Token(item.Value()))
 							return 0
 						case types.Numberlike:
 							v := int(value.Numberlike())
-							for _, item := range enumDesc.Items {
-								if item.Value == v {
-									// TODO: Push as enum item.
-									break setEnum
-								}
+							item := enum.Value(v)
+							if item == nil {
+								s.L.RaiseError("invalid value %d for enum %s", v, enum.Name())
+								return 0
 							}
-							s.L.RaiseError("unknown value (%d) for enum %s", v, enumDesc.Name)
+							inst.Set(name, types.Token(item.Value()))
 							return 0
 						case types.Stringlike:
 							v := value.Stringlike()
-							for _, item := range enumDesc.Items {
-								if item.Name == v {
-									// TODO: Push as enum item.
-									break setEnum
-								}
+							item := enum.Item(v)
+							if item == nil {
+								s.L.RaiseError("invalid value %s for enum %s", v, enum.Name())
+								return 0
 							}
-							s.L.RaiseError("unknown value (%q) for enum %s", v, enumDesc.Name)
+							inst.Set(name, types.Token(item.Value()))
+							return 0
+						default:
+							s.L.RaiseError("invalid value for enum %s", enum.Name())
 							return 0
 						}
 					default:
@@ -361,8 +392,6 @@ func Instance() Type {
 						}
 					}
 				}
-
-			nodesc:
 				prop, ok := value.(types.PropValue)
 				if !ok {
 					s.L.RaiseError("cannot assign %s as property", value.Type())

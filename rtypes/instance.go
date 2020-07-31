@@ -3,7 +3,6 @@ package rtypes
 import (
 	"errors"
 
-	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -15,7 +14,7 @@ type Instance struct {
 	properties map[string]types.PropValue
 	children   []*Instance
 	parent     *Instance
-	desc       *rbxdump.Root
+	desc       *RootDesc
 	root       bool
 }
 
@@ -428,7 +427,7 @@ func (inst *Instance) GetFullName() string {
 // Desc returns the nearest root descriptor for the instance. If the current
 // instance does not have a descriptor, then each ancestor is searched. Nil is
 // returned if no descriptors are found.
-func (inst *Instance) Desc() *rbxdump.Root {
+func (inst *Instance) Desc() *RootDesc {
 	if inst.desc != nil {
 		return inst.desc
 	}
@@ -443,7 +442,7 @@ func (inst *Instance) Desc() *rbxdump.Root {
 }
 
 // SetDesc sets root as the root descriptor for the instance.
-func (inst *Instance) SetDesc(root *rbxdump.Root) {
+func (inst *Instance) SetDesc(root *RootDesc) {
 	inst.desc = root
 }
 

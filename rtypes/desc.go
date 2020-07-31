@@ -1,6 +1,7 @@
 package rtypes
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/robloxapi/rbxdump"
@@ -10,14 +11,42 @@ import (
 
 type RootDesc struct {
 	*rbxdump.Root
+	EnumTypes Enums
 }
 
-func (RootDesc) Type() string {
+func (*RootDesc) Type() string {
 	return "RootDesc"
 }
 
-func (d RootDesc) String() string {
+func (d *RootDesc) String() string {
 	return "RootDesc"
+}
+
+// GenerateEnumTypes sets EnumTypes to a collection of enum values generated
+// from the root's enum descriptors.
+func (d *RootDesc) GenerateEnumTypes() {
+	enums := make([]*Enum, 0, len(d.Enums))
+	for name, enumDesc := range d.Enums {
+		itemDescs := make([]*rbxdump.EnumItem, 0, len(enumDesc.Items))
+		for _, itemDesc := range enumDesc.Items {
+			itemDescs = append(itemDescs, itemDesc)
+		}
+		sort.Slice(itemDescs, func(i, j int) bool {
+			if itemDescs[i].Index == itemDescs[j].Index {
+				return itemDescs[i].Value < itemDescs[j].Value
+			}
+			return itemDescs[i].Index < itemDescs[j].Index
+		})
+		items := make([]NewItem, len(itemDescs))
+		for i, itemDesc := range itemDescs {
+			items[i] = NewItem{
+				Name:  itemDesc.Name,
+				Value: itemDesc.Value,
+			}
+		}
+		enums = append(enums, NewEnum(name, items...))
+	}
+	d.EnumTypes = NewEnums(enums...)
 }
 
 type ClassDesc struct {
