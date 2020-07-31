@@ -9,10 +9,10 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Dictionary() Type {
-	return Type{
+func Dictionary() Reflector {
+	return Reflector{
 		Name: "Dictionary",
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -25,10 +25,10 @@ func Dictionary() Type {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
 			}
 			s.Cycle.Put(&dict)
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			table := s.L.CreateTable(0, len(dict))
 			for k, v := range dict {
-				lv, err := variantType.PushTo(s, variantType, v)
+				lv, err := variantRfl.PushTo(s, variantRfl, v)
 				if err != nil {
 					return nil, err
 				}
@@ -36,7 +36,7 @@ func Dictionary() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -49,14 +49,14 @@ func Dictionary() Type {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
 			s.Cycle.Put(table)
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			dict := make(rtypes.Dictionary)
 			table.ForEach(func(k, lv lua.LValue) {
 				if err != nil {
 					return
 				}
 				var v types.Value
-				if v, err = variantType.PullFrom(s, variantType, lv); err == nil {
+				if v, err = variantRfl.PullFrom(s, variantRfl, lv); err == nil {
 					dict[k.String()] = v
 				}
 			})

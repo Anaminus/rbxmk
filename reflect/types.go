@@ -4,8 +4,8 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
-func All() []func() rbxmk.Type {
-	return []func() rbxmk.Type{
+func All() []func() rbxmk.Reflector {
+	return []func() rbxmk.Reflector{
 		Array,
 		Axes,
 		BinaryString,

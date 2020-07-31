@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func NumberRange() Type {
-	return Type{
+func NumberRange() Reflector {
+	return Reflector{
 		Name:     "NumberRange",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

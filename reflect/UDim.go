@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func UDim() Type {
-	return Type{
+func UDim() Reflector {
+	return Reflector{
 		Name:     "UDim",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

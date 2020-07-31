@@ -7,8 +7,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func CallbackDesc() Type {
-	return Type{
+func CallbackDesc() Reflector {
+	return Reflector{
 		Name:     "CallbackDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

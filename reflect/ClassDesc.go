@@ -9,8 +9,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func ClassDesc() Type {
-	return Type{
+func ClassDesc() Reflector {
+	return Reflector{
 		Name:     "ClassDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

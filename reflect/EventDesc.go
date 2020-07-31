@@ -7,8 +7,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func EventDesc() Type {
-	return Type{
+func EventDesc() Reflector {
+	return Reflector{
 		Name:     "EventDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

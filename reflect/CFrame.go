@@ -7,8 +7,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func CFrame() Type {
-	return Type{
+func CFrame() Reflector {
+	return Reflector{
 		Name:     "CFrame",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

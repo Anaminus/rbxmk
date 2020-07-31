@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Vector2int16() Type {
-	return Type{
+func Vector2int16() Reflector {
+	return Reflector{
 		Name:     "Vector2int16",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

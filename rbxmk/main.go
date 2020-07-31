@@ -86,7 +86,7 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 	}))
 	OpenFilteredLibs(world.State(), GetFilteredStdLib())
 	for _, t := range reflect.All() {
-		world.RegisterType(t())
+		world.RegisterReflector(t())
 	}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())

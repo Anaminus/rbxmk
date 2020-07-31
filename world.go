@@ -14,7 +14,7 @@ import (
 type World struct {
 	l          *lua.LState
 	fileStack  []FileInfo
-	types      map[string]Type
+	reflectors map[string]Reflector
 	formats    map[string]Format
 	sources    map[string]Source
 	globalDesc *rtypes.RootDesc
@@ -22,8 +22,8 @@ type World struct {
 
 func NewWorld(l *lua.LState) *World {
 	return &World{
-		l:     l,
-		types: map[string]Type{},
+		l:          l,
+		reflectors: map[string]Reflector{},
 	}
 }
 
@@ -73,28 +73,28 @@ func (w *World) mergeGlobal(name string, t *lua.LTable) error {
 	return nil
 }
 
-// Type returns the Type registered with the given name. If the name is not
-// registered, then Type.Name will be an empty string.
-func (w *World) Type(name string) Type {
-	return w.types[name]
+// Reflector returns the Reflector registered with the given name. If the name
+// is not registered, then Reflector.Name will be an empty string.
+func (w *World) Reflector(name string) Reflector {
+	return w.reflectors[name]
 }
 
-// createMetatable constructs a metatable from the given Type. If Members and
-// Exprim is set, then the Value field will be injected if it does not already
-// exist.
-func (w *World) createMetatable(t Type) (mt *lua.LTable) {
-	if t.Metatable == nil && t.Members == nil && t.Flags&Exprim == 0 {
+// createMetatable constructs a metatable from the given Reflector. If Members
+// and Exprim is set, then the Value field will be injected if it does not
+// already exist.
+func (w *World) createMetatable(r Reflector) (mt *lua.LTable) {
+	if r.Metatable == nil && r.Members == nil && r.Flags&Exprim == 0 {
 		// No metatable.
 		return nil
 	}
 
-	if t.Flags&Exprim != 0 {
+	if r.Flags&Exprim != 0 {
 		// Inject Value field, if possible.
-		if t.Members == nil {
-			t.Members = make(map[string]Member, 1)
+		if r.Members == nil {
+			r.Members = make(map[string]Member, 1)
 		}
-		if _, ok := t.Members["Value"]; !ok {
-			t.Members["Value"] = Member{
+		if _, ok := r.Members["Value"]; !ok {
+			r.Members["Value"] = Member{
 				Get: func(s State, v types.Value) int {
 					if v, ok := v.(types.Aliaser); ok {
 						// Push underlying type.
@@ -106,9 +106,9 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 			}
 		}
 	}
-	if t.Members != nil {
+	if r.Members != nil {
 		// Validate members.
-		for _, member := range t.Members {
+		for _, member := range r.Members {
 			if member.Get == nil {
 				panic("member must define Get function")
 			}
@@ -118,59 +118,59 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 	mt = w.l.CreateTable(0, 8)
 
 	// Unconditional fields.
-	mt.RawSetString("__type", lua.LString(t.Name))
+	mt.RawSetString("__type", lua.LString(r.Name))
 	mt.RawSetString("__metatable", lua.LString("the metatable is locked"))
 
-	if t.Flags&Exprim != 0 {
+	if r.Flags&Exprim != 0 {
 		// Show type and value, if possible.
 		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
 			if u, ok := l.Get(1).(*lua.LUserData); ok {
 				if v, ok := u.Value.(types.Stringer); ok {
-					l.Push(lua.LString(t.Name + ": " + v.String()))
+					l.Push(lua.LString(r.Name + ": " + v.String()))
 					return 1
 				}
 			}
-			l.Push(lua.LString(t.Name))
+			l.Push(lua.LString(r.Name))
 			return 1
 		}))
 	} else {
 		// Just show type.
 		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
-			l.Push(lua.LString(t.Name))
+			l.Push(lua.LString(r.Name))
 			return 1
 		}))
 	}
 
 	var index Metamethod
 	var newindex Metamethod
-	if t.Metatable != nil {
+	if r.Metatable != nil {
 		// Set each defined metamethod, overriding predefined values.
-		for name, method := range t.Metatable {
+		for name, method := range r.Metatable {
 			m := method
 			mt.RawSetString(name, w.WrapFunc(m))
 		}
 		// If available, remember index and newindex for member indexing.
-		index = t.Metatable["__index"]
-		newindex = t.Metatable["__newindex"]
+		index = r.Metatable["__index"]
+		newindex = r.Metatable["__newindex"]
 	}
 
-	if t.Members != nil {
+	if r.Members != nil {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
 			u := l.CheckUserData(1)
 			if u.Metatable != mt {
-				TypeError(l, 1, t.Name)
+				TypeError(l, 1, r.Name)
 				return 0
 			}
 			v, ok := u.Value.(types.Value)
 			if !ok {
-				TypeError(l, 1, t.Name)
+				TypeError(l, 1, r.Name)
 				return 0
 			}
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
-				member, ok := t.Members[string(name)]
+				member, ok := r.Members[string(name)]
 				if !ok {
 					goto customIndex
 				}
@@ -191,7 +191,7 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 				return index(State{World: w, L: l})
 			}
 			if ok {
-				l.RaiseError("%q is not a valid member of %s", name, t.Name)
+				l.RaiseError("%q is not a valid member of %s", name, r.Name)
 			} else {
 				l.ArgError(2, "string expected, got "+idx.Type().String())
 			}
@@ -200,18 +200,18 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
 			u := l.CheckUserData(1)
 			if u.Metatable != mt {
-				TypeError(l, 1, t.Name)
+				TypeError(l, 1, r.Name)
 				return 0
 			}
 			v, ok := u.Value.(types.Value)
 			if !ok {
-				TypeError(l, 1, t.Name)
+				TypeError(l, 1, r.Name)
 				return 0
 			}
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
-				member, ok := t.Members[string(name)]
+				member, ok := r.Members[string(name)]
 				if !ok {
 					goto customNewindex
 				}
@@ -227,7 +227,7 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 				return newindex(State{World: w, L: l})
 			}
 			if ok {
-				l.RaiseError("%q is not a valid member of %s", name, t.Name)
+				l.RaiseError("%q is not a valid member of %s", name, r.Name)
 			} else {
 				l.ArgError(2, "string expected, got "+idx.Type().String())
 			}
@@ -238,38 +238,39 @@ func (w *World) createMetatable(t Type) (mt *lua.LTable) {
 	return mt
 }
 
-// RegisterType registers a type. Panics if the type is already registered.
-func (w *World) RegisterType(t Type) {
-	if _, ok := w.types[t.Name]; ok {
-		panic("type " + t.Name + " already registered")
+// RegisterReflector registers a reflector. Panics if the reflector is already
+// registered.
+func (w *World) RegisterReflector(r Reflector) {
+	if _, ok := w.reflectors[r.Name]; ok {
+		panic("reflector " + r.Name + " already registered")
 	}
-	if w.types == nil {
-		w.types = map[string]Type{}
+	if w.reflectors == nil {
+		w.reflectors = map[string]Reflector{}
 	}
-	w.types[t.Name] = t
+	w.reflectors[r.Name] = r
 
-	if mt := w.createMetatable(t); mt != nil {
-		w.l.SetField(w.l.Get(lua.RegistryIndex), t.Name, mt)
+	if mt := w.createMetatable(r); mt != nil {
+		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
 	}
-	if t.Constructors != nil {
-		ctors := w.l.CreateTable(0, len(t.Constructors))
-		for name, ctor := range t.Constructors {
+	if r.Constructors != nil {
+		ctors := w.l.CreateTable(0, len(r.Constructors))
+		for name, ctor := range r.Constructors {
 			c := ctor
 			ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
 				return c(State{World: w, L: w.l})
 			}))
 		}
-		w.l.SetGlobal(t.Name, ctors)
+		w.l.SetGlobal(r.Name, ctors)
 	}
-	if t.Environment != nil {
-		t.Environment(State{World: w, L: w.l})
+	if r.Environment != nil {
+		r.Environment(State{World: w, L: w.l})
 	}
 }
 
-// Types returns a list of types that have all of the given flags set.
-func (w *World) Types(flags TypeFlags) []Type {
-	ts := []Type{}
-	for _, t := range w.types {
+// Reflectors returns a list of reflectors that have all of the given flags set.
+func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
+	ts := []Reflector{}
+	for _, t := range w.reflectors {
 		if t.Flags&flags == flags {
 			ts = append(ts, t)
 		}
@@ -361,26 +362,26 @@ func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 
 // PushTo reflects v to lvs using registered type t.
 func (w *World) PushTo(t string, v types.Value) (lvs []lua.LValue, err error) {
-	typ := w.types[t]
-	if typ.Name == "" {
+	rfl := w.reflectors[t]
+	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
 	}
-	if typ.PushTo == nil {
+	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("cannot cast type %q to Lua", t)
 	}
-	return typ.PushTo(State{World: w, L: w.l}, typ, v)
+	return rfl.PushTo(State{World: w, L: w.l}, rfl, v)
 }
 
 // PullFrom reflects lvs to v using registered type t.
 func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error) {
-	typ := w.types[t]
-	if typ.Name == "" {
+	rfl := w.reflectors[t]
+	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
 	}
-	if typ.PullFrom == nil {
+	if rfl.PullFrom == nil {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
-	return typ.PullFrom(State{World: w, L: w.l}, typ, lvs...)
+	return rfl.PullFrom(State{World: w, L: w.l}, rfl, lvs...)
 }
 
 // Push reflects v according to its type as registered, then pushes the results

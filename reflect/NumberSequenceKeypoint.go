@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func NumberSequenceKeypoint() Type {
-	return Type{
+func NumberSequenceKeypoint() Reflector {
+	return Reflector{
 		Name:     "NumberSequenceKeypoint",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

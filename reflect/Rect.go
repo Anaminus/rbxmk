@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Rect() Type {
-	return Type{
+func Rect() Reflector {
+	return Reflector{
 		Name:     "Rect",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

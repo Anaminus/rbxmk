@@ -7,11 +7,11 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-type Type struct {
+type Reflector struct {
 	// Name is the name of the type.
 	Name string
 
-	Flags TypeFlags
+	Flags ReflectorFlags
 
 	// Count indicates the number of Lua values that the type can reflect to and
 	// from. A Count of 0 is the same as 1. Less than 0 indicates a variable
@@ -21,11 +21,11 @@ type Type struct {
 	// PushTo converts v to a number of Lua values. l must be used only for the
 	// conversion of values as needed. If err is nil, then lvs must have a
 	// length of 1 or greater.
-	PushTo func(s State, t Type, v types.Value) (lvs []lua.LValue, err error)
+	PushTo func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error)
 
 	// PullFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lvs must have a length of 1 or greater.
-	PullFrom func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error)
+	PullFrom func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -47,23 +47,23 @@ type Type struct {
 	Environment func(s State)
 }
 
-type TypeFlags uint8
+type ReflectorFlags uint8
 
 const (
-	_      TypeFlags = (1 << iota) / 2
-	Exprim           // Whether the type is an explicit primitive.
+	_      ReflectorFlags = (1 << iota) / 2
+	Exprim                // Whether the type is an explicit primitive.
 )
 
 // ValueCount returns the normalized number of Lua values that the type reflects
 // between. Less than 0 means the amount is variable.
-func (t Type) ValueCount() int {
+func (r Reflector) ValueCount() int {
 	switch {
-	case t.Count == 0, t.Count == 1:
+	case r.Count == 0, r.Count == 1:
 		return 1
-	case t.Count < 0:
+	case r.Count < 0:
 		return -1
 	}
-	return t.Count
+	return r.Count
 }
 
 // Metatable defines the metamethods of a custom type.
@@ -96,8 +96,8 @@ type Member struct {
 // Constructors is a set of constructor functions keyed by name.
 type Constructors map[string]Constructor
 
-// Constructor creates a new value of a Type. The function can receive arguments
-// from s.L, and must push a new value to s.L.
+// Constructor creates a new value of a Reflector. The function can receive
+// arguments from s.L, and must push a new value to s.L.
 type Constructor func(s State) int
 
 // State contains references to an environment surrounding a value.
@@ -119,11 +119,11 @@ func (s State) Count() int {
 // Push reflects v according to its type as registered with s.World, then pushes
 // the results to s.L.
 func (s State) Push(v types.Value) int {
-	typ := s.Type(v.Type())
-	if typ.Name == "" {
+	rfl := s.Reflector(v.Type())
+	if rfl.Name == "" {
 		panic("unregistered type " + v.Type())
 	}
-	lvs, err := typ.PushTo(s, typ, v)
+	lvs, err := rfl.PushTo(s, rfl, v)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -136,23 +136,23 @@ func (s State) Push(v types.Value) int {
 // Pull gets from s.L the values starting from n, and reflects a value from them
 // according to type t registered with s.World.
 func (s State) Pull(n int, t string) types.Value {
-	typ := s.Type(t)
+	rfl := s.Reflector(t)
 	var v types.Value
 	var err error
-	if typ.Count < 0 {
+	if rfl.Count < 0 {
 		lvs := make([]lua.LValue, 0, 4)
 		for i := n; i <= s.L.GetTop(); i++ {
 			lvs = append(lvs, s.L.Get(i))
 		}
-		v, err = typ.PullFrom(s, typ, lvs...)
-	} else if typ.Count > 1 {
+		v, err = rfl.PullFrom(s, rfl, lvs...)
+	} else if rfl.Count > 1 {
 		lvs := make([]lua.LValue, 0, 4)
-		for i := n; i <= typ.Count; i++ {
+		for i := n; i <= rfl.Count; i++ {
 			lvs = append(lvs, s.L.CheckAny(i))
 		}
-		v, err = typ.PullFrom(s, typ, lvs...)
+		v, err = rfl.PullFrom(s, rfl, lvs...)
 	} else {
-		v, err = typ.PullFrom(s, typ, s.L.CheckAny(n))
+		v, err = rfl.PullFrom(s, rfl, s.L.CheckAny(n))
 	}
 	if err != nil {
 		s.L.ArgError(n, err.Error())
@@ -165,17 +165,17 @@ func (s State) Pull(n int, t string) types.Value {
 // to type t registered with s.World. If the value is nil, d is returned
 // instead.
 func (s State) PullOpt(n int, t string, d types.Value) types.Value {
-	typ := s.Type(t)
-	if typ.Count < 0 {
+	rfl := s.Reflector(t)
+	if rfl.Count < 0 {
 		panic("PullOpt cannot pull variable types")
-	} else if typ.Count > 1 {
+	} else if rfl.Count > 1 {
 		panic("PullOpt cannot pull multi-value types")
 	}
 	lv := s.L.Get(n)
 	if lv == lua.LNil {
 		return d
 	}
-	v, err := typ.PullFrom(s, typ, lv)
+	v, err := rfl.PullFrom(s, rfl, lv)
 	if err != nil {
 		s.L.ArgError(n, err.Error())
 		return d
@@ -209,13 +209,13 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	// Find the maximum count among the given types. 0 is treated the same as 1.
 	// <0 indicates an arbitrary number of values.
 	max := 1
-	ts := make([]Type, 0, 4)
+	ts := make([]Reflector, 0, 4)
 	for _, t := range t {
-		typ := s.Type(t)
-		ts = append(ts, typ)
-		if typ.Count > 1 {
-			max = typ.Count
-		} else if typ.Count < 0 {
+		rfl := s.Reflector(t)
+		ts = append(ts, rfl)
+		if rfl.Count > 1 {
+			max = rfl.Count
+		} else if rfl.Count < 0 {
 			max = -1
 			break
 		}
@@ -307,27 +307,27 @@ func (c *Cycle) Put(t interface{}) {
 	c.m[t] = struct{}{}
 }
 
-// PushTypeTo is a Type.Push that converts v to a userdata set with a type
+// PushTypeTo is a Reflector.Push that converts v to a userdata set with a type
 // metatable registered as t.Name.
-func PushTypeTo(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+func PushTypeTo(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 	u := s.L.NewUserData()
 	u.Value = v
-	s.L.SetMetatable(u, s.L.GetTypeMetatable(t.Name))
+	s.L.SetMetatable(u, s.L.GetTypeMetatable(r.Name))
 	return append(lvs, u), nil
 }
 
-// PullTypeFrom is a Type.Pull that converts v from a userdata set with a type
-// metatable registered as t.Name.
-func PullTypeFrom(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+// PullTypeFrom is a Reflector.Pull that converts v from a userdata set with a
+// type metatable registered as t.Name.
+func PullTypeFrom(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 	u, ok := lvs[0].(*lua.LUserData)
 	if !ok {
-		return nil, TypeError(nil, 0, t.Name)
+		return nil, TypeError(nil, 0, r.Name)
 	}
-	if u.Metatable != s.L.GetTypeMetatable(t.Name) {
-		return nil, TypeError(nil, 0, t.Name)
+	if u.Metatable != s.L.GetTypeMetatable(r.Name) {
+		return nil, TypeError(nil, 0, r.Name)
 	}
 	if v, ok = u.Value.(types.Value); !ok {
-		return nil, TypeError(nil, 0, t.Name)
+		return nil, TypeError(nil, 0, r.Name)
 	}
 	return v, nil
 }

@@ -16,7 +16,7 @@ func setUserdata(s rbxmk.State, t string) int {
 var Types = rbxmk.Library{
 	Name: "types",
 	Open: func(s rbxmk.State) *lua.LTable {
-		exprims := s.Types(rbxmk.Exprim)
+		exprims := s.Reflectors(rbxmk.Exprim)
 		lib := s.L.CreateTable(0, len(exprims))
 		for _, t := range exprims {
 			name := t.Name

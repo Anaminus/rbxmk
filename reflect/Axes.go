@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Axes() Type {
-	return Type{
+func Axes() Reflector {
+	return Reflector{
 		Name:     "Axes",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

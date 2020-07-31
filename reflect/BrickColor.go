@@ -8,8 +8,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func BrickColor() Type {
-	return Type{
+func BrickColor() Reflector {
+	return Reflector{
 		Name:     "BrickColor",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

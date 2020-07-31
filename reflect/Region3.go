@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Region3() Type {
-	return Type{
+func Region3() Reflector {
+	return Reflector{
 		Name:     "Region3",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

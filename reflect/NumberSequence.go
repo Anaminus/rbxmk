@@ -7,8 +7,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func NumberSequence() Type {
-	return Type{
+func NumberSequence() Reflector {
+	return Reflector{
 		Name:     "NumberSequence",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,
@@ -34,10 +34,10 @@ func NumberSequence() Type {
 		Members: map[string]Member{
 			"Keypoints": {Get: func(s State, v types.Value) int {
 				u := v.(types.NumberSequence)
-				keypointType := s.Type("NumberSequenceKeypoint")
+				keypointRfl := s.Reflector("NumberSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)
 				for i, v := range u {
-					lv, err := keypointType.PushTo(s, keypointType, v)
+					lv, err := keypointRfl.PushTo(s, keypointRfl, v)
 					if err != nil {
 						return s.RaiseError(err.Error())
 					}
@@ -64,9 +64,9 @@ func NumberSequence() Type {
 							return s.RaiseError("NumberSequence requires at least 2 keypoints")
 						}
 						v = make(types.NumberSequence, n)
-						keypointType := s.Type("NumberSequenceKeypoint")
+						keypointRfl := s.Reflector("NumberSequenceKeypoint")
 						for i := 1; i <= n; i++ {
-							k, err := keypointType.PullFrom(s, keypointType, c.RawGetInt(i))
+							k, err := keypointRfl.PullFrom(s, keypointRfl, c.RawGetInt(i))
 							if err != nil {
 								return s.RaiseError(err.Error())
 							}

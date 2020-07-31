@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func PhysicalProperties() Type {
-	return Type{
+func PhysicalProperties() Reflector {
+	return Reflector{
 		Name:     "PhysicalProperties",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

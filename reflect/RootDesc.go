@@ -9,8 +9,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func RootDesc() Type {
-	return Type{
+func RootDesc() Reflector {
+	return Reflector{
 		Name:     "RootDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

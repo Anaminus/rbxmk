@@ -6,8 +6,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func PropertyDesc() Type {
-	return Type{
+func PropertyDesc() Reflector {
+	return Reflector{
 		Name:     "PropertyDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

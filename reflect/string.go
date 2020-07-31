@@ -6,13 +6,13 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func String() Type {
-	return Type{
+func String() Reflector {
+	return Reflector{
 		Name: "string",
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.String))}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.String(n), nil
 			}
@@ -21,14 +21,14 @@ func String() Type {
 	}
 }
 
-func BinaryString() Type {
-	return Type{
+func BinaryString() Reflector {
+	return Reflector{
 		Name:  "BinaryString",
 		Flags: Exprim,
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.BinaryString))}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				return types.BinaryString(v), nil
@@ -44,14 +44,14 @@ func BinaryString() Type {
 	}
 }
 
-func ProtectedString() Type {
-	return Type{
+func ProtectedString() Reflector {
+	return Reflector{
 		Name:  "ProtectedString",
 		Flags: Exprim,
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.ProtectedString))}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				return types.ProtectedString(v), nil
@@ -67,14 +67,14 @@ func ProtectedString() Type {
 	}
 }
 
-func Content() Type {
-	return Type{
+func Content() Reflector {
+	return Reflector{
 		Name:  "Content",
 		Flags: Exprim,
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.Content))}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				return types.Content(v), nil
@@ -90,14 +90,14 @@ func Content() Type {
 	}
 }
 
-func SharedString() Type {
-	return Type{
+func SharedString() Reflector {
+	return Reflector{
 		Name:  "SharedString",
 		Flags: Exprim,
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.SharedString))}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				return types.SharedString(v), nil

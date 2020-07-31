@@ -7,18 +7,18 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Instances() Type {
-	return Type{
+func Instances() Reflector {
+	return Reflector{
 		Name: "Instances",
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			instances, ok := v.(rtypes.Instances)
 			if !ok {
 				return nil, TypeError(nil, 0, "Instances")
 			}
-			instType := s.Type("Instance")
+			instRfl := s.Reflector("Instance")
 			table := s.L.CreateTable(len(instances), 0)
 			for i, v := range instances {
-				lv, err := instType.PushTo(s, instType, v)
+				lv, err := instRfl.PushTo(s, instRfl, v)
 				if err != nil {
 					return nil, err
 				}
@@ -26,16 +26,16 @@ func Instances() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, TypeError(nil, 0, "table")
 			}
-			instType := s.Type("Instance")
+			instRfl := s.Reflector("Instance")
 			n := table.Len()
 			instances := make(rtypes.Instances, n)
 			for i := 1; i <= n; i++ {
-				v, err := instType.PullFrom(s, instType, table.RawGetInt(i))
+				v, err := instRfl.PullFrom(s, instRfl, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}

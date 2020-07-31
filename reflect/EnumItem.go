@@ -6,8 +6,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func EnumItem() Type {
-	return Type{
+func EnumItem() Reflector {
+	return Reflector{
 		Name:     "EnumItem",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

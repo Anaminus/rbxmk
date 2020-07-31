@@ -9,8 +9,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func EnumDesc() Type {
-	return Type{
+func EnumDesc() Reflector {
+	return Reflector{
 		Name:     "EnumDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

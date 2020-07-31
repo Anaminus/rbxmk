@@ -20,16 +20,16 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	default:
 		return PushVariantTo(s, v)
 	}
-	typ := s.Type(v.Type())
-	if typ.Name == "" {
+	rfl := s.Reflector(v.Type())
+	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
-	if typ.PushTo == nil {
-		return nil, fmt.Errorf("unable to cast %s to Variant", typ.Name)
+	if rfl.PushTo == nil {
+		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
 	u := s.L.NewUserData()
 	u.Value = v
-	s.L.SetMetatable(u, s.L.GetTypeMetatable(typ.Name))
+	s.L.SetMetatable(u, s.L.GetTypeMetatable(rfl.Name))
 	return u, nil
 }
 
@@ -38,7 +38,7 @@ func convertType(s State, t string, v types.Value) (nv types.Value, ok bool) {
 	if v.Type() == t {
 		return v, true
 	}
-	if s.Type(t).Name == "" {
+	if s.Reflector(t).Name == "" {
 		return v, false
 	}
 	switch t {
@@ -115,13 +115,13 @@ func getPropDesc(root *rtypes.RootDesc, class *rbxdump.Class, name string) (prop
 	return nil
 }
 
-func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rtypes.Enum {
-	enumValue := desc.EnumTypes.Enum(enum)
+func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
+	enumValue := desc.EnumTypes.Enum(name)
 	if enumValue == nil {
-		if desc.Enums[enum] == nil {
+		if desc.Enums[name] == nil {
 			s.RaiseError(
 				"no enum descriptor %q for property descriptor %s.%s",
-				enum,
+				name,
 				class,
 				prop,
 			)
@@ -129,7 +129,7 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rt
 		}
 		s.RaiseError(
 			"no enum value %q generated for property descriptor %s.%s",
-			enum,
+			name,
 			class,
 			prop,
 		)
@@ -138,12 +138,12 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, enum, class, prop string) *rt
 	return enumValue
 }
 
-func checkClassDesc(s State, desc *rtypes.RootDesc, typ, class, prop string) *rbxdump.Class {
-	classDesc := desc.Classes[typ]
+func checkClassDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rbxdump.Class {
+	classDesc := desc.Classes[name]
 	if classDesc == nil {
 		s.RaiseError(
 			"no class descriptor %q for property descriptor %s.%s",
-			typ,
+			name,
 			class,
 			prop,
 		)
@@ -152,8 +152,8 @@ func checkClassDesc(s State, desc *rtypes.RootDesc, typ, class, prop string) *rb
 	return classDesc
 }
 
-func Instance() Type {
-	return Type{
+func Instance() Reflector {
+	return Reflector{
 		Name:     "Instance",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

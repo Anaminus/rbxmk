@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func ColorSequenceKeypoint() Type {
-	return Type{
+func ColorSequenceKeypoint() Reflector {
+	return Reflector{
 		Name:     "ColorSequenceKeypoint",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

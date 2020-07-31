@@ -7,16 +7,16 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Tuple() Type {
-	return Type{
+func Tuple() Reflector {
+	return Reflector{
 		Name:  "Tuple",
 		Count: -1,
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			values := v.(rtypes.Tuple)
 			lvs = make([]lua.LValue, len(values))
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			for i, value := range values {
-				lv, err := variantType.PushTo(s, variantType, value)
+				lv, err := variantRfl.PushTo(s, variantRfl, value)
 				if err != nil {
 					return nil, err
 				}
@@ -24,11 +24,11 @@ func Tuple() Type {
 			}
 			return lvs, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			vs := make(rtypes.Tuple, len(lvs))
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			for i, lv := range lvs {
-				v, err := variantType.PullFrom(s, variantType, lv)
+				v, err := variantRfl.PullFrom(s, variantRfl, lv)
 				if err != nil {
 					return nil, err
 				}

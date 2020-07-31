@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Faces() Type {
-	return Type{
+func Faces() Reflector {
+	return Reflector{
 		Name:     "Faces",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

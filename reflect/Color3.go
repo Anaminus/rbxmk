@@ -7,8 +7,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Color3() Type {
-	return Type{
+func Color3() Reflector {
+	return Reflector{
 		Name:     "Color3",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

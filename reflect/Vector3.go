@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Vector3() Type {
-	return Type{
+func Vector3() Reflector {
+	return Reflector{
 		Name:     "Vector3",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

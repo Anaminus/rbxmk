@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func DescActions() Type {
-	return Type{
+func DescActions() Reflector {
+	return Reflector{
 		Name:     "DescActions",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

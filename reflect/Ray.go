@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Ray() Type {
-	return Type{
+func Ray() Reflector {
+	return Reflector{
 		Name:     "Ray",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,

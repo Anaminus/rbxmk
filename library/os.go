@@ -27,7 +27,7 @@ func osSplit(s rbxmk.State) int {
 	n := s.L.GetTop()
 	for i := 2; i <= n; i++ {
 		var result string
-		switch typ := s.L.CheckString(i); typ {
+		switch comp := s.L.CheckString(i); comp {
 		case "dir":
 			result = filepath.Dir(path)
 		case "base":
@@ -50,7 +50,7 @@ func osSplit(s rbxmk.State) int {
 			result = filepath.Base(path)
 			result = result[:len(result)-len(ext)]
 		default:
-			return s.RaiseError("unknown argument %q", typ)
+			return s.RaiseError("unknown argument %q", comp)
 		}
 		s.L.Push(lua.LString(result))
 	}

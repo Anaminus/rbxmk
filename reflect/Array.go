@@ -9,10 +9,10 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func Array() Type {
-	return Type{
+func Array() Reflector {
+	return Reflector{
 		Name: "Array",
-		PushTo: func(s State, t Type, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -25,10 +25,10 @@ func Array() Type {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
 			}
 			s.Cycle.Put(&array)
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			table := s.L.CreateTable(len(array), 0)
 			for i, v := range array {
-				lv, err := variantType.PushTo(s, variantType, v)
+				lv, err := variantRfl.PushTo(s, variantRfl, v)
 				if err != nil {
 					return nil, err
 				}
@@ -36,7 +36,7 @@ func Array() Type {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, t Type, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
 				s.Cycle = &Cycle{}
 				defer func() { s.Cycle = nil }()
@@ -49,11 +49,11 @@ func Array() Type {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
 			s.Cycle.Put(table)
-			variantType := s.Type("Variant")
+			variantRfl := s.Reflector("Variant")
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {
-				if array[i-1], err = variantType.PullFrom(s, variantType, table.RawGetInt(i)); err != nil {
+				if array[i-1], err = variantRfl.PullFrom(s, variantRfl, table.RawGetInt(i)); err != nil {
 					return nil, err
 				}
 			}
