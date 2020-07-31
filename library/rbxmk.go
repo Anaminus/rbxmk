@@ -32,17 +32,20 @@ var RBXMK = rbxmk.Library{
 				return s.RaiseError("unknown field %q", field)
 			}
 			desc := s.Desc(nil)
+			if desc == nil {
+				return s.Push(rtypes.Nil)
+			}
 			return s.Push(desc)
 		}))
 		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
 			if field := s.Pull(2, "string").(types.String); field != "desc" {
 				return s.RaiseError("unknown field %q", field)
 			}
-			desc := s.PullOpt(3, "RootDesc", nil)
+			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
 			if desc == nil {
 				s.SetDesc(nil)
 			}
-			s.SetDesc(desc.(*rtypes.RootDesc))
+			s.SetDesc(desc)
 			return 0
 		}))
 		s.L.SetMetatable(lib, mt)
