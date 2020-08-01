@@ -3,6 +3,7 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
+	"github.com/yuin/gopher-lua"
 )
 
 func NumberRange() Reflector {
@@ -13,12 +14,14 @@ func NumberRange() Reflector {
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)
-				return s.Push(types.String(v.String()))
+				s.L.Push(lua.LString(v.String()))
+				return 1
 			},
 			"__eq": func(s State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)
 				op := s.Pull(2, "NumberRange").(types.NumberRange)
-				return s.Push(types.Bool(v == op))
+				s.L.Push(lua.LBool(v == op))
+				return 1
 			},
 		},
 		Members: map[string]Member{

@@ -3,7 +3,7 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/robloxapi/types"
+	"github.com/yuin/gopher-lua"
 )
 
 func DescActions() Reflector {
@@ -14,7 +14,8 @@ func DescActions() Reflector {
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "DescActions").(rtypes.DescActions)
-				return s.Push(types.String(v.String()))
+				s.L.Push(lua.LString(v.String()))
+				return 1
 			},
 		},
 	}

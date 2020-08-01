@@ -4,6 +4,7 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
+	"github.com/yuin/gopher-lua"
 )
 
 func NumberSequence() Reflector {
@@ -14,20 +15,24 @@ func NumberSequence() Reflector {
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "NumberSequence").(types.NumberSequence)
-				return s.Push(types.String(v.String()))
+				s.L.Push(lua.LString(v.String()))
+				return 1
 			},
 			"__eq": func(s State) int {
 				v := s.Pull(1, "NumberSequence").(types.NumberSequence)
 				op := s.Pull(2, "NumberSequence").(types.NumberSequence)
 				if len(op) != len(v) {
-					return s.Push(types.False)
+					s.L.Push(lua.LFalse)
+					return 1
 				}
-				for i, v := range v {
-					if v != op[i] {
-						return s.Push(types.False)
+				for i, k := range v {
+					if k != op[i] {
+						s.L.Push(lua.LFalse)
+						return 1
 					}
 				}
-				return s.Push(types.True)
+				s.L.Push(lua.LTrue)
+				return 1
 			},
 		},
 		Members: map[string]Member{

@@ -4,6 +4,7 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
+	"github.com/yuin/gopher-lua"
 )
 
 func Color3() Reflector {
@@ -14,12 +15,14 @@ func Color3() Reflector {
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Color3").(types.Color3)
-				return s.Push(types.String(v.String()))
+				s.L.Push(lua.LString(v.String()))
+				return 1
 			},
 			"__eq": func(s State) int {
 				v := s.Pull(1, "Color3").(types.Color3)
 				op := s.Pull(2, "Color3").(types.Color3)
-				return s.Push(types.Bool(v == op))
+				s.L.Push(lua.LBool(v == op))
+				return 1
 			},
 		},
 		Members: map[string]Member{
