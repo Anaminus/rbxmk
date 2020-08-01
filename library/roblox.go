@@ -2,7 +2,7 @@ package library
 
 import (
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/library/roblox"
+	reflect "github.com/anaminus/rbxmk/library/roblox"
 	lua "github.com/yuin/gopher-lua"
 )
 

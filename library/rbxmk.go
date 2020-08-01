@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/library/rbxmk"
+	reflect "github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
