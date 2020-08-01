@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/anaminus/rbxmk"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 const testdata = "testdata"

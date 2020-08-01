@@ -6,7 +6,7 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {

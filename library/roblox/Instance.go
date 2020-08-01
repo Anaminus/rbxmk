@@ -7,7 +7,7 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 // pushPropertyTo behaves like PushVariantTo, except that exprims types are

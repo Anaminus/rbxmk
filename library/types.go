@@ -2,7 +2,7 @@ package library
 
 import (
 	"github.com/anaminus/rbxmk"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func setUserdata(s rbxmk.State, t string) int {

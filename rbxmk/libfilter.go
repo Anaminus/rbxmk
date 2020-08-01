@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type LibFilter struct {

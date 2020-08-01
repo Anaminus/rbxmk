@@ -1,7 +1,7 @@
 package rtypes
 
 import (
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type Table struct {

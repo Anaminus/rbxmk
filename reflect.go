@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type Reflector struct {

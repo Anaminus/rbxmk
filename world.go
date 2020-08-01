@@ -8,7 +8,7 @@ import (
 
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type World struct {

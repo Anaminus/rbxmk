@@ -3,7 +3,7 @@ package library
 import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/library/roblox"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(Roblox) }
