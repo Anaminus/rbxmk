@@ -5,13 +5,13 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func init() { register(Base) }
+func init() { register(Roblox) }
 
-var Base = rbxmk.Library{
+var Roblox = rbxmk.Library{
 	Name: "",
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)
-		lib.RawSetString("typeof", s.L.NewFunction(baseTypeof))
+		lib.RawSetString("typeof", s.L.NewFunction(robloxTypeof))
 
 		for _, r := range s.Reflectors(0) {
 			if mt := s.CreateTypeMetatable(r); mt != nil {
@@ -36,7 +36,7 @@ var Base = rbxmk.Library{
 	},
 }
 
-func baseTypeof(l *lua.LState) int {
+func robloxTypeof(l *lua.LState) int {
 	v := l.CheckAny(1)
 	u, ok := v.(*lua.LUserData)
 	if !ok {
