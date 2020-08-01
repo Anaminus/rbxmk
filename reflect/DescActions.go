@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(DescActions) }
 func DescActions() Reflector {
 	return Reflector{
 		Name:     "DescActions",

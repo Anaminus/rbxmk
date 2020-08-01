@@ -7,6 +7,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(CFrame) }
 func CFrame() Reflector {
 	return Reflector{
 		Name:     "CFrame",

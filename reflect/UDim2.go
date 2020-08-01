@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(UDim2) }
 func UDim2() Reflector {
 	return Reflector{
 		Name:     "UDim2",

@@ -4,63 +4,12 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
+var registry []func() rbxmk.Reflector
+
+func register(r func() rbxmk.Reflector) {
+	registry = append(registry, r)
+}
+
 func All() []func() rbxmk.Reflector {
-	return []func() rbxmk.Reflector{
-		Array,
-		Axes,
-		BinaryString,
-		Bool,
-		BrickColor,
-		CallbackDesc,
-		CFrame,
-		ClassDesc,
-		Color3,
-		Color3uint8,
-		ColorSequence,
-		ColorSequenceKeypoint,
-		Content,
-		DescActions,
-		Dictionary,
-		Double,
-		Enum,
-		EnumDesc,
-		EnumItem,
-		EnumItemDesc,
-		Enums,
-		EventDesc,
-		Faces,
-		Float,
-		FunctionDesc,
-		Instance,
-		Instances,
-		Int,
-		Int64,
-		Nil,
-		Number,
-		NumberRange,
-		NumberSequence,
-		NumberSequenceKeypoint,
-		ParameterDesc,
-		PhysicalProperties,
-		PropertyDesc,
-		ProtectedString,
-		Ray,
-		Rect,
-		Region3,
-		Region3int16,
-		RootDesc,
-		SharedString,
-		String,
-		Table,
-		Token,
-		Tuple,
-		TypeDesc,
-		UDim,
-		UDim2,
-		Variant,
-		Vector2,
-		Vector2int16,
-		Vector3,
-		Vector3int16,
-	}
+	return registry
 }

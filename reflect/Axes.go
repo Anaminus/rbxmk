@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Axes) }
 func Axes() Reflector {
 	return Reflector{
 		Name:     "Axes",

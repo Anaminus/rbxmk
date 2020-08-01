@@ -7,6 +7,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(EventDesc) }
 func EventDesc() Reflector {
 	return Reflector{
 		Name:     "EventDesc",

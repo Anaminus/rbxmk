@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(NumberRange) }
 func NumberRange() Reflector {
 	return Reflector{
 		Name:     "NumberRange",

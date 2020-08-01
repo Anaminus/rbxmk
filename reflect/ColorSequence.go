@@ -7,6 +7,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(ColorSequence) }
 func ColorSequence() Reflector {
 	return Reflector{
 		Name:     "ColorSequence",

@@ -8,6 +8,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(BrickColor) }
 func BrickColor() Reflector {
 	return Reflector{
 		Name:     "BrickColor",

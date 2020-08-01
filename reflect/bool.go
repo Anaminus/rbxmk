@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Bool) }
 func Bool() Reflector {
 	return Reflector{
 		Name: "bool",

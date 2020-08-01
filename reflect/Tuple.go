@@ -7,6 +7,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Tuple) }
 func Tuple() Reflector {
 	return Reflector{
 		Name:  "Tuple",

@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(PropertyDesc) }
 func PropertyDesc() Reflector {
 	return Reflector{
 		Name:     "PropertyDesc",

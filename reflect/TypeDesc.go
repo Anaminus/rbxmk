@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(TypeDesc) }
 func TypeDesc() Reflector {
 	return Reflector{
 		Name:     "TypeDesc",

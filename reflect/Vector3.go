@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Vector3) }
 func Vector3() Reflector {
 	return Reflector{
 		Name:     "Vector3",

@@ -99,6 +99,7 @@ func PullVariant(s State, n int) (v types.Value) {
 	return v
 }
 
+func init() { register(Variant) }
 func Variant() Reflector {
 	return Reflector{
 		Name: "Variant",

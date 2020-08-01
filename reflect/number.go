@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Float) }
 func Float() Reflector {
 	return Reflector{
 		Name:  "float",
@@ -29,6 +30,7 @@ func Float() Reflector {
 	}
 }
 
+func init() { register(Double) }
 func Double() Reflector {
 	return Reflector{
 		Name: "double",
@@ -51,6 +53,7 @@ func Double() Reflector {
 	}
 }
 
+func init() { register(Number) }
 func Number() Reflector {
 	return Reflector{
 		Name: "number",
@@ -66,6 +69,7 @@ func Number() Reflector {
 	}
 }
 
+func init() { register(Int) }
 func Int() Reflector {
 	return Reflector{
 		Name:  "int",
@@ -89,6 +93,7 @@ func Int() Reflector {
 	}
 }
 
+func init() { register(Int64) }
 func Int64() Reflector {
 	return Reflector{
 		Name:  "int64",
@@ -112,6 +117,7 @@ func Int64() Reflector {
 	}
 }
 
+func init() { register(Token) }
 func Token() Reflector {
 	return Reflector{
 		Name:  "token",

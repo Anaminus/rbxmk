@@ -9,6 +9,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(RootDesc) }
 func RootDesc() Reflector {
 	return Reflector{
 		Name:     "RootDesc",

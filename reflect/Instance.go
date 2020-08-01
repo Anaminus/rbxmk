@@ -152,6 +152,7 @@ func checkClassDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *r
 	return classDesc
 }
 
+func init() { register(Instance) }
 func Instance() Reflector {
 	return Reflector{
 		Name:     "Instance",

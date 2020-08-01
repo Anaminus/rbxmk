@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(Enum) }
 func Enum() Reflector {
 	return Reflector{
 		Name:     "Enum",

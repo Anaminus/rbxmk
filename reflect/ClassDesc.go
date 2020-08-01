@@ -9,6 +9,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(ClassDesc) }
 func ClassDesc() Reflector {
 	return Reflector{
 		Name:     "ClassDesc",

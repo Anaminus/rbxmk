@@ -9,6 +9,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Array) }
 func Array() Reflector {
 	return Reflector{
 		Name: "Array",

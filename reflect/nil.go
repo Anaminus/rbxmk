@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Nil) }
 func Nil() Reflector {
 	return Reflector{
 		Name: "nil",

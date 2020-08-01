@@ -9,6 +9,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Dictionary) }
 func Dictionary() Reflector {
 	return Reflector{
 		Name: "Dictionary",

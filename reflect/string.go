@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(String) }
 func String() Reflector {
 	return Reflector{
 		Name: "string",
@@ -21,6 +22,7 @@ func String() Reflector {
 	}
 }
 
+func init() { register(BinaryString) }
 func BinaryString() Reflector {
 	return Reflector{
 		Name:  "BinaryString",
@@ -44,6 +46,7 @@ func BinaryString() Reflector {
 	}
 }
 
+func init() { register(ProtectedString) }
 func ProtectedString() Reflector {
 	return Reflector{
 		Name:  "ProtectedString",
@@ -67,6 +70,7 @@ func ProtectedString() Reflector {
 	}
 }
 
+func init() { register(Content) }
 func Content() Reflector {
 	return Reflector{
 		Name:  "Content",
@@ -90,6 +94,7 @@ func Content() Reflector {
 	}
 }
 
+func init() { register(SharedString) }
 func SharedString() Reflector {
 	return Reflector{
 		Name:  "SharedString",

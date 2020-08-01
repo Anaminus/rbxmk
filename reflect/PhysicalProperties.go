@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(PhysicalProperties) }
 func PhysicalProperties() Reflector {
 	return Reflector{
 		Name:     "PhysicalProperties",

@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Region3) }
 func Region3() Reflector {
 	return Reflector{
 		Name:     "Region3",

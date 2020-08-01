@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(EnumItemDesc) }
 func EnumItemDesc() Reflector {
 	return Reflector{
 		Name:     "EnumItemDesc",

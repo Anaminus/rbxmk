@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(ParameterDesc) }
 func ParameterDesc() Reflector {
 	return Reflector{
 		Name:     "ParameterDesc",

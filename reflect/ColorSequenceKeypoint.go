@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(ColorSequenceKeypoint) }
 func ColorSequenceKeypoint() Reflector {
 	return Reflector{
 		Name:     "ColorSequenceKeypoint",
