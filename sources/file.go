@@ -9,6 +9,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(File) }
 func File() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "file",
