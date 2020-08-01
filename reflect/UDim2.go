@@ -3,7 +3,6 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func UDim2() Reflector {
@@ -13,23 +12,27 @@ func UDim2() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "UDim2").(types.UDim2).String()))
-				return 1
+				v := s.Pull(1, "UDim2").(types.UDim2)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
+				v := s.Pull(1, "UDim2").(types.UDim2)
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push(types.Bool(s.Pull(1, "UDim2").(types.UDim2) == op))
+				return s.Push(types.Bool(v == op))
 			},
 			"__add": func(s State) int {
+				v := s.Pull(1, "UDim2").(types.UDim2)
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push(s.Pull(1, "UDim2").(types.UDim2).Add(op))
+				return s.Push(v.Add(op))
 			},
 			"__sub": func(s State) int {
+				v := s.Pull(1, "UDim2").(types.UDim2)
 				op := s.Pull(2, "UDim2").(types.UDim2)
-				return s.Push(s.Pull(1, "UDim2").(types.UDim2).Sub(op))
+				return s.Push(v.Sub(op))
 			},
 			"__unm": func(s State) int {
-				return s.Push(s.Pull(1, "UDim2").(types.UDim2).Neg())
+				v := s.Pull(1, "UDim2").(types.UDim2)
+				return s.Push(v.Neg())
 			},
 		},
 		Members: map[string]Member{

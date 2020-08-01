@@ -3,7 +3,6 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func Region3() Reflector {
@@ -13,12 +12,13 @@ func Region3() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "Region3").(types.Region3).String()))
-				return 1
+				v := s.Pull(1, "Region3").(types.Region3)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
+				v := s.Pull(1, "Region3").(types.Region3)
 				op := s.Pull(2, "Region3").(types.Region3)
-				return s.Push(types.Bool(s.Pull(1, "Region3").(types.Region3) == op))
+				return s.Push(types.Bool(v == op))
 			},
 		},
 		Members: map[string]Member{

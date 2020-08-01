@@ -4,7 +4,6 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func ColorSequence() Reflector {
@@ -14,17 +13,17 @@ func ColorSequence() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "ColorSequence").(types.ColorSequence).String()))
-				return 1
+				v := s.Pull(1, "ColorSequence").(types.ColorSequence)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
-				u := s.Pull(1, "ColorSequence").(types.ColorSequence)
+				v := s.Pull(1, "ColorSequence").(types.ColorSequence)
 				op := s.Pull(2, "ColorSequence").(types.ColorSequence)
-				if len(op) != len(u) {
+				if len(op) != len(v) {
 					return s.Push(types.False)
 				}
-				for i, v := range u {
-					if v != op[i] {
+				for i, k := range v {
+					if k != op[i] {
 						return s.Push(types.False)
 					}
 				}

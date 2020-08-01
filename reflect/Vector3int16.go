@@ -3,7 +3,6 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func Vector3int16() Reflector {
@@ -13,45 +12,51 @@ func Vector3int16() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "Vector3int16").(types.Vector3int16).String()))
-				return 1
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push(types.Bool(s.Pull(1, "Vector3int16").(types.Vector3int16) == op))
+				return s.Push(types.Bool(v == op))
 			},
 			"__add": func(s State) int {
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).Add(op))
+				return s.Push(v.Add(op))
 			},
 			"__sub": func(s State) int {
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
 				op := s.Pull(2, "Vector3int16").(types.Vector3int16)
-				return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).Sub(op))
+				return s.Push(v.Sub(op))
 			},
 			"__mul": func(s State) int {
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
-					return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).MulN(float64(op)))
+					return s.Push(v.MulN(float64(op)))
 				case types.Vector3int16:
-					return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).Mul(op))
+					return s.Push(v.Mul(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3int16 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__div": func(s State) int {
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
 				switch op := s.PullAnyOf(2, "number", "Vector3int16").(type) {
 				case types.Double:
-					return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).DivN(float64(op)))
+					return s.Push(v.DivN(float64(op)))
 				case types.Vector3int16:
-					return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).Div(op))
+					return s.Push(v.Div(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3int16 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__unm": func(s State) int {
-				return s.Push(s.Pull(1, "Vector3int16").(types.Vector3int16).Neg())
+				v := s.Pull(1, "Vector3int16").(types.Vector3int16)
+				return s.Push(v.Neg())
 			},
 		},
 		Members: map[string]Member{

@@ -4,7 +4,6 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func CFrame() Reflector {
@@ -14,27 +13,31 @@ func CFrame() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "CFrame").(types.CFrame).String()))
-				return 1
+				v := s.Pull(1, "CFrame").(types.CFrame)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
+				v := s.Pull(1, "CFrame").(types.CFrame)
 				op := s.Pull(2, "CFrame").(types.CFrame)
-				return s.Push(types.Bool(s.Pull(1, "CFrame").(types.CFrame) == op))
+				return s.Push(types.Bool(v == op))
 			},
 			"__add": func(s State) int {
+				v := s.Pull(1, "CFrame").(types.CFrame)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(s.Pull(1, "CFrame").(types.CFrame).AddVec(op))
+				return s.Push(v.AddVec(op))
 			},
 			"__sub": func(s State) int {
+				v := s.Pull(1, "CFrame").(types.CFrame)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(s.Pull(1, "CFrame").(types.CFrame).SubVec(op))
+				return s.Push(v.SubVec(op))
 			},
 			"__mul": func(s State) int {
+				v := s.Pull(1, "CFrame").(types.CFrame)
 				switch op := s.PullAnyOf(2, "CFrame", "Vector3").(type) {
 				case types.CFrame:
-					return s.Push(s.Pull(1, "CFrame").(types.CFrame).Mul(op))
+					return s.Push(v.Mul(op))
 				case types.Vector3:
-					return s.Push(s.Pull(1, "CFrame").(types.CFrame).MulVec(op))
+					return s.Push(v.MulVec(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible types.value type or nil")
 					return 0

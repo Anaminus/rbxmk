@@ -3,7 +3,6 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
-	"github.com/yuin/gopher-lua"
 )
 
 func Vector3() Reflector {
@@ -13,45 +12,51 @@ func Vector3() Reflector {
 		PullFrom: PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
-				s.L.Push(lua.LString(s.Pull(1, "Vector3").(types.Vector3).String()))
-				return 1
+				v := s.Pull(1, "Vector3").(types.Vector3)
+				return s.Push(types.String(v.String()))
 			},
 			"__eq": func(s State) int {
+				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(types.Bool(s.Pull(1, "Vector3").(types.Vector3) == op))
+				return s.Push(types.Bool(v == op))
 			},
 			"__add": func(s State) int {
+				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(s.Pull(1, "Vector3").(types.Vector3).Add(op))
+				return s.Push(v.Add(op))
 			},
 			"__sub": func(s State) int {
+				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(s.Pull(1, "Vector3").(types.Vector3).Sub(op))
+				return s.Push(v.Sub(op))
 			},
 			"__mul": func(s State) int {
+				v := s.Pull(1, "Vector3").(types.Vector3)
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
-					return s.Push(s.Pull(1, "Vector3").(types.Vector3).MulN(float64(op)))
+					return s.Push(v.MulN(float64(op)))
 				case types.Vector3:
-					return s.Push(s.Pull(1, "Vector3").(types.Vector3).Mul(op))
+					return s.Push(v.Mul(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__div": func(s State) int {
+				v := s.Pull(1, "Vector3").(types.Vector3)
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
-					return s.Push(s.Pull(1, "Vector3").(types.Vector3).DivN(float64(op)))
+					return s.Push(v.DivN(float64(op)))
 				case types.Vector3:
-					return s.Push(s.Pull(1, "Vector3").(types.Vector3).Div(op))
+					return s.Push(v.Div(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a Vector3 with an incompatible value type or nil")
 					return 0
 				}
 			},
 			"__unm": func(s State) int {
-				return s.Push(s.Pull(1, "Vector3").(types.Vector3).Neg())
+				v := s.Pull(1, "Vector3").(types.Vector3)
+				return s.Push(v.Neg())
 			},
 		},
 		Members: map[string]Member{
