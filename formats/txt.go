@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(Text) }
 func Text() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "txt",

@@ -363,6 +363,7 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v types
 	return buf.Bytes(), nil
 }
 
+func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxl",
@@ -375,6 +376,7 @@ func RBXL() rbxmk.Format {
 	}
 }
 
+func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxm",
@@ -387,6 +389,7 @@ func RBXM() rbxmk.Format {
 	}
 }
 
+func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxlx",
@@ -399,6 +402,7 @@ func RBXLX() rbxmk.Format {
 	}
 }
 
+func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxmx",

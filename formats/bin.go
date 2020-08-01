@@ -6,6 +6,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(Binary) }
 func Binary() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "bin",

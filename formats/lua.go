@@ -20,6 +20,7 @@ func encodeScript(v types.Value) (b []byte, err error) {
 	return []byte(s.Stringlike()), nil
 }
 
+func init() { register(ModuleScriptLua) }
 func ModuleScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "modulescript.lua",
@@ -30,6 +31,7 @@ func ModuleScriptLua() rbxmk.Format {
 	}
 }
 
+func init() { register(ScriptLua) }
 func ScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "script.lua",
@@ -40,6 +42,7 @@ func ScriptLua() rbxmk.Format {
 	}
 }
 
+func init() { register(LocalScriptLua) }
 func LocalScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "localscript.lua",
@@ -50,6 +53,7 @@ func LocalScriptLua() rbxmk.Format {
 	}
 }
 
+func init() { register(Lua) }
 func Lua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "lua",
@@ -60,6 +64,7 @@ func Lua() rbxmk.Format {
 	}
 }
 
+func init() { register(ServerLua) }
 func ServerLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "server.lua",
@@ -70,6 +75,7 @@ func ServerLua() rbxmk.Format {
 	}
 }
 
+func init() { register(ClientLua) }
 func ClientLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "client.lua",

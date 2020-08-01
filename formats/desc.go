@@ -11,6 +11,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(Desc) }
 func Desc() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "desc.json",
@@ -32,6 +33,7 @@ func Desc() rbxmk.Format {
 	}
 }
 
+func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "desc-patch.json",

@@ -6,23 +6,14 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
+var registry []func() rbxmk.Format
+
+func register(f func() rbxmk.Format) {
+	registry = append(registry, f)
+}
+
 func All() []func() rbxmk.Format {
-	return []func() rbxmk.Format{
-		Binary,
-		ClientLua,
-		Desc,
-		DescPatch,
-		LocalScriptLua,
-		Lua,
-		ModuleScriptLua,
-		RBXL,
-		RBXLX,
-		RBXM,
-		RBXMX,
-		ScriptLua,
-		ServerLua,
-		Text,
-	}
+	return registry
 }
 
 func cannotEncode(v interface{}) error {
