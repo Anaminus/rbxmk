@@ -71,12 +71,6 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 	return nil
 }
 
-// Reflector returns the Reflector registered with the given name. If the name
-// is not registered, then Reflector.Name will be an empty string.
-func (w *World) Reflector(name string) Reflector {
-	return w.reflectors[name]
-}
-
 // CreateTypeMetatable constructs a metatable from the given Reflector. If
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
@@ -248,6 +242,12 @@ func (w *World) RegisterReflector(r Reflector) {
 	w.reflectors[r.Name] = r
 }
 
+// Reflector returns the Reflector registered with the given name. If the name
+// is not registered, then Reflector.Name will be an empty string.
+func (w *World) Reflector(name string) Reflector {
+	return w.reflectors[name]
+}
+
 // Reflectors returns a list of reflectors that have all of the given flags set.
 func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 	ts := []Reflector{}
@@ -262,12 +262,6 @@ func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 	return ts
 }
 
-// Format returns the Format registered with the given name. If the name is not
-// registered, then Format.Name will be an empty string.
-func (w *World) Format(name string) Format {
-	return w.formats[strings.TrimPrefix(name, ".")]
-}
-
 // RegisterFormat registers a format. Panics if the format is already
 // registered.
 func (w *World) RegisterFormat(f Format) {
@@ -279,6 +273,12 @@ func (w *World) RegisterFormat(f Format) {
 		w.formats = map[string]Format{}
 	}
 	w.formats[f.Name] = f
+}
+
+// Format returns the Format registered with the given name. If the name is not
+// registered, then Format.Name will be an empty string.
+func (w *World) Format(name string) Format {
+	return w.formats[strings.TrimPrefix(name, ".")]
 }
 
 // Ext returns the extension of filename that most closely matches the name of a
@@ -303,12 +303,6 @@ func (w *World) Ext(filename string) (ext string) {
 	}
 }
 
-// Source returns the Source registered with the given name. If the name is not
-// registered, then Source.Name will be an empty string.
-func (w *World) Source(name string) Source {
-	return w.sources[name]
-}
-
 // RegisterSource registers a source. Panics if the source is already
 // registered, or the source's library could not be opened.
 func (w *World) RegisterSource(s Source) {
@@ -328,6 +322,12 @@ func (w *World) RegisterSource(s Source) {
 			panic(err.Error())
 		}
 	}
+}
+
+// Source returns the Source registered with the given name. If the name is not
+// registered, then Source.Name will be an empty string.
+func (w *World) Source(name string) Source {
+	return w.sources[name]
 }
 
 // Sources returns a list of registered sources.
