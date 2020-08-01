@@ -2,6 +2,7 @@ package library
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/library/roblox"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -13,23 +14,10 @@ var Roblox = rbxmk.Library{
 		lib := s.L.CreateTable(0, 1)
 		lib.RawSetString("typeof", s.L.NewFunction(robloxTypeof))
 
-		for _, r := range s.Reflectors(0) {
-			if mt := s.CreateTypeMetatable(r); mt != nil {
-				s.L.SetField(s.L.Get(lua.RegistryIndex), r.Name, mt)
-			}
-			if r.Constructors != nil {
-				ctors := s.L.CreateTable(0, len(r.Constructors))
-				for name, ctor := range r.Constructors {
-					c := ctor
-					ctors.RawSetString(name, s.L.NewFunction(func(l *lua.LState) int {
-						return c(s)
-					}))
-				}
-				lib.RawSetString(r.Name, ctors)
-			}
-			if r.Environment != nil {
-				r.Environment(s, lib)
-			}
+		for _, f := range reflect.All() {
+			r := f()
+			s.RegisterReflector(r)
+			s.ApplyReflector(r, lib)
 		}
 
 		return lib

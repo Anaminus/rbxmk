@@ -71,10 +71,10 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 	return nil
 }
 
-// CreateTypeMetatable constructs a metatable from the given Reflector. If
+// createTypeMetatable constructs a metatable from the given Reflector. If
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
-func (w *World) CreateTypeMetatable(r Reflector) (mt *lua.LTable) {
+func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	if r.Metatable == nil && r.Members == nil && r.Flags&Exprim == 0 {
 		// No metatable.
 		return nil
@@ -230,8 +230,9 @@ func (w *World) CreateTypeMetatable(r Reflector) (mt *lua.LTable) {
 	return mt
 }
 
-// RegisterReflector registers a reflector. Panics if the reflector is already
-// registered.
+// RegisterReflector registers a reflector. If the reflector produces a
+// metatable, then it is added as a type metatable to the world's state. Panics
+// if the reflector is already registered.
 func (w *World) RegisterReflector(r Reflector) {
 	if _, ok := w.reflectors[r.Name]; ok {
 		panic("reflector " + r.Name + " already registered")
@@ -240,6 +241,10 @@ func (w *World) RegisterReflector(r Reflector) {
 		w.reflectors = map[string]Reflector{}
 	}
 	w.reflectors[r.Name] = r
+
+	if mt := w.createTypeMetatable(r); mt != nil {
+		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
+	}
 }
 
 // Reflector returns the Reflector registered with the given name. If the name
@@ -260,6 +265,24 @@ func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 		return ts[i].Name < ts[j].Name
 	})
 	return ts
+}
+
+// ApplyReflector applies a reflector to a table by setting contructors and
+// initializing the reflector's environment.
+func (w *World) ApplyReflector(r Reflector, t *lua.LTable) {
+	if r.Constructors != nil {
+		ctors := w.l.CreateTable(0, len(r.Constructors))
+		for name, ctor := range r.Constructors {
+			c := ctor
+			ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
+				return c(State{World: w, L: w.l})
+			}))
+		}
+		t.RawSetString(r.Name, ctors)
+	}
+	if r.Environment != nil {
+		r.Environment(State{World: w, L: w.l}, t)
+	}
 }
 
 // RegisterFormat registers a format. Panics if the format is already

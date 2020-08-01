@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
@@ -27,6 +28,12 @@ var RBXMK = rbxmk.Library{
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
 		lib.RawSetString("writeSource", s.WrapFunc(rbxmkWriteSource))
+
+		for _, f := range reflect.All() {
+			r := f()
+			s.RegisterReflector(r)
+			s.ApplyReflector(r, lib)
+		}
 
 		mt := s.L.CreateTable(0, 2)
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
