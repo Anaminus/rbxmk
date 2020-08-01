@@ -83,7 +83,6 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 		SkipOpenLibs:        true,
 		IncludeGoStackTrace: false,
 	}))
-	OpenFilteredLibs(world.State(), GetFilteredStdLib())
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
 	}
