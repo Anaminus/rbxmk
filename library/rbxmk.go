@@ -12,6 +12,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(RBXMK) }
+
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {

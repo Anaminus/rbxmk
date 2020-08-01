@@ -5,6 +5,8 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func init() { register(Sources) }
+
 var Sources = rbxmk.Library{
 	Name: "",
 	Open: func(s rbxmk.State) *lua.LTable {

@@ -13,6 +13,8 @@ func setUserdata(s rbxmk.State, t string) int {
 	return 1
 }
 
+func init() { register(Types) }
+
 var Types = rbxmk.Library{
 	Name: "types",
 	Open: func(s rbxmk.State) *lua.LTable {
