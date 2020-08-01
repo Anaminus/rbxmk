@@ -6,7 +6,6 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/robloxapi/rbxdump/diff"
 	rbxdumpjson "github.com/robloxapi/rbxdump/json"
 	"github.com/robloxapi/types"
 )
@@ -38,14 +37,14 @@ func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "desc-patch.json",
 		Decode: func(b []byte) (v types.Value, err error) {
-			var actions []diff.Action
+			var actions rtypes.DescActions
 			if err := json.Unmarshal(b, &actions); err != nil {
 				return nil, err
 			}
 			return rtypes.DescActions(actions), nil
 		},
 		Encode: func(v types.Value) (b []byte, err error) {
-			actions := []diff.Action(v.(rtypes.DescActions))
+			actions := v.(rtypes.DescActions)
 			return json.MarshalIndent(actions, "", "\t")
 		},
 	}

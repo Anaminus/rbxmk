@@ -176,12 +176,20 @@ func rbxmkDiffDesc(s rbxmk.State) int {
 		next = v.Root
 	}
 	actions := diff.Diff{Prev: prev, Next: next}.Diff()
-	return s.Push(rtypes.DescActions(actions))
+	descActions := make(rtypes.DescActions, len(actions))
+	for i, action := range actions {
+		descActions[i] = &rtypes.DescAction{Action: action}
+	}
+	return s.Push(descActions)
 }
 
 func rbxmkPatchDesc(s rbxmk.State) int {
 	desc := s.Pull(1, "RootDesc").(*rtypes.RootDesc).Root
-	actions := []diff.Action(s.Pull(2, "DescActions").(rtypes.DescActions))
+	descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
+	actions := make([]diff.Action, len(descActions))
+	for i, action := range descActions {
+		actions[i] = action.Action
+	}
 	diff.Patch{Root: desc}.Patch(actions)
 	return 0
 }

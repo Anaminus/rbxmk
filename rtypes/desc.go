@@ -2,7 +2,6 @@ package rtypes
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
@@ -171,17 +170,20 @@ func (d EnumItemDesc) String() string {
 	return "EnumItemDesc"
 }
 
-type DescActions []diff.Action
+type DescActions []*DescAction
 
 func (DescActions) Type() string {
 	return "DescActions"
 }
 
-func (a DescActions) String() string {
-	var b strings.Builder
-	for _, action := range a {
-		b.WriteString(action.String())
-		b.WriteByte('\n')
-	}
-	return b.String()
+type DescAction struct {
+	diff.Action
+}
+
+func (DescAction) Type() string {
+	return "DescAction"
+}
+
+func (a DescAction) String() string {
+	return a.Action.String()
 }

@@ -3,21 +3,46 @@ package reflect
 import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(DescActions) }
 func DescActions() Reflector {
 	return Reflector{
-		Name:     "DescActions",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
-				v := s.Pull(1, "DescActions").(rtypes.DescActions)
-				s.L.Push(lua.LString(v.String()))
-				return 1
-			},
+		Name: "DescActions",
+		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+			actions, ok := v.(rtypes.DescActions)
+			if !ok {
+				return nil, TypeError(nil, 0, "DescActions")
+			}
+			actionRfl := s.Reflector("DescAction")
+			table := s.L.CreateTable(len(actions), 0)
+			for i, v := range actions {
+				lv, err := actionRfl.PushTo(s, actionRfl, v)
+				if err != nil {
+					return nil, err
+				}
+				table.RawSetInt(i+1, lv[0])
+			}
+			return []lua.LValue{table}, nil
+		},
+		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+			table, ok := lvs[0].(*lua.LTable)
+			if !ok {
+				return nil, TypeError(nil, 0, "table")
+			}
+			actionRfl := s.Reflector("DescAction")
+			n := table.Len()
+			actions := make(rtypes.DescActions, n)
+			for i := 1; i <= n; i++ {
+				v, err := actionRfl.PullFrom(s, actionRfl, table.RawGetInt(i))
+				if err != nil {
+					return nil, err
+				}
+				actions[i-1] = v.(*rtypes.DescAction)
+			}
+			return actions, nil
 		},
 	}
 }
