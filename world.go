@@ -79,10 +79,10 @@ func (w *World) Reflector(name string) Reflector {
 	return w.reflectors[name]
 }
 
-// createMetatable constructs a metatable from the given Reflector. If Members
-// and Exprim is set, then the Value field will be injected if it does not
-// already exist.
-func (w *World) createMetatable(r Reflector) (mt *lua.LTable) {
+// CreateTypeMetatable constructs a metatable from the given Reflector. If
+// Members and Exprim is set, then the Value field will be injected if it does
+// not already exist.
+func (w *World) CreateTypeMetatable(r Reflector) (mt *lua.LTable) {
 	if r.Metatable == nil && r.Members == nil && r.Flags&Exprim == 0 {
 		// No metatable.
 		return nil
@@ -248,23 +248,6 @@ func (w *World) RegisterReflector(r Reflector) {
 		w.reflectors = map[string]Reflector{}
 	}
 	w.reflectors[r.Name] = r
-
-	if mt := w.createMetatable(r); mt != nil {
-		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
-	}
-	if r.Constructors != nil {
-		ctors := w.l.CreateTable(0, len(r.Constructors))
-		for name, ctor := range r.Constructors {
-			c := ctor
-			ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
-				return c(State{World: w, L: w.l})
-			}))
-		}
-		w.l.SetGlobal(r.Name, ctors)
-	}
-	if r.Environment != nil {
-		r.Environment(State{World: w, L: w.l})
-	}
 }
 
 // Reflectors returns a list of reflectors that have all of the given flags set.

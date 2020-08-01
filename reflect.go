@@ -43,8 +43,8 @@ type Reflector struct {
 	Constructors Constructors
 
 	// Environment is called after the type is registered to provide additional
-	// setup.
-	Environment func(s State)
+	// setup. env is the table representing the base library.
+	Environment func(s State, env *lua.LTable)
 }
 
 type ReflectorFlags uint8

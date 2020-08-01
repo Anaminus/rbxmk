@@ -498,13 +498,13 @@ func Instance() Reflector {
 				return s.Push(inst)
 			},
 		},
-		Environment: func(s State) {
+		Environment: func(s State, env *lua.LTable) {
 			t := s.L.CreateTable(0, 1)
 			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
 				dataModel := rtypes.NewDataModel()
 				return s.Push(dataModel)
 			}))
-			s.L.SetGlobal("DataModel", t)
+			env.RawSetString("DataModel", t)
 		},
 	}
 }
