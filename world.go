@@ -46,27 +46,25 @@ func (w *World) Open(lib Library) error {
 // then lib is merged into the global table itself. An error is returned if the
 // merged value is not a table.
 func (w *World) OpenAs(name string, lib Library) error {
-	t := lib.Open(State{World: w, L: w.l})
-	return w.mergeGlobal(name, t)
+	src := lib.Open(State{World: w, L: w.l})
+	// TODO: Is lua.LState.G.Global safe to use?
+	return w.MergeTables(w.l.G.Global, src, name)
 }
 
-// mergeGlobal merges t into the global table according to name. Returns an
-// error if t could not be merged.
-func (w *World) mergeGlobal(name string, t *lua.LTable) error {
+// MargeTables merges src into dst according to name. If name is empty, then
+// each key in src is set in dst. If dst[name] is a table, then each key in src
+// is set in that table. If dst[name] is nil, then it is set directly to src.
+// Returns an error if the tables could not be merged.
+func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 	if name == "" {
-		t.ForEach(func(k, v lua.LValue) {
-			if s, ok := k.(lua.LString); ok {
-				w.l.SetGlobal(string(s), v)
-			}
-		})
+		src.ForEach(func(k, v lua.LValue) { dst.RawSet(k, v) })
 		return nil
 	}
-	u := w.l.GetGlobal(name)
-	switch u := u.(type) {
+	switch u := dst.RawGetString(name).(type) {
 	case *lua.LTable:
-		t.ForEach(func(k, v lua.LValue) { u.RawSet(k, v) })
+		src.ForEach(func(k, v lua.LValue) { u.RawSet(k, v) })
 	case *lua.LNilType:
-		w.l.SetGlobal(name, t)
+		dst.RawSetString(name, src)
 	default:
 		return fmt.Errorf("cannot merge %s into %s", name, u.Type().String())
 	}
@@ -330,6 +328,18 @@ func (w *World) RegisterSource(s Source) {
 			panic(err.Error())
 		}
 	}
+}
+
+// Sources returns a list of registered sources.
+func (w *World) Sources() []Source {
+	sources := []Source{}
+	for _, source := range w.sources {
+		sources = append(sources, source)
+	}
+	sort.Slice(sources, func(i, j int) bool {
+		return sources[i].Name < sources[j].Name
+	})
+	return sources
 }
 
 // State returns the underlying Lua state.
