@@ -54,8 +54,12 @@ func (w *World) OpenAs(name string, lib Library) error {
 // MargeTables merges src into dst according to name. If name is empty, then
 // each key in src is set in dst. If dst[name] is a table, then each key in src
 // is set in that table. If dst[name] is nil, then it is set directly to src.
-// Returns an error if the tables could not be merged.
+// Does nothing if src or dst is nil. Returns an error if the tables could not
+// be merged.
 func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
+	if src == nil || dst == nil {
+		return nil
+	}
 	if name == "" {
 		src.ForEach(func(k, v lua.LValue) { dst.RawSet(k, v) })
 		return nil
