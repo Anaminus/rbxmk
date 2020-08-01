@@ -6,7 +6,7 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func init() { register(Roblox) }
+func init() { register(Roblox, 1) }
 
 var Roblox = rbxmk.Library{
 	Name: "",

@@ -13,7 +13,7 @@ func setUserdata(s rbxmk.State, t string) int {
 	return 1
 }
 
-func init() { register(Types) }
+func init() { register(Types, 10) }
 
 var Types = rbxmk.Library{
 	Name: "types",

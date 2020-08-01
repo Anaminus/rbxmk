@@ -9,7 +9,7 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func init() { register(OS) }
+func init() { register(OS, 10) }
 
 var OS = rbxmk.Library{
 	Name: "os",

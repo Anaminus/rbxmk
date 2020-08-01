@@ -13,7 +13,7 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func init() { register(RBXMK) }
+func init() { register(RBXMK, 0) }
 
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",

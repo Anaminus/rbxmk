@@ -5,7 +5,7 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func init() { register(Sources) }
+func init() { register(Sources, 10) }
 
 var Sources = rbxmk.Library{
 	Name: "",
