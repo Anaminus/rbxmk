@@ -281,6 +281,18 @@ func (w *World) Format(name string) Format {
 	return w.formats[strings.TrimPrefix(name, ".")]
 }
 
+// Formats returns a list of registered formats.
+func (w *World) Formats() []Format {
+	formats := []Format{}
+	for _, format := range w.formats {
+		formats = append(formats, format)
+	}
+	sort.Slice(formats, func(i, j int) bool {
+		return formats[i].Name < formats[j].Name
+	})
+	return formats
+}
+
 // Ext returns the extension of filename that most closely matches the name of a
 // registered format. Returns an empty string if no format was found.
 func (w *World) Ext(filename string) (ext string) {
