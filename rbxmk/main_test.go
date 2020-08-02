@@ -2,10 +2,8 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,7 +16,7 @@ import (
 
 const testdata = "testdata"
 
-var scriptArguments = []string{
+var scriptArguments = [...]string{
 	"rbxmk_test",
 	"-",
 	"true",
@@ -116,42 +114,68 @@ func initMain(s rbxmk.State) {
 	}))
 }
 
+type Directive int
+
+const (
+	Fail Directive = 1 << iota
+	Skip
+	None = 0
+)
+
+func checkDirective(path string) (d Directive) {
+	f, err := os.Open(path)
+	if err != nil {
+		return d
+	}
+	defer f.Close()
+	first, _ := bufio.NewReader(f).ReadString('\n')
+	if !strings.HasPrefix(strings.TrimSpace(first), "--") {
+		return d
+	}
+	if strings.Contains(first, "skip") {
+		d |= Skip
+	}
+	if strings.Contains(first, "fail") {
+		d |= Fail
+	}
+	return d
+}
+
 // TestScripts runs each .lua file in testdata as a Lua script. If the first
 // line starts with a comment that contains "fail", then the script is expected
 // to throw an error. All scripts receive the arguments from scriptArguments.
 func TestScripts(t *testing.T) {
-	files, err := ioutil.ReadDir(testdata)
+	var files []string
+	err := filepath.Walk(testdata, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && filepath.Ext(info.Name()) == ".lua" {
+			files = append(files, path)
+		}
+		return nil
+	})
 	if err != nil {
-		t.Fatalf("missing testdata: %s", err)
+		t.Fatalf("error walking testdata: %s", err)
 	}
 	for _, file := range files {
-		if file.IsDir() || filepath.Ext(file.Name()) != ".lua" {
+		d := checkDirective(file)
+		if d&Skip != 0 {
 			continue
 		}
-		script, err := ioutil.ReadFile(filepath.Join(testdata, file.Name()))
-		if err != nil {
-			t.Errorf("read file: %s", err)
-			continue
-		}
-		r := bytes.NewReader(script)
-		first, _ := bufio.NewReader(r).ReadString('\n')
-		mustFail := strings.HasPrefix(strings.TrimSpace(first), "--") && strings.Contains(first, "fail")
-		r.Reset(script)
-		err = Main(scriptArguments, Std{
-			in: &dummyFile{r: r, info: &dummyInfo{
-				name:  "stdin",
-				size:  0,
-				isdir: false,
-				mode:  69206454,
-				time:  time.Now(),
-			}},
-			out: os.Stdout,
-			err: os.Stderr,
-		}, initMain)
-		if mustFail && err == nil {
-			t.Errorf("script %s: error expected", file.Name())
-		} else if !mustFail && err != nil {
-			t.Errorf("script %s: %s", file.Name(), err)
-		}
+		t.Run(filepath.ToSlash(file), func(t *testing.T) {
+			args := scriptArguments
+			args[1] = file
+			err := Main(args[:], Std{
+				in:  os.Stdin,
+				out: os.Stdout,
+				err: os.Stderr,
+			}, initMain)
+			if d&Fail != 0 && err == nil {
+				t.Errorf("script %s: error expected", file)
+			} else if d&Fail == 0 && err != nil {
+				t.Errorf("script %s: %s", file, err)
+			}
+		})
 	}
 }
