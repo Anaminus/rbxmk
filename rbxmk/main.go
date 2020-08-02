@@ -95,6 +95,8 @@ func Main(args []string, std Std, init func(rbxmk.State)) error {
 		}
 	}
 
+	world.State().SetGlobal("_RBXMK_VERSION", lua.LString(Version))
+
 	// Add script arguments.
 	for _, arg := range args {
 		world.State().Push(ParseLuaValue(arg))
