@@ -73,6 +73,8 @@ func rbxmkLoad(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 
+	nt := s.L.GetTop()
+
 	// Load file as function.
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
@@ -82,7 +84,6 @@ func rbxmkLoad(s rbxmk.State) int {
 	s.L.Push(fn) // +function
 
 	// Push extra arguments as arguments to loaded function.
-	nt := s.L.GetTop()
 	for i := 2; i <= nt; i++ {
 		s.L.Push(s.L.Get(i)) // function, ..., +arg
 	}
@@ -94,7 +95,7 @@ func rbxmkLoad(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	return s.L.GetTop() - 1
+	return s.L.GetTop() - nt
 }
 
 func metaGet(s rbxmk.State, inst *rtypes.Instance, name string) int {
