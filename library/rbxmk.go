@@ -123,10 +123,10 @@ func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 func rbxmkMeta(s rbxmk.State) int {
 	inst := s.Pull(1, "Instance").(*rtypes.Instance)
 	name := string(s.Pull(2, "string").(types.String))
-	if s.Count() == 3 {
-		return metaSet(s, inst, name)
+	if s.Count() <= 2 {
+		return metaGet(s, inst, name)
 	}
-	return metaGet(s, inst, name)
+	return metaSet(s, inst, name)
 }
 
 func rbxmkNewDesc(s rbxmk.State) int {
