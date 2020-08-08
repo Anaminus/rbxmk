@@ -439,6 +439,9 @@ func (inst *Instance) GetFullName() string {
 func (inst *Instance) Desc() *RootDesc {
 	parent := inst
 	for parent != nil {
+		if parent.descBlocked {
+			return nil
+		}
 		if parent.desc != nil {
 			return parent.desc
 		}
