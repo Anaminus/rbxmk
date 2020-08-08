@@ -21,10 +21,7 @@ type World struct {
 }
 
 func NewWorld(l *lua.LState) *World {
-	return &World{
-		l:          l,
-		reflectors: map[string]Reflector{},
-	}
+	return &World{l: l}
 }
 
 // Library represents a Lua library.
