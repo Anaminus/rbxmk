@@ -437,10 +437,7 @@ func (inst *Instance) GetFullName() string {
 // non-nil or blocked descriptor is found. Nil is returned if no descriptors are
 // found.
 func (inst *Instance) Desc() *RootDesc {
-	if inst.desc != nil {
-		return inst.desc
-	}
-	parent := inst.parent
+	parent := inst
 	for parent != nil {
 		if parent.desc != nil {
 			return parent.desc
