@@ -1,12 +1,20 @@
 local game = DataModel.new()
-PASS(function() game.ExplicitAutoJoints = true end, "DataModel must set properties")
-PASS(game.ExplicitAutoJoints == true              , "DataModel must get properties")
-FAIL(function() game.ClassName = "BoolValue"   end, "cannot set ClassName of DataModel")
+T.Pass("DataModel can set properties",
+	function() game.ExplicitAutoJoints = true end)
+T.Pass("DataModel can get properties",
+	game.ExplicitAutoJoints == true)
+T.Fail("cannot set ClassName of DataModel",
+	function() game.ClassName = "BoolValue" end)
 
 local workspace = game:GetService("Workspace")
-PASS(workspace.ClassName == "Workspace"        , "GetService must set ClassName to given value")
-PASS(workspace.Name == "Workspace"             , "GetService must set Name to given value")
-PASS(workspace.Parent == game                  , "GetService must set Parent to DataModel")
-PASS(game:GetService("Workspace") == workspace , "GetService must return singleton")
+T.Pass("GetService sets ClassName to given value",
+	workspace.ClassName == "Workspace")
+T.Pass("GetService sets Name to given value",
+	workspace.Name == "Workspace")
+T.Pass("GetService sets Parent to DataModel",
+	workspace.Parent == game)
+T.Pass("GetService returns singleton",
+	game:GetService("Workspace") == workspace)
 
-FAIL(function() Instance.new("BoolValue"):GetService("Workspace") end, "non-DataModel instance must not have GetService")
+T.Fail("non-DataModel instance does not have GetService",
+	function() Instance.new("BoolValue"):GetService("Workspace") end)

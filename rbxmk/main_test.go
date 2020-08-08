@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -54,42 +53,51 @@ func (d *dummyInfo) ModTime() time.Time { return d.time }
 func (d *dummyInfo) IsDir() bool        { return d.isdir }
 func (d *dummyInfo) Sys() interface{}   { return d }
 
-func initMain(s rbxmk.State) {
-	// PASS makes a positive assertion. If the first argument is a non-function,
-	// then an error is thrown if the value is falsy. Otherwise, the function is
-	// called. If the call errors or returns a falsy value, then an error is
-	// thrown. Returning no value counts as truthy. The second argument is an
-	// optional message to display with the error.
-	s.L.SetGlobal("PASS", s.L.NewFunction(func(l *lua.LState) int {
-		v := l.CheckAny(1)
-		msg := l.OptString(2, "expected pass")
+func initMain(s rbxmk.State, t *testing.T) {
+	T := s.L.CreateTable(0, 2)
+
+	// Pass makes a positive assertion. The first argument is a string that
+	// describes the assertion, which is included with an emitted error. If the
+	// second argument is a non-function, then an error is emitted if the value
+	// is falsy. Otherwise, the function is called. If the call errors or
+	// returns a falsy value, then an error is emitted. Returning no value
+	// counts as truthy. The error is emitted to testing.T, but does not cause a
+	// Lua error to be thrown.
+	T.RawSetString("Pass", s.L.NewFunction(func(l *lua.LState) int {
+		msg := l.CheckString(1)
+		v := l.CheckAny(2)
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.L.GetTop()
 			s.L.Push(v)
 			if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
-				return s.RaiseError("%s: %s", msg, err.Error())
+				t.Errorf("%s: %s", msg, err.Error())
+				return 0
 			}
 			if s.L.GetTop() > n {
 				if !s.L.ToBool(n + 1) {
-					return s.RaiseError(msg)
+					t.Errorf(msg)
+					return 0
 				}
 			}
 		default:
 			if !lua.LVAsBool(v) {
-				return s.RaiseError(msg)
+				t.Errorf(msg)
+				return 0
 			}
 		}
 		return 0
 	}))
-	// FAIL makes a negative assertion. If the first argument is a non-function,
-	// then an error is thrown if the value is truthy. Otherwise, the function
-	// is called. If the call does not error or returns a truthy value, then an
-	// error is thrown. Returning no value counts as falsy. The second argument
-	// is an optional message to display with the error.
-	s.L.SetGlobal("FAIL", s.L.NewFunction(func(l *lua.LState) int {
-		v := l.CheckAny(1)
-		msg := l.OptString(2, "expected fail")
+	// Fail makes a negative assertion. The first argument is a string that
+	// describes the assertion, which is included with an emitted error. If the
+	// second argument is a non-function, then an error is emitted if the value
+	// is truthy. Otherwise, the function is called. If the call does not error
+	// or returns a truthy value, then an error is emitted. Returning no value
+	// counts as falsy. The error is emitted to testing.T, but does not cause a
+	// Lua error to be thrown.
+	T.RawSetString("Fail", s.L.NewFunction(func(l *lua.LState) int {
+		msg := l.CheckString(1)
+		v := l.CheckAny(2)
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.L.GetTop()
@@ -97,21 +105,25 @@ func initMain(s rbxmk.State) {
 			if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
 				if s.L.GetTop() > n {
 					if s.L.ToBool(n + 1) {
-						return s.RaiseError(msg)
+						t.Errorf(msg)
 					}
 					return 0
 				}
-				return s.RaiseError(msg)
+				t.Errorf(msg)
+				return 0
 			} else if lua.LVAsBool(s.L.GetGlobal("SHOW_ERRORS")) {
-				fmt.Printf("ERROR: %s\n", err)
+				t.Logf("ERROR: %s\n", err)
 			}
 		default:
 			if lua.LVAsBool(v) {
-				return s.RaiseError(msg)
+				t.Errorf(msg)
+				return 0
 			}
 		}
 		return 0
 	}))
+
+	s.L.SetGlobal("T", T)
 }
 
 type Directive int
@@ -170,7 +182,7 @@ func TestScripts(t *testing.T) {
 				in:  os.Stdin,
 				out: os.Stdout,
 				err: os.Stderr,
-			}, initMain)
+			}, func(s rbxmk.State) { initMain(s, t) })
 			if d&Fail != 0 && err == nil {
 				t.Errorf("script %s: error expected", file)
 			} else if d&Fail == 0 && err != nil {
