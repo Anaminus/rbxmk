@@ -104,6 +104,21 @@ func metaGet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 		return s.Push(types.String(inst.Reference))
 	case "IsService":
 		return s.Push(types.Bool(inst.IsService))
+	case "Desc":
+		desc := inst.Desc()
+		if desc == nil {
+			return s.Push(rtypes.Nil)
+		}
+		return s.Push(desc)
+	case "RawDesc":
+		desc, blocked := inst.RawDesc()
+		if blocked {
+			return s.Push(types.False)
+		}
+		if desc == nil {
+			return s.Push(rtypes.Nil)
+		}
+		return s.Push(desc)
 	}
 	return s.RaiseError("unknown metadata %q", name)
 }
@@ -115,6 +130,19 @@ func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 		return 0
 	case "IsService":
 		inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
+		return 0
+	case "Desc", "RawDesc":
+		switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+		case *rtypes.RootDesc:
+			inst.SetDesc(v, false)
+		case types.Bool:
+			if v {
+				return s.RaiseError("descriptor cannot be true")
+			}
+			inst.SetDesc(nil, true)
+		case rtypes.NilType, nil:
+			inst.SetDesc(nil, false)
+		}
 		return 0
 	}
 	return s.RaiseError("unknown metadata %q", name)
