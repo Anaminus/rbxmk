@@ -7,6 +7,7 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(ClassDesc) }
@@ -15,6 +16,14 @@ func ClassDesc() Reflector {
 		Name:     "ClassDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,
+		Metatable: Metatable{
+			"__eq": func(s State) int {
+				v := s.Pull(1, "ClassDesc").(rtypes.ClassDesc)
+				op := s.Pull(2, "ClassDesc").(rtypes.ClassDesc)
+				s.L.Push(lua.LBool(v == op))
+				return 1
+			},
+		},
 		Members: Members{
 			"Name": Member{
 				Get: func(s State, v types.Value) int {

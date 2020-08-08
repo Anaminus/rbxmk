@@ -4,6 +4,7 @@ import (
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(EnumItemDesc) }
@@ -12,6 +13,14 @@ func EnumItemDesc() Reflector {
 		Name:     "EnumItemDesc",
 		PushTo:   PushTypeTo,
 		PullFrom: PullTypeFrom,
+		Metatable: Metatable{
+			"__eq": func(s State) int {
+				v := s.Pull(1, "EnumItemDesc").(rtypes.EnumItemDesc)
+				op := s.Pull(2, "EnumItemDesc").(rtypes.EnumItemDesc)
+				s.L.Push(lua.LBool(v == op))
+				return 1
+			},
+		},
 		Members: Members{
 			"Name": Member{
 				Get: func(s State, v types.Value) int {
