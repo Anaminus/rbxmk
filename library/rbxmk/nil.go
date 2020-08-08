@@ -2,6 +2,7 @@ package reflect
 
 import (
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -15,7 +16,7 @@ func Nil() Reflector {
 		},
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if lvs[0] == lua.LNil {
-				return nil, nil
+				return rtypes.Nil, nil
 			}
 			return nil, TypeError(nil, 0, "nil")
 		},

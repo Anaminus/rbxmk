@@ -140,7 +140,7 @@ func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
 				return s.RaiseError("descriptor cannot be true")
 			}
 			inst.SetDesc(nil, true)
-		case rtypes.NilType, nil:
+		case rtypes.NilType:
 			inst.SetDesc(nil, false)
 		}
 		return 0
