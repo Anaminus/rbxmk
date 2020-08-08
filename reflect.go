@@ -311,9 +311,7 @@ func (c *Cycle) Put(t interface{}) {
 // PushTypeTo is a Reflector.Push that converts v to a userdata set with a type
 // metatable registered as t.Name.
 func PushTypeTo(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
-	u := s.L.NewUserData()
-	u.Value = v
-	s.L.SetMetatable(u, s.L.GetTypeMetatable(r.Name))
+	u := s.UserDataOf(v, r.Name)
 	return append(lvs, u), nil
 }
 

@@ -3,8 +3,11 @@ package rbxmk
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
+	"sync"
+	"unsafe"
 
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
@@ -18,10 +21,77 @@ type World struct {
 	formats    map[string]Format
 	sources    map[string]Source
 	globalDesc *rtypes.RootDesc
+
+	udmut    sync.Mutex
+	userdata map[interface{}]uintptr
 }
 
 func NewWorld(l *lua.LState) *World {
 	return &World{l: l}
+}
+
+const cacheUserdata = true
+
+// UserDataOf returns the userdata value associated with v. If there is no such
+// userdata, then a new one is created, with the metatable set to the type
+// corresponding to t. The Value field of the userdata must never be modified.
+func (w *World) UserDataOf(v interface{}, t string) *lua.LUserData {
+	if !cacheUserdata {
+		// Fallback in case it turns out that pointer fiddling fails
+		// catastrophically for some reason.
+		u := w.State().NewUserData()
+		u.Value = v
+		w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
+		return u
+	}
+
+	// Normally, a new userdata will be created every single time a value needs
+	// to be pushed. This is fine for most cases; __eq will take care of most
+	// comparison checks. One problem is that such userdata cannot be properly
+	// used as a table key, because the table doesn't know when two userdata
+	// refer to the same underlying value.
+	//
+	// To fix this, a value must consistently map to the same userdata. This
+	// could be done by caching the association of the value to its userdata in
+	// a map. The problem is that this map will accumulate garbage userdata that
+	// has no references other than the map itself. Finalizers can't be used
+	// because the map still has that single reference.
+	//
+	// This problem is resolved by storing a uintptr pointing to the userdata
+	// instead. By eliminating the strong reference to the userdata, a finalizer
+	// can be used to remove the association when the userdata has no more
+	// references.
+
+	w.udmut.Lock()
+	defer w.udmut.Unlock()
+
+	if p, ok := w.userdata[v]; ok {
+		//TODO: vet doesn't like this (suppress unsafeptr).
+		u := (*lua.LUserData)(unsafe.Pointer(p))
+		return u
+	}
+
+	u := w.State().NewUserData()
+	u.Value = v
+	w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
+
+	if w.userdata == nil {
+		w.userdata = map[interface{}]uintptr{}
+	}
+	w.userdata[v] = uintptr(unsafe.Pointer(u))
+	runtime.SetFinalizer(u, func(u *lua.LUserData) {
+		w.udmut.Lock()
+		defer w.udmut.Unlock()
+		delete(w.userdata, u.Value)
+	})
+	return u
+}
+
+// UserDataCacheLen return the number of userdata values in the cache.
+func (w *World) UserDataCacheLen() int {
+	w.udmut.Lock()
+	defer w.udmut.Unlock()
+	return len(w.userdata)
 }
 
 // Library represents a Lua library.

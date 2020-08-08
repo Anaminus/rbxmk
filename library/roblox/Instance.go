@@ -27,9 +27,7 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
-	u := s.L.NewUserData()
-	u.Value = v
-	s.L.SetMetatable(u, s.L.GetTypeMetatable(rfl.Name))
+	u := s.UserDataOf(v, rfl.Name)
 	return u, nil
 }
 

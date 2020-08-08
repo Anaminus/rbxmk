@@ -5,11 +5,13 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 	lua "github.com/yuin/gopher-lua"
 )
 
@@ -88,6 +90,7 @@ func initMain(s rbxmk.State, t *testing.T) {
 		}
 		return 0
 	}))
+
 	// Fail makes a negative assertion. The first argument is a string that
 	// describes the assertion, which is included with an emitted error. If the
 	// second argument is a non-function, then an error is emitted if the value
@@ -121,6 +124,17 @@ func initMain(s rbxmk.State, t *testing.T) {
 			}
 		}
 		return 0
+	}))
+
+	// GC runs the garbage collector.
+	T.RawSetString("GC", s.L.NewFunction(func(l *lua.LState) int {
+		runtime.GC()
+		return 0
+	}))
+
+	// UserDataCacheLen returns the number of cached userdata values.
+	T.RawSetString("UserDataCacheLen", s.WrapFunc(func(s rbxmk.State) int {
+		return s.Push(types.Int(s.UserDataCacheLen()))
 	}))
 
 	s.L.SetGlobal("T", T)
