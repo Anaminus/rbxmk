@@ -11,11 +11,12 @@ type Instance struct {
 	Reference string
 	IsService bool
 
-	properties map[string]types.PropValue
-	children   []*Instance
-	parent     *Instance
-	desc       *RootDesc
-	root       bool
+	properties  map[string]types.PropValue
+	children    []*Instance
+	parent      *Instance
+	desc        *RootDesc
+	descBlocked bool
+	root        bool
 }
 
 func NewInstance(className string, parent *Instance, desc *RootDesc) *Instance {
@@ -24,7 +25,7 @@ func NewInstance(className string, parent *Instance, desc *RootDesc) *Instance {
 		properties: make(map[string]types.PropValue, 0),
 	}
 	if desc != nil {
-		inst.SetDesc(desc)
+		inst.SetDesc(desc, false)
 	}
 	if parent != nil {
 		inst.SetParent(parent)
@@ -431,9 +432,10 @@ func (inst *Instance) GetFullName() string {
 	return string(full)
 }
 
-// Desc returns the nearest root descriptor for the instance. If the current
-// instance does not have a descriptor, then each ancestor is searched. Nil is
-// returned if no descriptors are found.
+// Desc returns the nearest root descriptor for the instance. If the descriptor
+// of current instance is nil, then the parent is searched, and so on, until a
+// non-nil or blocked descriptor is found. Nil is returned if no descriptors are
+// found.
 func (inst *Instance) Desc() *RootDesc {
 	if inst.desc != nil {
 		return inst.desc
@@ -448,9 +450,23 @@ func (inst *Instance) Desc() *RootDesc {
 	return nil
 }
 
-// SetDesc sets root as the root descriptor for the instance.
-func (inst *Instance) SetDesc(root *RootDesc) {
+// RawDesc returns the root descriptor for the instance, and whether it is
+// blocked.
+func (inst *Instance) RawDesc() (desc *RootDesc, blocked bool) {
+	return inst.desc, inst.descBlocked
+}
+
+// SetDesc sets root as the root descriptor for the instance. If blocked is
+// true, then the root descriptor is set to nil, and Desc will return nil if it
+// reaches the instance.
+func (inst *Instance) SetDesc(root *RootDesc, blocked bool) {
+	if blocked {
+		inst.desc = nil
+		inst.descBlocked = true
+		return
+	}
 	inst.desc = root
+	inst.descBlocked = false
 }
 
 // Type returns a string identifying the type.
