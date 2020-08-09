@@ -113,10 +113,10 @@ func osDir(s rbxmk.State) int {
 	tfiles := s.L.CreateTable(len(files), 0)
 	for _, info := range files {
 		tinfo := s.L.CreateTable(0, 4)
-		tinfo.RawSetString("name", lua.LString(info.Name()))
-		tinfo.RawSetString("isdir", lua.LBool(info.IsDir()))
-		tinfo.RawSetString("size", lua.LNumber(info.Size()))
-		tinfo.RawSetString("modtime", lua.LNumber(info.ModTime().Unix()))
+		tinfo.RawSetString("Name", lua.LString(info.Name()))
+		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
+		tinfo.RawSetString("Size", lua.LNumber(info.Size()))
+		tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
 		tfiles.Append(tinfo)
 	}
 	s.L.Push(tfiles)
