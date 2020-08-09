@@ -18,12 +18,11 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 12)
+		lib := s.L.CreateTable(0, 11)
 		lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 		lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
 		lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 		lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
-		lib.RawSetString("meta", s.WrapFunc(rbxmkMeta))
 		lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 		lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
 		lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
@@ -145,65 +144,6 @@ func rbxmkRunString(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	return s.L.GetTop() - nt
-}
-
-func metaGet(s rbxmk.State, inst *rtypes.Instance, name string) int {
-	switch name {
-	case "Reference":
-		return s.Push(types.String(inst.Reference))
-	case "IsService":
-		return s.Push(types.Bool(inst.IsService))
-	case "Desc":
-		desc := inst.Desc()
-		if desc == nil {
-			return s.Push(rtypes.Nil)
-		}
-		return s.Push(desc)
-	case "RawDesc":
-		desc, blocked := inst.RawDesc()
-		if blocked {
-			return s.Push(types.False)
-		}
-		if desc == nil {
-			return s.Push(rtypes.Nil)
-		}
-		return s.Push(desc)
-	}
-	return s.RaiseError("unknown metadata %q", name)
-}
-
-func metaSet(s rbxmk.State, inst *rtypes.Instance, name string) int {
-	switch name {
-	case "Reference":
-		inst.Reference = string(s.Pull(3, "string").(types.String))
-		return 0
-	case "IsService":
-		inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
-		return 0
-	case "Desc", "RawDesc":
-		switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
-		case *rtypes.RootDesc:
-			inst.SetDesc(v, false)
-		case types.Bool:
-			if v {
-				return s.RaiseError("descriptor cannot be true")
-			}
-			inst.SetDesc(nil, true)
-		case rtypes.NilType:
-			inst.SetDesc(nil, false)
-		}
-		return 0
-	}
-	return s.RaiseError("unknown metadata %q", name)
-}
-
-func rbxmkMeta(s rbxmk.State) int {
-	inst := s.Pull(1, "Instance").(*rtypes.Instance)
-	name := string(s.Pull(2, "string").(types.String))
-	if s.Count() <= 2 {
-		return metaGet(s, inst, name)
-	}
-	return metaSet(s, inst, name)
 }
 
 func rbxmkNewDesc(s rbxmk.State) int {

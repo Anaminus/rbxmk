@@ -91,56 +91,6 @@ string to load.
 
 The function runs in the context of the calling script.
 
-### `rbxmk.meta(inst: Instance, name: string, value: any?) any?`
-The `meta` function gets or sets metadata on an instance. `meta` has two
-signatures; passing two arguments gets a value, while passing three arguments
-sets a value:
-
-- Get: `meta(inst: Instance, name: string): (value: any)`
-- Set: `meta(inst: Instance, name: string, value: any)`
-
-The following metadata values are possible:
-
-#### Desc
-Desc is the descriptor being used by the instance. Descriptors are inherited; if
-the instance has no descriptor, then each ancestor of the instance is searched
-until a descriptor is found. If none are still found, then the global descriptor
-is returned. If there is no global descriptor, then nil is returned.
-
-Getting Desc will return either a RootDesc, or nil.
-
-When setting Desc, the value can be a RootDesc, false, or nil. Setting to Desc
-sets the descriptor only for the current instance.
-
-- Setting to a RootDesc will set the descriptor directly for the current
-  instance, which may be inherited.
-- Setting to nil will cause the instance to have no direct descriptor, and the
-  descriptor will be inherited.
-- Setting to false will "block", forcing the instance to have no descriptor.
-  This behaves sort of like a RootDesc that is empty; there is no descriptor,
-  but this state will not inherit, and can be inherited.
-
-#### IsService
-IsService indicates whether the instance is a service, such as Workspace or
-Lighting. This is used by some formats to determine how to encode and decode the
-instance.
-
-#### RawDesc
-RawDesc is similar to Desc, except that it considers only the direct descriptor
-of the current instance.
-
-Getting RawDesc will return a RootDesc if the instance has a descriptor
-assigned, false if the descriptor is blocked, or nil if no descriptor is
-assigned.
-
-Setting RawDesc behaves the same as setting Desc.
-
-#### Reference
-Reference is a string used to refer to the instance from within a DataModel.
-Certain formats use this to encode a reference to an instance. For example, the
-RBXMX format will generate random UUIDs for its references (e.g.
-"RBX8B658F72923F487FAE2F7437482EF16D").
-
 ### `rbxmk.newDesc(name: string): Descriptor`
 The `newDesc` function creates a new descriptor object.
 
