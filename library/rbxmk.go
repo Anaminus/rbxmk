@@ -18,8 +18,11 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 7)
-		lib.RawSetString("load", s.WrapFunc(rbxmkLoad))
+		lib := s.L.CreateTable(0, 12)
+		lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
+		lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
+		lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
+		lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
 		lib.RawSetString("meta", s.WrapFunc(rbxmkMeta))
 		lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 		lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
@@ -63,7 +66,27 @@ var RBXMK = rbxmk.Library{
 	},
 }
 
-func rbxmkLoad(s rbxmk.State) int {
+func rbxmkLoadFile(s rbxmk.State) int {
+	fileName := filepath.Clean(s.L.CheckString(1))
+	fn, err := s.L.LoadFile(fileName)
+	if err != nil {
+		return s.RaiseError(err.Error())
+	}
+	s.L.Push(fn)
+	return 1
+}
+
+func rbxmkLoadString(s rbxmk.State) int {
+	source := s.L.CheckString(1)
+	fn, err := s.L.LoadString(source)
+	if err != nil {
+		return s.RaiseError(err.Error())
+	}
+	s.L.Push(fn)
+	return 1
+}
+
+func rbxmkRunFile(s rbxmk.State) int {
 	fileName := filepath.Clean(s.L.CheckString(1))
 	fi, err := os.Stat(fileName)
 	if err != nil {
@@ -79,6 +102,32 @@ func rbxmkLoad(s rbxmk.State) int {
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
 		s.PopFile()
+		return s.RaiseError(err.Error())
+	}
+	s.L.Push(fn) // +function
+
+	// Push extra arguments as arguments to loaded function.
+	for i := 2; i <= nt; i++ {
+		s.L.Push(s.L.Get(i)) // function, ..., +arg
+	}
+	// function, +args...
+
+	// Call loaded function.
+	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
+	s.PopFile()
+	if err != nil {
+		return s.RaiseError(err.Error())
+	}
+	return s.L.GetTop() - nt
+}
+
+func rbxmkRunString(s rbxmk.State) int {
+	source := s.L.CheckString(1)
+	nt := s.L.GetTop()
+
+	// Load file as function.
+	fn, err := s.L.LoadString(source)
+	if err != nil {
 		return s.RaiseError(err.Error())
 	}
 	s.L.Push(fn) // +function
