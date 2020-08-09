@@ -15,6 +15,7 @@ Library   | Description
 rbxmk     | An interface to the rbxmk engine, and the rbxmk environment.
 (roblox)  | An environment matching the Roblox Lua API.
 os        | Extensions to the standard os library.
+sym       | Symbols for accessing instance metadata.
 types     | Fallbacks for constructing certain types.
 (sources) | An assortment of libraries for interfacing with the various external sources.
 
@@ -285,6 +286,68 @@ Component | `project/scripts/main.script.lua` | Description
 
 A format extension depends on the available formats. See
 [Formats](#user-content-formats) for more information.
+
+## `sym` library
+The `sym` library contains **Symbol** values. A symbol is a unique identifier
+that can be used to access certain metadata fields of an Instance.
+
+An instance can be indexed with a symbol to get a metadata value in the same way
+it can be indexed with a string to get a property value:
+
+```lua
+instance = Instance.new("Workspace")
+instance[sym.IsService] = true
+print(instance[sym.IsService]) --> true
+```
+
+The following symbols are defined:
+
+Symbol      | Description
+------------|------------
+`Desc`      | Gets the inherited descriptor of an instance.
+`IsService` | Determines whether an instance is a service.
+`RawDesc`   | Accesses the direct director of an instance.
+`Reference` | Determines the value used to identify the instance.
+
+#### `Instance[sym.Desc]: RootDesc | nil`
+Desc is the descriptor being used by the instance. Descriptors are inherited; if
+the instance has no descriptor, then each ancestor of the instance is searched
+until a descriptor is found. If none are still found, then the global descriptor
+is returned. If there is no global descriptor, then nil is returned.
+
+Getting Desc will return either a RootDesc, or nil.
+
+When setting Desc, the value can be a RootDesc, false, or nil. Setting to Desc
+sets the descriptor only for the current instance.
+
+- Setting to a RootDesc will set the descriptor directly for the current
+  instance, which may be inherited.
+- Setting to nil will cause the instance to have no direct descriptor, and the
+  descriptor will be inherited.
+- Setting to false will "block", forcing the instance to have no descriptor.
+  This behaves sort of like a RootDesc that is empty; there is no descriptor,
+  but this state will not inherit, and can be inherited.
+
+#### `Instance[sym.IsService]: bool`
+IsService indicates whether the instance is a service, such as Workspace or
+Lighting. This is used by some formats to determine how to encode and decode the
+instance.
+
+#### `Instance[sym.RawDesc]: RootDesc | bool | nil`
+RawDesc is similar to Desc, except that it considers only the direct descriptor
+of the current instance.
+
+Getting RawDesc will return a RootDesc if the instance has a descriptor
+assigned, false if the descriptor is blocked, or nil if no descriptor is
+assigned.
+
+Setting RawDesc behaves the same as setting Desc.
+
+#### `Instance[sym.Reference]: string`
+Reference is a string used to refer to the instance from within a DataModel.
+Certain formats use this to encode a reference to an instance. For example, the
+RBXMX format will generate random UUIDs for its references (e.g.
+"RBX8B658F72923F487FAE2F7437482EF16D").
 
 ## `types` library
 The `types` library contains functions for constructing explicit primitives. The

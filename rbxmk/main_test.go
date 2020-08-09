@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -136,6 +137,8 @@ func initMain(s rbxmk.State, t *testing.T) {
 	T.RawSetString("UserDataCacheLen", s.WrapFunc(func(s rbxmk.State) int {
 		return s.Push(types.Int(s.UserDataCacheLen()))
 	}))
+
+	T.RawSetString("DummySymbol", s.UserDataOf(rtypes.Symbol{Name: "DummySymbol"}, "Symbol"))
 
 	s.L.SetGlobal("T", T)
 }

@@ -170,6 +170,37 @@ func Instance() Reflector {
 			},
 			"__index": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
+
+				// Try symbol.
+				if typ := s.Reflector("Symbol"); typ.Name != "" {
+					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
+						switch name := sym.(rtypes.Symbol).Name; name {
+						case "Reference":
+							return s.Push(types.String(inst.Reference))
+						case "IsService":
+							return s.Push(types.Bool(inst.IsService))
+						case "Desc":
+							desc := inst.Desc()
+							if desc == nil {
+								return s.Push(rtypes.Nil)
+							}
+							return s.Push(desc)
+						case "RawDesc":
+							desc, blocked := inst.RawDesc()
+							if blocked {
+								return s.Push(types.False)
+							}
+							if desc == nil {
+								return s.Push(rtypes.Nil)
+							}
+							return s.Push(desc)
+						default:
+							s.L.RaiseError("symbol %s is not a valid member", name)
+							return 0
+						}
+					}
+				}
+
 				name := string(s.Pull(2, "string").(types.String))
 				desc := s.Desc(inst)
 				var classDesc *rbxdump.Class
@@ -272,6 +303,37 @@ func Instance() Reflector {
 			},
 			"__newindex": func(s State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
+
+				// Try symbol.
+				if typ := s.Reflector("Symbol"); typ.Name != "" {
+					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
+						switch name := sym.(rtypes.Symbol).Name; name {
+						case "Reference":
+							inst.Reference = string(s.Pull(3, "string").(types.String))
+							return 0
+						case "IsService":
+							inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
+							return 0
+						case "Desc", "RawDesc":
+							switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+							case *rtypes.RootDesc:
+								inst.SetDesc(v, false)
+							case types.Bool:
+								if v {
+									return s.RaiseError("descriptor cannot be true")
+								}
+								inst.SetDesc(nil, true)
+							case rtypes.NilType:
+								inst.SetDesc(nil, false)
+							}
+							return 0
+						default:
+							s.L.RaiseError("symbol %s is not a valid member", name)
+							return 0
+						}
+					}
+				}
+
 				name := string(s.Pull(2, "string").(types.String))
 
 				// Try GetService.
