@@ -35,7 +35,7 @@ const cacheUserdata = true
 // UserDataOf returns the userdata value associated with v. If there is no such
 // userdata, then a new one is created, with the metatable set to the type
 // corresponding to t. The Value field of the userdata must never be modified.
-func (w *World) UserDataOf(v interface{}, t string) *lua.LUserData {
+func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	if !cacheUserdata {
 		// Fallback in case it turns out that pointer fiddling fails
 		// catastrophically for some reason.
