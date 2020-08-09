@@ -288,7 +288,8 @@ A format extension depends on the available formats. See
 
 ## `types` library
 The `types` library contains functions for constructing explicit primitives. The
-name of a function corresponds directly to the type.
+name of a function corresponds directly to the type. See [Explicit
+primitives](#user-content-explicit-primitives) for more information.
 
 Type              | Primitive
 ------------------|----------
@@ -301,6 +302,514 @@ Type              | Primitive
 `int64`           | number
 `token`           | number
 
+# Instances
+A major difference between Roblox and rbxmk is what an instance represents. In
+Roblox, an instance is a live object that acts and reacts. In rbxmk, an instance
+represents *data*, and only data.
+
+Consider the RBXL file format. Files of this format contain information used to
+reconstruct the instances that make up a place or model. Such files are static:
+they contain only data, but are difficult to manipulate in-place. Instances in
+rbxmk are like this, except that they are also interactive: the user can freely
+modify data and move it around.
+
+Because of this, there are several differences between the Roblox API and the
+rbxmk API. By default, any kind of class can be created. Instances are just
+data, including the class name. The ClassName property can even be assigned to.
+
+```lua
+local foobar = Instance.new("Foobar")
+foobar.ClassName = "FizzBuzz" -- allowed
+```
+
+Instances also have no defined properties by default. A value of any type can be
+assigned to any property. Likewise, properties that are not explicitly assigned
+effectively do not exist.
+
+```lua
+local part = Instance.new("Part")
+part.Foobar = 42 -- allowed
+print(part.Position) --> nil
+```
+
+That said, even though it is possible for rbxmk to create arbitrary classes with
+arbitrary properties, this does not mean such instances will be interpreted in
+any meaningful way when sent over to Roblox. The most convenient way to enforce
+the correctness of instances is to use [Descriptors](#user-content-descriptors).
+
+# Descriptors
+By default, rbxmk has no knowledge of the classes, members, and enums that are
+defined by Roblox. As such, instances can be of any class, properties can be of
+any type, and there are no constant enum values. By not explicitly requiring
+such information, rbxmk can remain relatively forward-compatible with future
+updates to Roblox. It also allows the user to construct values outside the
+constraints of the Roblox API.
+
+However, most of the time, the user will be using rbxmk to construct values
+specifically for Roblox. It's often less convenient for the user to specify type
+information manually; the API is slightly off from that of Roblox, therefore
+being less familiar. It would be great if this type information could be defined
+and enforced automatically.
+
+The solution to this is **descriptors**. A descriptor contains information about
+what classes exist, the properties that exist on each class, what enums are
+defined, and so on.
+
+The primary descriptor type is the **RootDesc**. This contains a complete
+description of the classes and enums of an entire API.
+
+Each instance can have a RootDesc assigned to it. This state is inherited by any
+descendant instances. See [`rbxmk.meta`](#user-content-TODO) for more
+information on how to assign descriptors to an instance.
+
+Additionally, the `rbxmk.desc` field may be used to apply a RootDesc globally.
+When `rbxmk.desc` is set, any instance that wouldn't otherwise inherit a
+descriptor will use this global descriptor.
+
+When an instance has a descriptor, several aspects are enforced:
+
+- When the global descriptor is set, `Instance.new` errors if the given class
+  name does not exist (`Instance.new` can also receive a descriptor).
+- A property will throw an error if it does not exist for the class.
+- Getting an uninitialized property will throw an error.
+- Getting a property that current has an incorrect type will throw an error.
+- Setting a property to a value of the incorrect type will throw an error.
+- A property of the Class category will throw an error if the assigned value is
+  not an instance of the expected class.
+- The value assigned to a property of the Enum category will be coerced into a
+  token. The value can be an enum item of the expected type, or a number or
+  string of the correct value.
+- The class of an instance created from `DataModel:GetService()` must have the
+  "Service" tag.
+
+## Types
+Descriptors are first-class values like any other, and can be modified on the
+fly. There are a number of descriptor types, each with their own fields.
+
+Type          | Description
+--------------|------------
+RootDesc      | Describes an entire API.
+ClassDesc     | Describes a class.
+PropertyDesc  | Describes a property member.
+FunctionDesc  | Describes a function member.
+EventDesc     | Describes a event member.
+CallbackDesc  | Describes a callback member.
+ParameterDesc | Describes a parameter of a function, event, or callback.
+TypeDesc      | Describes a type.
+EnumDesc      | Describes an enum.
+EnumItemDesc  | Describes an enum item.
+
+### RootDesc
+RootDesc describes an entire API. It has the following members:
+
+Member      | Type
+------------|-----
+Class       | method
+Classes     | method
+AddClass    | method
+RemoveClass | method
+Enum        | method
+Enums       | method
+AddEnum     | method
+RemoveEnum  | method
+EnumTypes   | method
+
+#### `RootDesc:Class(name: string): ClassDesc`
+Class returns a ClassDesc for the given name, or nil if no such class exists.
+
+#### `RootDesc:Classes(): Array<ClassDesc>`
+Classes returns a list of all the classes defined in the RootDesc.
+
+#### `RootDesc:AddClass(class: ClassDesc): bool`
+AddClass adds a new class to the RootDesc, returning whether the class was added
+successfully. The class will fail to be added if a class of the same name
+already exists.
+
+#### `RootDesc:RemoveClass(name: string): bool`
+RemoveClass removes a class from the RootDesc, returning whether the class was
+removed successfully. False will be returned if a class of the given name does
+not exist.
+
+#### `RootDesc:Enum(name: string): EnumDesc`
+Enum returns an EnumDesc for the given name, or nil if no such enum exists.
+
+#### `RootDesc:Enums(): Array<EnumDesc>`
+Enums returns a list of all the enums defined in the RootDesc.
+
+#### `RootDesc:AddEnum(enum: EnumDesc): bool`
+AddEnum adds a new enum to the RootDesc, returning whether the enum was added
+successfully. The enum will fail to be added if an enum of the same name already
+exists.
+
+#### `RootDesc:RemoveEnum(name: string): bool`
+RemoveEnum removes an enum from the RootDesc, returning whether the enum was
+removed successfully. False will be returned if an enum of the given name does
+not exist.
+
+#### `RootDesc:EnumTypes(): Enums`
+EnumTypes returns a set of enum values generated from the current state of the
+RootDesc. These enums are associated with the RootDesc, and may be used by
+certain properties, so it is important to generate them before operating on such
+properties. Additionally, EnumTypes should be called after modifying enum and
+enum item descriptors, to regenerate the enum values.
+
+The API of the resulting enums matches that of Roblox's Enums type. A common
+pattern is to assign the result of EnumTypes to the "Enum" variable, which
+matches Roblox's API:
+
+```lua
+Enum = rootDesc:EnumTypes()
+print(Enum.NormalId.Front)
+```
+
+### ClassDesc
+ClassDesc describes a class. It has the following members:
+
+Member         | Type
+---------------|-----
+Name           | string
+Superclass     | string
+MemoryCategory | string
+Member         | method
+Members        | method
+AddMember      | method
+RemoveMember   | method
+Tag            | method
+Tags           | method
+SetTag         | method
+UnsetTag       | method
+
+#### `ClassDesc.Name: string`
+Name is the name of the class.
+
+#### `ClassDesc.Superclass: string`
+Superclass is the name of the class from which the current class inherits.
+
+#### `ClassDesc.MemoryCategory: string`
+MemoryCategory describes the category of the class.
+
+#### `ClassDesc:Member(name: string): MemberDesc`
+Member returns a MemberDesc for the given name, or nil of no such member exists.
+
+MemberDesc is any one of the PropertyDesc, FunctionDesc, EventDesc, or
+CallbackDesc types.
+
+#### `ClassDesc:Members(): Array<MemberDesc>`
+Members returns a list of all the members of the class.
+
+#### `ClassDesc:AddMember(member: MemberDesc): bool`
+AddMember adds a new member to the ClassDesc, returning whether the member was
+added successfully. The member will fail to be added if a member of the same
+name already exists.
+
+#### `ClassDesc:RemoveMember(name: string): bool`
+RemoveMember removes a member from the ClassDesc, returning whether the member
+was removed successfully. False will be returned if a member of the given name
+does not exist.
+
+#### `ClassDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `ClassDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `ClassDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `ClassDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### PropertyDesc
+PropertyDesc describes a property member of a class. It has the following
+members:
+
+Member        | Type
+--------------|-----
+Name          | string
+ValueType     | TypeDesc
+ReadSecurity  | string
+WriteSecurity | string
+CanLoad       | bool
+CanSave       | bool
+Tag           | method
+Tags          | method
+SetTag        | method
+UnsetTag      | method
+
+#### `PropertyDesc.Name: string`
+Name is the name of the member.
+
+#### `PropertyDesc.ValueType: TypeDesc`
+ValueType is the value type of the property.
+
+#### `PropertyDesc.ReadSecurity: string`
+ReadSecurity indicates the security context required to get the property.
+
+#### `PropertyDesc.WriteSecurity: string`
+WriteSecurity indicates the security context required to set the property.
+
+#### `PropertyDesc.CanLoad: bool`
+CanLoad indicates whether the property is deserialized when decoding from a file.
+
+#### `PropertyDesc.CanSave: bool`
+CanLoad indicates whether the property is serialized when encoding to a file.
+
+#### `PropertyDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `PropertyDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `PropertyDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `PropertyDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### FunctionDesc
+FunctionDesc describes a function member of a class. It has the following
+members:
+
+Member        | Type
+--------------|-----
+Name          | string
+Parameters    | method
+SetParameters | method
+ReturnType    | TypeDesc
+Security      | string
+Tag           | method
+Tags          | method
+SetTag        | method
+UnsetTag      | method
+
+#### `FunctionDesc.Name: string`
+Name is the name of the member.
+
+#### `FunctionDesc:Parameters(): Array<ParameterDesc>`
+Parameters returns a list of parameters of the function.
+
+#### `FunctionDesc:SetParameters(params: Array<ParameterDesc>)`
+SetParameters sets the parameters of the function.
+
+#### `FunctionDesc.ReturnType: TypeDesc`
+ReturnType is the type returned by the function.
+
+#### `FunctionDesc.Security: string`
+Security indicates the security content required to index the member.
+
+#### `FunctionDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `FunctionDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `FunctionDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `FunctionDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### EventDesc
+EventDesc describes an event member of a class. It has the following members:
+
+Member        | Type
+--------------|-----
+Name          | string
+Parameters    | method
+SetParameters | method
+Security      | string
+Tag           | method
+Tags          | method
+SetTag        | method
+UnsetTag      | method
+
+#### `EventDesc.Name: string`
+Name is the name of the member.
+
+#### `EventDesc:Parameters(): Array<ParameterDesc>`
+Parameters returns a list of parameters of the event.
+
+#### `EventDesc:SetParameters(params: Array<ParameterDesc>)`
+SetParameters sets the parameters of the event.
+
+#### `EventDesc.Security: string`
+Security indicates the security content required to index the member.
+
+#### `EventDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `EventDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `EventDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `EventDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### CallbackDesc
+CallbackDesc describes a callback member of a class. It has the following
+members:
+
+Member        | Type
+--------------|-----
+Name          | string
+Parameters    | method
+SetParameters | method
+ReturnType    | TypeDesc
+Security      | string
+Tag           | method
+Tags          | method
+SetTag        | method
+UnsetTag      | method
+
+#### `CallbackDesc.Name: string`
+Name is the name of the member.
+
+#### `CallbackDesc:Parameters(): Array<ParameterDesc>`
+Parameters returns a list of parameters of the callback.
+
+#### `CallbackDesc:SetParameters(params: Array<ParameterDesc>)`
+SetParameters sets the parameters of the callback.
+
+#### `CallbackDesc.ReturnType: TypeDesc`
+ReturnType is the type returned by the callback.
+
+#### `CallbackDesc.Security: string`
+Security indicates the security content required to set the member.
+
+#### `CallbackDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `CallbackDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `CallbackDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `CallbackDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### ParameterDesc
+ParameterDesc describes a parameter of a function, event or callback member. It
+has the following members:
+
+Member  | Type
+--------|-----
+Type    | TypeDesc
+Name    | string
+Default | string?
+
+#### `ParameterDesc.Type: TypeDesc`
+Type is the type of the parameter.
+
+#### `ParameterDesc.Name: string`
+Name is a name describing the parameter.
+
+#### `ParameterDesc.Default: string?`
+Default is a string describing the default value of the parameter. May also be
+nil, indicating that the parameter has no default value.
+
+### TypeDesc
+TypeDesc describes a value type. It has the following members:
+
+Member   | Type
+---------|-----
+Category | string
+Name     | string
+
+#### `TypeDesc.Category: string`
+Category is the category of the type. Certain categories are treated specially:
+
+- `Class`: Name is the name of a class. A value of the type is expected to be an
+  Instance of the class.
+- `Enum`: Name is the name of an enum. A value of the type is expected to be an
+  enum item of the enum.
+
+#### `TypeDesc.Name: string`
+Name is the name of the type.
+
+### EnumDesc
+EnumDesc describes an enum. It has the following members:
+
+Member     | Type
+-----------|-----
+Name       | string
+Item       | method
+Items      | method
+AddItem    | method
+RemoveItem | method
+Tag        | method
+Tags       | method
+SetTag     | method
+UnsetTag   | method
+
+#### `EnumDesc.Name: string`
+Name is the name of the enum.
+
+#### `EnumDesc:Item(name: string): EnumItemDesc`
+Item returns an EnumItemDesc for the given name, or nil of no such item exists.
+
+#### `EnumDesc:Items(): Array<EnumItemDesc>`
+Items returns a list of all the items of the enum.
+
+#### `EnumDesc:AddItem(item: EnumItemDesc): bool`
+AddItem adds a new item to the EnumDesc, returning whether the item was added
+successfully. The item will fail to be added if an item of the same name already
+exists.
+
+#### `EnumDesc:RemoveItem(name: string): bool`
+RemoveItem removes an item from the EnumDesc, returning whether the item was
+removed successfully. False will be returned if an item of the given name does
+not exist.
+
+#### `EnumDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `EnumDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `EnumDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `EnumDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+### EnumItemDesc
+EnumDesc describes an enum item. It has the following members:
+
+Member   | Type
+---------|-----
+Name     | string
+Value    | int
+Index    | int
+Tag      | method
+Tags     | method
+SetTag   | method
+UnsetTag | method
+
+#### `EnumItemDesc.Name: string`
+Name is the name of the enum item.
+
+#### `EnumItemDesc.Value: int`
+Value is the numeric value of the enum item.
+
+#### `EnumItemDesc.Index: int`
+Index is an integer that hints the order of the enum item.
+
+#### `EnumItemDesc:Tag(name: string): bool`
+Tag returns whether a tag of the given name is set on the descriptor.
+
+#### `EnumItemDesc:Tags(): Array<string>`
+Tags returns a list of tags that are set on the descriptor.
+
+#### `EnumItemDesc:SetTag(tags: ...string)`
+SetTags sets the given tags on the descriptor.
+
+#### `EnumItemDesc:UnsetTag(tags: ...string)`
+SetTags unsets the given tags on the descriptor.
+
+# Explicit primitives
 The properties of instances in Roblox have a number of different types. Many of
 these types can be expressed in Lua through constructors. Examples of such are
 `CFrame`, `Vector3`, `UDim2`, and so on. These types correspond to internal data
@@ -311,17 +820,21 @@ Some Roblox types are represented with a simple Lua primitive, such as a number
 or string. For example, the Roblox types `int`, `int64`, `float`, and `double`
 all map to Lua's `number` type. When setting a property, the engine is able to
 reflect this Lua `number` back to the correct Roblox type, because the property
-has extra metadata called a **descriptor** that includes the property's type.
+has a descriptor that includes the property's type.
 
-In rbxmk, when no descriptors are specified, properties have no types. For
-example, when a property is set to a Lua number, it is always converted into a
-`double`. In the absence of extra type information, the user needs some way to
-set specific Roblox types.
+In rbxmk, when an instance has a descriptor, it is able to make this conversion
+as expected. However, the user may not always have access to descriptors. When
+no descriptors are specified, properties have no types. For example, when a
+property is set to a Lua number, it is always converted into a `double`. In the
+absence of extra type information, the user needs some way to set specific
+Roblox types.
 
 This problem is solved with "explicit primitives", or **exprims**. An exprim is
 a userdata representation of an otherwise ambiguous type. This userdata carries
 type metadata along with a given value, allowing the value to be mapped to the
 correct Roblox type when it is set as a property.
+
+The `types` library contains functions for constructing exprim types.
 
 	-- Problem
 	local v = Instance.new("IntValue")
@@ -337,26 +850,11 @@ The default Roblox type that maps to Lua strings is `string`. As such, `string`
 has no exprim. Likewise, the default type that maps to Lua numbers is `double`,
 which also has no exprim.
 
-An exprim userdata supports operations with its underlying primitive type, as
-well as other similar exprims. Numeric exprims can be added, multiplied, etc,
-with Lua numbers, as well as other numeric exprims. String-like exprims can be
-concatenated with Lua strings, as well as other string-like exprims. The result
-of such operations is always a value of the underlying primitive. For example,
-`types.int(9) + 1` returns 10 as a Lua number.
-
-Because of the limitations of metatables, exprims can be correctly compared only
-with other exprims of the same type.
-
-Additionally, an exprim can be called as function, which returns the underlying
-primitive.
-
-	local i = types.int(42)
-	print(i() == 42)
-
-Exprims are meant to be a niche feature for use in the absence of descriptors.
-The user will find descriptors to be a much more convenient solution.
-
-# Descriptors
+An exprim userdata has no fields or operators other than the `Value` field,
+which returns the underlying primitive value. Exprims are meant to be
+short-lived, and shouldn't really be used beyond getting or setting a property
+in the absence of descriptors. When possible, descriptors should be utilized
+instead.
 
 # Sources
 A **source** is an external location from which raw data can be read from and
