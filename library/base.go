@@ -41,7 +41,7 @@ var filteredStdLib = []libFilter{
 		// lua.LString("collectgarbage"): true,
 		// lua.LString("dofile"):         true,
 		// lua.LString("getfenv"):        true,
-		// lua.LString("getmetatable"):   true,
+		lua.LString("getmetatable"): true,
 		// lua.LString("load"):           true,
 		// lua.LString("loadfile"):       true,
 		// lua.LString("loadstring"):     true,
@@ -51,7 +51,7 @@ var filteredStdLib = []libFilter{
 		// lua.LString("rawset"):         true,
 		// lua.LString("require"):        true,
 		// lua.LString("setfenv"):        true,
-		// lua.LString("setmetatable"):   true,
+		lua.LString("setmetatable"): true,
 	}},
 	// {lua.CoroutineLibName, lua.OpenCoroutine, map[lua.LValue]bool{
 	// 	lua.LString("create"):  true,
