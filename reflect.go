@@ -282,6 +282,17 @@ func (s State) RaiseError(format string, args ...interface{}) int {
 	return 0
 }
 
+// CheckString is like lua.LState.CheckString, except that it does not try to
+// convert non-string values into a string.
+func (s State) CheckString(n int) string {
+	v := s.L.Get(n)
+	if lv, ok := v.(lua.LString); ok {
+		return string(lv)
+	}
+	s.L.TypeError(n, lua.LTString)
+	return ""
+}
+
 // Cycle is used to detect cyclic references by containing values that have
 // already been traversed.
 type Cycle struct {

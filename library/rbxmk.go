@@ -66,7 +66,7 @@ var RBXMK = rbxmk.Library{
 }
 
 func rbxmkLoadFile(s rbxmk.State) int {
-	fileName := filepath.Clean(s.L.CheckString(1))
+	fileName := filepath.Clean(s.CheckString(1))
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
 		return s.RaiseError(err.Error())
@@ -76,7 +76,7 @@ func rbxmkLoadFile(s rbxmk.State) int {
 }
 
 func rbxmkLoadString(s rbxmk.State) int {
-	source := s.L.CheckString(1)
+	source := s.CheckString(1)
 	fn, err := s.L.LoadString(source)
 	if err != nil {
 		return s.RaiseError(err.Error())
@@ -86,7 +86,7 @@ func rbxmkLoadString(s rbxmk.State) int {
 }
 
 func rbxmkRunFile(s rbxmk.State) int {
-	fileName := filepath.Clean(s.L.CheckString(1))
+	fileName := filepath.Clean(s.CheckString(1))
 	fi, err := os.Stat(fileName)
 	if err != nil {
 		return s.RaiseError(err.Error())
@@ -121,7 +121,7 @@ func rbxmkRunFile(s rbxmk.State) int {
 }
 
 func rbxmkRunString(s rbxmk.State) int {
-	source := s.L.CheckString(1)
+	source := s.CheckString(1)
 	nt := s.L.GetTop()
 
 	// Load file as function.

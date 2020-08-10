@@ -25,11 +25,11 @@ var OS = rbxmk.Library{
 }
 
 func osSplit(s rbxmk.State) int {
-	path := s.L.CheckString(1)
+	path := s.CheckString(1)
 	n := s.L.GetTop()
 	for i := 2; i <= n; i++ {
 		var result string
-		switch comp := s.L.CheckString(i); comp {
+		switch comp := s.CheckString(i); comp {
 		case "dir":
 			result = filepath.Dir(path)
 		case "base":
@@ -62,7 +62,7 @@ func osSplit(s rbxmk.State) int {
 func osJoin(s rbxmk.State) int {
 	j := make([]string, s.L.GetTop())
 	for i := 1; i <= s.L.GetTop(); i++ {
-		j[i-1] = s.L.CheckString(i)
+		j[i-1] = s.CheckString(i)
 	}
 	filename := filepath.Join(j...)
 	s.L.Push(lua.LString(filename))
@@ -70,7 +70,7 @@ func osJoin(s rbxmk.State) int {
 }
 
 func osExpand(s rbxmk.State) int {
-	expanded := os.Expand(s.L.CheckString(1), func(v string) string {
+	expanded := os.Expand(s.CheckString(1), func(v string) string {
 		switch v {
 		case "script_name", "sn":
 			if fi, ok := s.PeekFile(); ok {
@@ -95,7 +95,7 @@ func osExpand(s rbxmk.State) int {
 }
 
 func osGetenv(s rbxmk.State) int {
-	value, ok := os.LookupEnv(s.L.CheckString(1))
+	value, ok := os.LookupEnv(s.CheckString(1))
 	if ok {
 		s.L.Push(lua.LString(value))
 	} else {
@@ -105,7 +105,7 @@ func osGetenv(s rbxmk.State) int {
 }
 
 func osDir(s rbxmk.State) int {
-	dirname := s.L.CheckString(1)
+	dirname := s.CheckString(1)
 	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
 		return s.RaiseError(err.Error())
