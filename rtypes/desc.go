@@ -135,7 +135,7 @@ func (d ParameterDesc) String() string {
 }
 
 type TypeDesc struct {
-	Embedded *rbxdump.Type
+	Embedded rbxdump.Type
 }
 
 func (TypeDesc) Type() string {

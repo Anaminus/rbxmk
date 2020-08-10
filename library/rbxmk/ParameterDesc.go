@@ -26,11 +26,11 @@ func ParameterDesc() Reflector {
 				Get: func(s State, v types.Value) int {
 					desc := v.(*rtypes.ParameterDesc)
 					typ := desc.Parameter.Type
-					return s.Push(rtypes.TypeDesc{Embedded: &typ})
+					return s.Push(rtypes.TypeDesc{Embedded: typ})
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(*rtypes.ParameterDesc)
-					desc.Parameter.Type = *s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+					desc.Parameter.Type = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 			},
 			"Name": Member{

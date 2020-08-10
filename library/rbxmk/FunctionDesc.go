@@ -60,11 +60,11 @@ func FunctionDesc() Reflector {
 				Get: func(s State, v types.Value) int {
 					desc := v.(rtypes.FunctionDesc)
 					returnType := desc.ReturnType
-					return s.Push(rtypes.TypeDesc{Embedded: &returnType})
+					return s.Push(rtypes.TypeDesc{Embedded: returnType})
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.FunctionDesc)
-					desc.ReturnType = *s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 			},
 			"Security": Member{

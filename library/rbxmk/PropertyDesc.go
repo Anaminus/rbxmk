@@ -36,11 +36,11 @@ func PropertyDesc() Reflector {
 				Get: func(s State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					valueType := desc.ValueType
-					return s.Push(rtypes.TypeDesc{Embedded: &valueType})
+					return s.Push(rtypes.TypeDesc{Embedded: valueType})
 				},
 				Set: func(s State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
-					desc.ValueType = *s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+					desc.ValueType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 			},
 			"ReadSecurity": Member{

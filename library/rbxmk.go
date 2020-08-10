@@ -168,7 +168,12 @@ func rbxmkNewDesc(s rbxmk.State) int {
 	case "Parameter":
 		return s.Push(rtypes.ParameterDesc{Parameter: &rbxdump.Parameter{}})
 	case "Type":
-		return s.Push(rtypes.TypeDesc{Embedded: &rbxdump.Type{}})
+		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
+		name := string(s.PullOpt(3, "string", types.String("")).(types.String))
+		return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
+			Category: category,
+			Name:     name,
+		}})
 	case "Enum":
 		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
 			Items: make(map[string]*rbxdump.EnumItem),

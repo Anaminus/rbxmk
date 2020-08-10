@@ -111,6 +111,11 @@ Name          | Returned type
 
 `newDesc` returns a value of whose type corresponds to the given name.
 
+TypeDesc values are immutable. To set the fields, they can be passed as extra
+arguments to newDesc:
+
+	rbxmk.newDesc("Type", "Category", "Name")
+
 ### `rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
 The `patchDesc` function transforms a descriptor according to a list of actions.
 Each action in the list is applied in order. Actions that do not apply are
@@ -730,6 +735,9 @@ Member   | Type
 ---------|-----
 Category | string
 Name     | string
+
+TypeDesc is immutable. A new value with different fields can be created with
+rbxmk.newDesc.
 
 #### `TypeDesc.Category: string`
 Category is the category of the type. Certain categories are treated specially:
