@@ -10,7 +10,7 @@ import (
 
 type RootDesc struct {
 	*rbxdump.Root
-	EnumTypes Enums
+	EnumTypes *Enums
 }
 
 func (*RootDesc) Type() string {

@@ -17,11 +17,11 @@ func (Enums) String() string {
 	return "Enums"
 }
 
-func (e Enums) Enum(name string) *Enum {
+func (e *Enums) Enum(name string) *Enum {
 	return e.enumIndex[name]
 }
 
-func (e Enums) Enums() []*Enum {
+func (e *Enums) Enums() []*Enum {
 	enums := make([]*Enum, 0, len(e.enums))
 	copy(enums, e.enums)
 	return enums
@@ -113,7 +113,7 @@ func NewEnum(name string, items ...NewItem) *Enum {
 	return &enum
 }
 
-func NewEnums(enums ...*Enum) Enums {
+func NewEnums(enums ...*Enum) *Enums {
 	sort.Slice(enums, func(i, j int) bool {
 		return enums[i].name < enums[j].name
 	})
@@ -124,5 +124,5 @@ func NewEnums(enums ...*Enum) Enums {
 	for _, enum := range enums {
 		es.enumIndex[enum.name] = enum
 	}
-	return es
+	return &es
 }
