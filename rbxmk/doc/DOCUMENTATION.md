@@ -4,6 +4,19 @@
 This document provides details on how rbxmk works. For a basic overview, see
 [USAGE.md](USAGE.md).
 
+This document uses Luau type annotation syntax to describe the API of an
+element. Some liberties are taken for APIs not currently supported by the Luau
+syntax. For example, `...` indicates variable parameters. Additionally, the
+following types are predefined for documentation purposes:
+
+```luau
+-- A list of values of type T.
+type Array<T> = {[number]: T}
+
+-- A table mapping a name to a value of type T.
+type Dictionary<T> = {[string]: T}
+```
+
 # Environment
 The Lua environment provided by rbxmk is packaged as a number of libraries. Some
 libraries are loaded under a specific name, while others are loaded directly
@@ -26,12 +39,14 @@ The following items from the Lua 5.1 standard library are included:
 - `_VERSION`
 - `assert`
 - `error`
+- `getmetatable`
 - `ipairs`
 - `next`
 - `pairs`
 - `pcall`
 - `print`
 - `select`
+- `setmetatable`
 - `tonumber`
 - `tostring`
 - `type`
@@ -51,6 +66,7 @@ The `rbxmk` library contains functions related to the rbxmk engine.
 Name           | Description
 ---------------|------------
 `decodeFormat` | Deserialize data from bytes.
+`desc`         | Gets or sets the global descriptor.
 `diffDesc`     | Get the differences between two descriptors.
 `encodeFormat` | Serialize data into bytes.
 `loadFile`     | Loads the content of a file as a function.
@@ -67,6 +83,10 @@ Name           | Description
 The `decodeFormat` function decodes *bytes* into a value according to *format*.
 The exact details of each format are described in the
 [Formats](#user-content-formats) section.
+
+### `rbxmk.desc: RootDesc`
+The `desc` field gets or sets the global root descriptor. Most elements that
+utilize a root descriptor will fallback to the global descriptor when possible.
 
 ### `rbxmk.diffDesc(prev: RootDesc?, next: RootDesc?): (diff: Array<DescAction>)`
 The `diffDesc` function compares two descriptors and returns the differences
@@ -94,7 +114,8 @@ The function runs in the context of the calling script.
 ### `rbxmk.newDesc(name: string): Descriptor`
 The `newDesc` function creates a new descriptor object.
 
-*name* may be one of the following:
+`newDesc` returns a value of whose type corresponds to the given name. *name*
+may be one of the following:
 
 Name          | Returned type
 --------------|--------------
@@ -109,12 +130,24 @@ Name          | Returned type
 `"Enum"`      | EnumDesc
 `"EnumItem"`  | EnumItemDesc
 
-`newDesc` returns a value of whose type corresponds to the given name.
-
 TypeDesc values are immutable. To set the fields, they can be passed as extra
 arguments to newDesc:
 
-	rbxmk.newDesc("Type", "Category", "Name")
+```lua
+-- Sets .Category and .Name, respectively.
+local typeDesc = rbxmk.newDesc("Type", "Category", "Name")
+```
+
+ParameterDesc values are immutable. To set the fields, they can be passed as
+extra arguments to newDesc:
+
+```lua
+-- Sets .Type, .Name, and .Default, respectively.
+-- No default value
+local paramDesc = rbxmk.newDesc("Parameter", typeDesc, "paramName")
+-- Default value
+local paramDesc = rbxmk.newDesc("Parameter", typeDesc, "paramName", "ParamDefault")
+```
 
 ### `rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
 The `patchDesc` function transforms a descriptor according to a list of actions.
@@ -312,12 +345,13 @@ primitives](#user-content-explicit-primitives) for more information.
 Type              | Primitive
 ------------------|----------
 `BinaryString`    | string
+`Color3uint8`     | Color3
 `Content`         | string
+`float`           | number
+`int64`           | number
+`int`             | number
 `ProtectedString` | string
 `SharedString`    | string
-`float`           | number
-`int`             | number
-`int64`           | number
 `token`           | number
 
 # Instances
@@ -363,7 +397,7 @@ such information, rbxmk can remain relatively forward-compatible with future
 updates to Roblox. It also allows the user to construct values outside the
 constraints of the Roblox API.
 
-However, most of the time, the user will be using rbxmk to construct values
+However, most of the time, the user will be using rbxmk to manipulate values
 specifically for Roblox. It's often less convenient for the user to specify type
 information manually; the API is slightly off from that of Roblox, therefore
 being less familiar. It would be great if this type information could be defined
@@ -384,25 +418,26 @@ Additionally, the `rbxmk.desc` field may be used to apply a RootDesc globally.
 When `rbxmk.desc` is set, any instance that wouldn't otherwise inherit a
 descriptor will use this global descriptor.
 
-When an instance has a descriptor, several aspects are enforced:
+When an instance has a descriptor, several behaviors are enforced:
 
 - When the global descriptor is set, `Instance.new` errors if the given class
   name does not exist (`Instance.new` can also receive a descriptor).
 - A property will throw an error if it does not exist for the class.
 - Getting an uninitialized property will throw an error.
-- Getting a property that current has an incorrect type will throw an error.
+- Getting a property that currently has an incorrect type will throw an error.
 - Setting a property to a value of the incorrect type will throw an error.
-- A property of the Class category will throw an error if the assigned value is
-  not an instance of the expected class.
-- The value assigned to a property of the Enum category will be coerced into a
-  token. The value can be an enum item of the expected type, or a number or
-  string of the correct value.
+- A property of the "Class" type category will throw an error if the assigned
+  value is not an instance of the expected class.
+- The value assigned to a property of the "Enum" type category will be coerced
+  into a token. The value can be an enum item of the expected enum, or a number
+  or string of the correct value.
 - The class of an instance created from `DataModel:GetService()` must have the
   "Service" tag.
 
 ## Types
 Descriptors are first-class values like any other, and can be modified on the
-fly. There are a number of descriptor types, each with their own fields.
+fly. There are a number of descriptor types, each with their own fields. See
+[`rbxmk.newDesc`](#user-content-TODO) for creating descriptors.
 
 Type          | Description
 --------------|------------
@@ -412,8 +447,8 @@ PropertyDesc  | Describes a property member.
 FunctionDesc  | Describes a function member.
 EventDesc     | Describes a event member.
 CallbackDesc  | Describes a callback member.
-ParameterDesc | Describes a parameter of a function, event, or callback.
-TypeDesc      | Describes a type.
+ParameterDesc | Describes a parameter of a function, event, or callback. Immutable.
+TypeDesc      | Describes a type. Immutable.
 EnumDesc      | Describes an enum.
 EnumItemDesc  | Describes an enum item.
 
@@ -710,13 +745,16 @@ SetTags unsets the given tags on the descriptor.
 
 ### ParameterDesc
 ParameterDesc describes a parameter of a function, event or callback member. It
-has the following members:
+has the following immutable members:
 
 Member  | Type
 --------|-----
 Type    | TypeDesc
 Name    | string
 Default | string?
+
+ParameterDesc is immutable. A new value with different fields can be created
+with rbxmk.newDesc.
 
 #### `ParameterDesc.Type: TypeDesc`
 Type is the type of the parameter.
@@ -729,7 +767,7 @@ Default is a string describing the default value of the parameter. May also be
 nil, indicating that the parameter has no default value.
 
 ### TypeDesc
-TypeDesc describes a value type. It has the following members:
+TypeDesc describes a value type. It has the following immutable members:
 
 Member   | Type
 ---------|-----
@@ -830,6 +868,36 @@ SetTags sets the given tags on the descriptor.
 #### `EnumItemDesc:UnsetTag(tags: ...string)`
 SetTags unsets the given tags on the descriptor.
 
+## Diffing and Patching
+Descriptors can be compared and patched with the `rbxmk.diffDesc` and
+`rbxmk.patchDesc` functions. `diffDesc` returns a list of **DescActions**, which
+describe how to transform the first descriptor into the second. `patchDesc` can
+used to apply this transformation.
+
+```lua
+-- List differences.
+local diff = rbxmk.diffDesc(prevDesc, nextDesc)
+-- Transform prev into next.
+rbxmk.patchDesc(prevDesc, diff)
+```
+
+Patching is used primarily to augment some pregenerated descriptor with elements
+that aren't present. For example, Roblox's API dump does not include the
+`BinaryStringValue.Value` member. This can be patched with an action that adds
+the member, allowing it to be used as normal.
+
+More generally, patching allows any version of an API dump to be used, while
+maintaining a separate, constant set of additional API elements.
+
+### DescAction
+DescAction describes a single action that transforms a descriptor.
+
+Currently, DescAction has no members. However, converting a DescAction to a
+string will display the content of the action in a human-readable format.
+
+Actions may also be created directly with the
+[`desc-patch.json`](#user-content-TODO) format.
+
 # Explicit primitives
 The properties of instances in Roblox have a number of different types. Many of
 these types can be expressed in Lua through constructors. Examples of such are
@@ -855,7 +923,8 @@ a userdata representation of an otherwise ambiguous type. This userdata carries
 type metadata along with a given value, allowing the value to be mapped to the
 correct Roblox type when it is set as a property.
 
-The `types` library contains functions for constructing exprim types.
+The `types` library contains functions for constructing exprim types. See the
+[types library](#user-content-types-library) section for a list of exprims.
 
 	-- Problem
 	local v = Instance.new("IntValue")
@@ -869,7 +938,7 @@ The `types` library contains functions for constructing exprim types.
 
 The default Roblox type that maps to Lua strings is `string`. As such, `string`
 has no exprim. Likewise, the default type that maps to Lua numbers is `double`,
-which also has no exprim.
+so it also has no exprim.
 
 An exprim userdata has no fields or operators other than the `Value` field,
 which returns the underlying primitive value. Exprims are meant to be
@@ -879,10 +948,8 @@ instead.
 
 # Sources
 A **source** is an external location from which raw data can be read from and
-written to.
-
-A source can be accessed at a low level through the `rbxmk.readSource` and
-`rbxmk.writeSource` functions.
+written to. A source can be accessed at a low level through the
+`rbxmk.readSource` and `rbxmk.writeSource` functions.
 
 A source usually has a corresponding library that provides convenient access for
 common cases.
@@ -902,10 +969,8 @@ Name    | Description
 
 # Formats
 A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
-into a value.
-
-A format can be accessed at a low level through the `rbxmk.encodeFormat` and
-`rbxmk.decodeFormat` functions.
+into a value. A format can be accessed at a low level through the
+`rbxmk.encodeFormat` and `rbxmk.decodeFormat` functions.
 
 The name of a format corresponds to the extension of a file name. For example,
 the `lua` format corresponds to the `.lua` file extension. When determining a
