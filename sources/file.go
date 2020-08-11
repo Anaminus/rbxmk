@@ -36,11 +36,9 @@ func fileRead(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
 	formatName := string(s.PullOpt(2, "string", types.String("")).(types.String))
 	if formatName == "" {
-		f := s.Ext(fileName)
-		if f == "" {
+		if formatName = s.Ext(fileName); formatName == "" {
 			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
-		formatName = f
 	}
 
 	format := s.Format(formatName)
@@ -63,25 +61,15 @@ func fileRead(s rbxmk.State) int {
 }
 
 func fileWrite(s rbxmk.State) int {
-	var fileName string
-	var formatName string
-	var value types.Value
-	switch s.L.GetTop() {
-	case 2:
-		fileName = string(s.Pull(1, "string").(types.String))
-		value = s.Pull(2, "Variant")
-		f := s.Ext(fileName)
-		if f == "" {
+	fileName := string(s.Pull(1, "string").(types.String))
+	value := s.Pull(2, "Variant")
+	formatName := string(s.PullOpt(3, "string", types.String("")).(types.String))
+	if formatName == "" {
+		if formatName = s.Ext(fileName); formatName == "" {
 			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
-		formatName = f
-	case 3:
-		fileName = string(s.Pull(1, "string").(types.String))
-		formatName = string(s.Pull(2, "string").(types.String))
-		value = s.Pull(3, "Variant")
-	default:
-		return s.RaiseError("expected 2 or 3 arguments")
 	}
+
 	format := s.Format(formatName)
 	if format.Name == "" {
 		return s.RaiseError("unknown format %q", formatName)
