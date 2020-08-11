@@ -277,11 +277,8 @@ func rbxmkReadSource(s rbxmk.State) int {
 	if source.Read == nil {
 		return s.RaiseError("cannot read with format %s", name)
 	}
-	options := make([]interface{}, s.L.GetTop()-1)
-	for i := 2; i <= s.L.GetTop(); i++ {
-		options[i-2] = s.Pull(i, "Variant")
-	}
-	b, err := source.Read(options...)
+	s.L.Remove(1) // Remove name
+	b, err := source.Read(s)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -298,11 +295,9 @@ func rbxmkWriteSource(s rbxmk.State) int {
 		return s.RaiseError("cannot write with format %s", name)
 	}
 	b := []byte(s.Pull(2, "BinaryString").(types.BinaryString))
-	options := make([]interface{}, s.L.GetTop()-2)
-	for i := 3; i <= s.L.GetTop(); i++ {
-		options[i-3] = s.Pull(i, "Variant")
-	}
-	if err := source.Write(b, options...); err != nil {
+	s.L.Remove(1) // Remove name
+	s.L.Remove(1) // Remove b
+	if err := source.Write(s, b); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return 0

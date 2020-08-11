@@ -13,11 +13,13 @@ func init() { register(File) }
 func File() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "file",
-		Read: func(options ...interface{}) (p []byte, err error) {
-			return ioutil.ReadFile(options[0].(string))
+		Read: func(s rbxmk.State) (b []byte, err error) {
+			path := string(s.Pull(1, "string").(types.String))
+			return ioutil.ReadFile(path)
 		},
-		Write: func(p []byte, options ...interface{}) (err error) {
-			return ioutil.WriteFile(options[0].(string), p, 0666)
+		Write: func(s rbxmk.State, b []byte) (err error) {
+			path := string(s.Pull(1, "string").(types.String))
+			return ioutil.WriteFile(path, b, 0666)
 		},
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
@@ -49,7 +51,7 @@ func fileRead(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
-	b, err := s.Source("file").Read(fileName)
+	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -92,7 +94,7 @@ func fileWrite(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	if err := s.Source("file").Write(b, fileName); err != nil {
+	if err := ioutil.WriteFile(fileName, b, 0666); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return 0
