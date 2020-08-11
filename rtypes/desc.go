@@ -123,7 +123,7 @@ func NewMemberDesc(member rbxdump.Member) types.Value {
 }
 
 type ParameterDesc struct {
-	*rbxdump.Parameter
+	rbxdump.Parameter
 }
 
 func (ParameterDesc) Type() string {

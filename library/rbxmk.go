@@ -166,7 +166,17 @@ func rbxmkNewDesc(s rbxmk.State) int {
 	case "Callback":
 		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{}})
 	case "Parameter":
-		return s.Push(rtypes.ParameterDesc{Parameter: &rbxdump.Parameter{}})
+		var param rbxdump.Parameter
+		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
+		param.Name = string(s.PullOpt(3, "string", types.String("")).(types.String))
+		switch def := s.PullOpt(4, "string", rtypes.Nil).(type) {
+		case rtypes.NilType:
+			param.Optional = false
+		case types.String:
+			param.Optional = true
+			param.Default = string(def)
+		}
+		return s.Push(rtypes.ParameterDesc{Parameter: param})
 	case "Type":
 		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
 		name := string(s.PullOpt(3, "string", types.String("")).(types.String))

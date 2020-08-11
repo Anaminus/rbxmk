@@ -38,7 +38,7 @@ func EventDesc() Reflector {
 				array := make(rtypes.Array, len(desc.Parameters))
 				for i, param := range desc.Parameters {
 					p := param
-					array[i] = rtypes.ParameterDesc{Parameter: &p}
+					array[i] = rtypes.ParameterDesc{Parameter: p}
 				}
 				return s.Push(array)
 			}},
@@ -51,7 +51,7 @@ func EventDesc() Reflector {
 					if !ok {
 						TypeError(s.L, 2, param.Type())
 					}
-					params[i] = *param.Parameter
+					params[i] = param.Parameter
 				}
 				desc.Parameters = params
 				return 0
