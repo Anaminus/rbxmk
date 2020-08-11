@@ -1,4 +1,4 @@
-local desc = rbxmk.newDesc("Type", "FooCategory", "FooName")
+local desc = rbxmk.newDesc("TypeDesc", "FooCategory", "FooName")
 
 -- Metamethod tests
 T.Pass("type of descriptor is TypeDesc",
@@ -10,9 +10,9 @@ T.Pass("descriptor converts to a string",
 T.Pass("descriptor can be compared with itself",
 	desc == desc)
 T.Pass("descriptor can be compared with a matching TypeDesc",
-	desc == rbxmk.newDesc("Type", "FooCategory", "FooName"))
+	desc == rbxmk.newDesc("TypeDesc", "FooCategory", "FooName"))
 T.Pass("descriptor can be compared with a non-matching TypeDesc",
-	desc ~= rbxmk.newDesc("Type", "BarCategory", "BarName"))
+	desc ~= rbxmk.newDesc("TypeDesc", "BarCategory", "BarName"))
 
 -- Member tests
 

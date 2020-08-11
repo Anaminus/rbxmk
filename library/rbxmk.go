@@ -148,33 +148,33 @@ func rbxmkRunString(s rbxmk.State) int {
 
 func rbxmkNewDesc(s rbxmk.State) int {
 	switch name := string(s.Pull(1, "string").(types.String)); name {
-	case "Root":
+	case "RootDesc":
 		return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
 			Classes: make(map[string]*rbxdump.Class),
 			Enums:   make(map[string]*rbxdump.Enum),
 		}})
-	case "Class":
+	case "ClassDesc":
 		return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
 			Members: make(map[string]rbxdump.Member),
 		}})
-	case "Property":
+	case "PropertyDesc":
 		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
 			ReadSecurity:  "None",
 			WriteSecurity: "None",
 		}})
-	case "Function":
+	case "FunctionDesc":
 		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
 			Security: "None",
 		}})
-	case "Event":
+	case "EventDesc":
 		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
 			Security: "None",
 		}})
-	case "Callback":
+	case "CallbackDesc":
 		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
 			Security: "None",
 		}})
-	case "Parameter":
+	case "ParameterDesc":
 		var param rbxdump.Parameter
 		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
 		param.Name = string(s.PullOpt(3, "string", types.String("")).(types.String))
@@ -186,18 +186,18 @@ func rbxmkNewDesc(s rbxmk.State) int {
 			param.Default = string(def)
 		}
 		return s.Push(rtypes.ParameterDesc{Parameter: param})
-	case "Type":
+	case "TypeDesc":
 		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
 		name := string(s.PullOpt(3, "string", types.String("")).(types.String))
 		return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
 			Category: category,
 			Name:     name,
 		}})
-	case "Enum":
+	case "EnumDesc":
 		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
 			Items: make(map[string]*rbxdump.EnumItem),
 		}})
-	case "EnumItem":
+	case "EnumItemDesc":
 		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
 	default:
 		return s.RaiseError("unable to create descriptor of type %q", name)

@@ -1,5 +1,5 @@
-local prev = rbxmk.newDesc("Root")
-local next = rbxmk.newDesc("Root")
+local prev = rbxmk.newDesc("RootDesc")
+local next = rbxmk.newDesc("RootDesc")
 T.Fail("diffDesc expects a RootDesc or nil for its first argument",
 	function() rbxmk.diffDesc(42, next) end)
 T.Fail("diffDesc expects a RootDesc or nil for its second argument",

@@ -1,4 +1,4 @@
-local desc = rbxmk.newDesc("Property")
+local desc = rbxmk.newDesc("PropertyDesc")
 
 -- Metamethod tests
 T.Pass("type of descriptor is PropertyDesc",
@@ -10,7 +10,7 @@ T.Pass("descriptor converts to a string",
 T.Pass("descriptor is equal to itself",
 	desc == desc)
 T.Pass("descriptor is not equal to another descriptor of the same type",
-	desc ~= rbxmk.newDesc("Property"))
+	desc ~= rbxmk.newDesc("PropertyDesc"))
 
 -- Member tests
 
@@ -20,9 +20,9 @@ T.Pass("can get ValueType field",
 T.Pass("ValueType field is a TypeDesc",
 	function() return typeof(desc.ValueType) == "TypeDesc" end)
 T.Pass("ValueType field initializes to empty TypeDesc",
-	function() return desc.ValueType == rbxmk.newDesc("Type") end)
+	function() return desc.ValueType == rbxmk.newDesc("TypeDesc") end)
 T.Pass("can set ValueType field to TypeDesc",
-	function() desc.ValueType = rbxmk.newDesc("Type", "FooCategory", "FooName") end)
+	function() desc.ValueType = rbxmk.newDesc("TypeDesc", "FooCategory", "FooName") end)
 T.Fail("cannot set ValueType field to non-string",
 	function() desc.ValueType = 42 end)
 T.Pass("set ValueType field persists",

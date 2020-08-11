@@ -1,4 +1,4 @@
-local desc = rbxmk.newDesc("Event")
+local desc = rbxmk.newDesc("EventDesc")
 
 -- Metamethod tests
 T.Pass("type of descriptor is EventDesc",
@@ -10,4 +10,4 @@ T.Pass("descriptor converts to a string",
 T.Pass("descriptor is equal to itself",
 	desc == desc)
 T.Pass("descriptor is not equal to another descriptor of the same type",
-	desc ~= rbxmk.newDesc("Event"))
+	desc ~= rbxmk.newDesc("EventDesc"))

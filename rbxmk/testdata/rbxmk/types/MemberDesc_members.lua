@@ -1,8 +1,8 @@
 -- Test members common to member descriptors.
-local prop = rbxmk.newDesc("Property")
-local func = rbxmk.newDesc("Function")
-local event = rbxmk.newDesc("Event")
-local callback = rbxmk.newDesc("Callback")
+local prop = rbxmk.newDesc("PropertyDesc")
+local func = rbxmk.newDesc("FunctionDesc")
+local event = rbxmk.newDesc("EventDesc")
+local callback = rbxmk.newDesc("CallbackDesc")
 
 -- Name
 for _, desc in ipairs({prop,func,event,callback}) do
@@ -39,32 +39,32 @@ for _, desc in ipairs({func,event,callback}) do
 	T.Fail(t..": cannot call SetParameters method with nil",
 		function() desc:SetParameters() end)
 	T.Fail(t..": cannot call SetParameters method with ParameterDesc",
-		function() desc:SetParameters(rbxmk.newDesc("Parameter")) end)
+		function() desc:SetParameters(rbxmk.newDesc("ParameterDesc")) end)
 	T.Pass(t..": can call SetParameters method with table of ParameterDescs",
 		function() desc:SetParameters({
-			rbxmk.newDesc("Parameter", rbxmk.newDesc("Type", "FooCatA", "FooTypeA"), "fooNameA"),
-			rbxmk.newDesc("Parameter", rbxmk.newDesc("Type", "FooCatB", "FooTypeB"), "fooNameB", "FooDefault"),
-			rbxmk.newDesc("Parameter", rbxmk.newDesc("Type", "FooCatC", "FooTypeC"), "fooNameC"),
+			rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "FooCatA", "FooTypeA"), "fooNameA"),
+			rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "FooCatB", "FooTypeB"), "fooNameB", "FooDefault"),
+			rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "FooCatC", "FooTypeC"), "fooNameC"),
 		}) end)
 	T.Fail(t..": cannot call SetParameters method with table of non-ParameterDescs",
 		function() desc:SetParameters({
-			rbxmk.newDesc("Parameter", rbxmk.newDesc("Type", "FooCatA", "FooTypeA"), "fooNameA"),
+			rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "FooCatA", "FooTypeA"), "fooNameA"),
 			"Foobar",
-			rbxmk.newDesc("Parameter", rbxmk.newDesc("Type", "FooCatC", "FooTypeC"), "fooNameC"),
+			rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "FooCatC", "FooTypeC"), "fooNameC"),
 		}) end)
 	T.Pass(t..": first set parameter persists",
 		function()
 			return desc:Parameters()[1] == rbxmk.newDesc(
-				"Parameter",
-				rbxmk.newDesc("Type", "FooCatA", "FooTypeA"),
+				"ParameterDesc",
+				rbxmk.newDesc("TypeDesc", "FooCatA", "FooTypeA"),
 				"fooNameA"
 			)
 		end)
 	T.Pass(t..": second set parameter persists",
 		function()
 			return desc:Parameters()[2] == rbxmk.newDesc(
-				"Parameter",
-				rbxmk.newDesc("Type", "FooCatB", "FooTypeB"),
+				"ParameterDesc",
+				rbxmk.newDesc("TypeDesc", "FooCatB", "FooTypeB"),
 				"fooNameB",
 				"FooDefault"
 			)
@@ -72,8 +72,8 @@ for _, desc in ipairs({func,event,callback}) do
 	T.Pass(t..": third set parameter persists",
 		function()
 			return desc:Parameters()[3] == rbxmk.newDesc(
-				"Parameter",
-				rbxmk.newDesc("Type", "FooCatC", "FooTypeC"),
+				"ParameterDesc",
+				rbxmk.newDesc("TypeDesc", "FooCatC", "FooTypeC"),
 				"fooNameC"
 			)
 		end)
@@ -87,9 +87,9 @@ for _, desc in ipairs({func,callback}) do
 	T.Pass(t..": ReturnType field is a TypeDesc",
 		function() return typeof(desc.ReturnType) == "TypeDesc" end)
 	T.Pass(t..": ReturnType field initializes to empty TypeDesc",
-		function() return desc.ReturnType == rbxmk.newDesc("Type") end)
+		function() return desc.ReturnType == rbxmk.newDesc("TypeDesc") end)
 	T.Pass(t..": can set ReturnType field to TypeDesc",
-		function() desc.ReturnType = rbxmk.newDesc("Type", "FooCategory", "FooName") end)
+		function() desc.ReturnType = rbxmk.newDesc("TypeDesc", "FooCategory", "FooName") end)
 	T.Fail(t..": cannot set ReturnType field to non-string",
 		function() desc.ReturnType = 42 end)
 	T.Pass(t..": set ReturnType field persists",

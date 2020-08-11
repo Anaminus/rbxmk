@@ -1,6 +1,6 @@
-local typeDesc = rbxmk.newDesc("Type", "FooCategory", "FooName")
-local desc = rbxmk.newDesc("Parameter", typeDesc, "fooName")
-local descDefault = rbxmk.newDesc("Parameter", typeDesc, "fooName", "FooDefault")
+local typeDesc = rbxmk.newDesc("TypeDesc", "FooCategory", "FooName")
+local desc = rbxmk.newDesc("ParameterDesc", typeDesc, "fooName")
+local descDefault = rbxmk.newDesc("ParameterDesc", typeDesc, "fooName", "FooDefault")
 
 -- Metamethod tests
 T.Pass("type of descriptor is ParameterDesc",

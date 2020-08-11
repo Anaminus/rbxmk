@@ -1,4 +1,4 @@
-local desc = rbxmk.newDesc("Callback")
+local desc = rbxmk.newDesc("CallbackDesc")
 
 -- Metamethod tests
 T.Pass("type of descriptor is CallbackDesc",
@@ -10,4 +10,4 @@ T.Pass("descriptor converts to a string",
 T.Pass("descriptor is equal to itself",
 	desc == desc)
 T.Pass("descriptor is not equal to another descriptor of the same type",
-	desc ~= rbxmk.newDesc("Callback"))
+	desc ~= rbxmk.newDesc("CallbackDesc"))

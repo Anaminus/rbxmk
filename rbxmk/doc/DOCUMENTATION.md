@@ -114,28 +114,26 @@ The function runs in the context of the calling script.
 ### `rbxmk.newDesc(name: string): Descriptor`
 The `newDesc` function creates a new descriptor object.
 
-`newDesc` returns a value of whose type corresponds to the given name. *name*
-may be one of the following:
+`newDesc` returns a value of whose type corresponds to the given name. The
+following types may be constructed:
 
-Name          | Returned type
---------------|--------------
-`"Root"`      | RootDesc
-`"Class"`     | ClassDesc
-`"Property"`  | PropertyDesc
-`"Function"`  | FunctionDesc
-`"Event"`     | EventDesc
-`"Callback"`  | CallbackDesc
-`"Parameter"` | ParameterDesc
-`"Type"`      | TypeDesc
-`"Enum"`      | EnumDesc
-`"EnumItem"`  | EnumItemDesc
+- RootDesc
+- ClassDesc
+- PropertyDesc
+- FunctionDesc
+- EventDesc
+- CallbackDesc
+- ParameterDesc
+- TypeDesc
+- EnumDesc
+- EnumItemDesc
 
 TypeDesc values are immutable. To set the fields, they can be passed as extra
 arguments to newDesc:
 
 ```lua
 -- Sets .Category and .Name, respectively.
-local typeDesc = rbxmk.newDesc("Type", "Category", "Name")
+local typeDesc = rbxmk.newDesc("TypeDesc", "Category", "Name")
 ```
 
 ParameterDesc values are immutable. To set the fields, they can be passed as
@@ -144,9 +142,9 @@ extra arguments to newDesc:
 ```lua
 -- Sets .Type, .Name, and .Default, respectively.
 -- No default value
-local paramDesc = rbxmk.newDesc("Parameter", typeDesc, "paramName")
+local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName")
 -- Default value
-local paramDesc = rbxmk.newDesc("Parameter", typeDesc, "paramName", "ParamDefault")
+local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName", "ParamDefault")
 ```
 
 ### `rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
