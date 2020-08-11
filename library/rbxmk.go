@@ -39,7 +39,7 @@ var RBXMK = rbxmk.Library{
 
 		mt := s.L.CreateTable(0, 2)
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
-			if field := s.Pull(2, "string").(types.String); field != "desc" {
+			if field := s.Pull(2, "string").(types.String); field != "globalDesc" {
 				return s.RaiseError("unknown field %q", field)
 			}
 			desc := s.Desc(nil)
@@ -49,7 +49,7 @@ var RBXMK = rbxmk.Library{
 			return s.Push(desc)
 		}))
 		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
-			if field := s.Pull(2, "string").(types.String); field != "desc" {
+			if field := s.Pull(2, "string").(types.String); field != "globalDesc" {
 				return s.RaiseError("unknown field %q", field)
 			}
 			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)

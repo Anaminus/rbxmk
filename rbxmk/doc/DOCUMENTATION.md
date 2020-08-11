@@ -66,9 +66,9 @@ The `rbxmk` library contains functions related to the rbxmk engine.
 Name           | Description
 ---------------|------------
 `decodeFormat` | Deserialize data from bytes.
-`desc`         | Gets or sets the global descriptor.
 `diffDesc`     | Get the differences between two descriptors.
 `encodeFormat` | Serialize data into bytes.
+`globalDesc`   | Gets or sets the global descriptor.
 `loadFile`     | Loads the content of a file as a function.
 `loadString`   | Loads a string as a function.
 `meta`         | Set metadata of an Instance.
@@ -84,9 +84,10 @@ The `decodeFormat` function decodes *bytes* into a value according to *format*.
 The exact details of each format are described in the
 [Formats](#user-content-formats) section.
 
-### `rbxmk.desc: RootDesc`
-The `desc` field gets or sets the global root descriptor. Most elements that
-utilize a root descriptor will fallback to the global descriptor when possible.
+### `rbxmk.globalDesc: RootDesc`
+The `globalDesc` field gets or sets the global root descriptor. Most elements
+that utilize a root descriptor will fallback to the global descriptor when
+possible.
 
 ### `rbxmk.diffDesc(prev: RootDesc?, next: RootDesc?): (diff: Array<DescAction>)`
 The `diffDesc` function compares two descriptors and returns the differences
@@ -412,9 +413,9 @@ Each instance can have a RootDesc assigned to it. This state is inherited by any
 descendant instances. See [`rbxmk.meta`](#user-content-TODO) for more
 information on how to assign descriptors to an instance.
 
-Additionally, the `rbxmk.desc` field may be used to apply a RootDesc globally.
-When `rbxmk.desc` is set, any instance that wouldn't otherwise inherit a
-descriptor will use this global descriptor.
+Additionally, the `rbxmk.globalDesc` field may be used to apply a RootDesc
+globally. When `rbxmk.globalDesc` is set, any instance that wouldn't otherwise
+inherit a descriptor will use this global descriptor.
 
 When an instance has a descriptor, several behaviors are enforced:
 
