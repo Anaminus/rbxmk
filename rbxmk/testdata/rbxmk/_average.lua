@@ -1,4 +1,3 @@
--- skip
 -- Returns the average of the given arguments.
 local args = {...}
 local average = 0

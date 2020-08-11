@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"io"
 	"os"
 	"path/filepath"
@@ -143,33 +142,6 @@ func initMain(s rbxmk.State, t *testing.T) {
 	s.L.SetGlobal("T", T)
 }
 
-type Directive int
-
-const (
-	Fail Directive = 1 << iota
-	Skip
-	None = 0
-)
-
-func checkDirective(path string) (d Directive) {
-	f, err := os.Open(path)
-	if err != nil {
-		return d
-	}
-	defer f.Close()
-	first, _ := bufio.NewReader(f).ReadString('\n')
-	if !strings.HasPrefix(strings.TrimSpace(first), "--") {
-		return d
-	}
-	if strings.Contains(first, "skip") {
-		d |= Skip
-	}
-	if strings.Contains(first, "fail") {
-		d |= Fail
-	}
-	return d
-}
-
 // TestScripts runs each .lua file in testdata as a Lua script. If the first
 // line starts with a comment that contains "fail", then the script is expected
 // to throw an error. All scripts receive the arguments from scriptArguments.
@@ -179,7 +151,9 @@ func TestScripts(t *testing.T) {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && filepath.Ext(info.Name()) == ".lua" {
+		if !info.IsDir() &&
+			filepath.Ext(info.Name()) == ".lua" &&
+			!strings.HasPrefix(filepath.Base(info.Name()), "_") {
 			files = append(files, path)
 		}
 		return nil
@@ -188,10 +162,6 @@ func TestScripts(t *testing.T) {
 		t.Fatalf("error walking testdata: %s", err)
 	}
 	for _, file := range files {
-		d := checkDirective(file)
-		if d&Skip != 0 {
-			continue
-		}
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
 			args := scriptArguments
 			args[1] = file
@@ -200,9 +170,7 @@ func TestScripts(t *testing.T) {
 				out: os.Stdout,
 				err: os.Stderr,
 			}, func(s rbxmk.State) { initMain(s, t) })
-			if d&Fail != 0 && err == nil {
-				t.Errorf("script %s: error expected", file)
-			} else if d&Fail == 0 && err != nil {
+			if err != nil {
 				t.Errorf("script %s: %s", file, err)
 			}
 		})
