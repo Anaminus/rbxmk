@@ -956,8 +956,22 @@ common cases.
 ## `file` source
 The `file` source provides access to the file system.
 
-### Reading
-### Writing
+### `readSource`
+The first additional argument to `readSource` is the path to the file to read
+from.
+
+```lua
+local bytes = rbxmk.readSource("file", "path/to/file.ext")
+```
+
+### `writeSource`
+The first additional argument to `writeSource` is the path to the file to write
+to.
+
+```lua
+rbxmk.writeSource("file", bytes, "path/to/file.ext")
+```
+
 ### `file` library
 The `file` library handles the `file` source.
 
@@ -965,6 +979,54 @@ Name    | Description
 --------|------------
 `read`  | Reads data from a file in a certain format.
 `write` | Writes data to a file in a certain format.
+
+#### `file.read(path: string, format: string?): (value: any)`
+The `read` function reads the content of the file at *path*, and decodes it into
+*value* according to the file extension. If *format* is given, then it will be
+used instead of the file extension.
+
+#### `file.write(path: string, value: any, format: string?)`
+The `write` function encodes *value* according to the file extension of *path*,
+and writes the result to the file at *path*. If *format* is given, then it will
+be used instead of the file extension.
+
+## `http` source
+The `http` source provides access to an HTTP client.
+
+### `readSource`
+The first additional argument to `readSource` is the URL to which a GET request
+will be made. Returns the body of the response. Throws an error if the response
+status is not 2XX.
+
+```lua
+local bytes = rbxmk.readSource("file", "https://www.example.com/resource")
+```
+
+### `writeSource`
+The first additional argument to `writeSource` is the URL to which a POST
+request will be made. The bytes are sent as the body of the request. Throws an
+error if the response status is not 2XX.
+
+```lua
+rbxmk.writeSource("file", bytes, "https://www.example.com/resource")
+```
+
+### `http` library
+The `http` library handles the `http` source.
+
+Name    | Description
+--------|------------
+`read`  | Reads data from an HTTP URL in a certain format.
+`write` | Writes data to an HTTP URL in a certain format.
+
+#### `http.read(url: string, format: string?): (value: any)`
+The `read` function issues a GET request to *url*, and decodes the response body
+into *value* according to *format*. Throws an error if the response status is
+not 2XX.
+
+#### `file.write(url: string, value: any, format: string)`
+The `write` function encodes *value* according to *format*, and sends the result
+in a POST request to *url*. Throws an error if the response status is not 2XX.
 
 # Formats
 A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
