@@ -158,13 +158,22 @@ func rbxmkNewDesc(s rbxmk.State) int {
 			Members: make(map[string]rbxdump.Member),
 		}})
 	case "Property":
-		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{}})
+		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
+			ReadSecurity:  "None",
+			WriteSecurity: "None",
+		}})
 	case "Function":
-		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{}})
+		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
+			Security: "None",
+		}})
 	case "Event":
-		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{}})
+		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
+			Security: "None",
+		}})
 	case "Callback":
-		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{}})
+		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
+			Security: "None",
+		}})
 	case "Parameter":
 		var param rbxdump.Parameter
 		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded

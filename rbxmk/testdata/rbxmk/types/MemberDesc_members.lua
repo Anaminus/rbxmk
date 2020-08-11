@@ -103,8 +103,8 @@ for _, desc in ipairs({func,event,callback}) do
 		function() return desc.Security end)
 	T.Pass(t..": Security field is a string",
 		function() return type(desc.Security) == "string" end)
-	T.Pass(t..": Security field initializes to empty string",
-		function() return desc.Security == "" end)
+	T.Pass(t..": Security field initializes to 'None'",
+		function() return desc.Security == "None" end)
 	T.Pass(t..": can set Security field to string",
 		function() desc.Security = "Foobar" end)
 	T.Fail(t..": cannot set Security field to non-string",

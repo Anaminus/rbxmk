@@ -33,8 +33,8 @@ T.Pass("can get ReadSecurity field",
 	function() return desc.ReadSecurity end)
 T.Pass("ReadSecurity field is a string",
 	function() return type(desc.ReadSecurity) == "string" end)
-T.Pass("ReadSecurity field initializes to empty string",
-	function() return desc.ReadSecurity == "" end)
+T.Pass("ReadSecurity field initializes to 'None'",
+	function() return desc.ReadSecurity == "None" end)
 T.Pass("can set ReadSecurity field to string",
 	function() desc.ReadSecurity = "Foobar" end)
 T.Fail("cannot set ReadSecurity field to non-string",
@@ -47,8 +47,8 @@ T.Pass("can get WriteSecurity field",
 	function() return desc.WriteSecurity end)
 T.Pass("WriteSecurity field is a string",
 	function() return type(desc.WriteSecurity) == "string" end)
-T.Pass("WriteSecurity field initializes to empty string",
-	function() return desc.WriteSecurity == "" end)
+T.Pass("WriteSecurity field initializes to 'None'",
+	function() return desc.WriteSecurity == "None" end)
 T.Pass("can set WriteSecurity field to string",
 	function() desc.WriteSecurity = "Foobar" end)
 T.Fail("cannot set WriteSecurity field to non-string",
