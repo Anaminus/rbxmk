@@ -529,10 +529,10 @@ func Instance() Reflector {
 			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
-				return s.Push(rtypes.Instances(t))
+				return s.Push(rtypes.Objects(t))
 			}},
 			"GetDescendants": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push(rtypes.Instances(v.(*rtypes.Instance).Descendants()))
+				return s.Push(rtypes.Objects(v.(*rtypes.Instance).Descendants()))
 			}},
 			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))

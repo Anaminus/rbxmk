@@ -16,6 +16,6 @@ type Tuple []types.Value
 
 func (Tuple) Type() string { return "Tuple" }
 
-type Instances []*Instance
+type Objects []*Instance
 
-func (Instances) Type() string { return "Instances" }
+func (Objects) Type() string { return "Objects" }

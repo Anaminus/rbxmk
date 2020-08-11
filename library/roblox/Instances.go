@@ -7,18 +7,18 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func init() { register(Instances) }
-func Instances() Reflector {
+func init() { register(Objects) }
+func Objects() Reflector {
 	return Reflector{
-		Name: "Instances",
+		Name: "Objects",
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
-			instances, ok := v.(rtypes.Instances)
+			objects, ok := v.(rtypes.Objects)
 			if !ok {
-				return nil, TypeError(nil, 0, "Instances")
+				return nil, TypeError(nil, 0, "Objects")
 			}
 			instRfl := s.Reflector("Instance")
-			table := s.L.CreateTable(len(instances), 0)
-			for i, v := range instances {
+			table := s.L.CreateTable(len(objects), 0)
+			for i, v := range objects {
 				lv, err := instRfl.PushTo(s, instRfl, v)
 				if err != nil {
 					return nil, err
@@ -34,15 +34,15 @@ func Instances() Reflector {
 			}
 			instRfl := s.Reflector("Instance")
 			n := table.Len()
-			instances := make(rtypes.Instances, n)
+			objects := make(rtypes.Objects, n)
 			for i := 1; i <= n; i++ {
 				v, err := instRfl.PullFrom(s, instRfl, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}
-				instances[i-1] = v.(*rtypes.Instance)
+				objects[i-1] = v.(*rtypes.Instance)
 			}
-			return instances, nil
+			return objects, nil
 		},
 	}
 }
