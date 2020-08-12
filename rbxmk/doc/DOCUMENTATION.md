@@ -388,6 +388,109 @@ arbitrary properties, this does not mean such instances will be interpreted in
 any meaningful way when sent over to Roblox. The most convenient way to enforce
 the correctness of instances is to use [Descriptors](#user-content-descriptors).
 
+## Instance type
+The `Instance` type provides a similar API to that of Roblox. In addition to
+getting and setting properties as described previously, instances have the
+following members defined:
+
+Member                     | Kind
+---------------------------|-----
+`ClassName`                | property
+`Name`                     | property
+`Parent`                   | property
+`ClearAllChildren`         | method
+`Clone`                    | method
+`Destroy`                  | method
+`FindFirstAncestor`        | method
+`FindFirstAncestorOfClass` | method
+`FindFirstChild`           | method
+`FindFirstChildOfClass`    | method
+`GetChildren`              | method
+`GetDescendants`           | method
+`GetFullName`              | method
+`IsAncestorOf`             | method
+`IsDescendantOf`           | method
+
+### `Instance.ClassName: string`
+ClassName gets or sets the class of the instance.
+
+Unlike in Roblox, ClassName can be modified.
+
+### `Instance.Name: string`
+Name gets or sets a name identifying the instance.
+
+### `Instance.Parent: Instance?`
+Parent gets or sets the parent of the instance, which may be nil.
+
+### `Instance:ClearAllChildren()`
+ClearAllChildren sets the Parent of each child of the instance to nil.
+
+Unlike in Roblox, ClearAllChildren does not affect descendants.
+
+### `Instance:Clone(): Instance`
+Clone returns a copy of the instance.
+
+Unlike in Roblox, Clone does not ignore an instance if its Archivable property
+is set to false.
+
+### `Instance:Destroy()`
+Destroy set the Parent of the instance to nil.
+
+Unlike in Roblox, the Parent of the instance remains unlocked. Destroy also does
+not affect descendants.
+
+### `Instance:FindFirstAncestor(name: string): Instance?`
+FindFirstAncestor returns the first ancestor whose Name equals *name*, or nil if
+no such instance was found.
+
+### `Instance:FindFirstAncestorOfClass(className: string): Instance?`
+FindFirstAncestor returns the first ancestor of the instance whose ClassName
+equals *className*, or nil if no such instance was found.
+
+### `Instance:FindFirstChild(name: string, recursive: bool?): Instance?`
+FindFirstChild returns the first child of the instance whose Name equals *name*,
+or nil if no such instance was found. If *recurse* is true, then descendants are
+also searched, top-down.
+
+### `Instance:FindFirstChildOfClass(className: string, recursive: bool?):`
+FindFirstChildOfClass returns the first child of the instance whose ClassName
+equals *className*, or nil if no such instance was found. If *recurse* is true,
+then descendants are also searched, top-down.
+
+### `Instance:GetChildren(): Objects`
+GetChildren returns a list of child instances of the instance.
+
+### `Instance:GetDescendants(): Objects`
+GetDescendants returns a list of descendant instances of the instance.
+
+### `Instance:GetFullName(): string`
+GetFullName returns the concatenation of each ancestor of the instance and the
+instance itself, separated by `.` characters. If an ancestor is a DataModel, it
+is not included.
+
+### `Instance:IsAncestorOf(descendant: Instance): bool`
+IsAncestorOf returns whether the instance of an ancestor of *descendant*.
+
+### `Instance:IsDescendantOf(ancestor: Instance): bool`
+IsDescendantOf returns whether the instance of a descendant of *ancestor*.
+
+## DataModel type
+The `DataModel` type is a subclass of Instance, so it has the same general
+behavior as Instances, with several differences:
+
+- Properties set file metadata (e.g. ExplicitAutoJoints).
+- Has GetService method.
+
+### `DataModel:GetService(className: string): Instance`
+GetService get the instance of the class corresponding to *className*.
+GetService will return the first child of DataModel with a ClassName that
+matches *className*, if it exists. If it does not exist, then a new instance of
+*className* is created. The Name of the instance is set to *className*,
+`sym.IsService` is set to true, and Parent is set to the DataModel.
+
+If the DataModel has a descriptor, then GetService will throw an error if the
+class's descriptor does not have the "Service" tag set.
+
 # Descriptors
 By default, rbxmk has no knowledge of the classes, members, and enums that are
 defined by Roblox. As such, instances can be of any class, properties can be of
@@ -454,7 +557,7 @@ EnumItemDesc  | Describes an enum item.
 ### RootDesc
 RootDesc describes an entire API. It has the following members:
 
-Member      | Type
+Member      | Kind
 ------------|-----
 Class       | method
 Classes     | method
@@ -517,11 +620,11 @@ print(Enum.NormalId.Front)
 ### ClassDesc
 ClassDesc describes a class. It has the following members:
 
-Member         | Type
+Member         | Kind
 ---------------|-----
-Name           | string
-Superclass     | string
-MemoryCategory | string
+Name           | field
+Superclass     | field
+MemoryCategory | field
 Member         | method
 Members        | method
 AddMember      | method
@@ -575,14 +678,14 @@ SetTags unsets the given tags on the descriptor.
 PropertyDesc describes a property member of a class. It has the following
 members:
 
-Member        | Type
+Member        | Kind
 --------------|-----
-Name          | string
-ValueType     | TypeDesc
-ReadSecurity  | string
-WriteSecurity | string
-CanLoad       | bool
-CanSave       | bool
+Name          | field
+ValueType     | field
+ReadSecurity  | field
+WriteSecurity | field
+CanLoad       | field
+CanSave       | field
 Tag           | method
 Tags          | method
 SetTag        | method
@@ -622,13 +725,13 @@ SetTags unsets the given tags on the descriptor.
 FunctionDesc describes a function member of a class. It has the following
 members:
 
-Member        | Type
+Member        | Kind
 --------------|-----
-Name          | string
+Name          | field
 Parameters    | method
 SetParameters | method
-ReturnType    | TypeDesc
-Security      | string
+ReturnType    | field
+Security      | field
 Tag           | method
 Tags          | method
 SetTag        | method
@@ -664,12 +767,12 @@ SetTags unsets the given tags on the descriptor.
 ### EventDesc
 EventDesc describes an event member of a class. It has the following members:
 
-Member        | Type
+Member        | Kind
 --------------|-----
-Name          | string
+Name          | field
 Parameters    | method
 SetParameters | method
-Security      | string
+Security      | field
 Tag           | method
 Tags          | method
 SetTag        | method
@@ -703,13 +806,13 @@ SetTags unsets the given tags on the descriptor.
 CallbackDesc describes a callback member of a class. It has the following
 members:
 
-Member        | Type
+Member        | Kind
 --------------|-----
-Name          | string
+Name          | field
 Parameters    | method
 SetParameters | method
-ReturnType    | TypeDesc
-Security      | string
+ReturnType    | field
+Security      | field
 Tag           | method
 Tags          | method
 SetTag        | method
@@ -746,11 +849,11 @@ SetTags unsets the given tags on the descriptor.
 ParameterDesc describes a parameter of a function, event or callback member. It
 has the following immutable members:
 
-Member  | Type
+Member  | Kind
 --------|-----
-Type    | TypeDesc
-Name    | string
-Default | string?
+Type    | field
+Name    | field
+Default | field
 
 ParameterDesc is immutable. A new value with different fields can be created
 with rbxmk.newDesc.
@@ -768,10 +871,10 @@ nil, indicating that the parameter has no default value.
 ### TypeDesc
 TypeDesc describes a value type. It has the following immutable members:
 
-Member   | Type
+Member   | Kind
 ---------|-----
-Category | string
-Name     | string
+Category | field
+Name     | field
 
 TypeDesc is immutable. A new value with different fields can be created with
 rbxmk.newDesc.
@@ -790,9 +893,9 @@ Name is the name of the type.
 ### EnumDesc
 EnumDesc describes an enum. It has the following members:
 
-Member     | Type
+Member     | Kind
 -----------|-----
-Name       | string
+Name       | field
 Item       | method
 Items      | method
 AddItem    | method
@@ -836,11 +939,11 @@ SetTags unsets the given tags on the descriptor.
 ### EnumItemDesc
 EnumDesc describes an enum item. It has the following members:
 
-Member   | Type
+Member   | Kind
 ---------|-----
-Name     | string
-Value    | int
-Index    | int
+Name     | field
+Value    | field
+Index    | field
 Tag      | method
 Tags     | method
 SetTag   | method
