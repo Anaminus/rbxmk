@@ -296,45 +296,7 @@ Symbol      | Description
 `RawDesc`   | Accesses the direct director of an instance.
 `Reference` | Determines the value used to identify the instance.
 
-#### `Instance[sym.Desc]: RootDesc | nil`
-Desc is the descriptor being used by the instance. Descriptors are inherited; if
-the instance has no descriptor, then each ancestor of the instance is searched
-until a descriptor is found. If none are still found, then the global descriptor
-is returned. If there is no global descriptor, then nil is returned.
-
-Getting Desc will return either a RootDesc, or nil.
-
-When setting Desc, the value can be a RootDesc, false, or nil. Setting to Desc
-sets the descriptor only for the current instance.
-
-- Setting to a RootDesc will set the descriptor directly for the current
-  instance, which may be inherited.
-- Setting to nil will cause the instance to have no direct descriptor, and the
-  descriptor will be inherited.
-- Setting to false will "block", forcing the instance to have no descriptor.
-  This behaves sort of like a RootDesc that is empty; there is no descriptor,
-  but this state will not inherit, and can be inherited.
-
-#### `Instance[sym.IsService]: bool`
-IsService indicates whether the instance is a service, such as Workspace or
-Lighting. This is used by some formats to determine how to encode and decode the
-instance.
-
-#### `Instance[sym.RawDesc]: RootDesc | bool | nil`
-RawDesc is similar to Desc, except that it considers only the direct descriptor
-of the current instance.
-
-Getting RawDesc will return a RootDesc if the instance has a descriptor
-assigned, false if the descriptor is blocked, or nil if no descriptor is
-assigned.
-
-Setting RawDesc behaves the same as setting Desc.
-
-#### `Instance[sym.Reference]: string`
-Reference is a string used to refer to the instance from within a DataModel.
-Certain formats use this to encode a reference to an instance. For example, the
-RBXMX format will generate random UUIDs for its references (e.g.
-"RBX8B658F72923F487FAE2F7437482EF16D").
+See [Instance type](#user-content-instance-type) for how these symbols are used.
 
 ## `types` library
 The `types` library contains functions for constructing explicit primitives. The
@@ -410,6 +372,10 @@ Member                     | Kind
 `GetFullName`              | method
 `IsAncestorOf`             | method
 `IsDescendantOf`           | method
+`sym.Desc`                 | symbol
+`sym.IsService`            | symbol
+`sym.RawDesc`              | symbol
+`sym.Reference`            | symbol
 
 ### `Instance.ClassName: string`
 ClassName gets or sets the class of the instance.
@@ -474,6 +440,46 @@ IsAncestorOf returns whether the instance of an ancestor of *descendant*.
 ### `Instance:IsDescendantOf(ancestor: Instance): bool`
 IsDescendantOf returns whether the instance of a descendant of *ancestor*.
 
+### `Instance[sym.Desc]: RootDesc | nil`
+Desc is the descriptor being used by the instance. Descriptors are inherited; if
+the instance has no descriptor, then each ancestor of the instance is searched
+until a descriptor is found. If none are still found, then the global descriptor
+is returned. If there is no global descriptor, then nil is returned.
+
+Getting Desc will return either a RootDesc, or nil.
+
+When setting Desc, the value can be a RootDesc, false, or nil. Setting to Desc
+sets the descriptor only for the current instance.
+
+- Setting to a RootDesc will set the descriptor directly for the current
+  instance, which may be inherited.
+- Setting to nil will cause the instance to have no direct descriptor, and the
+  descriptor will be inherited.
+- Setting to false will "block", forcing the instance to have no descriptor.
+  This behaves sort of like a RootDesc that is empty; there is no descriptor,
+  but this state will not inherit, and can be inherited.
+
+### `Instance[sym.IsService]: bool`
+IsService indicates whether the instance is a service, such as Workspace or
+Lighting. This is used by some formats to determine how to encode and decode the
+instance.
+
+### `Instance[sym.RawDesc]: RootDesc | bool | nil`
+RawDesc is similar to Desc, except that it considers only the direct descriptor
+of the current instance.
+
+Getting RawDesc will return a RootDesc if the instance has a descriptor
+assigned, false if the descriptor is blocked, or nil if no descriptor is
+assigned.
+
+Setting RawDesc behaves the same as setting Desc.
+
+### `Instance[sym.Reference]: string`
+Reference is a string used to refer to the instance from within a DataModel.
+Certain formats use this to encode a reference to an instance. For example, the
+RBXMX format will generate random UUIDs for its references (e.g.
+"RBX8B658F72923F487FAE2F7437482EF16D").
+
 ## DataModel type
 The `DataModel` type is a subclass of Instance, so it has the same general
 behavior as Instances, with several differences:
@@ -482,14 +488,13 @@ behavior as Instances, with several differences:
 - Has GetService method.
 
 ### `DataModel:GetService(className: string): Instance`
-GetService get the instance of the class corresponding to *className*.
-GetService will return the first child of DataModel with a ClassName that
-matches *className*, if it exists. If it does not exist, then a new instance of
-*className* is created. The Name of the instance is set to *className*,
-`sym.IsService` is set to true, and Parent is set to the DataModel.
+GetService returns the first child of the instance whose ClassName equals
+*className*. If no such child exists, then a new instance of *className* is
+created. The Name of the instance is set to *className*, `sym.IsService` is set
+to true, and Parent is set to the DataModel.
 
 If the DataModel has a descriptor, then GetService will throw an error if the
-class's descriptor does not have the "Service" tag set.
+created class's descriptor does not have the "Service" tag set.
 
 # Descriptors
 By default, rbxmk has no knowledge of the classes, members, and enums that are
@@ -1142,6 +1147,39 @@ format from a file extension, format names are greedy; if a file extension is
 `.server.lua`, this will select the `server.lua` format before the `lua` format.
 For convenience, a format name may have an optional leading `.` separator.
 
+## Types
+Several types are defined for encompassing a number of similar types:
+
+### Stringlike
+A Stringlike type is any type that can be converted into a string:
+
+- string
+- BinaryString
+- Content
+- ProtectedString
+- SharedString
+- Instance, when the ClassName is "Script", "LocalScript", or "ModuleScript",
+  and the Source property has a Stringlike type.
+
+### Numberlike
+A Numberlike type is any type that can be converted into a floating-point
+number:
+
+- double
+- float
+- int
+- int64
+- token
+
+### Intlike
+An Intlike type is any type that can be converted into an integer number:
+
+- double
+- float
+- int
+- int64
+- token
+
 ## String formats
 Several string formats are defined for encoding string-like values.
 
@@ -1149,6 +1187,20 @@ Format | Name   | Description
 -------|--------|------------
 `txt`  | Text   | Encodes string-like values to UTF-8 text.
 `bin`  | Binary | Encodes string-like values to raw bytes.
+
+### `txt` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | string     |
+Encode    | Stringlike |
+
+### `bin` format
+
+Direction | Type         | Description
+----------|--------------|------------
+Decode    | BinaryString |
+Encode    | Stringlike   |
 
 ## Lua formats
 Several formats are defined for decoding Lua files into script instances.
@@ -1162,6 +1214,48 @@ Format             | Description
 `server.lua`       | Alias for `script.lua`.
 `client.lua`       | Alias for `localscript.lua`.
 
+### `modulescript.lua` format
+
+Direction | Type                    | Description
+----------|-------------------------|------------
+Decode    | Instance (ModuleScript) |
+Encode    | Stringlike              |
+
+### `script.lua` format
+
+Direction | Type              | Description
+----------|-------------------|------------
+Decode    | Instance (Script) |
+Encode    | Stringlike        |
+
+### `localscript.lua` format
+
+Direction | Type                   | Description
+----------|------------------------|------------
+Decode    | Instance (LocalScript) |
+Encode    | Stringlike             |
+
+### `lua` format
+
+Direction | Type                    | Description
+----------|-------------------------|------------
+Decode    | Instance (ModuleScript) |
+Encode    | Stringlike              |
+
+### `server.lua` format
+
+Direction | Type              | Description
+----------|-------------------|------------
+Decode    | Instance (Script) |
+Encode    | Stringlike        |
+
+### `client.lua` format
+
+Direction | Type                   | Description
+----------|------------------------|------------
+Decode    | Instance (LocalScript) |
+Encode    | Stringlike             |
+
 ## Roblox formats
 Several formats are defined for serializing instances.
 
@@ -1172,6 +1266,42 @@ Format  | Description
 `rbxlx` | The Roblox XML place format.
 `rbxmx` | The Roblox XML model format.
 
+### `rbxl` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | DataModel  |
+Encode    | DataModel  |
+Encode    | Instance   |
+Encode    | Objects    |
+
+### `rbxm` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | DataModel  |
+Encode    | DataModel  |
+Encode    | Instance   |
+Encode    | Objects    |
+
+### `rbxlx` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | DataModel  |
+Encode    | DataModel  |
+Encode    | Instance   |
+Encode    | Objects    |
+
+### `rbxmx` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | DataModel  |
+Encode    | DataModel  |
+Encode    | Instance   |
+Encode    | Objects    |
+
 ## Descriptor formats
 Several formats are defined for encoding descriptors.
 
@@ -1179,3 +1309,17 @@ Format            | Description
 ------------------|------------
 `desc.json`       | Descriptors in JSON format. More commonly known as an "API dump".
 `desc-patch.json` | Actions that describe changes to descriptors, in JSON format.
+
+### `desc.json` format
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | RootDesc   |
+Encode    | RootDesc   |
+
+### `desc-patch.json` format
+
+Direction | Type        | Description
+----------|-------------|------------
+Decode    | DescActions |
+Encode    | DescActions |
