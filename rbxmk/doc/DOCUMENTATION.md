@@ -1,12 +1,40 @@
-[DRAFT]
-
 # Documentation
 This document provides details on how rbxmk works. For a basic overview, see
 [USAGE.md](USAGE.md).
 
+<table>
+<thead><tr><th>Table of Contents</th></tr></thead>
+<tbody><tr><td>
+
+1. [Environment][environment]
+	1. [Base library][base-lib]
+	2. [`rbxmk` library][rbxmk-lib]
+	3. [Roblox library][roblox-lib]
+	4. [`os` library][os-lib]
+	5. [`sym` library][sym-lib]
+	6. [`types` library][types-lib]
+1. [Instances][instances]
+	1. [Instance][Instance]
+		1. [DataModel][DataModel]
+1. [Descriptors][descriptors]
+	1. [Descriptor types][descriptor-types]
+	2. [Diffing and Patching][diffing-and-patching]
+1. [Explicit primitives][explicit-primitives]
+1. [Sources][sources]
+	1. [`file` source][file-source]
+	2. [`http` source][http-source]
+1. [Formats][formats]
+	1. [String formats][string-formats]
+	3. [Lua formats][lua-formats]
+	4. [Roblox formats][roblox-formats]
+	5. [Descriptor formats][descriptor-formats]
+
+</td></tr></tbody>
+</table>
+
 This document uses Luau type annotation syntax to describe the API of an
-element. Some liberties are taken for APIs not currently supported by the Luau
-syntax. For example, `...` indicates variable parameters. Additionally, the
+element. Some liberties are taken for patterns not currently supported by the
+Luau syntax. For example, `...` indicates variable parameters. Additionally, the
 following types are predefined for documentation purposes:
 
 ```luau
@@ -18,116 +46,150 @@ type Dictionary<T> = {[string]: T}
 ```
 
 # Environment
+[environment]: #user-content-environment
+
 The Lua environment provided by rbxmk is packaged as a number of libraries. Some
 libraries are loaded under a specific name, while others are loaded directly
 into the global environment.
 
-Library   | Description
-----------|------------
-(base)    | The Lua 5.1 standard library, abridged.
-rbxmk     | An interface to the rbxmk engine, and the rbxmk environment.
-(roblox)  | An environment matching the Roblox Lua API.
-os        | Extensions to the standard os library.
-sym       | Symbols for accessing instance metadata.
-types     | Fallbacks for constructing certain types.
-(sources) | An assortment of libraries for interfacing with the various external sources.
+Library                | Description
+-----------------------|------------
+[(base)][base-lib]     | The Lua 5.1 standard library, abridged.
+[rbxmk ][rbxmk-lib]    | An interface to the rbxmk engine, and the rbxmk environment.
+[(roblox)][roblox-lib] | An environment emulating the Roblox Lua API.
+[os ][os-lib]          | Extensions to the standard os library.
+[sym ][sym-lib]        | Symbols for accessing instance metadata.
+[types ][types-lib]    | Fallbacks for constructing certain types.
+[(sources)][sources]   | An assortment of libraries for interfacing with various external sources.
 
 ## Base library
-The following items from the Lua 5.1 standard library are included:
+[base-lib]: #user-content-base-library
 
-- `_G`
-- `_VERSION`
-- `assert`
-- `error`
-- `getmetatable`
-- `ipairs`
-- `next`
-- `pairs`
-- `pcall`
-- `print`
-- `select`
-- `setmetatable`
-- `tonumber`
-- `tostring`
-- `type`
-- `unpack`
-- `xpcall`
-- Entire `math` library
-- Entire `string` library except `string.dump`
-- Entire `table` library
-- `os.clock`
-- `os.date`
-- `os.difftime`
-- `os.time`
+The following items from the [Lua 5.1 standard library][luastdlib] are included:
+
+- [`_G`](https://www.lua.org/manual/5.1/manual.html#pdf-_G)
+- [`_VERSION`](https://www.lua.org/manual/5.1/manual.html#pdf-_VERSION)
+- [`assert`](https://www.lua.org/manual/5.1/manual.html#pdf-assert)
+- [`error`](https://www.lua.org/manual/5.1/manual.html#pdf-error)
+- [`getmetatable`](https://www.lua.org/manual/5.1/manual.html#pdf-getmetatable)
+- [`ipairs`](https://www.lua.org/manual/5.1/manual.html#pdf-ipairs)
+- [`next`](https://www.lua.org/manual/5.1/manual.html#pdf-next)
+- [`pairs`](https://www.lua.org/manual/5.1/manual.html#pdf-pairs)
+- [`pcall`](https://www.lua.org/manual/5.1/manual.html#pdf-pcall)
+- [`print`](https://www.lua.org/manual/5.1/manual.html#pdf-print)
+- [`select`](https://www.lua.org/manual/5.1/manual.html#pdf-select)
+- [`setmetatable`](https://www.lua.org/manual/5.1/manual.html#pdf-setmetatable)
+- [`tonumber`](https://www.lua.org/manual/5.1/manual.html#pdf-tonumber)
+- [`tostring`](https://www.lua.org/manual/5.1/manual.html#pdf-tostring)
+- [`type`](https://www.lua.org/manual/5.1/manual.html#pdf-type)
+- [`unpack`](https://www.lua.org/manual/5.1/manual.html#pdf-unpack)
+- [`xpcall`](https://www.lua.org/manual/5.1/manual.html#pdf-xpcall)
+- [`math` library](https://www.lua.org/manual/5.1/manual.html#5.6)
+- [`string` library](https://www.lua.org/manual/5.1/manual.html#5.4), except `string.dump`
+- [`table` library](https://www.lua.org/manual/5.1/manual.html#5.5)
+- [`os.clock`](https://www.lua.org/manual/5.1/manual.html#pdf-os.clock)
+- [`os.date`](https://www.lua.org/manual/5.1/manual.html#pdf-os.date)
+- [`os.difftime`](https://www.lua.org/manual/5.1/manual.html#pdf-os.difftime)
+- [`os.time`](https://www.lua.org/manual/5.1/manual.html#pdf-os.time)
+
+[luastdlib]: https://www.lua.org/manual/5.1/manual.html#5
 
 ## `rbxmk` library
-The `rbxmk` library contains functions related to the rbxmk engine.
+[rbxmk-lib]: #user-content-rbxmk-library
 
-Name           | Description
----------------|------------
-`decodeFormat` | Deserialize data from bytes.
-`diffDesc`     | Get the differences between two descriptors.
-`encodeFormat` | Serialize data into bytes.
-`globalDesc`   | Gets or sets the global descriptor.
-`loadFile`     | Loads the content of a file as a function.
-`loadString`   | Loads a string as a function.
-`meta`         | Set metadata of an Instance.
-`newDesc`      | Create a new descriptor.
-`patchDesc`    | Transform a descriptor by applying differences.
-`readSource`   | Read bytes from an external source.
-`runFile`      | Runs a file as a Lua chunk.
-`runString`    | Runs a string as a Lua chunk.
-`writeSource`  | Write bytes to an external source.
+The **rbxmk** library contains functions related to the rbxmk engine.
 
-### `rbxmk.decodeFormat(format: string, bytes: BinaryString): (value: any)`
-The `decodeFormat` function decodes *bytes* into a value according to *format*.
-The exact details of each format are described in the
-[Formats](#user-content-formats) section.
+Name                               | Description
+-----------------------------------|------------
+[decodeFormat][rbxmk.decodeFormat] | Deserialize data from bytes.
+[diffDesc][rbxmk.diffDesc]         | Get the differences between two descriptors.
+[encodeFormat][rbxmk.encodeFormat] | Serialize data into bytes.
+[globalDesc][rbxmk.globalDesc]     | Get or set the global descriptor.
+[loadFile][rbxmk.loadFile]         | Load the content of a file as a function.
+[loadString][rbxmk.loadString]     | Load a string as a function.
+[newDesc][rbxmk.newDesc]           | Create a new descriptor.
+[patchDesc][rbxmk.patchDesc]       | Transform a descriptor by applying differences.
+[readSource][rbxmk.readSource]     | Read bytes from an external source.
+[runFile][rbxmk.runFile]           | Run a file as a Lua chunk.
+[runString][rbxmk.runString]       | Run a string as a Lua chunk.
+[writeSource][rbxmk.writeSource]   | Write bytes to an external source.
 
-### `rbxmk.globalDesc: RootDesc`
-The `globalDesc` field gets or sets the global root descriptor. Most elements
+### rbxmk.decodeFormat
+[rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
+`rbxmk.decodeFormat(format: string, bytes: BinaryString): (value: any)`
+
+The **decodeFormat** function decodes *bytes* into a value according to
+*format*. The exact details of each format are described in the
+[Formats][formats] section.
+
+decodeFormat will throw an error if the format does not exist, or the format has
+no decoder defined.
+
+### rbxmk.globalDesc
+[rbxmk.globalDesc]: #user-content-rbxmkglobaldesc
+`rbxmk.globalDesc: RootDesc`
+
+The **globalDesc** field gets or sets the global root descriptor. Most items
 that utilize a root descriptor will fallback to the global descriptor when
 possible.
 
-### `rbxmk.diffDesc(prev: RootDesc?, next: RootDesc?): (diff: Array<DescAction>)`
-The `diffDesc` function compares two descriptors and returns the differences
-between the two. A nil value for *prev* or *next* is treated the same as an
-empty descriptor. The result is a list of actions that describes how to
+### rbxmk.diffDesc
+[rbxmk.diffDesc]: #user-content-rbxmkdiffdesc
+`rbxmk.diffDesc(prev: RootDesc?, next: RootDesc?): (diff: Array<DescAction>)`
+
+The **diffDesc** function compares two root descriptors and returns the
+differences between them. A nil value for *prev* or *next* is treated the same
+as an empty descriptor. The result is a list of actions that describe how to
 transform *prev* into *next*.
 
-### `rbxmk.encodeFormat(format: string, value: any): (bytes: BinaryString)`
-The `encodeFormat` function encodes *value* into a sequence of bytes according
+### rbxmk.encodeFormat
+[rbxmk.encodeFormat]: #user-content-rbxmkencodeformat
+`rbxmk.encodeFormat(format: string, value: any): (bytes: BinaryString)`
+
+The **encodeFormat** function encodes *value* into a sequence of bytes according
 to *format*. The exact details of each format are described in the
-[Formats](#user-content-formats) section.
+[Formats][formats] section.
 
-### `rbxmk.loadFile(path: string): (func: function)`
-The `loadFile` function loads the content of a file as a Lua function. *path* is
-the path to the file.
+encodeFormat will throw an error if the format does not exist, or the format has
+no encoder defined.
+
+### rbxmk.loadFile
+[rbxmk.loadFile]: #user-content-rbxmkloadfile
+`rbxmk.loadFile(path: string): (func: function)`
+
+The **loadFile** function loads the content of a file as a Lua function. *path*
+is the path to the file.
 
 The function runs in the context of the calling script.
 
-### `rbxmk.loadString(source: string): (func: function)`
-The `loadString` function loads the a string as a Lua function. *source* is the
-string to load.
+### rbxmk.loadString
+[rbxmk.loadString]: #user-content-rbxmkloadstring
+`rbxmk.loadString(source: string): (func: function)`
+
+The **loadString** function loads the a string as a Lua function. *source* is
+the string to load.
 
 The function runs in the context of the calling script.
 
-### `rbxmk.newDesc(name: string): Descriptor`
-The `newDesc` function creates a new descriptor object.
+### rbxmk.newDesc
+[rbxmk.newDesc]: #user-content-rbxmknewdesc
+`rbxmk.newDesc(name: string): Descriptor`
 
-`newDesc` returns a value of whose type corresponds to the given name. The
+The **newDesc** function creates a new descriptor object.
+
+newDesc returns a value of whose type corresponds to the given name. The
 following types may be constructed:
 
-- RootDesc
-- ClassDesc
-- PropertyDesc
-- FunctionDesc
-- EventDesc
-- CallbackDesc
-- ParameterDesc
-- TypeDesc
-- EnumDesc
-- EnumItemDesc
+- [RootDesc][RootDesc]
+- [ClassDesc][ClassDesc]
+- [PropertyDesc][PropertyDesc]
+- [FunctionDesc][FunctionDesc]
+- [EventDesc][EventDesc]
+- [CallbackDesc][CallbackDesc]
+- [ParameterDesc][ParameterDesc]
+- [TypeDesc][TypeDesc]
+- [EnumDesc][EnumDesc]
+- [EnumItemDesc][EnumItemDesc]
 
 TypeDesc values are immutable. To set the fields, they can be passed as extra
 arguments to newDesc:
@@ -137,8 +199,8 @@ arguments to newDesc:
 local typeDesc = rbxmk.newDesc("TypeDesc", "Category", "Name")
 ```
 
-ParameterDesc values are immutable. To set the fields, they can be passed as
-extra arguments to newDesc:
+ParameterDesc values are also immutable. To set the fields, they can be passed
+as extra arguments to newDesc:
 
 ```lua
 -- Sets .Type, .Name, and .Default, respectively.
@@ -148,88 +210,119 @@ local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName")
 local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName", "ParamDefault")
 ```
 
-### `rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
-The `patchDesc` function transforms a descriptor according to a list of actions.
-Each action in the list is applied in order. Actions that do not apply are
-ignored.
+### rbxmk.patchDesc
+[rbxmk.patchDesc]: #user-content-rbxmkpatchdesc
+`rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
 
-### `rbxmk.readSource(source: string, args: ...any): (bytes: BinaryString)`
-The `readSource` function reads a sequence of bytes from an external source
+The **patchDesc** function transforms a root descriptor according to a list of
+actions. Each action in the list is applied in order. Actions that are
+incompatible are ignored.
+
+### rbxmk.readSource
+[rbxmk.readSource]: #user-content-rbxmkreadsource
+`rbxmk.readSource(source: string, args: ...any): (bytes: BinaryString)`
+
+The **readSource** function reads a sequence of bytes from an external source
 indicated by *source*. *args* depends on the source. The exact details of each
-source are described in the [Sources](#user-content-sources) section.
+source are described in the [Sources][sources] section.
 
-### `rbxmk.runFile(path: string, args: ...any): (results: ...any)`
-The `runFile` function runs the content of a file as a Lua script. *path* is the
-path to the file. *args* are passed into the script as arguments. Returns the
-values returned by the script.
+readSource will throw an error if *source* does not exist, or the source cannot
+be read from.
+
+### rbxmk.runFile
+[rbxmk.runFile]: #user-content-rbxmkrunfile
+`rbxmk.runFile(path: string, args: ...any): (results: ...any)`
+
+The **runFile** function runs the content of a file as a Lua script. *path* is
+the path to the file. *args* are passed into the script as arguments. Returns
+the values returned by the script.
 
 The script runs in the context of the referred file. Files cannot be run
-recursively; if a file is already running as a script, then `runFile` will throw
+recursively; if a file is already running as a script, then runFile will throw
 an error.
 
-### `rbxmk.runString(source: string, args: ...any): (results: ...any)`
-The `runString` function runs a string as a Lua script. *source* is the string
+### rbxmk.runString
+[rbxmk.runString]: #user-content-rbxmkrunstring
+`rbxmk.runString(source: string, args: ...any): (results: ...any)`
+
+The **runString** function runs a string as a Lua script. *source* is the string
 to run. *args* are passed into the script as arguments. Returns the values
 returned by the script.
 
 The script runs in the context of the calling script.
 
-### `rbxmk.writeSource(source: string, bytes: BinaryString, args: ...any)`
-The `writeSource` function writes a sequence of bytes to an external source
+### rbxmk.writeSource
+[rbxmk.writeSource]: #user-content-rbxmkwritesource
+`rbxmk.writeSource(source: string, bytes: BinaryString, args: ...any)`
+
+The **writeSource** function writes a sequence of bytes to an external source
 indicated by *source*. *args* depends on the source. The exact details of each
-source are described in the [Sources](#user-content-sources) section.
+source are described in the [Sources][sources] section.
+
+writeSource will throw an error if *source* does not exist, or cannot be written
+to.
 
 ## Roblox library
+[roblox-lib]: #user-content-roblox-library
+
 The Roblox library includes an environment similar to the Roblox Lua API. This
 is included directly into the global environment.
 
-The `typeof` function is included to get the type of a userdata. In addition to
-the usual Roblox types, `typeof` will work for various types specific to rbxmk.
+The **typeof** function is included to get the type of a userdata. In addition
+to the usual Roblox types, `typeof` will work for various types specific to
+rbxmk.
 
-The following type constructors are included:
+Included are constructors for the following types:
 
-- `Axes`
-- `BrickColor`
-- `CFrame`
-- `Color3`
-- `ColorSequence`
-- `ColorSequenceKeypoint`
-- `Faces`
-- `Instance`
-- `NumberRange`
-- `NumberSequence`
-- `NumberSequenceKeypoint`
-- `PhysicalProperties`
-- `Ray`
-- `Rect`
-- `Region3`
-- `Region3int16`
-- `UDim`
-- `UDim2`
-- `Vector2`
-- `Vector2int16`
-- `Vector3`
-- `Vector3int16`
+- Axes
+- BrickColor
+- CFrame
+- Color3
+- ColorSequence
+- ColorSequenceKeypoint
+- Faces
+- [Instance][Instance]
+- NumberRange
+- NumberSequence
+- NumberSequenceKeypoint
+- PhysicalProperties
+- Ray
+- Rect
+- Region3
+- Region3int16
+- UDim
+- UDim2
+- Vector2
+- Vector2int16
+- Vector3
+- Vector3int16
 
-Additionally, the `DataModel.new` constructor creates a special Instance of the
-DataModel class, to be used to contain instances in a game tree. Unlike a normal
-Instance, the ClassName property cannot be modified, and other properties
-determine metadata used by certain formats.
+Each of these types has an implementation that matches that of Roblox. The
+[DevHub](https://developer.roblox.com/en-us/api-reference/data-types) has more
+information about the API of such types.
+
+Additionally, the [`DataModel.new`][DataModel] constructor creates a special
+Instance of the DataModel class, to be used to contain instances in a game tree.
 
 ## `os` library
-The `os` library is an extension to the standard library. The following
+[os-lib]: #user-content-os-library
+
+The **os** library is an extension to the standard library. The following
 additional functions are included:
 
-Name     | Description
----------|------------
-`dir`    | Gets a list of files in a directory.
-`expand` | Expands predefined file path variables.
-`getenv` | Gets an environment variable.
-`join`   | Joins a number of file paths together.
-`split`  | Splits a file path into its components.
+Name                | Description
+--------------------|------------
+[dir][os.dir]       | Gets a list of files in a directory.
+[expand][os.expand] | Expands predefined file path variables.
+[getenv][os.getenv] | Gets an environment variable.
+[join][os.join]     | Joins a number of file paths together.
+[split][os.split]   | Splits a file path into its components.
 
-### `os.dir(path: string): Array<File>`
-The `dir` function returns a list of files in the given directory.
+### os.dir
+[os.dir]: #user-content-osdir
+`os.dir(path: string): Array<File>`
+
+The **dir** function returns a list of files in the given directory.
 
 Each file is a table with the following fields:
 
@@ -240,8 +333,11 @@ IsDir   | boolean | Whether the file is a directory.
 Size    | number  | The size of the file, in bytes.
 ModTime | number  | The modification time of the file, in Unix time.
 
-### `os.expand(path: string): string`
-The `expand` function scans *path* for certain variables of the form `$var` or
+### os.expand
+[os.expand]: #user-content-osexpand
+`os.expand(path: string): string`
+
+The **expand** function scans *path* for certain variables of the form `$var` or
 `${var}` an expands them. The following variables are expanded:
 
 Variable                                    | Description
@@ -251,16 +347,25 @@ Variable                                    | Description
 `$working_directory`, `$working_dir`, `$wd` | The current working directory.
 `$temp_directory`, `$temp_dir`, `$tmp`      | The directory for temporary files.
 
-### `os.getenv(name: string?): string | Array<string>`
-The `getenv` function returns the value of the *name* environment variable. If
+### os.getenv
+[os.getenv]: #user-content-osgetenv
+`os.getenv(name: string?): string | Array<string>`
+
+The **getenv** function returns the value of the *name* environment variable. If
 *name* is not specified, then a list of environment variables is returned.
 
-### `os.join(paths: ...string) string`
-The `join` function joins each *path* element into a single path, separating
+### os.join
+[os.join]: #user-content-osjoin
+`os.join(paths: ...string) string`
+
+The **join** function joins each *path* element into a single path, separating
 them using the operating system's path separator. This also cleans up the path.
 
-### `os.split(path: string, components: ...string): ...string`
-The `split` function returns the components of a file path.
+### os.split
+[os.split]: #user-content-ossplit
+`os.split(path: string, components: ...string): ...string`
+
+The **split** function returns the components of a file path.
 
 Component | `project/scripts/main.script.lua` | Description
 ----------|-----------------------------------|------------
@@ -271,37 +376,39 @@ Component | `project/scripts/main.script.lua` | Description
 `fstem`   | `main`                            | The base without the format extension.
 `stem`    | `main.script`                     | The base without the extension.
 
-A format extension depends on the available formats. See
-[Formats](#user-content-formats) for more information.
+A format extension depends on the available formats. See [Formats][formats] for
+more information.
 
 ## `sym` library
-The `sym` library contains **Symbol** values. A symbol is a unique identifier
-that can be used to access certain metadata fields of an Instance.
+[sym-lib]: #user-content-sym-library
+
+The **sym** library contains **Symbol** values. A symbol is a unique identifier
+that can be used to access certain metadata fields of an [Instance][Instance].
 
 An instance can be indexed with a symbol to get a metadata value in the same way
 it can be indexed with a string to get a property value:
 
 ```lua
-instance = Instance.new("Workspace")
+local instance = Instance.new("Workspace")
 instance[sym.IsService] = true
 print(instance[sym.IsService]) --> true
 ```
 
 The following symbols are defined:
 
-Symbol      | Description
-------------|------------
-`Desc`      | Gets the inherited descriptor of an instance.
-`IsService` | Determines whether an instance is a service.
-`RawDesc`   | Accesses the direct director of an instance.
-`Reference` | Determines the value used to identify the instance.
-
-See [Instance type](#user-content-instance-type) for how these symbols are used.
+Symbol                                    | Description
+------------------------------------------|------------
+[`sym.Desc`][Instance.sym.Desc]           | Gets the inherited descriptor of an instance.
+[`sym.IsService`][Instance.sym.IsService] | Determines whether an instance is a service.
+[`sym.RawDesc`][Instance.sym.RawDesc]     | Accesses the direct director of an instance.
+[`sym.Reference`][Instance.sym.Reference] | Determines the value used to identify the instance.
 
 ## `types` library
-The `types` library contains functions for constructing explicit primitives. The
-name of a function corresponds directly to the type. See [Explicit
-primitives](#user-content-explicit-primitives) for more information.
+[types-lib]: #user-content-types-library
+
+The **types** library contains functions for constructing explicit primitives.
+The name of a function corresponds directly to the type. See [Explicit
+primitives][explicit-primitives] for more information.
 
 Type              | Primitive
 ------------------|----------
@@ -316,6 +423,8 @@ Type              | Primitive
 `token`           | number
 
 # Instances
+[instances]: #user-content-instances
+
 A major difference between Roblox and rbxmk is what an instance represents. In
 Roblox, an instance is a live object that acts and reacts. In rbxmk, an instance
 represents *data*, and only data.
@@ -348,99 +457,164 @@ print(part.Position) --> nil
 That said, even though it is possible for rbxmk to create arbitrary classes with
 arbitrary properties, this does not mean such instances will be interpreted in
 any meaningful way when sent over to Roblox. The most convenient way to enforce
-the correctness of instances is to use [Descriptors](#user-content-descriptors).
+the correctness of instances is to use [descriptors][descriptors].
 
 ## Instance type
-The `Instance` type provides a similar API to that of Roblox. In addition to
+[Instance]: #user-content-instance-type
+
+The **Instance** type provides a similar API to that of Roblox. In addition to
 getting and setting properties as described previously, instances have the
 following members defined:
 
-Member                     | Kind
----------------------------|-----
-`ClassName`                | property
-`Name`                     | property
-`Parent`                   | property
-`ClearAllChildren`         | method
-`Clone`                    | method
-`Destroy`                  | method
-`FindFirstAncestor`        | method
-`FindFirstAncestorOfClass` | method
-`FindFirstChild`           | method
-`FindFirstChildOfClass`    | method
-`GetChildren`              | method
-`GetDescendants`           | method
-`GetFullName`              | method
-`IsAncestorOf`             | method
-`IsDescendantOf`           | method
-`sym.Desc`                 | symbol
-`sym.IsService`            | symbol
-`sym.RawDesc`              | symbol
-`sym.Reference`            | symbol
+Member                                                        | Kind
+--------------------------------------------------------------|-----
+[ClassName][Instance.ClassName]                               | property
+[Name][Instance.Name]                                         | property
+[Parent][Instance.Parent]                                     | property
+[ClearAllChildren][Instance.ClearAllChildren]                 | method
+[Clone][Instance.Clone]                                       | method
+[Destroy][Instance.Destroy]                                   | method
+[FindFirstAncestor][Instance.FindFirstAncestor]               | method
+[FindFirstAncestorOfClass][Instance.FindFirstAncestorOfClass] | method
+[FindFirstChild][Instance.FindFirstChild]                     | method
+[FindFirstChildOfClass][Instance.FindFirstChildOfClass]       | method
+[GetChildren][Instance.GetChildren]                           | method
+[GetDescendants][Instance.GetDescendants]                     | method
+[GetFullName][Instance.GetFullName]                           | method
+[IsAncestorOf][Instance.IsAncestorOf]                         | method
+[IsDescendantOf][Instance.IsDescendantOf]                     | method
+[sym.Desc][Instance.sym.Desc]                                 | symbol
+[sym.IsService][Instance.sym.IsService]                       | symbol
+[sym.RawDesc][Instance.sym.RawDesc]                           | symbol
+[sym.Reference][Instance.sym.Reference]                       | symbol
 
-### `Instance.ClassName: string`
+### Instance.new
+[Instance.new]: #user-content-instancenew
+`Instance.new(className: string, parent: Instance?, desc: RootDesc?): Instance`
+
+The `Instance.new` constructor returns a new Instance of the given class.
+*className* sets the [ClassName][Instance.ClassName] property of the instance.
+If *parent* is specified, it sets the [Parent][Instance.Parent] property.
+
+If *desc* is specified, then it sets the [`sym.Desc`][Instance.sym.Desc] member.
+Additionally, `Instance.new` will throw an error if the class does not exist, or
+has the "NotCreatable" tag. If no descriptor is specified, then any class name
+will be accepted.
+
+### Instance.ClassName
+[Instance.ClassName]: #user-content-instanceclassname
+`Instance.ClassName: string`
+
 ClassName gets or sets the class of the instance.
 
 Unlike in Roblox, ClassName can be modified.
 
-### `Instance.Name: string`
+### Instance.Name
+[Instance.Name]: #user-content-instancename
+`Instance.Name: string`
+
 Name gets or sets a name identifying the instance.
 
-### `Instance.Parent: Instance?`
+### Instance.Parent
+[Instance.Parent]: #user-content-instanceparent
+`Instance.Parent: Instance?`
+
 Parent gets or sets the parent of the instance, which may be nil.
 
-### `Instance:ClearAllChildren()`
-ClearAllChildren sets the Parent of each child of the instance to nil.
+### Instance.ClearAllChildren
+[Instance.ClearAllChildren]: #user-content-instanceclearallchildren
+`Instance:ClearAllChildren()`
+
+ClearAllChildren sets the [Parent][Instance.Parent] of each child of the
+instance to nil.
 
 Unlike in Roblox, ClearAllChildren does not affect descendants.
 
-### `Instance:Clone(): Instance`
+### Instance.Clone
+[Instance.Clone]: #user-content-instanceclone
+`Instance:Clone(): Instance`
+
 Clone returns a copy of the instance.
 
 Unlike in Roblox, Clone does not ignore an instance if its Archivable property
 is set to false.
 
-### `Instance:Destroy()`
-Destroy set the Parent of the instance to nil.
+### Instance.Destroy
+[Instance.Destroy]: #user-content-instancedestroy
+`Instance:Destroy()`
+
+Destroy sets the [Parent][Instance.Parent] of the instance to nil.
 
 Unlike in Roblox, the Parent of the instance remains unlocked. Destroy also does
 not affect descendants.
 
-### `Instance:FindFirstAncestor(name: string): Instance?`
-FindFirstAncestor returns the first ancestor whose Name equals *name*, or nil if
-no such instance was found.
+### Instance.FindFirstAncestor
+[Instance.FindFirstAncestor]: #user-content-instancefindfirstancestor
+`Instance:FindFirstAncestor(name: string): Instance?`
 
-### `Instance:FindFirstAncestorOfClass(className: string): Instance?`
-FindFirstAncestor returns the first ancestor of the instance whose ClassName
-equals *className*, or nil if no such instance was found.
+FindFirstAncestor returns the first ancestor whose [Name][Instance.Name] equals
+*name*, or nil if no such instance was found.
 
-### `Instance:FindFirstChild(name: string, recursive: bool?): Instance?`
-FindFirstChild returns the first child of the instance whose Name equals *name*,
-or nil if no such instance was found. If *recurse* is true, then descendants are
-also searched, top-down.
+### Instance.FindFirstAncestorOfClass
+[Instance.FindFirstAncestorOfClass]: #user-content-instancefindfirstancestorofclass
+`Instance:FindFirstAncestorOfClass(className: string): Instance?`
 
-### `Instance:FindFirstChildOfClass(className: string, recursive: bool?):`
-FindFirstChildOfClass returns the first child of the instance whose ClassName
-equals *className*, or nil if no such instance was found. If *recurse* is true,
-then descendants are also searched, top-down.
+FindFirstAncestor returns the first ancestor of the instance whose
+[ClassName][Instance.ClassName] equals *className*, or nil if no such instance
+was found.
 
-### `Instance:GetChildren(): Objects`
-GetChildren returns a list of child instances of the instance.
+### Instance.FindFirstChild
+[Instance.FindFirstChild]: #user-content-instancefindfirstchild
+`Instance:FindFirstChild(name: string, recursive: bool?): Instance?`
 
-### `Instance:GetDescendants(): Objects`
-GetDescendants returns a list of descendant instances of the instance.
+FindFirstChild returns the first child of the instance whose
+[Name][Instance.Name] equals *name*, or nil if no such instance was found. If
+*recurse* is true, then descendants are also searched, top-down.
 
-### `Instance:GetFullName(): string`
-GetFullName returns the concatenation of each ancestor of the instance and the
-instance itself, separated by `.` characters. If an ancestor is a DataModel, it
-is not included.
+### Instance.FindFirstChildOfClass
+[Instance.FindFirstChildOfClass]: #user-content-instancefindfirstchildofclass
+`Instance:FindFirstChildOfClass(className: string, recursive: bool?):`
 
-### `Instance:IsAncestorOf(descendant: Instance): bool`
+FindFirstChildOfClass returns the first child of the instance whose
+[ClassName][Instance.ClassName] equals *className*, or nil if no such instance
+was found. If *recurse* is true, then descendants are also searched, top-down.
+
+### Instance.GetChildren
+[Instance.GetChildren]: #user-content-instancegetchildren
+`Instance:GetChildren(): Objects`
+
+GetChildren returns a list of children of the instance.
+
+### Instance.GetDescendants
+[Instance.GetDescendants]: #user-content-instancegetdescendants
+`Instance:GetDescendants(): Objects`
+
+GetDescendants returns a list of descendants of the instance.
+
+### Instance.GetFullName
+[Instance.GetFullName]: #user-content-instancegetfullname
+`Instance:GetFullName(): string`
+
+GetFullName returns the concatenation of the [Name][Instance.Name] of each
+ancestor of the instance and the instance itself, separated by `.` characters.
+If an ancestor is a [DataModel][DataModel], it is not included.
+
+### Instance.IsAncestorOf
+[Instance.IsAncestorOf]: #user-content-instanceisancestorof
+`Instance:IsAncestorOf(descendant: Instance): bool`
+
 IsAncestorOf returns whether the instance of an ancestor of *descendant*.
 
-### `Instance:IsDescendantOf(ancestor: Instance): bool`
+### Instance.IsDescendantOf
+[Instance.IsDescendantOf]: #user-content-instanceisdescendantof
+`Instance:IsDescendantOf(ancestor: Instance): bool`
+
 IsDescendantOf returns whether the instance of a descendant of *ancestor*.
 
-### `Instance[sym.Desc]: RootDesc | nil`
+### Instance[sym.Desc]
+[Instance.sym.Desc]: #user-content-instancesymdesc
+`Instance[sym.Desc]: RootDesc | nil`
+
 Desc is the descriptor being used by the instance. Descriptors are inherited; if
 the instance has no descriptor, then each ancestor of the instance is searched
 until a descriptor is found. If none are still found, then the global descriptor
@@ -456,17 +630,23 @@ sets the descriptor only for the current instance.
 - Setting to nil will cause the instance to have no direct descriptor, and the
   descriptor will be inherited.
 - Setting to false will "block", forcing the instance to have no descriptor.
-  This behaves sort of like a RootDesc that is empty; there is no descriptor,
-  but this state will not inherit, and can be inherited.
+  This behaves sort of like a RootDesc that is empty; instance wont inherit any
+  other descriptors, and the state can be inherited.
 
-### `Instance[sym.IsService]: bool`
+### Instance[sym.IsService]
+[Instance.sym.IsService]: #user-content-instancesymisservice
+`Instance[sym.IsService]: bool`
+
 IsService indicates whether the instance is a service, such as Workspace or
 Lighting. This is used by some formats to determine how to encode and decode the
 instance.
 
-### `Instance[sym.RawDesc]: RootDesc | bool | nil`
-RawDesc is similar to Desc, except that it considers only the direct descriptor
-of the current instance.
+### Instance[sym.RawDesc]
+[Instance.sym.RawDesc]: #user-content-instancesymrawdesc
+`Instance[sym.RawDesc]: RootDesc | bool | nil`
+
+RawDesc is similar to [`sym.Desc`][Instance.sym.Desc], except that it considers
+only the direct descriptor of the current instance.
 
 Getting RawDesc will return a RootDesc if the instance has a descriptor
 assigned, false if the descriptor is blocked, or nil if no descriptor is
@@ -474,29 +654,47 @@ assigned.
 
 Setting RawDesc behaves the same as setting Desc.
 
-### `Instance[sym.Reference]: string`
-Reference is a string used to refer to the instance from within a DataModel.
-Certain formats use this to encode a reference to an instance. For example, the
-RBXMX format will generate random UUIDs for its references (e.g.
-"RBX8B658F72923F487FAE2F7437482EF16D").
+### Instance[sym.Reference]
+[Instance.sym.Reference]: #user-content-instancesymreference
+`Instance[sym.Reference]: string`
 
-## DataModel type
-The `DataModel` type is a subclass of Instance, so it has the same general
-behavior as Instances, with several differences:
+Reference is a string used to refer to the instance from within a
+[DataModel][DataModel]. Certain formats use this to encode a reference to an
+instance. For example, the RBXMX format will generate random UUIDs for its
+references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").
 
-- Properties set file metadata (e.g. ExplicitAutoJoints).
-- Has GetService method.
+### DataModel
+[DataModel]: #user-content-datamodel
 
-### `DataModel:GetService(className: string): Instance`
-GetService returns the first child of the instance whose ClassName equals
-*className*. If no such child exists, then a new instance of *className* is
-created. The Name of the instance is set to *className*, `sym.IsService` is set
-to true, and Parent is set to the DataModel.
+A **DataModel** is a special case of an [Instance][Instance]. Unlike a normal
+Instance, the [ClassName][Instance.ClassName] property of a DataModel cannot be
+modified, and the instance has a [GetService][DataModel.GetService] method.
+Additionally, other properties are not serialized, and instead determine
+metadata used by certain formats (e.g. ExplicitAutoJoints).
+
+### DataModel.new
+[DataModel.new]: #user-content-datamodelnew
+`DataModel.new(desc: RootDesc?): Instance`
+
+The `DataModel.new` constructor returns a new Instance of the DataModel class.
+If *desc* is specified, then it sets the [`sym.Desc`][Instance.sym.Desc] member.
+
+#### DataModel.GetService
+[DataModel.GetService]: #user-content-datamodelgetservice
+`DataModel:GetService(className: string): Instance`
+
+GetService returns the first child of the DataModel whose
+[ClassName][Instance.ClassName] equals *className*. If no such child exists,
+then a new instance of *className* is created. The [Name][Name] of the instance
+is set to *className*, [`sym.IsService`][Instance.sym.IsService] is set to true,
+and [Parent][Parent] is set to the DataModel.
 
 If the DataModel has a descriptor, then GetService will throw an error if the
 created class's descriptor does not have the "Service" tag set.
 
 # Descriptors
+[descriptors]: #user-content-descriptors
+
 By default, rbxmk has no knowledge of the classes, members, and enums that are
 defined by Roblox. As such, instances can be of any class, properties can be of
 any type, and there are no constant enum values. By not explicitly requiring
@@ -514,21 +712,22 @@ The solution to this is **descriptors**. A descriptor contains information about
 what classes exist, the properties that exist on each class, what enums are
 defined, and so on.
 
-The primary descriptor type is the **RootDesc**. This contains a complete
-description of the classes and enums of an entire API.
+The primary descriptor type is the [**RootDesc**][RootDesc]. This contains a
+complete description of the classes and enums of an entire API.
 
-Each instance can have a RootDesc assigned to it. This state is inherited by any
-descendant instances. See [`rbxmk.meta`](#user-content-TODO) for more
-information on how to assign descriptors to an instance.
+An [Instance][Instance] can have a RootDesc assigned to it. This state is
+inherited by any descendant instances. See [`sym.Desc`][Instance.sym.Desc] for
+more information.
 
-Additionally, the `rbxmk.globalDesc` field may be used to apply a RootDesc
-globally. When `rbxmk.globalDesc` is set, any instance that wouldn't otherwise
-inherit a descriptor will use this global descriptor.
+Additionally, the [`rbxmk.globalDesc`][rbxmk.globalDesc] field may be used to
+apply a RootDesc globally. When `globalDesc` is set, any instance that wouldn't
+otherwise inherit a descriptor will use this global descriptor.
 
 When an instance has a descriptor, several behaviors are enforced:
 
-- When the global descriptor is set, `Instance.new` errors if the given class
-  name does not exist (`Instance.new` can also receive a descriptor).
+- When the global descriptor is set, [`Instance.new`][Instance.new] errors if
+  the given class name does not exist (`Instance.new` can also receive a
+  descriptor).
 - A property will throw an error if it does not exist for the class.
 - Getting an uninitialized property will throw an error.
 - Getting a property that currently has an incorrect type will throw an error.
@@ -538,75 +737,108 @@ When an instance has a descriptor, several behaviors are enforced:
 - The value assigned to a property of the "Enum" type category will be coerced
   into a token. The value can be an enum item of the expected enum, or a number
   or string of the correct value.
-- The class of an instance created from `DataModel:GetService()` must have the
-  "Service" tag.
+- The class of an instance created from
+  [`DataModel.GetService`][DataModel.GetService] must have the "Service" tag.
 
-## Types
+## Descriptor types
+[descriptor-types]: #user-content-descriptor-types
+
 Descriptors are first-class values like any other, and can be modified on the
 fly. There are a number of descriptor types, each with their own fields. See
-[`rbxmk.newDesc`](#user-content-TODO) for creating descriptors.
+[`rbxmk.newDesc`][rbxmk.newDesc] for creating descriptors.
 
-Type          | Description
---------------|------------
-RootDesc      | Describes an entire API.
-ClassDesc     | Describes a class.
-PropertyDesc  | Describes a property member.
-FunctionDesc  | Describes a function member.
-EventDesc     | Describes a event member.
-CallbackDesc  | Describes a callback member.
-ParameterDesc | Describes a parameter of a function, event, or callback. Immutable.
-TypeDesc      | Describes a type. Immutable.
-EnumDesc      | Describes an enum.
-EnumItemDesc  | Describes an enum item.
+Type                           | Description
+-------------------------------|------------
+[RootDesc][RootDesc]           | Describes an entire API.
+[ClassDesc][ClassDesc]         | Describes a class.
+[PropertyDesc][PropertyDesc]   | Describes a property member.
+[FunctionDesc][FunctionDesc]   | Describes a function member.
+[EventDesc][EventDesc]         | Describes a event member.
+[CallbackDesc][CallbackDesc]   | Describes a callback member.
+[ParameterDesc][ParameterDesc] | Describes a parameter of a function, event, or callback. Immutable.
+[TypeDesc][TypeDesc]           | Describes a type. Immutable.
+[EnumDesc][EnumDesc]           | Describes an enum.
+[EnumItemDesc][EnumItemDesc]   | Describes an enum item.
 
 ### RootDesc
+[RootDesc]: #user-content-rootdesc
+
 RootDesc describes an entire API. It has the following members:
 
-Member      | Kind
-------------|-----
-Class       | method
-Classes     | method
-AddClass    | method
-RemoveClass | method
-Enum        | method
-Enums       | method
-AddEnum     | method
-RemoveEnum  | method
-EnumTypes   | method
+Member                              | Kind
+------------------------------------|-----
+[Class][RootDesc.Class]             | method
+[Classes][RootDesc.Classes]         | method
+[AddClass][RootDesc.AddClass]       | method
+[RemoveClass][RootDesc.RemoveClass] | method
+[Enum][RootDesc.Enum]               | method
+[Enums][RootDesc.Enums]             | method
+[AddEnum][RootDesc.AddEnum]         | method
+[RemoveEnum][RootDesc.RemoveEnum]   | method
+[EnumTypes][RootDesc.EnumTypes]     | method
 
-#### `RootDesc:Class(name: string): ClassDesc`
-Class returns a ClassDesc for the given name, or nil if no such class exists.
+#### RootDesc.Class
+[RootDesc.Class]: #user-content-rootdescclass
+`RootDesc:Class(name: string): ClassDesc`
 
-#### `RootDesc:Classes(): Array<ClassDesc>`
-Classes returns a list of all the classes defined in the RootDesc.
+Class returns the class of the API corresponding to the given name, or nil if no
+such class exists.
 
-#### `RootDesc:AddClass(class: ClassDesc): bool`
+#### RootDesc.Classes
+[RootDesc.Classes]: #user-content-rootdescclasses
+`RootDesc:Classes(): Array<ClassDesc>`
+
+Classes returns a list of all the classes of the API.
+
+#### RootDesc.AddClass
+[RootDesc.AddClass]: #user-content-rootdescaddclass
+`RootDesc:AddClass(class: ClassDesc): bool`
+
 AddClass adds a new class to the RootDesc, returning whether the class was added
 successfully. The class will fail to be added if a class of the same name
 already exists.
 
-#### `RootDesc:RemoveClass(name: string): bool`
+#### RootDesc.RemoveClass
+[RootDesc.RemoveClass]: #user-content-rootdescremoveclass
+`RootDesc:RemoveClass(name: string): bool`
+
 RemoveClass removes a class from the RootDesc, returning whether the class was
 removed successfully. False will be returned if a class of the given name does
 not exist.
 
-#### `RootDesc:Enum(name: string): EnumDesc`
-Enum returns an EnumDesc for the given name, or nil if no such enum exists.
+#### RootDesc.Enum
+[RootDesc.Enum]: #user-content-rootdescenum
+`RootDesc:Enum(name: string): EnumDesc`
 
-#### `RootDesc:Enums(): Array<EnumDesc>`
-Enums returns a list of all the enums defined in the RootDesc.
+Enum returns an enum of the API corresponding to the given name, or nil if no
+such enum exists.
 
-#### `RootDesc:AddEnum(enum: EnumDesc): bool`
+#### RootDesc.Enums
+[RootDesc.Enums]: #user-content-rootdescenums
+`RootDesc:Enums(): Array<EnumDesc>`
+
+Enums returns a list of all the enums of the API.
+
+#### RootDesc.AddEnum
+[RootDesc.AddEnum]: #user-content-rootdescaddenum
+`RootDesc:AddEnum(enum: EnumDesc): bool`
+
 AddEnum adds a new enum to the RootDesc, returning whether the enum was added
 successfully. The enum will fail to be added if an enum of the same name already
 exists.
 
-#### `RootDesc:RemoveEnum(name: string): bool`
+#### RootDesc.RemoveEnum
+[RootDesc.RemoveEnum]: #user-content-rootdescremoveenum
+`RootDesc:RemoveEnum(name: string): bool`
+
 RemoveEnum removes an enum from the RootDesc, returning whether the enum was
 removed successfully. False will be returned if an enum of the given name does
 not exist.
 
-#### `RootDesc:EnumTypes(): Enums`
+#### RootDesc.EnumTypes
+[RootDesc.EnumTypes]: #user-content-rootdescenumtypes
+`RootDesc:EnumTypes(): Enums`
+
 EnumTypes returns a set of enum values generated from the current state of the
 RootDesc. These enums are associated with the RootDesc, and may be used by
 certain properties, so it is important to generate them before operating on such
@@ -614,7 +846,7 @@ properties. Additionally, EnumTypes should be called after modifying enum and
 enum item descriptors, to regenerate the enum values.
 
 The API of the resulting enums matches that of Roblox's Enums type. A common
-pattern is to assign the result of EnumTypes to the "Enum" variable, which
+pattern is to assign the result of EnumTypes to the "Enum" variable so that it
 matches Roblox's API:
 
 ```lua
@@ -623,361 +855,589 @@ print(Enum.NormalId.Front)
 ```
 
 ### ClassDesc
+[ClassDesc]: #user-content-classdesc
+
 ClassDesc describes a class. It has the following members:
 
-Member         | Kind
----------------|-----
-Name           | field
-Superclass     | field
-MemoryCategory | field
-Member         | method
-Members        | method
-AddMember      | method
-RemoveMember   | method
-Tag            | method
-Tags           | method
-SetTag         | method
-UnsetTag       | method
+Member                                     | Kind
+-------------------------------------------|-----
+[Name][ClassDesc.Name]                     | field
+[Superclass][ClassDesc.Superclass]         | field
+[MemoryCategory][ClassDesc.MemoryCategory] | field
+[Member][ClassDesc.Member]                 | method
+[Members][ClassDesc.Members]               | method
+[AddMember][ClassDesc.AddMember]           | method
+[RemoveMember][ClassDesc.RemoveMember]     | method
+[Tag][ClassDesc.Tag]                       | method
+[Tags][ClassDesc.Tags]                     | method
+[SetTag][ClassDesc.SetTag]                 | method
+[UnsetTag][ClassDesc.UnsetTag]             | method
 
-#### `ClassDesc.Name: string`
+#### ClassDesc.Name
+[ClassDesc.Name]: #user-content-classdescname
+`ClassDesc.Name: string`
+
 Name is the name of the class.
 
-#### `ClassDesc.Superclass: string`
+#### ClassDesc.Superclass
+[ClassDesc.Superclass]: #user-content-classdescsuperclass
+`ClassDesc.Superclass: string`
+
 Superclass is the name of the class from which the current class inherits.
 
-#### `ClassDesc.MemoryCategory: string`
+#### ClassDesc.MemoryCategory
+[ClassDesc.MemoryCategory]: #user-content-classdescmemorycategory
+`ClassDesc.MemoryCategory: string`
+
 MemoryCategory describes the category of the class.
 
-#### `ClassDesc:Member(name: string): MemberDesc`
-Member returns a MemberDesc for the given name, or nil of no such member exists.
+#### ClassDesc.Member
+[ClassDesc.Member]: #user-content-classdescmember
+`ClassDesc:Member(name: string): MemberDesc`
 
-MemberDesc is any one of the PropertyDesc, FunctionDesc, EventDesc, or
-CallbackDesc types.
+Member returns a member of the class corresponding to the given name, or nil of
+no such member exists.
 
-#### `ClassDesc:Members(): Array<MemberDesc>`
+MemberDesc is any one of the [PropertyDesc][PropertyDesc],
+[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
+[CallbackDesc][CallbackDesc] types.
+
+#### ClassDesc.Members
+[ClassDesc.Members]: #user-content-classdescmembers
+`ClassDesc:Members(): Array<MemberDesc>`
+
 Members returns a list of all the members of the class.
 
-#### `ClassDesc:AddMember(member: MemberDesc): bool`
+#### ClassDesc.AddMember
+[ClassDesc.AddMember]: #user-content-classdescaddmember
+`ClassDesc:AddMember(member: MemberDesc): bool`
+
 AddMember adds a new member to the ClassDesc, returning whether the member was
 added successfully. The member will fail to be added if a member of the same
 name already exists.
 
-#### `ClassDesc:RemoveMember(name: string): bool`
+#### ClassDesc.RemoveMember
+[ClassDesc.RemoveMember]: #user-content-classdescremovemember
+`ClassDesc:RemoveMember(name: string): bool`
+
 RemoveMember removes a member from the ClassDesc, returning whether the member
 was removed successfully. False will be returned if a member of the given name
 does not exist.
 
-#### `ClassDesc:Tag(name: string): bool`
+#### ClassDesc.Tag
+[ClassDesc.Tag]: #user-content-classdesctag
+`ClassDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `ClassDesc:Tags(): Array<string>`
+#### ClassDesc.Tags
+[ClassDesc.Tags]: #user-content-classdesctags
+`ClassDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `ClassDesc:SetTag(tags: ...string)`
+#### ClassDesc.SetTag
+[ClassDesc.SetTag]: #user-content-classdescsettag
+`ClassDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `ClassDesc:UnsetTag(tags: ...string)`
+#### ClassDesc.UnsetTag
+[ClassDesc.UnsetTag]: #user-content-classdescunsettag
+`ClassDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### PropertyDesc
+[PropertyDesc]: #user-content-propertydesc
+
 PropertyDesc describes a property member of a class. It has the following
 members:
 
-Member        | Kind
---------------|-----
-Name          | field
-ValueType     | field
-ReadSecurity  | field
-WriteSecurity | field
-CanLoad       | field
-CanSave       | field
-Tag           | method
-Tags          | method
-SetTag        | method
-UnsetTag      | method
+Member                                      | Kind
+--------------------------------------------|-----
+[Name][PropertyDesc.Name]                   | field
+[ValueType][PropertyDesc.ValueType]         | field
+[ReadSecurity][PropertyDesc.ReadSecurity]   | field
+[WriteSecurity][PropertyDesc.WriteSecurity] | field
+[CanLoad][PropertyDesc.CanLoad]             | field
+[CanSave][PropertyDesc.CanSave]             | field
+[Tag][PropertyDesc.Tag]                     | method
+[Tags][PropertyDesc.Tags]                   | method
+[SetTag][PropertyDesc.SetTag]               | method
+[UnsetTag][PropertyDesc.UnsetTag]           | method
 
-#### `PropertyDesc.Name: string`
+#### PropertyDesc.Name
+[PropertyDesc.Name]: #user-content-propertydescname
+`PropertyDesc.Name: string`
+
 Name is the name of the member.
 
-#### `PropertyDesc.ValueType: TypeDesc`
+#### PropertyDesc.ValueType
+[PropertyDesc.ValueType]: #user-content-propertydescvaluetype
+`PropertyDesc.ValueType: TypeDesc`
+
 ValueType is the value type of the property.
 
-#### `PropertyDesc.ReadSecurity: string`
+#### PropertyDesc.ReadSecurity
+[PropertyDesc.ReadSecurity]: #user-content-propertydescreadsecurity
+`PropertyDesc.ReadSecurity: string`
+
 ReadSecurity indicates the security context required to get the property.
 
-#### `PropertyDesc.WriteSecurity: string`
+#### PropertyDesc.WriteSecurity
+[PropertyDesc.WriteSecurity]: #user-content-propertydescwritesecurity
+`PropertyDesc.WriteSecurity: string`
+
 WriteSecurity indicates the security context required to set the property.
 
-#### `PropertyDesc.CanLoad: bool`
+#### PropertyDesc.CanLoad
+[PropertyDesc.CanLoad]: #user-content-propertydesccanload
+`PropertyDesc.CanLoad: bool`
+
 CanLoad indicates whether the property is deserialized when decoding from a file.
 
-#### `PropertyDesc.CanSave: bool`
+#### PropertyDesc.CanSave
+[PropertyDesc.CanSave]: #user-content-propertydesccansave
+`PropertyDesc.CanSave: bool`
+
 CanLoad indicates whether the property is serialized when encoding to a file.
 
-#### `PropertyDesc:Tag(name: string): bool`
+#### PropertyDesc.Tag
+[PropertyDesc.Tag]: #user-content-propertydesctag
+`PropertyDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `PropertyDesc:Tags(): Array<string>`
+#### PropertyDesc.Tags
+[PropertyDesc.Tags]: #user-content-propertydesctags
+`PropertyDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `PropertyDesc:SetTag(tags: ...string)`
+#### PropertyDesc.SetTag
+[PropertyDesc.SetTag]: #user-content-propertydescsettag
+`PropertyDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `PropertyDesc:UnsetTag(tags: ...string)`
+#### PropertyDesc.UnsetTag
+[PropertyDesc.UnsetTag]: #user-content-propertydescunsettag
+`PropertyDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### FunctionDesc
+[FunctionDesc]: #user-content-functiondesc
+
 FunctionDesc describes a function member of a class. It has the following
 members:
 
-Member        | Kind
---------------|-----
-Name          | field
-Parameters    | method
-SetParameters | method
-ReturnType    | field
-Security      | field
-Tag           | method
-Tags          | method
-SetTag        | method
-UnsetTag      | method
+Member                                      | Kind
+--------------------------------------------|-----
+[Name][FunctionDesc.Name]                   | field
+[Parameters][FunctionDesc.Parameters]       | method
+[SetParameters][FunctionDesc.SetParameters] | method
+[ReturnType][FunctionDesc.ReturnType]       | field
+[Security][FunctionDesc.Security]           | field
+[Tag][FunctionDesc.Tag]                     | method
+[Tags][FunctionDesc.Tags]                   | method
+[SetTag][FunctionDesc.SetTag]               | method
+[UnsetTag][FunctionDesc.UnsetTag]           | method
 
-#### `FunctionDesc.Name: string`
+#### FunctionDesc.Name
+[FunctionDesc.Name]: #user-content-functiondescname
+`FunctionDesc.Name: string`
+
 Name is the name of the member.
 
-#### `FunctionDesc:Parameters(): Array<ParameterDesc>`
+#### FunctionDesc.Parameters
+[FunctionDesc.Parameters]: #user-content-functiondescparameters
+`FunctionDesc:Parameters(): Array<ParameterDesc>`
+
 Parameters returns a list of parameters of the function.
 
-#### `FunctionDesc:SetParameters(params: Array<ParameterDesc>)`
+#### FunctionDesc.SetParameters
+[FunctionDesc.SetParameters]: #user-content-functiondescsetparameters
+`FunctionDesc:SetParameters(params: Array<ParameterDesc>)`
+
 SetParameters sets the parameters of the function.
 
-#### `FunctionDesc.ReturnType: TypeDesc`
+#### FunctionDesc.ReturnType
+[FunctionDesc.ReturnType]: #user-content-functiondescreturntype
+`FunctionDesc.ReturnType: TypeDesc`
+
 ReturnType is the type returned by the function.
 
-#### `FunctionDesc.Security: string`
+#### FunctionDesc.Security
+[FunctionDesc.Security]: #user-content-functiondescsecurity
+`FunctionDesc.Security: string`
+
 Security indicates the security content required to index the member.
 
-#### `FunctionDesc:Tag(name: string): bool`
+#### FunctionDesc.Tag
+[FunctionDesc.Tag]: #user-content-functiondesctag
+`FunctionDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `FunctionDesc:Tags(): Array<string>`
+#### FunctionDesc.Tags
+[FunctionDesc.Tags]: #user-content-functiondesctags
+`FunctionDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `FunctionDesc:SetTag(tags: ...string)`
+#### FunctionDesc.SetTag
+[FunctionDesc.SetTag]: #user-content-functiondescsettag
+`FunctionDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `FunctionDesc:UnsetTag(tags: ...string)`
+#### FunctionDesc.UnsetTag
+[FunctionDesc.UnsetTag]: #user-content-functiondescunsettag
+`FunctionDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### EventDesc
+[EventDesc]: #user-content-eventdesc
+
 EventDesc describes an event member of a class. It has the following members:
 
-Member        | Kind
---------------|-----
-Name          | field
-Parameters    | method
-SetParameters | method
-Security      | field
-Tag           | method
-Tags          | method
-SetTag        | method
-UnsetTag      | method
+Member                                   | Kind
+-----------------------------------------|-----
+[Name][EventDesc.Name]                   | field
+[Parameters][EventDesc.Parameters]       | method
+[SetParameters][EventDesc.SetParameters] | method
+[Security][EventDesc.Security]           | field
+[Tag][EventDesc.Tag]                     | method
+[Tags][EventDesc.Tags]                   | method
+[SetTag][EventDesc.SetTag]               | method
+[UnsetTag][EventDesc.UnsetTag]           | method
 
-#### `EventDesc.Name: string`
+#### EventDesc.Name
+[EventDesc.Name]: #user-content-eventdescname
+`EventDesc.Name: string`
+
 Name is the name of the member.
 
-#### `EventDesc:Parameters(): Array<ParameterDesc>`
+#### EventDesc.Parameters
+[EventDesc.Parameters]: #user-content-eventdescparameters
+`EventDesc:Parameters(): Array<ParameterDesc>`
+
 Parameters returns a list of parameters of the event.
 
-#### `EventDesc:SetParameters(params: Array<ParameterDesc>)`
+#### EventDesc.SetParameters
+[EventDesc.SetParameters]: #user-content-eventdescsetparameters
+`EventDesc:SetParameters(params: Array<ParameterDesc>)`
+
 SetParameters sets the parameters of the event.
 
-#### `EventDesc.Security: string`
+#### EventDesc.Security
+[EventDesc.Security]: #user-content-eventdescsecurity
+`EventDesc.Security: string`
+
 Security indicates the security content required to index the member.
 
-#### `EventDesc:Tag(name: string): bool`
+#### EventDesc.Tag
+[EventDesc.Tag]: #user-content-eventdesctag
+`EventDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `EventDesc:Tags(): Array<string>`
+#### EventDesc.Tags
+[EventDesc.Tags]: #user-content-eventdesctags
+`EventDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `EventDesc:SetTag(tags: ...string)`
+#### EventDesc.SetTag
+[EventDesc.SetTag]: #user-content-eventdescsettag
+`EventDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `EventDesc:UnsetTag(tags: ...string)`
+#### EventDesc.UnsetTag
+[EventDesc.UnsetTag]: #user-content-eventdescunsettag
+`EventDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### CallbackDesc
+[CallbackDesc]: #user-content-callbackdesc
+
 CallbackDesc describes a callback member of a class. It has the following
 members:
 
-Member        | Kind
---------------|-----
-Name          | field
-Parameters    | method
-SetParameters | method
-ReturnType    | field
-Security      | field
-Tag           | method
-Tags          | method
-SetTag        | method
-UnsetTag      | method
+Member                                      | Kind
+--------------------------------------------|-----
+[Name][CallbackDesc.Name]                   | field
+[Parameters][CallbackDesc.Parameters]       | method
+[SetParameters][CallbackDesc.SetParameters] | method
+[ReturnType][CallbackDesc.ReturnType]       | field
+[Security][CallbackDesc.Security]           | field
+[Tag][CallbackDesc.Tag]                     | method
+[Tags][CallbackDesc.Tags]                   | method
+[SetTag][CallbackDesc.SetTag]               | method
+[UnsetTag][CallbackDesc.UnsetTag]           | method
 
-#### `CallbackDesc.Name: string`
+#### CallbackDesc.Name
+[CallbackDesc.Name]: #user-content-callbackdescname
+`CallbackDesc.Name: string`
+
 Name is the name of the member.
 
-#### `CallbackDesc:Parameters(): Array<ParameterDesc>`
+#### CallbackDesc.Parameters
+[CallbackDesc.Parameters]: #user-content-callbackdescparameters
+`CallbackDesc:Parameters(): Array<ParameterDesc>`
+
 Parameters returns a list of parameters of the callback.
 
-#### `CallbackDesc:SetParameters(params: Array<ParameterDesc>)`
+#### CallbackDesc.SetParameters
+[CallbackDesc.SetParameters]: #user-content-callbackdescsetparameters
+`CallbackDesc:SetParameters(params: Array<ParameterDesc>)`
+
 SetParameters sets the parameters of the callback.
 
-#### `CallbackDesc.ReturnType: TypeDesc`
+#### CallbackDesc.ReturnType
+[CallbackDesc.ReturnType]: #user-content-callbackdescreturntype
+`CallbackDesc.ReturnType: TypeDesc`
+
 ReturnType is the type returned by the callback.
 
-#### `CallbackDesc.Security: string`
+#### CallbackDesc.Security
+[CallbackDesc.Security]: #user-content-callbackdescsecurity
+`CallbackDesc.Security: string`
+
 Security indicates the security content required to set the member.
 
-#### `CallbackDesc:Tag(name: string): bool`
+#### CallbackDesc.Tag
+[CallbackDesc.Tag]: #user-content-callbackdesctag
+`CallbackDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `CallbackDesc:Tags(): Array<string>`
+#### CallbackDesc.Tags
+[CallbackDesc.Tags]: #user-content-callbackdesctags
+`CallbackDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `CallbackDesc:SetTag(tags: ...string)`
+#### CallbackDesc.SetTag
+[CallbackDesc.SetTag]: #user-content-callbackdescsettag
+`CallbackDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `CallbackDesc:UnsetTag(tags: ...string)`
+#### CallbackDesc.UnsetTag
+[CallbackDesc.UnsetTag]: #user-content-callbackdescunsettag
+`CallbackDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### ParameterDesc
-ParameterDesc describes a parameter of a function, event or callback member. It
-has the following immutable members:
+[ParameterDesc]: #user-content-parameterdesc
 
-Member  | Kind
---------|-----
-Type    | field
-Name    | field
-Default | field
+ParameterDesc describes a parameter of a function, event, or callback member. It
+has the following members:
+
+Member                           | Kind
+---------------------------------|-----
+[Type][ParameterDesc.Type]       | field
+[Name][ParameterDesc.Name]       | field
+[Default][ParameterDesc.Default] | field
 
 ParameterDesc is immutable. A new value with different fields can be created
-with rbxmk.newDesc.
+with [`rbxmk.newDesc`][rbxmk.newDesc].
 
-#### `ParameterDesc.Type: TypeDesc`
+#### ParameterDesc.Type
+[ParameterDesc.Type]: #user-content-parameterdesctype
+`ParameterDesc.Type: TypeDesc`
+
 Type is the type of the parameter.
 
-#### `ParameterDesc.Name: string`
+#### ParameterDesc.Name
+[ParameterDesc.Name]: #user-content-parameterdescname
+`ParameterDesc.Name: string`
+
 Name is a name describing the parameter.
 
-#### `ParameterDesc.Default: string?`
+#### ParameterDesc.Default
+[ParameterDesc.Default]: #user-content-parameterdescdefault
+`ParameterDesc.Default: string?`
+
 Default is a string describing the default value of the parameter. May also be
 nil, indicating that the parameter has no default value.
 
 ### TypeDesc
-TypeDesc describes a value type. It has the following immutable members:
+[TypeDesc]: #user-content-typedesc
 
-Member   | Kind
----------|-----
-Category | field
-Name     | field
+TypeDesc describes a value type. It has the following members:
+
+Member                        | Kind
+------------------------------|-----
+[Category][TypeDesc.Category] | field
+[Name][TypeDesc.Name]         | field
 
 TypeDesc is immutable. A new value with different fields can be created with
 rbxmk.newDesc.
 
-#### `TypeDesc.Category: string`
+#### TypeDesc.Category
+[TypeDesc.Category]: #user-content-typedesccategory
+`TypeDesc.Category: string`
+
 Category is the category of the type. Certain categories are treated specially:
 
-- `Class`: Name is the name of a class. A value of the type is expected to be an
-  Instance of the class.
-- `Enum`: Name is the name of an enum. A value of the type is expected to be an
-  enum item of the enum.
+- **Class**: Name is the name of a class. A value of the type is expected to be
+  an Instance of the class.
+- **Enum**: Name is the name of an enum. A value of the type is expected to be
+  an enum item of the enum.
 
-#### `TypeDesc.Name: string`
+#### TypeDesc.Name
+[TypeDesc.Name]: #user-content-typedescname
+`TypeDesc.Name: string`
+
 Name is the name of the type.
 
 ### EnumDesc
+[EnumDesc]: #user-content-enumdesc
+
 EnumDesc describes an enum. It has the following members:
 
-Member     | Kind
------------|-----
-Name       | field
-Item       | method
-Items      | method
-AddItem    | method
-RemoveItem | method
-Tag        | method
-Tags       | method
-SetTag     | method
-UnsetTag   | method
+Member                            | Kind
+----------------------------------|-----
+[Name][EnumDesc.Name]             | field
+[Item][EnumDesc.Item]             | method
+[Items][EnumDesc.Items]           | method
+[AddItem][EnumDesc.AddItem]       | method
+[RemoveItem][EnumDesc.RemoveItem] | method
+[Tag][EnumDesc.Tag]               | method
+[Tags][EnumDesc.Tags]             | method
+[SetTag][EnumDesc.SetTag]         | method
+[UnsetTag][EnumDesc.UnsetTag]     | method
 
-#### `EnumDesc.Name: string`
+#### EnumDesc.Name
+[EnumDesc.Name]: #user-content-enumdescname
+`EnumDesc.Name: string`
+
 Name is the name of the enum.
 
-#### `EnumDesc:Item(name: string): EnumItemDesc`
-Item returns an EnumItemDesc for the given name, or nil of no such item exists.
+#### EnumDesc.Item
+[EnumDesc.Item]: #user-content-enumdescitem
+`EnumDesc:Item(name: string): EnumItemDesc`
 
-#### `EnumDesc:Items(): Array<EnumItemDesc>`
+Item returns an item of the enum corresponding to given name, or nil of no such
+item exists.
+
+#### EnumDesc.Items
+[EnumDesc.Items]: #user-content-enumdescitems
+`EnumDesc:Items(): Array<EnumItemDesc>`
+
 Items returns a list of all the items of the enum.
 
-#### `EnumDesc:AddItem(item: EnumItemDesc): bool`
+#### EnumDesc.AddItem
+[EnumDesc.AddItem]: #user-content-enumdescadditem
+`EnumDesc:AddItem(item: EnumItemDesc): bool`
+
 AddItem adds a new item to the EnumDesc, returning whether the item was added
 successfully. The item will fail to be added if an item of the same name already
 exists.
 
-#### `EnumDesc:RemoveItem(name: string): bool`
+#### EnumDesc.RemoveItem
+[EnumDesc.RemoveItem]: #user-content-enumdescremoveitem
+`EnumDesc:RemoveItem(name: string): bool`
+
 RemoveItem removes an item from the EnumDesc, returning whether the item was
 removed successfully. False will be returned if an item of the given name does
 not exist.
 
-#### `EnumDesc:Tag(name: string): bool`
+#### EnumDesc.Tag
+[EnumDesc.Tag]: #user-content-enumdesctag
+`EnumDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `EnumDesc:Tags(): Array<string>`
+#### EnumDesc.Tags
+[EnumDesc.Tags]: #user-content-enumdesctags
+`EnumDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `EnumDesc:SetTag(tags: ...string)`
+#### EnumDesc.SetTag
+[EnumDesc.SetTag]: #user-content-enumdescsettag
+`EnumDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `EnumDesc:UnsetTag(tags: ...string)`
+#### EnumDesc.UnsetTag
+[EnumDesc.UnsetTag]: #user-content-enumdescunsettag
+`EnumDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ### EnumItemDesc
+[EnumItemDesc]: #user-content-enumitemdesc
+
 EnumDesc describes an enum item. It has the following members:
 
-Member   | Kind
----------|-----
-Name     | field
-Value    | field
-Index    | field
-Tag      | method
-Tags     | method
-SetTag   | method
-UnsetTag | method
+Member                            | Kind
+----------------------------------|-----
+[Name][EnumItemDesc.Name]         | field
+[Value][EnumItemDesc.Value]       | field
+[Index][EnumItemDesc.Index]       | field
+[Tag][EnumItemDesc.Tag]           | method
+[Tags][EnumItemDesc.Tags]         | method
+[SetTag][EnumItemDesc.SetTag]     | method
+[UnsetTag][EnumItemDesc.UnsetTag] | method
 
-#### `EnumItemDesc.Name: string`
+#### EnumItemDesc.Name
+[EnumItemDesc.Name]: #user-content-enumitemdescname
+`EnumItemDesc.Name: string`
+
 Name is the name of the enum item.
 
-#### `EnumItemDesc.Value: int`
+#### EnumItemDesc.Value
+[EnumItemDesc.Value]: #user-content-enumitemdescvalue
+`EnumItemDesc.Value: int`
+
 Value is the numeric value of the enum item.
 
-#### `EnumItemDesc.Index: int`
+#### EnumItemDesc.Index
+[EnumItemDesc.Index]: #user-content-enumitemdescindex
+`EnumItemDesc.Index: int`
+
 Index is an integer that hints the order of the enum item.
 
-#### `EnumItemDesc:Tag(name: string): bool`
+#### EnumItemDesc.Tag
+[EnumItemDesc.Tag]: #user-content-enumitemdesctag
+`EnumItemDesc:Tag(name: string): bool`
+
 Tag returns whether a tag of the given name is set on the descriptor.
 
-#### `EnumItemDesc:Tags(): Array<string>`
+#### EnumItemDesc.Tags
+[EnumItemDesc.Tags]: #user-content-enumitemdesctags
+`EnumItemDesc:Tags(): Array<string>`
+
 Tags returns a list of tags that are set on the descriptor.
 
-#### `EnumItemDesc:SetTag(tags: ...string)`
+#### EnumItemDesc.SetTag
+[EnumItemDesc.SetTag]: #user-content-enumitemdescsettag
+`EnumItemDesc:SetTag(tags: ...string)`
+
 SetTags sets the given tags on the descriptor.
 
-#### `EnumItemDesc:UnsetTag(tags: ...string)`
+#### EnumItemDesc.UnsetTag
+[EnumItemDesc.UnsetTag]: #user-content-enumitemdescunsettag
+`EnumItemDesc:UnsetTag(tags: ...string)`
+
 SetTags unsets the given tags on the descriptor.
 
 ## Diffing and Patching
-Descriptors can be compared and patched with the `rbxmk.diffDesc` and
-`rbxmk.patchDesc` functions. `diffDesc` returns a list of **DescActions**, which
+[diffing-and-patching]: #user-content-diffing-and-patching
+
+Descriptors can be compared and patched with the
+[`rbxmk.diffDesc`][rbxmk.diffDesc] and [`rbxmk.patchDesc`][rbxmk.patchDesc]
+functions. `diffDesc` returns a list of [**DescActions**][DescAction], which
 describe how to transform the first descriptor into the second. `patchDesc` can
 used to apply this transformation.
 
@@ -997,15 +1457,19 @@ More generally, patching allows any version of an API dump to be used, while
 maintaining a separate, constant set of additional API elements.
 
 ### DescAction
-DescAction describes a single action that transforms a descriptor.
+[DescAction]: #user-content-descaction
+
+A **DescAction** describes a single action that transforms a descriptor.
 
 Currently, DescAction has no members. However, converting a DescAction to a
 string will display the content of the action in a human-readable format.
 
 Actions may also be created directly with the
-[`desc-patch.json`](#user-content-TODO) format.
+[`desc-patch.json`][desc-patch.json-fmt] format.
 
 # Explicit primitives
+[explicit-primitives]: #user-content-explicit-primitives
+
 The properties of instances in Roblox have a number of different types. Many of
 these types can be expressed in Lua through constructors. Examples of such are
 `CFrame`, `Vector3`, `UDim2`, and so on. These types correspond to internal data
@@ -1025,13 +1489,13 @@ property is set to a Lua number, it is always converted into a `double`. In the
 absence of extra type information, the user needs some way to set specific
 Roblox types.
 
-This problem is solved with "explicit primitives", or **exprims**. An exprim is
-a userdata representation of an otherwise ambiguous type. This userdata carries
-type metadata along with a given value, allowing the value to be mapped to the
-correct Roblox type when it is set as a property.
+This problem can be solved with "explicit primitives", or **exprims**. An exprim
+is a userdata representation of an otherwise ambiguous type. This userdata
+carries type metadata along with a given value, allowing the value to be mapped
+to the correct Roblox type when it is set as a property.
 
-The `types` library contains functions for constructing exprim types. See the
-[types library](#user-content-types-library) section for a list of exprims.
+The [`types` library][types-lib] contains a constructor function for each exprim
+type.
 
 	-- Problem
 	local v = Instance.new("IntValue")
@@ -1048,216 +1512,271 @@ has no exprim. Likewise, the default type that maps to Lua numbers is `double`,
 so it also has no exprim.
 
 An exprim userdata has no fields or operators other than the `Value` field,
-which returns the underlying primitive value. Exprims are meant to be
-short-lived, and shouldn't really be used beyond getting or setting a property
-in the absence of descriptors. When possible, descriptors should be utilized
-instead.
+which returns the underlying primitive value:
+
+	v.Value = types.int64(v.Value.Value + 1)
+
+Exprims are meant to be short-lived, and shouldn't really be used beyond getting
+or setting a property in the absence of [descriptors][descriptors]. When
+possible, descriptors should be utilized instead.
 
 # Sources
+[sources]: #user-content-sources
+
 A **source** is an external location from which raw data can be read from and
 written to. A source can be accessed at a low level through the
-`rbxmk.readSource` and `rbxmk.writeSource` functions.
+[`rbxmk.readSource`][rbxmk.readSource] and
+[`rbxmk.writeSource`][rbxmk.writeSource] functions.
 
 A source usually has a corresponding library that provides convenient access for
 common cases.
 
 ## `file` source
+[file-source]: #user-content-file-source
+
 The `file` source provides access to the file system.
 
 ### `readSource`
-The first additional argument to `readSource` is the path to the file to read
-from.
+[file.readSource]: #user-content-readsource
+
+The first additional argument to [`readSource`][rbxmk.readSource] is the path to
+the file to read from.
 
 ```lua
 local bytes = rbxmk.readSource("file", "path/to/file.ext")
 ```
 
 ### `writeSource`
-The first additional argument to `writeSource` is the path to the file to write
-to.
+[file.writeSource]: #user-content-writesource
+
+The first additional argument to [`writeSource`][rbxmk.writeSource] is the path
+to the file to write to.
 
 ```lua
 rbxmk.writeSource("file", bytes, "path/to/file.ext")
 ```
 
 ### `file` library
+[file-lib]: #user-content-file-library
+
 The `file` library handles the `file` source.
 
-Name    | Description
---------|------------
-`read`  | Reads data from a file in a certain format.
-`write` | Writes data to a file in a certain format.
+Name                | Description
+--------------------|------------
+[read][file.read]   | Reads data from a file in a certain format.
+[write][file.write] | Writes data to a file in a certain format.
 
-#### `file.read(path: string, format: string?): (value: any)`
+#### file.read
+[file.read]: #user-content-fileread
+`file.read(path: string, format: string?): (value: any)`
+
 The `read` function reads the content of the file at *path*, and decodes it into
-*value* according to the file extension. If *format* is given, then it will be
-used instead of the file extension.
+*value* according to the [format][formats] matching the file extension of
+*path*. If *format* is given, then it will be used instead of the file
+extension.
 
-#### `file.write(path: string, value: any, format: string?)`
-The `write` function encodes *value* according to the file extension of *path*,
-and writes the result to the file at *path*. If *format* is given, then it will
-be used instead of the file extension.
+If the format returns an Instance, then the Name property will be set to the
+"fstem" component of *path* according to `os.split`.
+
+#### file.write
+[file.write]: #user-content-filewrite
+`file.write(path: string, value: any, format: string?)`
+
+The `write` function encodes *value* according to the [format][formats] matching
+the file extension of *path*, and writes the result to the file at *path*. If
+*format* is given, then it will be used instead of the file extension.
 
 ## `http` source
+[http-source]: #user-content-http-source
+
 The `http` source provides access to an HTTP client.
 
 ### `readSource`
-The first additional argument to `readSource` is the URL to which a GET request
-will be made. Returns the body of the response. Throws an error if the response
-status is not 2XX.
+[http.readSource]: #user-content-readsource-1
+
+The first additional argument to [`readSource`][rbxmk.readSource] is the URL to
+which a GET request will be made. Returns the body of the response. Throws an
+error if the response status is not 2XX.
 
 ```lua
 local bytes = rbxmk.readSource("file", "https://www.example.com/resource")
 ```
 
 ### `writeSource`
-The first additional argument to `writeSource` is the URL to which a POST
-request will be made. The bytes are sent as the body of the request. Throws an
-error if the response status is not 2XX.
+[http.readSource]: #user-content-writesource-1
+
+The first additional argument to [`writeSource`][rbxmk.writeSource] is the URL
+to which a POST request will be made. The bytes are sent as the body of the
+request. Throws an error if the response status is not 2XX.
 
 ```lua
 rbxmk.writeSource("file", bytes, "https://www.example.com/resource")
 ```
 
 ### `http` library
+[http-lib]: #user-content-http-library
+
 The `http` library handles the `http` source.
 
-Name    | Description
---------|------------
-`read`  | Reads data from an HTTP URL in a certain format.
-`write` | Writes data to an HTTP URL in a certain format.
+Name                | Description
+--------------------|------------
+[read][http.read]   | Reads data from an HTTP URL in a certain format.
+[write][http.write] | Writes data to an HTTP URL in a certain format.
 
-#### `http.read(url: string, format: string?): (value: any)`
+#### http.read
+[http.read]: #user-content-httpread
+`http.read(url: string, format: string?): (value: any)`
+
 The `read` function issues a GET request to *url*, and decodes the response body
-into *value* according to *format*. Throws an error if the response status is
-not 2XX.
+into *value* according to the [format][formats] matching *format*. Throws an
+error if the response status is not 2XX.
 
-#### `file.write(url: string, value: any, format: string)`
-The `write` function encodes *value* according to *format*, and sends the result
-in a POST request to *url*. Throws an error if the response status is not 2XX.
+#### http.write
+[http.write]: #user-content-httpwrite
+`http.write(url: string, value: any, format: string)`
+
+The `write` function encodes *value* according to the [format][formats] matching
+*format*, and sends the result in a POST request to *url*. Throws an error if
+the response status is not 2XX.
 
 # Formats
+[formats]: #user-content-formats
+
 A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
 into a value. A format can be accessed at a low level through the
-`rbxmk.encodeFormat` and `rbxmk.decodeFormat` functions.
+[`rbxmk.encodeFormat`][rbxmk.encodeFormat] and
+[`rbxmk.decodeFormat`][rbxmk.decodeFormat] functions.
 
 The name of a format corresponds to the extension of a file name. For example,
 the `lua` format corresponds to the `.lua` file extension. When determining a
 format from a file extension, format names are greedy; if a file extension is
 `.server.lua`, this will select the `server.lua` format before the `lua` format.
-For convenience, a format name may have an optional leading `.` separator.
+For convenience, in places where a format name is received, the name may have an
+optional leading `.` character.
 
-## Types
-Several types are defined for encompassing a number of similar types:
+A format can decode into a number of certain types, and encode a number of
+certain types. A format may also have no definition for either decoding or
+encoding at all.
 
-### Stringlike
-A Stringlike type is any type that can be converted into a string:
-
-- string
-- BinaryString
-- Content
-- ProtectedString
-- SharedString
-- Instance, when the ClassName is "Script", "LocalScript", or "ModuleScript",
-  and the Source property has a Stringlike type.
-
-### Numberlike
-A Numberlike type is any type that can be converted into a floating-point
-number:
-
-- double
-- float
-- int
-- int64
-- token
-
-### Intlike
-An Intlike type is any type that can be converted into an integer number:
-
-- double
-- float
-- int
-- int64
-- token
+A format that can encode a **Stringlike** type accepts any type that can be
+converted to a string. Additionally, an [Instance][Instance] will be accepted as
+a Stringlike when its [ClassName][Instance.ClassName] is "Script",
+"LocalScript", or "ModuleScript", and the Source property has a Stringlike
+value. In this case, the value of the Source property is encoded.
 
 ## String formats
+[string-formats]: #user-content-string-formats
+
 Several string formats are defined for encoding string-like values.
 
-Format | Name   | Description
--------|--------|------------
-`txt`  | Text   | Encodes string-like values to UTF-8 text.
-`bin`  | Binary | Encodes string-like values to raw bytes.
+Format           | Description
+-----------------|------------
+[`txt`][txt-fmt] | Encodes string-like values to UTF-8 text.
+[`bin`][bin-fmt] | Encodes string-like values to raw bytes.
 
 ### `txt` format
+[txt-fmt]: #user-content-txt-format
+
+The **txt** format encodes UTF-8 text.
 
 Direction | Type       | Description
 ----------|------------|------------
-Decode    | string     |
-Encode    | Stringlike |
+Decode    | string     | UTF-8 text.
+Encode    | Stringlike | Any string-like value.
 
 ### `bin` format
+[bin-fmt]: #user-content-bin-format
+
+The **bin** format encodes with the assurance that the bytes will be interpreted
+exactly as-is.
 
 Direction | Type         | Description
 ----------|--------------|------------
-Decode    | BinaryString |
-Encode    | Stringlike   |
+Decode    | BinaryString | Raw binary data.
+Encode    | Stringlike   | Any string-like value.
 
 ## Lua formats
+[lua-formats]: #user-content-lua-formats
+
 Several formats are defined for decoding Lua files into script instances.
 
-Format             | Description
--------------------|------------
-`modulescript.lua` | Decodes into a ModuleScript instance.
-`script.lua`       | Decodes into a Script instance.
-`localscript.lua`  | Decodes into a LocalScript instance.
-`lua`              | Alias for `modulescript.lua`.
-`server.lua`       | Alias for `script.lua`.
-`client.lua`       | Alias for `localscript.lua`.
+Format                                     | Description
+-------------------------------------------|------------
+[`modulescript.lua`][modulescript.lua-fmt] | Decodes into a ModuleScript instance.
+[`script.lua`][script.lua-fmt]             | Decodes into a Script instance.
+[`localscript.lua`][localscript.lua-fmt]   | Decodes into a LocalScript instance.
+[`lua`][lua-fmt]                           | Alias for `modulescript.lua`.
+[`server.lua`][server.lua-fmt]             | Alias for `script.lua`.
+[`client.lua`][client.lua-fmt]             | Alias for `localscript.lua`.
 
 ### `modulescript.lua` format
+[modulescript.lua-fmt]: #user-content-modulescriptlua-format
 
-Direction | Type                    | Description
-----------|-------------------------|------------
-Decode    | Instance (ModuleScript) |
-Encode    | Stringlike              |
+The **modulescript.lua** format is a shortcut for decoding Lua code into a
+ModuleScript instance, where the content is assigned to the Source property.
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A ModuleScript with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ### `script.lua` format
+[script.lua-fmt]: #user-content-scriptlua-format
 
-Direction | Type              | Description
-----------|-------------------|------------
-Decode    | Instance (Script) |
-Encode    | Stringlike        |
+The **script.lua** format is a shortcut for decoding Lua code into a
+Script instance, where the content is assigned to the Source property.
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A Script with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ### `localscript.lua` format
+[localscript.lua-fmt]: #user-content-localscriptlua-format
 
-Direction | Type                   | Description
-----------|------------------------|------------
-Decode    | Instance (LocalScript) |
-Encode    | Stringlike             |
+The **localscript.lua** format is a shortcut for decoding Lua code into a
+LocalScript instance, where the content is assigned to the Source property.
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A LocalScript with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ### `lua` format
+[lua-fmt]: #user-content-lua-format
 
-Direction | Type                    | Description
-----------|-------------------------|------------
-Decode    | Instance (ModuleScript) |
-Encode    | Stringlike              |
+The **lua** format is an alias for [`modulescript.lua`][modulescript.lua-fmt].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A ModuleScript with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ### `server.lua` format
+[server.lua-fmt]: #user-content-serverlua-format
 
-Direction | Type              | Description
-----------|-------------------|------------
-Decode    | Instance (Script) |
-Encode    | Stringlike        |
+The **server.lua** format is an alias for [`script.lua`][script.lua-fmt].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A Script with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ### `client.lua` format
+[client.lua-fmt]: #user-content-clientlua-format
 
-Direction | Type                   | Description
-----------|------------------------|------------
-Decode    | Instance (LocalScript) |
-Encode    | Stringlike             |
+The **client.lua** format is an alias for [`localscript.lua`][localscript.lua-fmt].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A LocalScript with a Source property.
+Encode    | Stringlike           | Any string-like value.
 
 ## Roblox formats
-Several formats are defined for serializing instances.
+[roblox-formats]: #user-content-roblox-formats
+
+Several formats are defined for serializing instances in formats known by
+Roblox.
 
 Format  | Description
 --------|------------
@@ -1266,60 +1785,42 @@ Format  | Description
 `rbxlx` | The Roblox XML place format.
 `rbxmx` | The Roblox XML model format.
 
-### `rbxl` format
+Each format can encode and decode the following types:
 
-Direction | Type       | Description
-----------|------------|------------
-Decode    | DataModel  |
-Encode    | DataModel  |
-Encode    | Instance   |
-Encode    | Objects    |
-
-### `rbxm` format
-
-Direction | Type       | Description
-----------|------------|------------
-Decode    | DataModel  |
-Encode    | DataModel  |
-Encode    | Instance   |
-Encode    | Objects    |
-
-### `rbxlx` format
-
-Direction | Type       | Description
-----------|------------|------------
-Decode    | DataModel  |
-Encode    | DataModel  |
-Encode    | Instance   |
-Encode    | Objects    |
-
-### `rbxmx` format
-
-Direction | Type       | Description
-----------|------------|------------
-Decode    | DataModel  |
-Encode    | DataModel  |
-Encode    | Instance   |
-Encode    | Objects    |
+Direction | Type                   | Description
+----------|------------------------|------------
+Decode    | [DataModel][DataModel] | A DataModel instance.
+Encode    | [DataModel][DataModel] | A DataModel instance.
+Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
+Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
 
 ## Descriptor formats
+[descriptor-formats]: #user-content-descriptor-formats
+
 Several formats are defined for encoding descriptors.
 
-Format            | Description
-------------------|------------
-`desc.json`       | Descriptors in JSON format. More commonly known as an "API dump".
-`desc-patch.json` | Actions that describe changes to descriptors, in JSON format.
+Format                                   | Description
+-----------------------------------------|------------
+[`desc.json`][desc.json-fmt]             | Descriptors in JSON format.
+[`desc-patch.json`][desc-patch.json-fmt] | Actions that describe changes to descriptors, in JSON format.
 
 ### `desc.json` format
+[desc.json-fmt]: #user-content-descjson-format
 
-Direction | Type       | Description
-----------|------------|------------
-Decode    | RootDesc   |
-Encode    | RootDesc   |
+The **desc.json** format encodes a root descriptor file, more commonly known as
+an "API dump".
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [RootDesc][RootDesc] | A root descriptor.
+Encode    | [RootDesc][RootDesc] | A root descriptor.
 
 ### `desc-patch.json` format
+[desc-patch.json-fmt]: #user-content-desc-patchjson-format
+
+The **desc-patch.json** format encodes actions that transform descriptors.
 
 Direction | Type        | Description
 ----------|-------------|------------
-Decode    | DescActions |
-Encode    | DescActions |
+Decode    | DescActions | A list of [DescAction][DescAction] values.
+Encode    | DescActions | A list of [DescAction][DescAction] values.
