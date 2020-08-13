@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -56,6 +57,15 @@ func fileRead(s rbxmk.State) int {
 	v, err := format.Decode(b)
 	if err != nil {
 		return s.RaiseError(err.Error())
+	}
+	if inst, ok := v.(*rtypes.Instance); ok {
+		ext := s.Ext(fileName)
+		if ext != "" && ext != "." {
+			ext = "." + ext
+		}
+		stem := filepath.Base(fileName)
+		stem = stem[:len(stem)-len(ext)]
+		inst.SetName(stem)
 	}
 	return s.Push(v)
 }
