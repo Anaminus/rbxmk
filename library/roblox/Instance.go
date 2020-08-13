@@ -555,8 +555,11 @@ func Instance() Reflector {
 					// Use global descriptor, if available.
 					desc = s.Desc(nil)
 				}
-				if desc != nil && desc.Classes[className] == nil {
-					return s.RaiseError("unable to create instance of type %q", className)
+				if desc != nil {
+					class := desc.Classes[className]
+					if class == nil || class.GetTag("NotCreatable") {
+						return s.RaiseError("unable to create instance of type %q", className)
+					}
 				}
 				inst := rtypes.NewInstance(className, parent, desc)
 				return s.Push(inst)
