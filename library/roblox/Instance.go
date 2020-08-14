@@ -585,7 +585,22 @@ func Instance() Reflector {
 		Environment: func(s State, env *lua.LTable) {
 			t := s.L.CreateTable(0, 1)
 			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
+				var desc *rtypes.RootDesc
+				var blocked bool
+				if s.L.GetTop() >= 3 {
+					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+					case rtypes.NilType:
+					case types.Bool:
+						if v {
+							return s.RaiseError("descriptor cannot be true")
+						}
+						blocked = true
+					case *rtypes.RootDesc:
+						desc = v
+					}
+				}
 				dataModel := rtypes.NewDataModel()
+				dataModel.SetDesc(desc, blocked)
 				return s.Push(dataModel)
 			}))
 			env.RawSetString("DataModel", t)
