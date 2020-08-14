@@ -100,19 +100,6 @@ func convertType(s State, t string, v types.Value) (nv types.Value, ok bool) {
 	return v, false
 }
 
-// getPropDesc gets a property descriptor from a class, or any class it inherits
-// from.
-func getPropDesc(root *rtypes.RootDesc, class *rbxdump.Class, name string) (prop *rbxdump.Property) {
-	for class != nil {
-		prop, _ = class.Members[name].(*rbxdump.Property)
-		if prop != nil {
-			return prop
-		}
-		class = root.Classes[class.Superclass]
-	}
-	return nil
-}
-
 func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
 	enumValue := desc.EnumTypes.Enum(name)
 	if enumValue == nil {
@@ -246,7 +233,7 @@ func Instance() Reflector {
 				var err error
 				value := inst.Get(name)
 				if classDesc != nil {
-					propDesc := getPropDesc(desc, classDesc, name)
+					propDesc := desc.Property(classDesc.Name, name)
 					if propDesc == nil {
 						return s.RaiseError("%s is not a valid member", name)
 					}
@@ -350,7 +337,7 @@ func Instance() Reflector {
 					classDesc = desc.Classes[inst.ClassName]
 				}
 				if classDesc != nil {
-					propDesc := getPropDesc(desc, classDesc, name)
+					propDesc := desc.Property(classDesc.Name, name)
 					if propDesc == nil {
 						return s.RaiseError("%s is not a valid member", name)
 					}

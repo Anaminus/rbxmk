@@ -21,6 +21,31 @@ func (d *RootDesc) String() string {
 	return "RootDesc"
 }
 
+// Member gets a member descriptor from a class, or any class it inherits from.
+func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
+	classDesc := d.Classes[class]
+	for classDesc != nil {
+		if member = classDesc.Members[name]; member != nil {
+			return member
+		}
+		classDesc = d.Classes[classDesc.Superclass]
+	}
+	return nil
+}
+
+// Property gets a property descriptor from a class, or any class it inherits
+// from.
+func (d *RootDesc) Property(class, name string) (prop *rbxdump.Property) {
+	classDesc := d.Classes[class]
+	for classDesc != nil {
+		if prop, _ = classDesc.Members[name].(*rbxdump.Property); prop != nil {
+			return prop
+		}
+		classDesc = d.Classes[classDesc.Superclass]
+	}
+	return nil
+}
+
 // GenerateEnumTypes sets EnumTypes to a collection of enum values generated
 // from the root's enum descriptors.
 func (d *RootDesc) GenerateEnumTypes() {
