@@ -12,7 +12,7 @@ func decodeScript(b []byte, className string) (v types.Value, err error) {
 	return script, nil
 }
 
-func encodeScript(v types.Value) (b []byte, err error) {
+func encodeScript(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 	s := rtypes.Stringlike{Value: v}
 	if !s.IsStringlike() {
 		return nil, cannotEncode(v)
@@ -24,7 +24,7 @@ func init() { register(ModuleScriptLua) }
 func ModuleScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "modulescript.lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "ModuleScript")
 		},
 		Encode: encodeScript,
@@ -35,7 +35,7 @@ func init() { register(ScriptLua) }
 func ScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "script.lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "Script")
 		},
 		Encode: encodeScript,
@@ -46,7 +46,7 @@ func init() { register(LocalScriptLua) }
 func LocalScriptLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "localscript.lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "LocalScript")
 		},
 		Encode: encodeScript,
@@ -57,7 +57,7 @@ func init() { register(Lua) }
 func Lua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "ModuleScript")
 		},
 		Encode: encodeScript,
@@ -68,7 +68,7 @@ func init() { register(ServerLua) }
 func ServerLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "server.lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "Script")
 		},
 		Encode: encodeScript,
@@ -79,7 +79,7 @@ func init() { register(ClientLua) }
 func ClientLua() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "client.lua",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeScript(b, "LocalScript")
 		},
 		Encode: encodeScript,

@@ -73,7 +73,7 @@ func httpRead(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	v, err := format.Decode(b)
+	v, err := format.Decode(rbxmk.FormatOptions{}, b)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -92,7 +92,7 @@ func httpWrite(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
-	b, err := format.Encode(value)
+	b, err := format.Encode(rbxmk.FormatOptions{}, value)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}

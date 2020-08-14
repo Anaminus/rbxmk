@@ -367,10 +367,10 @@ func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxl",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializePlace, b)
 		},
-		Encode: func(v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 			return encodeRBX(rbxl.SerializePlace, v)
 		},
 	}
@@ -380,10 +380,10 @@ func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxm",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializeModel, b)
 		},
-		Encode: func(v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 			return encodeRBX(rbxl.SerializeModel, v)
 		},
 	}
@@ -393,10 +393,10 @@ func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxlx",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxlx.Deserialize, b)
 		},
-		Encode: func(v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 			return encodeRBX(rbxlx.Serialize, v)
 		},
 	}
@@ -406,10 +406,10 @@ func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxmx",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxlx.Deserialize, b)
 		},
-		Encode: func(v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 			return encodeRBX(rbxlx.Serialize, v)
 		},
 	}

@@ -10,10 +10,10 @@ func init() { register(Text) }
 func Text() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "txt",
-		Decode: func(b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return types.String(b), nil
 		},
-		Encode: func(v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
 			s := rtypes.Stringlike{Value: v}
 			if !s.IsStringlike() {
 				return nil, cannotEncode(v)

@@ -245,7 +245,7 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 	if format.Encode == nil {
 		return s.RaiseError("cannot encode with format %s", name)
 	}
-	b, err := format.Encode(s.Pull(2, "Variant"))
+	b, err := format.Encode(rbxmk.FormatOptions{}, s.Pull(2, "Variant"))
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -261,7 +261,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 	if format.Decode == nil {
 		return s.RaiseError("cannot decode with format %s", name)
 	}
-	v, err := format.Decode([]byte(s.Pull(2, "BinaryString").(types.BinaryString)))
+	v, err := format.Decode(rbxmk.FormatOptions{}, []byte(s.Pull(2, "BinaryString").(types.BinaryString)))
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}

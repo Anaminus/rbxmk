@@ -11,9 +11,12 @@ type Format struct {
 
 	// Encode receives a value of one of a number of types and encodes it as a
 	// sequence of bytes.
-	Encode func(v types.Value) ([]byte, error)
+	Encode func(opt FormatOptions, v types.Value) ([]byte, error)
 
 	// Decode receives a sequence of bytes an decodes it into a value of a
 	// single type.
-	Decode func(b []byte) (types.Value, error)
+	Decode func(opt FormatOptions, b []byte) (types.Value, error)
+}
+
+type FormatOptions struct {
 }
