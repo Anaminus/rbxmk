@@ -550,19 +550,35 @@ func Instance() Reflector {
 			"new": func(s State) int {
 				className := string(s.Pull(1, "string").(types.String))
 				parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
-				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
-				checkDesc := desc
-				if checkDesc == nil {
-					// Use global descriptor, if available.
-					checkDesc = s.Desc(nil)
-				}
-				if checkDesc != nil {
-					class := checkDesc.Classes[className]
-					if class == nil || class.GetTag("NotCreatable") {
-						return s.RaiseError("unable to create instance of type %q", className)
+				var desc *rtypes.RootDesc
+				var blocked bool
+				if s.L.GetTop() >= 3 {
+					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+					case rtypes.NilType:
+					case types.Bool:
+						if v {
+							return s.RaiseError("descriptor cannot be true")
+						}
+						blocked = true
+					case *rtypes.RootDesc:
+						desc = v
 					}
 				}
-				inst := rtypes.NewInstance(className, parent, desc)
+				if !blocked {
+					checkDesc := desc
+					if checkDesc == nil {
+						// Use global descriptor, if available.
+						checkDesc = s.Desc(nil)
+					}
+					if checkDesc != nil {
+						class := checkDesc.Classes[className]
+						if class == nil || class.GetTag("NotCreatable") {
+							return s.RaiseError("unable to create instance of type %q", className)
+						}
+					}
+				}
+				inst := rtypes.NewInstance(className, parent, nil)
+				inst.SetDesc(desc, blocked)
 				return s.Push(inst)
 			},
 		},
