@@ -551,12 +551,13 @@ func Instance() Reflector {
 				className := string(s.Pull(1, "string").(types.String))
 				parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
 				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
-				if desc == nil {
+				checkDesc := desc
+				if checkDesc == nil {
 					// Use global descriptor, if available.
-					desc = s.Desc(nil)
+					checkDesc = s.Desc(nil)
 				}
-				if desc != nil {
-					class := desc.Classes[className]
+				if checkDesc != nil {
+					class := checkDesc.Classes[className]
 					if class == nil || class.GetTag("NotCreatable") {
 						return s.RaiseError("unable to create instance of type %q", className)
 					}
