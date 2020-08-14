@@ -35,11 +35,14 @@ func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
 
 // Property gets a property descriptor from a class, or any class it inherits
 // from.
-func (d *RootDesc) Property(class, name string) (prop *rbxdump.Property) {
+func (d *RootDesc) Property(class, name string) *rbxdump.Property {
 	classDesc := d.Classes[class]
 	for classDesc != nil {
-		if prop, _ = classDesc.Members[name].(*rbxdump.Property); prop != nil {
-			return prop
+		if member := classDesc.Members[name]; member != nil {
+			if prop, ok := member.(*rbxdump.Property); ok {
+				return prop
+			}
+			return nil
 		}
 		classDesc = d.Classes[classDesc.Superclass]
 	}
