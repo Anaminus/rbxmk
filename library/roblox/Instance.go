@@ -231,7 +231,7 @@ func Instance() Reflector {
 						}
 						service := inst.FindFirstChildOfClass(className, false)
 						if service == nil {
-							service = rtypes.NewInstance(className, nil, nil)
+							service = rtypes.NewInstance(className, nil)
 							service.IsService = true
 							service.SetName(className)
 							service.SetParent(inst)
@@ -577,7 +577,7 @@ func Instance() Reflector {
 						}
 					}
 				}
-				inst := rtypes.NewInstance(className, parent, nil)
+				inst := rtypes.NewInstance(className, parent)
 				inst.SetDesc(desc, blocked)
 				return s.Push(inst)
 			},

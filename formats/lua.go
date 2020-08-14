@@ -7,7 +7,7 @@ import (
 )
 
 func decodeScript(b []byte, className string) (v types.Value, err error) {
-	script := rtypes.NewInstance(className, nil, nil)
+	script := rtypes.NewInstance(className, nil)
 	script.Set("Source", types.ProtectedString(b))
 	return script, nil
 }

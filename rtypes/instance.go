@@ -19,13 +19,10 @@ type Instance struct {
 	root        bool
 }
 
-func NewInstance(className string, parent *Instance, desc *RootDesc) *Instance {
+func NewInstance(className string, parent *Instance) *Instance {
 	inst := &Instance{
 		ClassName:  className,
 		properties: make(map[string]types.PropValue, 0),
-	}
-	if desc != nil {
-		inst.SetDesc(desc, false)
 	}
 	if parent != nil {
 		inst.SetParent(parent)
