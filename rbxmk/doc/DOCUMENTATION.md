@@ -32,18 +32,17 @@ This document provides details on how rbxmk works. For a basic overview, see
 </td></tr></tbody>
 </table>
 
-This document uses Luau type annotation syntax to describe the API of an
-element. Some liberties are taken for patterns not currently supported by the
-Luau syntax. For example, `...` indicates variable parameters. Additionally, the
-following types are predefined for documentation purposes:
+This document uses [Luau][luau] type annotation syntax to describe the API of an
+element. Some liberties are taken for patterns not supported by the Luau syntax.
+For example, `...` indicates variable parameters. Additionally, the following
+types are predefined for documentation purposes:
 
 ```luau
 -- A list of values of type T.
 type Array<T> = {[number]: T}
-
--- A table mapping a name to a value of type T.
-type Dictionary<T> = {[string]: T}
 ```
+
+[luau]: https://roblox.github.io/luau/
 
 # Environment
 [environment]: #user-content-environment
@@ -116,7 +115,7 @@ Name                               | Description
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
-`rbxmk.decodeFormat(format: string, bytes: BinaryString): (value: any)`
+<code>rbxmk.decodeFormat(format: [string](##), bytes: [BinaryString](##)): (value: [any](##))</code>
 
 The **decodeFormat** function decodes *bytes* into a value according to
 *format*. The exact details of each format are described in the
@@ -127,7 +126,7 @@ no decoder defined.
 
 ### rbxmk.globalDesc
 [rbxmk.globalDesc]: #user-content-rbxmkglobaldesc
-`rbxmk.globalDesc: RootDesc`
+<code>rbxmk.globalDesc: [RootDesc][RootDesc]</code>
 
 The **globalDesc** field gets or sets the global root descriptor. Most items
 that utilize a root descriptor will fallback to the global descriptor when
@@ -135,7 +134,7 @@ possible.
 
 ### rbxmk.diffDesc
 [rbxmk.diffDesc]: #user-content-rbxmkdiffdesc
-`rbxmk.diffDesc(prev: RootDesc?, next: RootDesc?): (diff: Array<DescAction>)`
+<code>rbxmk.diffDesc(prev: [RootDesc][RootDesc]?, next: [RootDesc][RootDesc]?): (diff: [Array](##)\<[DescAction][DescAction]>)</code>
 
 The **diffDesc** function compares two root descriptors and returns the
 differences between them. A nil value for *prev* or *next* is treated the same
@@ -144,7 +143,7 @@ transform *prev* into *next*.
 
 ### rbxmk.encodeFormat
 [rbxmk.encodeFormat]: #user-content-rbxmkencodeformat
-`rbxmk.encodeFormat(format: string, value: any): (bytes: BinaryString)`
+<code>rbxmk.encodeFormat(format: [string](##), value: [any](##)): (bytes: [BinaryString](##))</code>
 
 The **encodeFormat** function encodes *value* into a sequence of bytes according
 to *format*. The exact details of each format are described in the
@@ -155,7 +154,7 @@ no encoder defined.
 
 ### rbxmk.loadFile
 [rbxmk.loadFile]: #user-content-rbxmkloadfile
-`rbxmk.loadFile(path: string): (func: function)`
+<code>rbxmk.loadFile(path: [string](##)): (func: [function](##))</code>
 
 The **loadFile** function loads the content of a file as a Lua function. *path*
 is the path to the file.
@@ -164,7 +163,7 @@ The function runs in the context of the calling script.
 
 ### rbxmk.loadString
 [rbxmk.loadString]: #user-content-rbxmkloadstring
-`rbxmk.loadString(source: string): (func: function)`
+<code>rbxmk.loadString(source: [string](##)): (func: [function](##))</code>
 
 The **loadString** function loads the a string as a Lua function. *source* is
 the string to load.
@@ -173,7 +172,7 @@ The function runs in the context of the calling script.
 
 ### rbxmk.newDesc
 [rbxmk.newDesc]: #user-content-rbxmknewdesc
-`rbxmk.newDesc(name: string): Descriptor`
+<code>rbxmk.newDesc(name: [string](##)): [Descriptor](##)</code>
 
 The **newDesc** function creates a new descriptor object.
 
@@ -212,7 +211,7 @@ local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName", "ParamDe
 
 ### rbxmk.patchDesc
 [rbxmk.patchDesc]: #user-content-rbxmkpatchdesc
-`rbxmk.patchDesc(desc: RootDesc, actions: Array<DescAction>)`
+<code>rbxmk.patchDesc(desc: [RootDesc][RootDesc], actions: [Array](##)\<[DescAction][DescAction]>)</code>
 
 The **patchDesc** function transforms a root descriptor according to a list of
 actions. Each action in the list is applied in order. Actions that are
@@ -220,7 +219,7 @@ incompatible are ignored.
 
 ### rbxmk.readSource
 [rbxmk.readSource]: #user-content-rbxmkreadsource
-`rbxmk.readSource(source: string, args: ...any): (bytes: BinaryString)`
+<code>rbxmk.readSource(source: [string](##), args: ...[any](##)): (bytes: [BinaryString](##))</code>
 
 The **readSource** function reads a sequence of bytes from an external source
 indicated by *source*. *args* depends on the source. The exact details of each
@@ -231,7 +230,7 @@ be read from.
 
 ### rbxmk.runFile
 [rbxmk.runFile]: #user-content-rbxmkrunfile
-`rbxmk.runFile(path: string, args: ...any): (results: ...any)`
+<code>rbxmk.runFile(path: [string](##), args: ...[any](##)): (results: ...[any](##))</code>
 
 The **runFile** function runs the content of a file as a Lua script. *path* is
 the path to the file. *args* are passed into the script as arguments. Returns
@@ -243,7 +242,7 @@ an error.
 
 ### rbxmk.runString
 [rbxmk.runString]: #user-content-rbxmkrunstring
-`rbxmk.runString(source: string, args: ...any): (results: ...any)`
+<code>rbxmk.runString(source: [string](##), args: ...[any](##)): (results: ...[any](##))</code>
 
 The **runString** function runs a string as a Lua script. *source* is the string
 to run. *args* are passed into the script as arguments. Returns the values
@@ -253,7 +252,7 @@ The script runs in the context of the calling script.
 
 ### rbxmk.writeSource
 [rbxmk.writeSource]: #user-content-rbxmkwritesource
-`rbxmk.writeSource(source: string, bytes: BinaryString, args: ...any)`
+<code>rbxmk.writeSource(source: [string](##), bytes: [BinaryString](##), args: ...[any](##))</code>
 
 The **writeSource** function writes a sequence of bytes to an external source
 indicated by *source*. *args* depends on the source. The exact details of each
@@ -320,7 +319,7 @@ Name                | Description
 
 ### os.dir
 [os.dir]: #user-content-osdir
-`os.dir(path: string): Array<File>`
+<code>os.dir(path: [string](##)): [Array](##)\<[File](##)></code>
 
 The **dir** function returns a list of files in the given directory.
 
@@ -335,7 +334,7 @@ ModTime | number  | The modification time of the file, in Unix time.
 
 ### os.expand
 [os.expand]: #user-content-osexpand
-`os.expand(path: string): string`
+<code>os.expand(path: [string](##)): [string](##)</code>
 
 The **expand** function scans *path* for certain variables of the form `$var` or
 `${var}` an expands them. The following variables are expanded:
@@ -349,21 +348,21 @@ Variable                                    | Description
 
 ### os.getenv
 [os.getenv]: #user-content-osgetenv
-`os.getenv(name: string?): string | Array<string>`
+<code>os.getenv(name: [string](##)?): [string](##) \| [Array](##)\<[string](##)></code>
 
 The **getenv** function returns the value of the *name* environment variable. If
 *name* is not specified, then a list of environment variables is returned.
 
 ### os.join
 [os.join]: #user-content-osjoin
-`os.join(paths: ...string) string`
+<code>os.join(paths: ...[string](##)): [string](##)</code>
 
 The **join** function joins each *path* element into a single path, separating
 them using the operating system's path separator. This also cleans up the path.
 
 ### os.split
 [os.split]: #user-content-ossplit
-`os.split(path: string, components: ...string): ...string`
+<code>os.split(path: [string](##), components: ...[string](##)): ...[string](##)</code>
 
 The **split** function returns the components of a file path.
 
@@ -490,7 +489,7 @@ Member                                                        | Kind
 
 ### Instance.new
 [Instance.new]: #user-content-instancenew
-`Instance.new(className: string, parent: Instance?, desc: RootDesc?): Instance`
+<code>Instance.new(className: [string](##), parent: [Instance][Instance]?, desc: [RootDesc][RootDesc]?): [Instance][Instance]</code>
 
 The `Instance.new` constructor returns a new Instance of the given class.
 *className* sets the [ClassName][Instance.ClassName] property of the instance.
@@ -503,7 +502,7 @@ will be accepted.
 
 ### Instance.ClassName
 [Instance.ClassName]: #user-content-instanceclassname
-`Instance.ClassName: string`
+<code>Instance.ClassName: [string](##)</code>
 
 ClassName gets or sets the class of the instance.
 
@@ -511,19 +510,19 @@ Unlike in Roblox, ClassName can be modified.
 
 ### Instance.Name
 [Instance.Name]: #user-content-instancename
-`Instance.Name: string`
+<code>Instance.Name: [string](##)</code>
 
 Name gets or sets a name identifying the instance.
 
 ### Instance.Parent
 [Instance.Parent]: #user-content-instanceparent
-`Instance.Parent: Instance?`
+<code>Instance.Parent: [Instance][Instance]?</code>
 
 Parent gets or sets the parent of the instance, which may be nil.
 
 ### Instance.ClearAllChildren
 [Instance.ClearAllChildren]: #user-content-instanceclearallchildren
-`Instance:ClearAllChildren()`
+<code>Instance:ClearAllChildren()</code>
 
 ClearAllChildren sets the [Parent][Instance.Parent] of each child of the
 instance to nil.
@@ -532,7 +531,7 @@ Unlike in Roblox, ClearAllChildren does not affect descendants.
 
 ### Instance.Clone
 [Instance.Clone]: #user-content-instanceclone
-`Instance:Clone(): Instance`
+<code>Instance:Clone(): [Instance][Instance]</code>
 
 Clone returns a copy of the instance.
 
@@ -541,7 +540,7 @@ is set to false.
 
 ### Instance.Destroy
 [Instance.Destroy]: #user-content-instancedestroy
-`Instance:Destroy()`
+<code>Instance:Destroy()</code>
 
 Destroy sets the [Parent][Instance.Parent] of the instance to nil.
 
@@ -550,14 +549,14 @@ not affect descendants.
 
 ### Instance.FindFirstAncestor
 [Instance.FindFirstAncestor]: #user-content-instancefindfirstancestor
-`Instance:FindFirstAncestor(name: string): Instance?`
+<code>Instance:FindFirstAncestor(name: [string](##)): [Instance][Instance]?</code>
 
 FindFirstAncestor returns the first ancestor whose [Name][Instance.Name] equals
 *name*, or nil if no such instance was found.
 
 ### Instance.FindFirstAncestorOfClass
 [Instance.FindFirstAncestorOfClass]: #user-content-instancefindfirstancestorofclass
-`Instance:FindFirstAncestorOfClass(className: string): Instance?`
+<code>Instance:FindFirstAncestorOfClass(className: [string](##)): [Instance][Instance]?</code>
 
 FindFirstAncestor returns the first ancestor of the instance whose
 [ClassName][Instance.ClassName] equals *className*, or nil if no such instance
@@ -565,7 +564,7 @@ was found.
 
 ### Instance.FindFirstChild
 [Instance.FindFirstChild]: #user-content-instancefindfirstchild
-`Instance:FindFirstChild(name: string, recursive: bool?): Instance?`
+<code>Instance:FindFirstChild(name: [string](##), recursive: [bool](##)?): [Instance][Instance]?</code>
 
 FindFirstChild returns the first child of the instance whose
 [Name][Instance.Name] equals *name*, or nil if no such instance was found. If
@@ -573,7 +572,7 @@ FindFirstChild returns the first child of the instance whose
 
 ### Instance.FindFirstChildOfClass
 [Instance.FindFirstChildOfClass]: #user-content-instancefindfirstchildofclass
-`Instance:FindFirstChildOfClass(className: string, recursive: bool?):`
+<code>Instance:FindFirstChildOfClass(className: [string](##), recursive: [bool](##)?): [Instance][Instance]?</code>
 
 FindFirstChildOfClass returns the first child of the instance whose
 [ClassName][Instance.ClassName] equals *className*, or nil if no such instance
@@ -581,19 +580,19 @@ was found. If *recurse* is true, then descendants are also searched, top-down.
 
 ### Instance.GetChildren
 [Instance.GetChildren]: #user-content-instancegetchildren
-`Instance:GetChildren(): Objects`
+<code>Instance:GetChildren(): Objects</code>
 
 GetChildren returns a list of children of the instance.
 
 ### Instance.GetDescendants
 [Instance.GetDescendants]: #user-content-instancegetdescendants
-`Instance:GetDescendants(): Objects`
+<code>Instance:GetDescendants(): [Objects](##)</code>
 
 GetDescendants returns a list of descendants of the instance.
 
 ### Instance.GetFullName
 [Instance.GetFullName]: #user-content-instancegetfullname
-`Instance:GetFullName(): string`
+<code>Instance:GetFullName(): [string](##)</code>
 
 GetFullName returns the concatenation of the [Name][Instance.Name] of each
 ancestor of the instance and the instance itself, separated by `.` characters.
@@ -601,19 +600,19 @@ If an ancestor is a [DataModel][DataModel], it is not included.
 
 ### Instance.IsAncestorOf
 [Instance.IsAncestorOf]: #user-content-instanceisancestorof
-`Instance:IsAncestorOf(descendant: Instance): bool`
+<code>Instance:IsAncestorOf(descendant: [Instance][Instance]): [bool](##)</code>
 
 IsAncestorOf returns whether the instance of an ancestor of *descendant*.
 
 ### Instance.IsDescendantOf
 [Instance.IsDescendantOf]: #user-content-instanceisdescendantof
-`Instance:IsDescendantOf(ancestor: Instance): bool`
+<code>Instance:IsDescendantOf(ancestor: [Instance][Instance]): [bool](##)</code>
 
 IsDescendantOf returns whether the instance of a descendant of *ancestor*.
 
 ### Instance[sym.Desc]
 [Instance.sym.Desc]: #user-content-instancesymdesc
-`Instance[sym.Desc]: RootDesc | nil`
+<code>Instance\[sym.Desc\]: [RootDesc][RootDesc] \| [nil](##)</code>
 
 Desc is the descriptor being used by the instance. Descriptors are inherited; if
 the instance has no descriptor, then each ancestor of the instance is searched
@@ -635,7 +634,7 @@ sets the descriptor only for the current instance.
 
 ### Instance[sym.IsService]
 [Instance.sym.IsService]: #user-content-instancesymisservice
-`Instance[sym.IsService]: bool`
+<code>Instance\[sym.IsService\]: [bool](##)</code>
 
 IsService indicates whether the instance is a service, such as Workspace or
 Lighting. This is used by some formats to determine how to encode and decode the
@@ -643,7 +642,7 @@ instance.
 
 ### Instance[sym.RawDesc]
 [Instance.sym.RawDesc]: #user-content-instancesymrawdesc
-`Instance[sym.RawDesc]: RootDesc | bool | nil`
+<code>Instance\[sym.RawDesc\]: [RootDesc][RootDesc] \| [bool](##) \| [nil](##)</code>
 
 RawDesc is similar to [`sym.Desc`][Instance.sym.Desc], except that it considers
 only the direct descriptor of the current instance.
@@ -656,7 +655,7 @@ Setting RawDesc behaves the same as setting Desc.
 
 ### Instance[sym.Reference]
 [Instance.sym.Reference]: #user-content-instancesymreference
-`Instance[sym.Reference]: string`
+<code>Instance\[sym.Reference\]: [string](##)</code>
 
 Reference is a string used to refer to the instance from within a
 [DataModel][DataModel]. Certain formats use this to encode a reference to an
@@ -674,14 +673,14 @@ metadata used by certain formats (e.g. ExplicitAutoJoints).
 
 ### DataModel.new
 [DataModel.new]: #user-content-datamodelnew
-`DataModel.new(desc: RootDesc?): Instance`
+<code>DataModel.new(desc: [RootDesc][RootDesc]?): [Instance][Instance]</code>
 
 The `DataModel.new` constructor returns a new Instance of the DataModel class.
 If *desc* is specified, then it sets the [`sym.Desc`][Instance.sym.Desc] member.
 
 #### DataModel.GetService
 [DataModel.GetService]: #user-content-datamodelgetservice
-`DataModel:GetService(className: string): Instance`
+<code>DataModel:GetService(className: [string](##)): [Instance][Instance]</code>
 
 GetService returns the first child of the DataModel whose
 [ClassName][Instance.ClassName] equals *className*. If no such child exists,
@@ -779,20 +778,20 @@ Member                              | Kind
 
 #### RootDesc.Class
 [RootDesc.Class]: #user-content-rootdescclass
-`RootDesc:Class(name: string): ClassDesc`
+<code>RootDesc:Class(name: [string](##)): [ClassDesc][ClassDesc]</code>
 
 Class returns the class of the API corresponding to the given name, or nil if no
 such class exists.
 
 #### RootDesc.Classes
 [RootDesc.Classes]: #user-content-rootdescclasses
-`RootDesc:Classes(): Array<ClassDesc>`
+<code>RootDesc:Classes(): [Array](##)\<[ClassDesc][ClassDesc]></code>
 
 Classes returns a list of all the classes of the API.
 
 #### RootDesc.AddClass
 [RootDesc.AddClass]: #user-content-rootdescaddclass
-`RootDesc:AddClass(class: ClassDesc): bool`
+<code>RootDesc:AddClass(class: [ClassDesc][ClassDesc]): [bool](##)</code>
 
 AddClass adds a new class to the RootDesc, returning whether the class was added
 successfully. The class will fail to be added if a class of the same name
@@ -800,7 +799,7 @@ already exists.
 
 #### RootDesc.RemoveClass
 [RootDesc.RemoveClass]: #user-content-rootdescremoveclass
-`RootDesc:RemoveClass(name: string): bool`
+<code>RootDesc:RemoveClass(name: [string](##)): [bool](##)</code>
 
 RemoveClass removes a class from the RootDesc, returning whether the class was
 removed successfully. False will be returned if a class of the given name does
@@ -808,20 +807,20 @@ not exist.
 
 #### RootDesc.Enum
 [RootDesc.Enum]: #user-content-rootdescenum
-`RootDesc:Enum(name: string): EnumDesc`
+<code>RootDesc:Enum(name: [string](##)): [EnumDesc][EnumDesc]</code>
 
 Enum returns an enum of the API corresponding to the given name, or nil if no
 such enum exists.
 
 #### RootDesc.Enums
 [RootDesc.Enums]: #user-content-rootdescenums
-`RootDesc:Enums(): Array<EnumDesc>`
+<code>RootDesc:Enums(): [Array](##)\<[EnumDesc][EnumDesc]></code>
 
 Enums returns a list of all the enums of the API.
 
 #### RootDesc.AddEnum
 [RootDesc.AddEnum]: #user-content-rootdescaddenum
-`RootDesc:AddEnum(enum: EnumDesc): bool`
+<code>RootDesc:AddEnum(enum: [EnumDesc][EnumDesc]): [bool](##)</code>
 
 AddEnum adds a new enum to the RootDesc, returning whether the enum was added
 successfully. The enum will fail to be added if an enum of the same name already
@@ -829,7 +828,7 @@ exists.
 
 #### RootDesc.RemoveEnum
 [RootDesc.RemoveEnum]: #user-content-rootdescremoveenum
-`RootDesc:RemoveEnum(name: string): bool`
+<code>RootDesc:RemoveEnum(name: [string](##)): [bool](##)</code>
 
 RemoveEnum removes an enum from the RootDesc, returning whether the enum was
 removed successfully. False will be returned if an enum of the given name does
@@ -837,7 +836,7 @@ not exist.
 
 #### RootDesc.EnumTypes
 [RootDesc.EnumTypes]: #user-content-rootdescenumtypes
-`RootDesc:EnumTypes(): Enums`
+<code>RootDesc:EnumTypes(): [Enums](##)</code>
 
 EnumTypes returns a set of enum values generated from the current state of the
 RootDesc. These enums are associated with the RootDesc, and may be used by
@@ -875,25 +874,25 @@ Member                                     | Kind
 
 #### ClassDesc.Name
 [ClassDesc.Name]: #user-content-classdescname
-`ClassDesc.Name: string`
+<code>ClassDesc.Name: [string](##)</code>
 
 Name is the name of the class.
 
 #### ClassDesc.Superclass
 [ClassDesc.Superclass]: #user-content-classdescsuperclass
-`ClassDesc.Superclass: string`
+<code>ClassDesc.Superclass: [string](##)</code>
 
 Superclass is the name of the class from which the current class inherits.
 
 #### ClassDesc.MemoryCategory
 [ClassDesc.MemoryCategory]: #user-content-classdescmemorycategory
-`ClassDesc.MemoryCategory: string`
+<code>ClassDesc.MemoryCategory: [string](##)</code>
 
 MemoryCategory describes the category of the class.
 
 #### ClassDesc.Member
 [ClassDesc.Member]: #user-content-classdescmember
-`ClassDesc:Member(name: string): MemberDesc`
+<code>ClassDesc:Member(name: [string](##)): [MemberDesc](##)</code>
 
 Member returns a member of the class corresponding to the given name, or nil of
 no such member exists.
@@ -904,21 +903,29 @@ MemberDesc is any one of the [PropertyDesc][PropertyDesc],
 
 #### ClassDesc.Members
 [ClassDesc.Members]: #user-content-classdescmembers
-`ClassDesc:Members(): Array<MemberDesc>`
+<code>ClassDesc:Members(): [Array](##)\<[MemberDesc](##)></code>
 
 Members returns a list of all the members of the class.
 
+MemberDesc is any one of the [PropertyDesc][PropertyDesc],
+[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
+[CallbackDesc][CallbackDesc] types.
+
 #### ClassDesc.AddMember
 [ClassDesc.AddMember]: #user-content-classdescaddmember
-`ClassDesc:AddMember(member: MemberDesc): bool`
+<code>ClassDesc:AddMember(member: [MemberDesc](##)): [bool](##)</code>
 
 AddMember adds a new member to the ClassDesc, returning whether the member was
 added successfully. The member will fail to be added if a member of the same
 name already exists.
 
+MemberDesc is any one of the [PropertyDesc][PropertyDesc],
+[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
+[CallbackDesc][CallbackDesc] types.
+
 #### ClassDesc.RemoveMember
 [ClassDesc.RemoveMember]: #user-content-classdescremovemember
-`ClassDesc:RemoveMember(name: string): bool`
+<code>ClassDesc:RemoveMember(name: [string](##)): [bool](##)</code>
 
 RemoveMember removes a member from the ClassDesc, returning whether the member
 was removed successfully. False will be returned if a member of the given name
@@ -926,25 +933,25 @@ does not exist.
 
 #### ClassDesc.Tag
 [ClassDesc.Tag]: #user-content-classdesctag
-`ClassDesc:Tag(name: string): bool`
+<code>ClassDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### ClassDesc.Tags
 [ClassDesc.Tags]: #user-content-classdesctags
-`ClassDesc:Tags(): Array<string>`
+<code>ClassDesc:Tags(): [Array](##)\<[string](##)></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### ClassDesc.SetTag
 [ClassDesc.SetTag]: #user-content-classdescsettag
-`ClassDesc:SetTag(tags: ...string)`
+<code>ClassDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### ClassDesc.UnsetTag
 [ClassDesc.UnsetTag]: #user-content-classdescunsettag
-`ClassDesc:UnsetTag(tags: ...string)`
+<code>ClassDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -969,61 +976,61 @@ Member                                      | Kind
 
 #### PropertyDesc.Name
 [PropertyDesc.Name]: #user-content-propertydescname
-`PropertyDesc.Name: string`
+<code>PropertyDesc.Name: [string](##)</code>
 
 Name is the name of the member.
 
 #### PropertyDesc.ValueType
 [PropertyDesc.ValueType]: #user-content-propertydescvaluetype
-`PropertyDesc.ValueType: TypeDesc`
+<code>PropertyDesc.ValueType: [TypeDesc][TypeDesc]</code>
 
 ValueType is the value type of the property.
 
 #### PropertyDesc.ReadSecurity
 [PropertyDesc.ReadSecurity]: #user-content-propertydescreadsecurity
-`PropertyDesc.ReadSecurity: string`
+<code>PropertyDesc.ReadSecurity: [string](##)</code>
 
 ReadSecurity indicates the security context required to get the property.
 
 #### PropertyDesc.WriteSecurity
 [PropertyDesc.WriteSecurity]: #user-content-propertydescwritesecurity
-`PropertyDesc.WriteSecurity: string`
+<code>PropertyDesc.WriteSecurity: [string](##)</code>
 
 WriteSecurity indicates the security context required to set the property.
 
 #### PropertyDesc.CanLoad
 [PropertyDesc.CanLoad]: #user-content-propertydesccanload
-`PropertyDesc.CanLoad: bool`
+<code>PropertyDesc.CanLoad: [bool](##)</code>
 
 CanLoad indicates whether the property is deserialized when decoding from a file.
 
 #### PropertyDesc.CanSave
 [PropertyDesc.CanSave]: #user-content-propertydesccansave
-`PropertyDesc.CanSave: bool`
+<code>PropertyDesc.CanSave: [bool](##)</code>
 
 CanLoad indicates whether the property is serialized when encoding to a file.
 
 #### PropertyDesc.Tag
 [PropertyDesc.Tag]: #user-content-propertydesctag
-`PropertyDesc:Tag(name: string): bool`
+<code>PropertyDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### PropertyDesc.Tags
 [PropertyDesc.Tags]: #user-content-propertydesctags
-`PropertyDesc:Tags(): Array<string>`
+<code>PropertyDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### PropertyDesc.SetTag
 [PropertyDesc.SetTag]: #user-content-propertydescsettag
-`PropertyDesc:SetTag(tags: ...string)`
+<code>PropertyDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### PropertyDesc.UnsetTag
 [PropertyDesc.UnsetTag]: #user-content-propertydescunsettag
-`PropertyDesc:UnsetTag(tags: ...string)`
+<code>PropertyDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1047,55 +1054,55 @@ Member                                      | Kind
 
 #### FunctionDesc.Name
 [FunctionDesc.Name]: #user-content-functiondescname
-`FunctionDesc.Name: string`
+<code>FunctionDesc.Name: [string](##)</code>
 
 Name is the name of the member.
 
 #### FunctionDesc.Parameters
 [FunctionDesc.Parameters]: #user-content-functiondescparameters
-`FunctionDesc:Parameters(): Array<ParameterDesc>`
+<code>FunctionDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
 
 Parameters returns a list of parameters of the function.
 
 #### FunctionDesc.SetParameters
 [FunctionDesc.SetParameters]: #user-content-functiondescsetparameters
-`FunctionDesc:SetParameters(params: Array<ParameterDesc>)`
+<code>FunctionDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
 
 SetParameters sets the parameters of the function.
 
 #### FunctionDesc.ReturnType
 [FunctionDesc.ReturnType]: #user-content-functiondescreturntype
-`FunctionDesc.ReturnType: TypeDesc`
+<code>FunctionDesc.ReturnType: [TypeDesc][TypeDesc]</code>
 
 ReturnType is the type returned by the function.
 
 #### FunctionDesc.Security
 [FunctionDesc.Security]: #user-content-functiondescsecurity
-`FunctionDesc.Security: string`
+<code>FunctionDesc.Security: [string](##)</code>
 
 Security indicates the security content required to index the member.
 
 #### FunctionDesc.Tag
 [FunctionDesc.Tag]: #user-content-functiondesctag
-`FunctionDesc:Tag(name: string): bool`
+<code>FunctionDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### FunctionDesc.Tags
 [FunctionDesc.Tags]: #user-content-functiondesctags
-`FunctionDesc:Tags(): Array<string>`
+<code>FunctionDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### FunctionDesc.SetTag
 [FunctionDesc.SetTag]: #user-content-functiondescsettag
-`FunctionDesc:SetTag(tags: ...string)`
+<code>FunctionDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### FunctionDesc.UnsetTag
 [FunctionDesc.UnsetTag]: #user-content-functiondescunsettag
-`FunctionDesc:UnsetTag(tags: ...string)`
+<code>FunctionDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1117,49 +1124,49 @@ Member                                   | Kind
 
 #### EventDesc.Name
 [EventDesc.Name]: #user-content-eventdescname
-`EventDesc.Name: string`
+<code>EventDesc.Name: [string](##)</code>
 
 Name is the name of the member.
 
 #### EventDesc.Parameters
 [EventDesc.Parameters]: #user-content-eventdescparameters
-`EventDesc:Parameters(): Array<ParameterDesc>`
+<code>EventDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
 
 Parameters returns a list of parameters of the event.
 
 #### EventDesc.SetParameters
 [EventDesc.SetParameters]: #user-content-eventdescsetparameters
-`EventDesc:SetParameters(params: Array<ParameterDesc>)`
+<code>EventDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
 
 SetParameters sets the parameters of the event.
 
 #### EventDesc.Security
 [EventDesc.Security]: #user-content-eventdescsecurity
-`EventDesc.Security: string`
+<code>EventDesc.Security: [string](##)</code>
 
 Security indicates the security content required to index the member.
 
 #### EventDesc.Tag
 [EventDesc.Tag]: #user-content-eventdesctag
-`EventDesc:Tag(name: string): bool`
+<code>EventDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EventDesc.Tags
 [EventDesc.Tags]: #user-content-eventdesctags
-`EventDesc:Tags(): Array<string>`
+<code>EventDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### EventDesc.SetTag
 [EventDesc.SetTag]: #user-content-eventdescsettag
-`EventDesc:SetTag(tags: ...string)`
+<code>EventDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### EventDesc.UnsetTag
 [EventDesc.UnsetTag]: #user-content-eventdescunsettag
-`EventDesc:UnsetTag(tags: ...string)`
+<code>EventDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1183,55 +1190,55 @@ Member                                      | Kind
 
 #### CallbackDesc.Name
 [CallbackDesc.Name]: #user-content-callbackdescname
-`CallbackDesc.Name: string`
+<code>CallbackDesc.Name: [string](##)</code>
 
 Name is the name of the member.
 
 #### CallbackDesc.Parameters
 [CallbackDesc.Parameters]: #user-content-callbackdescparameters
-`CallbackDesc:Parameters(): Array<ParameterDesc>`
+<code>CallbackDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
 
 Parameters returns a list of parameters of the callback.
 
 #### CallbackDesc.SetParameters
 [CallbackDesc.SetParameters]: #user-content-callbackdescsetparameters
-`CallbackDesc:SetParameters(params: Array<ParameterDesc>)`
+<code>CallbackDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
 
 SetParameters sets the parameters of the callback.
 
 #### CallbackDesc.ReturnType
 [CallbackDesc.ReturnType]: #user-content-callbackdescreturntype
-`CallbackDesc.ReturnType: TypeDesc`
+<code>CallbackDesc.ReturnType: [TypeDesc][TypeDesc]</code>
 
 ReturnType is the type returned by the callback.
 
 #### CallbackDesc.Security
 [CallbackDesc.Security]: #user-content-callbackdescsecurity
-`CallbackDesc.Security: string`
+<code>CallbackDesc.Security: [string](##)</code>
 
 Security indicates the security content required to set the member.
 
 #### CallbackDesc.Tag
 [CallbackDesc.Tag]: #user-content-callbackdesctag
-`CallbackDesc:Tag(name: string): bool`
+<code>CallbackDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### CallbackDesc.Tags
 [CallbackDesc.Tags]: #user-content-callbackdesctags
-`CallbackDesc:Tags(): Array<string>`
+<code>CallbackDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### CallbackDesc.SetTag
 [CallbackDesc.SetTag]: #user-content-callbackdescsettag
-`CallbackDesc:SetTag(tags: ...string)`
+<code>CallbackDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### CallbackDesc.UnsetTag
 [CallbackDesc.UnsetTag]: #user-content-callbackdescunsettag
-`CallbackDesc:UnsetTag(tags: ...string)`
+<code>CallbackDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1252,19 +1259,19 @@ with [`rbxmk.newDesc`][rbxmk.newDesc].
 
 #### ParameterDesc.Type
 [ParameterDesc.Type]: #user-content-parameterdesctype
-`ParameterDesc.Type: TypeDesc`
+<code>ParameterDesc.Type: [TypeDesc][TypeDesc]</code>
 
 Type is the type of the parameter.
 
 #### ParameterDesc.Name
 [ParameterDesc.Name]: #user-content-parameterdescname
-`ParameterDesc.Name: string`
+<code>ParameterDesc.Name: [string](##)</code>
 
 Name is a name describing the parameter.
 
 #### ParameterDesc.Default
 [ParameterDesc.Default]: #user-content-parameterdescdefault
-`ParameterDesc.Default: string?`
+<code>ParameterDesc.Default: [string](##)?</code>
 
 Default is a string describing the default value of the parameter. May also be
 nil, indicating that the parameter has no default value.
@@ -1284,7 +1291,7 @@ rbxmk.newDesc.
 
 #### TypeDesc.Category
 [TypeDesc.Category]: #user-content-typedesccategory
-`TypeDesc.Category: string`
+<code>TypeDesc.Category: [string](##)</code>
 
 Category is the category of the type. Certain categories are treated specially:
 
@@ -1295,7 +1302,7 @@ Category is the category of the type. Certain categories are treated specially:
 
 #### TypeDesc.Name
 [TypeDesc.Name]: #user-content-typedescname
-`TypeDesc.Name: string`
+<code>TypeDesc.Name: [string](##)</code>
 
 Name is the name of the type.
 
@@ -1318,26 +1325,26 @@ Member                            | Kind
 
 #### EnumDesc.Name
 [EnumDesc.Name]: #user-content-enumdescname
-`EnumDesc.Name: string`
+<code>EnumDesc.Name: [string](##)</code>
 
 Name is the name of the enum.
 
 #### EnumDesc.Item
 [EnumDesc.Item]: #user-content-enumdescitem
-`EnumDesc:Item(name: string): EnumItemDesc`
+<code>EnumDesc:Item(name: [string](##)): [EnumItemDesc][EnumItemDesc]</code>
 
 Item returns an item of the enum corresponding to given name, or nil of no such
 item exists.
 
 #### EnumDesc.Items
 [EnumDesc.Items]: #user-content-enumdescitems
-`EnumDesc:Items(): Array<EnumItemDesc>`
+<code>EnumDesc:Items(): [Array](##)\<[EnumItemDesc][EnumItemDesc]></code>
 
 Items returns a list of all the items of the enum.
 
 #### EnumDesc.AddItem
 [EnumDesc.AddItem]: #user-content-enumdescadditem
-`EnumDesc:AddItem(item: EnumItemDesc): bool`
+<code>EnumDesc:AddItem(item: [EnumItemDesc][EnumItemDesc]): [bool](##)</code>
 
 AddItem adds a new item to the EnumDesc, returning whether the item was added
 successfully. The item will fail to be added if an item of the same name already
@@ -1345,7 +1352,7 @@ exists.
 
 #### EnumDesc.RemoveItem
 [EnumDesc.RemoveItem]: #user-content-enumdescremoveitem
-`EnumDesc:RemoveItem(name: string): bool`
+<code>EnumDesc:RemoveItem(name: [string](##)): [bool](##)</code>
 
 RemoveItem removes an item from the EnumDesc, returning whether the item was
 removed successfully. False will be returned if an item of the given name does
@@ -1353,25 +1360,25 @@ not exist.
 
 #### EnumDesc.Tag
 [EnumDesc.Tag]: #user-content-enumdesctag
-`EnumDesc:Tag(name: string): bool`
+<code>EnumDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EnumDesc.Tags
 [EnumDesc.Tags]: #user-content-enumdesctags
-`EnumDesc:Tags(): Array<string>`
+<code>EnumDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### EnumDesc.SetTag
 [EnumDesc.SetTag]: #user-content-enumdescsettag
-`EnumDesc:SetTag(tags: ...string)`
+<code>EnumDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### EnumDesc.UnsetTag
 [EnumDesc.UnsetTag]: #user-content-enumdescunsettag
-`EnumDesc:UnsetTag(tags: ...string)`
+<code>EnumDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1392,43 +1399,43 @@ Member                            | Kind
 
 #### EnumItemDesc.Name
 [EnumItemDesc.Name]: #user-content-enumitemdescname
-`EnumItemDesc.Name: string`
+<code>EnumItemDesc.Name: [string](##)</code>
 
 Name is the name of the enum item.
 
 #### EnumItemDesc.Value
 [EnumItemDesc.Value]: #user-content-enumitemdescvalue
-`EnumItemDesc.Value: int`
+<code>EnumItemDesc.Value: [int](##)</code>
 
 Value is the numeric value of the enum item.
 
 #### EnumItemDesc.Index
 [EnumItemDesc.Index]: #user-content-enumitemdescindex
-`EnumItemDesc.Index: int`
+<code>EnumItemDesc.Index: [int](##)</code>
 
 Index is an integer that hints the order of the enum item.
 
 #### EnumItemDesc.Tag
 [EnumItemDesc.Tag]: #user-content-enumitemdesctag
-`EnumItemDesc:Tag(name: string): bool`
+<code>EnumItemDesc:Tag(name: [string](##)): [bool](##)</code>
 
 Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EnumItemDesc.Tags
 [EnumItemDesc.Tags]: #user-content-enumitemdesctags
-`EnumItemDesc:Tags(): Array<string>`
+<code>EnumItemDesc:Tags(): [Array](##)\<string></code>
 
 Tags returns a list of tags that are set on the descriptor.
 
 #### EnumItemDesc.SetTag
 [EnumItemDesc.SetTag]: #user-content-enumitemdescsettag
-`EnumItemDesc:SetTag(tags: ...string)`
+<code>EnumItemDesc:SetTag(tags: ...[string](##))</code>
 
 SetTags sets the given tags on the descriptor.
 
 #### EnumItemDesc.UnsetTag
 [EnumItemDesc.UnsetTag]: #user-content-enumitemdescunsettag
-`EnumItemDesc:UnsetTag(tags: ...string)`
+<code>EnumItemDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
 
@@ -1568,7 +1575,7 @@ Name                | Description
 
 #### file.read
 [file.read]: #user-content-fileread
-`file.read(path: string, format: string?): (value: any)`
+<code>file.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
 
 The `read` function reads the content of the file at *path*, and decodes it into
 *value* according to the [format][formats] matching the file extension of
@@ -1580,7 +1587,7 @@ If the format returns an Instance, then the Name property will be set to the
 
 #### file.write
 [file.write]: #user-content-filewrite
-`file.write(path: string, value: any, format: string?)`
+<code>file.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
 
 The `write` function encodes *value* according to the [format][formats] matching
 the file extension of *path*, and writes the result to the file at *path*. If
@@ -1625,7 +1632,7 @@ Name                | Description
 
 #### http.read
 [http.read]: #user-content-httpread
-`http.read(url: string, format: string?): (value: any)`
+<code>http.read(url: [string](##), format: [string](##)?): (value: [any](##))</code>
 
 The `read` function issues a GET request to *url*, and decodes the response body
 into *value* according to the [format][formats] matching *format*. Throws an
@@ -1633,7 +1640,7 @@ error if the response status is not 2XX.
 
 #### http.write
 [http.write]: #user-content-httpwrite
-`http.write(url: string, value: any, format: string)`
+<code>http.write(url: [string](##), value: [any](##), format: [string](##))</code>
 
 The `write` function encodes *value* according to the [format][formats] matching
 *format*, and sends the result in a POST request to *url*. Throws an error if
