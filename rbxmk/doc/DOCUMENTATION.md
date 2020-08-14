@@ -1,29 +1,30 @@
 # Documentation
-This document provides details on how rbxmk works. For a basic overview, see
-[USAGE.md](USAGE.md).
+This document contains a complete reference of the rbxmk API, and provides
+details on how rbxmk works.
 
 <table>
 <thead><tr><th>Table of Contents</th></tr></thead>
 <tbody><tr><td>
 
-1. [Environment][environment]
+1. [Command line][command-line]
+2. [Environment][environment]
 	1. [Base library][base-lib]
 	2. [`rbxmk` library][rbxmk-lib]
 	3. [Roblox library][roblox-lib]
 	4. [`os` library][os-lib]
 	5. [`sym` library][sym-lib]
 	6. [`types` library][types-lib]
-1. [Instances][instances]
+3. [Instances][instances]
 	1. [Instance][Instance]
 		1. [DataModel][DataModel]
-1. [Descriptors][descriptors]
+4. [Descriptors][descriptors]
 	1. [Descriptor types][descriptor-types]
 	2. [Diffing and Patching][diffing-and-patching]
-1. [Explicit primitives][explicit-primitives]
-1. [Sources][sources]
+5. [Explicit primitives][explicit-primitives]
+6. [Sources][sources]
 	1. [`file` source][file-source]
 	2. [`http` source][http-source]
-1. [Formats][formats]
+7. [Formats][formats]
 	1. [String formats][string-formats]
 	3. [Lua formats][lua-formats]
 	4. [Roblox formats][roblox-formats]
@@ -44,22 +45,58 @@ type Array<T> = {[number]: T}
 
 [luau]: https://roblox.github.io/luau/
 
+# Command line
+[command-line]: #user-content-command-line
+
+```bash
+rbxmk [ FILE ] [ ...VALUE ]
+```
+
+The rbxmk command receives a path to a file to be executed as a Lua script.
+
+```bash
+rbxmk script.lua
+```
+
+If `-` is given, then the script will be read from stdin instead.
+
+```bash
+echo 'print("hello world!")' | rbxmk -
+```
+
+The remaining arguments are Lua values to be passed to the file. Numbers, bools,
+and nil are parsed into their respective types in Lua, and any other value is
+interpreted as a string.
+
+```bash
+rbxmk script.lua true 3.14159 hello!
+```
+
+Within the script, these arguments can be received from the `...` operator:
+
+```lua
+local arg1, arg2, arg3 = ...
+```
+
 # Environment
 [environment]: #user-content-environment
 
-The Lua environment provided by rbxmk is packaged as a number of libraries. Some
-libraries are loaded under a specific name, while others are loaded directly
-into the global environment.
+[Lua][lua] scripts are used to perform actions in rbxmk. The environment
+provided by rbxmk is packaged as a set of libraries. Some libraries are loaded
+under a specific name, while others are loaded directly into the global
+environment:
 
 Library                | Description
 -----------------------|------------
 [(base)][base-lib]     | The Lua 5.1 standard library, abridged.
 [rbxmk ][rbxmk-lib]    | An interface to the rbxmk engine, and the rbxmk environment.
 [(roblox)][roblox-lib] | An environment emulating the Roblox Lua API.
-[os ][os-lib]          | Extensions to the standard os library.
-[sym ][sym-lib]        | Symbols for accessing instance metadata.
-[types ][types-lib]    | Fallbacks for constructing certain types.
+[os][os-lib]           | Extensions to the standard os library.
+[sym][sym-lib]         | Symbols for accessing instance metadata.
+[types][types-lib]     | Fallbacks for constructing certain types.
 [(sources)][sources]   | An assortment of libraries for interfacing with various external sources.
+
+[lua]: https://lua.org
 
 ## Base library
 [base-lib]: #user-content-base-library
