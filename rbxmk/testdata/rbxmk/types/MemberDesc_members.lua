@@ -4,23 +4,6 @@ local func = rbxmk.newDesc("FunctionDesc")
 local event = rbxmk.newDesc("EventDesc")
 local callback = rbxmk.newDesc("CallbackDesc")
 
--- Name
-for _, desc in ipairs({prop,func,event,callback}) do
-	local t = typeof(desc)
-	T.Pass(t..": can get Name field",
-		function() return desc.Name end)
-	T.Pass(t..": Name field is a string",
-		function() return type(desc.Name) == "string" end)
-	T.Pass(t..": Name field initializes to empty string",
-		function() return desc.Name == "" end)
-	T.Pass(t..": can set Name field to string",
-		function() desc.Name = "Foobar" end)
-	T.Fail(t..": cannot set Name field to non-string",
-		function() desc.Name = 42 end)
-	T.Pass(t..": set Name field persists",
-		function() return desc.Name == "Foobar" end)
-end
-
 -- Parameters
 for _, desc in ipairs({func,event,callback}) do
 	local t = typeof(desc)

@@ -7,6 +7,23 @@ local callback = rbxmk.newDesc("CallbackDesc")
 local enum = rbxmk.newDesc("EnumDesc")
 local item = rbxmk.newDesc("EnumItemDesc")
 
+-- Name
+for _, desc in ipairs({class,prop,func,event,callback,enum,item}) do
+	local t = typeof(desc)
+	T.Pass(t..": can get Name field",
+		function() return desc.Name end)
+	T.Pass(t..": Name field is a string",
+		function() return type(desc.Name) == "string" end)
+	T.Pass(t..": Name field initializes to empty string",
+		function() return desc.Name == "" end)
+	T.Pass(t..": can set Name field to string",
+		function() desc.Name = "Foobar" end)
+	T.Fail(t..": cannot set Name field to non-string",
+		function() desc.Name = 42 end)
+	T.Pass(t..": set Name field persists",
+		function() return desc.Name == "Foobar" end)
+end
+
 -- Tags
 for _, desc in ipairs({class,prop,func,event,callback,enum,item}) do
 	local t = typeof(desc)
