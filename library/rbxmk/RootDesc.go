@@ -88,7 +88,7 @@ func RootDesc() Reflector {
 			}},
 			"AddEnum": Member{Method: true, Get: func(s State, v types.Value) int {
 				desc := v.(*rtypes.RootDesc)
-				enum := s.Pull(2, "ClassDesc").(rtypes.EnumDesc)
+				enum := s.Pull(2, "EnumDesc").(rtypes.EnumDesc)
 				if _, ok := desc.Enums[enum.Name]; ok {
 					return s.Push(types.False)
 				}
