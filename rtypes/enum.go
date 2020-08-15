@@ -22,7 +22,7 @@ func (e *Enums) Enum(name string) *Enum {
 }
 
 func (e *Enums) Enums() []*Enum {
-	enums := make([]*Enum, 0, len(e.enums))
+	enums := make([]*Enum, len(e.enums))
 	copy(enums, e.enums)
 	return enums
 }
