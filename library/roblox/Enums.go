@@ -18,7 +18,7 @@ func Enums() Reflector {
 
 				if name == "GetEnums" {
 					s.L.Push(s.WrapFunc(func(s State) int {
-						enums := s.Pull(1, "Enums").(rtypes.Enums)
+						enums := s.Pull(1, "Enums").(*rtypes.Enums)
 						es := enums.Enums()
 						array := make(rtypes.Array, len(es))
 						for i, enum := range es {
@@ -29,7 +29,7 @@ func Enums() Reflector {
 					return 1
 				}
 
-				enums := s.Pull(1, "Enums").(rtypes.Enums)
+				enums := s.Pull(1, "Enums").(*rtypes.Enums)
 				enum := enums.Enum(name)
 				if enum == nil {
 					return s.RaiseError("%s is not a valid Enum", name)
