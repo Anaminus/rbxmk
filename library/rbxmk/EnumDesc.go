@@ -57,7 +57,7 @@ func EnumDesc() Reflector {
 			}},
 			"AddItem": Member{Method: true, Get: func(s State, v types.Value) int {
 				desc := v.(rtypes.EnumDesc)
-				item := s.Pull(2, "ClassDesc").(rtypes.EnumItemDesc)
+				item := s.Pull(2, "EnumItemDesc").(rtypes.EnumItemDesc)
 				if _, ok := desc.Items[item.Name]; ok {
 					return s.Push(types.False)
 				}
