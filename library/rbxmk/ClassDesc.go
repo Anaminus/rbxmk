@@ -71,7 +71,7 @@ func ClassDesc() Reflector {
 					members = append(members, rtypes.NewMemberDesc(member))
 				}
 				sort.Slice(members, func(i, j int) bool {
-					return members[i].(rtypes.ClassDesc).Name < members[j].(rtypes.ClassDesc).Name
+					return members[i].(rbxdump.Member).MemberName() < members[j].(rbxdump.Member).MemberName()
 				})
 				return s.Push(members)
 			}},
