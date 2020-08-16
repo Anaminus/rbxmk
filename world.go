@@ -14,6 +14,8 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
+// World contains the entire state of a Lua environment, including a Lua state,
+// and registered Reflectors, Formats, and Sources.
 type World struct {
 	l          *lua.LState
 	fileStack  []FileInfo
@@ -26,10 +28,12 @@ type World struct {
 	userdata map[interface{}]uintptr
 }
 
+// NewWorld returns a World initialized with the given Lua state.
 func NewWorld(l *lua.LState) *World {
 	return &World{l: l}
 }
 
+// cacheUserData causes userdata created by the world to be cached per value.
 const cacheUserdata = true
 
 // UserDataOf returns the userdata value associated with v. If there is no such
@@ -453,6 +457,7 @@ func (w *World) State() *lua.LState {
 	return w.l
 }
 
+// WrapFunc wraps a function that receives a State into a Lua function.
 func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
 		return f(State{World: w, L: l})
@@ -510,6 +515,7 @@ func (w *World) PullAnyOf(n int, t ...string) types.Value {
 	return State{World: w, L: w.l}.PullAnyOf(n, t...)
 }
 
+// FileInfo describes a file, including the full path.
 type FileInfo struct {
 	Path string
 	os.FileInfo
@@ -579,6 +585,8 @@ func (w *World) DoFile(fileName string, args int) error {
 	return err
 }
 
+// File represents a file that can be read from or written to, and includes file
+// information.
 type File interface {
 	Name() string
 	Stat() (os.FileInfo, error)

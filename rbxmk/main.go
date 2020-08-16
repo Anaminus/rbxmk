@@ -46,12 +46,15 @@ func ParseLuaValue(s string) lua.LValue {
 	return lua.LString(s)
 }
 
+// Std contains interfaces to standard file descriptors. It is meant to be used
+// in place of os.Std* so that they can work with tests.
 type Std struct {
 	in  rbxmk.File
 	out rbxmk.File
 	err rbxmk.File
 }
 
+// CommandUsage contains a description of the command.
 const CommandUsage = `rbxmk [ FILE ] [ ...VALUE ]
 
 Receives a file to be executed as a Lua script. If "-" is given, then the script
@@ -62,6 +65,9 @@ nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string. Within the script, these arguments can be received from
 the ... operator.`
 
+// Main is the entrypoint to the command. init runs after the World envrionment
+// is fully initialized and arguments have been pushed, and before the script
+// runs.
 func Main(args []string, std Std, init func(rbxmk.State)) error {
 	// Parse flags.
 	flagset := flag.NewFlagSet(args[0], flag.ExitOnError)

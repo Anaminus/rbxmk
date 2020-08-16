@@ -4,11 +4,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Intlike implements rbxmk.Intlike for a number of types.
+// Intlike implements types.Intlike for a number of types.
 type Intlike struct {
 	Value interface{}
 }
 
+// IsIntlike returns whether Value can be converted to an integer.
 func (i Intlike) IsIntlike() bool {
 	switch i.Value.(type) {
 	case uint8, uint16, uint32, uint64, uint,
@@ -20,6 +21,9 @@ func (i Intlike) IsIntlike() bool {
 	return false
 }
 
+// Intlike returns Value as an integer, or 0 if the value could not be
+// converted. Types that can be converted are the built-in numeric types, as
+// well as any value implementing types.Intlike or types.Numberlike.
 func (i Intlike) Intlike() int64 {
 	switch v := i.Value.(type) {
 	case uint8:

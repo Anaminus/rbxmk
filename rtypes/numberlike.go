@@ -4,11 +4,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Numberlike implements rbxmk.Numberlike for a number of types.
+// Numberlike implements types.Numberlike for a number of types.
 type Numberlike struct {
 	Value interface{}
 }
 
+// IsIntlike returns whether Value can be converted to a floating-point number.
 func (n Numberlike) IsNumberlike() bool {
 	switch n.Value.(type) {
 	case uint8, uint16, uint32, uint64, uint,
@@ -20,6 +21,9 @@ func (n Numberlike) IsNumberlike() bool {
 	return false
 }
 
+// Numberlike returns Value as a floating-point number, or 0 if the value could
+// not be converted. Types that can be converted are the built-in numeric types,
+// as well as any value implementing types.Numberlike or types.Intlike.
 func (n Numberlike) Numberlike() float64 {
 	switch v := n.Value.(type) {
 	case uint8:

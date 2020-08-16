@@ -6,6 +6,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// Instance contains data describing an instance of a particular class. It
+// corresponds to the Instance type in Roblox.
 type Instance struct {
 	ClassName string
 	Reference string
@@ -19,6 +21,8 @@ type Instance struct {
 	root        bool
 }
 
+// NewInstance returns a new Instance of the given class name. Optionally,
+// parent sets the Parent of the instance.
 func NewInstance(className string, parent *Instance) *Instance {
 	inst := &Instance{
 		ClassName:  className,
@@ -30,6 +34,8 @@ func NewInstance(className string, parent *Instance) *Instance {
 	return inst
 }
 
+// NewDataModel returns a special Instance of the DataModel class, to be used as
+// the root of a tree of instances.
 func NewDataModel() *Instance {
 	return &Instance{
 		root:       true,
@@ -43,6 +49,7 @@ func (inst *Instance) IsDataModel() bool {
 	return inst.root
 }
 
+// propRef holds the value of an instance property to be resolved later.
 type propRef struct {
 	Instance *Instance
 	Property string
@@ -265,12 +272,14 @@ func (inst *Instance) RemoveAll() {
 	inst.children = inst.children[:0]
 }
 
+// Children returns the children of the instance in a list.
 func (inst *Instance) Children() []*Instance {
 	children := make([]*Instance, len(inst.children))
 	copy(children, inst.children)
 	return children
 }
 
+// descendants recursively accumulates descendants of an instance in a.
 func (inst *Instance) descendants(a *[]*Instance) {
 	for _, child := range inst.children {
 		*a = append(*a, child)
@@ -278,14 +287,15 @@ func (inst *Instance) descendants(a *[]*Instance) {
 	}
 }
 
+// Descendants returns the descendants of the instance in a list.
 func (inst *Instance) Descendants() []*Instance {
 	var children []*Instance
 	inst.descendants(&children)
 	return children
 }
 
-// Parent returns the parent of the instance. Can return nil if the instance
-// has no parent.
+// Parent returns the parent of the instance. Returns nil if the instance has no
+// parent.
 func (inst *Instance) Parent() *Instance {
 	if inst.root {
 		return nil
@@ -319,6 +329,8 @@ func (inst *Instance) SetParent(parent *Instance) error {
 	return nil
 }
 
+// FindFirstAncestor returns the nearest ancestor of the instance that matches
+// the given name, or nil if no such instance was found.
 func (inst *Instance) FindFirstAncestor(name string) *Instance {
 	parent := inst.parent
 	for parent != nil {
@@ -330,6 +342,8 @@ func (inst *Instance) FindFirstAncestor(name string) *Instance {
 	return nil
 }
 
+// FindFirstAncestorOfClass returns the nearest ancestor of the instance that
+// matches the given class name, or nil if no such instance was found.
 func (inst *Instance) FindFirstAncestorOfClass(class string) *Instance {
 	parent := inst.parent
 	for parent != nil {
@@ -341,6 +355,8 @@ func (inst *Instance) FindFirstAncestorOfClass(class string) *Instance {
 	return nil
 }
 
+// FindFirstChild returns the first child instance of the given name. If recurse
+// is true, then descendants will also be searched top-down.
 func (inst *Instance) FindFirstChild(name string, recurse bool) *Instance {
 	for _, child := range inst.children {
 		if child.Name() == name {
@@ -355,6 +371,8 @@ func (inst *Instance) FindFirstChild(name string, recurse bool) *Instance {
 	return nil
 }
 
+// FindFirstChildOfClass returns the first child instance of the given class
+// name. If recurse is true, then descendants will also be searched top-down.
 func (inst *Instance) FindFirstChildOfClass(class string, recurse bool) *Instance {
 	for _, child := range inst.children {
 		if child.ClassName == class {
@@ -385,6 +403,7 @@ func (inst *Instance) Set(property string, value types.PropValue) {
 	}
 }
 
+// Properties returns the properties of the instance as names mapped to values.
 func (inst *Instance) Properties() map[string]types.PropValue {
 	props := make(map[string]types.PropValue, len(inst.properties))
 	for name, value := range inst.properties {
@@ -466,13 +485,13 @@ func (inst *Instance) SetDesc(root *RootDesc, blocked bool) {
 	inst.descBlocked = false
 }
 
-// Type returns a string identifying the type.
+// Type returns a string identifying the type of the value.
 func (*Instance) Type() string {
 	return "Instance"
 }
 
-// String implements the fmt.Stringer interface by returning the Name of the
-// instance, or the ClassName if Name isn't defined.
+// String returns a string representation of the instance by returning the Name,
+// or the ClassName if Name isn't defined.
 func (inst *Instance) String() string {
 	if v, ok := (inst.properties["Name"]).(types.Stringlike); ok {
 		return v.Stringlike()
@@ -480,7 +499,7 @@ func (inst *Instance) String() string {
 	return inst.ClassName
 }
 
-// Copy implements types.PropValue.
+// Copy is an alias for Clone that allows Instance to implement types.PropValue.
 func (inst *Instance) Copy() types.PropValue {
 	return inst.Clone()
 }

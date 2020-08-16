@@ -7,6 +7,10 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
+// Reflector defines reflection behavior for a type. It defines how to convert a
+// types.Value between a Lua value, and behaviors when the type is a userdata.
+// It also defines functions for constructing values of the type. A Reflector
+// can be registered with a World.
 type Reflector struct {
 	// Name is the name of the type.
 	Name string
@@ -183,6 +187,7 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	return v
 }
 
+// listTypes returns each type listed in a natural sentence.
 func listTypes(types []string) string {
 	switch len(types) {
 	case 0:
@@ -277,6 +282,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	return nil
 }
 
+// RaiseError is a shortcut for LState.RaiseError that returns 0.
 func (s State) RaiseError(format string, args ...interface{}) int {
 	s.L.RaiseError(format, args...)
 	return 0
@@ -342,11 +348,13 @@ func PullTypeFrom(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err e
 	return v, nil
 }
 
+// typeError is an error where a type was received where another was expected.
 type typeError struct {
 	expected string
 	got      string
 }
 
+// Error implements the error interface.
 func (err typeError) Error() string {
 	if err.got == "" {
 		return err.expected + " expected"

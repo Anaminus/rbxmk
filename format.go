@@ -4,6 +4,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// Format defines a format for encoding between a sequence of bytes and a
+// types.Value. The format can be registered with a World.
 type Format struct {
 	// Name is the name that identifies the format. The name matches a file
 	// extension.
@@ -18,5 +20,7 @@ type Format struct {
 	Decode func(opt FormatOptions, b []byte) (types.Value, error)
 }
 
+// FormatOptions contains options to be passed to Format.Encode and
+// Format.Decode.
 type FormatOptions struct {
 }
