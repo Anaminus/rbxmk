@@ -96,7 +96,12 @@ Library                | Description
 [types][types-lib]     | Fallbacks for constructing certain types.
 [(sources)][sources]   | An assortment of libraries for interfacing with various external sources.
 
-[lua]: https://lua.org
+Additionally, the `_RBXMK_VERSION` global variable is defined as a string
+containing the current version of rbxmk, formatted according to [semantic
+versioning][semver].
+
+[lua]: https://lua.org/
+[semver]: https://semver.org/
 
 ## Base library
 [base-lib]: #user-content-base-library
