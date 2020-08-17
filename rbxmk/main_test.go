@@ -147,19 +147,32 @@ func initMain(s rbxmk.State, t *testing.T) {
 // to throw an error. All scripts receive the arguments from scriptArguments.
 func TestScripts(t *testing.T) {
 	var files []string
-	err := filepath.Walk(testdata, func(path string, info os.FileInfo, err error) error {
+	wd, _ := os.Getwd()
+	for _, arg := range os.Args[2:] {
+		if strings.HasPrefix(arg, "-test.") {
+			continue
+		}
+		rel, err := filepath.Rel(wd, arg)
 		if err != nil {
-			return err
+			rel = arg
 		}
-		if !info.IsDir() &&
-			filepath.Ext(info.Name()) == ".lua" &&
-			!strings.HasPrefix(filepath.Base(info.Name()), "_") {
-			files = append(files, path)
+		files = append(files, rel)
+	}
+	if len(files) == 0 {
+		err := filepath.Walk(testdata, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() &&
+				filepath.Ext(info.Name()) == ".lua" &&
+				!strings.HasPrefix(filepath.Base(info.Name()), "_") {
+				files = append(files, path)
+			}
+			return nil
+		})
+		if err != nil {
+			t.Fatalf("error walking testdata: %s", err)
 		}
-		return nil
-	})
-	if err != nil {
-		t.Fatalf("error walking testdata: %s", err)
 	}
 	for _, file := range files {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
