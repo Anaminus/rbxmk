@@ -30,7 +30,7 @@ T.Pass("IsService returns set value",
 	instance[sym.IsService] == true)
 
 -- Desc
-local desc = file.read(os.expand("$sd/../dump.desc.json"))
+local desc = file.read(os.expand("$sd/../../dump.desc.json"))
 local instance = Instance.new("BoolValue")
 T.Pass("Desc initializes with nil",
 	instance[sym.Desc] == nil)
@@ -60,7 +60,7 @@ T.Fail("Desc errors without RootDesc, false, or nil",
 	function() instance[sym.Desc] = "foobar" end)
 
 -- RawDesc
-local desc = file.read(os.expand("$sd/../dump.desc.json"))
+local desc = file.read(os.expand("$sd/../../dump.desc.json"))
 local instance = Instance.new("BoolValue")
 T.Pass("RawDesc initializes with nil",
 	instance[sym.RawDesc] == nil)
@@ -90,8 +90,8 @@ T.Fail("RawDesc errors without RootDesc, false, or nil",
 	function() instance[sym.RawDesc] = "foobar" end)
 
 -- Desc inheritance
-local a = file.read(os.expand("$sd/../dump.desc.json"))
-local b = file.read(os.expand("$sd/../dump.desc.json"))
+local a = file.read(os.expand("$sd/../../dump.desc.json"))
+local b = file.read(os.expand("$sd/../../dump.desc.json"))
 local n = nil
 local f = false
 
