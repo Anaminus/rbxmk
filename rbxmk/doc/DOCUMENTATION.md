@@ -603,7 +603,7 @@ FindFirstAncestor returns the first ancestor whose [Name][Instance.Name] equals
 [Instance.FindFirstAncestorOfClass]: #user-content-instancefindfirstancestorofclass
 <code>Instance:FindFirstAncestorOfClass(className: [string](##)): [Instance][Instance]?</code>
 
-FindFirstAncestor returns the first ancestor of the instance whose
+FindFirstAncestorOfClass returns the first ancestor of the instance whose
 [ClassName][Instance.ClassName] equals *className*, or nil if no such instance
 was found.
 
