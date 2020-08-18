@@ -1,0 +1,5 @@
+local instance = Instance.new("BoolValue")
+T.Pass(instance[sym.Reference] == ""                    , "initializes with empty string")
+T.Pass(function() instance[sym.Reference] = "foobar" end, "is set to string")
+T.Fail(function() instance[sym.Reference] = true end    , "errors with non-string")
+T.Pass(instance[sym.Reference] == "foobar"              , "returns set value")

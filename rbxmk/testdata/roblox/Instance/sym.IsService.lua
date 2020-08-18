@@ -1,0 +1,5 @@
+local instance = Instance.new("BoolValue")
+T.Pass(instance[sym.IsService] == false                 , "initializes with false")
+T.Pass(function() instance[sym.IsService] = true end    , "is set to boolean")
+T.Fail(function() instance[sym.IsService] = "foobar" end, "errors with non-boolean")
+T.Pass(instance[sym.IsService] == true                  , "returns set value")
