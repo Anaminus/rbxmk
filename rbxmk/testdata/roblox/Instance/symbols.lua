@@ -1,93 +1,56 @@
 -- Symbols
 local v = Instance.new("BoolValue")
-T.Pass("Instance can be newindexed with symbols",
-	function() v[sym.Reference] = "foobar" end)
-T.Pass("Instance can be indexed with symbols",
-	function() return v[sym.Reference] end)
-T.Fail("Instance can be indexed only with certain symbols",
-	function() return v[T.DummySymbol] end)
+T.Pass(function() v[sym.Reference] = "foobar" end, "Instance can be newindexed with symbols")
+T.Pass(function() return v[sym.Reference] end    , "Instance can be indexed with symbols")
+T.Fail(function() return v[T.DummySymbol] end    , "Instance can be indexed only with certain symbols")
 
 -- Reference
 local instance = Instance.new("BoolValue")
-T.Pass("Reference initializes with empty string",
-	instance[sym.Reference] == "")
-T.Pass("Reference is set to string",
-	function() instance[sym.Reference] = "foobar" end)
-T.Fail("Reference errors with non-string",
-	function() instance[sym.Reference] = true end)
-T.Pass("Reference returns set value",
-	instance[sym.Reference] == "foobar")
+T.Pass(instance[sym.Reference] == ""                    , "reference initializes with empty string")
+T.Pass(function() instance[sym.Reference] = "foobar" end, "reference is set to string")
+T.Fail(function() instance[sym.Reference] = true end    , "reference errors with non-string")
+T.Pass(instance[sym.Reference] == "foobar"              , "reference returns set value")
 
 -- IsService
 local instance = Instance.new("BoolValue")
-T.Pass("IsService initializes with false",
-	instance[sym.IsService] == false)
-T.Pass("IsService is set to boolean",
-	function() instance[sym.IsService] = true end)
-T.Fail("IsService errors with non-boolean",
-	function() instance[sym.IsService] = "foobar" end)
-T.Pass("IsService returns set value",
-	instance[sym.IsService] == true)
+T.Pass(instance[sym.IsService] == false                 , "IsService initializes with false")
+T.Pass(function() instance[sym.IsService] = true end    , "IsService is set to boolean")
+T.Fail(function() instance[sym.IsService] = "foobar" end, "IsService errors with non-boolean")
+T.Pass(instance[sym.IsService] == true                  , "IsService returns set value")
 
 -- Desc
 local desc = file.read(os.expand("$sd/../../dump.desc.json"))
 local instance = Instance.new("BoolValue")
-T.Pass("Desc initializes with nil",
-	instance[sym.Desc] == nil)
-T.Pass("RawDesc initializes with nil",
-	instance[sym.RawDesc] == nil)
-T.Pass("Desc can be set to RootDesc",
-	function() instance[sym.Desc] = desc end)
-T.Pass("Desc returns RootDesc after being set to RootDesc",
-	instance[sym.Desc] == desc)
-T.Pass("RawDesc returns RootDesc after Desc is set to RootDesc",
-	instance[sym.RawDesc] == desc)
-T.Pass("Desc can be set to nil",
-	function() instance[sym.Desc] = nil end)
-T.Pass("Desc returns nil after being set to nil",
-	instance[sym.Desc] == nil)
-T.Pass("RawDesc returns nil after Desc is set to nil",
-	instance[sym.RawDesc] == nil)
-T.Pass("Desc can be set to false",
-	function() instance[sym.Desc] = false end)
-T.Fail("Desc cannot be set to true",
-	function() instance[sym.Desc] = true end)
-T.Pass("Desc returns nil after being set to false",
-	instance[sym.Desc] == nil)
-T.Pass("RawDesc returns false after Desc is set to false",
-	instance[sym.RawDesc] == false)
-T.Fail("Desc errors without RootDesc, false, or nil",
-	function() instance[sym.Desc] = "foobar" end)
+T.Pass(instance[sym.Desc] == nil                   , "Desc initializes with nil")
+T.Pass(instance[sym.RawDesc] == nil                , "RawDesc initializes with nil")
+T.Pass(function() instance[sym.Desc] = desc end    , "Desc can be set to RootDesc")
+T.Pass(instance[sym.Desc] == desc                  , "Desc returns RootDesc after being set to RootDesc")
+T.Pass(instance[sym.RawDesc] == desc               , "RawDesc returns RootDesc after Desc is set to RootDesc")
+T.Pass(function() instance[sym.Desc] = nil end     , "Desc can be set to nil")
+T.Pass(instance[sym.Desc] == nil                   , "Desc returns nil after being set to nil")
+T.Pass(instance[sym.RawDesc] == nil                , "RawDesc returns nil after Desc is set to nil")
+T.Pass(function() instance[sym.Desc] = false end   , "Desc can be set to false")
+T.Fail(function() instance[sym.Desc] = true end    , "Desc cannot be set to true")
+T.Pass(instance[sym.Desc] == nil                   , "Desc returns nil after being set to false")
+T.Pass(instance[sym.RawDesc] == false              , "RawDesc returns false after Desc is set to false")
+T.Fail(function() instance[sym.Desc] = "foobar" end, "Desc errors without RootDesc, false, or nil")
 
 -- RawDesc
 local desc = file.read(os.expand("$sd/../../dump.desc.json"))
 local instance = Instance.new("BoolValue")
-T.Pass("RawDesc initializes with nil",
-	instance[sym.RawDesc] == nil)
-T.Pass("Desc initializes with nil",
-	instance[sym.Desc] == nil)
-T.Pass("RawDesc can be set to RootDesc",
-	function() instance[sym.RawDesc] = desc end)
-T.Pass("RawDesc returns RootDesc after being set to RootDesc",
-	instance[sym.RawDesc] == desc)
-T.Pass("Desc returns RootDesc after RawDesc is set to RootDesc",
-	instance[sym.Desc] == desc)
-T.Pass("RawDesc can be set to nil",
-	function() instance[sym.RawDesc] = nil end)
-T.Pass("RawDesc returns nil after being set to nil",
-	instance[sym.RawDesc] == nil)
-T.Pass("Desc returns nil after RawDesc is set to nil",
-	instance[sym.Desc] == nil)
-T.Pass("RawDesc can be set to false",
-	function() instance[sym.RawDesc] = false end)
-T.Fail("RawDesc cannot be set to true",
-	function() instance[sym.RawDesc] = true end)
-T.Pass("RawDesc returns false after being set to false",
-	instance[sym.RawDesc] == false)
-T.Pass("Desc returns nil after RawDesc is set to false",
-	instance[sym.Desc] == nil)
-T.Fail("RawDesc errors without RootDesc, false, or nil",
-	function() instance[sym.RawDesc] = "foobar" end)
+T.Pass(instance[sym.RawDesc] == nil                   , "RawDesc initializes with nil")
+T.Pass(instance[sym.Desc] == nil                      , "Desc initializes with nil")
+T.Pass(function() instance[sym.RawDesc] = desc end    , "RawDesc can be set to RootDesc")
+T.Pass(instance[sym.RawDesc] == desc                  , "RawDesc returns RootDesc after being set to RootDesc")
+T.Pass(instance[sym.Desc] == desc                     , "Desc returns RootDesc after RawDesc is set to RootDesc")
+T.Pass(function() instance[sym.RawDesc] = nil end     , "RawDesc can be set to nil")
+T.Pass(instance[sym.RawDesc] == nil                   , "RawDesc returns nil after being set to nil")
+T.Pass(instance[sym.Desc] == nil                      , "Desc returns nil after RawDesc is set to nil")
+T.Pass(function() instance[sym.RawDesc] = false end   , "RawDesc can be set to false")
+T.Fail(function() instance[sym.RawDesc] = true end    , "RawDesc cannot be set to true")
+T.Pass(instance[sym.RawDesc] == false                 , "RawDesc returns false after being set to false")
+T.Pass(instance[sym.Desc] == nil                      , "Desc returns nil after RawDesc is set to false")
+T.Fail(function() instance[sym.RawDesc] = "foobar" end, "RawDesc errors without RootDesc, false, or nil")
 
 -- Desc inheritance
 local a = file.read(os.expand("$sd/../../dump.desc.json"))
@@ -199,5 +162,5 @@ for i, test in ipairs(inheritTests) do
 	local p = P[sym.Desc]
 	local c = C[sym.Desc]
 	local d = D[sym.Desc]
-	T.Pass(fmtInheritMessage(i, test, p, c, d), p == test[4] and c == test[5] and d == test[6])
+	T.Pass(p == test[4] and c == test[5] and d == test[6], fmtInheritMessage(i, test, p, c, d))
 end

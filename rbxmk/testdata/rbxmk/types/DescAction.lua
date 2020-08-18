@@ -6,13 +6,8 @@ local desc = diff[1]
 local other = diff[2]
 
 -- Metamethod tests
-T.Pass("type of value is DescAction",
-	typeof(desc) == "DescAction")
-T.Pass("metatable of value is locked",
-	type(getmetatable(desc)) == "string")
-T.Pass("value converts to a string",
-	not string.match(tostring(desc), "^userdata"))
-T.Pass("value is equal to itself",
-	desc == desc)
-T.Pass("value is not equal to another value of the same type",
-	desc ~= other)
+T.Pass(typeof(desc) == "DescAction"                 , "type of value is DescAction")
+T.Pass(type(getmetatable(desc)) == "string"         , "metatable of value is locked")
+T.Pass(not string.match(tostring(desc), "^userdata"), "value converts to a string")
+T.Pass(desc == desc                                 , "value is equal to itself")
+T.Pass(desc ~= other                                , "value is not equal to another value of the same type")

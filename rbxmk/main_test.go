@@ -58,16 +58,16 @@ func (d *dummyInfo) Sys() interface{}   { return d }
 func initMain(s rbxmk.State, t *testing.T) {
 	T := s.L.CreateTable(0, 2)
 
-	// Pass makes a positive assertion. The first argument is a string that
-	// describes the assertion, which is included with an emitted error. If the
-	// second argument is a non-function, then an error is emitted if the value
-	// is falsy. Otherwise, the function is called. If the call errors or
-	// returns a falsy value, then an error is emitted. Returning no value
-	// counts as truthy. The error is emitted to testing.T, but does not cause a
-	// Lua error to be thrown.
+	// Pass makes a positive assertion. If the first argument is a non-function,
+	// then an error is emitted if the value is falsy. Otherwise, the function
+	// is called. If the call errors or returns a falsy value, then an error is
+	// emitted. Returning no value counts as truthy. The error is emitted to
+	// testing.T, but does not cause a Lua error to be thrown. The second
+	// optional argument is a string that describes the assertion, which is
+	// included with an emitted error.
 	T.RawSetString("Pass", s.L.NewFunction(func(l *lua.LState) int {
-		msg := l.CheckString(1)
-		v := l.CheckAny(2)
+		v := l.CheckAny(1)
+		msg := l.OptString(2, "expected pass")
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.L.GetTop()
@@ -91,16 +91,16 @@ func initMain(s rbxmk.State, t *testing.T) {
 		return 0
 	}))
 
-	// Fail makes a negative assertion. The first argument is a string that
-	// describes the assertion, which is included with an emitted error. If the
-	// second argument is a non-function, then an error is emitted if the value
-	// is truthy. Otherwise, the function is called. If the call does not error
-	// or returns a truthy value, then an error is emitted. Returning no value
-	// counts as falsy. The error is emitted to testing.T, but does not cause a
-	// Lua error to be thrown.
+	// Fail makes a negative assertion. If the first argument is a non-function,
+	// then an error is emitted if the value is truthy. Otherwise, the function
+	// is called. If the call does not error or returns a truthy value, then an
+	// error is emitted. Returning no value counts as falsy. The error is
+	// emitted to testing.T, but does not cause a Lua error to be thrown. The
+	// second optional argument is a string that describes the assertion, which
+	// is included with an emitted error.
 	T.RawSetString("Fail", s.L.NewFunction(func(l *lua.LState) int {
-		msg := l.CheckString(1)
-		v := l.CheckAny(2)
+		v := l.CheckAny(1)
+		msg := l.OptString(2, "expected fail")
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.L.GetTop()

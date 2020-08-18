@@ -1,20 +1,13 @@
+-- Test DataModel type.
 local game = DataModel.new()
-T.Pass("DataModel can set properties",
-	function() game.ExplicitAutoJoints = true end)
-T.Pass("DataModel can get properties",
-	game.ExplicitAutoJoints == true)
-T.Fail("cannot set ClassName of DataModel",
-	function() game.ClassName = "BoolValue" end)
+T.Pass(function() game.ExplicitAutoJoints = true end, "DataModel can set properties")
+T.Pass(game.ExplicitAutoJoints == true              , "DataModel can get properties")
+T.Fail(function() game.ClassName = "BoolValue" end  , "cannot set ClassName of DataModel")
 
 local workspace = game:GetService("Workspace")
-T.Pass("GetService sets ClassName to given value",
-	workspace.ClassName == "Workspace")
-T.Pass("GetService sets Name to given value",
-	workspace.Name == "Workspace")
-T.Pass("GetService sets Parent to DataModel",
-	workspace.Parent == game)
-T.Pass("GetService returns singleton",
-	game:GetService("Workspace") == workspace)
+T.Pass(workspace.ClassName == "Workspace"       , "GetService sets ClassName to given value")
+T.Pass(workspace.Name == "Workspace"            , "GetService sets Name to given value")
+T.Pass(workspace.Parent == game                 , "GetService sets Parent to DataModel")
+T.Pass(game:GetService("Workspace") == workspace, "GetService returns singleton")
 
-T.Fail("non-DataModel instance does not have GetService",
-	function() Instance.new("BoolValue"):GetService("Workspace") end)
+T.Fail(function() Instance.new("BoolValue"):GetService("Workspace") end, "non-DataModel instance does not have GetService")

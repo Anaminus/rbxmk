@@ -1,22 +1,13 @@
 local prev = rbxmk.newDesc("RootDesc")
 local next = rbxmk.newDesc("RootDesc")
-T.Fail("diffDesc expects a RootDesc or nil for its first argument",
-	function() rbxmk.diffDesc(42, next) end)
-T.Fail("diffDesc expects a RootDesc or nil for its second argument",
-	function() rbxmk.diffDesc(prev, 42) end)
-T.Pass("first argument to diffDesc can be a RootDesc",
-	function() rbxmk.diffDesc(prev, next) end)
-T.Pass("first argument to diffDesc can be nil",
-	function() rbxmk.diffDesc(nil, next) end)
-T.Pass("second argument to diffDesc can be a RootDesc",
-	function() rbxmk.diffDesc(prev, next) end)
-T.Pass("second argument to diffDesc can be nil",
-	function() rbxmk.diffDesc(prev, nil) end)
-T.Pass("both arguments to diffDesc can be nil",
-	function() rbxmk.diffDesc(nil, nil) end)
-T.Pass("diffDesc with no differences returns an empty table",
-	function() return #rbxmk.diffDesc(prev, next) == 0 end)
-T.Pass("diffDesc with both nil returns an empty table",
-	function() return #rbxmk.diffDesc(nil, nil) == 0 end)
+T.Fail(function() rbxmk.diffDesc(42, next) end               , "diffDesc expects a RootDesc or nil for its first argument")
+T.Fail(function() rbxmk.diffDesc(prev, 42) end               , "diffDesc expects a RootDesc or nil for its second argument")
+T.Pass(function() rbxmk.diffDesc(prev, next) end             , "first argument to diffDesc can be a RootDesc")
+T.Pass(function() rbxmk.diffDesc(nil, next) end              , "first argument to diffDesc can be nil")
+T.Pass(function() rbxmk.diffDesc(prev, next) end             , "second argument to diffDesc can be a RootDesc")
+T.Pass(function() rbxmk.diffDesc(prev, nil) end              , "second argument to diffDesc can be nil")
+T.Pass(function() rbxmk.diffDesc(nil, nil) end               , "both arguments to diffDesc can be nil")
+T.Pass(function() return #rbxmk.diffDesc(prev, next) == 0 end, "diffDesc with no differences returns an empty table")
+T.Pass(function() return #rbxmk.diffDesc(nil, nil) == 0 end  , "diffDesc with both nil returns an empty table")
 
 -- TODO: verify correctness of returned actions.

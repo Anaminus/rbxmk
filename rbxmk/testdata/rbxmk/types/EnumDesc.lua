@@ -1,16 +1,11 @@
 local desc = rbxmk.newDesc("EnumDesc")
 
 -- Metamethod tests
-T.Pass("type of descriptor is EnumDesc",
-	typeof(desc) == "EnumDesc")
-T.Pass("metatable of descriptor is locked",
-	type(getmetatable(desc)) == "string")
-T.Pass("descriptor converts to a string",
-	not string.match(tostring(desc), "^userdata"))
-T.Pass("descriptor is equal to itself",
-	desc == desc)
-T.Pass("descriptor is not equal to another descriptor of the same type",
-	desc ~= rbxmk.newDesc("EnumDesc"))
+T.Pass(typeof(desc) == "EnumDesc"                   , "type of descriptor is EnumDesc")
+T.Pass(type(getmetatable(desc)) == "string"         , "metatable of descriptor is locked")
+T.Pass(not string.match(tostring(desc), "^userdata"), "descriptor converts to a string")
+T.Pass(desc == desc                                 , "descriptor is equal to itself")
+T.Pass(desc ~= rbxmk.newDesc("EnumDesc")            , "descriptor is not equal to another descriptor of the same type")
 
 -- Items
 local itemA = rbxmk.newDesc("EnumItemDesc")
@@ -26,43 +21,23 @@ local itemD = rbxmk.newDesc("EnumItemDesc")
 itemD.Name = "ItemD"
 itemD.Value = 4
 
-T.Pass("can call Item method with string",
-	function() desc:Item("") end)
-T.Fail("cannot call Item method with non-string",
-	function() desc:Item(42) end)
-T.Pass("can call AddItem method with EnumItemDesc",
-	desc:AddItem(itemA) == true)
-T.Pass("can call AddItem method with second EnumItemDesc",
-	desc:AddItem(itemB) == true)
-T.Pass("can call AddItem method with third EnumItemDesc",
-	desc:AddItem(itemC) == true)
-T.Pass("can call AddItem method with fourth EnumItemDesc",
-	desc:AddItem(itemD) == true)
-T.Pass("AddItem returns false for existing item",
-	desc:AddItem(itemA) == false)
-T.Fail("cannot call AddItem method with non-item descriptor",
-	function() desc:AddItem(42) end)
-T.Pass("Item returns nil for nonextant item",
-	desc:Item("Nonextant") == nil)
-T.Pass("Item returns item for existing item",
-	desc:Item("ItemA") == itemA)
-T.Pass("can call RemoveItem method with string",
-	function() desc:RemoveItem("") end)
-T.Fail("cannot call RemoveItem method with non-string",
-	function() desc:RemoveItem(42) end)
-T.Pass("RemoveItem returns true for existing item",
-	desc:RemoveItem("ItemA") == true)
-T.Pass("RemoveItem returns false for nonextant item",
-	desc:RemoveItem("ItemA") == false)
-T.Pass("removal of item persists",
-	desc:Item("ItemA") == nil)
-T.Pass("Items method returns a table",
-	type(desc:Items()) == "table")
-T.Pass("has three items",
-	#desc:Items() == 3)
-T.Pass("first item is ItemB",
-	desc:Items()[1] == itemB)
-T.Pass("second item is ItemC",
-	desc:Items()[2] == itemC)
-T.Pass("third item is ItemD",
-	desc:Items()[3] == itemD)
+T.Pass(function() desc:Item("") end      , "can call Item method with string")
+T.Fail(function() desc:Item(42) end      , "cannot call Item method with non-string")
+T.Pass(desc:AddItem(itemA) == true       , "can call AddItem method with EnumItemDesc")
+T.Pass(desc:AddItem(itemB) == true       , "can call AddItem method with second EnumItemDesc")
+T.Pass(desc:AddItem(itemC) == true       , "can call AddItem method with third EnumItemDesc")
+T.Pass(desc:AddItem(itemD) == true       , "can call AddItem method with fourth EnumItemDesc")
+T.Pass(desc:AddItem(itemA) == false      , "AddItem returns false for existing item")
+T.Fail(function() desc:AddItem(42) end   , "cannot call AddItem method with non-item descriptor")
+T.Pass(desc:Item("Nonextant") == nil     , "Item returns nil for nonextant item")
+T.Pass(desc:Item("ItemA") == itemA       , "Item returns item for existing item")
+T.Pass(function() desc:RemoveItem("") end, "can call RemoveItem method with string")
+T.Fail(function() desc:RemoveItem(42) end, "cannot call RemoveItem method with non-string")
+T.Pass(desc:RemoveItem("ItemA") == true  , "RemoveItem returns true for existing item")
+T.Pass(desc:RemoveItem("ItemA") == false , "RemoveItem returns false for nonextant item")
+T.Pass(desc:Item("ItemA") == nil         , "Removal of item persists")
+T.Pass(type(desc:Items()) == "table"     , "Items method returns a table")
+T.Pass(#desc:Items() == 3                , "has three items")
+T.Pass(desc:Items()[1] == itemB          , "first item is ItemB")
+T.Pass(desc:Items()[2] == itemC          , "second item is ItemC")
+T.Pass(desc:Items()[3] == itemD          , "third item is ItemD")
