@@ -517,11 +517,14 @@ Member                                                        | Kind
 [Destroy][Instance.Destroy]                                   | method
 [FindFirstAncestor][Instance.FindFirstAncestor]               | method
 [FindFirstAncestorOfClass][Instance.FindFirstAncestorOfClass] | method
+[FindFirstAncestorWhichIsA][FindFirstAncestorWhichIsA]        | method
 [FindFirstChild][Instance.FindFirstChild]                     | method
 [FindFirstChildOfClass][Instance.FindFirstChildOfClass]       | method
+[FindFirstChildWhichIsA][FindFirstChildWhichIsA]              | method
 [GetChildren][Instance.GetChildren]                           | method
 [GetDescendants][Instance.GetDescendants]                     | method
 [GetFullName][Instance.GetFullName]                           | method
+[IsA][IsA]                                                    | method
 [IsAncestorOf][Instance.IsAncestorOf]                         | method
 [IsDescendantOf][Instance.IsDescendantOf]                     | method
 [sym.Desc][Instance.sym.Desc]                                 | symbol
@@ -604,6 +607,15 @@ FindFirstAncestor returns the first ancestor of the instance whose
 [ClassName][Instance.ClassName] equals *className*, or nil if no such instance
 was found.
 
+### Instance.FindFirstAncestorWhichIsA
+[Instance.FindFirstAncestorWhichIsA]: #user-content-instancefindfirstancestorwhichisa
+<code>Instance:FindFirstAncestorWhichIsA(className: [string](##)): [Instance][Instance]?</code>
+
+FindFirstAncestorWhichIsA returns the first ancestor of the instance whose
+[ClassName][Instance.ClassName] inherits *className* according to the instance's
+descriptor, or nil if no such instance was found. If the instance has no
+descriptor, then the ClassName is compared directly.
+
 ### Instance.FindFirstChild
 [Instance.FindFirstChild]: #user-content-instancefindfirstchild
 <code>Instance:FindFirstChild(name: [string](##), recursive: [bool](##)?): [Instance][Instance]?</code>
@@ -619,6 +631,15 @@ FindFirstChild returns the first child of the instance whose
 FindFirstChildOfClass returns the first child of the instance whose
 [ClassName][Instance.ClassName] equals *className*, or nil if no such instance
 was found. If *recurse* is true, then descendants are also searched, top-down.
+
+### Instance.FindFirstChildWhichIsA
+[Instance.FindFirstChildWhichIsA]: #user-content-instancefindfirstchildwhichisa
+<code>Instance:FindFirstChildWhichIsA(className: [string](##), recursive: [bool](##)?): [Instance][Instance]?</code>
+
+FindFirstChildWhichIsA returns the first child of the instance whose
+[ClassName][Instance.ClassName] inherits *className*, or nil if no such instance
+was found. If the instance has no descriptor, then the ClassName is compared
+directly. If *recurse* is true, then descendants are also searched, top-down.
 
 ### Instance.GetChildren
 [Instance.GetChildren]: #user-content-instancegetchildren
@@ -639,6 +660,14 @@ GetDescendants returns a list of descendants of the instance.
 GetFullName returns the concatenation of the [Name][Instance.Name] of each
 ancestor of the instance and the instance itself, separated by `.` characters.
 If an ancestor is a [DataModel][DataModel], it is not included.
+
+### Instance.IsA
+[Instance.IsA]: #user-content-instanceisa
+<code>Instance:IsA(className: [string](##)): [bool](##)</code>
+
+IsA returns whether the [ClassName][Instance.ClassName] inherits from
+*className*, according to the instance's descriptor. If the instance has no
+descriptor, then IsA returns whether ClassName equals *className*.
 
 ### Instance.IsAncestorOf
 [Instance.IsAncestorOf]: #user-content-instanceisancestorof

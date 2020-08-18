@@ -485,6 +485,56 @@ func (inst *Instance) SetDesc(root *RootDesc, blocked bool) {
 	inst.descBlocked = false
 }
 
+// IsA returns whether the instance's class inherits from className. If the
+// instance has no descriptor, then only its ClassName is compared.
+func (inst *Instance) IsA(className string) bool {
+	desc := inst.Desc()
+	if desc == nil {
+		return inst.ClassName == className
+	}
+	class := desc.Classes[inst.ClassName]
+	for class != nil {
+		if class.Name == className {
+			return true
+		}
+		class = desc.Classes[class.Superclass]
+	}
+	return false
+}
+
+// FindFirstChildWhichIsA returns the first child instance that inherits from
+// the given class name. If recurse is true, then descendants will also be
+// searched top-down. If an instance has no descriptor, then only its ClassName
+// is compared.
+func (inst *Instance) FindFirstChildWhichIsA(class string, recurse bool) *Instance {
+	for _, child := range inst.children {
+		// TODO: improve performance by handling descriptors directly.
+		if child.IsA(class) {
+			return child
+		}
+		if recurse {
+			if descendant := child.FindFirstChildWhichIsA(class, true); descendant != nil {
+				return descendant
+			}
+		}
+	}
+	return nil
+}
+
+// FindFirstAncestorWhichIsA returns the nearest ancestor of the instance that
+// inherits from the given class name, or nil if no such instance was found. If
+// an instance has no descriptor, then only its ClassName is compared.
+func (inst *Instance) FindFirstAncestorWhichIsA(class string) *Instance {
+	parent := inst.parent
+	for parent != nil {
+		if parent.IsA(class) {
+			return parent
+		}
+		parent = parent.parent
+	}
+	return nil
+}
+
 // Type returns a string identifying the type of the value.
 func (*Instance) Type() string {
 	return "Instance"

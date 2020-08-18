@@ -498,6 +498,13 @@ func Instance() Reflector {
 				}
 				return s.Push(rtypes.Nil)
 			}},
+			"FindFirstAncestorWhichIsA": Member{Method: true, Get: func(s State, v types.Value) int {
+				className := string(s.Pull(2, "string").(types.String))
+				if ancestor := v.(*rtypes.Instance).FindFirstAncestorWhichIsA(className); ancestor != nil {
+					return s.Push(ancestor)
+				}
+				return s.Push(rtypes.Nil)
+			}},
 			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
 				name := string(s.Pull(2, "string").(types.String))
 				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
@@ -514,6 +521,14 @@ func Instance() Reflector {
 				}
 				return s.Push(rtypes.Nil)
 			}},
+			"FindFirstChildWhichIsA": Member{Method: true, Get: func(s State, v types.Value) int {
+				className := string(s.Pull(2, "string").(types.String))
+				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+				if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
+					return s.Push(child)
+				}
+				return s.Push(rtypes.Nil)
+			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
 				return s.Push(rtypes.Objects(t))
@@ -523,6 +538,10 @@ func Instance() Reflector {
 			}},
 			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
 				return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
+			}},
+			"IsA": Member{Method: true, Get: func(s State, v types.Value) int {
+				className := string(s.Pull(2, "string").(types.String))
+				return s.Push(types.Bool(v.(*rtypes.Instance).IsA(className)))
 			}},
 			"IsAncestorOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				descendant := s.Pull(2, "Instance").(*rtypes.Instance)
