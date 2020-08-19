@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/robloxapi/types"
 )
 
 // registry contains registered Formats.
@@ -21,5 +22,8 @@ func All() []func() rbxmk.Format {
 
 // cannotEncode returns an error indicating that v cannot be encoded.
 func cannotEncode(v interface{}) error {
+	if v, ok := v.(types.Value); ok {
+		return fmt.Errorf("cannot encode %s", v.Type())
+	}
 	return fmt.Errorf("cannot encode %T", v)
 }
