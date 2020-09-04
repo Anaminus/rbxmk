@@ -7,7 +7,9 @@ import (
 
 func setUserdata(s rbxmk.State, t string) int {
 	v := s.Pull(1, t)
-	u := s.UserDataOf(v, t)
+	u := s.L.NewUserData()
+	u.Value = v
+	s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
 	s.L.Push(u)
 	return 1
 }
