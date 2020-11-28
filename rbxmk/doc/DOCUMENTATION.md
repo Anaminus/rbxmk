@@ -749,9 +749,9 @@ If *desc* is specified, then it sets the [`sym.Desc`][Instance.sym.Desc] member.
 
 GetService returns the first child of the DataModel whose
 [ClassName][Instance.ClassName] equals *className*. If no such child exists,
-then a new instance of *className* is created. The [Name][Name] of the instance
-is set to *className*, [`sym.IsService`][Instance.sym.IsService] is set to true,
-and [Parent][Parent] is set to the DataModel.
+then a new instance of *className* is created. The [Name][Instance.Name] of the
+instance is set to *className*, [`sym.IsService`][Instance.sym.IsService] is set
+to true, and [Parent][Instance.Parent] is set to the DataModel.
 
 If the DataModel has a descriptor, then GetService will throw an error if the
 created class's descriptor does not have the "Service" tag set.
