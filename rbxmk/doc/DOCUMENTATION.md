@@ -35,13 +35,7 @@ details on how rbxmk works.
 
 This document uses [Luau][luau] type annotation syntax to describe the API of an
 element. Some liberties are taken for patterns not supported by the Luau syntax.
-For example, `...` indicates variable parameters. Additionally, the following
-types are predefined for documentation purposes:
-
-```luau
--- A list of values of type T.
-type Array<T> = {[number]: T}
-```
+For example, `...` indicates variable parameters.
 
 [luau]: https://roblox.github.io/luau/
 
@@ -176,7 +170,7 @@ possible.
 
 ### rbxmk.diffDesc
 [rbxmk.diffDesc]: #user-content-rbxmkdiffdesc
-<code>rbxmk.diffDesc(prev: [RootDesc][RootDesc]?, next: [RootDesc][RootDesc]?): (diff: [Array](##)\<[DescAction][DescAction]>)</code>
+<code>rbxmk.diffDesc(prev: [RootDesc][RootDesc]?, next: [RootDesc][RootDesc]?): (diff: {[DescAction][DescAction]})</code>
 
 The **diffDesc** function compares two root descriptors and returns the
 differences between them. A nil value for *prev* or *next* is treated the same
@@ -253,7 +247,7 @@ local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName", "ParamDe
 
 ### rbxmk.patchDesc
 [rbxmk.patchDesc]: #user-content-rbxmkpatchdesc
-<code>rbxmk.patchDesc(desc: [RootDesc][RootDesc], actions: [Array](##)\<[DescAction][DescAction]>)</code>
+<code>rbxmk.patchDesc(desc: [RootDesc][RootDesc], actions: {[DescAction][DescAction]})</code>
 
 The **patchDesc** function transforms a root descriptor according to a list of
 actions. Each action in the list is applied in order. Actions that are
@@ -361,7 +355,7 @@ Name                | Description
 
 ### os.dir
 [os.dir]: #user-content-osdir
-<code>os.dir(path: [string](##)): [Array](##)\<[File](##)></code>
+<code>os.dir(path: [string](##)): {[File](##)}</code>
 
 The **dir** function returns a list of files in the given directory.
 
@@ -390,7 +384,7 @@ Variable                                    | Description
 
 ### os.getenv
 [os.getenv]: #user-content-osgetenv
-<code>os.getenv(name: [string](##)?): [string](##) \| [Array](##)\<[string](##)></code>
+<code>os.getenv(name: [string](##)?): [string](##) \| {[string](##)}</code>
 
 The **getenv** function returns the value of the *name* environment variable. If
 *name* is not specified, then a list of environment variables is returned.
@@ -856,7 +850,7 @@ such class exists.
 
 #### RootDesc.Classes
 [RootDesc.Classes]: #user-content-rootdescclasses
-<code>RootDesc:Classes(): [Array](##)\<[ClassDesc][ClassDesc]></code>
+<code>RootDesc:Classes(): {[ClassDesc][ClassDesc]}</code>
 
 Classes returns a list of all the classes of the API.
 
@@ -885,7 +879,7 @@ such enum exists.
 
 #### RootDesc.Enums
 [RootDesc.Enums]: #user-content-rootdescenums
-<code>RootDesc:Enums(): [Array](##)\<[EnumDesc][EnumDesc]></code>
+<code>RootDesc:Enums(): {[EnumDesc][EnumDesc]}</code>
 
 Enums returns a list of all the enums of the API.
 
@@ -974,7 +968,7 @@ MemberDesc is any one of the [PropertyDesc][PropertyDesc],
 
 #### ClassDesc.Members
 [ClassDesc.Members]: #user-content-classdescmembers
-<code>ClassDesc:Members(): [Array](##)\<[MemberDesc](##)></code>
+<code>ClassDesc:Members(): {[MemberDesc](##)}</code>
 
 Members returns a list of all the members of the class.
 
@@ -1010,7 +1004,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### ClassDesc.Tags
 [ClassDesc.Tags]: #user-content-classdesctags
-<code>ClassDesc:Tags(): [Array](##)\<[string](##)></code>
+<code>ClassDesc:Tags(): {[string](##)}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1089,7 +1083,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### PropertyDesc.Tags
 [PropertyDesc.Tags]: #user-content-propertydesctags
-<code>PropertyDesc:Tags(): [Array](##)\<string></code>
+<code>PropertyDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1131,13 +1125,13 @@ Name is the name of the member.
 
 #### FunctionDesc.Parameters
 [FunctionDesc.Parameters]: #user-content-functiondescparameters
-<code>FunctionDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
+<code>FunctionDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
 
 Parameters returns a list of parameters of the function.
 
 #### FunctionDesc.SetParameters
 [FunctionDesc.SetParameters]: #user-content-functiondescsetparameters
-<code>FunctionDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
+<code>FunctionDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
 
 SetParameters sets the parameters of the function.
 
@@ -1161,7 +1155,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### FunctionDesc.Tags
 [FunctionDesc.Tags]: #user-content-functiondesctags
-<code>FunctionDesc:Tags(): [Array](##)\<string></code>
+<code>FunctionDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1201,13 +1195,13 @@ Name is the name of the member.
 
 #### EventDesc.Parameters
 [EventDesc.Parameters]: #user-content-eventdescparameters
-<code>EventDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
+<code>EventDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
 
 Parameters returns a list of parameters of the event.
 
 #### EventDesc.SetParameters
 [EventDesc.SetParameters]: #user-content-eventdescsetparameters
-<code>EventDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
+<code>EventDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
 
 SetParameters sets the parameters of the event.
 
@@ -1225,7 +1219,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EventDesc.Tags
 [EventDesc.Tags]: #user-content-eventdesctags
-<code>EventDesc:Tags(): [Array](##)\<string></code>
+<code>EventDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1267,13 +1261,13 @@ Name is the name of the member.
 
 #### CallbackDesc.Parameters
 [CallbackDesc.Parameters]: #user-content-callbackdescparameters
-<code>CallbackDesc:Parameters(): [Array](##)\<[ParameterDesc][ParameterDesc]></code>
+<code>CallbackDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
 
 Parameters returns a list of parameters of the callback.
 
 #### CallbackDesc.SetParameters
 [CallbackDesc.SetParameters]: #user-content-callbackdescsetparameters
-<code>CallbackDesc:SetParameters(params: [Array](##)\<[ParameterDesc][ParameterDesc]>)</code>
+<code>CallbackDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
 
 SetParameters sets the parameters of the callback.
 
@@ -1297,7 +1291,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### CallbackDesc.Tags
 [CallbackDesc.Tags]: #user-content-callbackdesctags
-<code>CallbackDesc:Tags(): [Array](##)\<string></code>
+<code>CallbackDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1409,7 +1403,7 @@ item exists.
 
 #### EnumDesc.Items
 [EnumDesc.Items]: #user-content-enumdescitems
-<code>EnumDesc:Items(): [Array](##)\<[EnumItemDesc][EnumItemDesc]></code>
+<code>EnumDesc:Items(): {[EnumItemDesc][EnumItemDesc]}</code>
 
 Items returns a list of all the items of the enum.
 
@@ -1437,7 +1431,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EnumDesc.Tags
 [EnumDesc.Tags]: #user-content-enumdesctags
-<code>EnumDesc:Tags(): [Array](##)\<string></code>
+<code>EnumDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
@@ -1494,7 +1488,7 @@ Tag returns whether a tag of the given name is set on the descriptor.
 
 #### EnumItemDesc.Tags
 [EnumItemDesc.Tags]: #user-content-enumitemdesctags
-<code>EnumItemDesc:Tags(): [Array](##)\<string></code>
+<code>EnumItemDesc:Tags(): {string}</code>
 
 Tags returns a list of tags that are set on the descriptor.
 
