@@ -168,7 +168,7 @@ no decoder defined.
 
 ### rbxmk.globalDesc
 [rbxmk.globalDesc]: #user-content-rbxmkglobaldesc
-<code>rbxmk.globalDesc: [RootDesc][RootDesc]</code>
+<code>rbxmk.globalDesc: [RootDesc][RootDesc]?</code>
 
 The **globalDesc** field gets or sets the global root descriptor. Most items
 that utilize a root descriptor will fallback to the global descriptor when
