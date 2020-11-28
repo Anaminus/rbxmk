@@ -1671,7 +1671,7 @@ which a GET request will be made. Returns the body of the response. Throws an
 error if the response status is not 2XX.
 
 ```lua
-local bytes = rbxmk.readSource("file", "https://www.example.com/resource")
+local bytes = rbxmk.readSource("http", "https://www.example.com/resource")
 ```
 
 ### `writeSource`
@@ -1682,7 +1682,7 @@ to which a POST request will be made. The bytes are sent as the body of the
 request. Throws an error if the response status is not 2XX.
 
 ```lua
-rbxmk.writeSource("file", bytes, "https://www.example.com/resource")
+rbxmk.writeSource("http", bytes, "https://www.example.com/resource")
 ```
 
 ### `http` library
