@@ -501,30 +501,30 @@ The **Instance** type provides a similar API to that of Roblox. In addition to
 getting and setting properties as described previously, instances have the
 following members defined:
 
-Member                                                        | Kind
---------------------------------------------------------------|-----
-[ClassName][Instance.ClassName]                               | property
-[Name][Instance.Name]                                         | property
-[Parent][Instance.Parent]                                     | property
-[ClearAllChildren][Instance.ClearAllChildren]                 | method
-[Clone][Instance.Clone]                                       | method
-[Destroy][Instance.Destroy]                                   | method
-[FindFirstAncestor][Instance.FindFirstAncestor]               | method
-[FindFirstAncestorOfClass][Instance.FindFirstAncestorOfClass] | method
-[FindFirstAncestorWhichIsA][FindFirstAncestorWhichIsA]        | method
-[FindFirstChild][Instance.FindFirstChild]                     | method
-[FindFirstChildOfClass][Instance.FindFirstChildOfClass]       | method
-[FindFirstChildWhichIsA][FindFirstChildWhichIsA]              | method
-[GetChildren][Instance.GetChildren]                           | method
-[GetDescendants][Instance.GetDescendants]                     | method
-[GetFullName][Instance.GetFullName]                           | method
-[IsA][IsA]                                                    | method
-[IsAncestorOf][Instance.IsAncestorOf]                         | method
-[IsDescendantOf][Instance.IsDescendantOf]                     | method
-[sym.Desc][Instance.sym.Desc]                                 | symbol
-[sym.IsService][Instance.sym.IsService]                       | symbol
-[sym.RawDesc][Instance.sym.RawDesc]                           | symbol
-[sym.Reference][Instance.sym.Reference]                       | symbol
+Member                                                          | Kind
+----------------------------------------------------------------|-----
+[ClassName][Instance.ClassName]                                 | property
+[Name][Instance.Name]                                           | property
+[Parent][Instance.Parent]                                       | property
+[ClearAllChildren][Instance.ClearAllChildren]                   | method
+[Clone][Instance.Clone]                                         | method
+[Destroy][Instance.Destroy]                                     | method
+[FindFirstAncestor][Instance.FindFirstAncestor]                 | method
+[FindFirstAncestorOfClass][Instance.FindFirstAncestorOfClass]   | method
+[FindFirstAncestorWhichIsA][Instance.FindFirstAncestorWhichIsA] | method
+[FindFirstChild][Instance.FindFirstChild]                       | method
+[FindFirstChildOfClass][Instance.FindFirstChildOfClass]         | method
+[FindFirstChildWhichIsA][Instance.FindFirstChildWhichIsA]       | method
+[GetChildren][Instance.GetChildren]                             | method
+[GetDescendants][Instance.GetDescendants]                       | method
+[GetFullName][Instance.GetFullName]                             | method
+[IsA][Instance.IsA]                                             | method
+[IsAncestorOf][Instance.IsAncestorOf]                           | method
+[IsDescendantOf][Instance.IsDescendantOf]                       | method
+[sym.Desc][Instance.sym.Desc]                                   | symbol
+[sym.IsService][Instance.sym.IsService]                         | symbol
+[sym.RawDesc][Instance.sym.RawDesc]                             | symbol
+[sym.Reference][Instance.sym.Reference]                         | symbol
 
 ### Instance.new
 [Instance.new]: #user-content-instancenew
