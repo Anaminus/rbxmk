@@ -11,6 +11,9 @@ type Format struct {
 	// extension.
 	Name string
 
+	// CanDecode returns whether the format decodes into the given type.
+	CanDecode func(typeName string) bool
+
 	// Encode receives a value of one of a number of types and encodes it as a
 	// sequence of bytes.
 	Encode func(opt FormatOptions, v types.Value) ([]byte, error)

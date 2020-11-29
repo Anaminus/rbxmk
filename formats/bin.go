@@ -10,6 +10,9 @@ func init() { register(Binary) }
 func Binary() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "bin",
+		CanDecode: func(typeName string) bool {
+			return typeName == "BinaryString"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return types.BinaryString(b), nil
 		},

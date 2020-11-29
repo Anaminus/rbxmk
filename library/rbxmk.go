@@ -18,7 +18,7 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 11)
+		lib := s.L.CreateTable(0, 12)
 		lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 		lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
 		lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
@@ -28,6 +28,7 @@ var RBXMK = rbxmk.Library{
 		lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
+		lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 		lib.RawSetString("readSource", s.WrapFunc(rbxmkReadSource))
 		lib.RawSetString("writeSource", s.WrapFunc(rbxmkWriteSource))
 
@@ -266,6 +267,19 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	return s.Push(v)
+}
+
+func rbxmkFormatCanDecode(s rbxmk.State) int {
+	name := string(s.Pull(1, "string").(types.String))
+	typeName := string(s.Pull(2, "string").(types.String))
+	format := s.Format(name)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", name)
+	}
+	if format.CanDecode == nil {
+		return s.RaiseError("undefined decode type for %s", name)
+	}
+	return s.Push(types.Bool(format.CanDecode(typeName)))
 }
 
 func rbxmkReadSource(s rbxmk.State) int {

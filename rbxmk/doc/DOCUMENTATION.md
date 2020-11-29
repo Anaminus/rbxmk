@@ -83,7 +83,7 @@ environment:
 Library                | Description
 -----------------------|------------
 [(base)][base-lib]     | The Lua 5.1 standard library, abridged.
-[rbxmk ][rbxmk-lib]    | An interface to the rbxmk engine, and the rbxmk environment.
+[rbxmk][rbxmk-lib]     | An interface to the rbxmk engine, and the rbxmk environment.
 [(roblox)][roblox-lib] | An environment emulating the Roblox Lua API.
 [os][os-lib]           | Extensions to the standard os library.
 [sym][sym-lib]         | Symbols for accessing instance metadata.
@@ -134,20 +134,21 @@ The following items from the [Lua 5.1 standard library][luastdlib] are included:
 
 The **rbxmk** library contains functions related to the rbxmk engine.
 
-Name                               | Description
------------------------------------|------------
-[decodeFormat][rbxmk.decodeFormat] | Deserialize data from bytes.
-[diffDesc][rbxmk.diffDesc]         | Get the differences between two descriptors.
-[encodeFormat][rbxmk.encodeFormat] | Serialize data into bytes.
-[globalDesc][rbxmk.globalDesc]     | Get or set the global descriptor.
-[loadFile][rbxmk.loadFile]         | Load the content of a file as a function.
-[loadString][rbxmk.loadString]     | Load a string as a function.
-[newDesc][rbxmk.newDesc]           | Create a new descriptor.
-[patchDesc][rbxmk.patchDesc]       | Transform a descriptor by applying differences.
-[readSource][rbxmk.readSource]     | Read bytes from an external source.
-[runFile][rbxmk.runFile]           | Run a file as a Lua chunk.
-[runString][rbxmk.runString]       | Run a string as a Lua chunk.
-[writeSource][rbxmk.writeSource]   | Write bytes to an external source.
+Name                                     | Description
+-----------------------------------------|------------
+[decodeFormat][rbxmk.decodeFormat]       | Deserialize data from bytes.
+[diffDesc][rbxmk.diffDesc]               | Get the differences between two descriptors.
+[encodeFormat][rbxmk.encodeFormat]       | Serialize data into bytes.
+[formatCanDecode][rbxmk.formatCanDecode] | Check whether a format decodes into a type.
+[globalDesc][rbxmk.globalDesc]           | Get or set the global descriptor.
+[loadFile][rbxmk.loadFile]               | Load the content of a file as a function.
+[loadString][rbxmk.loadString]           | Load a string as a function.
+[newDesc][rbxmk.newDesc]                 | Create a new descriptor.
+[patchDesc][rbxmk.patchDesc]             | Transform a descriptor by applying differences.
+[readSource][rbxmk.readSource]           | Read bytes from an external source.
+[runFile][rbxmk.runFile]                 | Run a file as a Lua chunk.
+[runString][rbxmk.runString]             | Run a string as a Lua chunk.
+[writeSource][rbxmk.writeSource]         | Write bytes to an external source.
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
@@ -187,6 +188,15 @@ to *format*. The exact details of each format are described in the
 
 encodeFormat will throw an error if the format does not exist, or the format has
 no encoder defined.
+
+### rbxmk.formatCanDecode
+[rbxmk.formatCanDecode]: #user-content-rbxmkformatcandecode
+<code>rbxmk.formatCanDecode(format: [string](##), type: [string](##)): [boolean](##)</code>
+
+The **formatCanDecode** function returns whether *format* decodes into *type*.
+
+formatCanDecode will throw an error if the format does not exist, or the format
+does not define types it decodes into.
 
 ### rbxmk.loadFile
 [rbxmk.loadFile]: #user-content-rbxmkloadfile

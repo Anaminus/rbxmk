@@ -367,6 +367,9 @@ func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxl",
+		CanDecode: func(typeName string) bool {
+			return typeName == "Instance"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializePlace, b)
 		},
@@ -380,6 +383,9 @@ func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxm",
+		CanDecode: func(typeName string) bool {
+			return typeName == "Instance"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializeModel, b)
 		},
@@ -393,6 +399,9 @@ func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxlx",
+		CanDecode: func(typeName string) bool {
+			return typeName == "Instance"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxlx.Deserialize, b)
 		},
@@ -406,6 +415,9 @@ func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "rbxmx",
+		CanDecode: func(typeName string) bool {
+			return typeName == "Instance"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			return decodeRBX(rbxlx.Deserialize, b)
 		},

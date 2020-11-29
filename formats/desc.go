@@ -14,6 +14,9 @@ func init() { register(Desc) }
 func Desc() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "desc.json",
+		CanDecode: func(typeName string) bool {
+			return typeName == "RootDesc"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			root, err := rbxdumpjson.Decode(bytes.NewReader(b))
 			if err != nil {
@@ -36,6 +39,9 @@ func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name: "desc-patch.json",
+		CanDecode: func(typeName string) bool {
+			return typeName == "DescActions"
+		},
 		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
 			var actions rtypes.DescActions
 			if err := json.Unmarshal(b, &actions); err != nil {
