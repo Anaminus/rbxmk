@@ -362,21 +362,16 @@ Name                | Description
 [getenv][os.getenv] | Gets an environment variable.
 [join][os.join]     | Joins a number of file paths together.
 [split][os.split]   | Splits a file path into its components.
+[stat][os.stat]     | Gets metadata about a file.
 
 ### os.dir
 [os.dir]: #user-content-osdir
 <code>os.dir(path: [string](##)): {[File](##)}</code>
 
-The **dir** function returns a list of files in the given directory.
+The **dir** function returns a list of files in the given directory. Each file
+is a table with the same fields as returned by [os.stat][os.stat].
 
-Each file is a table with the following fields:
-
-Field   | Type    | Description
---------|---------|------------
-Name    | string  | The base name of the file.
-IsDir   | boolean | Whether the file is a directory.
-Size    | number  | The size of the file, in bytes.
-ModTime | number  | The modification time of the file, in Unix time.
+dir throws an error if the file does not exist.
 
 ### os.expand
 [os.expand]: #user-content-osexpand
@@ -423,6 +418,22 @@ Component | `project/scripts/main.script.lua` | Description
 
 A format extension depends on the available formats. See [Formats][formats] for
 more information.
+
+### os.stat
+[os.stat]: #user-content-osstat
+<code>os.stat(path: [string](##)): [File](##)</code>
+
+The **stat** function gets metadata of the given file. Returns a table with the
+following fields:
+
+Field   | Type    | Description
+--------|---------|------------
+Name    | string  | The base name of the file.
+IsDir   | boolean | Whether the file is a directory.
+Size    | number  | The size of the file, in bytes.
+ModTime | number  | The modification time of the file, in Unix time.
+
+stat throws an error if the file does not exist.
 
 ## `sym` library
 [sym-lib]: #user-content-sym-library
