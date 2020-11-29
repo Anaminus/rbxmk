@@ -578,7 +578,7 @@ func Instance() Reflector {
 					}
 					if checkDesc != nil {
 						class := checkDesc.Classes[className]
-						if class == nil || class.GetTag("NotCreatable") {
+						if class == nil {
 							return s.RaiseError("unable to create instance of type %q", className)
 						}
 					}

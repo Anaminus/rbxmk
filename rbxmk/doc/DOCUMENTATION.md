@@ -556,9 +556,8 @@ The `Instance.new` constructor returns a new Instance of the given class.
 If *parent* is specified, it sets the [Parent][Instance.Parent] property.
 
 If *desc* is specified, then it sets the [`sym.Desc`][Instance.sym.Desc] member.
-Additionally, `Instance.new` will throw an error if the class does not exist, or
-has the "NotCreatable" tag. If no descriptor is specified, then any class name
-will be accepted.
+Additionally, `Instance.new` will throw an error if the class does not exist. If
+no descriptor is specified, then any class name will be accepted.
 
 ### Instance.ClassName
 [Instance.ClassName]: #user-content-instanceclassname
