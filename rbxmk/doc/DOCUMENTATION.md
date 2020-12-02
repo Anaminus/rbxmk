@@ -26,9 +26,10 @@ details on how rbxmk works.
 	2. [`http` source][http-source]
 7. [Formats][formats]
 	1. [String formats][string-formats]
-	3. [Lua formats][lua-formats]
-	4. [Roblox formats][roblox-formats]
-	5. [Descriptor formats][descriptor-formats]
+	2. [Lua formats][lua-formats]
+	3. [Roblox formats][roblox-formats]
+	4. [Descriptor formats][descriptor-formats]
+	5. [JSON formats][json-formats]
 
 </td></tr></tbody>
 </table>
@@ -1916,3 +1917,34 @@ Direction | Type        | Description
 ----------|-------------|------------
 Decode    | DescActions | A list of [DescAction][DescAction] values.
 Encode    | DescActions | A list of [DescAction][DescAction] values.
+
+## JSON formats
+[json-formats]: #user-content-json-formats
+
+The JSON format is defined for encoding general JSON data.
+
+Format             | Description
+-------------------|------------
+[`json`][json-fmt] | JSON data structure.
+
+### `json` format
+[json-fmt]: #user-content-json-format
+
+The **json** format encodes certain types of values.
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | nil        | A JSON null.
+Decode    | boolean    | A JSON boolean.
+Decode    | number     | The nearest representation of a JSON number.
+Decode    | string     | A JSON string.
+Decode    | Array      | An JSON array.
+Decode    | Dictionary | A JSON object.
+Encode    | nil        | A Lua nil.
+Encode    | boolean    | A Lua boolean.
+Encode    | number     | A Lua number.
+Encode    | string     | A Lua string.
+Encode    | Array      | An array-like table, having a non-zero length.
+Encode    | Dictionary | A dictionary-like table, having a length of zero.
+
+Other value types are encoded as null.
