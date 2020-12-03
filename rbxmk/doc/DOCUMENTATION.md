@@ -14,7 +14,8 @@ details on how rbxmk works.
 	4. [`math` library][math-lib]
 	5. [`os` library][os-lib]
 	6. [`sym` library][sym-lib]
-	7. [`types` library][types-lib]
+	7. [`table` library][table-lib]
+	8. [`types` library][types-lib]
 3. [Instances][instances]
 	1. [Instance][Instance]
 		1. [DataModel][DataModel]
@@ -90,6 +91,7 @@ Library                | Description
 [math][math-lib]       | Extensions to the standard math library.
 [os][os-lib]           | Extensions to the standard os library.
 [sym][sym-lib]         | Symbols for accessing instance metadata.
+[table][table-lib]     | Extensions to the standard table library.
 [types][types-lib]     | Fallbacks for constructing certain types.
 [(sources)][sources]   | An assortment of libraries for interfacing with various external sources.
 
@@ -504,6 +506,74 @@ Symbol                                    | Description
 [`sym.IsService`][Instance.sym.IsService] | Determines whether an instance is a service.
 [`sym.RawDesc`][Instance.sym.RawDesc]     | Accesses the direct director of an instance.
 [`sym.Reference`][Instance.sym.Reference] | Determines the value used to identify the instance.
+
+## `table` library
+[table-lib]: #user-content-table-library
+
+The **table** library is an extension to the standard library that includes the
+same additions to [Roblox's table library][roblox-table-lib]:
+
+Name                   | Description
+-----------------------|------------
+[clear][table.clear]   | Removes all entries from a table.
+[create][table.create] | Creates a new table with a preallocated capacity.
+[find][table.find]     | Find the index of a value in a table.
+[move][table.move]     | Copies the entries in a table.
+[pack][table.pack]     | Packs arguments into a table.
+[unpack][table.unpack] | Unpacks a table into arguments.
+
+[roblox-table-lib]: https://developer.roblox.com/en-us/api-reference/lua-docs/table
+
+### table.clear
+[table.clear]: #user-content-tableclear
+<code>table.clear(t: [table](##)?)</code>
+
+The **clear** function removes all the entries from *t*.
+
+### table.create
+[table.create]: #user-content-tablecreate
+<code>table.create(cap: [number](##), value: [any](##)?): [table](##)</code>
+
+The **create** function returns a table with the array part allocated with a
+capacity of *cap*. Each entry in the array is optionally filled with *value*.
+
+### table.find
+[table.find]: #user-content-tablefind
+<code>table.find(t: [table](##), value: [any](##), init: [number](##)?): number?</code>
+
+The **find** function returns the index in *t* of the first occurrence of
+*value*, or nil if *value* was not found. Starts at index *init*, or 1 if
+unspecified.
+
+### table.move
+[table.move]: #user-content-tablemove
+<code>table.move(a1: [table](##), f: [number](##), e: [number](##), t: [number](##), a2: [table](##)?): table</code>
+
+The **move** function copies elements from *a1* to *a2*, performing the
+equivalent to the multiple assignment
+
+	a2[t], ... = a1[f], ..., a1[e]
+
+The default for *a2* is *a1*. The destination range can overlap the source
+range. Returns *a2*.
+
+### table.pack
+[table.pack]: #user-content-tablepack
+<code>table.pack(...[any](##)?): table</code>
+
+The **pack** function returns a table with each argument stored at keys 1, 2,
+etc. Also sets field "n" to the number of arguments. Note that the resulting
+table may not be a sequence.
+
+### table.unpack
+[table.unpack]: #user-content-tableunpack
+<code>table.unpack(list: [table](##), i: [number](##)?, j: [number](##)?): ...[any](##)</code>
+
+Returns the elements from *list*, equivalent to
+
+	list[i], list[i+1], ..., list[j]
+
+By default, *i* is 1 and *j* is the length of *list*.
 
 ## `types` library
 [types-lib]: #user-content-types-library
