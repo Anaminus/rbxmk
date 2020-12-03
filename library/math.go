@@ -1,0 +1,75 @@
+package library
+
+import (
+	"math"
+
+	"github.com/anaminus/rbxmk"
+	lua "github.com/yuin/gopher-lua"
+)
+
+func init() { register(Math, 10) }
+
+var Math = rbxmk.Library{
+	Name: "math",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 4)
+		lib.RawSetString("clamp", s.WrapFunc(mathClamp))
+		lib.RawSetString("log", s.WrapFunc(mathLog))
+		lib.RawSetString("round", s.WrapFunc(mathRound))
+		lib.RawSetString("sign", s.WrapFunc(mathSign))
+		return lib
+	},
+}
+
+func mathClamp(s rbxmk.State) int {
+	x := s.L.CheckNumber(1)
+	min := s.L.CheckNumber(2)
+	max := s.L.CheckNumber(3)
+	if min > max {
+		s.L.RaiseError("max must be greater than min")
+	}
+	if x < min {
+		x = min
+	} else if x > max {
+		x = max
+	}
+	s.L.Push(x)
+	return 1
+}
+
+func mathLog(s rbxmk.State) int {
+	x := s.L.CheckNumber(1)
+	if s.L.Get(2) == lua.LNil {
+		s.L.Push(lua.LNumber(math.Log(float64(x))))
+		return 1
+	}
+	var res float64
+	switch base := s.L.CheckNumber(2); base {
+	case 2:
+		res = math.Log2(float64(x))
+	case 10:
+		res = math.Log10(float64(x))
+	default:
+		res = math.Log(float64(x)) / math.Log(float64(base))
+	}
+	s.L.Push(lua.LNumber(res))
+	return 1
+}
+
+func mathRound(s rbxmk.State) int {
+	// Half away from zero.
+	s.L.Push(lua.LNumber(math.Round(float64(s.L.CheckNumber(1)))))
+	return 1
+}
+
+func mathSign(s rbxmk.State) int {
+	x := s.L.CheckNumber(1)
+	if x > 0 {
+		s.L.Push(lua.LNumber(1))
+	} else if x < 0 {
+		s.L.Push(lua.LNumber(-1))
+	} else {
+		s.L.Push(lua.LNumber(0))
+	}
+	return 1
+}

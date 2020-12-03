@@ -11,9 +11,10 @@ details on how rbxmk works.
 	1. [Base library][base-lib]
 	2. [`rbxmk` library][rbxmk-lib]
 	3. [Roblox library][roblox-lib]
-	4. [`os` library][os-lib]
-	5. [`sym` library][sym-lib]
-	6. [`types` library][types-lib]
+	4. [`math` library][math-lib]
+	5. [`os` library][os-lib]
+	6. [`sym` library][sym-lib]
+	7. [`types` library][types-lib]
 3. [Instances][instances]
 	1. [Instance][Instance]
 		1. [DataModel][DataModel]
@@ -86,6 +87,7 @@ Library                | Description
 [(base)][base-lib]     | The Lua 5.1 standard library, abridged.
 [rbxmk][rbxmk-lib]     | An interface to the rbxmk engine, and the rbxmk environment.
 [(roblox)][roblox-lib] | An environment emulating the Roblox Lua API.
+[math][math-lib]       | Extensions to the standard math library.
 [os][os-lib]           | Extensions to the standard os library.
 [sym][sym-lib]         | Symbols for accessing instance metadata.
 [types][types-lib]     | Fallbacks for constructing certain types.
@@ -349,6 +351,49 @@ information about the API of such types.
 
 Additionally, the [`DataModel.new`][DataModel] constructor creates a special
 Instance of the DataModel class, to be used to contain instances in a game tree.
+
+## `math` library
+[math-lib]: #user-content-math-library
+
+The **math** library is an extension to the standard library that includes the
+same additions to [Roblox's math library][roblox-math-lib]:
+
+Name                | Description
+--------------------|------------
+[clamp][math.clamp] | Returns a number clamped between a minimum and maximum.
+[log][math.log]     | Includes optional base argument.
+[round][math.round] | Rounds a number to the nearest integer.
+[sign][math.sign]   | Returns the sign of a number.
+
+[roblox-math-lib]: https://developer.roblox.com/en-us/api-reference/lua-docs/math
+
+### math.clamp
+[math.clamp]: #user-content-mathclamp
+<code>math.clamp(x: [number](##), min: [number](##), max: [number](##)): [number](##)</code>
+
+The **clamp** function returns *x* clamped so that it is not less than *min* or
+greater than *max*.
+
+### math.log
+[math.log]: #user-content-mathlog
+<code>math.log(x: [number](##), base: [number](##)?): [number](##)</code>
+
+The **log** function returns the logarithm of *x* in *base*. The default for
+*base* is `e`, returning the natural logarithm of *x*.
+
+### math.round
+[math.round]: #user-content-mathround
+<code>math.round(x: [number](##)): [number](##)</code>
+
+The **round** function returns *x* rounded to the nearest integer. The function
+rounds half away from zero.
+
+### math.sign
+[math.sign]: #user-content-mathsign
+<code>math.sign(x: [number](##)): [number](##)</code>
+
+The **sign** function returns the sign of *x*: `1` if *x* is greater than zero,
+`-1` of *x* is less than zero, and `0` if *x* equals zero.
 
 ## `os` library
 [os-lib]: #user-content-os-library
