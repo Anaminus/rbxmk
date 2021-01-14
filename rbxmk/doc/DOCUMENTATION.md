@@ -506,7 +506,7 @@ Symbol                                    | Description
 ------------------------------------------|------------
 [`sym.Desc`][Instance.sym.Desc]           | Gets the inherited descriptor of an instance.
 [`sym.IsService`][Instance.sym.IsService] | Determines whether an instance is a service.
-[`sym.RawDesc`][Instance.sym.RawDesc]     | Accesses the direct director of an instance.
+[`sym.RawDesc`][Instance.sym.RawDesc]     | Accesses the direct descriptor of an instance.
 [`sym.Reference`][Instance.sym.Reference] | Determines the value used to identify the instance.
 
 ## `table` library
@@ -831,9 +831,9 @@ sets the descriptor only for the current instance.
   instance, which may be inherited.
 - Setting to nil will cause the instance to have no direct descriptor, and the
   descriptor will be inherited.
-- Setting to false will "block", forcing the instance to have no descriptor.
-  This behaves sort of like a RootDesc that is empty; instance wont inherit any
-  other descriptors, and the state can be inherited.
+- Setting to false will "block" inheritance, forcing the instance to have no
+  descriptor. This behaves sort of like a RootDesc that is empty; the instance
+  wont inherit any other descriptors, and this blocked state can be inherited.
 
 ### Instance[sym.IsService]
 [Instance.sym.IsService]: #user-content-instancesymisservice
@@ -981,7 +981,7 @@ Type                           | Description
 [ClassDesc][ClassDesc]         | Describes a class.
 [PropertyDesc][PropertyDesc]   | Describes a property member.
 [FunctionDesc][FunctionDesc]   | Describes a function member.
-[EventDesc][EventDesc]         | Describes a event member.
+[EventDesc][EventDesc]         | Describes an event member.
 [CallbackDesc][CallbackDesc]   | Describes a callback member.
 [ParameterDesc][ParameterDesc] | Describes a parameter of a function, event, or callback. Immutable.
 [TypeDesc][TypeDesc]           | Describes a type. Immutable.
