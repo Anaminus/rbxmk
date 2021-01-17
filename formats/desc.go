@@ -13,7 +13,8 @@ import (
 func init() { register(Desc) }
 func Desc() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "desc.json",
+		Name:       "desc.json",
+		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "RootDesc"
 		},
@@ -38,7 +39,8 @@ func Desc() rbxmk.Format {
 func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "desc-patch.json",
+		Name:       "desc-patch.json",
+		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "DescActions"
 		},

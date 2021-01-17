@@ -63,7 +63,8 @@ func encodeJSON(v types.Value) (u interface{}) {
 func init() { register(JSON) }
 func JSON() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "json",
+		Name:       "json",
+		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(typeName string) bool {
 			switch typeName {
 			case "nil", "bool", "double", "string", "Array", "Dictionary":

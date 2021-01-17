@@ -11,6 +11,10 @@ type Format struct {
 	// extension.
 	Name string
 
+	// MediaTypes is a list of media types that are associated with the format,
+	// to be used by sources as needed.
+	MediaTypes []string
+
 	// CanDecode returns whether the format decodes into the given type.
 	CanDecode func(typeName string) bool
 

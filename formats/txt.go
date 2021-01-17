@@ -9,7 +9,8 @@ import (
 func init() { register(Text) }
 func Text() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "txt",
+		Name:       "txt",
+		MediaTypes: []string{"text/plain"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "string"
 		},

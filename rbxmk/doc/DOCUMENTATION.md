@@ -25,8 +25,9 @@ details on how rbxmk works.
 	2. [Diffing and Patching][diffing-and-patching]
 5. [Explicit primitives][explicit-primitives]
 6. [Sources][sources]
-	1. [`file` source][file-source]
-	2. [`http` source][http-source]
+	1. [`clipboard` source][clipboard-source]
+	2. [`file` source][file-source]
+	3. [`http` source][http-source]
 7. [Formats][formats]
 	1. [String formats][string-formats]
 	2. [Lua formats][lua-formats]
@@ -1766,6 +1767,95 @@ written to. A source can be accessed at a low level through the
 
 A source usually has a corresponding library that provides convenient access for
 common cases.
+
+## `clipboard` source
+[clipboard-source]: #user-content-clipboard-source
+
+The `clipboard` source provides access to the operating system's clipboard.
+
+[media-type]: https://en.wikipedia.org/wiki/Media_type
+
+### `readSource`
+[clipboard.readSource]: #user-content-readsource
+
+Each additional argument to [`readSource`][rbxmk.readSource] is a
+[format][formats] that describes how interpret data retrieved from the
+clipboard.
+
+Each format has a number of associated [media types][media-type]. Each format is
+traversed in order, and each media type within a format is traversed in order.
+The data that matches the first media type found in the clipboard is returned.
+
+The formats passed to readSource are used only to select data from the
+clipboard. The returned data is still in raw bytes, and it is up to the user to
+decoded it with the expected format.
+
+```lua
+local bytes = rbxmk.readSource("clipboard", "txt", "bin")
+```
+
+### `writeSource`
+[clipboard.writeSource]: #user-content-writesource
+
+Each additional argument to [`writeSource`][rbxmk.writeSource] is a
+[format][formats] that describes how to format data sent to the clipboard.
+
+Each format has a number of associated [media types][media-type]. For each given
+format, the bytes are sent to the clipboard for each of the format's media
+types.
+
+The formats passed to writeSource are used only to select the clipboard formats
+to write to. The same bytes will be written to every clipboard format, and it is
+up to the user to ensure that the data is correct for each clipboard format. For
+more flexible encoding in multiple formats, [clipboard.write][clipboard.write]
+should be used instead.
+
+```lua
+rbxmk.writeSource("clipboard", bytes, "txt", "bin")
+```
+
+[media-type]: https://en.wikipedia.org/wiki/Media_type
+
+### `clipboard` library
+[clipboard-lib]: #user-content-clipboard-library
+
+The `clipboard` library handles the `clipboard` source.
+
+Name                     | Description
+-------------------------|------------
+[read][clipboard.read]   | Gets data from the clipboard in one of a number of formats.
+[write][clipboard.write] | Sets data to the clipboard in a number of formats.
+
+#### clipboard.read
+[clipboard.read]: #user-content-clipboardread
+<code>clipboard.read(formats: ...[string](##)): (value: [any](##))</code>
+
+The `read` function gets a value from the clipboard according to one of the
+given [formats][formats].
+
+Each format has a number of associated [media types][media-type]. Each format is
+traversed in order, and each media type within a format is traversed in order.
+The data that matches the first media type found in the clipboard is selected.
+This data is decoded by the format corresponding to the matched media type, and
+the result is returned.
+
+Throws an error if *value* could not be decoded from the format, or if data
+could not be retrieved from the clipboard.
+
+#### clipboard.write
+[clipboard.write]: #user-content-clipboardwrite
+<code>clipboard.write(value: [any](##), formats: ...[string](##))</code>
+
+The `write` function sets *value* to the clipboard according to the given
+[formats][formats].
+
+Each format has a number of associated [media types][media-type]. For each
+format, the data is encoded in the format, which is then sent to the clipboard
+for each of the format's media type. Data is not sent for a media type if that
+media type was already sent.
+
+Throws an error if *value* could not be encoded in a format, or if data could
+not be sent to the clipboard.
 
 ## `file` source
 [file-source]: #user-content-file-source

@@ -366,7 +366,8 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v types
 func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "rbxl",
+		Name:       "rbxl",
+		MediaTypes: []string{"application/x-roblox-studio"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -382,7 +383,8 @@ func RBXL() rbxmk.Format {
 func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "rbxm",
+		Name:       "rbxm",
+		MediaTypes: []string{"application/x-roblox-studio"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -398,7 +400,8 @@ func RBXM() rbxmk.Format {
 func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "rbxlx",
+		Name:       "rbxlx",
+		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -414,7 +417,8 @@ func RBXLX() rbxmk.Format {
 func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "rbxmx",
+		Name:       "rbxmx",
+		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},

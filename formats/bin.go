@@ -9,7 +9,8 @@ import (
 func init() { register(Binary) }
 func Binary() rbxmk.Format {
 	return rbxmk.Format{
-		Name: "bin",
+		Name:       "bin",
+		MediaTypes: []string{"application/octet-stream"},
 		CanDecode: func(typeName string) bool {
 			return typeName == "BinaryString"
 		},
