@@ -58,14 +58,11 @@ type propRef struct {
 
 // clone returns a deep copy of the instance while managing references.
 func (inst *Instance) clone(refs map[*Instance]*Instance, propRefs *[]propRef) *Instance {
-	clone := &Instance{
-		ClassName:  inst.ClassName,
-		Reference:  inst.Reference,
-		IsService:  inst.IsService,
-		desc:       inst.desc,
-		children:   make([]*Instance, len(inst.children)),
-		properties: make(map[string]types.PropValue, len(inst.properties)),
-	}
+	c := *inst
+	clone := &c
+	clone.children = make([]*Instance, len(inst.children))
+	clone.properties = make(map[string]types.PropValue, len(inst.properties))
+	clone.parent = nil
 	refs[inst] = clone
 	for name, v := range inst.properties {
 		switch v := v.(type) {
