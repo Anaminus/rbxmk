@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
@@ -137,6 +138,39 @@ func checkClassDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *r
 	return classDesc
 }
 
+func defaultAttrConfig(inst *rtypes.Instance) rtypes.AttrConfig {
+	attrcfg := inst.AttrConfig()
+	if attrcfg != nil {
+		return *attrcfg
+	}
+	return rtypes.AttrConfig{Property: "AttributesSerialize"}
+}
+
+func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
+	attrcfg := defaultAttrConfig(inst)
+	sv, ok := inst.Get(attrcfg.Property).(types.Stringlike)
+	if ok {
+		s.RaiseError("property %q is not string-like", attrcfg.Property)
+		return nil
+	}
+	dict, err := formats.RBXAttr().Decode(FormatOptions{}, []byte(sv.Stringlike()))
+	if err != nil {
+		s.RaiseError("decode attributes from %q: %w", attrcfg.Property, err)
+		return nil
+	}
+	return dict.(rtypes.Dictionary)
+}
+
+func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
+	attrcfg := defaultAttrConfig(inst)
+	b, err := formats.RBXAttr().Encode(FormatOptions{}, dict)
+	if err != nil {
+		s.RaiseError("encode attributes to %q: %w", attrcfg.Property, err)
+		return
+	}
+	inst.Set(attrcfg.Property, types.BinaryString(b))
+}
+
 func init() { register(Instance) }
 func Instance() Reflector {
 	return Reflector{
@@ -181,6 +215,21 @@ func Instance() Reflector {
 								return s.Push(rtypes.Nil)
 							}
 							return s.Push(desc)
+						case "AttrConfig":
+							attrcfg := inst.AttrConfig()
+							if attrcfg == nil {
+								return s.Push(rtypes.Nil)
+							}
+							return s.Push(attrcfg)
+						case "RawAttrConfig":
+							attrcfg, blocked := inst.RawAttrConfig()
+							if blocked {
+								return s.Push(types.False)
+							}
+							if attrcfg == nil {
+								return s.Push(rtypes.Nil)
+							}
+							return s.Push(attrcfg)
 						default:
 							s.L.RaiseError("symbol %s is not a valid member", name)
 							return 0
@@ -312,6 +361,19 @@ func Instance() Reflector {
 								inst.SetDesc(nil, true)
 							case rtypes.NilType:
 								inst.SetDesc(nil, false)
+							}
+							return 0
+						case "AttrConfig", "RawAttrConfig":
+							switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
+							case *rtypes.AttrConfig:
+								inst.SetAttrConfig(v, false)
+							case types.Bool:
+								if v {
+									return s.RaiseError("AttrConfig cannot be true")
+								}
+								inst.SetAttrConfig(nil, true)
+							case rtypes.NilType:
+								inst.SetAttrConfig(nil, false)
 							}
 							return 0
 						default:
@@ -529,6 +591,17 @@ func Instance() Reflector {
 				}
 				return s.Push(rtypes.Nil)
 			}},
+			"GetAttribute": Member{Method: true, Get: func(s State, v types.Value) int {
+				attribute := string(s.Pull(2, "string").(types.String))
+				dict := getAttributes(s, v.(*rtypes.Instance))
+				if v, ok := dict[attribute]; ok {
+					return s.Push(v)
+				}
+				return s.Push(rtypes.Nil)
+			}},
+			"GetAttributes": Member{Method: true, Get: func(s State, v types.Value) int {
+				return s.Push(getAttributes(s, v.(*rtypes.Instance)))
+			}},
 			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				t := v.(*rtypes.Instance).Children()
 				return s.Push(rtypes.Objects(t))
@@ -550,6 +623,20 @@ func Instance() Reflector {
 			"IsDescendantOf": Member{Method: true, Get: func(s State, v types.Value) int {
 				ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
 				return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
+			}},
+			"SetAttribute": Member{Method: true, Get: func(s State, v types.Value) int {
+				inst := v.(*rtypes.Instance)
+				attribute := string(s.Pull(2, "string").(types.String))
+				value := s.Pull(3, "Variant")
+				dict := getAttributes(s, inst)
+				dict[attribute] = value
+				setAttributes(s, inst, dict)
+				return 0
+			}},
+			"SetAttributes": Member{Method: true, Get: func(s State, v types.Value) int {
+				dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
+				setAttributes(s, v.(*rtypes.Instance), dict)
+				return 0
 			}},
 		},
 		Constructors: Constructors{

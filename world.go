@@ -17,12 +17,13 @@ import (
 // World contains the entire state of a Lua environment, including a Lua state,
 // and registered Reflectors, Formats, and Sources.
 type World struct {
-	l          *lua.LState
-	fileStack  []FileInfo
-	reflectors map[string]Reflector
-	formats    map[string]Format
-	sources    map[string]Source
-	globalDesc *rtypes.RootDesc
+	l                *lua.LState
+	fileStack        []FileInfo
+	reflectors       map[string]Reflector
+	formats          map[string]Format
+	sources          map[string]Source
+	globalDesc       *rtypes.RootDesc
+	globalAttrConfig *rtypes.AttrConfig
 
 	udmut    sync.Mutex
 	userdata map[interface{}]uintptr
@@ -631,4 +632,20 @@ func (w *World) Desc(inst *rtypes.Instance) *rtypes.RootDesc {
 // SetDesc sets root as the global root descriptor for the world.
 func (w *World) SetDesc(root *rtypes.RootDesc) {
 	w.globalDesc = root
+}
+
+// AttrConfig returns the AttrConfig of an instance. If inst is nil, the global
+// AttrConfig is returned.
+func (w *World) AttrConfig(inst *rtypes.Instance) *rtypes.AttrConfig {
+	if inst != nil {
+		if attrcfg := inst.AttrConfig(); attrcfg != nil {
+			return attrcfg
+		}
+	}
+	return w.globalAttrConfig
+}
+
+// SetAttrConfig sets attrcfg as the global AttrConfig for the world.
+func (w *World) SetAttrConfig(attrcfg *rtypes.AttrConfig) {
+	w.globalAttrConfig = attrcfg
 }

@@ -13,12 +13,14 @@ type Instance struct {
 	Reference string
 	IsService bool
 
-	properties  map[string]types.PropValue
-	children    []*Instance
-	parent      *Instance
-	desc        *RootDesc
-	descBlocked bool
-	root        bool
+	properties     map[string]types.PropValue
+	children       []*Instance
+	parent         *Instance
+	desc           *RootDesc
+	descBlocked    bool
+	attrcfg        *AttrConfig
+	attrcfgBlocked bool
+	root           bool
 }
 
 // NewInstance returns a new Instance of the given class name. Optionally,
@@ -530,6 +532,43 @@ func (inst *Instance) FindFirstAncestorWhichIsA(class string) *Instance {
 		parent = parent.parent
 	}
 	return nil
+}
+
+// AttrConfig returns the nearest AttrConfig for the instance. If the AttrConfig
+// of current instance is nil, then the parent is searched, and so on, until a
+// non-nil or blocked AttrConfig is found. Nil is returned if no Attrs are
+// found.
+func (inst *Instance) AttrConfig() *AttrConfig {
+	parent := inst
+	for parent != nil {
+		if parent.attrcfgBlocked {
+			return nil
+		}
+		if parent.desc != nil {
+			return parent.attrcfg
+		}
+		parent = parent.parent
+	}
+	return nil
+}
+
+// RawAttrConfig returns the AttrConfig for the instance, and whether it is
+// blocked.
+func (inst *Instance) RawAttrConfig() (attrcfg *AttrConfig, blocked bool) {
+	return inst.attrcfg, inst.attrcfgBlocked
+}
+
+// SetAttrConfig sets attrcfg as the AttrConfig for the instance. If blocked is
+// true, then the AttrConfig is set to nil, and AttrConfig will return nil if it
+// reaches the instance.
+func (inst *Instance) SetAttrConfig(attrcfg *AttrConfig, blocked bool) {
+	if blocked {
+		inst.attrcfg = nil
+		inst.attrcfgBlocked = true
+		return
+	}
+	inst.attrcfg = attrcfg
+	inst.attrcfgBlocked = false
 }
 
 // Type returns a string identifying the type of the value.

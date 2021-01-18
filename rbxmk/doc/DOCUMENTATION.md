@@ -20,20 +20,24 @@ details on how rbxmk works.
 3. [Instances][instances]
 	1. [Instance][Instance]
 		1. [DataModel][DataModel]
+	2. [Attributes][Attributes]
+		1. [AttrConfig][AttrConfig]
 4. [Descriptors][descriptors]
 	1. [Descriptor types][descriptor-types]
 	2. [Diffing and Patching][diffing-and-patching]
-5. [Explicit primitives][explicit-primitives]
-6. [Sources][sources]
+5. [Value inheritance][value-inheritance]
+6. [Explicit primitives][explicit-primitives]
+7. [Sources][sources]
 	1. [`clipboard` source][clipboard-source]
 	2. [`file` source][file-source]
 	3. [`http` source][http-source]
-7. [Formats][formats]
+8. [Formats][formats]
 	1. [String formats][string-formats]
 	2. [Lua formats][lua-formats]
 	3. [Roblox formats][roblox-formats]
 	4. [Descriptor formats][descriptor-formats]
-	5. [JSON formats][json-formats]
+	5. [Attribute formats][attribute-formats]
+	6. [JSON formats][json-formats]
 
 </td></tr></tbody>
 </table>
@@ -142,21 +146,22 @@ The following items from the [Lua 5.1 standard library][luastdlib] are included:
 
 The **rbxmk** library contains functions related to the rbxmk engine.
 
-Name                                     | Description
------------------------------------------|------------
-[decodeFormat][rbxmk.decodeFormat]       | Deserialize data from bytes.
-[diffDesc][rbxmk.diffDesc]               | Get the differences between two descriptors.
-[encodeFormat][rbxmk.encodeFormat]       | Serialize data into bytes.
-[formatCanDecode][rbxmk.formatCanDecode] | Check whether a format decodes into a type.
-[globalDesc][rbxmk.globalDesc]           | Get or set the global descriptor.
-[loadFile][rbxmk.loadFile]               | Load the content of a file as a function.
-[loadString][rbxmk.loadString]           | Load a string as a function.
-[newDesc][rbxmk.newDesc]                 | Create a new descriptor.
-[patchDesc][rbxmk.patchDesc]             | Transform a descriptor by applying differences.
-[readSource][rbxmk.readSource]           | Read bytes from an external source.
-[runFile][rbxmk.runFile]                 | Run a file as a Lua chunk.
-[runString][rbxmk.runString]             | Run a string as a Lua chunk.
-[writeSource][rbxmk.writeSource]         | Write bytes to an external source.
+Name                                       | Description
+-------------------------------------------|------------
+[decodeFormat][rbxmk.decodeFormat]         | Deserialize data from bytes.
+[diffDesc][rbxmk.diffDesc]                 | Get the differences between two descriptors.
+[encodeFormat][rbxmk.encodeFormat]         | Serialize data into bytes.
+[formatCanDecode][rbxmk.formatCanDecode]   | Check whether a format decodes into a type.
+[globalAttrConfig][rbxmk.globalAttrConfig] | Get or set the global AttrConfig.
+[globalDesc][rbxmk.globalDesc]             | Get or set the global descriptor.
+[loadFile][rbxmk.loadFile]                 | Load the content of a file as a function.
+[loadString][rbxmk.loadString]             | Load a string as a function.
+[newDesc][rbxmk.newDesc]                   | Create a new descriptor.
+[patchDesc][rbxmk.patchDesc]               | Transform a descriptor by applying differences.
+[readSource][rbxmk.readSource]             | Read bytes from an external source.
+[runFile][rbxmk.runFile]                   | Run a file as a Lua chunk.
+[runString][rbxmk.runString]               | Run a string as a Lua chunk.
+[writeSource][rbxmk.writeSource]           | Write bytes to an external source.
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
@@ -169,6 +174,16 @@ The **decodeFormat** function decodes *bytes* into a value according to
 decodeFormat will throw an error if the format does not exist, or the format has
 no decoder defined.
 
+### rbxmk.globalAttrConfig
+[rbxmk.globalAttrConfig]: #user-content-rbxmkglobalattrconfig
+<code>rbxmk.globalAttrConfig: [AttrConfig][AttrConfig]?</code>
+
+The **globalAttrConfig** field gets or sets the global AttrConfig. Most items
+that utilize an AttrConfig will fallback to the global AttrConfig when possible.
+
+See the [Value inheritance][value-inheritance] section for details on how this
+field is inherited by [Instances][Instance].
+
 ### rbxmk.globalDesc
 [rbxmk.globalDesc]: #user-content-rbxmkglobaldesc
 <code>rbxmk.globalDesc: [RootDesc][RootDesc]?</code>
@@ -176,6 +191,9 @@ no decoder defined.
 The **globalDesc** field gets or sets the global root descriptor. Most items
 that utilize a root descriptor will fallback to the global descriptor when
 possible.
+
+See the [Value inheritance][value-inheritance] section for details on how this
+field is inherited by [Instances][Instance].
 
 ### rbxmk.diffDesc
 [rbxmk.diffDesc]: #user-content-rbxmkdiffdesc
@@ -503,12 +521,14 @@ print(instance[sym.IsService]) --> true
 
 The following symbols are defined:
 
-Symbol                                    | Description
-------------------------------------------|------------
-[`sym.Desc`][Instance.sym.Desc]           | Gets the inherited descriptor of an instance.
-[`sym.IsService`][Instance.sym.IsService] | Determines whether an instance is a service.
-[`sym.RawDesc`][Instance.sym.RawDesc]     | Accesses the direct descriptor of an instance.
-[`sym.Reference`][Instance.sym.Reference] | Determines the value used to identify the instance.
+Symbol                                            | Description
+--------------------------------------------------|------------
+[`sym.AttrConfig`][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
+[`sym.Desc`][Instance.sym.Desc]                   | Gets the inherited descriptor of an instance.
+[`sym.IsService`][Instance.sym.IsService]         | Determines whether an instance is a service.
+[`sym.RawAttrConfig`][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
+[`sym.RawDesc`][Instance.sym.RawDesc]             | Accesses the direct descriptor of an instance.
+[`sym.Reference`][Instance.sym.Reference]         | Determines the value used to identify the instance.
 
 ## `table` library
 [table-lib]: #user-content-table-library
@@ -655,14 +675,20 @@ Member                                                          | Kind
 [FindFirstChild][Instance.FindFirstChild]                       | method
 [FindFirstChildOfClass][Instance.FindFirstChildOfClass]         | method
 [FindFirstChildWhichIsA][Instance.FindFirstChildWhichIsA]       | method
+[GetAttribute][Instance.GetAttribute]                           | method
+[GetAttributes][Instance.GetAttributes]                         | method
 [GetChildren][Instance.GetChildren]                             | method
 [GetDescendants][Instance.GetDescendants]                       | method
 [GetFullName][Instance.GetFullName]                             | method
 [IsA][Instance.IsA]                                             | method
 [IsAncestorOf][Instance.IsAncestorOf]                           | method
 [IsDescendantOf][Instance.IsDescendantOf]                       | method
+[SetAttribute][Instance.SetAttribute]                           | method
+[SetAttributes][Instance.SetAttributes]                         | method
+[sym.AttrConfig][Instance.sym.AttrConfig]                       | symbol
 [sym.Desc][Instance.sym.Desc]                                   | symbol
 [sym.IsService][Instance.sym.IsService]                         | symbol
+[sym.RawAttrConfig][Instance.sym.RawAttrConfig]                 | symbol
 [sym.RawDesc][Instance.sym.RawDesc]                             | symbol
 [sym.Reference][Instance.sym.Reference]                         | symbol
 
@@ -774,6 +800,39 @@ FindFirstChildWhichIsA returns the first child of the instance whose
 was found. If the instance has no descriptor, then the ClassName is compared
 directly. If *recurse* is true, then descendants are also searched, top-down.
 
+### Instance.GetAttribute
+[Instance.GetAttribute]: #user-content-instancegetattribute
+<code>Instance:GetAttribute(attribute: string): Variant?</code>
+
+GetAttribute returns the value of *attribute*, or nil if the attribute is not
+found.
+
+This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig] to
+select the property to decode from, which is expected to be string-like. An
+error is thrown if the data could not be decoded.
+
+See the [`rbxattr` format][rbxattr-fmt] for a list of possible attribute value
+types.
+
+The [Attributes][Attributes] section provides a more general description of
+attributes.
+
+### Instance.GetAttributes
+[Instance.GetAttributes]: #user-content-instancegetattributes
+<code>Instance:GetAttributes(): Dictionary</code>
+
+GetAttributes returns a dictionary of attribute names mapped to values.
+
+This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig] to
+select the property to decode from, which is expected to be string-like. An
+error is thrown if the data could not be decoded.
+
+See the [`rbxattr` format][rbxattr-fmt] for a list of possible attribute value
+types.
+
+The [Attributes][Attributes] section provides a more general description of
+attributes.
+
 ### Instance.GetChildren
 [Instance.GetChildren]: #user-content-instancegetchildren
 <code>Instance:GetChildren(): Objects</code>
@@ -814,27 +873,58 @@ IsAncestorOf returns whether the instance of an ancestor of *descendant*.
 
 IsDescendantOf returns whether the instance of a descendant of *ancestor*.
 
+### Instance.SetAttribute
+[Instance.SetAttribute]: #user-content-instancesetattribute
+<code>Instance:SetAttribute(attribute: string, value: Variant?)</code>
+
+SetAttribute sets *attribute* to *value*. If *value* is nil, then the attribute
+is removed.
+
+This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig] to
+select the property to decode from, which is expected to be string-like. This
+function decodes the serialized attributes, sets the given value, then
+re-encodes the attributes. An error is thrown if the data could not be decoded
+or encoded.
+
+See the [`rbxattr` format][rbxattr-fmt] for a list of possible attribute value
+types.
+
+The [Attributes][Attributes] section provides a more general description of
+attributes.
+
+### Instance.SetAttributes
+[Instance.SetAttributes]: #user-content-instancesetattributes
+<code>Instance:SetAttributes(attributes: Dictionary)</code>
+
+SetAttributes replaces all attributes with the content of *attributes*, which
+contains attribute names mapped to values.
+
+This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig] to
+select the property to encode to. An error is thrown if the data could not be
+encoded.
+
+See the [`rbxattr` format][rbxattr-fmt] for a list of possible attribute value
+types.
+
+The [Attributes][Attributes] section provides a more general description of
+attributes.
+
+### Instance[sym.AttrConfig]
+[Instance.sym.AttrConfig]: #user-content-instancesymattrconfig
+<code>Instance\[sym.AttrConfig\]: [AttrConfig][AttrConfig] \| [nil](##)</code>
+
+AttrConfig is the [AttrConfig][AttrConfig] being used by the instance.
+AttrConfig is inherited, the behavior of which is described in the [Value
+inheritance][value-inheritance] section.
+
 ### Instance[sym.Desc]
 [Instance.sym.Desc]: #user-content-instancesymdesc
 <code>Instance\[sym.Desc\]: [RootDesc][RootDesc] \| [nil](##)</code>
 
-Desc is the descriptor being used by the instance. Descriptors are inherited; if
-the instance has no descriptor, then each ancestor of the instance is searched
-until a descriptor is found. If none are still found, then the global descriptor
-is returned. If there is no global descriptor, then nil is returned.
+Desc is the descriptor being used by the instance. Desc is inherited, the
+behavior of which is described in the [Value inheritance][value-inheritance]
+section.
 
-Getting Desc will return either a RootDesc, or nil.
-
-When setting Desc, the value can be a RootDesc, false, or nil. Setting to Desc
-sets the descriptor only for the current instance.
-
-- Setting to a RootDesc will set the descriptor directly for the current
-  instance, which may be inherited.
-- Setting to nil will cause the instance to have no direct descriptor, and the
-  descriptor will be inherited.
-- Setting to false will "block" inheritance, forcing the instance to have no
-  descriptor. This behaves sort of like a RootDesc that is empty; the instance
-  wont inherit any other descriptors, and this blocked state can be inherited.
 
 ### Instance[sym.IsService]
 [Instance.sym.IsService]: #user-content-instancesymisservice
@@ -844,18 +934,24 @@ IsService indicates whether the instance is a service, such as Workspace or
 Lighting. This is used by some formats to determine how to encode and decode the
 instance.
 
+### Instance[sym.RawAttrConfig]
+[Instance.sym.RawAttrConfig]: #user-content-instancesymrawattrconfig
+<code>Instance\[sym.RawAttrConfig\]: [AttrConfig][AttrConfig] \| [bool](##) \| [nil](##)</code>
+
+RawAttrConfig is the raw member corresponding to to
+[`sym.AttrConfig`][Instance.sym.AttrConfig]. It is similar to AttrConfig, except
+that it considers only the direct value of the current instance. The exact
+behavior of RawAttrConfig is described in the [Value
+inheritance][value-inheritance] section.
+
 ### Instance[sym.RawDesc]
 [Instance.sym.RawDesc]: #user-content-instancesymrawdesc
 <code>Instance\[sym.RawDesc\]: [RootDesc][RootDesc] \| [bool](##) \| [nil](##)</code>
 
-RawDesc is similar to [`sym.Desc`][Instance.sym.Desc], except that it considers
-only the direct descriptor of the current instance.
-
-Getting RawDesc will return a RootDesc if the instance has a descriptor
-assigned, false if the descriptor is blocked, or nil if no descriptor is
-assigned.
-
-Setting RawDesc behaves the same as setting Desc.
+RawDesc is the raw member corresponding to to [`sym.Desc`][Instance.sym.Desc].
+It is similar to Desc, except that it considers only the direct value of the
+current instance. The exact behavior of RawDesc is described in the [Value
+inheritance][value-inheritance] section.
 
 ### Instance[sym.Reference]
 [Instance.sym.Reference]: #user-content-instancesymreference
@@ -894,6 +990,45 @@ to true, and [Parent][Instance.Parent] is set to the DataModel.
 
 If the DataModel has a descriptor, then GetService will throw an error if the
 created class's descriptor does not have the "Service" tag set.
+
+## Attributes
+[Attributes]: #user-content-attributes
+
+[Instances][Instance] in Roblox and rbxmk have **attributes**, which are similar
+to custom properties.
+
+Roblox serializes all attributes into a single property in a binary format. In
+rbxmk, this format is implemented by the [`rbxattr` format][rbxattr-fmt].
+
+rbxmk provides the same API as Roblox for manipulating attributes:
+
+- [Instance.GetAttribute][Instance.GetAttribute]
+- [Instance.GetAttributes][Instance.GetAttributes]
+- [Instance.SetAttribute][Instance.SetAttribute]
+
+Additionally, rbxmk provides the [SetAttributes][Instance.SetAttributes] method
+for setting all the attributes of an instance more efficiently.
+
+In order to maintain rbxmk's theme of forward-compatibility, rbxmk provides the
+[AttrConfig][AttrConfig] type to configure how attributes are applied to an
+instance. AttrConfigs are inherited, the behavior of which is described in the
+[Value inheritance][value-inheritance] section.
+
+### AttrConfig
+[AttrConfig]: #user-content-attrconfig
+
+AttrConfig configures how an instance encodes and decodes attributes.
+
+Member                          | Kind
+--------------------------------|-----
+[Property][AttrConfig.Property] | field
+
+#### AttrConfig.Property
+[AttrConfig.Property]: #user-content-attrconfigproperty
+<code>AttrConfig.Property: [string](##)</code>
+
+Property determines which property of an instance attributes are applied to. If
+an empty string, instances will default to "AttributesSerialize".
 
 ## `string` library
 [string-lib]: #user-content-string-library
@@ -1704,6 +1839,49 @@ string will display the content of the action in a human-readable format.
 Actions may also be created directly with the
 [`desc-patch.json`][desc-patch.json-fmt] format.
 
+# Value inheritance
+[value-inheritance]: #user-content-value-inheritance
+
+Certain symbol fields on [Instances][Instance] have an inheritance behavior.
+
+Member                                    | Principal type           | Raw member                                      | Global field
+------------------------------------------|--------------------------|-------------------------------------------------|-------------
+[sym.AttrConfig][Instance.sym.AttrConfig] | [AttrConfig][AttrConfig] | [sym.RawAttrConfig][Instance.sym.RawAttrConfig] | [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
+[sym.Desc][Instance.sym.Desc]             | [RootDesc][RootDesc]     | [sym.RawDesc][Instance.sym.RawDesc]             | [rbxmk.globalDesc][rbxmk.globalDesc]
+
+The following sections describe the aspects of this behavior for each member.
+
+### Indexing
+The member has a **principal type**, which indicates the type of the main value
+assigned to the member.
+
+Getting the member will return either a value of the principal type, or nil. If
+the instance has no value, then each ancestor of the instance is searched until
+a value is found. If none are still found, then the global value is returned. If
+there is no global value, then nil is finally returned.
+
+When setting the member, the value can be of the principal type, false, or nil.
+Setting to the member sets the value only for the current instance.
+
+- Setting to a value of the principal type will set the value directly for the
+  current instance, which may be inherited.
+- Setting to nil will cause the instance to have no direct value, and the value
+  will be inherited instead.
+- Setting to false will "block" inheritance, forcing the instance to have no
+  value. This behaves sort of like a value that is empty; the instance wont
+  inherit any other values, and this blocked state can be inherited.
+
+### Raw member
+The member has a corresponding **raw member**, which gets the value directly.
+Getting the raw member will return the value if the instance has a value
+assigned, false if the member is blocked, or nil if no value is assigned.
+Setting the raw member behaves the same as setting the corresponding member.
+
+### Global field
+The member has a corresponding **global field** in the [rbxmk
+library][rbxmk-lib], which sets a global value to be applied to any instance
+that would otherwise inherit nothing.
+
 # Explicit primitives
 [explicit-primitives]: #user-content-explicit-primitives
 
@@ -1990,6 +2168,10 @@ a Stringlike when its [ClassName][Instance.ClassName] is "Script",
 "LocalScript", or "ModuleScript", and the Source property has a Stringlike
 value. In this case, the value of the Source property is encoded.
 
+A format that can encode a **Numberlike** type accepts any type that can be
+converted to a floating-point number. An **Intlike** is similar, converting to
+an integer instead.
+
 ## String formats
 [string-formats]: #user-content-string-formats
 
@@ -2150,6 +2332,44 @@ Direction | Type        | Description
 ----------|-------------|------------
 Decode    | DescActions | A list of [DescAction][DescAction] values.
 Encode    | DescActions | A list of [DescAction][DescAction] values.
+
+## Attribute formats
+[attribute-formats]: #user-content-attribute-formats
+
+The attributes format is defined for serializing instance attributes.
+
+Format                   | Description
+-------------------------|------------
+[`rbxattr`][rbxattr-fmt] | Serialized instance attributes.
+
+### `rbxattr` format
+[rbxattr-fmt]: #user-content-rbxattr-format
+
+The **rbxattr** format encodes a Dictionary of attributes.
+
+Direction | Type       | Description
+----------|------------|------------
+Decode    | Dictionary | A dictionary of attribute names mapped to values.
+Encode    | Dictionary | A dictionary of attribute names mapped to values.
+
+The following value types are encoded and decoded:
+- string
+- bool
+- float
+- double
+- UDim
+- UDim2
+- BrickColor
+- Color3
+- Vector2
+- Vector3
+- NumberSequence
+- ColorSequence
+- NumberRange
+- Rect
+
+Additionally, any Stringlike value is encoded as a string, and any Numberlike
+value is encoded as a double.
 
 ## JSON formats
 [json-formats]: #user-content-json-formats

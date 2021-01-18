@@ -40,25 +40,42 @@ var RBXMK = rbxmk.Library{
 
 		mt := s.L.CreateTable(0, 2)
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
-			if field := s.Pull(2, "string").(types.String); field != "globalDesc" {
+			switch field := s.Pull(2, "string").(types.String); field {
+			case "globalDesc":
+				desc := s.Desc(nil)
+				if desc == nil {
+					return s.Push(rtypes.Nil)
+				}
+				return s.Push(desc)
+			case "globalAttrConfig":
+				attrcfg := s.AttrConfig(nil)
+				if attrcfg == nil {
+					return s.Push(rtypes.Nil)
+				}
+				return s.Push(attrcfg)
+			default:
 				return s.RaiseError("unknown field %q", field)
 			}
-			desc := s.Desc(nil)
-			if desc == nil {
-				return s.Push(rtypes.Nil)
-			}
-			return s.Push(desc)
 		}))
 		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
-			if field := s.Pull(2, "string").(types.String); field != "globalDesc" {
+			switch field := s.Pull(2, "string").(types.String); field {
+			case "globalDesc":
+				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
+				if desc == nil {
+					s.SetDesc(nil)
+				}
+				s.SetDesc(desc)
+				return 0
+			case "globalAttrConfig":
+				attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
+				if attrcfg == nil {
+					s.SetAttrConfig(nil)
+				}
+				s.SetAttrConfig(attrcfg)
+				return 0
+			default:
 				return s.RaiseError("unknown field %q", field)
 			}
-			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
-			if desc == nil {
-				s.SetDesc(nil)
-			}
-			s.SetDesc(desc)
-			return 0
 		}))
 		s.L.SetMetatable(lib, mt)
 
