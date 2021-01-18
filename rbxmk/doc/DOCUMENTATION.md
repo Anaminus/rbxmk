@@ -96,10 +96,10 @@ Library                | Description
 [(roblox)][roblox-lib] | An environment emulating the Roblox Lua API.
 [math][math-lib]       | Extensions to the standard math library.
 [os][os-lib]           | Extensions to the standard os library.
+[string][string-lib]   | Extensions to the standard string library.
 [sym][sym-lib]         | Symbols for accessing instance metadata.
 [table][table-lib]     | Extensions to the standard table library.
 [types][types-lib]     | Fallbacks for constructing certain types.
-[string][string-lib]   | Extensions to the standard string library.
 [(sources)][sources]   | An assortment of libraries for interfacing with various external sources.
 
 Additionally, the `_RBXMK_VERSION` global variable is defined as a string
@@ -503,6 +503,32 @@ Size    | number  | The size of the file, in bytes.
 ModTime | number  | The modification time of the file, in Unix time.
 
 stat throws an error if the file does not exist.
+
+## `string` library
+[string-lib]: #user-content-string-library
+
+The **string** library is an extension to the standard library that includes the
+same additions to [Roblox's string library][roblox-string-lib]:
+
+Name                  | Description
+----------------------|------------
+[split][string.split] | Splits a string into a list of substrings.
+
+[roblox-string-lib]: https://developer.roblox.com/en-us/api-reference/lua-docs/string
+
+### string.split
+[string.split]: #user-content-stringsplit
+<code>string.split(s: [string](##), sep: [string](##)?): {[string](##)}</code>
+
+The **split** function splits *s* into substrings separated by *sep*.
+
+If *sep* is nil, or if *sep* is not nil but not in *s*, then split returns a
+table with *s* as its only element.
+
+If *sep* is empty, then *s* is split after each UTF-8 sequence.
+
+**Note**: Roblox's implementation splits per byte, while this implementation
+splits per UTF-8 character.
 
 ## `sym` library
 [sym-lib]: #user-content-sym-library
@@ -1029,32 +1055,6 @@ Member                          | Kind
 
 Property determines which property of an instance attributes are applied to. If
 an empty string, instances will default to "AttributesSerialize".
-
-## `string` library
-[string-lib]: #user-content-string-library
-
-The **string** library is an extension to the standard library that includes the
-same additions to [Roblox's string library][roblox-string-lib]:
-
-Name                  | Description
-----------------------|------------
-[split][string.split] | Splits a string into a list of substrings.
-
-[roblox-string-lib]: https://developer.roblox.com/en-us/api-reference/lua-docs/string
-
-### string.split
-[string.split]: #user-content-stringsplit
-<code>string.split(s: [string](##), sep: [string](##)?): {[string](##)}</code>
-
-The **split** function splits *s* into substrings separated by *sep*.
-
-If *sep* is nil, or if *sep* is not nil but not in *s*, then split returns a
-table with *s* as its only element.
-
-If *sep* is empty, then *s* is split after each UTF-8 sequence.
-
-**Note**: Roblox's implementation splits per byte, while this implementation
-splits per UTF-8 character.
 
 # Descriptors
 [descriptors]: #user-content-descriptors
