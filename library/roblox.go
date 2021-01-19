@@ -1,9 +1,9 @@
 package library
 
 import (
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	reflect "github.com/anaminus/rbxmk/library/roblox"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(Roblox, 1) }

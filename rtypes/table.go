@@ -1,7 +1,7 @@
 package rtypes
 
 import (
-	lua "github.com/yuin/gopher-lua"
+	lua "github.com/anaminus/gopher-lua"
 )
 
 // Table wraps a Lua table to implement types.Value.

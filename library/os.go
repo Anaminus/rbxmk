@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(OS, 10) }

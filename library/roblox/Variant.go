@@ -3,10 +3,10 @@ package reflect
 import (
 	"fmt"
 
+	lua "github.com/anaminus/gopher-lua"
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {

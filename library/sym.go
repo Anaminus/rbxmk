@@ -1,9 +1,9 @@
 package library
 
 import (
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(Sym, 10) }

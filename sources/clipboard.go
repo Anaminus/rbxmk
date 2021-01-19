@@ -3,11 +3,11 @@ package sources
 import (
 	"fmt"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/rbxmk/sources/internal/clipboard"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 // Get list of each unique format from arguments.

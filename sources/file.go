@@ -4,10 +4,10 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(File) }

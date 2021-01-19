@@ -9,9 +9,9 @@ import (
 	"sync"
 	"unsafe"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 // World contains the entire state of a Lua environment, including a Lua state,

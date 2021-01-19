@@ -3,12 +3,12 @@ package reflect
 import (
 	"fmt"
 
+	lua "github.com/anaminus/gopher-lua"
 	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 // pushPropertyTo behaves like PushVariantTo, except that exprims types are

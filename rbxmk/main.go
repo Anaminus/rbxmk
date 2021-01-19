@@ -8,11 +8,11 @@ import (
 	"strconv"
 
 	"github.com/anaminus/but"
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/sources"
-	lua "github.com/yuin/gopher-lua"
 )
 
 // shortenPath transforms the given path so that it is relative to the working

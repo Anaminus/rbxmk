@@ -3,8 +3,8 @@ package library
 import (
 	"math"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(Math, 10) }

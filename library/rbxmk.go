@@ -4,13 +4,13 @@ import (
 	"os"
 	"path/filepath"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	reflect "github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(RBXMK, 0) }

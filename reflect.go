@@ -3,8 +3,8 @@ package rbxmk
 import (
 	"strings"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/robloxapi/types"
-	lua "github.com/yuin/gopher-lua"
 )
 
 // Reflector defines reflection behavior for a type. It defines how to convert a

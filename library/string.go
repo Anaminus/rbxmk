@@ -3,8 +3,8 @@ package library
 import (
 	"strings"
 
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	lua "github.com/yuin/gopher-lua"
 )
 
 func init() { register(String, 10) }
