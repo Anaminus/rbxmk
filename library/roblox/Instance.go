@@ -14,19 +14,15 @@ import (
 // pushPropertyTo behaves like PushVariantTo, except that exprims types are
 // reflected as userdata.
 func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
-	switch v.(type) {
-	case types.Numberlike:
-	case types.Intlike:
-	case types.Stringlike:
-	default:
-		return PushVariantTo(s, v)
-	}
 	rfl := s.Reflector(v.Type())
 	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
+	}
+	if rfl.Flags&Exprim == 0 {
+		return PushVariantTo(s, v)
 	}
 	u := s.UserDataOf(v, rfl.Name)
 	return u, nil
