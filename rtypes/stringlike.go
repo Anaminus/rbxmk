@@ -18,17 +18,27 @@ func (s Stringlike) IsStringlike() bool {
 		switch v.ClassName {
 		case "Script", "LocalScript", "ModuleScript":
 			return Stringlike{Value: v.Get("Source")}.IsStringlike()
+		case "LocalizationTable":
+			return Stringlike{Value: v.Get("Contents")}.IsStringlike()
 		}
 	}
 	return false
 }
 
 // Stringlike returns Value as a string, or an empty string if the value could
-// not be converted. Types that can be converted are the built-in string, []byte
-// and []rune, as well as any value implementing types.Stringlike. Additionally,
-// an Instance can be converted if its ClassName is either "Script",
-// "LocalScript", or "ModuleScript", and it's Source property is a string-like
-// type, in which case the Source is returned.
+// not be converted. Types that can be converted are the built-in string,
+// []byte, and []rune, as well as any value implementing types.Stringlike.
+//
+// Additionally, an Instance can be converted if it has a particular ClassName,
+// and a selected property has a string-like type:
+//
+//     ClassName         | Property
+//     ------------------|---------
+//     LocalizationTable | Contents
+//     LocalScript       | Source
+//     ModuleScript      | Source
+//     Script            | Source
+//
 func (s Stringlike) Stringlike() string {
 	switch v := s.Value.(type) {
 	case string:
@@ -43,6 +53,8 @@ func (s Stringlike) Stringlike() string {
 		switch v.ClassName {
 		case "Script", "LocalScript", "ModuleScript":
 			return Stringlike{Value: v.Get("Source")}.Stringlike()
+		case "LocalizationTable":
+			return Stringlike{Value: v.Get("Contents")}.Stringlike()
 		}
 	}
 	return ""

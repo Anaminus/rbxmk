@@ -2164,9 +2164,16 @@ encoding at all.
 
 A format that can encode a **Stringlike** type accepts any type that can be
 converted to a string. Additionally, an [Instance][Instance] will be accepted as
-a Stringlike when its [ClassName][Instance.ClassName] is "Script",
-"LocalScript", or "ModuleScript", and the Source property has a Stringlike
-value. In this case, the value of the Source property is encoded.
+a Stringlike when it has a particular [ClassName][Instance.ClassName], with a
+selected property that has a Stringlike value. In this case, the property is
+encoded.
+
+ClassName         | Property
+------------------|---------
+LocalizationTable | Contents
+LocalScript       | Source
+ModuleScript      | Source
+Script            | Source
 
 A format that can encode a **Numberlike** type accepts any type that can be
 converted to a floating-point number. An **Intlike** is similar, converting to
