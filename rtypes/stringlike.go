@@ -30,7 +30,7 @@ func (s Stringlike) IsStringlike() bool {
 // []byte, and []rune, as well as any value implementing types.Stringlike.
 //
 // Additionally, an Instance can be converted if it has a particular ClassName,
-// and a selected property has a string-like type:
+// and a selected property has a string-like type that isn't an Instance:
 //
 //     ClassName         | Property
 //     ------------------|---------
@@ -50,11 +50,17 @@ func (s Stringlike) Stringlike() string {
 	case types.Stringlike:
 		return v.Stringlike()
 	case *Instance:
+		var value types.Value
 		switch v.ClassName {
 		case "Script", "LocalScript", "ModuleScript":
-			return Stringlike{Value: v.Get("Source")}.Stringlike()
+			value = v.Get("Source")
 		case "LocalizationTable":
-			return Stringlike{Value: v.Get("Contents")}.Stringlike()
+			value = v.Get("Contents")
+		}
+		if value != nil {
+			if _, ok := value.(*Instance); !ok {
+				return Stringlike{Value: value}.Stringlike()
+			}
 		}
 	}
 	return ""

@@ -2165,8 +2165,8 @@ encoding at all.
 A format that can encode a **Stringlike** type accepts any type that can be
 converted to a string. Additionally, an [Instance][Instance] will be accepted as
 a Stringlike when it has a particular [ClassName][Instance.ClassName], with a
-selected property that has a Stringlike value. In this case, the property is
-encoded.
+selected property that has a Stringlike value that isn't an Instance. In this
+case, the property is encoded.
 
 ClassName         | Property
 ------------------|---------
