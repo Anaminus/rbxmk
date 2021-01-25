@@ -38,6 +38,7 @@ details on how rbxmk works.
 	4. [Descriptor formats][descriptor-formats]
 	5. [Attribute formats][attribute-formats]
 	6. [JSON formats][json-formats]
+	7. [Localization formats][localization-formats]
 
 </td></tr></tbody>
 </table>
@@ -2408,3 +2409,47 @@ Encode    | Array      | An array-like table, having a non-zero length.
 Encode    | Dictionary | A dictionary-like table, having a length of zero.
 
 Other value types are encoded as null.
+
+## Localization formats
+[localization-formats]: #user-content-localization-formats
+
+The localization format is defined for encoding localization data.
+
+Format                     | Description
+---------------------------|------------
+[`l10n.csv`][l10n.csv-fmt] | Localization data.
+
+### `l10n.csv` format
+[l10n.csv-fmt]: #user-content-l10ncsv-format
+
+The **l10n.csv** format decodes localization data into a LocalizationTable
+instance, where the data is assigned to the Contents property.
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A LocalizationTable a Contents property.
+Encode    | Stringlike           | Any string-like value.
+
+Decoded data is a string in JSON format with the following structure:
+
+	[
+		{
+			"key":      "string",
+			"context":  "string",
+			"examples": "string",
+			"source":   "string",
+			"values": {
+				"locale": "string",
+				...
+			},
+		},
+		...
+	]
+
+Well-formed data has certain constraints, which are described in the
+[LocalizationTable page][l10ntable] of the DevHub. rbxmk applies these same
+constraints when encoding and decoding. To avoid data loss, they are applied
+more strictly. Rather than discarding data, any conflict that arises will throw
+an error that describes the conflict in detail.
+
+[l10ntable]: https://developer.roblox.com/en-us/api-reference/class/LocalizationTable

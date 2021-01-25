@@ -78,7 +78,11 @@ func initMain(s rbxmk.State, t *testing.T) {
 			}
 			if s.L.GetTop() > n {
 				if !s.L.ToBool(n + 1) {
-					t.Errorf(msg)
+					if m := s.L.ToString(n + 2); m != "" {
+						t.Errorf("%s: %s", msg, m)
+					} else {
+						t.Errorf(msg)
+					}
 					return 0
 				}
 			}
@@ -108,7 +112,11 @@ func initMain(s rbxmk.State, t *testing.T) {
 			if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
 				if s.L.GetTop() > n {
 					if s.L.ToBool(n + 1) {
-						t.Errorf(msg)
+						if m := s.L.ToString(n + 2); m != "" {
+							t.Errorf("%s: %s", msg, m)
+						} else {
+							t.Errorf(msg)
+						}
 					}
 					return 0
 				}
