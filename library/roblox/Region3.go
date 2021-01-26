@@ -33,7 +33,7 @@ func Region3() Reflector {
 				return s.Push(v.(types.Region3).Size())
 			}},
 			"ExpandToGrid": {Method: true, Get: func(s State, v types.Value) int {
-				region := int(s.Pull(2, "int").(types.Int))
+				region := float64(s.Pull(2, "double").(types.Double))
 				return s.Push(v.(types.Region3).ExpandToGrid(region))
 			}},
 		},

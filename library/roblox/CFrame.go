@@ -28,12 +28,12 @@ func CFrame() Reflector {
 			"__add": func(s State) int {
 				v := s.Pull(1, "CFrame").(types.CFrame)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(v.AddVec(op))
+				return s.Push(v.AddV3(op))
 			},
 			"__sub": func(s State) int {
 				v := s.Pull(1, "CFrame").(types.CFrame)
 				op := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(v.SubVec(op))
+				return s.Push(v.SubV3(op))
 			},
 			"__mul": func(s State) int {
 				v := s.Pull(1, "CFrame").(types.CFrame)
@@ -41,7 +41,7 @@ func CFrame() Reflector {
 				case types.CFrame:
 					return s.Push(v.Mul(op))
 				case types.Vector3:
-					return s.Push(v.MulVec(op))
+					return s.Push(v.MulV3(op))
 				default:
 					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible types.value type or nil")
 					return 0
