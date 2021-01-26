@@ -11,6 +11,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rbxmk/cmds"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -186,11 +187,8 @@ func TestScripts(t *testing.T) {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
 			args := scriptArguments
 			args[1] = file
-			err := Main(args[:], Std{
-				in:  os.Stdin,
-				out: os.Stdout,
-				err: os.Stderr,
-			}, func(s rbxmk.State) { initMain(s, t) })
+			flags := cmds.NewFlags(args[0], args[1:])
+			err := Run(flags, func(s rbxmk.State) { initMain(s, t) })
 			if err != nil {
 				t.Errorf("script %s: %s", file, err)
 			}

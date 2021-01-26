@@ -592,7 +592,6 @@ type File interface {
 	Name() string
 	Stat() (os.FileInfo, error)
 	Read([]byte) (int, error)
-	Write([]byte) (int, error)
 }
 
 // DoFile executes the contents of file f as Lua. args is the number of
