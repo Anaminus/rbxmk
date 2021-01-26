@@ -49,6 +49,10 @@ type Reflector struct {
 	// Environment is called after the type is registered to provide additional
 	// setup. env is the table representing the base library.
 	Environment func(s State, env *lua.LTable)
+
+	// ConvertFrom receives an arbitrary value and attempts to convert it to the
+	// reflector's type. Returns nil if the value could not be converted.
+	ConvertFrom func(v types.Value) types.Value
 }
 
 type ReflectorFlags uint8

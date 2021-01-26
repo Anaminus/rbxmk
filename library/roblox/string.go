@@ -19,5 +19,14 @@ func String() Reflector {
 			}
 			return nil, TypeError(nil, 0, "string")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.String:
+				return v
+			case types.Stringlike:
+				return types.String(v.Stringlike())
+			}
+			return nil
+		},
 	}
 }

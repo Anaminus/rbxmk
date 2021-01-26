@@ -27,5 +27,16 @@ func Int() Reflector {
 			}
 			return nil, TypeError(nil, 0, "int")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Int:
+				return v
+			case types.Intlike:
+				return types.Int(v.Intlike())
+			case types.Numberlike:
+				return types.Int(v.Numberlike())
+			}
+			return nil
+		},
 	}
 }

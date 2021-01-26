@@ -26,5 +26,16 @@ func Double() Reflector {
 			}
 			return nil, TypeError(nil, 0, "double")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Double:
+				return v
+			case types.Numberlike:
+				return types.Double(v.Numberlike())
+			case types.Intlike:
+				return types.Double(v.Intlike())
+			}
+			return nil
+		},
 	}
 }

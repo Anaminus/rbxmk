@@ -27,5 +27,14 @@ func Content() Reflector {
 			}
 			return nil, TypeError(nil, 0, "Content")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Content:
+				return v
+			case types.Stringlike:
+				return types.Content(v.Stringlike())
+			}
+			return nil
+		},
 	}
 }

@@ -27,5 +27,14 @@ func ProtectedString() Reflector {
 			}
 			return nil, TypeError(nil, 0, "ProtectedString")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.ProtectedString:
+				return v
+			case types.Stringlike:
+				return types.ProtectedString(v.Stringlike())
+			}
+			return nil
+		},
 	}
 }

@@ -27,5 +27,14 @@ func SharedString() Reflector {
 			}
 			return nil, TypeError(nil, 0, "SharedString")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.SharedString:
+				return v
+			case types.Stringlike:
+				return types.SharedString(v.Stringlike())
+			}
+			return nil
+		},
 	}
 }

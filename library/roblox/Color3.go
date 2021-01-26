@@ -75,5 +75,14 @@ func Color3() Reflector {
 				))
 			},
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Color3:
+				return v
+			case rtypes.Color3uint8:
+				return types.Color3(v)
+			}
+			return nil
+		},
 	}
 }

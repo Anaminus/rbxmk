@@ -28,5 +28,14 @@ func Color3uint8() Reflector {
 			}
 			return nil, TypeError(nil, 0, "Color3uint8")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case rtypes.Color3uint8:
+				return v
+			case types.Color3:
+				return rtypes.Color3uint8(v)
+			}
+			return nil
+		},
 	}
 }

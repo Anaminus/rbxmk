@@ -27,5 +27,16 @@ func Int64() Reflector {
 			}
 			return nil, TypeError(nil, 0, "int64")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Int64:
+				return v
+			case types.Intlike:
+				return types.Int64(v.Intlike())
+			case types.Numberlike:
+				return types.Int64(v.Numberlike())
+			}
+			return nil
+		},
 	}
 }

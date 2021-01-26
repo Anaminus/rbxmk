@@ -27,5 +27,16 @@ func Float() Reflector {
 			}
 			return nil, TypeError(nil, 0, "float")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.Float:
+				return v
+			case types.Numberlike:
+				return types.Float(v.Numberlike())
+			case types.Intlike:
+				return types.Float(v.Intlike())
+			}
+			return nil
+		},
 	}
 }

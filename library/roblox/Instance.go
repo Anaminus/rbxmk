@@ -28,75 +28,6 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	return u, nil
 }
 
-// convertType tries to convert v to t.
-func convertType(s State, t string, v types.Value) (nv types.Value, ok bool) {
-	if v.Type() == t {
-		return v, true
-	}
-	if s.Reflector(t).Name == "" {
-		return v, false
-	}
-	switch t {
-	case "int":
-		switch v := v.(type) {
-		case types.Intlike:
-			return types.Int(v.Intlike()), true
-		case types.Numberlike:
-			return types.Int(v.Numberlike()), true
-		}
-	case "int64":
-		switch v := v.(type) {
-		case types.Intlike:
-			return types.Int64(v.Intlike()), true
-		case types.Numberlike:
-			return types.Int64(v.Numberlike()), true
-		}
-	case "float":
-		switch v := v.(type) {
-		case types.Numberlike:
-			return types.Float(v.Numberlike()), true
-		case types.Intlike:
-			return types.Float(v.Intlike()), true
-		}
-	case "double":
-		switch v := v.(type) {
-		case types.Numberlike:
-			return types.Double(v.Numberlike()), true
-		case types.Intlike:
-			return types.Double(v.Intlike()), true
-		}
-	case "string":
-		if v, ok := v.(types.Stringlike); ok {
-			return types.String(v.Stringlike()), true
-		}
-	case "BinaryString":
-		if v, ok := v.(types.Stringlike); ok {
-			return types.BinaryString(v.Stringlike()), true
-		}
-	case "ProtectedString":
-		if v, ok := v.(types.Stringlike); ok {
-			return types.ProtectedString(v.Stringlike()), true
-		}
-	case "Content":
-		if v, ok := v.(types.Stringlike); ok {
-			return types.Content(v.Stringlike()), true
-		}
-	case "SharedString":
-		if v, ok := v.(types.Stringlike); ok {
-			return types.SharedString(v.Stringlike()), true
-		}
-	case "Color3":
-		if v, ok := v.(rtypes.Color3uint8); ok {
-			return types.Color3(v), true
-		}
-	case "Color3uint8":
-		if v, ok := v.(types.Color3); ok {
-			return rtypes.Color3uint8(v), true
-		}
-	}
-	return v, false
-}
-
 func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
 	enumValue := desc.EnumTypes.Enum(name)
 	if enumValue == nil {
@@ -473,10 +404,15 @@ func Instance() Reflector {
 							return s.RaiseError("invalid value for enum %s", enum.Name())
 						}
 					default:
-						var ok bool
-						value, ok = convertType(s, propDesc.ValueType.Name, value)
-						if !ok {
-							return s.RaiseError("%s expected, got %s", propDesc.ValueType.Name, value.Type())
+						if pt, vt := propDesc.ValueType.Name, value.Type(); vt != pt {
+							// Attempt to convert value type to property type.
+							rfl := s.Reflector(pt)
+							if rfl.Name == "" || rfl.ConvertFrom == nil {
+								return s.RaiseError("%s expected, got %s", pt, vt)
+							}
+							if value = rfl.ConvertFrom(value); value == nil {
+								return s.RaiseError("%s expected, got %s", pt, vt)
+							}
 						}
 					}
 				}

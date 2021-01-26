@@ -27,5 +27,14 @@ func BinaryString() Reflector {
 			}
 			return nil, TypeError(nil, 0, "BinaryString")
 		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case types.BinaryString:
+				return v
+			case types.Stringlike:
+				return types.BinaryString(v.Stringlike())
+			}
+			return nil
+		},
 	}
 }
