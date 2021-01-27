@@ -233,6 +233,72 @@ func encodeL10nCSV(b []byte) (c []byte, err error) {
 	return buf.Bytes(), nil
 }
 
+func init() { register(CSV) }
+func CSV() rbxmk.Format {
+	return rbxmk.Format{
+		Name:       "csv",
+		MediaTypes: []string{"text/csv", "text/plain"},
+		CanDecode: func(typeName string) bool {
+			return typeName == "Array"
+		},
+		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
+			r := csv.NewReader(bytes.NewReader(b))
+			r.ReuseRecord = true
+			var vrecords rtypes.Array
+			for {
+				record, err := r.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					return nil, fmt.Errorf("decode CSV: %w", err)
+				}
+				vrecord := make(rtypes.Array, len(record))
+				for i, v := range record {
+					vrecord[i] = types.String(v)
+				}
+				vrecords = append(vrecords, vrecord)
+			}
+			return vrecords, nil
+		},
+		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+			if _, ok := v.(rtypes.Dictionary); ok {
+				// Assume empty array, encode as no content.
+				return []byte{}, nil
+			}
+			vrecords, ok := v.(rtypes.Array)
+			if !ok {
+				return nil, cannotEncode(v)
+			}
+			var buf bytes.Buffer
+			w := csv.NewWriter(&buf)
+			var record []string
+			for i, vrecord := range vrecords {
+				vrecord, ok := vrecord.(rtypes.Array)
+				if !ok {
+					return nil, fmt.Errorf("record %d: %w", i+1, cannotEncode(vrecord))
+				}
+				record = record[:0]
+				for j, v := range vrecord {
+					s, ok := v.(types.Stringlike)
+					if !ok {
+						return nil, fmt.Errorf("record %d:%d: %w", i+1, j+1, cannotEncode(v))
+					}
+					record = append(record, s.Stringlike())
+				}
+				if err := w.Write(record); err != nil {
+					return nil, fmt.Errorf("encode CSV: %w", err)
+				}
+			}
+			w.Flush()
+			if err := w.Error(); err != nil {
+				return nil, fmt.Errorf("encode CSV: %w", err)
+			}
+			return buf.Bytes(), nil
+		},
+	}
+}
+
 func init() { register(L10nCSV) }
 func L10nCSV() rbxmk.Format {
 	return rbxmk.Format{

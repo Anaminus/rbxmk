@@ -38,7 +38,7 @@ details on how rbxmk works.
 	4. [Descriptor formats][descriptor-formats]
 	5. [Attribute formats][attribute-formats]
 	6. [JSON formats][json-formats]
-	7. [Localization formats][localization-formats]
+	7. [CSV formats][csv-formats]
 
 </td></tr></tbody>
 </table>
@@ -2410,14 +2410,45 @@ Encode    | Dictionary | A dictionary-like table, having a length of zero.
 
 Other value types are encoded as null.
 
-## Localization formats
-[localization-formats]: #user-content-localization-formats
+## CSV formats
+[csv-formats]: #user-content-csv-formats
 
-The localization format is defined for encoding localization data.
+Several formats are defined for encoding comma-separated values.
 
 Format                     | Description
 ---------------------------|------------
+[`csv`][csv-fmt]           | General comma-separated values.
 [`l10n.csv`][l10n.csv-fmt] | Localization data.
+
+### `csv` format
+[csv-fmt]: #user-content-csv-format
+
+The **csv** format decodes comma-separated values into a two-dimensional array.
+
+Direction | Type  | Description
+----------|-------|------------
+Decode    | Array | An array of arrays of strings.
+Encode    | Array | An array of arrays of strings.
+
+CSV data decodes into a two-dimensional array of strings. For example,
+
+	A,B,C
+	D,E,F
+	G,H,I
+
+decodes into
+
+	{
+		{"A", "B", "C"),
+		{"D", "E", "F"),
+		{"G", "H", "I"),
+	}
+
+When encoding, each field must be string-like, but cannot be an Instance.
+
+When decoding, each record must have the same number of fields. When encoding,
+records do not need to have the same number of fields.
+
 
 ### `l10n.csv` format
 [l10n.csv-fmt]: #user-content-l10ncsv-format
