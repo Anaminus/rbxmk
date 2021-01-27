@@ -3,6 +3,7 @@ package sources
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -17,11 +18,16 @@ func HTTP() rbxmk.Source {
 		Name: "http",
 		Read: func(s rbxmk.State) (b []byte, err error) {
 			url := string(s.Pull(1, "string").(types.String))
-			return httpGet(url)
+			r, err := httpGet(url)
+			if err != nil {
+				return nil, err
+			}
+			defer r.Close()
+			return ioutil.ReadAll(r)
 		},
 		Write: func(s rbxmk.State, b []byte) (err error) {
 			url := string(s.Pull(1, "string").(types.String))
-			return httpPost(url, b)
+			return httpPost(url, bytes.NewReader(b))
 		},
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
@@ -34,7 +40,7 @@ func HTTP() rbxmk.Source {
 	}
 }
 
-func httpGet(url string) (b []byte, err error) {
+func httpGet(url string) (r io.ReadCloser, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -43,11 +49,11 @@ func httpGet(url string) (b []byte, err error) {
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("bad status: %s", resp.Status)
 	}
-	return ioutil.ReadAll(resp.Body)
+	return resp.Body, nil
 }
 
-func httpPost(url string, b []byte) (err error) {
-	resp, err := http.Post(url, "", bytes.NewReader(b))
+func httpPost(url string, r io.Reader) (err error) {
+	resp, err := http.Post(url, "", r)
 	if err != nil {
 		return err
 	}
@@ -69,11 +75,12 @@ func httpRead(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
-	b, err := httpGet(url)
+	r, err := httpGet(url)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	v, err := format.Decode(rbxmk.FormatOptions{}, b)
+	defer r.Close()
+	v, err := format.Decode(rbxmk.FormatOptions{}, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -92,11 +99,11 @@ func httpWrite(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
-	b, err := format.Encode(rbxmk.FormatOptions{}, value)
-	if err != nil {
+	var w bytes.Buffer
+	if err := format.Encode(rbxmk.FormatOptions{}, &w, value); err != nil {
 		return s.RaiseError(err.Error())
 	}
-	if err := httpPost(url, b); err != nil {
+	if err := httpPost(url, &w); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return 0

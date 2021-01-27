@@ -1,8 +1,8 @@
 package formats
 
 import (
-	"bytes"
 	"encoding/json"
+	"io"
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -18,20 +18,19 @@ func Desc() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "RootDesc"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			root, err := rbxdumpjson.Decode(bytes.NewReader(b))
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			root, err := rbxdumpjson.Decode(r)
 			if err != nil {
 				return nil, err
 			}
 			return &rtypes.RootDesc{Root: root}, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			root := v.(*rtypes.RootDesc).Root
-			var buf bytes.Buffer
-			if err := rbxdumpjson.Encode(&buf, root); err != nil {
-				return nil, err
+			if err := rbxdumpjson.Encode(w, root); err != nil {
+				return err
 			}
-			return buf.Bytes(), nil
+			return nil
 		},
 	}
 }
@@ -44,16 +43,20 @@ func DescPatch() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "DescActions"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var actions rtypes.DescActions
-			if err := json.Unmarshal(b, &actions); err != nil {
+			j := json.NewDecoder(r)
+			if err := j.Decode(&actions); err != nil {
 				return nil, err
 			}
 			return rtypes.DescActions(actions), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			actions := v.(rtypes.DescActions)
-			return json.MarshalIndent(actions, "", "\t")
+			j := json.NewEncoder(w)
+			j.SetIndent("", "\t")
+			j.SetEscapeHTML(false)
+			return j.Encode(actions)
 		},
 	}
 }

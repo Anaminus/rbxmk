@@ -2,6 +2,7 @@ package sources
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -50,11 +51,12 @@ func fileRead(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
-	b, err := ioutil.ReadFile(fileName)
+	r, err := os.Open(fileName)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	v, err := format.Decode(rbxmk.FormatOptions{}, b)
+	defer r.Close()
+	v, err := format.Decode(rbxmk.FormatOptions{}, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -88,11 +90,15 @@ func fileWrite(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
-	b, err := format.Encode(rbxmk.FormatOptions{}, value)
+	w, err := os.Create(fileName)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
-	if err := ioutil.WriteFile(fileName, b, 0666); err != nil {
+	defer w.Close()
+	if err := format.Encode(rbxmk.FormatOptions{}, w, value); err != nil {
+		return s.RaiseError(err.Error())
+	}
+	if err := w.Sync(); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return 0

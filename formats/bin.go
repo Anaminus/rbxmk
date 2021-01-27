@@ -1,6 +1,9 @@
 package formats
 
 import (
+	"io"
+	"io/ioutil"
+
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
@@ -14,15 +17,20 @@ func Binary() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "BinaryString"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			b, err := ioutil.ReadAll(r)
+			if err != nil {
+				return nil, err
+			}
 			return types.BinaryString(b), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			s := rtypes.Stringlike{Value: v}
 			if !s.IsStringlike() {
-				return nil, cannotEncode(v)
+				return cannotEncode(v)
 			}
-			return []byte(s.Stringlike()), nil
+			_, err := w.Write([]byte(s.Stringlike()))
+			return err
 		},
 	}
 }

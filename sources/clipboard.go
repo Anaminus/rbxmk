@@ -1,6 +1,7 @@
 package sources
 
 import (
+	"bytes"
 	"fmt"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -130,7 +131,7 @@ func clipboardRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	format := mediaFormats[f]
-	v, err := format.Decode(rbxmk.FormatOptions{}, b)
+	v, err := format.Decode(rbxmk.FormatOptions{}, bytes.NewReader(b))
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -151,20 +152,21 @@ func clipboardWrite(s rbxmk.State) int {
 	clipboardFormats := []clipboard.Format{}
 	mediaDefined := map[string]struct{}{}
 	for _, format := range formats {
-		var b []byte
+		var w bytes.Buffer
+		var written bool
 		for _, mediaType := range format.MediaTypes {
 			if _, ok := mediaDefined[mediaType]; ok {
 				continue
 			}
-			if b == nil {
-				var err error
-				if b, err = format.Encode(rbxmk.FormatOptions{}, value); err != nil {
+			if !written {
+				if err := format.Encode(rbxmk.FormatOptions{}, &w, value); err != nil {
 					return s.RaiseError(err.Error())
 				}
+				written = true
 			}
 			clipboardFormats = append(clipboardFormats, clipboard.Format{
 				Name:    mediaType,
-				Content: b,
+				Content: w.Bytes(),
 			})
 			mediaDefined[mediaType] = struct{}{}
 		}

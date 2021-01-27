@@ -1,8 +1,8 @@
 package formats
 
 import (
-	"bytes"
 	"fmt"
+	"io"
 	"sort"
 
 	"github.com/anaminus/rbxmk"
@@ -151,9 +151,9 @@ func RBXAttr() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var model rbxattr.Model
-			if _, err = model.ReadFrom(bytes.NewReader(b)); err != nil {
+			if _, err = model.ReadFrom(r); err != nil {
 				return nil, fmt.Errorf("decode attributes: %w", err)
 			}
 			dict := make(rtypes.Dictionary, len(model.Value))
@@ -168,10 +168,10 @@ func RBXAttr() rbxmk.Format {
 			}
 			return dict, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
-				return nil, fmt.Errorf("Dictionary expected, got %s", v.Type())
+				return fmt.Errorf("Dictionary expected, got %s", v.Type())
 			}
 
 			// Roblox's implementation encodes using reverse insertion order. To
@@ -196,11 +196,10 @@ func RBXAttr() rbxmk.Format {
 				})
 			}
 
-			var buf bytes.Buffer
-			if _, err = model.WriteTo(&buf); err != nil {
-				return nil, fmt.Errorf("encode attributes: %w", err)
+			if _, err := model.WriteTo(w); err != nil {
+				return fmt.Errorf("encode attributes: %w", err)
 			}
-			return buf.Bytes(), nil
+			return nil
 		},
 	}
 }

@@ -1,7 +1,6 @@
 package formats
 
 import (
-	"bytes"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
@@ -32,13 +31,13 @@ func (m orderedMap) UnmarshalJSON(b []byte) error {
 // Number of index headers.
 const l10nIndexHeaders = 4
 
-func decodeL10nCSV(b []byte) (j []byte, err error) {
-	if len(b) == 0 {
-		return []byte("[]"), nil
-	}
-	r := csv.NewReader(bytes.NewReader(b))
-	headers, err := r.Read()
+func decodeL10nCSV(r io.Reader) (j []byte, err error) {
+	cr := csv.NewReader(r)
+	headers, err := cr.Read()
 	if err != nil {
+		if err == io.EOF {
+			return []byte("[]"), nil
+		}
 		return nil, err
 	}
 	// Headers that have been mapped.
@@ -93,10 +92,10 @@ loop:
 
 	// Scan remaining entries into JSON structure.
 	var entries []l10nCSVEntry
-	r.ReuseRecord = true
+	cr.ReuseRecord = true
 	entry := make([]string, n)
 	for {
-		rec, err := r.Read()
+		rec, err := cr.Read()
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -144,10 +143,10 @@ loop:
 	return json.Marshal(entries)
 }
 
-func encodeL10nCSV(b []byte) (c []byte, err error) {
+func encodeL10nCSV(w io.Writer, b []byte) error {
 	var entries []l10nCSVEntry
 	if err := json.Unmarshal(b, &entries); err != nil {
-		return nil, err
+		return err
 	}
 
 	type tuple struct {
@@ -170,7 +169,7 @@ func encodeL10nCSV(b []byte) (c []byte, err error) {
 		for k := range entry.Values {
 			l := strings.ToLower(k)
 			if m, ok := mappedEntryHeaders[l]; ok {
-				return nil, fmt.Errorf("entry %d: value field %q conflicts with %q", i, k, m)
+				return fmt.Errorf("entry %d: value field %q conflicts with %q", i, k, m)
 			}
 			mappedEntryHeaders[l] = k
 		}
@@ -188,26 +187,25 @@ func encodeL10nCSV(b []byte) (c []byte, err error) {
 		}
 		// Ensure no index headers conflict.
 		if entry.Key == "" && entry.Source == "" {
-			return nil, fmt.Errorf("entry %d has empty key and source", len(entries))
+			return fmt.Errorf("entry %d has empty key and source", len(entries))
 		} else if entry.Key != "" {
 			if j, ok := kIndex[entry.Key]; ok {
-				return nil, fmt.Errorf("entry %d conflicts with %d by key %q", len(entries), j, entry.Key)
+				return fmt.Errorf("entry %d conflicts with %d by key %q", len(entries), j, entry.Key)
 			}
 			kIndex[entry.Key] = len(entries) + 1
 		} else {
 			t := tuple{entry.Context, entry.Source}
 			if j, ok := csIndex[t]; ok {
-				return nil, fmt.Errorf("entry %d conflicts with %d by (context,source) (%q, %q)", len(entries), j, t.context, t.source)
+				return fmt.Errorf("entry %d conflicts with %d by (context,source) (%q, %q)", len(entries), j, t.context, t.source)
 			}
 			csIndex[t] = len(entries) + 1
 		}
 	}
 	sort.Strings(headers[l10nIndexHeaders:])
 
-	var buf bytes.Buffer
-	w := csv.NewWriter(&buf)
-	if err := w.Write(headers); err != nil {
-		return nil, err
+	cw := csv.NewWriter(w)
+	if err := cw.Write(headers); err != nil {
+		return err
 	}
 	entry := make([]string, len(headers))
 	for _, jentry := range entries {
@@ -222,15 +220,15 @@ func encodeL10nCSV(b []byte) (c []byte, err error) {
 			key := headers[i]
 			entry[i] = jentry.Values[key]
 		}
-		if err := w.Write(entry); err != nil {
-			return nil, err
+		if err := cw.Write(entry); err != nil {
+			return err
 		}
 	}
-	w.Flush()
-	if err := w.Error(); err != nil {
-		return nil, err
+	cw.Flush()
+	if err := cw.Error(); err != nil {
+		return err
 	}
-	return buf.Bytes(), nil
+	return nil
 }
 
 func init() { register(CSV) }
@@ -241,12 +239,12 @@ func CSV() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Array"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			r := csv.NewReader(bytes.NewReader(b))
-			r.ReuseRecord = true
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			cr := csv.NewReader(r)
+			cr.ReuseRecord = true
 			var vrecords rtypes.Array
 			for {
-				record, err := r.Read()
+				record, err := cr.Read()
 				if err == io.EOF {
 					break
 				}
@@ -261,40 +259,39 @@ func CSV() rbxmk.Format {
 			}
 			return vrecords, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			if _, ok := v.(rtypes.Dictionary); ok {
 				// Assume empty array, encode as no content.
-				return []byte{}, nil
+				return nil
 			}
 			vrecords, ok := v.(rtypes.Array)
 			if !ok {
-				return nil, cannotEncode(v)
+				return cannotEncode(v)
 			}
-			var buf bytes.Buffer
-			w := csv.NewWriter(&buf)
+			cw := csv.NewWriter(w)
 			var record []string
 			for i, vrecord := range vrecords {
 				vrecord, ok := vrecord.(rtypes.Array)
 				if !ok {
-					return nil, fmt.Errorf("record %d: %w", i+1, cannotEncode(vrecord))
+					return fmt.Errorf("record %d: %w", i+1, cannotEncode(vrecord))
 				}
 				record = record[:0]
 				for j, v := range vrecord {
 					s, ok := v.(types.Stringlike)
 					if !ok {
-						return nil, fmt.Errorf("record %d:%d: %w", i+1, j+1, cannotEncode(v))
+						return fmt.Errorf("record %d:%d: %w", i+1, j+1, cannotEncode(v))
 					}
 					record = append(record, s.Stringlike())
 				}
-				if err := w.Write(record); err != nil {
-					return nil, fmt.Errorf("encode CSV: %w", err)
+				if err := cw.Write(record); err != nil {
+					return fmt.Errorf("encode CSV: %w", err)
 				}
 			}
-			w.Flush()
-			if err := w.Error(); err != nil {
-				return nil, fmt.Errorf("encode CSV: %w", err)
+			cw.Flush()
+			if err := cw.Error(); err != nil {
+				return fmt.Errorf("encode CSV: %w", err)
 			}
-			return buf.Bytes(), nil
+			return nil
 		},
 	}
 }
@@ -305,23 +302,24 @@ func L10nCSV() rbxmk.Format {
 		Name:       "l10n.csv",
 		MediaTypes: []string{"text/csv", "text/plain"},
 		CanDecode:  canDecodeInstance,
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			if b, err = decodeL10nCSV(b); err != nil {
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			b, err := decodeL10nCSV(r)
+			if err != nil {
 				return nil, fmt.Errorf("decode CSV: %w", err)
 			}
 			table := rtypes.NewInstance("LocalizationTable", nil)
 			table.Set("Contents", types.String(b))
 			return table, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			s := rtypes.Stringlike{Value: v}
 			if !s.IsStringlike() {
-				return nil, cannotEncode(v)
+				return cannotEncode(v)
 			}
-			if b, err = encodeL10nCSV([]byte(s.Stringlike())); err != nil {
-				return nil, fmt.Errorf("encode CSV: %w", err)
+			if err := encodeL10nCSV(w, []byte(s.Stringlike())); err != nil {
+				return fmt.Errorf("encode CSV: %w", err)
 			}
-			return b, nil
+			return nil
 		},
 	}
 }

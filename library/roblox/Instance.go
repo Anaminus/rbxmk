@@ -1,7 +1,9 @@
 package reflect
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	. "github.com/anaminus/rbxmk"
@@ -80,7 +82,8 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 		s.RaiseError("property %q is not string-like", attrcfg.Property)
 		return nil
 	}
-	dict, err := formats.RBXAttr().Decode(FormatOptions{}, []byte(sv.Stringlike()))
+	r := strings.NewReader(sv.Stringlike())
+	dict, err := formats.RBXAttr().Decode(FormatOptions{}, r)
 	if err != nil {
 		s.RaiseError("decode attributes from %q: %w", attrcfg.Property, err)
 		return nil
@@ -90,12 +93,12 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 
 func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 	attrcfg := defaultAttrConfig(inst)
-	b, err := formats.RBXAttr().Encode(FormatOptions{}, dict)
-	if err != nil {
+	var w bytes.Buffer
+	if err := formats.RBXAttr().Encode(FormatOptions{}, &w, dict); err != nil {
 		s.RaiseError("encode attributes to %q: %w", attrcfg.Property, err)
 		return
 	}
-	inst.Set(attrcfg.Property, types.BinaryString(b))
+	inst.Set(attrcfg.Property, types.BinaryString(w.Bytes()))
 }
 
 func init() { register(Instance) }

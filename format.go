@@ -1,6 +1,8 @@
 package rbxmk
 
 import (
+	"io"
+
 	"github.com/robloxapi/types"
 )
 
@@ -19,12 +21,12 @@ type Format struct {
 	CanDecode func(typeName string) bool
 
 	// Encode receives a value of one of a number of types and encodes it as a
-	// sequence of bytes.
-	Encode func(opt FormatOptions, v types.Value) ([]byte, error)
+	// sequence of bytes written to w.
+	Encode func(opt FormatOptions, w io.Writer, v types.Value) error
 
-	// Decode receives a sequence of bytes an decodes it into a value of a
-	// single type.
-	Decode func(opt FormatOptions, b []byte) (types.Value, error)
+	// Decode receives a sequence of bytes read from r, and decodes it into a
+	// value of a single type.
+	Decode func(opt FormatOptions, r io.Reader) (types.Value, error)
 }
 
 // FormatOptions contains options to be passed to Format.Encode and

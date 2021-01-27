@@ -1,8 +1,10 @@
 package library
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
@@ -263,11 +265,11 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 	if format.Encode == nil {
 		return s.RaiseError("cannot encode with format %s", name)
 	}
-	b, err := format.Encode(rbxmk.FormatOptions{}, s.Pull(2, "Variant"))
-	if err != nil {
+	var w bytes.Buffer
+	if err := format.Encode(rbxmk.FormatOptions{}, &w, s.Pull(2, "Variant")); err != nil {
 		return s.RaiseError(err.Error())
 	}
-	return s.Push(types.BinaryString(b))
+	return s.Push(types.BinaryString(w.Bytes()))
 }
 
 func rbxmkDecodeFormat(s rbxmk.State) int {
@@ -279,7 +281,8 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 	if format.Decode == nil {
 		return s.RaiseError("cannot decode with format %s", name)
 	}
-	v, err := format.Decode(rbxmk.FormatOptions{}, []byte(s.Pull(2, "BinaryString").(types.BinaryString)))
+	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
+	v, err := format.Decode(rbxmk.FormatOptions{}, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}

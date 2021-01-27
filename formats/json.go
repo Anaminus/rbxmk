@@ -2,6 +2,7 @@ package formats
 
 import (
 	"encoding/json"
+	"io"
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -72,15 +73,19 @@ func JSON() rbxmk.Format {
 			}
 			return false
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var u interface{}
-			if err := json.Unmarshal(b, &u); err != nil {
+			j := json.NewDecoder(r)
+			if err := j.Decode(&u); err != nil {
 				return nil, err
 			}
 			return decodeJSON(u), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
-			return json.MarshalIndent(encodeJSON(v), "", "\t")
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			j := json.NewEncoder(w)
+			j.SetIndent("", "\t")
+			j.SetEscapeHTML(false)
+			return j.Encode(encodeJSON(v))
 		},
 	}
 }

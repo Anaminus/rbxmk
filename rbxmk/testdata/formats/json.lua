@@ -16,14 +16,14 @@ T.Pass(object.a == 1           , "decodes object field a")
 T.Pass(object.b == 2           , "decodes object field b")
 T.Pass(object.c == 3           , "decodes object field c")
 
-T.Pass(rbxmk.encodeFormat("json", nil)             == [[null]]            , "nil encodes into json null")
-T.Pass(rbxmk.encodeFormat("json", false)           == [[false]]           , "false encodes into json false")
-T.Pass(rbxmk.encodeFormat("json", true)            == [[true]]            , "true encodes into json true")
-T.Pass(rbxmk.encodeFormat("json", -3.14159)        == [[-3.14159]]        , "number encodes into json number")
-T.Pass(rbxmk.encodeFormat("json", "Hello, world!") == [["Hello, world!"]] , "string encodes into json string")
+T.Pass(rbxmk.encodeFormat("json", nil)             == "null\n"            , "nil encodes into json null")
+T.Pass(rbxmk.encodeFormat("json", false)           == "false\n"           , "false encodes into json false")
+T.Pass(rbxmk.encodeFormat("json", true)            == "true\n"            , "true encodes into json true")
+T.Pass(rbxmk.encodeFormat("json", -3.14159)        == "-3.14159\n"        , "number encodes into json number")
+T.Pass(rbxmk.encodeFormat("json", "Hello, world!") == '"Hello, world!"\n' , "string encodes into json string")
 
-local jarray = '[\n\t1,\n\t2,\n\t3\n]'
+local jarray = '[\n\t1,\n\t2,\n\t3\n]\n'
 T.Pass(rbxmk.encodeFormat("json", {1,2,3}) == jarray, "array table encodes into json array")
 
-local jobject = '{\n\t"a": 1,\n\t"b": 2,\n\t"c": 3\n}'
+local jobject = '{\n\t"a": 1,\n\t"b": 2,\n\t"c": 3\n}\n'
 T.Pass(rbxmk.encodeFormat("json", {a=1,b=2,c=3}) == jobject, "dictionary table encodes into json object")

@@ -1,7 +1,6 @@
 package formats
 
 import (
-	"bytes"
 	"io"
 
 	"github.com/anaminus/rbxmk"
@@ -326,15 +325,15 @@ func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 	return
 }
 
-func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), b []byte) (v types.Value, err error) {
-	root, err := method(bytes.NewReader(b))
+func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Reader) (v types.Value, err error) {
+	root, err := method(r)
 	if err != nil {
 		return nil, err
 	}
 	return decodeDataModel(root)
 }
 
-func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v types.Value) (b []byte, err error) {
+func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Writer, v types.Value) error {
 	var t *rtypes.Instance
 	switch v := v.(type) {
 	case *rtypes.Instance:
@@ -350,17 +349,13 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), v types
 			t.AddChild(inst)
 		}
 	default:
-		return nil, cannotEncode(v)
+		return cannotEncode(v)
 	}
 	r, err := encodeDataModel(t)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var buf bytes.Buffer
-	if err := method(&buf, r); err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
+	return method(w, r)
 }
 
 func init() { register(RBXL) }
@@ -371,11 +366,11 @@ func RBXL() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializePlace, b)
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxl.DeserializePlace, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
-			return encodeRBX(rbxl.SerializePlace, v)
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxl.SerializePlace, w, v)
 		},
 	}
 }
@@ -388,11 +383,11 @@ func RBXM() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializeModel, b)
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxl.DeserializeModel, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
-			return encodeRBX(rbxl.SerializeModel, v)
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxl.SerializeModel, w, v)
 		},
 	}
 }
@@ -405,11 +400,11 @@ func RBXLX() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			return decodeRBX(rbxlx.Deserialize, b)
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxlx.Deserialize, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
-			return encodeRBX(rbxlx.Serialize, v)
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxlx.Serialize, w, v)
 		},
 	}
 }
@@ -422,11 +417,11 @@ func RBXMX() rbxmk.Format {
 		CanDecode: func(typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, b []byte) (v types.Value, err error) {
-			return decodeRBX(rbxlx.Deserialize, b)
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxlx.Deserialize, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, v types.Value) (b []byte, err error) {
-			return encodeRBX(rbxlx.Serialize, v)
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxlx.Serialize, w, v)
 		},
 	}
 }
