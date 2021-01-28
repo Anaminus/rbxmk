@@ -69,6 +69,9 @@ func JSON() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "json",
 		MediaTypes: []string{"application/json", "text/plain"},
+		Options: map[string]string{
+			"Indent": "string",
+		},
 		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {
 			case "nil", "bool", "double", "string", "Array", "Dictionary":
@@ -87,6 +90,9 @@ func JSON() rbxmk.Format {
 		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			j := json.NewEncoder(w)
 			j.SetIndent("", "\t")
+			if v, ok := stringOf(f, "Indent"); ok {
+				j.SetIndent("", v)
+			}
 			j.SetEscapeHTML(false)
 			return j.Encode(encodeJSON(v))
 		},
