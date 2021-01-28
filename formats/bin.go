@@ -14,7 +14,7 @@ func Binary() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "bin",
 		MediaTypes: []string{"application/octet-stream"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "BinaryString"
 		},
 		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {

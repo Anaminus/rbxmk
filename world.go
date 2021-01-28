@@ -368,6 +368,9 @@ func (w *World) RegisterFormat(f Format) {
 	if _, ok := w.formats[f.Name]; ok {
 		panic("format " + f.Name + " already registered")
 	}
+	if _, ok := f.Options["Format"]; ok {
+		panic("format " + f.Name + " specifies reserved \"Format\" option")
+	}
 	if w.formats == nil {
 		w.formats = map[string]Format{}
 	}

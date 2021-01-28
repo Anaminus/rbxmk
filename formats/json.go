@@ -69,7 +69,7 @@ func JSON() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {
 			case "nil", "bool", "double", "string", "Array", "Dictionary":
 				return true

@@ -19,7 +19,7 @@ func decodeScript(r io.Reader, className string) (v types.Value, err error) {
 	return script, nil
 }
 
-func canDecodeInstance(typeName string) bool {
+func canDecodeInstance(f rbxmk.FormatOptions, typeName string) bool {
 	return typeName == "Instance"
 }
 

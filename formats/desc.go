@@ -15,7 +15,7 @@ func Desc() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "desc.json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "RootDesc"
 		},
 		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -40,7 +40,7 @@ func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "desc-patch.json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "DescActions"
 		},
 		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {

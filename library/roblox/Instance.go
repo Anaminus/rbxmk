@@ -83,7 +83,7 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 		return nil
 	}
 	r := strings.NewReader(sv.Stringlike())
-	dict, err := formats.RBXAttr().Decode(FormatOptions{}, r)
+	dict, err := formats.RBXAttr().Decode(nil, r)
 	if err != nil {
 		s.RaiseError("decode attributes from %q: %w", attrcfg.Property, err)
 		return nil
@@ -94,7 +94,7 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 	attrcfg := defaultAttrConfig(inst)
 	var w bytes.Buffer
-	if err := formats.RBXAttr().Encode(FormatOptions{}, &w, dict); err != nil {
+	if err := formats.RBXAttr().Encode(nil, &w, dict); err != nil {
 		s.RaiseError("encode attributes to %q: %w", attrcfg.Property, err)
 		return
 	}

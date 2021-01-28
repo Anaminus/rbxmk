@@ -14,7 +14,7 @@ func Text() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "txt",
 		MediaTypes: []string{"text/plain"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "string"
 		},
 		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {

@@ -236,7 +236,7 @@ func CSV() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "csv",
 		MediaTypes: []string{"text/csv", "text/plain"},
-		CanDecode: func(typeName string) bool {
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Array"
 		},
 		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
