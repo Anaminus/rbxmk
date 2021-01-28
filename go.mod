@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/anaminus/but v0.2.0
-	github.com/anaminus/gopher-lua v0.1.2
+	github.com/anaminus/gopher-lua v0.1.3
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.3.2
 	github.com/robloxapi/rbxfile v0.2.1
