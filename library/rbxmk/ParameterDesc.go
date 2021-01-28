@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -11,8 +11,8 @@ func init() { register(ParameterDesc) }
 func ParameterDesc() Reflector {
 	return Reflector{
 		Name:     "ParameterDesc",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "ParameterDesc").(rtypes.ParameterDesc)

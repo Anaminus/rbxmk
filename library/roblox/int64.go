@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,7 +10,7 @@ func init() { register(Int64) }
 func Int64() Reflector {
 	return Reflector{
 		Name:  "int64",
-		Flags: Exprim,
+		Flags: rbxmk.Exprim,
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int64))}, nil
 		},
@@ -25,7 +25,7 @@ func Int64() Reflector {
 					}
 				}
 			}
-			return nil, TypeError(nil, 0, "int64")
+			return nil, rbxmk.TypeError(nil, 0, "int64")
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

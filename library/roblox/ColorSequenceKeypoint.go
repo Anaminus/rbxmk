@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,8 +10,8 @@ func init() { register(ColorSequenceKeypoint) }
 func ColorSequenceKeypoint() Reflector {
 	return Reflector{
 		Name:     "ColorSequenceKeypoint",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)

@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,8 +10,8 @@ func init() { register(Axes) }
 func Axes() Reflector {
 	return Reflector{
 		Name:     "Axes",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Axes").(types.Axes)

@@ -4,7 +4,7 @@ import (
 	"sort"
 
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
@@ -14,8 +14,8 @@ func init() { register(EnumDesc) }
 func EnumDesc() Reflector {
 	return Reflector{
 		Name:     "EnumDesc",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "EnumDesc").(rtypes.EnumDesc)

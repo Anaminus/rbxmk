@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -14,7 +14,7 @@ func DescActions() Reflector {
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			actions, ok := v.(rtypes.DescActions)
 			if !ok {
-				return nil, TypeError(nil, 0, "DescActions")
+				return nil, rbxmk.TypeError(nil, 0, "DescActions")
 			}
 			actionRfl := s.Reflector("DescAction")
 			table := s.L.CreateTable(len(actions), 0)
@@ -30,7 +30,7 @@ func DescActions() Reflector {
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
 			actionRfl := s.Reflector("DescAction")
 			n := table.Len()

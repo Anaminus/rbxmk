@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
@@ -12,8 +12,8 @@ func init() { register(FunctionDesc) }
 func FunctionDesc() Reflector {
 	return Reflector{
 		Name:     "FunctionDesc",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "FunctionDesc").(rtypes.FunctionDesc)
@@ -49,7 +49,7 @@ func FunctionDesc() Reflector {
 				for i, paramDesc := range array {
 					param, ok := paramDesc.(rtypes.ParameterDesc)
 					if !ok {
-						TypeError(s.L, 3, param.Type())
+						rbxmk.TypeError(s.L, 3, param.Type())
 					}
 					params[i] = param.Parameter
 				}

@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,8 +10,8 @@ func init() { register(Vector3int16) }
 func Vector3int16() Reflector {
 	return Reflector{
 		Name:     "Vector3int16",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Vector3int16").(types.Vector3int16)

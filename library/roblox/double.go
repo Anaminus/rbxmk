@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -24,7 +24,7 @@ func Double() Reflector {
 					}
 				}
 			}
-			return nil, TypeError(nil, 0, "double")
+			return nil, rbxmk.TypeError(nil, 0, "double")
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

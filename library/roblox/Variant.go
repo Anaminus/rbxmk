@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )

@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,7 +10,7 @@ func init() { register(SharedString) }
 func SharedString() Reflector {
 	return Reflector{
 		Name:  "SharedString",
-		Flags: Exprim,
+		Flags: rbxmk.Exprim,
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.SharedString))}, nil
 		},
@@ -25,7 +25,7 @@ func SharedString() Reflector {
 					}
 				}
 			}
-			return nil, TypeError(nil, 0, "SharedString")
+			return nil, rbxmk.TypeError(nil, 0, "SharedString")
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

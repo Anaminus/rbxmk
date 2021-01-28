@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -17,7 +17,7 @@ func Number() Reflector {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return types.Double(n), nil
 			}
-			return nil, TypeError(nil, 0, "number")
+			return nil, rbxmk.TypeError(nil, 0, "number")
 		},
 	}
 }

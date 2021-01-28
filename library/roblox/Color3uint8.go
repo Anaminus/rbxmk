@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -11,8 +11,8 @@ func init() { register(Color3uint8) }
 func Color3uint8() Reflector {
 	return Reflector{
 		Name:   "Color3uint8",
-		Flags:  Exprim,
-		PushTo: PushTypeTo,
+		Flags:  rbxmk.Exprim,
+		PushTo: rbxmk.PushTypeTo,
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if u, ok := lvs[0].(*lua.LUserData); ok {
 				switch u.Metatable {
@@ -26,7 +26,7 @@ func Color3uint8() Reflector {
 					}
 				}
 			}
-			return nil, TypeError(nil, 0, "Color3uint8")
+			return nil, rbxmk.TypeError(nil, 0, "Color3uint8")
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

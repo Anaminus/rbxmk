@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/robloxapi/types"
 )
 
@@ -10,7 +10,7 @@ func init() { register(Token) }
 func Token() Reflector {
 	return Reflector{
 		Name:  "token",
-		Flags: Exprim,
+		Flags: rbxmk.Exprim,
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Token))}, nil
 		},
@@ -25,7 +25,7 @@ func Token() Reflector {
 					}
 				}
 			}
-			return nil, TypeError(nil, 0, "token")
+			return nil, rbxmk.TypeError(nil, 0, "token")
 		},
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
@@ -23,7 +23,7 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
-	if rfl.Flags&Exprim == 0 {
+	if rfl.Flags&rbxmk.Exprim == 0 {
 		return PushVariantTo(s, v)
 	}
 	u := s.UserDataOf(v, rfl.Name)
@@ -105,8 +105,8 @@ func init() { register(Instance) }
 func Instance() Reflector {
 	return Reflector{
 		Name:     "Instance",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -179,12 +179,12 @@ func Instance() Reflector {
 					s.L.Push(s.L.NewFunction(func(l *lua.LState) int {
 						u := l.CheckUserData(1)
 						if u.Metatable != l.GetTypeMetatable("Instance") {
-							TypeError(l, 1, "Instance")
+							rbxmk.TypeError(l, 1, "Instance")
 							return 0
 						}
 						inst, ok := u.Value.(*rtypes.Instance)
 						if !ok {
-							TypeError(l, 1, "Instance")
+							rbxmk.TypeError(l, 1, "Instance")
 							return 0
 						}
 						s := State{World: s.World, L: l}

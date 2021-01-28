@@ -2,7 +2,7 @@ package reflect
 
 import (
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -14,7 +14,7 @@ func Objects() Reflector {
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
-				return nil, TypeError(nil, 0, "Objects")
+				return nil, rbxmk.TypeError(nil, 0, "Objects")
 			}
 			instRfl := s.Reflector("Instance")
 			table := s.L.CreateTable(len(objects), 0)
@@ -30,7 +30,7 @@ func Objects() Reflector {
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
 			instRfl := s.Reflector("Instance")
 			n := table.Len()

@@ -16,3 +16,9 @@ func register(r func() rbxmk.Reflector) {
 func All() []func() rbxmk.Reflector {
 	return registry
 }
+
+type State = rbxmk.State
+type Reflector = rbxmk.Reflector
+type Metatable = rbxmk.Metatable
+type Member = rbxmk.Member
+type Members = rbxmk.Members

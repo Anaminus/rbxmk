@@ -1,7 +1,7 @@
 package reflect
 
 import (
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -10,8 +10,8 @@ func init() { register(EnumItem) }
 func EnumItem() Reflector {
 	return Reflector{
 		Name:     "EnumItem",
-		PushTo:   PushTypeTo,
-		PullFrom: PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo,
+		PullFrom: rbxmk.PullTypeFrom,
 		Metatable: Metatable{
 			"__index": func(s State) int {
 				item := s.Pull(1, "EnumItem").(*rtypes.EnumItem)

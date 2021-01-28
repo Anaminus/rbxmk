@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	lua "github.com/anaminus/gopher-lua"
-	. "github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -15,12 +15,12 @@ func Dictionary() Reflector {
 		Name: "Dictionary",
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
 			if s.Cycle == nil {
-				s.Cycle = &Cycle{}
+				s.Cycle = &rbxmk.Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
-				return nil, TypeError(nil, 0, "Dictionary")
+				return nil, rbxmk.TypeError(nil, 0, "Dictionary")
 			}
 			if s.Cycle.Mark(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
@@ -38,12 +38,12 @@ func Dictionary() Reflector {
 		},
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.Cycle == nil {
-				s.Cycle = &Cycle{}
+				s.Cycle = &rbxmk.Cycle{}
 				defer func() { s.Cycle = nil }()
 			}
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
 			if s.Cycle.Mark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
