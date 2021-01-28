@@ -76,7 +76,7 @@ func httpRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer r.Close()
-	v, err := selector.Format.Decode(selector, r)
+	v, err := selector.Decode(r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -92,7 +92,7 @@ func httpWrite(s rbxmk.State) int {
 	}
 
 	var w bytes.Buffer
-	if err := selector.Format.Encode(selector, &w, value); err != nil {
+	if err := selector.Encode(&w, value); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	if err := httpPost(url, &w); err != nil {

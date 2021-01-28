@@ -1,6 +1,7 @@
 package rbxmk
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/anaminus/rbxmk/rtypes"
@@ -57,4 +58,28 @@ func (FormatSelector) Type() string {
 // ValueOf returns the value of field. Returns nil if the value does not exist.
 func (f FormatSelector) ValueOf(field string) types.Value {
 	return f.Options[field]
+}
+
+// CanDecode calls f.Format.CanDecode with f as the options.
+func (f FormatSelector) CanDecode(typeName string) bool {
+	if f.Format.CanDecode == nil {
+		return false
+	}
+	return f.Format.CanDecode(f, typeName)
+}
+
+// Decode calls f.Format.Decode with f as the options.
+func (f FormatSelector) Decode(r io.Reader) (v types.Value, err error) {
+	if f.Format.Decode == nil {
+		return nil, fmt.Errorf("cannot decode with format %s", f.Format.Name)
+	}
+	return f.Format.Decode(f, r)
+}
+
+// Encode calls f.Format.Encode with f as the options.
+func (f FormatSelector) Encode(w io.Writer, v types.Value) error {
+	if f.Format.Encode == nil {
+		return fmt.Errorf("cannot encode with format %s", f.Format.Name)
+	}
+	return f.Format.Encode(f, w, v)
 }

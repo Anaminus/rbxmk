@@ -54,7 +54,7 @@ func fileRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer r.Close()
-	v, err := selector.Format.Decode(selector, r)
+	v, err := selector.Decode(r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -91,7 +91,7 @@ func fileWrite(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer w.Close()
-	if err := selector.Format.Encode(selector, w, value); err != nil {
+	if err := selector.Encode(w, value); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	if err := w.Sync(); err != nil {

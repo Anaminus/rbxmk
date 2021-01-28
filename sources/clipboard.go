@@ -126,7 +126,7 @@ func clipboardRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	selector := mediaFormats[f]
-	v, err := selector.Format.Decode(selector, bytes.NewReader(b))
+	v, err := selector.Decode(bytes.NewReader(b))
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -154,7 +154,7 @@ func clipboardWrite(s rbxmk.State) int {
 				continue
 			}
 			if !written {
-				if err := selector.Format.Encode(selector, &w, value); err != nil {
+				if err := selector.Encode(&w, value); err != nil {
 					return s.RaiseError(err.Error())
 				}
 				written = true

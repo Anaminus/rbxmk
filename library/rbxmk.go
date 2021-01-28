@@ -262,7 +262,7 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", selector.Format.Name)
 	}
 	var w bytes.Buffer
-	if err := selector.Format.Encode(selector, &w, s.Pull(2, "Variant")); err != nil {
+	if err := selector.Encode(&w, s.Pull(2, "Variant")); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return s.Push(types.BinaryString(w.Bytes()))
@@ -274,7 +274,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", selector.Format.Name)
 	}
 	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
-	v, err := selector.Format.Decode(selector, r)
+	v, err := selector.Decode(r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -287,7 +287,7 @@ func rbxmkFormatCanDecode(s rbxmk.State) int {
 	if selector.Format.CanDecode == nil {
 		return s.RaiseError("undefined decode type for %s", selector.Format.Name)
 	}
-	return s.Push(types.Bool(selector.Format.CanDecode(selector, typeName)))
+	return s.Push(types.Bool(selector.CanDecode(typeName)))
 }
 
 func rbxmkReadSource(s rbxmk.State) int {
