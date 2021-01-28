@@ -309,24 +309,19 @@ type Cycle struct {
 	m map[interface{}]struct{}
 }
 
-// Has returns whether a value has already been visited.
-func (c *Cycle) Has(t interface{}) bool {
+// Mark marks t as visited, and returns whether t was already visited.
+func (c *Cycle) Mark(t interface{}) bool {
 	if c == nil {
 		return false
 	}
 	_, ok := c.m[t]
+	if !ok {
+		if c.m == nil {
+			c.m = make(map[interface{}]struct{}, 4)
+		}
+		c.m[t] = struct{}{}
+	}
 	return ok
-}
-
-// Put marks a value has having been visited.
-func (c *Cycle) Put(t interface{}) {
-	if c == nil {
-		return
-	}
-	if c.m == nil {
-		c.m = make(map[interface{}]struct{}, 4)
-	}
-	c.m[t] = struct{}{}
 }
 
 // PushTypeTo is a Reflector.Push that converts v to a userdata set with a type
