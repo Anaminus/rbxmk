@@ -36,6 +36,9 @@ func decodeJSON(u interface{}) (v types.Value) {
 }
 
 func encodeJSON(v types.Value) (u interface{}) {
+	//WARN: Must not receive cyclic tables. The Array and Dictionary type
+	//reflectors already validate this, but such values could still be produced
+	//internally.
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return nil
