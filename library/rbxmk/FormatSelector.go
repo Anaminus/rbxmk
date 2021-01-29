@@ -19,7 +19,7 @@ func FormatSelector() Reflector {
 				table := s.L.CreateTable(0, 1)
 				table.RawSetString("Format", lua.LString(v.Stringlike()))
 				return []lua.LValue{table}, nil
-			case rbxmk.FormatSelector:
+			case rtypes.FormatSelector:
 				if s.Cycle == nil {
 					s.Cycle = &rbxmk.Cycle{}
 					defer func() { s.Cycle = nil }()
@@ -27,7 +27,7 @@ func FormatSelector() Reflector {
 				if s.Cycle.Mark(&v) {
 					return nil, fmt.Errorf("format selectors cannot be cyclic")
 				}
-				format := v.Format
+				format := s.Format(v.Format)
 				if format.Name == "" {
 					return nil, fmt.Errorf("unknown format")
 				}
@@ -63,7 +63,7 @@ func FormatSelector() Reflector {
 				if format.Name == "" {
 					return nil, fmt.Errorf("unknown format %q", v)
 				}
-				return rbxmk.FormatSelector{Format: format}, nil
+				return rtypes.FormatSelector{Format: format.Name}, nil
 			case *lua.LTable:
 				if s.Cycle == nil {
 					s.Cycle = &rbxmk.Cycle{}
@@ -81,10 +81,10 @@ func FormatSelector() Reflector {
 					return nil, fmt.Errorf("unknown format %q", name)
 				}
 				if len(format.Options) == 0 {
-					return rbxmk.FormatSelector{Format: format}, nil
+					return rtypes.FormatSelector{Format: format.Name}, nil
 				}
-				sel := rbxmk.FormatSelector{
-					Format:  format,
+				sel := rtypes.FormatSelector{
+					Format:  format.Name,
 					Options: make(rtypes.Dictionary),
 				}
 				for field, typ := range format.Options {

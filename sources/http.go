@@ -9,6 +9,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -66,9 +67,13 @@ func httpPost(url string, r io.Reader) (err error) {
 
 func httpRead(s rbxmk.State) int {
 	url := string(s.Pull(1, "string").(types.String))
-	selector := s.Pull(2, "FormatSelector").(rbxmk.FormatSelector)
-	if selector.Format.Decode == nil {
-		return s.RaiseError("cannot decode with format %s", selector.Format.Name)
+	selector := s.Pull(2, "FormatSelector").(rtypes.FormatSelector)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Decode == nil {
+		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
 	r, err := httpGet(url)
@@ -76,7 +81,7 @@ func httpRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer r.Close()
-	v, err := selector.Decode(r)
+	v, err := format.Decode(selector, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -85,14 +90,18 @@ func httpRead(s rbxmk.State) int {
 
 func httpWrite(s rbxmk.State) int {
 	url := string(s.Pull(1, "string").(types.String))
-	selector := s.Pull(2, "FormatSelector").(rbxmk.FormatSelector)
+	selector := s.Pull(2, "FormatSelector").(rtypes.FormatSelector)
 	value := s.Pull(3, "Variant")
-	if selector.Format.Encode == nil {
-		return s.RaiseError("cannot encode with format %s", selector.Format.Name)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Encode == nil {
+		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
 	var w bytes.Buffer
-	if err := selector.Encode(&w, value); err != nil {
+	if err := format.Encode(selector, &w, value); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	if err := httpPost(url, &w); err != nil {

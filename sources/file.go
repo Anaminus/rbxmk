@@ -36,17 +36,20 @@ func File() rbxmk.Source {
 
 func fileRead(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
-	selector := s.PullOpt(2, "FormatSelector", rbxmk.FormatSelector{}).(rbxmk.FormatSelector)
-	if selector.Format.Name == "" {
-		selector.Format.Name = s.Ext(fileName)
-		selector.Format = s.Format(selector.Format.Name)
-		if selector.Format.Name == "" {
+	selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	if selector.Format == "" {
+		selector.Format = s.Ext(fileName)
+		if selector.Format == "" {
 			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
 	}
 
-	if selector.Format.Decode == nil {
-		return s.RaiseError("cannot decode with format %s", selector.Format.Name)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Decode == nil {
+		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
 	r, err := os.Open(fileName)
@@ -54,7 +57,7 @@ func fileRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer r.Close()
-	v, err := selector.Decode(r)
+	v, err := format.Decode(selector, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -73,17 +76,20 @@ func fileRead(s rbxmk.State) int {
 func fileWrite(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
 	value := s.Pull(2, "Variant")
-	selector := s.PullOpt(3, "FormatSelector", rbxmk.FormatSelector{}).(rbxmk.FormatSelector)
-	if selector.Format.Name == "" {
-		selector.Format.Name = s.Ext(fileName)
-		selector.Format = s.Format(selector.Format.Name)
-		if selector.Format.Name == "" {
+	selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	if selector.Format == "" {
+		selector.Format = s.Ext(fileName)
+		if selector.Format == "" {
 			return s.RaiseError("unknown format from %s", filepath.Base(fileName))
 		}
 	}
 
-	if selector.Format.Encode == nil {
-		return s.RaiseError("cannot encode with format %s", selector.Format.Name)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Encode == nil {
+		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
 	w, err := os.Create(fileName)
@@ -91,7 +97,7 @@ func fileWrite(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	defer w.Close()
-	if err := selector.Encode(w, value); err != nil {
+	if err := format.Encode(selector, w, value); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	if err := w.Sync(); err != nil {

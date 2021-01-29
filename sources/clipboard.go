@@ -8,34 +8,52 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/rbxmk/sources/internal/clipboard"
+	"github.com/robloxapi/types"
 )
 
+type formatSelector struct {
+	Format  rbxmk.Format
+	Options rtypes.Dictionary
+}
+
+// ValueOf returns the value of field. Returns nil if the value does not exist.
+func (f formatSelector) ValueOf(field string) types.Value {
+	return f.Options[field]
+}
+
 // Get list of each unique format from arguments.
-func getFormatSelectors(s rbxmk.State, n int, decode bool) (selectors []rbxmk.FormatSelector, err error) {
+func getFormatSelectors(s rbxmk.State, n int, decode bool) (selectors []formatSelector, err error) {
 	values := s.Pull(n, "Tuple").(rtypes.Tuple)
-	selectors = make([]rbxmk.FormatSelector, 0, len(values))
+	selectors = make([]formatSelector, 0, len(values))
 loop:
 	for i, value := range values {
-		selector, ok := value.(rbxmk.FormatSelector)
+		selector, ok := value.(rtypes.FormatSelector)
 		if !ok {
 			return nil, rbxmk.TypeError(s.L, i+n, "FormatSelector")
 		}
+		format := s.Format(selector.Format)
+		if format.Name == "" {
+			return nil, fmt.Errorf("unknown format %q", selector.Format)
+		}
 		if decode {
-			if selector.Format.Decode == nil {
-				return nil, fmt.Errorf("cannot encode with format %s", selector.Format.Name)
+			if format.Decode == nil {
+				return nil, fmt.Errorf("cannot encode with format %s", format.Name)
 			}
 		} else {
-			if selector.Format.Encode == nil {
-				return nil, fmt.Errorf("cannot encode with format %s", selector.Format.Name)
+			if format.Encode == nil {
+				return nil, fmt.Errorf("cannot encode with format %s", format.Name)
 			}
 		}
 		for _, f := range selectors {
-			if selector.Format.Name == f.Format.Name {
+			if format.Name == f.Format.Name {
 				// Skip duplicate formats.
 				continue loop
 			}
 		}
-		selectors = append(selectors, selector)
+		selectors = append(selectors, formatSelector{
+			Format:  format,
+			Options: selector.Options,
+		})
 	}
 	return selectors, nil
 }
@@ -107,7 +125,7 @@ func clipboardRead(s rbxmk.State) int {
 
 	// Get list of media types from each format.
 	mediaTypes := []string{}
-	mediaFormats := []rbxmk.FormatSelector{}
+	mediaFormats := []formatSelector{}
 	mediaDefined := map[string]struct{}{}
 	for _, selector := range selectors {
 		for _, mediaType := range selector.Format.MediaTypes {
@@ -126,7 +144,7 @@ func clipboardRead(s rbxmk.State) int {
 		return s.RaiseError(err.Error())
 	}
 	selector := mediaFormats[f]
-	v, err := selector.Decode(bytes.NewReader(b))
+	v, err := selector.Format.Decode(selector, bytes.NewReader(b))
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -154,7 +172,7 @@ func clipboardWrite(s rbxmk.State) int {
 				continue
 			}
 			if !written {
-				if err := selector.Encode(&w, value); err != nil {
+				if err := selector.Format.Encode(selector, &w, value); err != nil {
 					return s.RaiseError(err.Error())
 				}
 				written = true

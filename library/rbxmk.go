@@ -257,24 +257,32 @@ func rbxmkPatchDesc(s rbxmk.State) int {
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rbxmk.FormatSelector)
-	if selector.Format.Encode == nil {
-		return s.RaiseError("cannot encode with format %s", selector.Format.Name)
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Encode == nil {
+		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 	var w bytes.Buffer
-	if err := selector.Encode(&w, s.Pull(2, "Variant")); err != nil {
+	if err := format.Encode(selector, &w, s.Pull(2, "Variant")); err != nil {
 		return s.RaiseError(err.Error())
 	}
 	return s.Push(types.BinaryString(w.Bytes()))
 }
 
 func rbxmkDecodeFormat(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rbxmk.FormatSelector)
-	if selector.Format.Decode == nil {
-		return s.RaiseError("cannot decode with format %s", selector.Format.Name)
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Decode == nil {
+		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
-	v, err := selector.Decode(r)
+	v, err := format.Decode(selector, r)
 	if err != nil {
 		return s.RaiseError(err.Error())
 	}
@@ -282,12 +290,16 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 }
 
 func rbxmkFormatCanDecode(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rbxmk.FormatSelector)
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
 	typeName := string(s.Pull(2, "string").(types.String))
-	if selector.Format.CanDecode == nil {
-		return s.RaiseError("undefined decode type for %s", selector.Format.Name)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
 	}
-	return s.Push(types.Bool(selector.CanDecode(typeName)))
+	if format.CanDecode == nil {
+		return s.RaiseError("undefined decode type for %s", format.Name)
+	}
+	return s.Push(types.Bool(format.CanDecode(selector, typeName)))
 }
 
 func rbxmkReadSource(s rbxmk.State) int {
