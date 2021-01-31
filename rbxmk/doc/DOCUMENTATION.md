@@ -2180,6 +2180,18 @@ A format that can encode a **Numberlike** type accepts any type that can be
 converted to a floating-point number. An **Intlike** is similar, converting to
 an integer instead.
 
+## FormatSelector type
+[FormatSelector]: #user-content-formatselector-type
+<code>type FormatSelector = string \| {Format: string, ...}</code>
+
+The FormatSelector type selects a format, and optionally configures the format.
+
+If a table, then the Format field indicates the name of the format to use, and
+remaining fields are options that configure the format, which depend on the
+format specified. All such fields are optional.
+
+If a string, it is the name of the format to use, and specifies no options.
+
 ## String formats
 [string-formats]: #user-content-string-formats
 
@@ -2200,6 +2212,8 @@ Direction | Type       | Description
 Decode    | string     | UTF-8 text.
 Encode    | Stringlike | Any string-like value.
 
+This format has no options.
+
 ### `bin` format
 [bin-fmt]: #user-content-bin-format
 
@@ -2210,6 +2224,8 @@ Direction | Type         | Description
 ----------|--------------|------------
 Decode    | BinaryString | Raw binary data.
 Encode    | Stringlike   | Any string-like value.
+
+This format has no options.
 
 ## Lua formats
 [lua-formats]: #user-content-lua-formats
@@ -2236,6 +2252,8 @@ Direction | Type                 | Description
 Decode    | [Instance][Instance] | A ModuleScript with a Source property.
 Encode    | Stringlike           | Any string-like value.
 
+This format has no options.
+
 ### `script.lua` format
 [script.lua-fmt]: #user-content-scriptlua-format
 
@@ -2246,6 +2264,8 @@ Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A Script with a Source property.
 Encode    | Stringlike           | Any string-like value.
+
+This format has no options.
 
 ### `localscript.lua` format
 [localscript.lua-fmt]: #user-content-localscriptlua-format
@@ -2258,6 +2278,8 @@ Direction | Type                 | Description
 Decode    | [Instance][Instance] | A LocalScript with a Source property.
 Encode    | Stringlike           | Any string-like value.
 
+This format has no options.
+
 ### `lua` format
 [lua-fmt]: #user-content-lua-format
 
@@ -2267,6 +2289,8 @@ Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A ModuleScript with a Source property.
 Encode    | Stringlike           | Any string-like value.
+
+This format has no options.
 
 ### `server.lua` format
 [server.lua-fmt]: #user-content-serverlua-format
@@ -2278,6 +2302,8 @@ Direction | Type                 | Description
 Decode    | [Instance][Instance] | A Script with a Source property.
 Encode    | Stringlike           | Any string-like value.
 
+This format has no options.
+
 ### `client.lua` format
 [client.lua-fmt]: #user-content-clientlua-format
 
@@ -2287,6 +2313,8 @@ Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A LocalScript with a Source property.
 Encode    | Stringlike           | Any string-like value.
+
+This format has no options.
 
 ## Roblox formats
 [roblox-formats]: #user-content-roblox-formats
@@ -2310,6 +2338,8 @@ Encode    | [DataModel][DataModel] | A DataModel instance.
 Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
 Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
 
+These formats have no options.
+
 ## Descriptor formats
 [descriptor-formats]: #user-content-descriptor-formats
 
@@ -2331,6 +2361,8 @@ Direction | Type                 | Description
 Decode    | [RootDesc][RootDesc] | A root descriptor.
 Encode    | [RootDesc][RootDesc] | A root descriptor.
 
+This format has no options.
+
 ### `desc-patch.json` format
 [desc-patch.json-fmt]: #user-content-desc-patchjson-format
 
@@ -2340,6 +2372,8 @@ Direction | Type        | Description
 ----------|-------------|------------
 Decode    | DescActions | A list of [DescAction][DescAction] values.
 Encode    | DescActions | A list of [DescAction][DescAction] values.
+
+This format has no options.
 
 ## Attribute formats
 [attribute-formats]: #user-content-attribute-formats
@@ -2379,6 +2413,8 @@ The following value types are encoded and decoded:
 Additionally, any Stringlike value is encoded as a string, and any Numberlike
 value is encoded as a double.
 
+This format has no options.
+
 ## JSON formats
 [json-formats]: #user-content-json-formats
 
@@ -2409,6 +2445,12 @@ Encode    | Array      | An array-like table, having a non-zero length.
 Encode    | Dictionary | A dictionary-like table, having a length of zero.
 
 Other value types are encoded as null.
+
+This format has the following options:
+
+Field  | Type   | Default | Description
+-------|--------|---------|------------
+Indent | string | `"\t"`  | Determines the indentation of encoded content. If an empty string, then the content is minified.
 
 ## CSV formats
 [csv-formats]: #user-content-csv-formats
