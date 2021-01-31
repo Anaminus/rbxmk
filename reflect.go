@@ -191,6 +191,65 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	return v
 }
 
+// PushToTable reflects v according to its type as registered with s.World, then
+// sets the result to table[field]. The type must be single-value.
+func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
+	rfl := s.Reflector(v.Type())
+	if rfl.Name == "" {
+		panic("unregistered type " + v.Type())
+	}
+	if rfl.Count < 0 {
+		panic("PushToTable cannot push variable types")
+	} else if rfl.Count > 1 {
+		panic("PushToTable cannot push multi-value types")
+	}
+	lvs, err := rfl.PushTo(s, rfl, v)
+	if err != nil {
+		s.RaiseError(err.Error())
+		return
+	}
+	table.RawSet(field, lvs[0])
+}
+
+// PullFromTable gets a value from table[field], and reflects a value from it to
+// type t registered with s.World.
+func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) types.Value {
+	rfl := s.Reflector(t)
+	if rfl.Count < 0 {
+		panic("PullFromTable cannot push variable types")
+	} else if rfl.Count > 1 {
+		panic("PullFromTable cannot push multi-value types")
+	}
+	v, err := rfl.PullFrom(s, rfl, table.RawGet(field))
+	if err != nil {
+		s.RaiseError(err.Error())
+		return nil
+	}
+	return v
+}
+
+// PullFromTableOpt gets a value from table[field], and reflects a value from it
+// to type t registered with s.World. If the value is nil, d is returned
+// instead.
+func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d types.Value) types.Value {
+	rfl := s.Reflector(t)
+	if rfl.Count < 0 {
+		panic("PullFromTableOpt cannot pull variable types")
+	} else if rfl.Count > 1 {
+		panic("PullFromTableOpt cannot pull multi-value types")
+	}
+	lv := table.RawGet(field)
+	if lv == lua.LNil {
+		return d
+	}
+	v, err := rfl.PullFrom(s, rfl, lv)
+	if err != nil {
+		s.RaiseError(err.Error())
+		return d
+	}
+	return v
+}
+
 // listTypes returns each type listed in a natural sentence.
 func listTypes(types []string) string {
 	switch len(types) {

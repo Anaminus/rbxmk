@@ -27,11 +27,12 @@ details on how rbxmk works.
 	2. [Diffing and Patching][diffing-and-patching]
 5. [Value inheritance][value-inheritance]
 6. [Explicit primitives][explicit-primitives]
-7. [Sources][sources]
+7. [HTTP types][http-types]
+8. [Sources][sources]
 	1. [`clipboard` source][clipboard-source]
 	2. [`file` source][file-source]
 	3. [`http` source][http-source]
-8. [Formats][formats]
+9. [Formats][formats]
 	1. [String formats][string-formats]
 	2. [Lua formats][lua-formats]
 	3. [Roblox formats][roblox-formats]
@@ -1936,6 +1937,84 @@ Exprims are meant to be short-lived, and shouldn't really be used beyond getting
 or setting a property in the absence of [descriptors][descriptors]. When
 possible, descriptors should be utilized instead.
 
+# HTTP types
+[http-types]: #user-content-http-types
+Several types are defined for uses related to the HyperText Transfer Protocol.
+
+Name                         | Description
+-----------------------------|------------
+[HTTPOptions][HTTPOptions]   | Specifies options to a request.
+[HTTPRequest][HTTPRequest]   | Represents a pending request.
+[HTTPResponse][HTTPResponse] | Contains the response to an HTTP request.
+[HTTPHeaders][HTTPHeaders]   | Contains request or response headers.
+
+## HTTPOptions type
+[HTTPOptions]: #user-content-httpoptions-type
+<code>type HTTPOptions = {URL: [string](##), Method: [string](##)?, RequestFormat: [FormatSelector][FormatSelector], ResponseFormat: [FormatSelector][FormatSelector], Headers: [HTTPHeaders][HTTPHeaders]?, Body: [any](##)?}</code>
+
+An HTTPOptions specifies how an HTTP request is made.
+
+Field          | Type                              | Description
+---------------|-----------------------------------|------------
+URL            | [string](##)                      | The URL to make to request to.
+Method         | [string](##)?                     | The HTTP method. Defaults to GET.
+RequestFormat  | [FormatSelector][FormatSelector]? | The format used to encode the request body.
+ResponseFormat | [FormatSelector][FormatSelector]? | The format used to decode the response body.
+Headers        | [HTTPHeaders][HTTPHeaders]?       | The HTTP headers to include with the request.
+Body           | [any](##)?                        | The body of the request, to be encoded by the specified format.
+
+If RequestFormat is unspecified, then no request body is sent. If ResponseFormat
+is unspecified, then no response body is returned.
+
+## HTTPRequest type
+[HTTPRequest]: #user-content-httprequest-type
+<code>type HTTPRequest</code>
+
+An HTTPRequest represents a pending HTTP request. It has the following members:
+
+Member                         | Kind
+-------------------------------|-----
+[Resolve][HTTPRequest.Resolve] | method
+[Cancel][HTTPRequest.Cancel]   | method
+
+### HTTPRequest.Resolve
+[HTTPRequest.Resolve]: #user-content-httprequestresolve
+<code>HTTPRequest:Resolve(): (resp: [HTTPResponse][HTTPResponse])</code>
+
+Resolve blocks until the request has finished, and returns the response. Throws
+an error if a problem occurred while resolving the request.
+
+### HTTPRequest.Cancel
+[HTTPRequest.Cancel]: #user-content-httprequestcancel
+<code>HTTPRequest:Cancel()</code>
+
+Cancel cancels the pending request.
+
+## HTTPResponse type
+[HTTPResponse]: #user-content-httpresponse-type
+<code>type HTTPResponse = {Success: [bool](##), StatusCode: [int](##), StatusMessage: [string](##), Headers: [HTTPHeaders][HTTPHeaders], Body: [any](##)?}</code>
+
+An HTTPResponse contains the response of a request.
+
+Field         | Type                       | Description
+--------------|----------------------------|------------
+Success       | [bool](##)                 | Whether the request succeeded. True if StatusCode between 200 and 299.
+StatusCode    | [int](##)                  | The HTTP status code of the response.
+StatusMessage | [string](##)               | A readable message corresponding to the StatusCode.
+Headers       | [HTTPHeaders][HTTPHeaders] | A set of reasponse headers.
+Body          | [any](##)?                 | The decoded body of the response.
+
+## HTTPHeaders type
+[HTTPHeaders]: #user-content-httpheaders-type
+<code>type HTTPHeaders = {[string]: string\|{string}}</code>
+
+HTTPHeaders specifies the headers to be sent with a request. Each entry consists
+of a header name mapped to a string value. If a header requires multiple values,
+the name may be mapped to an array of values instead.
+
+For response headers, a header is always mapped to an array, and each array will
+have at least one value.
+
 # Sources
 [sources]: #user-content-sources
 
@@ -2099,23 +2178,38 @@ The `http` source provides access to an HTTP client.
 ### `readSource`
 [http.readSource]: #user-content-readsource-1
 
-The first additional argument to [`readSource`][rbxmk.readSource] is the URL to
-which a GET request will be made. Returns the body of the response. Throws an
-error if the response status is not 2XX.
+The first additional argument to [`readSource`][rbxmk.readSource] is an
+[HTTPOptions][HTTPOptions]. Several options are ignored:
+
+- Method is ignored. A GET request is always performed.
+- RequestFormat is ignored. No body is sent with GET requests.
+- ResponseFormat is ignored. The response is always decoded into raw bytes.
+- Body is ignored. No body is sent with GET requests.
+
+Returns the raw body of the response. Throws an error if the response status is
+not 2XX.
 
 ```lua
-local bytes = rbxmk.readSource("http", "https://www.example.com/resource")
+local bytes = rbxmk.readSource("http", {URL="https://www.example.com/resource"})
 ```
 
 ### `writeSource`
 [http.readSource]: #user-content-writesource-1
 
-The first additional argument to [`writeSource`][rbxmk.writeSource] is the URL
-to which a POST request will be made. The bytes are sent as the body of the
-request. Throws an error if the response status is not 2XX.
+The first additional argument to [`writeSource`][rbxmk.writeSource] is an
+[HTTPOptions][HTTPOptions]. Several options are ignored:
+
+- Method is ignored. A POST request is always performed.
+- RequestFormat is ignored. The *bytes* argument of writeSource is used as the
+  raw body of the request.
+- ResponseFormat is ignored. The response body is discarded.
+- Body is ignored. The *bytes* argument of writeSource is used as the raw body
+  of the request.
+
+Throws an error if the response status is not 2XX.
 
 ```lua
-rbxmk.writeSource("http", bytes, "https://www.example.com/resource")
+rbxmk.writeSource("http", bytes, {URL="https://www.example.com/resource"})
 ```
 
 ### `http` library
@@ -2123,26 +2217,17 @@ rbxmk.writeSource("http", bytes, "https://www.example.com/resource")
 
 The `http` library handles the `http` source.
 
-Name                | Description
---------------------|------------
-[read][http.read]   | Reads data from an HTTP URL in a certain format.
-[write][http.write] | Writes data to an HTTP URL in a certain format.
+Name                         | Description
+-----------------------------|------------
+[request][http.request]      | Begins an HTTP request.
 
-#### http.read
-[http.read]: #user-content-httpread
-<code>http.read(url: [string](##), format: [string](##)?): (value: [any](##))</code>
+#### http.request
+[http.request]: #user-content-httprequest
+<code>http.request(options: [HTTPOptions][HTTPOptions]): (req: [HTTPRequest][HTTPRequest])</code>
 
-The `read` function issues a GET request to *url*, and decodes the response body
-into *value* according to the [format][formats] matching *format*. Throws an
-error if the response status is not 2XX.
-
-#### http.write
-[http.write]: #user-content-httpwrite
-<code>http.write(url: [string](##), value: [any](##), format: [string](##))</code>
-
-The `write` function encodes *value* according to the [format][formats] matching
-*format*, and sends the result in a POST request to *url*. Throws an error if
-the response status is not 2XX.
+The `request` function begins a request with the specified
+[options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
+resolved or canceled. Throws an error if the request could not be started.
 
 # Formats
 [formats]: #user-content-formats

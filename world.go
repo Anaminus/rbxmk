@@ -2,6 +2,7 @@ package rbxmk
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
 	"sort"
@@ -24,6 +25,8 @@ type World struct {
 	sources          map[string]Source
 	globalDesc       *rtypes.RootDesc
 	globalAttrConfig *rtypes.AttrConfig
+
+	Client *http.Client
 
 	udmut    sync.Mutex
 	userdata map[interface{}]uintptr
