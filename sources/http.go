@@ -120,7 +120,7 @@ func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 			Success:       200 <= resp.StatusCode && resp.StatusCode < 300,
 			StatusCode:    resp.StatusCode,
 			StatusMessage: resp.Status,
-			Headers:       resp.Header,
+			Headers:       rtypes.HTTPHeaders(resp.Header),
 		}
 		if r.fmt.Name != "" {
 			if r.resp.Body, r.err = r.fmt.Decode(r.sel, resp.Body); r.err != nil {
@@ -176,7 +176,7 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 		cancel()
 		return nil, err
 	}
-	req.Header = options.Headers
+	req.Header = http.Header(options.Headers)
 
 	// Push request object.
 	request = &HTTPRequest{

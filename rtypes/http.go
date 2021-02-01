@@ -6,12 +6,13 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// HTTPOptions specifies options to an HTTP request.
 type HTTPOptions struct {
 	URL            string
 	Method         string
 	RequestFormat  FormatSelector
 	ResponseFormat FormatSelector
-	Headers        http.Header
+	Headers        HTTPHeaders
 	Body           types.Value
 }
 
@@ -20,15 +21,24 @@ func (HTTPOptions) Type() string {
 	return "HTTPOptions"
 }
 
+// HTTPResponse contains the response to an HTTP request.
 type HTTPResponse struct {
 	Success       bool
 	StatusCode    int
 	StatusMessage string
-	Headers       http.Header
+	Headers       HTTPHeaders
 	Body          types.Value
 }
 
 // Type returns a string identifying the type of the value.
 func (HTTPResponse) Type() string {
 	return "HTTPResponse"
+}
+
+// HTTPHeaders contains the headers of an HTTP request or response.
+type HTTPHeaders http.Header
+
+// Type returns a string identifying the type of the value.
+func (HTTPHeaders) Type() string {
+	return "HTTPHeaders"
 }

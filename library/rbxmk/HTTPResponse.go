@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"fmt"
-
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -22,8 +20,8 @@ func HTTPResponse() Reflector {
 			s.PushToTable(table, lua.LString("Success"), types.Bool(resp.Success))
 			s.PushToTable(table, lua.LString("StatusCode"), types.Int(resp.StatusCode))
 			s.PushToTable(table, lua.LString("StatusMessage"), types.String(resp.StatusMessage))
+			s.PushToTable(table, lua.LString("Headers"), resp.Headers)
 			s.PushToTable(table, lua.LString("Body"), resp.Body)
-			table.RawSetString("Headers", pushHTTPHeaders(s, resp.Headers))
 			return []lua.LValue{table}, nil
 		},
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
@@ -35,16 +33,8 @@ func HTTPResponse() Reflector {
 				Success:       bool(s.PullFromTable(table, lua.LString("Success"), "bool").(types.Bool)),
 				StatusCode:    int(s.PullFromTable(table, lua.LString("StatusCode"), "int").(types.Int)),
 				StatusMessage: string(s.PullFromTable(table, lua.LString("StatusMessage"), "string").(types.String)),
+				Headers:       s.PullFromTableOpt(table, lua.LString("Headers"), "HTTPHeaders", rtypes.HTTPHeaders(nil)).(rtypes.HTTPHeaders),
 				Body:          s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
-			}
-			switch table := table.RawGetString("Headers").(type) {
-			case *lua.LNilType:
-			case *lua.LTable:
-				if resp.Headers, err = pullHTTPHeaders(table); err != nil {
-					return nil, err
-				}
-			default:
-				return nil, fmt.Errorf("Headers must be a table")
 			}
 			return resp, nil
 		},
