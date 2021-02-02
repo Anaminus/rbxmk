@@ -592,8 +592,7 @@ func (w *World) DoFile(fileName string, args int) error {
 	return err
 }
 
-// File represents a file that can be read from or written to, and includes file
-// information.
+// File represents a file that can be read from, and includes file information.
 type File interface {
 	Name() string
 	Stat() (os.FileInfo, error)
