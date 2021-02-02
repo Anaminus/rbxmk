@@ -32,6 +32,7 @@ details on how rbxmk works.
 	1. [`clipboard` source][clipboard-source]
 	2. [`file` source][file-source]
 	3. [`http` source][http-source]
+	4. [`rbxassetid` source][rbxassetid-source]
 9. [Formats][formats]
 	1. [String formats][string-formats]
 	2. [Lua formats][lua-formats]
@@ -1941,12 +1942,13 @@ possible, descriptors should be utilized instead.
 [http-types]: #user-content-http-types
 Several types are defined for uses related to the HyperText Transfer Protocol.
 
-Name                         | Description
------------------------------|------------
-[HTTPOptions][HTTPOptions]   | Specifies options to a request.
-[HTTPRequest][HTTPRequest]   | Represents a pending request.
-[HTTPResponse][HTTPResponse] | Contains the response to an HTTP request.
-[HTTPHeaders][HTTPHeaders]   | Contains request or response headers.
+Name                           | Description
+-------------------------------|------------
+[HTTPOptions][HTTPOptions]     | Specifies options to a request.
+[HTTPRequest][HTTPRequest]     | Represents a pending request.
+[HTTPResponse][HTTPResponse]   | Contains the response to an HTTP request.
+[HTTPHeaders][HTTPHeaders]     | Contains request or response headers.
+[RBXWebOptions][RBXWebOptions] | Options for Roblox-specific requests.
 
 ## HTTPOptions type
 [HTTPOptions]: #user-content-httpoptions-type
@@ -2014,6 +2016,19 @@ the name may be mapped to an array of values instead.
 
 For response headers, a header is always mapped to an array, and each array will
 have at least one value.
+
+## RBXWebOptions type
+[RBXWebOptions]: #user-content-rbxweboptions-type
+<code>type RBXWebOptions = {AssetID: [int64](##), Cookies: [string](##)\|{[string](##)}?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
+
+An RBXWebOptions specifies how a request to thr Roblox website is made.
+
+Field          | Type                              | Description
+---------------|-----------------------------------|------------
+AssetID        | [int64](##)                       | The asset to request.
+Cookies        | [string](##)\|{[string](##)}?     | Optional cookies to send with requests, usually used for authentication.
+Format         | [FormatSelector][FormatSelector]  | The format used to encode or decode an asset.
+Body           | [any](##)?                        | The body of an asset, to be encoded by the specified format.
 
 # Sources
 [sources]: #user-content-sources
@@ -2228,6 +2243,74 @@ Name                         | Description
 The `request` function begins a request with the specified
 [options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
 resolved or canceled. Throws an error if the request could not be started.
+
+## `rbxassetid` source
+[rbxassetid-source]: #user-content-rbxassetid-source
+
+The `rbxassetid` source provides access to assets on the Roblox website.
+
+### `readSource`
+[rbxassetid.readSource]: #user-content-readsource
+
+The first additional argument to [`readSource`][rbxmk.readSource] is a
+[RBXWebOptions][RBXWebOptions]. Several options are ignored:
+
+- Format is ignored. The content is always decoded into raw bytes.
+- Body is ignored.
+
+Returns the raw content of the asset. Throws an error if a problem occurred
+while downloading the asset.
+
+```lua
+local bytes = rbxmk.readSource("rbxassetid", {AssetID=1818})
+```
+
+### `writeSource`
+[rbxassetid.writeSource]: #user-content-writesource
+
+The first additional argument to [`writeSource`][rbxmk.writeSource] is a
+[RBXWebOptions][RBXWebOptions]. Several options are ignored:
+
+- Format is ignored. The *bytes* argument of writeSource is used as the raw
+  content of the asset.
+- Body is ignored. The *bytes* argument of writeSource is used as the raw
+  content of the asset.
+
+Throws an error if a problem occurred while uploading the asset.
+
+```lua
+rbxmk.writeSource("rbxassetid", bytes, {AssetID=1818})```
+```
+
+### `rbxassetid` library
+[rbxassetid-lib]: #user-content-rbxassetid-library
+
+The `rbxassetid` library handles the `rbxassetid` source.
+
+Name                      | Description
+--------------------------|------------
+[read][rbxassetid.read]   | Reads data from a rbxassetid in a certain format.
+[write][rbxassetid.write] | Writes data to a rbxassetid in a certain format.
+
+#### rbxassetid.read
+[rbxassetid.read]: #user-content-rbxassetidread
+<code>rbxassetid.read(options: [RBXWebOptions][RBXWebOptions]): (value: [any](##))</code>
+
+The `read` function downloads an asset according to the given
+[options][RBXWebOptions]. Returns the content of the asset corresponding to
+AssetID, decoded according to Format.
+
+Throws an error if a problem occurred while downloading the asset.
+
+#### rbxassetid.write
+[rbxassetid.write]: #user-content-rbxassetidwrite
+<code>rbxassetid.write(options: [RBXWebOptions][RBXWebOptions])</code>
+
+The `write` function uploads to an existing asset according to the given
+[options][RBXWebOptions]. The Body is encoding according to Format, then
+uploaded to AssetID. AssetID must be the ID of an existing asset.
+
+Throws an error if a problem occurred while uploading the asset.
 
 # Formats
 [formats]: #user-content-formats

@@ -42,3 +42,16 @@ type HTTPHeaders http.Header
 func (HTTPHeaders) Type() string {
 	return "HTTPHeaders"
 }
+
+// RBXWebOptions specifies options to a Roblox web request.
+type RBXWebOptions struct {
+	AssetID int64
+	Cookies []string
+	Format  FormatSelector
+	Body    types.Value
+}
+
+// Type returns a string identifying the type of the value.
+func (RBXWebOptions) Type() string {
+	return "RBXWebOptions"
+}
