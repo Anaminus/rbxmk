@@ -16,7 +16,7 @@ func HTTPOptions() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "HTTPOptions")
 			}
-			table := s.L.CreateTable(0, 5)
+			table := s.L.CreateTable(0, 6)
 			s.PushToTable(table, lua.LString("URL"), types.String(options.URL))
 			s.PushToTable(table, lua.LString("Method"), types.String(options.Method))
 			s.PushToTable(table, lua.LString("RequestFormat"), options.RequestFormat)
