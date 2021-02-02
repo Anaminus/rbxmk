@@ -21,5 +21,5 @@ If you installed Go correctly, this will install rbxmk to `$GOPATH/bin`,
 which will allow you run it directly from a shell.
 
 ## Usage
-The [documentation page](rbxmk/doc/DOCUMENTATION.md) provides a complete
-reference on how rbxmk is used.
+The [documentation page](doc/README.md) provides a complete reference on how
+rbxmk is used.
