@@ -192,8 +192,12 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 }
 
 // PushToTable reflects v according to its type as registered with s.World, then
-// sets the result to table[field]. The type must be single-value.
+// sets the result to table[field]. The type must be single-value. Does nothing
+// if v is nil.
 func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
+	if v == nil {
+		return
+	}
 	rfl := s.Reflector(v.Type())
 	if rfl.Name == "" {
 		panic("unregistered type " + v.Type())
