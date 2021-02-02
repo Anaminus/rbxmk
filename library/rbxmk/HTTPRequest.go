@@ -26,7 +26,7 @@ func HTTPRequest() Reflector {
 				req := v.(*sources.HTTPRequest)
 				resp, err := req.Resolve()
 				if err != nil {
-					return s.RaiseError(err.Error())
+					return s.RaiseError("%w", err)
 				}
 				return s.Push(*resp)
 			}},

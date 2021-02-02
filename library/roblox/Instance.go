@@ -262,7 +262,7 @@ func Instance() Reflector {
 					lv, err = pushPropertyTo(s, value)
 				}
 				if err != nil {
-					return s.RaiseError(err.Error())
+					return s.RaiseError("%w", err)
 				}
 				s.L.Push(lv)
 				return 1
@@ -466,7 +466,7 @@ func Instance() Reflector {
 						err = v.(*rtypes.Instance).SetParent(nil)
 					}
 					if err != nil {
-						s.RaiseError(err.Error())
+						s.RaiseError("%w", err)
 					}
 				},
 			},

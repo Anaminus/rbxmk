@@ -120,7 +120,7 @@ func Clipboard() rbxmk.Source {
 func clipboardRead(s rbxmk.State) int {
 	selectors, err := getFormatSelectors(s, 1, true)
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 
 	// Get list of media types from each format.
@@ -141,12 +141,12 @@ func clipboardRead(s rbxmk.State) int {
 	// Read and decode.
 	f, b, err := clipboard.Read(mediaTypes...)
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	selector := mediaFormats[f]
 	v, err := selector.Format.Decode(selector, bytes.NewReader(b))
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	return s.Push(v)
 }
@@ -156,7 +156,7 @@ func clipboardWrite(s rbxmk.State) int {
 
 	selectors, err := getFormatSelectors(s, 2, false)
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 
 	// Get list of media types and content from each format. The same content is
@@ -173,7 +173,7 @@ func clipboardWrite(s rbxmk.State) int {
 			}
 			if !written {
 				if err := selector.Format.Encode(selector, &w, value); err != nil {
-					return s.RaiseError(err.Error())
+					return s.RaiseError("%w", err)
 				}
 				written = true
 			}
@@ -187,7 +187,7 @@ func clipboardWrite(s rbxmk.State) int {
 
 	// Write to clipboard.
 	if err := clipboard.Write(clipboardFormats); err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	return 0
 }

@@ -44,7 +44,7 @@ func NumberSequence() Reflector {
 				for i, v := range u {
 					lv, err := keypointRfl.PushTo(s, keypointRfl, v)
 					if err != nil {
-						return s.RaiseError(err.Error())
+						return s.RaiseError("%w", err)
 					}
 					table.RawSetInt(i, lv[0])
 				}
@@ -73,7 +73,7 @@ func NumberSequence() Reflector {
 						for i := 1; i <= n; i++ {
 							k, err := keypointRfl.PullFrom(s, keypointRfl, c.RawGetInt(i))
 							if err != nil {
-								return s.RaiseError(err.Error())
+								return s.RaiseError("%w", err)
 							}
 							v[i] = k.(types.NumberSequenceKeypoint)
 						}

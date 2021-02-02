@@ -133,7 +133,7 @@ func (s State) Push(v types.Value) int {
 	}
 	lvs, err := rfl.PushTo(s, rfl, v)
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	for _, lv := range lvs {
 		s.L.Push(lv)

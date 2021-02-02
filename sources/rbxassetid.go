@@ -105,7 +105,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		},
 	})
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	var assetResponse struct {
 		Location string `json:"location"`
@@ -123,7 +123,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		},
 	})
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	return s.Push(resp.Body)
 }
@@ -144,7 +144,7 @@ func rbxassetidWrite(s rbxmk.State) int {
 		Body: options.Body,
 	})
 	if err != nil {
-		return s.RaiseError(err.Error())
+		return s.RaiseError("%w", err)
 	}
 	return 0
 }
