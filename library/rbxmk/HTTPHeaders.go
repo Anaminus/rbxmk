@@ -42,34 +42,41 @@ func HTTPHeaders() Reflector {
 				if !ok {
 					return
 				}
-				switch v := lv.(type) {
-				case lua.LString:
-					headers[string(name)] = []string{string(v)}
-				case *lua.LTable:
-					n := v.Len()
-					if n == 0 {
-						err = fmt.Errorf("header %q must be string or array of strings", string(name))
-						return
-					}
-					values := make([]string, n)
-					for i := 1; i <= n; i++ {
-						value, ok := v.RawGetInt(i).(lua.LString)
-						if !ok {
-							err = fmt.Errorf("expected string from index %d of header %q, got %s", i, string(name), value.Type())
-							return
-						}
-						values[i-1] = string(value)
-					}
-					headers[string(name)] = values
-				default:
-					err = fmt.Errorf("header %q must be string or array of strings", string(name))
+				values, e := pullStringArray(lv)
+				if e != nil {
+					err = fmt.Errorf("header %q: %w", string(name), e)
 					return
 				}
+				headers[string(name)] = values
 			})
 			if err != nil {
 				return nil, err
 			}
 			return headers, nil
 		},
+	}
+}
+
+// Convert a string or an array of strings.
+func pullStringArray(v lua.LValue) ([]string, error) {
+	switch v := v.(type) {
+	case lua.LString:
+		return []string{string(v)}, nil
+	case *lua.LTable:
+		n := v.Len()
+		if n == 0 {
+			return nil, fmt.Errorf("expected string or array of strings")
+		}
+		values := make([]string, n)
+		for i := 1; i <= n; i++ {
+			value, ok := v.RawGetInt(i).(lua.LString)
+			if !ok {
+				return nil, fmt.Errorf("index %d: expected string, got %s", i, value.Type())
+			}
+			values[i-1] = string(value)
+		}
+		return values, nil
+	default:
+		return nil, fmt.Errorf("expected string or array of strings")
 	}
 }
