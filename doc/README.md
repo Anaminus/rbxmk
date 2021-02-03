@@ -8,6 +8,9 @@ details on how rbxmk works.
 
 1. [Documents][documents]
 2. [Command line][command-line]
+	1. [Run command][run-command]
+	2. [Help command][help-command]
+	3. [Version command][version-command]
 3. [Instances][instances]
 4. [Attributes][attributes]
 5. [Descriptors][descriptors]
@@ -45,19 +48,35 @@ Document                     | Description
 [command-line]: #user-content-command-line
 
 ```bash
-rbxmk [ FILE ] [ ...VALUE ]
+rbxmk COMMAND [ OPTIONS... ]
 ```
 
-The rbxmk command receives a path to a file to be executed as a Lua script.
+The rbxmk command receives the name of a subcommand followed by a number of
+options, which depend on the subcommand. The following subcommands are provided:
+
+Subcommand                         | Description
+-----------------------------------|------------
+[`rbxmk run`][run-command]         | Executes a Lua script.
+[`rbxmk help`][help-command]       | Displays help for rbxmk.
+[`rbxmk version`][version-command] | Displays the version of rbxmk.
+
+### Run command
+[run-command]: #user-content-run-command
 
 ```bash
-rbxmk script.lua
+rbxmk run FILE [ VALUE... ]
+```
+
+The **run** command receives a path to a file to be executed as a Lua script.
+
+```bash
+rbxmk run script.lua
 ```
 
 If `-` is given, then the script will be read from stdin instead.
 
 ```bash
-echo 'print("hello world!")' | rbxmk -
+echo 'print("hello world!")' | rbxmk run -
 ```
 
 The remaining arguments are Lua values to be passed to the file. Numbers, bools,
@@ -65,7 +84,7 @@ and nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string.
 
 ```bash
-rbxmk script.lua true 3.14159 hello!
+rbxmk run script.lua true 3.14159 hello!
 ```
 
 Within the script, these arguments can be received from the `...` operator:
@@ -73,6 +92,29 @@ Within the script, these arguments can be received from the `...` operator:
 ```lua
 local arg1, arg2, arg3 = ...
 ```
+
+For more information about the Lua environment provided by rbxmk, refer to the
+[Libraries section](libraries.md).
+
+### Help command
+[help-command]: #user-content-help-command
+
+```bash
+rbxmk help [ COMMAND ]
+```
+
+The **help** command displays information about a subcommand. If no subcommand
+is specified, information about using rbxmk is displayed.
+
+### Version command
+[version-command]: #user-content-version-command
+
+```bash
+rbxmk version
+```
+
+The **version** command displays the version of the rbxmk command. The result is
+a string formatted according to [semantic versioning](https://semver.org/).
 
 ## Instances
 [instances]: #user-content-instances
