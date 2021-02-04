@@ -83,12 +83,9 @@ func (*HTTPRequest) Type() string {
 	return "HTTPRequest"
 }
 
-func (r *HTTPRequest) do(client *http.Client, req *http.Request) {
+func (r *HTTPRequest) do(client *rbxmk.Client, req *http.Request) {
 	defer close(r.respch)
 	defer close(r.errch)
-	if client == nil {
-		client = http.DefaultClient
-	}
 	resp, err := client.Do(req)
 	if err != nil {
 		r.errch <- err

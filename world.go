@@ -2,7 +2,6 @@ package rbxmk
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"runtime"
 	"sort"
@@ -26,7 +25,7 @@ type World struct {
 	globalDesc       *rtypes.RootDesc
 	globalAttrConfig *rtypes.AttrConfig
 
-	Client *http.Client
+	Client *Client
 
 	udmut    sync.Mutex
 	userdata map[interface{}]uintptr
@@ -34,7 +33,10 @@ type World struct {
 
 // NewWorld returns a World initialized with the given Lua state.
 func NewWorld(l *lua.LState) *World {
-	return &World{l: l}
+	return &World{
+		l:      l,
+		Client: NewClient(nil),
+	}
 }
 
 // cacheUserData causes userdata created by the world to be cached per value.
