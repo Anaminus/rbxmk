@@ -5,173 +5,152 @@ This document contains a reference to the sources available to rbxmk scripts.
 <thead><tr><th>Table of Contents</th></tr></thead>
 <tbody><tr><td>
 
-1. [`clipboard` source][clipboard]
-2. [`file` source][file]
-3. [`http` source][http]
-4. [`rbxassetid` source][rbxassetid]
+1. [clipboard][clipboard]
+	1. [clipboard.read][clipboard.read]
+	2. [clipboard.write][clipboard.write]
+2. [file][file]
+	1. [file.read][file.read]
+	2. [file.write][file.write]
+3. [http][http]
+	1. [http.request][http.request]
+4. [rbxassetid][rbxassetid]
+	1. [rbxassetid.read][rbxassetid.read]
+	2. [rbxassetid.write][rbxassetid.write]
 
 </td></tr></tbody>
 </table>
 
-A **source** is an external location from which raw data can be read from and
-written to. A source can be accessed in a general way through the
-[`rbxmk.readSource`][readSource] and [`rbxmk.writeSource`][writeSource]
-functions. This document describes the implementation of readSource and
-writeSource for each source.
+A **source** is an interface to an external location outside of the rbxmk
+environment. Each source has a corresponding library that provides access to the
+source.
 
-A source usually has a corresponding library that provides more detailed access.
-Such libraries are described in the [Libraries](libraries.md) document.
+## clipboard
+[clipboard]: #user-content-clipboard
 
-Source                   | Library                          | Description
--------------------------|----------------------------------|------------
-[clipboard][clipboard]   | [clipboard][clipboard-library]   | The OS clipboard.
-[file][file]             | [file][file-library]             | The filesystem.
-[http][http]             | [http][http-library]             | An HTTP resource.
-[rbxassetid][rbxassetid] | [rbxassetid][rbxassetid-library] | A Roblox asset.
+The `clipboard` source provides an interface to the operating system's
+clipboard.
 
-[readSource]: libraries.md#user-content-rbxmkreadsource
-[writeSource]: libraries.md#user-content-rbxmkwritesource
-
-## `clipboard` source
-[clipboard]: #user-content-clipboard-source
-[clipboard-library]: libraries.md#user-content-clipboard
-
-The `clipboard` source provides access to the operating system's clipboard.
+Name                               | Description
+-----------------------------------|------------
+[clipboard.read][clipboard.read]   | Gets data from the clipboard in one of a number of formats.
+[clipboard.write][clipboard.write] | Sets data to the clipboard in a number of formats.
 
 **The clipboard is currently available only on Windows. Other operating systems
 return no data.**
 
-### `readSource`
-Each additional argument to [readSource][readSource] is a [format](formats.md)
-that describes how interpret data retrieved from the clipboard.
+#### clipboard.read
+[clipboard.read]: #user-content-clipboardread
+<code>clipboard.read(formats: ...[string](##)): (value: [any](##))</code>
+
+The `read` function gets a value from the clipboard according to one of the
+given [formats](formats.md).
 
 Each format has a number of associated [media
 types](https://en.wikipedia.org/wiki/Media_type). Each format is traversed in
 order, and each media type within a format is traversed in order. The data that
-matches the first media type found in the clipboard is returned.
+matches the first media type found in the clipboard is selected. This data is
+decoded by the format corresponding to the matched media type, and the result is
+returned.
 
-The formats passed to readSource are used only to select data from the
-clipboard. The returned data is still in raw bytes, and it is up to the user to
-decoded it with the expected format.
+Throws an error if *value* could not be decoded from the format, or if data
+could not be retrieved from the clipboard.
 
-```lua
-local bytes = rbxmk.readSource("clipboard", "txt", "bin")
-```
+#### clipboard.write
+[clipboard.write]: #user-content-clipboardwrite
+<code>clipboard.write(value: [any](##), formats: ...[string](##))</code>
 
-### `writeSource`
-Each additional argument to [writeSource][writeSource] is a [format](formats.md)
-that describes how to format data sent to the clipboard.
+The `write` function sets *value* to the clipboard according to the given
+[formats](formats.md).
 
 Each format has a number of associated [media
-types](https://en.wikipedia.org/wiki/Media_type). For each given format, the
-bytes are sent to the clipboard for each of the format's media types.
+types](https://en.wikipedia.org/wiki/Media_type). For each format, the data is
+encoded in the format, which is then sent to the clipboard for each of the
+format's media type. Data is not sent for a media type if that media type was
+already sent.
 
-The formats passed to writeSource are used only to select the clipboard formats
-to write to. The same bytes will be written to every clipboard format, and it is
-up to the user to ensure that the data is correct for each clipboard format. For
-more flexible encoding in multiple formats,
-[clipboard.write](libraries.md#user-content-clipboardwrite) should be used
-instead.
+Throws an error if *value* could not be encoded in a format, or if data could
+not be sent to the clipboard.
 
-```lua
-rbxmk.writeSource("clipboard", bytes, "txt", "bin")
-```
+## file
+[file]: #user-content-file
 
-## `file` source
-[file]: #user-content-file-source
-[file-library]: libraries.md#user-content-file
+The `file` source provides an interface to the file system.
 
-The `file` source provides access to the file system.
+Name                     | Description
+-------------------------|------------
+[file.read][file.read]   | Reads data from a file in a certain format.
+[file.write][file.write] | Writes data to a file in a certain format.
 
-### `readSource`
-The first additional argument to [readSource][readSource] is the path to the
-file to read from.
+#### file.read
+[file.read]: #user-content-fileread
+<code>file.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
 
-```lua
-local bytes = rbxmk.readSource("file", "path/to/file.ext")
-```
+The `read` function reads the content of the file at *path*, and decodes it into
+*value* according to the [format](formats.md) matching the file extension of
+*path*. If *format* is given, then it will be used instead of the file
+extension.
 
-### `writeSource`
-The first additional argument to [writeSource][writeSource] is the path to the
-file to write to.
+If the format returns an [Instance][Instance], then the Name property will be
+set to the "fstem" component of *path* according to
+[os.split](libraries.md#user-content-ossplit).
 
-```lua
-rbxmk.writeSource("file", bytes, "path/to/file.ext")
-```
+#### file.write
+[file.write]: #user-content-filewrite
+<code>file.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
 
-## `http` source
-[http]: #user-content-http-source
-[http-library]: libraries.md#user-content-http
+The `write` function encodes *value* according to the [format](formats.md)
+matching the file extension of *path*, and writes the result to the file at
+*path*. If *format* is given, then it will be used instead of the file
+extension.
 
-The `http` source provides access to an HTTP client.
+## http
+[http]: #user-content-http
 
-### `readSource`
-The first additional argument to [readSource][readSource] is an
-[HTTPOptions][HTTPOptions]. Several options are ignored:
+The `http` source provides an interface to resources on the network via HTTP.
 
-- Method is ignored. A GET request is always performed.
-- RequestFormat is ignored. No body is sent with GET requests.
-- ResponseFormat is ignored. The response is always decoded into raw bytes.
-- Body is ignored. No body is sent with GET requests.
+Name                         | Description
+-----------------------------|------------
+[http.request][http.request] | Begins an HTTP request.
 
-Returns the raw body of the response. Throws an error if the response status is
-not 2XX.
+#### http.request
+[http.request]: #user-content-httprequest
+<code>http.request(options: [HTTPOptions][HTTPOptions]): (req: [HTTPRequest][HTTPRequest])</code>
 
-```lua
-local bytes = rbxmk.readSource("http", {URL="https://www.example.com/resource"})
-```
+The `request` function begins a request with the specified
+[options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
+resolved or canceled. Throws an error if the request could not be started.
 
-### `writeSource`
-The first additional argument to [writeSource][writeSource] is an
-[HTTPOptions][HTTPOptions]. Several options are ignored:
+## rbxassetid
+[rbxassetid]: #user-content-rbxassetid
 
-- Method is ignored. A POST request is always performed.
-- RequestFormat is ignored. The *bytes* argument of writeSource is used as the
-  raw body of the request.
-- ResponseFormat is ignored. The response body is discarded.
-- Body is ignored. The *bytes* argument of writeSource is used as the raw body
-  of the request.
+The `rbxassetid` source provides an interface to assets on the Roblox website.
 
-Throws an error if the response status is not 2XX.
+Name                                 | Description
+-------------------------------------|------------
+[rbxassetid.read][rbxassetid.read]   | Reads data from a rbxassetid in a certain format.
+[rbxassetid.write][rbxassetid.write] | Writes data to a rbxassetid in a certain format.
 
-```lua
-rbxmk.writeSource("http", bytes, {URL="https://www.example.com/resource"})
-```
+#### rbxassetid.read
+[rbxassetid.read]: #user-content-rbxassetidread
+<code>rbxassetid.read(options: [RBXWebOptions][RBXWebOptions]): (value: [any](##))</code>
 
-## `rbxassetid` source
-[rbxassetid]: #user-content-rbxassetid-source
-[rbxassetid-library]: libraries.md#user-content-rbxassetid
+The `read` function downloads an asset according to the given
+[options][RBXWebOptions]. Returns the content of the asset corresponding to
+AssetID, decoded according to Format.
 
-The `rbxassetid` source provides access to assets on the Roblox website.
+Throws an error if a problem occurred while downloading the asset.
 
-### `readSource`
-The first additional argument to [readSource][readSource] is a
-[RBXWebOptions][RBXWebOptions]. Several options are ignored:
+#### rbxassetid.write
+[rbxassetid.write]: #user-content-rbxassetidwrite
+<code>rbxassetid.write(options: [RBXWebOptions][RBXWebOptions])</code>
 
-- Format is ignored. The content is always decoded into raw bytes.
-- Body is ignored.
-
-Returns the raw content of the asset. Throws an error if a problem occurred
-while downloading the asset.
-
-```lua
-local bytes = rbxmk.readSource("rbxassetid", {AssetID=1818})
-```
-
-### `writeSource`
-The first additional argument to [writeSource][writeSource] is a
-[RBXWebOptions][RBXWebOptions]. Several options are ignored:
-
-- Format is ignored. The *bytes* argument of writeSource is used as the raw
-  content of the asset.
-- Body is ignored. The *bytes* argument of writeSource is used as the raw
-  content of the asset.
+The `write` function uploads to an existing asset according to the given
+[options][RBXWebOptions]. The Body is encoding according to Format, then
+uploaded to AssetID. AssetID must be the ID of an existing asset.
 
 Throws an error if a problem occurred while uploading the asset.
 
-```lua
-rbxmk.writeSource("rbxassetid", bytes, {AssetID=1818})```
-```
-
 [HTTPOptions]: types.md#user-content-httpoptions
+[HTTPRequest]: types.md#user-content-httprequest
+[Instance]: types.md#user-content-instance
 [RBXWebOptions]: types.md#user-content-rbxweboptions

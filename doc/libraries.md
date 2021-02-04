@@ -17,10 +17,8 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	8. [rbxmk.loadString][rbxmk.loadString]
 	9. [rbxmk.newDesc][rbxmk.newDesc]
 	10. [rbxmk.patchDesc][rbxmk.patchDesc]
-	11. [rbxmk.readSource][rbxmk.readSource]
-	12. [rbxmk.runFile][rbxmk.runFile]
-	13. [rbxmk.runString][rbxmk.runString]
-	14. [rbxmk.writeSource][rbxmk.writeSource]
+	11. [rbxmk.runFile][rbxmk.runFile]
+	12. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [math][math]
 	1. [math.clamp][math.clamp]
@@ -45,17 +43,6 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	6. [table.unpack][table.unpack]
 8. [sym][sym]
 9. [types][types]
-10. [clipboard][clipboard]
-	1. [clipboard.read][clipboard.read]
-	2. [clipboard.write][clipboard.write]
-11. [file][file]
-	1. [file.read][file.read]
-	2. [file.write][file.write]
-12. [http][http]
-	1. [http.request][http.request]
-13. [rbxassetid][rbxassetid]
-	1. [rbxassetid.read][rbxassetid.read]
-	2. [rbxassetid.write][rbxassetid.write]
 
 </td></tr></tbody>
 </table>
@@ -76,13 +63,13 @@ Library                  | Description
 [table][table]           | Extensions to the standard table library.
 [sym][sym]               | Symbols for accessing instance metadata.
 [types][types]           | Fallbacks for constructing certain types.
-[clipboard][clipboard]   | Handles the [clipboard][clipboard-source] source.
-[file][file]             | Handles the [file][file-source] source.
-[http][http]             | Handles the [http][http-source] source.
-[rbxassetid][rbxassetid] | Handles the [rbxassetid][rbxassetid-source] source.
 
-Additionally, the `_RBXMK_VERSION` global variable is defined as a string
-containing the current version of rbxmk, formatted according to [semantic
+Additionally, each source provides a library that enables access to the source.
+See the [Sources document](sources.md) for more information about each source
+library.
+
+The `_RBXMK_VERSION` global variable is defined as a string containing the
+current version of rbxmk, formatted according to [semantic
 versioning](https://semver.org/).
 
 ## Base
@@ -134,10 +121,8 @@ Name                                       | Kind     | Description
 [loadString][rbxmk.loadString]             | function | Load a string as a function.
 [newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
 [patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
-[readSource][rbxmk.readSource]             | function | Read bytes from an external source.
 [runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
 [runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
-[writeSource][rbxmk.writeSource]           | function | Write bytes to an external source.
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
@@ -265,17 +250,6 @@ The **patchDesc** function transforms a root descriptor according to a list of
 actions. Each action in the list is applied in order. Actions that are
 incompatible are ignored.
 
-### rbxmk.readSource
-[rbxmk.readSource]: #user-content-rbxmkreadsource
-<code>rbxmk.readSource(source: [string](##), args: ...[any](##)): (bytes: [BinaryString](##))</code>
-
-The **readSource** function reads a sequence of bytes from an external source
-indicated by *source*. *args* depends on the source. The exact details of each
-source are described in the [Sources](sources.md) document.
-
-readSource will throw an error if *source* does not exist, or the source cannot
-be read from.
-
 ### rbxmk.runFile
 [rbxmk.runFile]: #user-content-rbxmkrunfile
 <code>rbxmk.runFile(path: [string](##), args: ...[any](##)): (results: ...[any](##))</code>
@@ -297,17 +271,6 @@ to run. *args* are passed into the script as arguments. Returns the values
 returned by the script.
 
 The script runs in the context of the calling script.
-
-### rbxmk.writeSource
-[rbxmk.writeSource]: #user-content-rbxmkwritesource
-<code>rbxmk.writeSource(source: [string](##), bytes: [BinaryString](##), args: ...[any](##))</code>
-
-The **writeSource** function writes a sequence of bytes to an external source
-indicated by *source*. *args* depends on the source. The exact details of each
-source are described in the [Sources](sources.md) section.
-
-writeSource will throw an error if *source* does not exist, or cannot be written
-to.
 
 ## Roblox
 [roblox]: #user-content-roblox
@@ -616,131 +579,6 @@ Type              | Primitive
 `SharedString`    | string
 `token`           | number
 
-## clipboard
-[clipboard]: #user-content-clipboard
-[clipboard-source]: sources.md#user-content-clipboard-source
-
-The `clipboard` library handles the `clipboard` source.
-
-Name                     | Description
--------------------------|------------
-[read][clipboard.read]   | Gets data from the clipboard in one of a number of formats.
-[write][clipboard.write] | Sets data to the clipboard in a number of formats.
-
-#### clipboard.read
-[clipboard.read]: #user-content-clipboardread
-<code>clipboard.read(formats: ...[string](##)): (value: [any](##))</code>
-
-The `read` function gets a value from the clipboard according to one of the
-given [formats](formats.md).
-
-Each format has a number of associated [media
-types](https://en.wikipedia.org/wiki/Media_type). Each format is traversed in
-order, and each media type within a format is traversed in order. The data that
-matches the first media type found in the clipboard is selected. This data is
-decoded by the format corresponding to the matched media type, and the result is
-returned.
-
-Throws an error if *value* could not be decoded from the format, or if data
-could not be retrieved from the clipboard.
-
-#### clipboard.write
-[clipboard.write]: #user-content-clipboardwrite
-<code>clipboard.write(value: [any](##), formats: ...[string](##))</code>
-
-The `write` function sets *value* to the clipboard according to the given
-[formats](formats.md).
-
-Each format has a number of associated [media
-types](https://en.wikipedia.org/wiki/Media_type). For each format, the data is
-encoded in the format, which is then sent to the clipboard for each of the
-format's media type. Data is not sent for a media type if that media type was
-already sent.
-
-Throws an error if *value* could not be encoded in a format, or if data could
-not be sent to the clipboard.
-
-### file
-[file]: #user-content-file
-[file-source]: sources.md#user-content-file-source
-
-The `file` library handles the `file` source.
-
-Name                | Description
---------------------|------------
-[read][file.read]   | Reads data from a file in a certain format.
-[write][file.write] | Writes data to a file in a certain format.
-
-#### file.read
-[file.read]: #user-content-fileread
-<code>file.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
-
-The `read` function reads the content of the file at *path*, and decodes it into
-*value* according to the [format](formats.md) matching the file extension of
-*path*. If *format* is given, then it will be used instead of the file
-extension.
-
-If the format returns an [Instance][Instance], then the Name property will be
-set to the "fstem" component of *path* according to [os.split][os.split].
-
-#### file.write
-[file.write]: #user-content-filewrite
-<code>file.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
-
-The `write` function encodes *value* according to the [format](formats.md)
-matching the file extension of *path*, and writes the result to the file at
-*path*. If *format* is given, then it will be used instead of the file
-extension.
-
-### http
-[http]: #user-content-http
-[http-source]: sources.md#user-content-http-source
-
-The `http` library handles the `http` source.
-
-Name                    | Description
-------------------------|------------
-[request][http.request] | Begins an HTTP request.
-
-#### http.request
-[http.request]: #user-content-httprequest
-<code>http.request(options: [HTTPOptions][HTTPOptions]): (req: [HTTPRequest][HTTPRequest])</code>
-
-The `request` function begins a request with the specified
-[options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
-resolved or canceled. Throws an error if the request could not be started.
-
-### rbxassetid
-[rbxassetid]: #user-content-rbxassetid
-[rbxassetid-source]: sources.md#user-content-rbxassetid-source
-
-The `rbxassetid` library handles the `rbxassetid` source.
-
-Name                      | Description
---------------------------|------------
-[read][rbxassetid.read]   | Reads data from a rbxassetid in a certain format.
-[write][rbxassetid.write] | Writes data to a rbxassetid in a certain format.
-
-#### rbxassetid.read
-[rbxassetid.read]: #user-content-rbxassetidread
-<code>rbxassetid.read(options: [RBXWebOptions][RBXWebOptions]): (value: [any](##))</code>
-
-The `read` function downloads an asset according to the given
-[options][RBXWebOptions]. Returns the content of the asset corresponding to
-AssetID, decoded according to Format.
-
-Throws an error if a problem occurred while downloading the asset.
-
-#### rbxassetid.write
-[rbxassetid.write]: #user-content-rbxassetidwrite
-<code>rbxassetid.write(options: [RBXWebOptions][RBXWebOptions])</code>
-
-The `write` function uploads to an existing asset according to the given
-[options][RBXWebOptions]. The Body is encoding according to Format, then
-uploaded to AssetID. AssetID must be the ID of an existing asset.
-
-Throws an error if a problem occurred while uploading the asset.
-
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc
 [ClassDesc]: types.md#user-content-classdesc
@@ -750,8 +588,6 @@ Throws an error if a problem occurred while uploading the asset.
 [EnumItemDesc]: types.md#user-content-enumitemdesc
 [EventDesc]: types.md#user-content-eventdesc
 [FunctionDesc]: types.md#user-content-functiondesc
-[HTTPOptions]: types.md#user-content-httpoptions
-[HTTPRequest]: types.md#user-content-httprequest
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.IsService]: types.md#user-content-instancesymisservice
@@ -761,6 +597,5 @@ Throws an error if a problem occurred while uploading the asset.
 [Instance]: types.md#user-content-instance
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
-[RBXWebOptions]: types.md#user-content-rbxweboptions
 [RootDesc]: types.md#user-content-rootdesc
 [TypeDesc]: types.md#user-content-typedesc

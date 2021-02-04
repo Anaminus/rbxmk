@@ -62,50 +62,6 @@ func init() { register(Clipboard) }
 func Clipboard() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "clipboard",
-		Read: func(s rbxmk.State) (b []byte, err error) {
-			selectors, err := getFormatSelectors(s, 1, true)
-			if err != nil {
-				return nil, err
-			}
-
-			mediaTypes := []string{}
-			mediaDefined := map[string]struct{}{}
-			for _, selector := range selectors {
-				for _, mediaType := range selector.Format.MediaTypes {
-					if _, ok := mediaDefined[mediaType]; ok {
-						continue
-					}
-					mediaTypes = append(mediaTypes, mediaType)
-					mediaDefined[mediaType] = struct{}{}
-				}
-			}
-
-			_, b, err = clipboard.Read(mediaTypes...)
-			return b, err
-		},
-		Write: func(s rbxmk.State, b []byte) (err error) {
-			selectors, err := getFormatSelectors(s, 1, false)
-			if err != nil {
-				return err
-			}
-
-			clipboardFormats := []clipboard.Format{}
-			mediaDefined := map[string]struct{}{}
-			for _, selector := range selectors {
-				for _, mediaType := range selector.Format.MediaTypes {
-					if _, ok := mediaDefined[mediaType]; ok {
-						continue
-					}
-					clipboardFormats = append(clipboardFormats, clipboard.Format{
-						Name:    mediaType,
-						Content: b,
-					})
-					mediaDefined[mediaType] = struct{}{}
-				}
-			}
-
-			return clipboard.Write(clipboardFormats)
-		},
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 2)

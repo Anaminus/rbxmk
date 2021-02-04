@@ -9,52 +9,12 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/robloxapi/types"
 )
 
 func init() { register(HTTP) }
 func HTTP() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "http",
-		Read: func(s rbxmk.State) (b []byte, err error) {
-			options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
-			options.Method = "GET"
-			options.RequestFormat = rtypes.FormatSelector{}
-			options.ResponseFormat = rtypes.FormatSelector{Format: "bin"}
-			options.Body = nil
-			request, err := doHTTPRequest(s, options)
-			if err != nil {
-				return nil, err
-			}
-			resp, err := request.Resolve()
-			if err != nil {
-				return nil, err
-			}
-			if !resp.Success {
-				return nil, fmt.Errorf(resp.StatusMessage)
-			}
-			body := resp.Body.(types.Stringlike).Stringlike()
-			return []byte(body), nil
-		},
-		Write: func(s rbxmk.State, b []byte) (err error) {
-			options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
-			options.Method = "POST"
-			options.RequestFormat = rtypes.FormatSelector{Format: "bin"}
-			options.ResponseFormat = rtypes.FormatSelector{}
-			options.Body = types.BinaryString(b)
-			request, err := doHTTPRequest(s, options)
-			if err != nil {
-				return err
-			}
-			resp, err := request.Resolve()
-			if err != nil {
-				return err
-			}
-			if !resp.Success {
-				return fmt.Errorf(resp.StatusMessage)
-			}
-			return nil
-		},
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 1)

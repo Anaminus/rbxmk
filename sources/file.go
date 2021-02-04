@@ -1,7 +1,6 @@
 package sources
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -15,14 +14,6 @@ func init() { register(File) }
 func File() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "file",
-		Read: func(s rbxmk.State) (b []byte, err error) {
-			path := string(s.Pull(1, "string").(types.String))
-			return ioutil.ReadFile(path)
-		},
-		Write: func(s rbxmk.State, b []byte) (err error) {
-			path := string(s.Pull(1, "string").(types.String))
-			return ioutil.WriteFile(path, b, 0666)
-		},
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 2)
