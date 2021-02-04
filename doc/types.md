@@ -38,6 +38,16 @@ Member                          | Kind
 --------------------------------|-----
 [Property][AttrConfig.Property] | field
 
+An AttrConfig can be created with the [AttrConfig.new][AttrConfig.new]
+constructor.
+
+### AttrConfig.new
+[AttrConfig.new]: #user-content-attrconfignew
+<code>AttrConfig.new(property: [string](##)?): [AttrConfig][AttrConfig]</code>
+
+The `AttrConfig.new` constructor returns a new AttrConfig. *property* sets the
+[Property][AttrConfig.Property] field, defaulting to an empty string.
+
 ### AttrConfig.Property
 [AttrConfig.Property]: #user-content-attrconfigproperty
 <code>AttrConfig.Property: [string](##)</code>
