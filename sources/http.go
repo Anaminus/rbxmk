@@ -1,9 +1,9 @@
 package sources
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -76,20 +76,11 @@ type HTTPRequest struct {
 
 	fmt rbxmk.Format
 	sel rtypes.FormatSelector
-	pr  *io.PipeReader
 }
 
 // Type returns a string identifying the type of the value.
 func (*HTTPRequest) Type() string {
 	return "HTTPRequest"
-}
-
-func (r *HTTPRequest) encode(w *io.PipeWriter, f rbxmk.Format, s rtypes.FormatSelector, v types.Value) {
-	if err := f.Encode(s, w, v); err != nil {
-		w.CloseWithError(err)
-		return
-	}
-	w.Close()
 }
 
 func (r *HTTPRequest) do(client *http.Client, req *http.Request) {
@@ -109,9 +100,6 @@ func (r *HTTPRequest) do(client *http.Client, req *http.Request) {
 func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 	if r.resp != nil || r.err != nil {
 		return r.resp, r.err
-	}
-	if r.pr != nil {
-		defer r.pr.Close()
 	}
 	select {
 	case resp := <-r.respch:
@@ -144,19 +132,20 @@ func (r *HTTPRequest) Cancel() {
 }
 
 func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
-	var r *io.PipeReader
-	var w *io.PipeWriter
-	var reqfmt rbxmk.Format
-	var respfmt rbxmk.Format
+	var buf *bytes.Buffer
 	if options.RequestFormat.Format != "" {
-		reqfmt = s.Format(options.RequestFormat.Format)
+		reqfmt := s.Format(options.RequestFormat.Format)
 		if reqfmt.Encode == nil {
 			return nil, fmt.Errorf("cannot encode with format %s", reqfmt.Name)
 		}
 		if options.Body != nil {
-			r, w = io.Pipe()
+			buf = new(bytes.Buffer)
+			if err := reqfmt.Encode(options.RequestFormat, buf, options.Body); err != nil {
+				return nil, fmt.Errorf("encode body: %w", err)
+			}
 		}
 	}
+	var respfmt rbxmk.Format
 	if options.ResponseFormat.Format != "" {
 		respfmt = s.Format(options.ResponseFormat.Format)
 		if respfmt.Decode == nil {
@@ -167,8 +156,9 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 	// Create request.
 	ctx, cancel := context.WithCancel(context.TODO())
 	var req *http.Request
-	if r != nil {
-		req, err = http.NewRequestWithContext(ctx, options.Method, options.URL, r)
+	if buf != nil {
+		// Use of *bytes.Buffer guarantees that req.GetBody will be set.
+		req, err = http.NewRequestWithContext(ctx, options.Method, options.URL, buf)
 	} else {
 		req, err = http.NewRequestWithContext(ctx, options.Method, options.URL, nil)
 	}
@@ -185,10 +175,6 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 		errch:  make(chan error),
 		fmt:    respfmt,
 		sel:    options.ResponseFormat,
-		pr:     r,
-	}
-	if w != nil {
-		go request.encode(w, reqfmt, options.RequestFormat, options.Body)
 	}
 	go request.do(s.Client, req)
 	return request, nil
