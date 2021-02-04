@@ -6,6 +6,11 @@ import (
 	"sync"
 )
 
+// UserAgent is the User-Agent header string sent with HTTP requests made by
+// rbxmk. It includes components that ensure the client will operate with Roblox
+// website APIs.
+const UserAgent = "RobloxStudio/WinInet rbxmk/0.0"
+
 // Client wraps an http.Client to handle various additional behavior.
 type Client struct {
 	*http.Client
@@ -27,7 +32,7 @@ func NewClient(client *http.Client) *Client {
 	}
 }
 
-// Do sends a request, with the following additional behaviors:
+// Do sends a request, with the following additional behaviors.
 // - Includes a configured user agent header with the request, if the header is
 //   unset.
 // - Handles CSRF token validation.
@@ -35,6 +40,9 @@ func (c *Client) Do(req *http.Request) (resp *http.Response, err error) {
 	for i := 2; i > 0; i-- {
 		// Merge headers.
 		c.mtx.Lock()
+		if req.Header.Get("User-Agent") == "" {
+			req.Header.Set("User-Agent", UserAgent)
+		}
 		if token, ok := c.csrfTokens[req.URL.Host]; ok {
 			req.Header.Set("X-Csrf-Token", token)
 		}
