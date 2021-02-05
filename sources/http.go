@@ -143,7 +143,7 @@ func httpRequest(s rbxmk.State) int {
 	options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
 	request, err := doHTTPRequest(s, options)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.Push(request)
 }

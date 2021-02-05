@@ -133,7 +133,7 @@ func (s State) Push(v types.Value) int {
 	}
 	lvs, err := rfl.PushTo(s, rfl, v)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	for _, lv := range lvs {
 		s.L.Push(lv)
@@ -209,7 +209,7 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 	}
 	lvs, err := rfl.PushTo(s, rfl, v)
 	if err != nil {
-		s.RaiseError("field %s: %w", field, err.Error())
+		s.RaiseError("field %s: %s", field, err.Error())
 		return
 	}
 	table.RawSet(field, lvs[0])
@@ -226,7 +226,7 @@ func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) type
 	}
 	v, err := rfl.PullFrom(s, rfl, table.RawGet(field))
 	if err != nil {
-		s.RaiseError("field %s: %w", field, err.Error())
+		s.RaiseError("field %s: %s", field, err.Error())
 		return nil
 	}
 	return v
@@ -248,7 +248,7 @@ func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d
 	}
 	v, err := rfl.PullFrom(s, rfl, lv)
 	if err != nil {
-		s.RaiseError("field %s: %w", field, err.Error())
+		s.RaiseError("field %s: %s", field, err.Error())
 		return d
 	}
 	return v

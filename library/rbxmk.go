@@ -90,7 +90,7 @@ func rbxmkLoadFile(s rbxmk.State) int {
 	fileName := filepath.Clean(s.CheckString(1))
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	s.L.Push(fn)
 	return 1
@@ -100,7 +100,7 @@ func rbxmkLoadString(s rbxmk.State) int {
 	source := s.CheckString(1)
 	fn, err := s.L.LoadString(source)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	s.L.Push(fn)
 	return 1
@@ -110,10 +110,10 @@ func rbxmkRunFile(s rbxmk.State) int {
 	fileName := filepath.Clean(s.CheckString(1))
 	fi, err := os.Stat(fileName)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	if err = s.PushFile(rbxmk.FileInfo{Path: fileName, FileInfo: fi}); err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 
 	nt := s.L.GetTop()
@@ -122,7 +122,7 @@ func rbxmkRunFile(s rbxmk.State) int {
 	fn, err := s.L.LoadFile(fileName)
 	if err != nil {
 		s.PopFile()
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	s.L.Push(fn) // +function
 
@@ -136,7 +136,7 @@ func rbxmkRunFile(s rbxmk.State) int {
 	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
 	s.PopFile()
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.L.GetTop() - nt
 }
@@ -148,7 +148,7 @@ func rbxmkRunString(s rbxmk.State) int {
 	// Load file as function.
 	fn, err := s.L.LoadString(source)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	s.L.Push(fn) // +function
 
@@ -162,7 +162,7 @@ func rbxmkRunString(s rbxmk.State) int {
 	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
 	s.PopFile()
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.L.GetTop() - nt
 }
@@ -268,7 +268,7 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 	}
 	var w bytes.Buffer
 	if err := format.Encode(selector, &w, s.Pull(2, "Variant")); err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.Push(types.BinaryString(w.Bytes()))
 }
@@ -285,7 +285,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
 	v, err := format.Decode(selector, r)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.Push(v)
 }

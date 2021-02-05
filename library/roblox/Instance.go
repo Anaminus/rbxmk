@@ -85,7 +85,7 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 	r := strings.NewReader(sv.Stringlike())
 	dict, err := formats.RBXAttr().Decode(nil, r)
 	if err != nil {
-		s.RaiseError("decode attributes from %q: %w", attrcfg.Property, err)
+		s.RaiseError("decode attributes from %q: %s", attrcfg.Property, err)
 		return nil
 	}
 	return dict.(rtypes.Dictionary)
@@ -95,7 +95,7 @@ func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 	attrcfg := defaultAttrConfig(inst)
 	var w bytes.Buffer
 	if err := formats.RBXAttr().Encode(nil, &w, dict); err != nil {
-		s.RaiseError("encode attributes to %q: %w", attrcfg.Property, err)
+		s.RaiseError("encode attributes to %q: %s", attrcfg.Property, err)
 		return
 	}
 	inst.Set(attrcfg.Property, types.BinaryString(w.Bytes()))
@@ -262,7 +262,7 @@ func Instance() Reflector {
 					lv, err = pushPropertyTo(s, value)
 				}
 				if err != nil {
-					return s.RaiseError("%w", err)
+					return s.RaiseError("%s", err)
 				}
 				s.L.Push(lv)
 				return 1
@@ -466,7 +466,7 @@ func Instance() Reflector {
 						err = v.(*rtypes.Instance).SetParent(nil)
 					}
 					if err != nil {
-						s.RaiseError("%w", err)
+						s.RaiseError("%s", err)
 					}
 				},
 			},

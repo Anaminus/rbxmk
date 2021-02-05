@@ -109,7 +109,7 @@ func osDir(s rbxmk.State) int {
 	dirname := s.CheckString(1)
 	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
 	for _, info := range files {
@@ -128,7 +128,7 @@ func osStat(s rbxmk.State) int {
 	filename := s.CheckString(1)
 	info, err := os.Stat(filename)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	tinfo := s.L.CreateTable(0, 4)
 	tinfo.RawSetString("Name", lua.LString(info.Name()))

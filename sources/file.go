@@ -45,12 +45,12 @@ func fileRead(s rbxmk.State) int {
 
 	r, err := os.Open(fileName)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	defer r.Close()
 	v, err := format.Decode(selector, r)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	if inst, ok := v.(*rtypes.Instance); ok {
 		ext := s.Ext(fileName)
@@ -85,14 +85,14 @@ func fileWrite(s rbxmk.State) int {
 
 	w, err := os.Create(fileName)
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	defer w.Close()
 	if err := format.Encode(selector, w, value); err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	if err := w.Sync(); err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return 0
 }

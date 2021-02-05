@@ -54,13 +54,13 @@ func rbxassetidRead(s rbxmk.State) int {
 		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	var assetResponse struct {
 		Location string `json:"location"`
 	}
 	if err := json.Unmarshal(resp.Body.(types.BinaryString), &assetResponse); err != nil {
-		return s.RaiseError("decode asset response: %w", err)
+		return s.RaiseError("decode asset response: %s", err)
 	}
 	resp, err = doGeneralRequest(s, rtypes.HTTPOptions{
 		URL:            assetResponse.Location,
@@ -69,7 +69,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return s.Push(resp.Body)
 }
@@ -87,7 +87,7 @@ func rbxassetidWrite(s rbxmk.State) int {
 		Body:          options.Body,
 	})
 	if err != nil {
-		return s.RaiseError("%w", err)
+		return s.RaiseError("%s", err)
 	}
 	return 0
 }
