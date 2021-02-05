@@ -8,23 +8,25 @@ This document contains a reference to the types available to rbxmk scripts.
 1. [AttrConfig][AttrConfig]
 2. [CallbackDesc][CallbackDesc]
 3. [ClassDesc][ClassDesc]
-4. [DataModel][DataModel]
-5. [DescAction][DescAction]
-6. [EnumDesc][EnumDesc]
-7. [EnumItemDesc][EnumItemDesc]
-8. [EventDesc][EventDesc]
-9. [FormatSelector][FormatSelector]
-10. [FunctionDesc][FunctionDesc]
-11. [HTTPHeaders][HTTPHeaders]
-12. [HTTPOptions][HTTPOptions]
-13. [HTTPRequest][HTTPRequest]
-14. [HTTPResponse][HTTPResponse]
-15. [Instance][Instance]
-16. [ParameterDesc][ParameterDesc]
-17. [PropertyDesc][PropertyDesc]
-18. [RBXAssetOptions][RBXAssetOptions]
-19. [RootDesc][RootDesc]
-20. [TypeDesc][TypeDesc]
+4. [Cookie][Cookie]
+5. [Cookies][Cookies]
+6. [DataModel][DataModel]
+7. [DescAction][DescAction]
+8. [EnumDesc][EnumDesc]
+9. [EnumItemDesc][EnumItemDesc]
+10. [EventDesc][EventDesc]
+11. [FormatSelector][FormatSelector]
+12. [FunctionDesc][FunctionDesc]
+13. [HTTPHeaders][HTTPHeaders]
+14. [HTTPOptions][HTTPOptions]
+15. [HTTPRequest][HTTPRequest]
+16. [HTTPResponse][HTTPResponse]
+17. [Instance][Instance]
+18. [ParameterDesc][ParameterDesc]
+19. [PropertyDesc][PropertyDesc]
+20. [RBXAssetOptions][RBXAssetOptions]
+21. [RootDesc][RootDesc]
+22. [TypeDesc][TypeDesc]
 
 </td></tr></tbody>
 </table>
@@ -234,6 +236,34 @@ SetTags sets the given tags on the descriptor.
 <code>ClassDesc:UnsetTag(tags: ...[string](##))</code>
 
 SetTags unsets the given tags on the descriptor.
+
+## Cookie
+[Cookie]: #user-content-cookie
+
+A **Cookie** contains information about an HTTP cookie. It has the following
+members:
+
+Member              | Kind
+--------------------|-----
+[Name][Cookie.Name] | field
+
+For security reasons, the value of the cookie cannot be accessed.
+
+Cookie is immutable. A Cookie can be created with the
+[rbxmk.newCookie](libraries.md#user-content-rbxmknewcookie) constructor.
+Additionally, Cookies can be fetched from known locations with the
+[rbxmk.cookiesFrom](libraries.md#user-content-rbxmkcookiesfrom) function.
+
+### Cookie.Name
+[Cookie.Name]: #user-content-cookiename
+<code>Cookie.Name: [string](##)</code>
+
+Name is the name of the cookie.
+
+## Cookies
+[Cookies]: #user-content-cookies
+
+A **Cookies** is a list of [Cookie][Cookie] values.
 
 ## DataModel
 [DataModel]: #user-content-datamodel
@@ -588,7 +618,7 @@ have at least one value.
 
 ## HTTPOptions
 [HTTPOptions]: #user-content-httpoptions
-<code>type HTTPOptions = {URL: [string](##), Method: [string](##)?, RequestFormat: [FormatSelector][FormatSelector], ResponseFormat: [FormatSelector][FormatSelector], Headers: [HTTPHeaders][HTTPHeaders]?, Body: [any](##)?}</code>
+<code>type HTTPOptions = {URL: [string](##), Method: [string](##)?, RequestFormat: [FormatSelector][FormatSelector], ResponseFormat: [FormatSelector][FormatSelector], Headers: [HTTPHeaders][HTTPHeaders]?, Cookies: [Cookies][Cookies]?, Body: [any](##)?}</code>
 
 An HTTPOptions is a table that specifies how an HTTP request is made.
 
@@ -599,10 +629,14 @@ Method         | [string](##)?                     | The HTTP method. Defaults t
 RequestFormat  | [FormatSelector][FormatSelector]? | The format used to encode the request body.
 ResponseFormat | [FormatSelector][FormatSelector]? | The format used to decode the response body.
 Headers        | [HTTPHeaders][HTTPHeaders]?       | The HTTP headers to include with the request.
+Cookies        | [Cookies][Cookies]?               | Cookies to append to the Cookie header.
 Body           | [any](##)?                        | The body of the request, to be encoded by the specified format.
 
 If RequestFormat is unspecified, then no request body is sent. If ResponseFormat
 is unspecified, then no response body is returned.
+
+Use of the Cookies field ensures that cookies sent with the request are
+well-formed, and is preferred over setting the Cookie header directly.
 
 ## HTTPRequest
 [HTTPRequest]: #user-content-httprequest
@@ -630,7 +664,7 @@ Cancel cancels the pending request.
 
 ## HTTPResponse
 [HTTPResponse]: #user-content-httpresponse
-<code>type HTTPResponse = {Success: [bool](##), StatusCode: [int](##), StatusMessage: [string](##), Headers: [HTTPHeaders][HTTPHeaders], Body: [any](##)?}</code>
+<code>type HTTPResponse = {Success: [bool](##), StatusCode: [int](##), StatusMessage: [string](##), Headers: [HTTPHeaders][HTTPHeaders], Cookies: [Cookies][Cookies], Body: [any](##)?}</code>
 
 An HTTPResponse is a table that contains the response of a request.
 
@@ -640,6 +674,7 @@ Success       | [bool](##)                 | Whether the request succeeded. True
 StatusCode    | [int](##)                  | The HTTP status code of the response.
 StatusMessage | [string](##)               | A readable message corresponding to the StatusCode.
 Headers       | [HTTPHeaders][HTTPHeaders] | A set of response headers.
+Cookies       | [Cookies][Cookies]         | Cookies parsed from the Set-Cookie header.
 Body          | [any](##)?                 | The decoded body of the response.
 
 ## Instance
@@ -1073,7 +1108,7 @@ SetTags unsets the given tags on the descriptor.
 
 ## RBXAssetOptions
 [RBXAssetOptions]: #user-content-rbxassetoptions
-<code>type RBXAssetOptions = {AssetID: [int64](##), Cookies: [string](##)\|{[string](##)}?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
+<code>type RBXAssetOptions = {AssetID: [int64](##), Cookies: [Cookies][Cookies]?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
 
 An RBXAssetOptions is a table that specifies the options of a request to an
 asset on the Roblox website.
@@ -1081,7 +1116,7 @@ asset on the Roblox website.
 Field          | Type                              | Description
 ---------------|-----------------------------------|------------
 AssetID        | [int64](##)                       | The ID of the asset to request.
-Cookies        | [string](##)\|{[string](##)}?     | Optional cookies to send with requests, usually used for authentication.
+Cookies        | [Cookies][Cookies]?               | Optional cookies to send with requests, usually used for authentication.
 Format         | [FormatSelector][FormatSelector]  | The format used to encode or decode an asset.
 Body           | [any](##)?                        | The body of an asset, to be encoded by the specified format.
 

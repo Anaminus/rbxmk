@@ -51,9 +51,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		URL:            fmt.Sprintf(rbxassetidReadURL, options.AssetID),
 		Method:         "GET",
 		ResponseFormat: rtypes.FormatSelector{Format: "bin"},
-		Headers: rtypes.HTTPHeaders{
-			"Cookie": options.Cookies,
-		},
+		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
 		return s.RaiseError("%w", err)
@@ -68,9 +66,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		URL:            assetResponse.Location,
 		Method:         "GET",
 		ResponseFormat: options.Format,
-		Headers: rtypes.HTTPHeaders{
-			"Cookie": options.Cookies,
-		},
+		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
 		return s.RaiseError("%w", err)
@@ -87,10 +83,8 @@ func rbxassetidWrite(s rbxmk.State) int {
 		URL:           fmt.Sprintf(rbxassetidWriteURL, options.AssetID),
 		Method:        "POST",
 		RequestFormat: options.Format,
-		Headers: rtypes.HTTPHeaders{
-			"Cookie": options.Cookies,
-		},
-		Body: options.Body,
+		Headers:       rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
+		Body:          options.Body,
 	})
 	if err != nil {
 		return s.RaiseError("%w", err)

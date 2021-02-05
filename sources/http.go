@@ -61,11 +61,13 @@ func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 	select {
 	case resp := <-r.respch:
 		defer resp.Body.Close()
+		headers := rtypes.HTTPHeaders(resp.Header)
 		r.resp = &rtypes.HTTPResponse{
 			Success:       200 <= resp.StatusCode && resp.StatusCode < 300,
 			StatusCode:    resp.StatusCode,
 			StatusMessage: resp.Status,
-			Headers:       rtypes.HTTPHeaders(resp.Header),
+			Headers:       headers,
+			Cookies:       headers.RetrieveSetCookies(),
 		}
 		if r.fmt.Name != "" {
 			if r.resp.Body, r.err = r.fmt.Decode(r.sel, resp.Body); r.err != nil {
@@ -123,7 +125,7 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 		cancel()
 		return nil, err
 	}
-	req.Header = http.Header(options.Headers)
+	req.Header = http.Header(options.Headers.AppendCookies(options.Cookies))
 
 	// Push request object.
 	request = &HTTPRequest{

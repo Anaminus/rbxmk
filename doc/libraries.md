@@ -7,18 +7,20 @@ This document contains a reference to the libraries available to rbxmk scripts.
 
 1. [Base][base]
 2. [rbxmk][rbxmk]
-	1. [rbxmk.decodeFormat][rbxmk.decodeFormat]
-	2. [rbxmk.diffDesc][rbxmk.diffDesc]
-	3. [rbxmk.encodeFormat][rbxmk.encodeFormat]
-	4. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
-	5. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
-	6. [rbxmk.globalDesc][rbxmk.globalDesc]
-	7. [rbxmk.loadFile][rbxmk.loadFile]
-	8. [rbxmk.loadString][rbxmk.loadString]
-	9. [rbxmk.newDesc][rbxmk.newDesc]
-	10. [rbxmk.patchDesc][rbxmk.patchDesc]
-	11. [rbxmk.runFile][rbxmk.runFile]
-	12. [rbxmk.runString][rbxmk.runString]
+	1. [rbxmk.cookiesFrom][rbxmk.cookiesFrom]
+	2. [rbxmk.decodeFormat][rbxmk.decodeFormat]
+	3. [rbxmk.diffDesc][rbxmk.diffDesc]
+	4. [rbxmk.encodeFormat][rbxmk.encodeFormat]
+	5. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
+	6. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
+	7. [rbxmk.globalDesc][rbxmk.globalDesc]
+	8. [rbxmk.loadFile][rbxmk.loadFile]
+	9. [rbxmk.loadString][rbxmk.loadString]
+	10. [rbxmk.newCookie][rbxmk.newCookie]
+	11. [rbxmk.newDesc][rbxmk.newDesc]
+	12. [rbxmk.patchDesc][rbxmk.patchDesc]
+	13. [rbxmk.runFile][rbxmk.runFile]
+	14. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [math][math]
 	1. [math.clamp][math.clamp]
@@ -111,6 +113,7 @@ The **rbxmk** library contains functions related to the rbxmk engine.
 
 Name                                       | Kind     | Description
 -------------------------------------------|----------|------------
+[cookiesFrom][rbxmk.cookiesFrom]           | function | Retrieve cookies from a known location.
 [decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
 [diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
 [encodeFormat][rbxmk.encodeFormat]         | function | Serialize data into bytes.
@@ -119,10 +122,23 @@ Name                                       | Kind     | Description
 [globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
 [loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
 [loadString][rbxmk.loadString]             | function | Load a string as a function.
+[newCookie][rbxmk.newCookie]               | function | Create a new cookie.
 [newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
 [patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
 [runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
 [runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
+
+### rbxmk.cookiesFrom
+[rbxmk.cookiesFrom]: #user-content-rbxmkcookiesfrom
+<code>rbxmk.cookiesFrom(location: string): (cookies: [Cookies][Cookies]?)</code>
+
+The **cookiesFrom** function retrieves cookies from a known location. *location*
+is case-insensitive.
+
+No locations are currently implemented.
+
+Returns nil if no cookies could be retrieved from the location. Throws an error
+if an unknown location is given.
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
@@ -202,6 +218,12 @@ The **loadString** function loads the a string as a Lua function. *source* is
 the string to load.
 
 The function runs in the context of the calling script.
+
+### rbxmk.newCookie
+[rbxmk.newCookie]: #user-content-rbxmknewcookie
+<code>rbxmk.newCookie(name: [string](##), value: [string](##)): [Cookie][Cookie]</code>
+
+The **newCookie** function creates a new cookie object.
 
 ### rbxmk.newDesc
 [rbxmk.newDesc]: #user-content-rbxmknewdesc
@@ -582,6 +604,8 @@ Type              | Primitive
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc
 [ClassDesc]: types.md#user-content-classdesc
+[Cookie]: types.md#user-content-cookie
+[Cookies]: types.md#user-content-cookies
 [DataModel]: types.md#user-content-datamodel
 [DescAction]: types.md#user-content-descaction
 [EnumDesc]: types.md#user-content-enumdesc

@@ -16,12 +16,13 @@ func HTTPOptions() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "HTTPOptions")
 			}
-			table := s.L.CreateTable(0, 6)
+			table := s.L.CreateTable(0, 7)
 			s.PushToTable(table, lua.LString("URL"), types.String(options.URL))
 			s.PushToTable(table, lua.LString("Method"), types.String(options.Method))
 			s.PushToTable(table, lua.LString("RequestFormat"), options.RequestFormat)
 			s.PushToTable(table, lua.LString("ResponseFormat"), options.ResponseFormat)
 			s.PushToTable(table, lua.LString("Headers"), options.Headers)
+			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
 			s.PushToTable(table, lua.LString("Body"), options.Body)
 			return []lua.LValue{table}, nil
 		},
@@ -36,6 +37,7 @@ func HTTPOptions() Reflector {
 				RequestFormat:  s.PullFromTableOpt(table, lua.LString("RequestFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector),
 				ResponseFormat: s.PullFromTableOpt(table, lua.LString("ResponseFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector),
 				Headers:        s.PullFromTableOpt(table, lua.LString("Headers"), "HTTPHeaders", rtypes.HTTPHeaders(nil)).(rtypes.HTTPHeaders),
+				Cookies:        s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
 				Body:           s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
 			}
 			return options, nil

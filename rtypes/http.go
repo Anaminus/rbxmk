@@ -13,6 +13,7 @@ type HTTPOptions struct {
 	RequestFormat  FormatSelector
 	ResponseFormat FormatSelector
 	Headers        HTTPHeaders
+	Cookies        Cookies
 	Body           types.Value
 }
 
@@ -27,6 +28,7 @@ type HTTPResponse struct {
 	StatusCode    int
 	StatusMessage string
 	Headers       HTTPHeaders
+	Cookies       Cookies
 	Body          types.Value
 }
 
@@ -38,6 +40,40 @@ func (HTTPResponse) Type() string {
 // HTTPHeaders contains the headers of an HTTP request or response.
 type HTTPHeaders http.Header
 
+// AppendCookie formats and adds the given cookies to the Cookie header.
+func (h HTTPHeaders) AppendCookies(c Cookies) HTTPHeaders {
+	req := http.Request{Header: http.Header(h)}
+	for _, cookie := range c {
+		req.AddCookie(cookie.Cookie)
+	}
+	return h
+}
+
+// AppendSetCookie formats and adds the given cookies to the Set-Cookie header.
+func (h HTTPHeaders) AppendSetCookies(c Cookies) HTTPHeaders {
+	for _, cookie := range c {
+		if v := cookie.Cookie.String(); v != "" {
+			http.Header(h).Add("Set-Cookie", v)
+		}
+	}
+	return h
+}
+
+// RetrieveCookies parses the Cookie header.
+func (h HTTPHeaders) RetrieveCookies() Cookies {
+	return HTTPHeaders{"Set-Cookie": h["Cookie"]}.RetrieveSetCookies()
+}
+
+// RetrieveSetCookies parses the Set-Cookie header.
+func (h HTTPHeaders) RetrieveSetCookies() Cookies {
+	cs := (&http.Response{Header: http.Header(h)}).Cookies()
+	cookies := make(Cookies, len(cs))
+	for i, c := range cs {
+		cookies[i] = Cookie{c}
+	}
+	return cookies
+}
+
 // Type returns a string identifying the type of the value.
 func (HTTPHeaders) Type() string {
 	return "HTTPHeaders"
@@ -46,7 +82,7 @@ func (HTTPHeaders) Type() string {
 // RBXAssetOptions specifies options to a Roblox web request.
 type RBXAssetOptions struct {
 	AssetID int64
-	Cookies []string
+	Cookies Cookies
 	Format  FormatSelector
 	Body    types.Value
 }

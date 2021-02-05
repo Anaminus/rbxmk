@@ -24,12 +24,8 @@ func RBXAssetOptions() Reflector {
 			table := s.L.CreateTable(0, 4)
 			s.PushToTable(table, lua.LString("AssetID"), types.Int64(options.AssetID))
 			s.PushToTable(table, lua.LString("Format"), options.Format)
+			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
 			s.PushToTable(table, lua.LString("Body"), options.Body)
-			cookies := s.L.CreateTable(len(options.Cookies), 0)
-			for _, cookie := range options.Cookies {
-				cookies.Append(lua.LString(cookie))
-			}
-			table.RawSetString("Cookies", cookies)
 			return []lua.LValue{table}, nil
 		},
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
@@ -40,13 +36,11 @@ func RBXAssetOptions() Reflector {
 			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),
 				Format:  s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector),
+				Cookies: s.PullFromTable(table, lua.LString("Cookies"), "Cookies").(rtypes.Cookies),
 				Body:    s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
-			}
-			if options.Cookies, err = pullStringArray(table.RawGetString("Cookies")); err != nil {
-				return nil, fmt.Errorf("field Cookies: %w", err)
 			}
 			return options, nil
 		},

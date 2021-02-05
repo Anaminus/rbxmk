@@ -2,6 +2,7 @@ package library
 
 import (
 	"bytes"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,7 +21,7 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{
 	Name: "rbxmk",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 10)
+		lib := s.L.CreateTable(0, 12)
 		lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 		lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
 		lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
@@ -31,6 +32,8 @@ var RBXMK = rbxmk.Library{
 		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 		lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
+		lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
+		lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
 
 		for _, f := range reflect.All() {
 			r := f()
@@ -298,4 +301,19 @@ func rbxmkFormatCanDecode(s rbxmk.State) int {
 		return s.RaiseError("undefined decode type for %s", format.Name)
 	}
 	return s.Push(types.Bool(format.CanDecode(selector, typeName)))
+}
+
+func rbxmkNewCookie(s rbxmk.State) int {
+	name := string(s.Pull(1, "string").(types.String))
+	value := string(s.Pull(2, "string").(types.String))
+	cookie := rtypes.Cookie{Cookie: &http.Cookie{Name: name, Value: value}}
+	return s.Push(cookie)
+}
+
+func rbxmkCookiesFrom(s rbxmk.State) int {
+	location := string(s.Pull(1, "string").(types.String))
+	switch strings.ToLower(location) {
+	default:
+		return s.RaiseError("unknown location %q", location)
+	}
 }
