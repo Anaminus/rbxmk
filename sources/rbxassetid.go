@@ -52,8 +52,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		Method:         "GET",
 		ResponseFormat: rtypes.FormatSelector{Format: "bin"},
 		Headers: rtypes.HTTPHeaders{
-			"Cookie":     options.Cookies,
-			"User-Agent": {"Roblox/WinInet"},
+			"Cookie": options.Cookies,
 		},
 	})
 	if err != nil {
@@ -70,8 +69,7 @@ func rbxassetidRead(s rbxmk.State) int {
 		Method:         "GET",
 		ResponseFormat: options.Format,
 		Headers: rtypes.HTTPHeaders{
-			"Cookie":     options.Cookies,
-			"User-Agent": {"Roblox/WinInet"},
+			"Cookie": options.Cookies,
 		},
 	})
 	if err != nil {
@@ -90,8 +88,7 @@ func rbxassetidWrite(s rbxmk.State) int {
 		Method:        "POST",
 		RequestFormat: options.Format,
 		Headers: rtypes.HTTPHeaders{
-			"Cookie":     options.Cookies,
-			"User-Agent": {"Roblox/WinInet"},
+			"Cookie": options.Cookies,
 		},
 		Body: options.Body,
 	})
