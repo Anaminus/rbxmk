@@ -132,20 +132,20 @@ Name                                 | Description
 
 #### rbxassetid.read
 [rbxassetid.read]: #user-content-rbxassetidread
-<code>rbxassetid.read(options: [RBXWebOptions][RBXWebOptions]): (value: [any](##))</code>
+<code>rbxassetid.read(options: [RBXAssetOptions][RBXAssetOptions]): (value: [any](##))</code>
 
 The `read` function downloads an asset according to the given
-[options][RBXWebOptions]. Returns the content of the asset corresponding to
+[options][RBXAssetOptions]. Returns the content of the asset corresponding to
 AssetID, decoded according to Format.
 
 Throws an error if a problem occurred while downloading the asset.
 
 #### rbxassetid.write
 [rbxassetid.write]: #user-content-rbxassetidwrite
-<code>rbxassetid.write(options: [RBXWebOptions][RBXWebOptions])</code>
+<code>rbxassetid.write(options: [RBXAssetOptions][RBXAssetOptions])</code>
 
 The `write` function uploads to an existing asset according to the given
-[options][RBXWebOptions]. The Body is encoding according to Format, then
+[options][RBXAssetOptions]. The Body is encoding according to Format, then
 uploaded to AssetID. AssetID must be the ID of an existing asset.
 
 Throws an error if a problem occurred while uploading the asset.
@@ -153,4 +153,4 @@ Throws an error if a problem occurred while uploading the asset.
 [HTTPOptions]: types.md#user-content-httpoptions
 [HTTPRequest]: types.md#user-content-httprequest
 [Instance]: types.md#user-content-instance
-[RBXWebOptions]: types.md#user-content-rbxweboptions
+[RBXAssetOptions]: types.md#user-content-rbxassetoptions

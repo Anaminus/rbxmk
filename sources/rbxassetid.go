@@ -43,7 +43,7 @@ func doGeneralRequest(s rbxmk.State, options rtypes.HTTPOptions) (resp *rtypes.H
 }
 
 func rbxassetidRead(s rbxmk.State) int {
-	options := s.Pull(1, "RBXWebOptions").(rtypes.RBXWebOptions)
+	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
 	if options.Format.Format == "" {
 		return s.RaiseError("must specify Format for decoding")
 	}
@@ -81,7 +81,7 @@ func rbxassetidRead(s rbxmk.State) int {
 }
 
 func rbxassetidWrite(s rbxmk.State) int {
-	options := s.Pull(1, "RBXWebOptions").(rtypes.RBXWebOptions)
+	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
 	if options.Format.Format == "" {
 		return s.RaiseError("must specify Format for encoding")
 	}

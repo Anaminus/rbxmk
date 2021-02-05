@@ -22,7 +22,7 @@ This document contains a reference to the types available to rbxmk scripts.
 15. [Instance][Instance]
 16. [ParameterDesc][ParameterDesc]
 17. [PropertyDesc][PropertyDesc]
-18. [RBXWebOptions][RBXWebOptions]
+18. [RBXAssetOptions][RBXAssetOptions]
 19. [RootDesc][RootDesc]
 20. [TypeDesc][TypeDesc]
 
@@ -1071,16 +1071,16 @@ SetTags sets the given tags on the descriptor.
 
 SetTags unsets the given tags on the descriptor.
 
-## RBXWebOptions
-[RBXWebOptions]: #user-content-rbxweboptions
-<code>type RBXWebOptions = {AssetID: [int64](##), Cookies: [string](##)\|{[string](##)}?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
+## RBXAssetOptions
+[RBXAssetOptions]: #user-content-rbxassetoptions
+<code>type RBXAssetOptions = {AssetID: [int64](##), Cookies: [string](##)\|{[string](##)}?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
 
-An RBXWebOptions is a table that specifies how a request to the Roblox website
-is made.
+An RBXAssetOptions is a table that specifies the options of a request to an
+asset on the Roblox website.
 
 Field          | Type                              | Description
 ---------------|-----------------------------------|------------
-AssetID        | [int64](##)                       | The asset to request.
+AssetID        | [int64](##)                       | The ID of the asset to request.
 Cookies        | [string](##)\|{[string](##)}?     | Optional cookies to send with requests, usually used for authentication.
 Format         | [FormatSelector][FormatSelector]  | The format used to encode or decode an asset.
 Body           | [any](##)?                        | The body of an asset, to be encoded by the specified format.

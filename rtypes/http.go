@@ -43,8 +43,8 @@ func (HTTPHeaders) Type() string {
 	return "HTTPHeaders"
 }
 
-// RBXWebOptions specifies options to a Roblox web request.
-type RBXWebOptions struct {
+// RBXAssetOptions specifies options to a Roblox web request.
+type RBXAssetOptions struct {
 	AssetID int64
 	Cookies []string
 	Format  FormatSelector
@@ -52,6 +52,6 @@ type RBXWebOptions struct {
 }
 
 // Type returns a string identifying the type of the value.
-func (RBXWebOptions) Type() string {
-	return "RBXWebOptions"
+func (RBXAssetOptions) Type() string {
+	return "RBXAssetOptions"
 }

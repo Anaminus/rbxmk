@@ -9,14 +9,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(RBXWebOptions) }
-func RBXWebOptions() Reflector {
+func init() { register(RBXAssetOptions) }
+func RBXAssetOptions() Reflector {
 	return Reflector{
-		Name: "RBXWebOptions",
+		Name: "RBXAssetOptions",
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
-			options, ok := v.(rtypes.RBXWebOptions)
+			options, ok := v.(rtypes.RBXAssetOptions)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "RBXWebOptions")
+				return nil, rbxmk.TypeError(nil, 0, "RBXAssetOptions")
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
@@ -37,7 +37,7 @@ func RBXWebOptions() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
-			options := rtypes.RBXWebOptions{
+			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),
 				Format:  s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector),
 				Body:    s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
