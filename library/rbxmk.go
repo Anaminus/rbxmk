@@ -2,18 +2,22 @@ package library
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/parse"
 	"github.com/anaminus/rbxmk"
 	reflect "github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
+	reg "golang.org/x/sys/windows/registry"
 )
 
 func init() { register(RBXMK, 0) }
@@ -313,7 +317,62 @@ func rbxmkNewCookie(s rbxmk.State) int {
 func rbxmkCookiesFrom(s rbxmk.State) int {
 	location := string(s.Pull(1, "string").(types.String))
 	switch strings.ToLower(location) {
+	case "studio":
+		if cookies := cookiesFromStudio(); len(cookies) > 0 {
+			fmt.Println("CHECK", cookies[0].Value)
+			return s.Push(cookies)
+		}
+		return s.Push(rtypes.Nil)
 	default:
 		return s.RaiseError("unknown location %q", location)
 	}
+}
+
+func cookiesFromStudio() rtypes.Cookies {
+	const keyPath = `Software\Roblox\RobloxStudioBrowser\roblox.com`
+	key, err := reg.OpenKey(reg.CURRENT_USER, keyPath, reg.QUERY_VALUE)
+	if err != nil {
+		return nil
+	}
+	defer key.Close()
+	v, _, err := key.GetStringValue(".ROBLOSECURITY")
+	if err != nil {
+		return nil
+	}
+	cookie := &http.Cookie{
+		Name:   ".ROBLOSECURITY",
+		Domain: "roblox.com",
+	}
+	if !parseRegistryCookie(cookie, v) {
+		return nil
+	}
+	return rtypes.Cookies{rtypes.Cookie{Cookie: cookie}}
+}
+
+func parseRegistryCookie(cookie *http.Cookie, v string) bool {
+	r := parse.NewTextReader(strings.NewReader(v))
+	if r.Is("SEC::<YES>") {
+		cookie.Secure = true
+		r.Is(",")
+	}
+	if r.Is("EXP::<") {
+		value, ok := r.Until('>')
+		if !ok {
+			return false
+		}
+		t, err := time.Parse(time.RFC3339, value)
+		if err != nil {
+			return false
+		}
+		cookie.Expires = t
+		r.Is(",")
+	}
+	if r.Is("COOK::<") {
+		value, ok := r.UntilEOF()
+		if !ok {
+			return false
+		}
+		cookie.Value = value[:len(value)-1]
+	}
+	return r.IsEOF()
 }

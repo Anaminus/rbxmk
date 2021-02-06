@@ -135,7 +135,11 @@ Name                                       | Kind     | Description
 The **cookiesFrom** function retrieves cookies from a known location. *location*
 is case-insensitive.
 
-No locations are currently implemented.
+The following locations are implemented:
+
+Location | Description
+---------|------------
+`studio` | Returns the cookies used for authentication when logging into Roblox Studio.
 
 Returns nil if no cookies could be retrieved from the location. Throws an error
 if an unknown location is given.

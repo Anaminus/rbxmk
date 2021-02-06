@@ -3,6 +3,8 @@ github.com/anaminus/but v0.2.0/go.mod h1:44z5qYo/3MWnZDi6ifH3IgrFWa1VFfdTttL3IYN
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/anaminus/gopher-lua v0.1.3 h1:4dRuWHVh5sbkVlyLgW2ibAmWqxjRFY/7WwEmqbDcDeU=
 github.com/anaminus/gopher-lua v0.1.3/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
+github.com/anaminus/parse v0.1.0 h1:KbkRU9EAJLoGXrASCZvqfzdcwelc8evFU14xfBraE+8=
+github.com/anaminus/parse v0.1.0/go.mod h1:5EP2T2CqY4EDBxl2S/qhFSSb2VjW+iIqG+8Scy3mZN8=
 github.com/bkaradzic/go-lz4 v1.0.0 h1:RXc4wYsyz985CkXXeX04y4VnZFGG8Rd43pRaHsOXAKk=
 github.com/bkaradzic/go-lz4 v1.0.0/go.mod h1:0YdlkowM3VswSROI7qDxhRvJ3sLhlFrRRwjwegp5jy4=
 github.com/robloxapi/rbxattr v0.1.1 h1:L9PwMXRD7uGT/CIz511IHKY3HXGNOgQjONoml3VWTak=
