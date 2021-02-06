@@ -43,11 +43,11 @@ A format can decode into a number of certain types, and encode a number of
 certain types. A format may also have no definition for either decoding or
 encoding at all.
 
-A format that can encode a **Stringlike** type accepts any type that can be
+A format that can encode a **Stringable** type accepts any type that can be
 converted to a string. Additionally, an [Instance][Instance] will be accepted as
-a Stringlike when it has a particular [ClassName][Instance.ClassName], with a
-selected property that has a Stringlike value that isn't an Instance. In this
-case, the property is encoded.
+a Stringable when it has a particular [ClassName][Instance.ClassName], with a
+selected property that has a [Stringlike][Stringlike] value. In this case, the
+property is encoded.
 
 ClassName         | Property
 ------------------|---------
@@ -56,10 +56,9 @@ LocalScript       | Source
 ModuleScript      | Source
 Script            | Source
 
-A format that can encode a **Numberlike** type accepts any type that can be
-converted to a floating-point number. An **Intlike** is similar, converting to
+A format that can encode a **Numberable** type accepts any type that can be
+converted to a floating-point number. An **Intable** is similar, converting to
 an integer instead.
-
 
 ## `bin`
 [bin]: #user-content-bin
@@ -70,7 +69,7 @@ will be interpreted exactly as-is.
 Direction | Type         | Description
 ----------|--------------|------------
 Decode    | BinaryString | Raw binary data.
-Encode    | Stringlike   | Any string-like value.
+Encode    | Stringable   | Any string-like value.
 
 This format has no options.
 
@@ -112,7 +111,7 @@ LocalizationTable instance, where the data is assigned to the Contents property.
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A LocalizationTable a Contents property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 Decoded data is a string in JSON format with the following structure:
 
@@ -200,7 +199,7 @@ The **lua** format is an alias for [`modulescript.lua`][modulescript.lua].
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A ModuleScript with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -212,7 +211,7 @@ The **client.lua** format is an alias for [`localscript.lua`][localscript.lua].
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A LocalScript with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -225,7 +224,7 @@ LocalScript instance, where the content is assigned to the Source property.
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A LocalScript with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -238,7 +237,7 @@ ModuleScript instance, where the content is assigned to the Source property.
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A ModuleScript with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -251,7 +250,7 @@ Script instance, where the content is assigned to the Source property.
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A Script with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -263,7 +262,7 @@ The **server.lua** format is an alias for [`script.lua`][script.lua].
 Direction | Type                 | Description
 ----------|----------------------|------------
 Decode    | [Instance][Instance] | A Script with a Source property.
-Encode    | Stringlike           | Any string-like value.
+Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
@@ -294,7 +293,7 @@ The following value types are encoded and decoded:
 - NumberRange
 - Rect
 
-Additionally, any Stringlike value is encoded as a string, and any Numberlike
+Additionally, any Stringable value is encoded as a string, and any Numberable
 value is encoded as a double.
 
 This format has no options.
@@ -363,12 +362,15 @@ The **txt** format encodes UTF-8 text.
 Direction | Type       | Description
 ----------|------------|------------
 Decode    | string     | UTF-8 text.
-Encode    | Stringlike | Any string-like value.
+Encode    | Stringable | Any string-like value.
 
 This format has no options.
 
-[Instance]: types.md#user-content-instance
-[Instance.ClassName]: types.md#user-content-instanceclassname
 [DataModel]: types.md#user-content-datamodel
-[RootDesc]: types.md#user-content-rootdesc
 [DescAction]: types.md#user-content-descaction
+[Instance.ClassName]: types.md#user-content-instanceclassname
+[Instance]: types.md#user-content-instance
+[Intlike]: types.md#user-content-intlike
+[Numberlike]: types.md#user-content-numberlike
+[RootDesc]: types.md#user-content-rootdesc
+[Stringlike]: types.md#user-content-stringlike

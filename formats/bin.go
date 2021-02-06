@@ -25,11 +25,11 @@ func Binary() rbxmk.Format {
 			return types.BinaryString(b), nil
 		},
 		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			s := rtypes.Stringlike{Value: v}
-			if !s.IsStringlike() {
+			s := rtypes.Stringable{Value: v}
+			if !s.IsStringable() {
 				return cannotEncode(v)
 			}
-			_, err := w.Write([]byte(s.Stringlike()))
+			_, err := w.Write([]byte(s.Stringable()))
 			return err
 		},
 	}

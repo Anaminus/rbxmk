@@ -4,13 +4,13 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Intlike implements types.Intlike for a number of types.
-type Intlike struct {
+// Intable converts a number of types to an integer.
+type Intable struct {
 	Value interface{}
 }
 
-// IsIntlike returns whether Value can be converted to an integer.
-func (i Intlike) IsIntlike() bool {
+// IsIntable returns whether Value can be converted to an integer.
+func (i Intable) IsIntable() bool {
 	switch i.Value.(type) {
 	case uint8, uint16, uint32, uint64, uint,
 		int8, int16, int32, int64, int,
@@ -21,10 +21,10 @@ func (i Intlike) IsIntlike() bool {
 	return false
 }
 
-// Intlike returns Value as an integer, or 0 if the value could not be
+// Intable returns Value as an integer, or 0 if the value could not be
 // converted. Types that can be converted are the built-in numeric types, as
 // well as any value implementing types.Intlike or types.Numberlike.
-func (i Intlike) Intlike() int64 {
+func (i Intable) Intable() int64 {
 	switch v := i.Value.(type) {
 	case uint8:
 		return int64(v)

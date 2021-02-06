@@ -304,8 +304,8 @@ func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxf
 func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 	r = rbxfile.NewRoot()
 	for prop, value := range t.Properties() {
-		if s := (rtypes.Stringlike{Value: value}); s.IsStringlike() {
-			r.Metadata[prop] = string(s.Stringlike())
+		if s := (rtypes.Stringable{Value: value}); s.IsStringable() {
+			r.Metadata[prop] = string(s.Stringable())
 		}
 	}
 	refs := encinst{}

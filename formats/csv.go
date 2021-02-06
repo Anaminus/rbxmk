@@ -312,11 +312,11 @@ func L10nCSV() rbxmk.Format {
 			return table, nil
 		},
 		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			s := rtypes.Stringlike{Value: v}
-			if !s.IsStringlike() {
+			s := rtypes.Stringable{Value: v}
+			if !s.IsStringable() {
 				return cannotEncode(v)
 			}
-			if err := encodeL10nCSV(w, []byte(s.Stringlike())); err != nil {
+			if err := encodeL10nCSV(w, []byte(s.Stringable())); err != nil {
 				return fmt.Errorf("encode CSV: %w", err)
 			}
 			return nil

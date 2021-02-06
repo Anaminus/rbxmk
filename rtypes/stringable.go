@@ -4,13 +4,13 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Stringlike implements types.Stringlike for a number of types.
-type Stringlike struct {
+// Stringable converts a number of types to a string.
+type Stringable struct {
 	Value interface{}
 }
 
-// IsStringlike returns whether Value can be converted to a string.
-func (s Stringlike) IsStringlike() bool {
+// IsStringable returns whether Value can be converted to a string.
+func (s Stringable) IsStringable() bool {
 	switch v := s.Value.(type) {
 	case string, []byte, []rune, types.Stringlike:
 		return true
@@ -23,20 +23,19 @@ func (s Stringlike) IsStringlike() bool {
 			value = v.Get("Contents")
 		}
 		if value != nil {
-			if _, ok := value.(*Instance); !ok {
-				return Stringlike{Value: value}.IsStringlike()
-			}
+			_, ok := value.(types.Stringlike)
+			return ok
 		}
 	}
 	return false
 }
 
-// Stringlike returns Value as a string, or an empty string if the value could
+// Stringable returns Value as a string, or an empty string if the value could
 // not be converted. Types that can be converted are the built-in string,
 // []byte, and []rune, as well as any value implementing types.Stringlike.
 //
 // Additionally, an Instance can be converted if it has a particular ClassName,
-// and a selected property has a string-like type that isn't an Instance:
+// and a selected property has a stringable type that isn't an Instance:
 //
 //     ClassName         | Property
 //     ------------------|---------
@@ -45,7 +44,7 @@ func (s Stringlike) IsStringlike() bool {
 //     ModuleScript      | Source
 //     Script            | Source
 //
-func (s Stringlike) Stringlike() string {
+func (s Stringable) Stringable() string {
 	switch v := s.Value.(type) {
 	case string:
 		return v
@@ -64,8 +63,8 @@ func (s Stringlike) Stringlike() string {
 			value = v.Get("Contents")
 		}
 		if value != nil {
-			if _, ok := value.(*Instance); !ok {
-				return Stringlike{Value: value}.Stringlike()
+			if value, ok := value.(types.Stringlike); ok {
+				return value.Stringlike()
 			}
 		}
 	}
