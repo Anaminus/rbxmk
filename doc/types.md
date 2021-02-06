@@ -22,11 +22,14 @@ This document contains a reference to the types available to rbxmk scripts.
 15. [HTTPRequest][HTTPRequest]
 16. [HTTPResponse][HTTPResponse]
 17. [Instance][Instance]
-18. [ParameterDesc][ParameterDesc]
-19. [PropertyDesc][PropertyDesc]
-20. [RBXAssetOptions][RBXAssetOptions]
-21. [RootDesc][RootDesc]
-22. [TypeDesc][TypeDesc]
+18. [Intlike][Intlike]
+19. [Numberlike][Numberlike]
+20. [ParameterDesc][ParameterDesc]
+21. [PropertyDesc][PropertyDesc]
+22. [RBXAssetOptions][RBXAssetOptions]
+23. [RootDesc][RootDesc]
+24. [Stringlike][Stringlike]
+25. [TypeDesc][TypeDesc]
 
 </td></tr></tbody>
 </table>
@@ -990,6 +993,30 @@ Reference is a string used to refer to the instance from within a
 instance. For example, the RBXMX format will generate random UUIDs for its
 references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").
 
+## Intlike
+[Intlike]: #user-content-intlike
+
+Intlike is any type that can be converted directly to an integer. The following
+types are int-like:
+
+- double
+- float
+- int
+- int64
+- token
+
+## Numberlike
+[Numberlike]: #user-content-numberlike
+
+Numberlike is any type that can be converted directly to a floating-point
+number. The following types are number-like:
+
+- double
+- float
+- int
+- int64
+- token
+
 ## ParameterDesc
 [ParameterDesc]: #user-content-parameterdesc
 
@@ -1216,6 +1243,18 @@ matches Roblox's API:
 Enum = rootDesc:EnumTypes()
 print(Enum.NormalId.Front)
 ```
+
+## Stringlike
+[Stringlike]: #user-content-stringlike
+
+Stringlike is any type that can be converted directly to a string. The following
+types are string-like:
+
+- BinaryString
+- Content
+- ProtectedString
+- SharedString
+- string
 
 ## TypeDesc
 [TypeDesc]: #user-content-typedesc
