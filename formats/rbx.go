@@ -147,8 +147,9 @@ func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rty
 
 func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
 	t = rtypes.NewDataModel()
+	meta := t.Metadata()
 	for k, v := range r.Metadata {
-		t.Set(k, types.String(v))
+		meta[k] = v
 	}
 	refs := decinst{}
 	prefs := []decprop{}
@@ -303,10 +304,10 @@ func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxf
 
 func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 	r = rbxfile.NewRoot()
-	for prop, value := range t.Properties() {
-		if s, ok := rtypes.Stringable(value); ok {
-			r.Metadata[prop] = s
-		}
+	meta := t.Metadata()
+	r.Metadata = make(map[string]string, len(meta))
+	for k, v := range meta {
+		r.Metadata[k] = v
 	}
 	refs := encinst{}
 	prefs := []encprop{}

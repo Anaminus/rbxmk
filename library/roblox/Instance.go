@@ -125,7 +125,8 @@ func Instance() Reflector {
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
 					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
-						switch name := sym.(rtypes.Symbol).Name; name {
+						name := sym.(rtypes.Symbol).Name
+						switch name {
 						case "Reference":
 							return s.Push(types.String(inst.Reference))
 						case "IsService":
@@ -160,10 +161,17 @@ func Instance() Reflector {
 								return s.Push(rtypes.Nil)
 							}
 							return s.Push(attrcfg)
-						default:
-							s.L.RaiseError("symbol %s is not a valid member", name)
-							return 0
+						case "Metadata":
+							if meta := inst.Metadata(); meta != nil {
+								dict := make(rtypes.Dictionary, len(meta))
+								for k, v := range meta {
+									dict[k] = types.String(v)
+								}
+								return s.Push(dict)
+							}
 						}
+						s.L.RaiseError("symbol %s is not a valid member", name)
+						return 0
 					}
 				}
 
@@ -273,7 +281,8 @@ func Instance() Reflector {
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
 					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
-						switch name := sym.(rtypes.Symbol).Name; name {
+						name := sym.(rtypes.Symbol).Name
+						switch name {
 						case "Reference":
 							inst.Reference = string(s.Pull(3, "string").(types.String))
 							return 0
@@ -306,10 +315,24 @@ func Instance() Reflector {
 								inst.SetAttrConfig(nil, false)
 							}
 							return 0
-						default:
-							s.L.RaiseError("symbol %s is not a valid member", name)
-							return 0
+						case "Metadata":
+							if meta := inst.Metadata(); meta != nil {
+								dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
+								for k := range meta {
+									delete(meta, k)
+								}
+								for k, v := range dict {
+									w, ok := v.(types.String)
+									if !ok {
+										return s.RaiseError("field %q: string expected, got %s (%T)", k, v.Type(), v)
+									}
+									meta[k] = string(w)
+								}
+								return 0
+							}
 						}
+						s.L.RaiseError("symbol %s is not a valid member", name)
+						return 0
 					}
 				}
 

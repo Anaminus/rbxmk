@@ -277,11 +277,17 @@ A **Cookies** is a list of [Cookie][Cookie] values.
 ## DataModel
 [DataModel]: #user-content-datamodel
 
-A **DataModel** is a special case of an [Instance][Instance]. Unlike a normal
-Instance, the [ClassName][Instance.ClassName] property of a DataModel cannot be
-modified, and the instance has a [GetService][DataModel.GetService] method.
-Additionally, other properties are not serialized, and instead determine
-metadata used by certain formats (e.g. ExplicitAutoJoints).
+A **DataModel** is a special case of an [Instance][Instance]. In addition to the
+members of Instance, DataModel has the following members:
+
+Member                                 | Kind
+---------------------------------------|-----
+[GetService][DataModel.GetService]     | method
+[sym.Metadata][DataModel.sym.Metadata] | symbol
+
+Unlike a normal Instance, the [ClassName][Instance.ClassName] property of a
+DataModel cannot be modified. Properties on a DataModel are usually not
+serialized.
 
 A DataModel can be created with the [DataModel.new][DataModel.new]
 constructor.
@@ -305,6 +311,13 @@ to true, and [Parent][Instance.Parent] is set to the DataModel.
 
 If the DataModel has a descriptor, then GetService will throw an error if the
 created class's descriptor does not have the "Service" tag set.
+
+### DataModel[sym.Metadata]
+[DataModel.sym.Metadata]: #user-content-datamodelsymmetadata
+<code>DataModel\[sym.Metadata\]: {[[string](##)]: [string](##)}</code>
+
+Metadata gets or sets the metadata associated with the DataModel. This metadata
+is used by certain formats (e.g. ExplicitAutoJoints).
 
 ## DescAction
 [DescAction]: #user-content-descaction

@@ -582,6 +582,7 @@ Symbol                                            | Description
 [`sym.AttrConfig`][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
 [`sym.Desc`][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
 [`sym.IsService`][Instance.sym.IsService]         | Determines whether an instance is a service.
+[`sym.Metadata`][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
 [`sym.RawAttrConfig`][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
 [`sym.RawDesc`][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
 [`sym.Reference`][Instance.sym.Reference]         | Determines the value used to identify the instance.
@@ -610,6 +611,7 @@ Type              | Primitive
 [ClassDesc]: types.md#user-content-classdesc
 [Cookie]: types.md#user-content-cookie
 [Cookies]: types.md#user-content-cookies
+[DataModel.sym.Metadata]: types.md#user-content-datamodelsymmetadata
 [DataModel]: types.md#user-content-datamodel
 [DescAction]: types.md#user-content-descaction
 [EnumDesc]: types.md#user-content-enumdesc

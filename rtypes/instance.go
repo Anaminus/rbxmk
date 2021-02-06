@@ -20,7 +20,10 @@ type Instance struct {
 	descBlocked    bool
 	attrcfg        *AttrConfig
 	attrcfgBlocked bool
-	root           bool
+
+	// Contains model metadata. Non-nil also signals that Instance is a
+	// DataModel.
+	metadata map[string]string
 }
 
 // NewInstance returns a new Instance of the given class name. Optionally,
@@ -40,15 +43,20 @@ func NewInstance(className string, parent *Instance) *Instance {
 // the root of a tree of instances.
 func NewDataModel() *Instance {
 	return &Instance{
-		root:       true,
-		ClassName:  "DataModel",
-		properties: make(map[string]types.PropValue, 0),
+		ClassName: "DataModel",
+		metadata:  map[string]string{},
 	}
 }
 
 // IsDataModel returns whether the instance is a root DataModel.
 func (inst *Instance) IsDataModel() bool {
-	return inst.root
+	return inst.metadata != nil
+}
+
+// Metadata returns the metadata of a DataModel. Returns nil if the Instance is
+// not a DataModel.
+func (inst *Instance) Metadata() map[string]string {
+	return inst.metadata
 }
 
 // propRef holds the value of an instance property to be resolved later.
@@ -296,7 +304,7 @@ func (inst *Instance) Descendants() []*Instance {
 // Parent returns the parent of the instance. Returns nil if the instance has no
 // parent.
 func (inst *Instance) Parent() *Instance {
-	if inst.root {
+	if inst.IsDataModel() {
 		return nil
 	}
 	return inst.parent
@@ -309,7 +317,7 @@ func (inst *Instance) Parent() *Instance {
 // new parent is the same as the old parent, then the position of the instance
 // in the parent's children is unchanged.
 func (inst *Instance) SetParent(parent *Instance) error {
-	if inst.root {
+	if inst.IsDataModel() {
 		// Error: The Parent property of <Name> is locked, current parent: NULL, new parent <Parent>
 		return errors.New("cannot set parent of DataModel")
 	}
@@ -434,7 +442,7 @@ func (inst *Instance) GetFullName() string {
 	// includes every ancestor.
 	names := make([]string, 0, 8)
 	object := inst
-	for object != nil && !object.root {
+	for object != nil && object.metadata == nil {
 		names = append(names, object.Name())
 		object = object.Parent()
 	}
