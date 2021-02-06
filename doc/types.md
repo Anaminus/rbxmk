@@ -34,6 +34,12 @@ This document contains a reference to the types available to rbxmk scripts.
 </td></tr></tbody>
 </table>
 
+This document only describes the types implemented by rbxmk. The
+[Libraries](libraries.md#user-content-roblox) document lists the Roblox types
+available in the rbxmk environment. See the [Data type
+index](https://developer.roblox.com/en-us/api-reference/data-types) page on the
+DevHub for information about Roblox types.
+
 ## AttrConfig
 [AttrConfig]: #user-content-attrconfig
 
