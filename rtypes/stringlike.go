@@ -15,11 +15,17 @@ func (s Stringlike) IsStringlike() bool {
 	case string, []byte, []rune, types.Stringlike:
 		return true
 	case *Instance:
+		var value types.Value
 		switch v.ClassName {
 		case "Script", "LocalScript", "ModuleScript":
-			return Stringlike{Value: v.Get("Source")}.IsStringlike()
+			value = v.Get("Source")
 		case "LocalizationTable":
-			return Stringlike{Value: v.Get("Contents")}.IsStringlike()
+			value = v.Get("Contents")
+		}
+		if value != nil {
+			if _, ok := value.(*Instance); !ok {
+				return Stringlike{Value: value}.IsStringlike()
+			}
 		}
 	}
 	return false
