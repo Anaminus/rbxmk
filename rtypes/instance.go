@@ -552,7 +552,7 @@ func (inst *Instance) AttrConfig() *AttrConfig {
 		if parent.attrcfgBlocked {
 			return nil
 		}
-		if parent.desc != nil {
+		if parent.attrcfg != nil {
 			return parent.attrcfg
 		}
 		parent = parent.parent
