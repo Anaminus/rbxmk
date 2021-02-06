@@ -4,56 +4,39 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Numberable converts a number of types to a floating-point number.
-type Numberable struct {
-	Value interface{}
-}
-
-// IsNumberable returns whether Value can be converted to a floating-point number.
-func (n Numberable) IsNumberable() bool {
-	switch n.Value.(type) {
-	case uint8, uint16, uint32, uint64, uint,
-		int8, int16, int32, int64, int,
-		float32, float64,
-		types.Numberlike, types.Intlike:
-		return true
-	}
-	return false
-}
-
-// Numberable returns Value as a floating-point number, or 0 if the value could
-// not be converted. Types that can be converted are the built-in numeric types,
-// as well as any value implementing types.Numberlike or types.Intlike.
-func (n Numberable) Numberable() float64 {
-	switch v := n.Value.(type) {
+// Numberable returns v as a floating-point number. ok is false if the value
+// could not be converted. Types that can be converted are the built-in numeric
+// types, as well as any value implementing types.Numberlike or types.Intlike.
+func Numberable(v interface{}) (n float64, ok bool) {
+	switch v := v.(type) {
 	case uint8:
-		return float64(v)
+		return float64(v), true
 	case uint16:
-		return float64(v)
+		return float64(v), true
 	case uint32:
-		return float64(v)
+		return float64(v), true
 	case uint64:
-		return float64(v)
+		return float64(v), true
 	case uint:
-		return float64(v)
+		return float64(v), true
 	case int8:
-		return float64(v)
+		return float64(v), true
 	case int16:
-		return float64(v)
+		return float64(v), true
 	case int32:
-		return float64(v)
+		return float64(v), true
 	case int64:
-		return float64(v)
+		return float64(v), true
 	case int:
-		return float64(v)
+		return float64(v), true
 	case float32:
-		return float64(v)
+		return float64(v), true
 	case float64:
-		return float64(v)
+		return float64(v), true
 	case types.Numberlike:
-		return v.Numberlike()
+		return v.Numberlike(), true
 	case types.Intlike:
-		return float64(v.Intlike())
+		return float64(v.Intlike()), true
 	}
-	return 0
+	return 0, false
 }

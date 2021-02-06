@@ -24,11 +24,11 @@ func canDecodeInstance(f rbxmk.FormatOptions, typeName string) bool {
 }
 
 func encodeScript(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-	s := rtypes.Stringable{Value: v}
-	if !s.IsStringable() {
+	s, ok := rtypes.Stringable(v)
+	if !ok {
 		return cannotEncode(v)
 	}
-	_, err := w.Write([]byte(s.Stringable()))
+	_, err := w.Write([]byte(s))
 	return err
 }
 

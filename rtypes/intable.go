@@ -4,56 +4,39 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// Intable converts a number of types to an integer.
-type Intable struct {
-	Value interface{}
-}
-
-// IsIntable returns whether Value can be converted to an integer.
-func (i Intable) IsIntable() bool {
-	switch i.Value.(type) {
-	case uint8, uint16, uint32, uint64, uint,
-		int8, int16, int32, int64, int,
-		float32, float64,
-		types.Intlike, types.Numberlike:
-		return true
-	}
-	return false
-}
-
-// Intable returns Value as an integer, or 0 if the value could not be
+// Intable returns Value as an integer. ok is false if the value could not be
 // converted. Types that can be converted are the built-in numeric types, as
 // well as any value implementing types.Intlike or types.Numberlike.
-func (i Intable) Intable() int64 {
-	switch v := i.Value.(type) {
+func Intable(v interface{}) (i int64, ok bool) {
+	switch v := v.(type) {
 	case uint8:
-		return int64(v)
+		return int64(v), true
 	case uint16:
-		return int64(v)
+		return int64(v), true
 	case uint32:
-		return int64(v)
+		return int64(v), true
 	case uint64:
-		return int64(v)
+		return int64(v), true
 	case uint:
-		return int64(v)
+		return int64(v), true
 	case int8:
-		return int64(v)
+		return int64(v), true
 	case int16:
-		return int64(v)
+		return int64(v), true
 	case int32:
-		return int64(v)
+		return int64(v), true
 	case int64:
-		return int64(v)
+		return int64(v), true
 	case int:
-		return int64(v)
+		return int64(v), true
 	case float32:
-		return int64(v)
+		return int64(v), true
 	case float64:
-		return int64(v)
+		return int64(v), true
 	case types.Intlike:
-		return v.Intlike()
+		return v.Intlike(), true
 	case types.Numberlike:
-		return int64(v.Numberlike())
+		return int64(v.Numberlike()), true
 	}
-	return 0
+	return 0, false
 }
