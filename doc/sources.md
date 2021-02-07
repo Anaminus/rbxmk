@@ -9,8 +9,10 @@ This document contains a reference to the sources available to rbxmk scripts.
 	1. [clipboard.read][clipboard.read]
 	2. [clipboard.write][clipboard.write]
 2. [fs][fs]
-	1. [fs.read][fs.read]
-	2. [fs.write][fs.write]
+	1. [fs.dir][fs.dir]
+	2. [fs.read][fs.read]
+	3. [fs.stat][fs.stat]
+	4. [fs.write][fs.write]
 3. [http][http]
 	1. [http.request][http.request]
 4. [rbxassetid][rbxassetid]
@@ -78,8 +80,19 @@ The `fs` source provides an interface to the file system.
 
 Name                 | Description
 ---------------------|------------
+[fs.dir][fs.dir]     | Gets a list of files in a directory.
 [fs.read][fs.read]   | Reads data from a file in a certain format.
+[fs.stat][fs.stat]   | Gets metadata about a file.
 [fs.write][fs.write] | Writes data to a file in a certain format.
+
+### fs.dir
+[fs.dir]: #user-content-fsdir
+<code>fs.dir(path: [string](##)): {[File](##)}</code>
+
+The `dir` function returns a list of files in the given directory. Each file is
+a table with the same fields as returned by [fs.stat][fs.stat].
+
+dir throws an error if the file does not exist.
 
 #### fs.read
 [fs.read]: #user-content-fsread
@@ -93,6 +106,22 @@ extension.
 If the format returns an [Instance][Instance], then the Name property will be
 set to the "fstem" component of *path* according to
 [os.split](libraries.md#user-content-ossplit).
+
+### fs.stat
+[fs.stat]: #user-content-fsstat
+<code>fs.stat(path: [string](##)): [File](##)</code>
+
+The `stat` function gets metadata of the given file. Returns a table with the
+following fields:
+
+Field   | Type    | Description
+--------|---------|------------
+Name    | string  | The base name of the file.
+IsDir   | boolean | Whether the file is a directory.
+Size    | number  | The size of the file, in bytes.
+ModTime | number  | The modification time of the file, in Unix time.
+
+stat throws an error if the file does not exist.
 
 #### fs.write
 [fs.write]: #user-content-fswrite

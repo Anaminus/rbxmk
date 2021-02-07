@@ -28,12 +28,10 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	3. [math.round][math.round]
 	4. [math.sign][math.sign]
 5. [os][os]
-	1. [os.dir][os.dir]
-	2. [os.expand][os.expand]
-	3. [os.getenv][os.getenv]
-	4. [os.join][os.join]
-	5. [os.split][os.split]
-	6. [os.stat][os.stat]
+	1. [os.expand][os.expand]
+	2. [os.getenv][os.getenv]
+	3. [os.join][os.join]
+	4. [os.split][os.split]
 6. [string][string]
 	1. [string.split][string.split]
 7. [table][table]
@@ -390,21 +388,10 @@ additional functions are included:
 
 Name                | Description
 --------------------|------------
-[dir][os.dir]       | Gets a list of files in a directory.
 [expand][os.expand] | Expands predefined file path variables.
 [getenv][os.getenv] | Gets an environment variable.
 [join][os.join]     | Joins a number of file paths together.
 [split][os.split]   | Splits a file path into its components.
-[stat][os.stat]     | Gets metadata about a file.
-
-### os.dir
-[os.dir]: #user-content-osdir
-<code>os.dir(path: [string](##)): {[File](##)}</code>
-
-The **dir** function returns a list of files in the given directory. Each file
-is a table with the same fields as returned by [os.stat][os.stat].
-
-dir throws an error if the file does not exist.
 
 ### os.expand
 [os.expand]: #user-content-osexpand
@@ -451,22 +438,6 @@ Component | `project/scripts/main.script.lua` | Description
 
 A format extension depends on the available formats. See [Formats](formats.md)
 for more information.
-
-### os.stat
-[os.stat]: #user-content-osstat
-<code>os.stat(path: [string](##)): [File](##)</code>
-
-The **stat** function gets metadata of the given file. Returns a table with the
-following fields:
-
-Field   | Type    | Description
---------|---------|------------
-Name    | string  | The base name of the file.
-IsDir   | boolean | Whether the file is a directory.
-Size    | number  | The size of the file, in bytes.
-ModTime | number  | The modification time of the file, in Unix time.
-
-stat throws an error if the file does not exist.
 
 ## string
 [string]: #user-content-string

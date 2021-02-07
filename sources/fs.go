@@ -1,6 +1,7 @@
 package sources
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -16,13 +17,34 @@ func FS() rbxmk.Source {
 		Name: "fs",
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
-				lib := s.L.CreateTable(0, 2)
+				lib := s.L.CreateTable(0, 4)
+				lib.RawSetString("dir", s.WrapFunc(fsDir))
 				lib.RawSetString("read", s.WrapFunc(fsRead))
+				lib.RawSetString("stat", s.WrapFunc(fsStat))
 				lib.RawSetString("write", s.WrapFunc(fsWrite))
 				return lib
 			},
 		},
 	}
+}
+
+func fsDir(s rbxmk.State) int {
+	dirname := s.CheckString(1)
+	files, err := ioutil.ReadDir(dirname)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	tfiles := s.L.CreateTable(len(files), 0)
+	for _, info := range files {
+		tinfo := s.L.CreateTable(0, 4)
+		tinfo.RawSetString("Name", lua.LString(info.Name()))
+		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
+		tinfo.RawSetString("Size", lua.LNumber(info.Size()))
+		tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
+		tfiles.Append(tinfo)
+	}
+	s.L.Push(tfiles)
+	return 1
 }
 
 func fsRead(s rbxmk.State) int {
@@ -62,6 +84,21 @@ func fsRead(s rbxmk.State) int {
 		inst.SetName(stem)
 	}
 	return s.Push(v)
+}
+
+func fsStat(s rbxmk.State) int {
+	filename := s.CheckString(1)
+	info, err := os.Stat(filename)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	tinfo := s.L.CreateTable(0, 4)
+	tinfo.RawSetString("Name", lua.LString(info.Name()))
+	tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
+	tinfo.RawSetString("Size", lua.LNumber(info.Size()))
+	tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
+	s.L.Push(tinfo)
+	return 1
 }
 
 func fsWrite(s rbxmk.State) int {

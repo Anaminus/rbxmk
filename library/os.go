@@ -1,7 +1,6 @@
 package library
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -14,13 +13,11 @@ func init() { register(OS, 10) }
 var OS = rbxmk.Library{
 	Name: "os",
 	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 6)
+		lib := s.L.CreateTable(0, 4)
 		lib.RawSetString("split", s.WrapFunc(osSplit))
 		lib.RawSetString("join", s.WrapFunc(osJoin))
 		lib.RawSetString("expand", s.WrapFunc(osExpand))
 		lib.RawSetString("getenv", s.WrapFunc(osGetenv))
-		lib.RawSetString("dir", s.WrapFunc(osDir))
-		lib.RawSetString("stat", s.WrapFunc(osStat))
 		return lib
 	},
 }
@@ -102,39 +99,5 @@ func osGetenv(s rbxmk.State) int {
 	} else {
 		s.L.Push(lua.LNil)
 	}
-	return 1
-}
-
-func osDir(s rbxmk.State) int {
-	dirname := s.CheckString(1)
-	files, err := ioutil.ReadDir(dirname)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	tfiles := s.L.CreateTable(len(files), 0)
-	for _, info := range files {
-		tinfo := s.L.CreateTable(0, 4)
-		tinfo.RawSetString("Name", lua.LString(info.Name()))
-		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-		tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-		tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-		tfiles.Append(tinfo)
-	}
-	s.L.Push(tfiles)
-	return 1
-}
-
-func osStat(s rbxmk.State) int {
-	filename := s.CheckString(1)
-	info, err := os.Stat(filename)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	tinfo := s.L.CreateTable(0, 4)
-	tinfo.RawSetString("Name", lua.LString(info.Name()))
-	tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-	tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-	tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-	s.L.Push(tinfo)
 	return 1
 }
