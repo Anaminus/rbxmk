@@ -80,11 +80,13 @@ func osExpand(s rbxmk.State) int {
 				path, _ := filepath.Abs(fi.Path)
 				return filepath.Dir(path)
 			}
+		case "root_script_directory", "root_script_dir", "rsd":
+			return s.RootDir()
 		case "working_directory", "working_dir", "wd":
 			wd, _ := os.Getwd()
 			return wd
 		case "temp_directory", "temp_dir", "tmp":
-			return os.TempDir()
+			return s.TempDir()
 		}
 		return ""
 	})

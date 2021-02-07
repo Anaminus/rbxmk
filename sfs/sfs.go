@@ -13,8 +13,9 @@ import (
 type Flags int
 
 const (
-	_    Flags = (1 << iota) / 2
-	Root       // Path is accessible if it is a root directory.
+	_ Flags = (1 << iota) / 2
+
+	Root // Path is accessible if it is a root directory.
 )
 
 // FS contains wrappers for common file system functions that also check whether
@@ -29,22 +30,56 @@ type FS struct {
 
 // access returns whether the given path can be accessed.
 func (fs *FS) access(path string, flags Flags) bool {
-	//TODO: Implement.
-	return true
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return false
+	}
+	for _, root := range fs.roots {
+		// Check if path is root.
+		ok, err := EquivalentPaths(path, root)
+		if err != nil {
+			ok = path == root
+		}
+		if ok {
+			// root can be accessed if Root flag is specified.
+			return flags&Root != 0
+		}
+		// Check if path is descendant of root.
+		ok, err = HasFilepathPrefix(path, root)
+		if err == nil && ok {
+			return true
+		}
+	}
+	return false
+}
+
+// Roots returns a list of roots in the FS.
+func (fs *FS) Roots() []string {
+	roots := make([]string, len(fs.roots))
+	copy(roots, fs.roots)
+	return roots
 }
 
 // AddRoot adds path as a root. Returns an error if the path could not be
-// converted to an absolute path. Does nothing if the path is already a root.
+// converted to an absolute path. Does nothing if the path is an empty string or
+// is already a root.
 func (fs *FS) AddRoot(path string) error {
 	fs.mtx.Lock()
 	defer fs.mtx.Unlock()
 
+	if path == "" {
+		return nil
+	}
 	path, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
 	for _, root := range fs.roots {
-		if path == root {
+		ok, err := EquivalentPaths(path, root)
+		if err != nil {
+			ok = path == root
+		}
+		if ok {
 			return nil
 		}
 	}
@@ -53,17 +88,25 @@ func (fs *FS) AddRoot(path string) error {
 }
 
 // RemoveRoot removes path as a root. Returns an error if the path could not be
-// converted to an absolute path. Does nothing if the path is not a root.
+// converted to an absolute path. Does nothing if the path is an empty string or
+// is not a root.
 func (fs *FS) RemoveRoot(path string) error {
 	fs.mtx.Lock()
 	defer fs.mtx.Unlock()
 
+	if path == "" {
+		return nil
+	}
 	path, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
 	for i, root := range fs.roots {
-		if path == root {
+		ok, err := EquivalentPaths(path, root)
+		if err != nil {
+			ok = path == root
+		}
+		if ok {
 			fs.roots[i] = fs.roots[len(fs.roots)-1]
 			fs.roots = fs.roots[:len(fs.roots)-1]
 			return nil
@@ -179,5 +222,6 @@ func (fs *FS) Stat(name string) (os.FileInfo, error) {
 	if err := fs.accessible(name, 0); err != nil {
 		return nil, err
 	}
-	return os.Stat(name)
+	// For now, avoid symlinks.
+	return os.Lstat(name)
 }

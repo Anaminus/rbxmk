@@ -2,7 +2,9 @@ package rbxmk
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
@@ -20,11 +22,15 @@ import (
 type World struct {
 	l                *lua.LState
 	fileStack        []FileInfo
+	rootdir          string
 	reflectors       map[string]Reflector
 	formats          map[string]Format
 	sources          map[string]Source
 	globalDesc       *rtypes.RootDesc
 	globalAttrConfig *rtypes.AttrConfig
+
+	tmponce sync.Once
+	tmpdir  string
 
 	Client *Client
 	FS     sfs.FS
@@ -531,22 +537,36 @@ type FileInfo struct {
 	os.FileInfo
 }
 
-// PushFile marks a file as the currently running file.
+// PushFile marks a file as the currently running file. Returns an error if the
+// file is already running. If the file is the first file pushed, its directory
+// is added as a root to w.FS.
 func (w *World) PushFile(fi FileInfo) error {
 	for _, f := range w.fileStack {
 		if os.SameFile(fi.FileInfo, f.FileInfo) {
 			return fmt.Errorf("\"%s\" is already running", fi.Path)
 		}
 	}
+	if len(w.fileStack) == 0 {
+		// Set RootDir to file at bottom of stack.
+		if abs, err := filepath.Abs(fi.Path); err == nil {
+			w.rootdir = filepath.Dir(abs)
+			w.FS.AddRoot(w.rootdir)
+		}
+	}
 	w.fileStack = append(w.fileStack, fi)
 	return nil
 }
 
-// PopFile unmarks the currently running file.
+// PopFile unmarks the currently running file. If the last file on the stack is
+// popped, the file's directory is removed as a root from w.FS.
 func (w *World) PopFile() {
 	if len(w.fileStack) > 0 {
 		w.fileStack[len(w.fileStack)-1] = FileInfo{}
 		w.fileStack = w.fileStack[:len(w.fileStack)-1]
+		if len(w.fileStack) == 0 {
+			w.FS.RemoveRoot(w.rootdir)
+			w.rootdir = ""
+		}
 	}
 }
 
@@ -593,6 +613,26 @@ func (w *World) DoFile(fileName string, args int) error {
 	err = w.l.PCall(args, lua.MultRet, nil)
 	w.PopFile()
 	return err
+}
+
+// RootDir returns the directory of the first file pushed onto the running file
+// stack. Returns an empty string if there are no files on the stack, or the
+// absolute path of the file could not be determined.
+func (w *World) RootDir() string {
+	return w.rootdir
+}
+
+// TempDir returns a directory used for temporary files, which is unique per
+// world. Returns an empty string if a temporary directory could not be found.
+func (w *World) TempDir() string {
+	// Create directory lazily.
+	w.tmponce.Do(func() {
+		if tmp, err := ioutil.TempDir("", "rbxmk_"); err == nil {
+			w.tmpdir = tmp
+			w.FS.AddRoot(tmp)
+		}
+	})
+	return w.tmpdir
 }
 
 // File represents a file that can be read from, and includes file information.

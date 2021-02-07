@@ -86,6 +86,10 @@ func Run(flags cmds.Flags, init func(rbxmk.State)) error {
 		SkipOpenLibs:        true,
 		IncludeGoStackTrace: false,
 	}))
+	if wd, err := os.Getwd(); err == nil {
+		// Working directory is an accessible root.
+		world.FS.AddRoot(wd)
+	}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
 	}

@@ -165,6 +165,8 @@ ModTime | number  | The modification time of the file, in Unix time.
 stats returns nil if the file does not exist. An error will be thrown if a
 problem otherwise occurred while getting the metadata.
 
+stat does not follow symbolic links.
+
 #### fs.write
 [fs.write]: #user-content-fswrite
 <code>fs.write(path: [string](##), value: [any](##), format: [string](##)?)</code>

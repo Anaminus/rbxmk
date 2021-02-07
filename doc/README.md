@@ -21,6 +21,7 @@ details on how rbxmk works.
 	2. [Raw member][raw-member]
 	3. [Global field][global-field]
 7. [Explicit primitives][explicit-primitives]
+8. [File access limits][file-access-limits]
 
 </td></tr></tbody>
 </table>
@@ -376,18 +377,35 @@ Exprims are meant to be short-lived, and shouldn't really be used beyond getting
 or setting a property in the absence of [descriptors][descriptors]. When
 possible, descriptors should be utilized instead.
 
+## File access limits
+[file-access-limits]: #user-content-file-access-limits
+
+To reduce the impact of malicious scripts, rbxmk limits a script's access to the
+file system. An environment specifies a number of **root** directories. Only
+file paths within a root can be accessed. A root path itself cannot be accessed,
+except for moving files into ([fs.rename][fs.rename]), or getting the contents
+of ([fs.dir][fs.dir]).
+
+The following directories are marked as roots:
+- The working directory (<code>[os.expand][os.expand]("$wd")</code>).
+- The directory of the first running script file (<code>[os.expand][os.expand]("$rsd")</code>).
+- The temporary directory provided by rbxmk (<code>[os.expand][os.expand]("$tmp")</code>).
+
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc
 [ClassDesc]: types.md#user-content-classdesc
 [EnumDesc]: types.md#user-content-enumdesc
 [EnumItemDesc]: types.md#user-content-enumitemdesc
 [EventDesc]: types.md#user-content-eventdesc
+[fs.dir]: sources.md#user-content-fsdir
+[fs.rename]: sources.md#user-content-fsrename
 [FunctionDesc]: types.md#user-content-functiondesc
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.RawAttrConfig]: types.md#user-content-instancesymrawattrconfig
 [Instance.sym.RawDesc]: types.md#user-content-instancesymrawdesc
 [Instance]: types.md#user-content-instance
+[os.expand]: libraries.md#user-content-osexpand
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
 [rbxmk.globalAttrConfig]: libraries.md#user-content-rbxmkglobalattrconfig
