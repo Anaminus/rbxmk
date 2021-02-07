@@ -10,7 +10,10 @@ This document contains a reference to the sources available to rbxmk scripts.
 	2. [clipboard.write][clipboard.write]
 2. [fs][fs]
 	1. [fs.dir][fs.dir]
+	1. [fs.mkdir][fs.mkdir]
 	2. [fs.read][fs.read]
+	2. [fs.remove][fs.remove]
+	2. [fs.rename][fs.rename]
 	3. [fs.stat][fs.stat]
 	4. [fs.write][fs.write]
 3. [http][http]
@@ -78,12 +81,15 @@ not be sent to the clipboard.
 
 The `fs` source provides an interface to the file system.
 
-Name                 | Description
----------------------|------------
-[fs.dir][fs.dir]     | Gets a list of files in a directory.
-[fs.read][fs.read]   | Reads data from a file in a certain format.
-[fs.stat][fs.stat]   | Gets metadata about a file.
-[fs.write][fs.write] | Writes data to a file in a certain format.
+Name                   | Description
+-----------------------|------------
+[fs.dir][fs.dir]       | Gets a list of files in a directory.
+[fs.mkdir][fs.mkdir]   | Makes a new directory.
+[fs.read][fs.read]     | Reads data from a file in a certain format.
+[fs.remove][fs.remove] | Removes a file or directory.
+[fs.rename][fs.rename] | Moves a file or directory.
+[fs.stat][fs.stat]     | Gets metadata about a file.
+[fs.write][fs.write]   | Writes data to a file in a certain format.
 
 ### fs.dir
 [fs.dir]: #user-content-fsdir
@@ -94,6 +100,17 @@ a table with the same fields as returned by [fs.stat][fs.stat].
 
 dir returns nil if the directory does not exist. An error is thrown if a problem
 otherwise occurred while reading the directory.
+
+### fs.mkdir
+[fs.mkdir]: #user-content-fsmkdir
+<code>fs.mkdir(path: [string](##), all: [bool](##)?): [bool](##)</code>
+
+The `mkdir` function creates a directory at *path*. If *all* is true, then mkdir
+will create each parent directory as needed. *all* defaults to false.
+
+Returns true if all the directories were created successfully. Returns false if
+all of the directories already exist. Throws an error if a problem otherwise
+occurred while creating a directory.
 
 #### fs.read
 [fs.read]: #user-content-fsread
@@ -107,6 +124,29 @@ extension.
 If the format returns an [Instance][Instance], then the Name property will be
 set to the "fstem" component of *path* according to
 [os.split](libraries.md#user-content-ossplit).
+
+#### fs.remove
+[fs.remove]: #user-content-fsremove
+<code>fs.remove(path: [string](##), all: [bool](##)?): [bool](##)</code>
+
+The `remove` function removes the file or directory at *path*. If *all* is true,
+then removing a directory will also recursively remove all of its children.
+*all* defaults to false.
+
+Returns true if every file is removed successfully. Returns false if the file or
+directory does not exist. Throws an error if a problem occurred while removing a
+file.
+
+#### fs.rename
+[fs.rename]: #user-content-fsrename
+<code>fs.rename(old: [string](##), new: [string](##)): [bool](##)</code>
+
+The `rename` functions moves the file or directory at path *old* to path *new*.
+If *new* exists and is not a directory, it is replaced.
+
+Returns true if the file was moved successfully. Returns false if the file or
+directory does not exist. Throws an error if a problem otherwise occurred while
+moving the file.
 
 ### fs.stat
 [fs.stat]: #user-content-fsstat

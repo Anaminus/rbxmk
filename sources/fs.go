@@ -17,9 +17,12 @@ func FS() rbxmk.Source {
 		Name: "fs",
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
-				lib := s.L.CreateTable(0, 4)
+				lib := s.L.CreateTable(0, 6)
 				lib.RawSetString("dir", s.WrapFunc(fsDir))
+				lib.RawSetString("mkdir", s.WrapFunc(fsMkDir))
 				lib.RawSetString("read", s.WrapFunc(fsRead))
+				lib.RawSetString("remove", s.WrapFunc(fsRemove))
+				lib.RawSetString("rename", s.WrapFunc(fsRename))
 				lib.RawSetString("stat", s.WrapFunc(fsStat))
 				lib.RawSetString("write", s.WrapFunc(fsWrite))
 				return lib
@@ -48,6 +51,26 @@ func fsDir(s rbxmk.State) int {
 		tfiles.Append(tinfo)
 	}
 	s.L.Push(tfiles)
+	return 1
+}
+
+func fsMkDir(s rbxmk.State) int {
+	path := string(s.Pull(1, "string").(types.String))
+	all := bool(s.PullOpt(1, "bool", types.Bool(false)).(types.Bool))
+	var err error
+	if all {
+		err = os.MkdirAll(path, 0755)
+	} else {
+		err = os.Mkdir(path, 0755)
+	}
+	if err != nil {
+		if os.IsExist(err) {
+			s.L.Push(lua.LFalse)
+			return 1
+		}
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(lua.LTrue)
 	return 1
 }
 
@@ -88,6 +111,46 @@ func fsRead(s rbxmk.State) int {
 		inst.SetName(stem)
 	}
 	return s.Push(v)
+}
+
+func fsRemove(s rbxmk.State) int {
+	path := string(s.Pull(1, "string").(types.String))
+	all := bool(s.PullOpt(1, "bool", types.Bool(false)).(types.Bool))
+	var err error
+	if all {
+		// RemoveAll returns nil if file does not exist.
+		if _, err = os.Stat(path); err == nil {
+			err = os.RemoveAll(path)
+		}
+	} else {
+		err = os.Remove(path)
+	}
+	if err != nil {
+		if os.IsNotExist(err) {
+			s.L.Push(lua.LFalse)
+			return 1
+		}
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(lua.LTrue)
+	return 1
+}
+
+func fsRename(s rbxmk.State) int {
+	from := string(s.Pull(1, "string").(types.String))
+	to := string(s.Pull(1, "string").(types.String))
+	if _, err := os.Stat(from); err != nil {
+		if os.IsNotExist(err) {
+			s.L.Push(lua.LFalse)
+			return 1
+		}
+		return s.RaiseError("%s", err)
+	}
+	if err := os.Rename(from, to); err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(lua.LTrue)
+	return 1
 }
 
 func fsStat(s rbxmk.State) int {
