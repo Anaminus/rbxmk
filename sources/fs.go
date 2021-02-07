@@ -1,7 +1,6 @@
 package sources
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -33,7 +32,7 @@ func FS() rbxmk.Source {
 
 func fsDir(s rbxmk.State) int {
 	dirname := s.CheckString(1)
-	files, err := ioutil.ReadDir(dirname)
+	files, err := s.FS.ReadDir(dirname)
 	if err != nil {
 		if os.IsNotExist(err) {
 			s.L.Push(lua.LNil)
@@ -59,9 +58,9 @@ func fsMkDir(s rbxmk.State) int {
 	all := bool(s.PullOpt(1, "bool", types.Bool(false)).(types.Bool))
 	var err error
 	if all {
-		err = os.MkdirAll(path, 0755)
+		err = s.FS.MkdirAll(path, 0755)
 	} else {
-		err = os.Mkdir(path, 0755)
+		err = s.FS.Mkdir(path, 0755)
 	}
 	if err != nil {
 		if os.IsExist(err) {
@@ -92,7 +91,7 @@ func fsRead(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 
-	r, err := os.Open(fileName)
+	r, err := s.FS.Open(fileName)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -119,11 +118,11 @@ func fsRemove(s rbxmk.State) int {
 	var err error
 	if all {
 		// RemoveAll returns nil if file does not exist.
-		if _, err = os.Stat(path); err == nil {
-			err = os.RemoveAll(path)
+		if _, err = s.FS.Stat(path); err == nil {
+			err = s.FS.RemoveAll(path)
 		}
 	} else {
-		err = os.Remove(path)
+		err = s.FS.Remove(path)
 	}
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -139,14 +138,14 @@ func fsRemove(s rbxmk.State) int {
 func fsRename(s rbxmk.State) int {
 	from := string(s.Pull(1, "string").(types.String))
 	to := string(s.Pull(1, "string").(types.String))
-	if _, err := os.Stat(from); err != nil {
+	if _, err := s.FS.Stat(from); err != nil {
 		if os.IsNotExist(err) {
 			s.L.Push(lua.LFalse)
 			return 1
 		}
 		return s.RaiseError("%s", err)
 	}
-	if err := os.Rename(from, to); err != nil {
+	if err := s.FS.Rename(from, to); err != nil {
 		return s.RaiseError("%s", err)
 	}
 	s.L.Push(lua.LTrue)
@@ -155,7 +154,7 @@ func fsRename(s rbxmk.State) int {
 
 func fsStat(s rbxmk.State) int {
 	filename := s.CheckString(1)
-	info, err := os.Stat(filename)
+	info, err := s.FS.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
 			s.L.Push(lua.LNil)
@@ -191,7 +190,7 @@ func fsWrite(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 
-	w, err := os.Create(fileName)
+	w, err := s.FS.Create(fileName)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}

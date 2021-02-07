@@ -11,6 +11,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/anaminus/rbxmk/sfs"
 	"github.com/robloxapi/types"
 )
 
@@ -26,6 +27,7 @@ type World struct {
 	globalAttrConfig *rtypes.AttrConfig
 
 	Client *Client
+	FS     sfs.FS
 
 	udmut    sync.Mutex
 	userdata map[interface{}]uintptr
@@ -574,7 +576,7 @@ func (w *World) DoString(s, name string, args int) (err error) {
 // number of arguments currently on the stack that should be passed in. The file
 // is marked as actively running, and is unmarked when the file returns.
 func (w *World) DoFile(fileName string, args int) error {
-	fi, err := os.Stat(fileName)
+	fi, err := w.FS.Stat(fileName)
 	if err != nil {
 		return err
 	}

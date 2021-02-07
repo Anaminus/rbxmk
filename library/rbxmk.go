@@ -3,7 +3,6 @@ package library
 import (
 	"bytes"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -111,7 +110,7 @@ func rbxmkLoadString(s rbxmk.State) int {
 
 func rbxmkRunFile(s rbxmk.State) int {
 	fileName := filepath.Clean(s.CheckString(1))
-	fi, err := os.Stat(fileName)
+	fi, err := s.FS.Stat(fileName)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
