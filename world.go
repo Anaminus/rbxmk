@@ -76,7 +76,6 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	defer w.udmut.Unlock()
 
 	if p, ok := w.userdata[v]; ok {
-		//TODO: vet doesn't like this (suppress unsafeptr).
 		u := (*lua.LUserData)(unsafe.Pointer(p))
 		return u
 	}
