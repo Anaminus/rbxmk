@@ -166,7 +166,7 @@ func (fs *FS) Rename(oldpath, newpath string) error {
 	if err := fs.accessible(oldpath, 0); err != nil {
 		return err
 	}
-	if err := fs.accessible(newpath, 0); err != nil {
+	if err := fs.accessible(newpath, Root); err != nil {
 		return err
 	}
 	return os.Rename(oldpath, newpath)
