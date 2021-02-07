@@ -87,12 +87,13 @@ Name                 | Description
 
 ### fs.dir
 [fs.dir]: #user-content-fsdir
-<code>fs.dir(path: [string](##)): {[File](##)}</code>
+<code>fs.dir(path: [string](##)): {[File](##)}?</code>
 
 The `dir` function returns a list of files in the given directory. Each file is
 a table with the same fields as returned by [fs.stat][fs.stat].
 
-dir throws an error if the file does not exist.
+dir returns nil if the directory does not exist. An error is thrown if a problem
+otherwise occurred while reading the directory.
 
 #### fs.read
 [fs.read]: #user-content-fsread
@@ -109,7 +110,7 @@ set to the "fstem" component of *path* according to
 
 ### fs.stat
 [fs.stat]: #user-content-fsstat
-<code>fs.stat(path: [string](##)): [File](##)</code>
+<code>fs.stat(path: [string](##)): [File](##)?</code>
 
 The `stat` function gets metadata of the given file. Returns a table with the
 following fields:
@@ -121,7 +122,8 @@ IsDir   | boolean | Whether the file is a directory.
 Size    | number  | The size of the file, in bytes.
 ModTime | number  | The modification time of the file, in Unix time.
 
-stat throws an error if the file does not exist.
+stats returns nil if the file does not exist. An error will be thrown if a
+problem otherwise occurred while getting the metadata.
 
 #### fs.write
 [fs.write]: #user-content-fswrite

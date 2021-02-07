@@ -32,6 +32,10 @@ func fsDir(s rbxmk.State) int {
 	dirname := s.CheckString(1)
 	files, err := ioutil.ReadDir(dirname)
 	if err != nil {
+		if os.IsNotExist(err) {
+			s.L.Push(lua.LNil)
+			return 1
+		}
 		return s.RaiseError("%s", err)
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
@@ -90,6 +94,10 @@ func fsStat(s rbxmk.State) int {
 	filename := s.CheckString(1)
 	info, err := os.Stat(filename)
 	if err != nil {
+		if os.IsNotExist(err) {
+			s.L.Push(lua.LNil)
+			return 1
+		}
 		return s.RaiseError("%s", err)
 	}
 	tinfo := s.L.CreateTable(0, 4)
