@@ -20,11 +20,10 @@ func FormatSelector() Reflector {
 				table.RawSetString("Format", lua.LString(v.Stringlike()))
 				return []lua.LValue{table}, nil
 			case rtypes.FormatSelector:
-				if s.Cycle == nil {
-					s.Cycle = &rbxmk.Cycle{}
-					defer func() { s.Cycle = nil }()
+				if s.CycleGuard() {
+					defer s.CycleClear()
 				}
-				if s.Cycle.Mark(&v) {
+				if s.CycleMark(&v) {
 					return nil, fmt.Errorf("format selectors cannot be cyclic")
 				}
 				format := s.Format(v.Format)
@@ -65,11 +64,10 @@ func FormatSelector() Reflector {
 				}
 				return rtypes.FormatSelector{Format: format.Name}, nil
 			case *lua.LTable:
-				if s.Cycle == nil {
-					s.Cycle = &rbxmk.Cycle{}
-					defer func() { s.Cycle = nil }()
+				if s.CycleGuard() {
+					defer s.CycleClear()
 				}
-				if s.Cycle.Mark(v) {
+				if s.CycleMark(v) {
 					return nil, fmt.Errorf("tables cannot be cyclic")
 				}
 				name, ok := v.RawGetString("Format").(lua.LString)

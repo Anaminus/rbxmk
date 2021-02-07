@@ -115,9 +115,47 @@ type State struct {
 
 	L *lua.LState
 
-	// Cycle is used to mark a table as having been traversed. This is non-nil
+	// cycle is used to mark a table as having been traversed. This is non-nil
 	// only for types that can contain other types.
-	Cycle *Cycle
+	cycle map[interface{}]struct{}
+}
+
+// CycleGuard begins a guard against reference cycles when reflecting with the
+// state. Returns false if a guard was already set up for the state. If true is
+// returned, the guard must be cleared via CycleClear. For example:
+//
+//     if s.CycleGuard() {
+//         defer s.CycleClear()
+//     }
+//
+func (s *State) CycleGuard() bool {
+	if s.cycle == nil {
+		s.cycle = make(map[interface{}]struct{}, 4)
+		return true
+	}
+	return false
+}
+
+// CycleClear clears the cycle guard on the state. Panics if the state has no
+// guard.
+func (s *State) CycleClear() {
+	if s.cycle == nil {
+		panic("state has no cycle guard")
+	}
+	s.cycle = nil
+}
+
+// CycleMark marks t as visited, and returns whether t was already visited.
+// Panics if the state has no guard.
+func (s State) CycleMark(t interface{}) bool {
+	if s.cycle == nil {
+		panic("attempt to mark reference without cycle guard")
+	}
+	_, ok := s.cycle[t]
+	if !ok {
+		s.cycle[t] = struct{}{}
+	}
+	return ok
 }
 
 // Count returns the number of arguments in the stack frame.
@@ -353,11 +391,10 @@ func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d
 // PushArrayOf pushes an rtypes.Array, ensuring that each element is reflected
 // according to t.
 func (s State) PushArrayOf(t string, v rtypes.Array) int {
-	if s.Cycle == nil {
-		s.Cycle = &Cycle{}
-		defer func() { s.Cycle = nil }()
+	if s.CycleGuard() {
+		defer s.CycleClear()
 	}
-	if s.Cycle.Mark(&v) {
+	if s.CycleMark(&v) {
 		return s.RaiseError("arrays cannot be cyclic")
 	}
 	rfl := s.Reflector(t)
@@ -378,16 +415,15 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	rfl := s.Reflector(t)
 	lv := s.L.CheckAny(n)
-	if s.Cycle == nil {
-		s.Cycle = &Cycle{}
-		defer func() { s.Cycle = nil }()
+	if s.CycleGuard() {
+		defer s.CycleClear()
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
 		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
 		return nil
 	}
-	if s.Cycle.Mark(table) {
+	if s.CycleMark(table) {
 		s.L.ArgError(n, "tables cannot be cyclic")
 		return nil
 	}
@@ -404,11 +440,10 @@ func (s State) PullArrayOf(n int, t string) rtypes.Array {
 }
 
 func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
-	if s.Cycle == nil {
-		s.Cycle = &Cycle{}
-		defer func() { s.Cycle = nil }()
+	if s.CycleGuard() {
+		defer s.CycleClear()
 	}
-	if s.Cycle.Mark(&v) {
+	if s.CycleMark(&v) {
 		return s.RaiseError("dictionaries cannot be cyclic")
 	}
 	rfl := s.Reflector(t)
@@ -427,16 +462,15 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 	rfl := s.Reflector(t)
 	lv := s.L.CheckAny(n)
-	if s.Cycle == nil {
-		s.Cycle = &Cycle{}
-		defer func() { s.Cycle = nil }()
+	if s.CycleGuard() {
+		defer s.CycleClear()
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
 		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
 		return nil
 	}
-	if s.Cycle.Mark(table) {
+	if s.CycleMark(table) {
 		s.L.ArgError(n, "tables cannot be cyclic")
 		return nil
 	}
@@ -473,27 +507,6 @@ func (s State) CheckString(n int) string {
 	}
 	s.L.TypeError(n, lua.LTString)
 	return ""
-}
-
-// Cycle is used to detect cyclic references by containing values that have
-// already been traversed.
-type Cycle struct {
-	m map[interface{}]struct{}
-}
-
-// Mark marks t as visited, and returns whether t was already visited.
-func (c *Cycle) Mark(t interface{}) bool {
-	if c == nil {
-		return false
-	}
-	_, ok := c.m[t]
-	if !ok {
-		if c.m == nil {
-			c.m = make(map[interface{}]struct{}, 4)
-		}
-		c.m[t] = struct{}{}
-	}
-	return ok
 }
 
 // PushTypeTo is a Reflector.Push that converts v to a userdata set with a type

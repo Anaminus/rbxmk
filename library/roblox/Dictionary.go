@@ -14,15 +14,14 @@ func Dictionary() Reflector {
 	return Reflector{
 		Name: "Dictionary",
 		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
-			if s.Cycle == nil {
-				s.Cycle = &rbxmk.Cycle{}
-				defer func() { s.Cycle = nil }()
+			if s.CycleGuard() {
+				defer s.CycleClear()
 			}
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Dictionary")
 			}
-			if s.Cycle.Mark(&dict) {
+			if s.CycleMark(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
 			}
 			variantRfl := s.Reflector("Variant")
@@ -37,15 +36,14 @@ func Dictionary() Reflector {
 			return []lua.LValue{table}, nil
 		},
 		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
-			if s.Cycle == nil {
-				s.Cycle = &rbxmk.Cycle{}
-				defer func() { s.Cycle = nil }()
+			if s.CycleGuard() {
+				defer s.CycleClear()
 			}
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
-			if s.Cycle.Mark(table) {
+			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
 			variantRfl := s.Reflector("Variant")
