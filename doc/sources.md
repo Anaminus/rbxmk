@@ -8,9 +8,9 @@ This document contains a reference to the sources available to rbxmk scripts.
 1. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
 	2. [clipboard.write][clipboard.write]
-2. [file][file]
-	1. [file.read][file.read]
-	2. [file.write][file.write]
+2. [fs][fs]
+	1. [fs.read][fs.read]
+	2. [fs.write][fs.write]
 3. [http][http]
 	1. [http.request][http.request]
 4. [rbxassetid][rbxassetid]
@@ -71,19 +71,19 @@ already sent.
 Throws an error if *value* could not be encoded in a format, or if data could
 not be sent to the clipboard.
 
-## file
-[file]: #user-content-file
+## fs
+[fs]: #user-content-fs
 
-The `file` source provides an interface to the file system.
+The `fs` source provides an interface to the file system.
 
-Name                     | Description
--------------------------|------------
-[file.read][file.read]   | Reads data from a file in a certain format.
-[file.write][file.write] | Writes data to a file in a certain format.
+Name                 | Description
+---------------------|------------
+[fs.read][fs.read]   | Reads data from a file in a certain format.
+[fs.write][fs.write] | Writes data to a file in a certain format.
 
-#### file.read
-[file.read]: #user-content-fileread
-<code>file.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
+#### fs.read
+[fs.read]: #user-content-fsread
+<code>fs.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
 
 The `read` function reads the content of the file at *path*, and decodes it into
 *value* according to the [format](formats.md) matching the file extension of
@@ -94,9 +94,9 @@ If the format returns an [Instance][Instance], then the Name property will be
 set to the "fstem" component of *path* according to
 [os.split](libraries.md#user-content-ossplit).
 
-#### file.write
-[file.write]: #user-content-filewrite
-<code>file.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
+#### fs.write
+[fs.write]: #user-content-fswrite
+<code>fs.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
 
 The `write` function encodes *value* according to the [format](formats.md)
 matching the file extension of *path*, and writes the result to the file at

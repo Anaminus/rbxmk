@@ -1,5 +1,5 @@
-local a = file.read(os.expand("$sd/../../dump.desc.json"))
-local b = file.read(os.expand("$sd/../../dump.desc.json"))
+local a = fs.read(os.expand("$sd/../../dump.desc.json"))
+local b = fs.read(os.expand("$sd/../../dump.desc.json"))
 local n = nil
 local f = false
 

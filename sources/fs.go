@@ -10,22 +10,22 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(File) }
-func File() rbxmk.Source {
+func init() { register(FS) }
+func FS() rbxmk.Source {
 	return rbxmk.Source{
-		Name: "file",
+		Name: "fs",
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 2)
-				lib.RawSetString("read", s.WrapFunc(fileRead))
-				lib.RawSetString("write", s.WrapFunc(fileWrite))
+				lib.RawSetString("read", s.WrapFunc(fsRead))
+				lib.RawSetString("write", s.WrapFunc(fsWrite))
 				return lib
 			},
 		},
 	}
 }
 
-func fileRead(s rbxmk.State) int {
+func fsRead(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
 	selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
 	if selector.Format == "" {
@@ -64,7 +64,7 @@ func fileRead(s rbxmk.State) int {
 	return s.Push(v)
 }
 
-func fileWrite(s rbxmk.State) int {
+func fsWrite(s rbxmk.State) int {
 	fileName := string(s.Pull(1, "string").(types.String))
 	value := s.Pull(2, "Variant")
 	selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
