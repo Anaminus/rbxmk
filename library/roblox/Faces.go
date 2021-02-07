@@ -10,8 +10,8 @@ func init() { register(Faces) }
 func Faces() Reflector {
 	return Reflector{
 		Name:     "Faces",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Faces"),
+		PullFrom: rbxmk.PullTypeFrom("Faces"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Faces").(types.Faces)

@@ -11,8 +11,8 @@ func init() { register(NumberSequence) }
 func NumberSequence() Reflector {
 	return Reflector{
 		Name:     "NumberSequence",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("NumberSequence"),
+		PullFrom: rbxmk.PullTypeFrom("NumberSequence"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "NumberSequence").(types.NumberSequence)
@@ -42,7 +42,7 @@ func NumberSequence() Reflector {
 				keypointRfl := s.Reflector("NumberSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)
 				for i, v := range u {
-					lv, err := keypointRfl.PushTo(s, keypointRfl, v)
+					lv, err := keypointRfl.PushTo(s, v)
 					if err != nil {
 						return s.RaiseError("%s", err)
 					}
@@ -71,7 +71,7 @@ func NumberSequence() Reflector {
 						v = make(types.NumberSequence, n)
 						keypointRfl := s.Reflector("NumberSequenceKeypoint")
 						for i := 1; i <= n; i++ {
-							k, err := keypointRfl.PullFrom(s, keypointRfl, c.RawGetInt(i))
+							k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
 							if err != nil {
 								return s.RaiseError("%s", err)
 							}

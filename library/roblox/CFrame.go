@@ -11,8 +11,8 @@ func init() { register(CFrame) }
 func CFrame() Reflector {
 	return Reflector{
 		Name:     "CFrame",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("CFrame"),
+		PullFrom: rbxmk.PullTypeFrom("CFrame"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "CFrame").(types.CFrame)

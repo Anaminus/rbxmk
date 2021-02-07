@@ -11,8 +11,8 @@ func init() { register(Cookie) }
 func Cookie() Reflector {
 	return Reflector{
 		Name:     "Cookie",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Cookie"),
+		PullFrom: rbxmk.PullTypeFrom("Cookie"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Cookie").(rtypes.Cookie)

@@ -13,7 +13,7 @@ func init() { register(FormatSelector) }
 func FormatSelector() Reflector {
 	return Reflector{
 		Name: "FormatSelector",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			switch v := v.(type) {
 			case types.Stringlike:
 				table := s.L.CreateTable(0, 1)
@@ -43,7 +43,7 @@ func FormatSelector() Reflector {
 					}
 					value, ok := v.Options[field]
 					if ok {
-						v, err := rfl.PushTo(s, rfl, value)
+						v, err := rfl.PushTo(s, value)
 						if err != nil {
 							return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
 						}
@@ -55,7 +55,7 @@ func FormatSelector() Reflector {
 				return nil, rbxmk.TypeError(nil, 0, "FormatSelector or string")
 			}
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				format := s.Format(string(v))
@@ -90,7 +90,7 @@ func FormatSelector() Reflector {
 					if rfl.Name == "" {
 						return nil, fmt.Errorf("unknown type %q for option %s of format %s", typ, field, format.Name)
 					}
-					v, err := rfl.PullFrom(s, rfl, v.RawGetString(field))
+					v, err := rfl.PullFrom(s, v.RawGetString(field))
 					if err != nil {
 						return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
 					}

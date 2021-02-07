@@ -13,7 +13,7 @@ func init() { register(Array) }
 func Array() Reflector {
 	return Reflector{
 		Name: "Array",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -27,7 +27,7 @@ func Array() Reflector {
 			variantRfl := s.Reflector("Variant")
 			table := s.L.CreateTable(len(array), 0)
 			for i, v := range array {
-				lv, err := variantRfl.PushTo(s, variantRfl, v)
+				lv, err := variantRfl.PushTo(s, v)
 				if err != nil {
 					return nil, err
 				}
@@ -35,7 +35,7 @@ func Array() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -50,7 +50,7 @@ func Array() Reflector {
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {
-				if array[i-1], err = variantRfl.PullFrom(s, variantRfl, table.RawGetInt(i)); err != nil {
+				if array[i-1], err = variantRfl.PullFrom(s, table.RawGetInt(i)); err != nil {
 					return nil, err
 				}
 			}

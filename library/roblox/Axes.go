@@ -10,8 +10,8 @@ func init() { register(Axes) }
 func Axes() Reflector {
 	return Reflector{
 		Name:     "Axes",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Axes"),
+		PullFrom: rbxmk.PullTypeFrom("Axes"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Axes").(types.Axes)

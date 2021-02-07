@@ -14,8 +14,8 @@ func init() { register(RootDesc) }
 func RootDesc() Reflector {
 	return Reflector{
 		Name:     "RootDesc",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("RootDesc"),
+		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "RootDesc").(*rtypes.RootDesc)

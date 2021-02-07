@@ -11,8 +11,8 @@ func init() { register(TypeDesc) }
 func TypeDesc() Reflector {
 	return Reflector{
 		Name:     "TypeDesc",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("TypeDesc"),
+		PullFrom: rbxmk.PullTypeFrom("TypeDesc"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "TypeDesc").(rtypes.TypeDesc)

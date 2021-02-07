@@ -11,7 +11,7 @@ func init() { register(Objects) }
 func Objects() Reflector {
 	return Reflector{
 		Name: "Objects",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Objects")
@@ -19,7 +19,7 @@ func Objects() Reflector {
 			instRfl := s.Reflector("Instance")
 			table := s.L.CreateTable(len(objects), 0)
 			for i, v := range objects {
-				lv, err := instRfl.PushTo(s, instRfl, v)
+				lv, err := instRfl.PushTo(s, v)
 				if err != nil {
 					return nil, err
 				}
@@ -27,7 +27,7 @@ func Objects() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
@@ -36,7 +36,7 @@ func Objects() Reflector {
 			n := table.Len()
 			objects := make(rtypes.Objects, n)
 			for i := 1; i <= n; i++ {
-				v, err := instRfl.PullFrom(s, instRfl, table.RawGetInt(i))
+				v, err := instRfl.PullFrom(s, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}

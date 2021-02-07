@@ -105,8 +105,8 @@ func init() { register(Instance) }
 func Instance() Reflector {
 	return Reflector{
 		Name:     "Instance",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Instance"),
+		PullFrom: rbxmk.PullTypeFrom("Instance"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -124,7 +124,7 @@ func Instance() Reflector {
 
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, s.L.CheckAny(2)); err == nil {
 						name := sym.(rtypes.Symbol).Name
 						switch name {
 						case "Reference":
@@ -280,7 +280,7 @@ func Instance() Reflector {
 
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, typ, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, s.L.CheckAny(2)); err == nil {
 						name := sym.(rtypes.Symbol).Name
 						switch name {
 						case "Reference":

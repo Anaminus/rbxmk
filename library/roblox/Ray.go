@@ -10,8 +10,8 @@ func init() { register(Ray) }
 func Ray() Reflector {
 	return Reflector{
 		Name:     "Ray",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Ray"),
+		PullFrom: rbxmk.PullTypeFrom("Ray"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Ray").(types.Ray)

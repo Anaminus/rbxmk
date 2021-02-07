@@ -11,8 +11,8 @@ func init() { register(Color3) }
 func Color3() Reflector {
 	return Reflector{
 		Name:     "Color3",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Color3"),
+		PullFrom: rbxmk.PullTypeFrom("Color3"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Color3").(types.Color3)

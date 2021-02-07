@@ -11,8 +11,8 @@ func init() { register(AttrConfig) }
 func AttrConfig() Reflector {
 	return Reflector{
 		Name:     "AttrConfig",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("AttrConfig"),
+		PullFrom: rbxmk.PullTypeFrom("AttrConfig"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "AttrConfig").(*rtypes.AttrConfig)

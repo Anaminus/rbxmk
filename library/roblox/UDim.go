@@ -10,8 +10,8 @@ func init() { register(UDim) }
 func UDim() Reflector {
 	return Reflector{
 		Name:     "UDim",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("UDim"),
+		PullFrom: rbxmk.PullTypeFrom("UDim"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "UDim").(types.UDim)

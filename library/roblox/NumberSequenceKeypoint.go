@@ -10,8 +10,8 @@ func init() { register(NumberSequenceKeypoint) }
 func NumberSequenceKeypoint() Reflector {
 	return Reflector{
 		Name:     "NumberSequenceKeypoint",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("NumberSequenceKeypoint"),
+		PullFrom: rbxmk.PullTypeFrom("NumberSequenceKeypoint"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint)

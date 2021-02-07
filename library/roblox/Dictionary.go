@@ -13,7 +13,7 @@ func init() { register(Dictionary) }
 func Dictionary() Reflector {
 	return Reflector{
 		Name: "Dictionary",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -27,7 +27,7 @@ func Dictionary() Reflector {
 			variantRfl := s.Reflector("Variant")
 			table := s.L.CreateTable(0, len(dict))
 			for k, v := range dict {
-				lv, err := variantRfl.PushTo(s, variantRfl, v)
+				lv, err := variantRfl.PushTo(s, v)
 				if err != nil {
 					return nil, err
 				}
@@ -35,7 +35,7 @@ func Dictionary() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -53,7 +53,7 @@ func Dictionary() Reflector {
 					return
 				}
 				var v types.Value
-				if v, err = variantRfl.PullFrom(s, variantRfl, lv); err == nil {
+				if v, err = variantRfl.PullFrom(s, lv); err == nil {
 					dict[k.String()] = v
 				}
 			})

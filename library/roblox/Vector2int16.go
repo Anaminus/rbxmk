@@ -10,8 +10,8 @@ func init() { register(Vector2int16) }
 func Vector2int16() Reflector {
 	return Reflector{
 		Name:     "Vector2int16",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Vector2int16"),
+		PullFrom: rbxmk.PullTypeFrom("Vector2int16"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)

@@ -10,8 +10,8 @@ func init() { register(NumberRange) }
 func NumberRange() Reflector {
 	return Reflector{
 		Name:     "NumberRange",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("NumberRange"),
+		PullFrom: rbxmk.PullTypeFrom("NumberRange"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)

@@ -10,8 +10,8 @@ func init() { register(PhysicalProperties) }
 func PhysicalProperties() Reflector {
 	return Reflector{
 		Name:     "PhysicalProperties",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("PhysicalProperties"),
+		PullFrom: rbxmk.PullTypeFrom("PhysicalProperties"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "PhysicalProperties").(types.PhysicalProperties)

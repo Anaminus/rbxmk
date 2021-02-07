@@ -481,7 +481,7 @@ func (w *World) PushTo(t string, v types.Value) (lvs []lua.LValue, err error) {
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("cannot cast type %q to Lua", t)
 	}
-	return rfl.PushTo(State{World: w, L: w.l}, rfl, v)
+	return rfl.PushTo(State{World: w, L: w.l}, v)
 }
 
 // PullFrom reflects lvs to v using registered type t.
@@ -493,7 +493,7 @@ func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error)
 	if rfl.PullFrom == nil {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
-	return rfl.PullFrom(State{World: w, L: w.l}, rfl, lvs...)
+	return rfl.PullFrom(State{World: w, L: w.l}, lvs...)
 }
 
 // Push reflects v according to its type as registered, then pushes the results

@@ -11,8 +11,8 @@ func init() { register(HTTPRequest) }
 func HTTPRequest() Reflector {
 	return Reflector{
 		Name:     "HTTPRequest",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("HTTPRequest"),
+		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "HTTPRequest").(*sources.HTTPRequest)

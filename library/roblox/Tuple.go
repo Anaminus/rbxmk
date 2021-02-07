@@ -11,12 +11,12 @@ func Tuple() Reflector {
 	return Reflector{
 		Name:  "Tuple",
 		Count: -1,
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			values := v.(rtypes.Tuple)
 			lvs = make([]lua.LValue, len(values))
 			variantRfl := s.Reflector("Variant")
 			for i, value := range values {
-				lv, err := variantRfl.PushTo(s, variantRfl, value)
+				lv, err := variantRfl.PushTo(s, value)
 				if err != nil {
 					return nil, err
 				}
@@ -24,11 +24,11 @@ func Tuple() Reflector {
 			}
 			return lvs, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			vs := make(rtypes.Tuple, len(lvs))
 			variantRfl := s.Reflector("Variant")
 			for i, lv := range lvs {
-				v, err := variantRfl.PullFrom(s, variantRfl, lv)
+				v, err := variantRfl.PullFrom(s, lv)
 				if err != nil {
 					return nil, err
 				}

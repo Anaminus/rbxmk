@@ -11,7 +11,7 @@ func init() { register(HTTPOptions) }
 func HTTPOptions() Reflector {
 	return Reflector{
 		Name: "HTTPOptions",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "HTTPOptions")
@@ -26,7 +26,7 @@ func HTTPOptions() Reflector {
 			s.PushToTable(table, lua.LString("Body"), options.Body)
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")

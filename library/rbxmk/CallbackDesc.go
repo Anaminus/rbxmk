@@ -12,8 +12,8 @@ func init() { register(CallbackDesc) }
 func CallbackDesc() Reflector {
 	return Reflector{
 		Name:     "CallbackDesc",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("CallbackDesc"),
+		PullFrom: rbxmk.PullTypeFrom("CallbackDesc"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "CallbackDesc").(rtypes.CallbackDesc)

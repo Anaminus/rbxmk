@@ -10,8 +10,8 @@ func init() { register(Region3int16) }
 func Region3int16() Reflector {
 	return Reflector{
 		Name:     "Region3int16",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Region3int16"),
+		PullFrom: rbxmk.PullTypeFrom("Region3int16"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Region3int16").(types.Region3int16)

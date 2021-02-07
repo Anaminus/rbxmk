@@ -26,11 +26,11 @@ type Reflector struct {
 	// PushTo converts v to a number of Lua values. l must be used only for the
 	// conversion of values as needed. If err is nil, then lvs must have a
 	// length of 1 or greater.
-	PushTo func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error)
+	PushTo func(s State, v types.Value) (lvs []lua.LValue, err error)
 
 	// PullFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lvs must have a length of 1 or greater.
-	PullFrom func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error)
+	PullFrom func(s State, lvs ...lua.LValue) (v types.Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -170,7 +170,7 @@ func (s State) Push(v types.Value) int {
 	if rfl.Name == "" {
 		panic("unregistered type " + v.Type())
 	}
-	lvs, err := rfl.PushTo(s, rfl, v)
+	lvs, err := rfl.PushTo(s, v)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -191,15 +191,15 @@ func (s State) Pull(n int, t string) types.Value {
 		for i := n; i <= s.L.GetTop(); i++ {
 			lvs = append(lvs, s.L.Get(i))
 		}
-		v, err = rfl.PullFrom(s, rfl, lvs...)
+		v, err = rfl.PullFrom(s, lvs...)
 	} else if rfl.Count > 1 {
 		lvs := make([]lua.LValue, 0, 4)
 		for i := n; i <= rfl.Count; i++ {
 			lvs = append(lvs, s.L.CheckAny(i))
 		}
-		v, err = rfl.PullFrom(s, rfl, lvs...)
+		v, err = rfl.PullFrom(s, lvs...)
 	} else {
-		v, err = rfl.PullFrom(s, rfl, s.L.CheckAny(n))
+		v, err = rfl.PullFrom(s, s.L.CheckAny(n))
 	}
 	if err != nil {
 		s.L.ArgError(n, err.Error())
@@ -222,7 +222,7 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	if lv == lua.LNil {
 		return d
 	}
-	v, err := rfl.PullFrom(s, rfl, lv)
+	v, err := rfl.PullFrom(s, lv)
 	if err != nil {
 		s.L.ArgError(n, err.Error())
 		return d
@@ -272,7 +272,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	case 1: // All types have 1 value.
 		v := s.L.CheckAny(n)
 		for _, t := range ts {
-			if v, err := t.PullFrom(s, t, v); err == nil {
+			if v, err := t.PullFrom(s, v); err == nil {
 				return v
 			}
 		}
@@ -287,16 +287,16 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 				for i := n; i <= s.L.GetTop(); i++ {
 					lvs = append(lvs, s.L.Get(i))
 				}
-				v, err = t.PullFrom(s, t, lvs...)
+				v, err = t.PullFrom(s, lvs...)
 			} else if t.Count > 1 {
 				// Append up to type count.
 				for i := n; i <= t.Count; i++ {
 					lvs = append(lvs, s.L.CheckAny(i))
 				}
-				v, err = t.PullFrom(s, t, lvs...)
+				v, err = t.PullFrom(s, lvs...)
 			} else {
 				// Append single value.
-				v, err = t.PullFrom(s, t, s.L.CheckAny(n))
+				v, err = t.PullFrom(s, s.L.CheckAny(n))
 			}
 			if err != nil {
 				continue
@@ -314,7 +314,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			for i := n; i <= t.Count; i++ {
 				lvs = append(lvs, s.L.CheckAny(i))
 			}
-			v, err := t.PullFrom(s, t, lvs...)
+			v, err := t.PullFrom(s, lvs...)
 			if err != nil {
 				continue
 			}
@@ -341,7 +341,7 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 	} else if rfl.Count > 1 {
 		panic("PushToTable cannot push multi-value types")
 	}
-	lvs, err := rfl.PushTo(s, rfl, v)
+	lvs, err := rfl.PushTo(s, v)
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
 		return
@@ -358,7 +358,7 @@ func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) type
 	} else if rfl.Count > 1 {
 		panic("PullFromTable cannot push multi-value types")
 	}
-	v, err := rfl.PullFrom(s, rfl, table.RawGet(field))
+	v, err := rfl.PullFrom(s, table.RawGet(field))
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
 		return nil
@@ -380,7 +380,7 @@ func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d
 	if lv == lua.LNil {
 		return d
 	}
-	v, err := rfl.PullFrom(s, rfl, lv)
+	v, err := rfl.PullFrom(s, lv)
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
 		return d
@@ -400,7 +400,7 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 	rfl := s.Reflector(t)
 	table := s.L.CreateTable(len(v), 0)
 	for i, v := range v {
-		lv, err := rfl.PushTo(s, rfl, v)
+		lv, err := rfl.PushTo(s, v)
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
@@ -431,7 +431,7 @@ func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	array := make(rtypes.Array, l)
 	for i := 1; i <= l; i++ {
 		var err error
-		if array[i-1], err = rfl.PullFrom(s, rfl, table.RawGetInt(i)); err != nil {
+		if array[i-1], err = rfl.PullFrom(s, table.RawGetInt(i)); err != nil {
 			s.L.ArgError(n, err.Error())
 			return nil
 		}
@@ -449,7 +449,7 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 	rfl := s.Reflector(t)
 	table := s.L.CreateTable(0, len(v))
 	for k, v := range v {
-		lv, err := rfl.PushTo(s, rfl, v)
+		lv, err := rfl.PushTo(s, v)
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
@@ -481,7 +481,7 @@ func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 			return
 		}
 		var v types.Value
-		if v, err = rfl.PullFrom(s, rfl, lv); err == nil {
+		if v, err = rfl.PullFrom(s, lv); err == nil {
 			dict[k.String()] = v
 		}
 	})
@@ -509,27 +509,31 @@ func (s State) CheckString(n int) string {
 	return ""
 }
 
-// PushTypeTo is a Reflector.Push that converts v to a userdata set with a type
-// metatable registered as t.Name.
-func PushTypeTo(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
-	u := s.UserDataOf(v, r.Name)
-	return append(lvs, u), nil
+// PushTypeTo returns a Reflector.PushTo that converts v to a userdata set with
+// a type metatable registered as type t.
+func PushTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
+	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		u := s.UserDataOf(v, t)
+		return append(lvs, u), nil
+	}
 }
 
-// PullTypeFrom is a Reflector.Pull that converts v from a userdata set with a
-// type metatable registered as t.Name.
-func PullTypeFrom(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
-	u, ok := lvs[0].(*lua.LUserData)
-	if !ok {
-		return nil, TypeError(nil, 0, r.Name)
+// PullTypeFrom returns a Reflector.PullFrom that converts v from a userdata set
+// with a type metatable registered as type t.
+func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+	return func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		u, ok := lvs[0].(*lua.LUserData)
+		if !ok {
+			return nil, TypeError(nil, 0, t)
+		}
+		if u.Metatable != s.L.GetTypeMetatable(t) {
+			return nil, TypeError(nil, 0, t)
+		}
+		if v, ok = u.Value.(types.Value); !ok {
+			return nil, TypeError(nil, 0, t)
+		}
+		return v, nil
 	}
-	if u.Metatable != s.L.GetTypeMetatable(r.Name) {
-		return nil, TypeError(nil, 0, r.Name)
-	}
-	if v, ok = u.Value.(types.Value); !ok {
-		return nil, TypeError(nil, 0, r.Name)
-	}
-	return v, nil
 }
 
 // typeError is an error where a type was received where another was expected.

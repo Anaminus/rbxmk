@@ -22,14 +22,14 @@ func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 		return lua.LString(v.Stringlike()), nil
 	case rtypes.Array:
 		rfl := s.Reflector("Array")
-		values, err := rfl.PushTo(s, rfl, v)
+		values, err := rfl.PushTo(s, v)
 		if err != nil {
 			return nil, err
 		}
 		return values[0], nil
 	case rtypes.Dictionary:
 		rfl := s.Reflector("Dictionary")
-		values, err := rfl.PushTo(s, rfl, v)
+		values, err := rfl.PushTo(s, v)
 		if err != nil {
 			return nil, err
 		}
@@ -42,7 +42,7 @@ func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
-	values, err := rfl.PushTo(s, rfl, v)
+	values, err := rfl.PushTo(s, v)
 	if err != nil {
 		return nil, err
 	}
@@ -62,12 +62,12 @@ func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 	case *lua.LTable:
 		if lv.Len() > 0 {
 			arrayRfl := s.Reflector("Array")
-			if v, err = arrayRfl.PullFrom(s, arrayRfl, lv); err == nil {
+			if v, err = arrayRfl.PullFrom(s, lv); err == nil {
 				return v, nil
 			}
 		}
 		dictRfl := s.Reflector("Dictionary")
-		v, err := dictRfl.PullFrom(s, dictRfl, lv)
+		v, err := dictRfl.PullFrom(s, lv)
 		return v, err
 	case *lua.LUserData:
 		name, ok := s.L.GetMetaField(lv, "__type").(lua.LString)
@@ -81,7 +81,7 @@ func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 		if rfl.PullFrom == nil {
 			return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 		}
-		v, err := rfl.PullFrom(s, rfl, lv)
+		v, err := rfl.PullFrom(s, lv)
 		return v, err
 	}
 	return nil, fmt.Errorf("unable to cast %s to Variant", lv.Type().String())
@@ -102,14 +102,14 @@ func init() { register(Variant) }
 func Variant() Reflector {
 	return Reflector{
 		Name: "Variant",
-		PushTo: func(s State, r Reflector, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
 			lv, err := PushVariantTo(s, v)
 			if err != nil {
 				return nil, err
 			}
 			return []lua.LValue{lv}, nil
 		},
-		PullFrom: func(s State, r Reflector, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 			v, err = PullVariantFrom(s, lvs[0])
 			return v, err
 		},

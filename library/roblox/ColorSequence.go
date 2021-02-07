@@ -11,8 +11,8 @@ func init() { register(ColorSequence) }
 func ColorSequence() Reflector {
 	return Reflector{
 		Name:     "ColorSequence",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("ColorSequence"),
+		PullFrom: rbxmk.PullTypeFrom("ColorSequence"),
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "ColorSequence").(types.ColorSequence)
@@ -42,7 +42,7 @@ func ColorSequence() Reflector {
 				keypointRfl := s.Reflector("ColorSequenceKeypoint")
 				table := s.L.CreateTable(len(u), 0)
 				for i, v := range u {
-					lv, err := keypointRfl.PushTo(s, keypointRfl, v)
+					lv, err := keypointRfl.PushTo(s, v)
 					if err != nil {
 						return s.RaiseError("%s", err)
 					}
@@ -71,7 +71,7 @@ func ColorSequence() Reflector {
 						v = make(types.ColorSequence, n)
 						keypointRfl := s.Reflector("ColorSequenceKeypoint")
 						for i := 1; i <= n; i++ {
-							k, err := keypointRfl.PullFrom(s, keypointRfl, c.RawGetInt(i))
+							k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
 							if err != nil {
 								return s.RaiseError("%s", err)
 							}

@@ -10,8 +10,8 @@ func init() { register(Symbol) }
 func Symbol() Reflector {
 	return Reflector{
 		Name:     "Symbol",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("Symbol"),
+		PullFrom: rbxmk.PullTypeFrom("Symbol"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "Symbol").(rtypes.Symbol)

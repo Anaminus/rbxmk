@@ -11,8 +11,8 @@ func init() { register(ParameterDesc) }
 func ParameterDesc() Reflector {
 	return Reflector{
 		Name:     "ParameterDesc",
-		PushTo:   rbxmk.PushTypeTo,
-		PullFrom: rbxmk.PullTypeFrom,
+		PushTo:   rbxmk.PushTypeTo("ParameterDesc"),
+		PullFrom: rbxmk.PullTypeFrom("ParameterDesc"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
 				v := s.Pull(1, "ParameterDesc").(rtypes.ParameterDesc)
