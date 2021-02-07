@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -347,6 +348,114 @@ func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d
 		return d
 	}
 	return v
+}
+
+// PushArrayOf pushes an rtypes.Array, ensuring that each element is reflected
+// according to t.
+func (s State) PushArrayOf(t string, v rtypes.Array) int {
+	if s.Cycle == nil {
+		s.Cycle = &Cycle{}
+		defer func() { s.Cycle = nil }()
+	}
+	if s.Cycle.Mark(&v) {
+		return s.RaiseError("arrays cannot be cyclic")
+	}
+	rfl := s.Reflector(t)
+	table := s.L.CreateTable(len(v), 0)
+	for i, v := range v {
+		lv, err := rfl.PushTo(s, rfl, v)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		table.RawSetInt(i+1, lv[0])
+	}
+	s.L.Push(table)
+	return 1
+}
+
+// PullArrayOf pulls an rtypes.Array from n, ensuring that each element is
+// reflected according to t.
+func (s State) PullArrayOf(n int, t string) rtypes.Array {
+	rfl := s.Reflector(t)
+	lv := s.L.CheckAny(n)
+	if s.Cycle == nil {
+		s.Cycle = &Cycle{}
+		defer func() { s.Cycle = nil }()
+	}
+	table, ok := lv.(*lua.LTable)
+	if !ok {
+		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
+		return nil
+	}
+	if s.Cycle.Mark(table) {
+		s.L.ArgError(n, "tables cannot be cyclic")
+		return nil
+	}
+	l := table.Len()
+	array := make(rtypes.Array, l)
+	for i := 1; i <= l; i++ {
+		var err error
+		if array[i-1], err = rfl.PullFrom(s, rfl, table.RawGetInt(i)); err != nil {
+			s.L.ArgError(n, err.Error())
+			return nil
+		}
+	}
+	return array
+}
+
+func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
+	if s.Cycle == nil {
+		s.Cycle = &Cycle{}
+		defer func() { s.Cycle = nil }()
+	}
+	if s.Cycle.Mark(&v) {
+		return s.RaiseError("dictionaries cannot be cyclic")
+	}
+	rfl := s.Reflector(t)
+	table := s.L.CreateTable(0, len(v))
+	for k, v := range v {
+		lv, err := rfl.PushTo(s, rfl, v)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		table.RawSetString(k, lv[0])
+	}
+	s.L.Push(table)
+	return 1
+}
+
+func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
+	rfl := s.Reflector(t)
+	lv := s.L.CheckAny(n)
+	if s.Cycle == nil {
+		s.Cycle = &Cycle{}
+		defer func() { s.Cycle = nil }()
+	}
+	table, ok := lv.(*lua.LTable)
+	if !ok {
+		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
+		return nil
+	}
+	if s.Cycle.Mark(table) {
+		s.L.ArgError(n, "tables cannot be cyclic")
+		return nil
+	}
+	dict := make(rtypes.Dictionary)
+	var err error
+	table.ForEach(func(k, lv lua.LValue) {
+		if err != nil {
+			return
+		}
+		var v types.Value
+		if v, err = rfl.PullFrom(s, rfl, lv); err == nil {
+			dict[k.String()] = v
+		}
+	})
+	if err != nil {
+		s.L.ArgError(n, err.Error())
+		return nil
+	}
+	return dict
 }
 
 // RaiseError is a shortcut for LState.RaiseError that returns 0.
