@@ -2,7 +2,6 @@ package library
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -319,7 +318,6 @@ func rbxmkCookiesFrom(s rbxmk.State) int {
 	switch strings.ToLower(location) {
 	case "studio":
 		if cookies := cookiesFromStudio(); len(cookies) > 0 {
-			fmt.Println("CHECK", cookies[0].Value)
 			return s.Push(cookies)
 		}
 		return s.Push(rtypes.Nil)
