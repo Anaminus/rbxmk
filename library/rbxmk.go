@@ -15,7 +15,6 @@ import (
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
-	reg "golang.org/x/sys/windows/registry"
 )
 
 func init() { register(RBXMK, 0) }
@@ -323,27 +322,6 @@ func rbxmkCookiesFrom(s rbxmk.State) int {
 	default:
 		return s.RaiseError("unknown location %q", location)
 	}
-}
-
-func cookiesFromStudio() rtypes.Cookies {
-	const keyPath = `Software\Roblox\RobloxStudioBrowser\roblox.com`
-	key, err := reg.OpenKey(reg.CURRENT_USER, keyPath, reg.QUERY_VALUE)
-	if err != nil {
-		return nil
-	}
-	defer key.Close()
-	v, _, err := key.GetStringValue(".ROBLOSECURITY")
-	if err != nil {
-		return nil
-	}
-	cookie := &http.Cookie{
-		Name:   ".ROBLOSECURITY",
-		Domain: "roblox.com",
-	}
-	if !parseRegistryCookie(cookie, v) {
-		return nil
-	}
-	return rtypes.Cookies{rtypes.Cookie{Cookie: cookie}}
 }
 
 func parseRegistryCookie(cookie *http.Cookie, v string) bool {

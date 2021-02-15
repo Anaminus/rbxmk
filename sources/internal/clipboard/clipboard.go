@@ -16,8 +16,8 @@ func Clear() error {
 // media types.
 //
 // Each argument is a media type (e.g. "text/plain").
-func Read(formats ...string) (b []byte, err error) {
-	return nil, notImplemented
+func Read(formats ...string) (f int, b []byte, err error) {
+	return 0, nil, notImplemented
 }
 
 // Write sets data to the clipboard. If multiple formats are supported, then
