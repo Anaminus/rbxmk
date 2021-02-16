@@ -475,15 +475,13 @@ func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 		return nil
 	}
 	dict := make(rtypes.Dictionary)
-	var err error
-	table.ForEach(func(k, lv lua.LValue) {
+	err := table.ForEach(func(k, lv lua.LValue) error {
+		v, err := rfl.PullFrom(s, lv)
 		if err != nil {
-			return
+			return err
 		}
-		var v types.Value
-		if v, err = rfl.PullFrom(s, lv); err == nil {
-			dict[k.String()] = v
-		}
+		dict[k.String()] = v
+		return nil
 	})
 	if err != nil {
 		s.L.ArgError(n, err.Error())

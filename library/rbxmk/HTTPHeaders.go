@@ -34,20 +34,17 @@ func HTTPHeaders() Reflector {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
 			headers := make(rtypes.HTTPHeaders)
-			table.ForEach(func(k, lv lua.LValue) {
-				if err != nil {
-					return
-				}
+			err = table.ForEach(func(k, lv lua.LValue) error {
 				name, ok := k.(lua.LString)
 				if !ok {
-					return
+					return nil
 				}
-				values, e := pullStringArray(lv)
-				if e != nil {
-					err = fmt.Errorf("header %q: %w", string(name), e)
-					return
+				values, err := pullStringArray(lv)
+				if err != nil {
+					return fmt.Errorf("header %q: %w", string(name), err)
 				}
 				headers[string(name)] = values
+				return nil
 			})
 			if err != nil {
 				return nil, err

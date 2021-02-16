@@ -145,12 +145,18 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 		return nil
 	}
 	if name == "" {
-		src.ForEach(func(k, v lua.LValue) { dst.RawSet(k, v) })
+		src.ForEach(func(k, v lua.LValue) error {
+			dst.RawSet(k, v)
+			return nil
+		})
 		return nil
 	}
 	switch u := dst.RawGetString(name).(type) {
 	case *lua.LTable:
-		src.ForEach(func(k, v lua.LValue) { u.RawSet(k, v) })
+		src.ForEach(func(k, v lua.LValue) error {
+			u.RawSet(k, v)
+			return nil
+		})
 	case *lua.LNilType:
 		dst.RawSetString(name, src)
 	default:

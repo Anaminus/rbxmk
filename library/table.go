@@ -24,8 +24,9 @@ var Table = rbxmk.Library{
 func tableClear(s rbxmk.State) int {
 	t := s.L.CheckTable(1)
 	// TODO: Implement native clear function.
-	t.ForEach(func(k, v lua.LValue) {
+	t.ForEach(func(k, v lua.LValue) error {
 		t.RawSet(k, lua.LNil)
+		return nil
 	})
 	return 0
 }

@@ -48,14 +48,13 @@ func Dictionary() Reflector {
 			}
 			variantRfl := s.Reflector("Variant")
 			dict := make(rtypes.Dictionary)
-			table.ForEach(func(k, lv lua.LValue) {
+			err = table.ForEach(func(k, lv lua.LValue) error {
+				v, err := variantRfl.PullFrom(s, lv)
 				if err != nil {
-					return
+					return err
 				}
-				var v types.Value
-				if v, err = variantRfl.PullFrom(s, lv); err == nil {
-					dict[k.String()] = v
-				}
+				dict[k.String()] = v
+				return nil
 			})
 			if err != nil {
 				return nil, err
