@@ -48,6 +48,8 @@ Document                     | Description
 ## Command line
 [command-line]: #user-content-command-line
 
+rbxmk is a single executable, to be run within a [command-line interface][cli].
+
 ```bash
 rbxmk COMMAND [ OPTIONS... ]
 ```
@@ -60,6 +62,8 @@ Subcommand                         | Description
 [`rbxmk run`][run-command]         | Executes a Lua script.
 [`rbxmk help`][help-command]       | Displays help for rbxmk.
 [`rbxmk version`][version-command] | Displays the version of rbxmk.
+
+[cli]: https://en.wikipedia.org/wiki/Command-line_interface
 
 ### Run command
 [run-command]: #user-content-run-command
