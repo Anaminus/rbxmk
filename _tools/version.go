@@ -24,17 +24,20 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
-const location = `rbxmk/version.go`
+const versiongo = `rbxmk/version.go`
+const readme = `README.md`
 
-const content = `package main
+const versiongoContent = `package main
 
 const Version = "%d.%d.%d"
 `
@@ -59,6 +62,11 @@ func (v Version) IncMinor() Version {
 
 func (v Version) IncPatch() Version {
 	return Version{v.Major, v.Minor, v.Patch + 1}
+}
+
+func Fatalf(format string, v ...interface{}) {
+	fmt.Fprintf(os.Stderr, format, v...)
+	os.Exit(1)
 }
 
 func IfFatalf(err error, format string, v ...interface{}) {
@@ -93,25 +101,41 @@ func main() {
 	}
 	fmt.Printf("%s => %s\n", prev, next)
 	writeVersion(next)
+	updateREADME(next)
 	commit(next)
 }
 
 func readVersion() (v Version) {
-	b, err := ioutil.ReadFile(location)
+	b, err := ioutil.ReadFile(versiongo)
 	IfFatalf(err, "read version.go")
-	_, err = fmt.Sscanf(string(b), content, &v.Major, &v.Minor, &v.Patch)
+	_, err = fmt.Sscanf(string(b), versiongoContent, &v.Major, &v.Minor, &v.Patch)
 	IfFatalf(err, "parse version.go")
 	return v
 }
 
 func writeVersion(v Version) {
-	b := []byte(fmt.Sprintf(content, v.Major, v.Minor, v.Patch))
-	err := ioutil.WriteFile(location, b, 0666)
+	b := []byte(fmt.Sprintf(versiongoContent, v.Major, v.Minor, v.Patch))
+	err := ioutil.WriteFile(versiongo, b, 0666)
 	IfFatalf(err, "write version.go")
 }
 
+var versionTag = regexp.MustCompile(`<version>(.+)</version>`)
+
+func updateREADME(v Version) {
+	content, err := os.ReadFile(readme)
+	IfFatalf(err, "read README")
+
+	matches := versionTag.FindSubmatch(content)
+	if len(matches) == 0 {
+		Fatalf("failed to find version in README")
+	}
+	content = bytes.ReplaceAll(content, matches[1], []byte("v"+v.String()))
+
+	IfFatalf(os.WriteFile(readme, content, 0666), "write README")
+}
+
 func commit(v Version) {
-	err := exec.Command("git", "add", "rbxmk/version.go").Run()
+	err := exec.Command("git", "add", versiongo, readme).Run()
 	IfFatalf(err, "git add")
 	err = exec.Command("git", "commit", "-m", fmt.Sprintf("Release version v%s.", v)).Run()
 	IfFatalf(err, "git commit")
