@@ -13,4 +13,6 @@ T.Pass(function() return fs.stat(os.expand("$wd/foo/bar/baz")) == nil end, "none
 T.Fail(function() return fs.stat("..") == nil end, "wd parent")
 T.Fail(function() return fs.stat("../..") == nil end, "wd ancestor")
 T.Fail(function() return fs.stat("../../foo/bar") == nil end, "out then elsewhere")
-T.Pass(function() return fs.stat("../../rbxmk/rbxmk/foo") == nil end, "out then back in")
+-- T.Pass(function() return fs.stat("../../rbxmk/rbxmk/foo") == nil end, "out then back in")
+--TODO: run tests in a deeper working directory, so that the name of the
+--directory is known.
