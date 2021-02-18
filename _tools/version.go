@@ -34,12 +34,32 @@ import (
 	"strings"
 )
 
-const versiongo = `rbxmk/version.go`
-const readme = `README.md`
+// Files to be updated.
+const (
+	versiongo = `rbxmk/version.go`
+	readme    = `README.md`
+	changelog = `CHANGELOG.md`
+)
 
+// Content of version.go file.
 const versiongoContent = `package main
 
 const Version = "%d.%d.%d"
+`
+
+// Section in CHANGELOG indicating unreleased version.
+const latest = `imperative`
+
+// Template that produces a new CHANGELOG section. First argument is the
+// previous version, second argument is the next version.
+const changelogTemplate = `
+## %[2]s
+See a [comparison with the previous version][cmp-%[2]s] for a thorough list of changes.
+
+The [Documentation page][doc-%[2]s] provides a complete reference for this version of rbxmk.
+
+[doc-%[2]s]: https://github.com/Anaminus/rbxmk/blob/%[2]s/doc/README.md#user-content-rbxmk-reference
+[cmp-%[2]s]: https://github.com/Anaminus/rbxmk/compare/%[1]s...%[2]s
 `
 
 type Version struct {
@@ -101,6 +121,7 @@ func main() {
 	}
 	fmt.Printf("%s => %s\n", prev, next)
 	writeVersion(next)
+	updateCHANGELOG(prev, next)
 	updateREADME(next)
 	commit(next)
 }
@@ -134,8 +155,34 @@ func updateREADME(v Version) {
 	IfFatalf(os.WriteFile(readme, content, 0666), "write README")
 }
 
+func updateCHANGELOG(prev, next Version) {
+	content, err := os.ReadFile(changelog)
+	IfFatalf(err, "read CHANGELOG")
+
+	match := regexp.MustCompile(fmt.Sprintf(`\n## %s\n(?s:.)*?\n## `, regexp.QuoteMeta(latest)))
+	loc := match.FindIndex(content)
+	if loc == nil {
+		Fatalf("failed to find section %q in CHANGELOG", latest)
+	}
+	prefix := content[:loc[0]]
+	section := content[loc[0]:loc[1]]
+	suffix := content[loc[1]:]
+
+	ver := "v" + next.String()
+	section = bytes.ReplaceAll(section, []byte(latest), []byte(ver))
+
+	var buf bytes.Buffer
+	buf.Write(prefix)
+	buf.WriteString(fmt.Sprintf(changelogTemplate, ver, latest))
+	buf.Write(section)
+	buf.Write(suffix)
+
+	err = ioutil.WriteFile(changelog, buf.Bytes(), 0666)
+	IfFatalf(err, "write CHANGELOG")
+}
+
 func commit(v Version) {
-	err := exec.Command("git", "add", versiongo, readme).Run()
+	err := exec.Command("git", "add", versiongo, readme, changelog).Run()
 	IfFatalf(err, "git add")
 	err = exec.Command("git", "commit", "-m", fmt.Sprintf("Release version v%s.", v)).Run()
 	IfFatalf(err, "git commit")

@@ -106,12 +106,21 @@ jobs:
       - name: Check files
         run: find .
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: repo
+
+      - name: Extract change log
+        id: changelog
+        run: cat repo/CHANGELOG.md | grep -Pzo '(?<=\n## ${{env.VERSION}}\n)(?s:.)*?(?=\n## )' | tr -d '\000' > RELEASE_BODY.md
+
       - name: Create release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           name: ${{env.PROJECT}} ${{env.VERSION}}
-          body: TODO
+          body_path: RELEASE_BODY.md
           draft: true
           files: files/*.zip
