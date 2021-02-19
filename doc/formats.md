@@ -39,6 +39,12 @@ format from a file extension, format names are greedy; if a file extension is
 For convenience, in places where a format name is received, the name may have an
 optional leading `.` character.
 
+APIs that require a format receive a [FormatSelector][FormatSelector]. A
+selector is usually a string, which specifies the name of the format to use. A
+selector can also be a table, where the "Format" field specifies the name, and a
+number of additional options can be specified. If a format has any such options,
+this document will describe them.
+
 A format can decode into a number of certain types, and encode a number of
 certain types. A format may also have no definition for either decoding or
 encoding at all.
@@ -372,6 +378,7 @@ This format has no options.
 
 [DataModel]: types.md#user-content-datamodel
 [DescAction]: types.md#user-content-descaction
+[FormatSelector]: types.md#user-content-formatselector
 [Instance.ClassName]: types.md#user-content-instanceclassname
 [Instance]: types.md#user-content-instance
 [Intlike]: types.md#user-content-intlike
