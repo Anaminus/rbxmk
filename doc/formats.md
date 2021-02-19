@@ -112,7 +112,7 @@ LocalizationTable instance, where the data is assigned to the Contents property.
 
 Direction | Type                 | Description
 ----------|----------------------|------------
-Decode    | [Instance][Instance] | A LocalizationTable a Contents property.
+Decode    | [Instance][Instance] | A LocalizationTable with a Contents property.
 Encode    | Stringable           | Any string-like value.
 
 Decoded data is a string in JSON format with the following structure:
