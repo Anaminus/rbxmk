@@ -102,6 +102,8 @@ When encoding, each field must be string-like, but cannot be an Instance.
 When decoding, each record must have the same number of fields. When encoding,
 records do not need to have the same number of fields.
 
+This format has no options.
+
 ## `l10n.csv`
 [l10n.csv]: #user-content-l10ncsv
 
@@ -136,6 +138,8 @@ of the DevHub. rbxmk applies these same constraints when encoding and decoding.
 To avoid data loss, they are applied more strictly. Rather than discarding data,
 any conflict that arises will throw an error that describes the conflict in
 detail.
+
+This format has no options.
 
 ## `json`
 [json]: #user-content-json
