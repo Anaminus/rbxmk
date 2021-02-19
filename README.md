@@ -1,5 +1,8 @@
-# rbxmk
-`rbxmk` is a command-line tool for manipulating Roblox files.
+<a id="user-content-rbxmk" href="#user-content-rbxmk">
+	<img src="assets/logo-flat-name.png" alt="rbxmk logo"/>
+</a>
+
+**rbxmk** is a command-line tool for manipulating Roblox files.
 
 rbxmk is useful for development workflows that involve many separate files. If
 your project is organized into a number of files, such as Lua files for
