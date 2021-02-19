@@ -165,7 +165,7 @@ Instances in Roblox and rbxmk have **attributes**, which are similar to custom
 properties.
 
 Roblox serializes all attributes into a single property in a binary format. In
-rbxmk, this format is implemented by the [`rbxattr`
+rbxmk, this format is implemented by the [rbxattr
 format](formats.md#user-content-rbxattr).
 
 rbxmk provides the same API as Roblox for manipulating attributes:
@@ -207,18 +207,18 @@ The primary descriptor type is the [**RootDesc**][RootDesc]. This contains a
 complete description of the classes and enums of an entire API.
 
 An [Instance][Instance] can have a RootDesc assigned to it. This state is
-inherited by any descendant instances. See [`sym.Desc`][Instance.sym.Desc] for
+inherited by any descendant instances. See [sym.Desc][Instance.sym.Desc] for
 more information.
 
-Additionally, the [`rbxmk.globalDesc`][rbxmk.globalDesc] field may be used to
-apply a RootDesc globally. When `globalDesc` is set, any instance that wouldn't
+Additionally, the [rbxmk.globalDesc][rbxmk.globalDesc] field may be used to
+apply a RootDesc globally. When globalDesc is set, any instance that wouldn't
 otherwise inherit a descriptor will use this global descriptor.
 
 When an instance has a descriptor, several behaviors are enforced:
 
 - When the global descriptor is set,
-  [`Instance.new`](types.md#user-content-instancenew) errors if the given class
-  name does not exist (`Instance.new` can also receive a descriptor).
+  [Instance.new](types.md#user-content-instancenew) errors if the given class
+  name does not exist (Instance.new can also receive a descriptor).
 - A property will throw an error if it does not exist for the class.
 - Getting an uninitialized property will throw an error.
 - Getting a property that currently has an incorrect type will throw an error.
@@ -229,7 +229,7 @@ When an instance has a descriptor, several behaviors are enforced:
   into a token. The value can be an enum item of the expected enum, or a number
   or string of the correct value.
 - The class of an instance created from
-  [`DataModel.GetService`](types.md#user-content-datamodelgetservice) must have
+  [DataModel.GetService](types.md#user-content-datamodelgetservice) must have
   the "Service" tag.
 
 ## Descriptor types
@@ -237,7 +237,7 @@ When an instance has a descriptor, several behaviors are enforced:
 
 Descriptors are first-class values like any other, and can be modified on the
 fly. There are a number of descriptor types, each with their own fields. See
-[`rbxmk.newDesc`](libraries.md#user-content-rbxmknewdesc) for creating
+[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) for creating
 descriptors.
 
 Type                           | Description
@@ -257,12 +257,11 @@ Type                           | Description
 [diffing-and-patching]: #user-content-diffing-and-patching
 
 Descriptors can be compared and patched with the
-[`rbxmk.diffDesc`](libraries.md#user-content-rbxmkdiffdesc) and
-[`rbxmk.patchDesc`](libraries.md#user-content-rbxmkpatchdesc) functions.
-`diffDesc` returns a list of
-[**DescActions**](types.md#user-content-descaction), which describe how to
-transform the first descriptor into the second. `patchDesc` can used to apply
-this transformation.
+[rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) and
+[rbxmk.patchDesc](libraries.md#user-content-rbxmkpatchdesc) functions. diffDesc
+returns a list of [**DescActions**](types.md#user-content-descaction), which
+describe how to transform the first descriptor into the second. patchDesc can
+used to apply this transformation.
 
 ```lua
 -- List differences.
@@ -333,8 +332,8 @@ applied to any instance that would otherwise inherit nothing.
 
 The properties of instances in Roblox have a number of different types. Many of
 these types can be expressed in Lua through constructors. Examples of such are
-`CFrame`, `Vector3`, `UDim2`, and so on. These types correspond to internal data
-types within the Roblox engine. The Lua representation of, say, a `CFrame`, is a
+CFrame, Vector3, UDim2, and so on. These types correspond to internal data types
+within the Roblox engine. The Lua representation of, say, a CFrame, is a
 userdata with accessible fields.
 
 Some Roblox types are represented with a simple Lua primitive, such as a number
@@ -355,7 +354,7 @@ is a userdata representation of an otherwise ambiguous type. This userdata
 carries type metadata along with a given value, allowing the value to be mapped
 to the correct Roblox type when it is set as a property.
 
-The [`types` library](libraries.md#user-content-types) contains a constructor
+The [types library](libraries.md#user-content-types) contains a constructor
 function for each exprim type.
 
 	-- Problem
@@ -372,7 +371,7 @@ The default Roblox type that maps to Lua strings is `string`. As such, `string`
 has no exprim. Likewise, the default type that maps to Lua numbers is `double`,
 so it also has no exprim.
 
-An exprim userdata has no fields or operators other than the `Value` field,
+An exprim userdata has no fields or operators other than the "Value" field,
 which returns the underlying primitive value:
 
 	v.Value = types.int64(v.Value.Value + 1)

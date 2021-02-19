@@ -52,23 +52,23 @@ environment provided by rbxmk is packaged as a set of libraries. Some libraries
 are loaded under a specific name, while others are loaded directly into the
 global environment:
 
-Library                  | Description
--------------------------|------------
-[(base)][base]           | The Lua 5.1 standard library, abridged.
-[rbxmk][rbxmk]           | An interface to the rbxmk engine, and the rbxmk environment.
-[(roblox)][roblox]       | An environment emulating the Roblox Lua API.
-[math][math]             | Extensions to the standard math library.
-[os][os]                 | Extensions to the standard os library.
-[string][string]         | Extensions to the standard string library.
-[table][table]           | Extensions to the standard table library.
-[sym][sym]               | Symbols for accessing instance metadata.
-[types][types]           | Fallbacks for constructing certain types.
+Library            | Description
+-------------------|------------
+[(base)][base]     | The Lua 5.1 standard library, abridged.
+[rbxmk][rbxmk]     | An interface to the rbxmk engine, and the rbxmk environment.
+[(roblox)][roblox] | An environment emulating the Roblox Lua API.
+[math][math]       | Extensions to the standard math library.
+[os][os]           | Extensions to the standard os library.
+[string][string]   | Extensions to the standard string library.
+[table][table]     | Extensions to the standard table library.
+[sym][sym]         | Symbols for accessing instance metadata.
+[types][types]     | Fallbacks for constructing certain types.
 
 Additionally, each source provides a library that enables access to the source.
 See the [Sources document](sources.md) for more information about each source
 library.
 
-The `_RBXMK_VERSION` global variable is defined as a string containing the
+The **\_RBXMK_VERSION** global variable is defined as a string containing the
 current version of rbxmk, formatted according to [semantic
 versioning](https://semver.org/).
 
@@ -79,52 +79,52 @@ The **base** library is loaded directly into the global environment. It contains
 the following items from the [Lua 5.1 standard
 library](https://www.lua.org/manual/5.1/manual.html#5):
 
-- [`_G`](https://www.lua.org/manual/5.1/manual.html#pdf-_G)
-- [`_VERSION`](https://www.lua.org/manual/5.1/manual.html#pdf-_VERSION)
-- [`assert`](https://www.lua.org/manual/5.1/manual.html#pdf-assert)
-- [`error`](https://www.lua.org/manual/5.1/manual.html#pdf-error)
-- [`getmetatable`](https://www.lua.org/manual/5.1/manual.html#pdf-getmetatable)
-- [`ipairs`](https://www.lua.org/manual/5.1/manual.html#pdf-ipairs)
-- [`next`](https://www.lua.org/manual/5.1/manual.html#pdf-next)
-- [`pairs`](https://www.lua.org/manual/5.1/manual.html#pdf-pairs)
-- [`pcall`](https://www.lua.org/manual/5.1/manual.html#pdf-pcall)
-- [`print`](https://www.lua.org/manual/5.1/manual.html#pdf-print)
-- [`select`](https://www.lua.org/manual/5.1/manual.html#pdf-select)
-- [`setmetatable`](https://www.lua.org/manual/5.1/manual.html#pdf-setmetatable)
-- [`tonumber`](https://www.lua.org/manual/5.1/manual.html#pdf-tonumber)
-- [`tostring`](https://www.lua.org/manual/5.1/manual.html#pdf-tostring)
-- [`type`](https://www.lua.org/manual/5.1/manual.html#pdf-type)
-- [`unpack`](https://www.lua.org/manual/5.1/manual.html#pdf-unpack)
-- [`xpcall`](https://www.lua.org/manual/5.1/manual.html#pdf-xpcall)
-- [`math` library](https://www.lua.org/manual/5.1/manual.html#5.6)
-- [`string` library](https://www.lua.org/manual/5.1/manual.html#5.4), except `string.dump`
-- [`table` library](https://www.lua.org/manual/5.1/manual.html#5.5)
-- [`os.clock`](https://www.lua.org/manual/5.1/manual.html#pdf-os.clock)
-- [`os.date`](https://www.lua.org/manual/5.1/manual.html#pdf-os.date)
-- [`os.difftime`](https://www.lua.org/manual/5.1/manual.html#pdf-os.difftime)
-- [`os.time`](https://www.lua.org/manual/5.1/manual.html#pdf-os.time)
+- [\_G](https://www.lua.org/manual/5.1/manual.html#pdf-_G)
+- [\_VERSION](https://www.lua.org/manual/5.1/manual.html#pdf-_VERSION)
+- [assert](https://www.lua.org/manual/5.1/manual.html#pdf-assert)
+- [error](https://www.lua.org/manual/5.1/manual.html#pdf-error)
+- [getmetatable](https://www.lua.org/manual/5.1/manual.html#pdf-getmetatable)
+- [ipairs](https://www.lua.org/manual/5.1/manual.html#pdf-ipairs)
+- [next](https://www.lua.org/manual/5.1/manual.html#pdf-next)
+- [pairs](https://www.lua.org/manual/5.1/manual.html#pdf-pairs)
+- [pcall](https://www.lua.org/manual/5.1/manual.html#pdf-pcall)
+- [print](https://www.lua.org/manual/5.1/manual.html#pdf-print)
+- [select](https://www.lua.org/manual/5.1/manual.html#pdf-select)
+- [setmetatable](https://www.lua.org/manual/5.1/manual.html#pdf-setmetatable)
+- [tonumber](https://www.lua.org/manual/5.1/manual.html#pdf-tonumber)
+- [tostring](https://www.lua.org/manual/5.1/manual.html#pdf-tostring)
+- [type](https://www.lua.org/manual/5.1/manual.html#pdf-type)
+- [unpack](https://www.lua.org/manual/5.1/manual.html#pdf-unpack)
+- [xpcall](https://www.lua.org/manual/5.1/manual.html#pdf-xpcall)
+- [math library](https://www.lua.org/manual/5.1/manual.html#5.6)
+- [string library](https://www.lua.org/manual/5.1/manual.html#5.4), except string.dump
+- [table library](https://www.lua.org/manual/5.1/manual.html#5.5)
+- [os.clock](https://www.lua.org/manual/5.1/manual.html#pdf-os.clock)
+- [os.date](https://www.lua.org/manual/5.1/manual.html#pdf-os.date)
+- [os.difftime](https://www.lua.org/manual/5.1/manual.html#pdf-os.difftime)
+- [os.time](https://www.lua.org/manual/5.1/manual.html#pdf-os.time)
 
 ## rbxmk
 [rbxmk]: #user-content-rbxmk
 
 The **rbxmk** library contains functions related to the rbxmk engine.
 
-Name                                       | Kind     | Description
--------------------------------------------|----------|------------
-[cookiesFrom][rbxmk.cookiesFrom]           | function | Retrieve cookies from a known location.
-[decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
-[diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
-[encodeFormat][rbxmk.encodeFormat]         | function | Serialize data into bytes.
-[formatCanDecode][rbxmk.formatCanDecode]   | function | Check whether a format decodes into a type.
-[globalAttrConfig][rbxmk.globalAttrConfig] | field    | Get or set the global AttrConfig.
-[globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
-[loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
-[loadString][rbxmk.loadString]             | function | Load a string as a function.
-[newCookie][rbxmk.newCookie]               | function | Create a new cookie.
-[newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
-[patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
-[runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
-[runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
+Name                                             | Kind     | Description
+-------------------------------------------------|----------|------------
+[rbxmk.cookiesFrom][rbxmk.cookiesFrom]           | function | Retrieve cookies from a known location.
+[rbxmk.decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
+[rbxmk.diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
+[rbxmk.encodeFormat][rbxmk.encodeFormat]         | function | Serialize data into bytes.
+[rbxmk.formatCanDecode][rbxmk.formatCanDecode]   | function | Check whether a format decodes into a type.
+[rbxmk.globalAttrConfig][rbxmk.globalAttrConfig] | field    | Get or set the global AttrConfig.
+[rbxmk.globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
+[rbxmk.loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
+[rbxmk.loadString][rbxmk.loadString]             | function | Load a string as a function.
+[rbxmk.newCookie][rbxmk.newCookie]               | function | Create a new cookie.
+[rbxmk.newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
+[rbxmk.patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
+[rbxmk.runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
+[rbxmk.runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
 
 ### rbxmk.cookiesFrom
 [rbxmk.cookiesFrom]: #user-content-rbxmkcookiesfrom
@@ -303,8 +303,7 @@ The Roblox library contains an environment similar to the Roblox Lua API. It is
 included directly into the global environment.
 
 The **typeof** function is included to get the type of a userdata. In addition
-to the usual Roblox types, `typeof` will work for various types specific to
-rbxmk.
+to the usual Roblox types, typeof will work for various types specific to rbxmk.
 
 Included are constructors for the following types:
 
@@ -335,7 +334,7 @@ Each of these types has an implementation that matches that of Roblox. The
 [DevHub](https://developer.roblox.com/en-us/api-reference/data-types) has more
 information about the API of such types.
 
-Additionally, the [`DataModel.new`][DataModel] constructor creates a special
+Additionally, the [DataModel.new][DataModel] constructor creates a special
 Instance of the DataModel class, to be used to contain instances in a game tree.
 
 ## math
@@ -345,12 +344,12 @@ The **math** library is an extension to the standard library that includes the
 same additions to [Roblox's math
 library](https://developer.roblox.com/en-us/api-reference/lua-docs/math):
 
-Name                | Description
---------------------|------------
-[clamp][math.clamp] | Returns a number clamped between a minimum and maximum.
-[log][math.log]     | Includes optional base argument.
-[round][math.round] | Rounds a number to the nearest integer.
-[sign][math.sign]   | Returns the sign of a number.
+Name                     | Description
+-------------------------|------------
+[math.clamp][math.clamp] | Returns a number clamped between a minimum and maximum.
+[math.log][math.log]     | Includes optional base argument.
+[math.round][math.round] | Rounds a number to the nearest integer.
+[math.sign][math.sign]   | Returns the sign of a number.
 
 ### math.clamp
 [math.clamp]: #user-content-mathclamp
@@ -386,12 +385,12 @@ The **sign** function returns the sign of *x*: `1` if *x* is greater than zero,
 The **os** library is an extension to the standard library. The following
 additional functions are included:
 
-Name                | Description
---------------------|------------
-[expand][os.expand] | Expands predefined file path variables.
-[getenv][os.getenv] | Gets an environment variable.
-[join][os.join]     | Joins a number of file paths together.
-[split][os.split]   | Splits a file path into its components.
+Name                   | Description
+-----------------------|------------
+[os.expand][os.expand] | Expands predefined file path variables.
+[os.getenv][os.getenv] | Gets an environment variable.
+[os.join][os.join]     | Joins a number of file paths together.
+[os.split][os.split]   | Splits a file path into its components.
 
 ### os.expand
 [os.expand]: #user-content-osexpand
@@ -472,14 +471,14 @@ The **table** library is an extension to the standard library that includes the
 same additions to [Roblox's table
 library](https://developer.roblox.com/en-us/api-reference/lua-docs/table):
 
-Name                   | Description
------------------------|------------
-[clear][table.clear]   | Removes all entries from a table.
-[create][table.create] | Creates a new table with a preallocated capacity.
-[find][table.find]     | Find the index of a value in a table.
-[move][table.move]     | Copies the entries in a table.
-[pack][table.pack]     | Packs arguments into a table.
-[unpack][table.unpack] | Unpacks a table into arguments.
+Name                         | Description
+-----------------------------|------------
+[table.clear][table.clear]   | Removes all entries from a table.
+[table.create][table.create] | Creates a new table with a preallocated capacity.
+[table.find][table.find]     | Find the index of a value in a table.
+[table.move][table.move]     | Copies the entries in a table.
+[table.pack][table.pack]     | Packs arguments into a table.
+[table.unpack][table.unpack] | Unpacks a table into arguments.
 
 ### table.clear
 [table.clear]: #user-content-tableclear
@@ -549,15 +548,15 @@ print(instance[sym.IsService]) --> true
 
 The following symbols are defined:
 
-Symbol                                            | Description
---------------------------------------------------|------------
-[`sym.AttrConfig`][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
-[`sym.Desc`][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
-[`sym.IsService`][Instance.sym.IsService]         | Determines whether an instance is a service.
-[`sym.Metadata`][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
-[`sym.RawAttrConfig`][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
-[`sym.RawDesc`][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
-[`sym.Reference`][Instance.sym.Reference]         | Determines the value used to identify the instance.
+Symbol                                          | Description
+------------------------------------------------|------------
+[sym.AttrConfig][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
+[sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
+[sym.IsService][Instance.sym.IsService]         | Determines whether an instance is a service.
+[sym.Metadata][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
+[sym.RawAttrConfig][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
+[sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
+[sym.Reference][Instance.sym.Reference]         | Determines the value used to identify the instance.
 
 ## types
 [types]: #user-content-types
@@ -566,17 +565,17 @@ The **types** library contains functions for constructing explicit primitives.
 The name of a function corresponds directly to the type. See [Explicit
 primitives](README.md#user-content-explicit-primitives) for more information.
 
-Type              | Primitive
-------------------|----------
-`BinaryString`    | string
-`Color3uint8`     | Color3
-`Content`         | string
-`float`           | number
-`int64`           | number
-`int`             | number
-`ProtectedString` | string
-`SharedString`    | string
-`token`           | number
+Type            | Primitive
+----------------|----------
+BinaryString    | string
+Color3uint8     | Color3
+Content         | string
+float           | number
+int64           | number
+int             | number
+ProtectedString | string
+SharedString    | string
+token           | number
 
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc

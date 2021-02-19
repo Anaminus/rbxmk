@@ -29,8 +29,8 @@ This document contains a reference to the formats available to rbxmk scripts.
 
 A **format** is capable of encoding a value to raw bytes, or decoding raw bytes
 into a value. A format can be accessed at a low level through the
-[`rbxmk.encodeFormat`](libraries.md#user-content-rbxmkencodeformat) and
-[`rbxmk.decodeFormat`](libraries.md#user-content-rbxmkdecodeformat) functions.
+[rbxmk.encodeFormat](libraries.md#user-content-rbxmkencodeformat) and
+[rbxmk.decodeFormat](libraries.md#user-content-rbxmkdecodeformat) functions.
 
 The name of a format corresponds to the extension of a file name. For example,
 the `lua` format corresponds to the `.lua` file extension. When determining a
@@ -66,7 +66,7 @@ A format that can encode a **Numberable** type accepts any type that can be
 converted to a floating-point number. An **Intable** is similar, converting to
 an integer instead.
 
-## `bin`
+## bin
 [bin]: #user-content-bin
 
 The **bin** format encodes string-like values with the assurance that the bytes
@@ -79,7 +79,7 @@ Encode    | Stringable   | Any string-like value.
 
 This format has no options.
 
-## `csv`
+## csv
 [csv]: #user-content-csv
 
 The **csv** format decodes comma-separated values into a two-dimensional array.
@@ -110,7 +110,7 @@ records do not need to have the same number of fields.
 
 This format has no options.
 
-## `l10n.csv`
+## l10n.csv
 [l10n.csv]: #user-content-l10ncsv
 
 The **l10n.csv** format decodes comma-separated localization data into a
@@ -147,7 +147,7 @@ detail.
 
 This format has no options.
 
-## `json`
+## json
 [json]: #user-content-json
 
 The **json** format is defined for encoding general data in JSON format.
@@ -175,7 +175,7 @@ Field  | Type   | Default | Description
 -------|--------|---------|------------
 Indent | string | `"\t"`  | Determines the indentation of encoded content. If an empty string, then the content is minified.
 
-## `desc.json`
+## desc.json
 [desc.json]: #user-content-descjson
 
 The **desc.json** format encodes a root descriptor file, more commonly known as
@@ -188,7 +188,7 @@ Encode    | [RootDesc][RootDesc] | A root descriptor.
 
 This format has no options.
 
-## `desc-patch.json`
+## desc-patch.json
 [desc-patch.json]: #user-content-desc-patchjson
 
 The **desc-patch.json** format encodes actions that transform descriptors, in
@@ -201,10 +201,10 @@ Encode    | DescActions | A list of [DescAction][DescAction] values.
 
 This format has no options.
 
-## `lua`
+## lua
 [lua]: #user-content-lua
 
-The **lua** format is an alias for [`modulescript.lua`][modulescript.lua].
+The **lua** format is an alias for [modulescript.lua][modulescript.lua].
 
 Direction | Type                 | Description
 ----------|----------------------|------------
@@ -213,10 +213,10 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `client.lua`
+## client.lua
 [client.lua]: #user-content-clientlua
 
-The **client.lua** format is an alias for [`localscript.lua`][localscript.lua].
+The **client.lua** format is an alias for [localscript.lua][localscript.lua].
 
 Direction | Type                 | Description
 ----------|----------------------|------------
@@ -225,7 +225,7 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `localscript.lua`
+## localscript.lua
 [localscript.lua]: #user-content-localscriptlua
 
 The **localscript.lua** format is a shortcut for decoding Lua code into a
@@ -238,7 +238,7 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `modulescript.lua`
+## modulescript.lua
 [modulescript.lua]: #user-content-modulescriptlua
 
 The **modulescript.lua** format is a shortcut for decoding Lua code into a
@@ -251,7 +251,7 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `script.lua`
+## script.lua
 [script.lua]: #user-content-scriptlua
 
 The **script.lua** format is a shortcut for decoding Lua code into a
@@ -264,10 +264,10 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `server.lua`
+## server.lua
 [server.lua]: #user-content-serverlua
 
-The **server.lua** format is an alias for [`script.lua`][script.lua].
+The **server.lua** format is an alias for [script.lua][script.lua].
 
 Direction | Type                 | Description
 ----------|----------------------|------------
@@ -276,7 +276,7 @@ Encode    | Stringable           | Any string-like value.
 
 This format has no options.
 
-## `rbxattr`
+## rbxattr
 [rbxattr]: #user-content-rbxattr
 
 The **rbxattr** format is defined for serializing instance attributes, encoding
@@ -308,7 +308,7 @@ value is encoded as a double.
 
 This format has no options.
 
-## `rbxl`
+## rbxl
 [rbxl]: #user-content-rbxl
 
 The **rbxl** format encodes Instances in the Roblox binary place format.
@@ -322,7 +322,7 @@ Encode    | Objects                | A list of Instances, interpreted as childre
 
 This format has no options.
 
-## `rbxlx`
+## rbxlx
 [rbxlx]: #user-content-rbxlx
 
 The **rbxlx** format encodes Instances in the Roblox XML place format.
@@ -336,7 +336,7 @@ Encode    | Objects                | A list of Instances, interpreted as childre
 
 This format has no options.
 
-## `rbxm`
+## rbxm
 [rbxm]: #user-content-rbxm
 
 The **rbxm** format encodes Instances in the Roblox binary model format.
@@ -350,7 +350,7 @@ Encode    | Objects                | A list of Instances, interpreted as childre
 
 This format has no options.
 
-## `rbxmx`
+## rbxmx
 [rbxmx]: #user-content-rbxmx
 
 The **rbxmx** format encodes Instances in the Roblox XML model format.
@@ -364,7 +364,7 @@ Encode    | Objects                | A list of Instances, interpreted as childre
 
 This format has no options.
 
-## `txt` format
+## txt format
 [txt]: #user-content-txt-format
 
 The **txt** format encodes UTF-8 text.
