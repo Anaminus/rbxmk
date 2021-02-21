@@ -19,7 +19,7 @@ type decprop struct {
 	Value    *rbxfile.Instance
 }
 
-func decodeValue(r rbxfile.Value, refs decinst, prefs *[]decprop) (t types.PropValue, err error) {
+func decodeValue(r rbxfile.Value) (t types.PropValue, err error) {
 	switch r := r.(type) {
 	case rbxfile.ValueString:
 		return types.String(r), nil
@@ -129,7 +129,7 @@ func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rty
 			})
 			continue
 		}
-		v, err := decodeValue(value, refs, prefs)
+		v, err := decodeValue(value)
 		if err != nil {
 			return nil, err
 		}
@@ -176,7 +176,7 @@ type encprop struct {
 	Value    *rtypes.Instance
 }
 
-func encodeValue(t types.PropValue, refs encinst, prefs *[]encprop) (r rbxfile.Value, err error) {
+func encodeValue(t types.PropValue) (r rbxfile.Value, err error) {
 	switch t := t.(type) {
 	case types.String:
 		return rbxfile.ValueString(t), nil
@@ -286,7 +286,7 @@ func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxf
 			})
 			continue
 		}
-		v, err := encodeValue(value, refs, prefs)
+		v, err := encodeValue(value)
 		if err != nil {
 			return nil, err
 		}
