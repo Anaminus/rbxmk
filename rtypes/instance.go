@@ -48,6 +48,25 @@ func NewDataModel() *Instance {
 	}
 }
 
+// Type returns a string identifying the type of the value.
+func (*Instance) Type() string {
+	return "Instance"
+}
+
+// String returns a string representation of the instance by returning the Name,
+// or the ClassName if Name isn't defined.
+func (inst *Instance) String() string {
+	if v, ok := (inst.properties["Name"]).(types.Stringlike); ok {
+		return v.Stringlike()
+	}
+	return inst.ClassName
+}
+
+// Copy is an alias for Clone that allows Instance to implement types.PropValue.
+func (inst *Instance) Copy() types.PropValue {
+	return inst.Clone()
+}
+
 // IsDataModel returns whether the instance is a root DataModel.
 func (inst *Instance) IsDataModel() bool {
 	return inst.metadata != nil
@@ -574,23 +593,4 @@ func (inst *Instance) SetAttrConfig(attrcfg *AttrConfig, blocked bool) {
 	}
 	inst.attrcfg = attrcfg
 	inst.attrcfgBlocked = false
-}
-
-// Type returns a string identifying the type of the value.
-func (*Instance) Type() string {
-	return "Instance"
-}
-
-// String returns a string representation of the instance by returning the Name,
-// or the ClassName if Name isn't defined.
-func (inst *Instance) String() string {
-	if v, ok := (inst.properties["Name"]).(types.Stringlike); ok {
-		return v.Stringlike()
-	}
-	return inst.ClassName
-}
-
-// Copy is an alias for Clone that allows Instance to implement types.PropValue.
-func (inst *Instance) Copy() types.PropValue {
-	return inst.Clone()
 }
