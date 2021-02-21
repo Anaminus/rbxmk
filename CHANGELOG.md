@@ -5,10 +5,12 @@ branch is the latest unreleased version.
 ## imperative
 **Fixes:**
 - Fix version displayed by rbxmk.
+- Fix type of BrickColor properties decoded by Roblox XML formats.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
 - Add tool for automatically incrementing version number.
+- Improve documentation.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
