@@ -412,13 +412,50 @@ func (inst *Instance) FindFirstChildOfClass(class string, recurse bool) *Instanc
 
 // Get returns the value of a property in the instance. The value will be nil
 // if the property is not defined.
+//
+// If property is "ClassName", then the ClassName field is returned as a
+// types.String.
+//
+// If property is "Parent", then the result of the Parent method is returned.
 func (inst *Instance) Get(property string) (value types.Value) {
+	switch property {
+	case "ClassName":
+		return types.String(inst.ClassName)
+	case "Parent":
+		return inst.Parent()
+	}
 	return inst.properties[property]
 }
 
 // Set sets the value of a property in the instance. If value is nil, then the
 // value will be deleted from the Properties map.
+//
+// If property is "ClassName", then the ClassName field is set. Set panics if
+// value does not implement types.Stringlike.
+//
+// If property is "Parent", then the SetParent method is called. Set panics if
+// value is not an *Instance or nil, or if SetParent returns an error.
 func (inst *Instance) Set(property string, value types.PropValue) {
+	switch property {
+	case "ClassName":
+		if s, ok := value.(types.Stringlike); ok {
+			inst.ClassName = s.Stringlike()
+			return
+		}
+		panic("value of ClassName must be Stringlike")
+	case "Parent":
+		switch parent := value.(type) {
+		case nil:
+			if err := inst.SetParent(nil); err != nil {
+				panic(err)
+			}
+		case *Instance:
+			if err := inst.SetParent(parent); err != nil {
+				panic(err)
+			}
+		}
+		panic("value of Parent must be *Instance or nil")
+	}
 	if value == nil {
 		delete(inst.properties, property)
 	} else {
@@ -427,6 +464,8 @@ func (inst *Instance) Set(property string, value types.PropValue) {
 }
 
 // Properties returns the properties of the instance as names mapped to values.
+//
+// ClassName and Parent are not included.
 func (inst *Instance) Properties() map[string]types.PropValue {
 	props := make(map[string]types.PropValue, len(inst.properties))
 	for name, value := range inst.properties {
