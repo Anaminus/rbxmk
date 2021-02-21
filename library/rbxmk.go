@@ -46,13 +46,13 @@ var RBXMK = rbxmk.Library{
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
 			switch field := s.Pull(2, "string").(types.String); field {
 			case "globalDesc":
-				desc := s.Desc(nil)
+				desc := s.DescOf(nil)
 				if desc == nil {
 					return s.Push(rtypes.Nil)
 				}
 				return s.Push(desc)
 			case "globalAttrConfig":
-				attrcfg := s.AttrConfig(nil)
+				attrcfg := s.AttrConfigOf(nil)
 				if attrcfg == nil {
 					return s.Push(rtypes.Nil)
 				}
@@ -66,16 +66,16 @@ var RBXMK = rbxmk.Library{
 			case "globalDesc":
 				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
 				if desc == nil {
-					s.SetDesc(nil)
+					s.Desc = nil
 				}
-				s.SetDesc(desc)
+				s.Desc = desc
 				return 0
 			case "globalAttrConfig":
 				attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
 				if attrcfg == nil {
-					s.SetAttrConfig(nil)
+					s.AttrConfig = nil
 				}
-				s.SetAttrConfig(attrcfg)
+				s.AttrConfig = attrcfg
 				return 0
 			default:
 				return s.RaiseError("unknown field %q", field)

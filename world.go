@@ -12,7 +12,6 @@ import (
 	"unsafe"
 
 	lua "github.com/anaminus/gopher-lua"
-	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/rbxmk/sfs"
 	"github.com/robloxapi/types"
 )
@@ -20,14 +19,14 @@ import (
 // World contains the entire state of a Lua environment, including a Lua state,
 // and registered Reflectors, Formats, and Sources.
 type World struct {
-	l                *lua.LState
-	fileStack        []FileInfo
-	rootdir          string
-	reflectors       map[string]Reflector
-	formats          map[string]Format
-	sources          map[string]Source
-	globalDesc       *rtypes.RootDesc
-	globalAttrConfig *rtypes.AttrConfig
+	l          *lua.LState
+	fileStack  []FileInfo
+	rootdir    string
+	reflectors map[string]Reflector
+	formats    map[string]Format
+	sources    map[string]Source
+
+	Global
 
 	tmponce sync.Once
 	tmpdir  string
@@ -669,36 +668,4 @@ func (w *World) DoFileHandle(f File, args int) error {
 	err = w.l.PCall(args, lua.MultRet, nil)
 	w.PopFile()
 	return err
-}
-
-// Desc returns the root descriptor of an instance. If inst is nil, the global
-// descriptor is returned.
-func (w *World) Desc(inst *rtypes.Instance) *rtypes.RootDesc {
-	if inst != nil {
-		if desc := inst.Desc(); desc != nil {
-			return desc
-		}
-	}
-	return w.globalDesc
-}
-
-// SetDesc sets root as the global root descriptor for the world.
-func (w *World) SetDesc(root *rtypes.RootDesc) {
-	w.globalDesc = root
-}
-
-// AttrConfig returns the AttrConfig of an instance. If inst is nil, the global
-// AttrConfig is returned.
-func (w *World) AttrConfig(inst *rtypes.Instance) *rtypes.AttrConfig {
-	if inst != nil {
-		if attrcfg := inst.AttrConfig(); attrcfg != nil {
-			return attrcfg
-		}
-	}
-	return w.globalAttrConfig
-}
-
-// SetAttrConfig sets attrcfg as the global AttrConfig for the world.
-func (w *World) SetAttrConfig(attrcfg *rtypes.AttrConfig) {
-	w.globalAttrConfig = attrcfg
 }
