@@ -5,6 +5,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxfile"
 	"github.com/robloxapi/rbxfile/rbxl"
 	"github.com/robloxapi/rbxfile/rbxlx"
@@ -20,10 +21,10 @@ func RBXL() rbxmk.Format {
 			return typeName == "Instance"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializePlace, r)
+			return decodeRBX(rbxl.DeserializePlace, r, nil)
 		},
 		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxl.SerializePlace, w, v)
+			return encodeRBX(rbxl.SerializePlace, w, nil, v)
 		},
 	}
 }
@@ -37,10 +38,10 @@ func RBXM() rbxmk.Format {
 			return typeName == "Instance"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializeModel, r)
+			return decodeRBX(rbxl.DeserializeModel, r, nil)
 		},
 		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxl.SerializeModel, w, v)
+			return encodeRBX(rbxl.SerializeModel, w, nil, v)
 		},
 	}
 }
@@ -54,10 +55,10 @@ func RBXLX() rbxmk.Format {
 			return typeName == "Instance"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxlx.Deserialize, r)
+			return decodeRBX(rbxlx.Deserialize, r, g.Desc)
 		},
 		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxlx.Serialize, w, v)
+			return encodeRBX(rbxlx.Serialize, w, g.Desc, v)
 		},
 	}
 }
@@ -71,19 +72,19 @@ func RBXMX() rbxmk.Format {
 			return typeName == "Instance"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			root, err := decodeRBX(rbxlx.Deserialize, r)
+			root, err := decodeRBX(rbxlx.Deserialize, r, g.Desc)
 			if err != nil {
 				return nil, err
 			}
 			return root, nil
 		},
 		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxlx.Serialize, w, v)
+			return encodeRBX(rbxlx.Serialize, w, g.Desc, v)
 		},
 	}
 }
 
-func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Reader) (v types.Value, err error) {
+func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Reader, desc *rtypes.RootDesc) (v types.Value, err error) {
 	root, err := method(r)
 	if err != nil {
 		return nil, err
@@ -92,6 +93,7 @@ func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Re
 	if err != nil {
 		return nil, err
 	}
+	normalizeProps(t, desc, true)
 	return t, nil
 }
 
@@ -254,7 +256,7 @@ func decodeValue(r rbxfile.Value) (t types.PropValue, err error) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Writer, v types.Value) error {
+func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Writer, desc *rtypes.RootDesc, v types.Value) error {
 	var t *rtypes.Instance
 	switch v := v.(type) {
 	case *rtypes.Instance:
@@ -272,6 +274,7 @@ func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Wr
 	default:
 		return cannotEncode(v)
 	}
+	normalizeProps(t, desc, false)
 	r, err := encodeDataModel(t)
 	if err != nil {
 		return err
@@ -435,4 +438,76 @@ func encodeValue(t types.PropValue) (r rbxfile.Value, err error) {
 	default:
 		return nil, cannotEncode(t)
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// normalizeProps walks each property and attempts to convert certain types
+// according to the property's descriptor.
+func normalizeProps(inst *rtypes.Instance, desc *rtypes.RootDesc, decode bool) {
+	if desc == nil && decode {
+		// Decoded instances never have descriptors, so the whole thing can be
+		// skipped.
+		return
+	}
+	if desc := desc.Of(inst); desc != nil {
+		if class, ok := desc.Classes[inst.ClassName]; ok {
+			for name, value := range inst.Properties() {
+				member, ok := class.Members[name]
+				if !ok {
+					continue
+				}
+				prop, ok := member.(*rtypes.PropertyDesc)
+				if !ok {
+					continue
+				}
+				transform, ok := rules[prop.ValueType]
+				if !ok {
+					continue
+				}
+				if decode {
+					value, ok = transform.decode(value)
+				} else {
+					value, ok = transform.encode(value)
+				}
+				if !ok {
+					continue
+				}
+				inst.Set(name, value)
+			}
+		}
+	}
+	for _, child := range inst.Children() {
+		normalizeProps(child, desc, decode)
+	}
+}
+
+type transformer struct {
+	decode func(v types.PropValue) (w types.PropValue, ok bool)
+	encode func(v types.PropValue) (w types.PropValue, ok bool)
+}
+
+// Set of rules to transform type of a property.
+var rules = map[rbxdump.Type]transformer{
+	// In rbxlx, BrickColors are encoded as int.
+	{Category: "DataType", Name: "BrickColor"}: {
+		decode: func(v types.PropValue) (w types.PropValue, ok bool) {
+			switch v := v.(type) {
+			case types.Intlike:
+				return types.BrickColor(v.Intlike()), true
+			case types.Numberlike:
+				return types.BrickColor(v.Numberlike()), true
+			default:
+				return v, false
+			}
+		},
+		encode: func(v types.PropValue) (w types.PropValue, ok bool) {
+			switch v := v.(type) {
+			case types.BrickColor:
+				return types.Int(v), true
+			default:
+				return v, false
+			}
+		},
+	},
 }
