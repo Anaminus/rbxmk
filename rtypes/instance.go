@@ -144,6 +144,10 @@ func assertLoop(child, parent *Instance) error {
 	if parent == nil {
 		return nil
 	}
+	if child.IsDataModel() {
+		// Error: The Parent property of <Name> is locked, current parent: NULL, new parent <Parent>
+		return errors.New("cannot set parent of DataModel")
+	}
 	if parent == child {
 		return errors.New("attempt to set instance as its own parent")
 	}
@@ -304,9 +308,6 @@ func (inst *Instance) Descendants() []*Instance {
 // Parent returns the parent of the instance. Returns nil if the instance has no
 // parent.
 func (inst *Instance) Parent() *Instance {
-	if inst.IsDataModel() {
-		return nil
-	}
 	return inst.parent
 }
 
@@ -317,10 +318,6 @@ func (inst *Instance) Parent() *Instance {
 // new parent is the same as the old parent, then the position of the instance
 // in the parent's children is unchanged.
 func (inst *Instance) SetParent(parent *Instance) error {
-	if inst.IsDataModel() {
-		// Error: The Parent property of <Name> is locked, current parent: NULL, new parent <Parent>
-		return errors.New("cannot set parent of DataModel")
-	}
 	if inst.parent == parent {
 		return nil
 	}
