@@ -594,3 +594,56 @@ func (inst *Instance) SetAttrConfig(attrcfg *AttrConfig, blocked bool) {
 	inst.attrcfg = attrcfg
 	inst.attrcfgBlocked = false
 }
+
+// ForEachChild iterates over each child of the instance.
+//
+// If cb returns an error, iteration stops, and the error is returned.
+func (inst *Instance) ForEachChild(cb func(child *Instance) error) error {
+	for _, child := range inst.children {
+		if err := cb(child); err != nil {
+			return err
+		}
+
+	}
+	return nil
+}
+
+// SkipChildren causes Instance.ForEachDescendant to skip iterating an
+// instance's children.
+var SkipChildren = errors.New("skip children")
+
+// ForEachDescendant iterates over each descendant of the instance, depth-first.
+//
+// If cb returns SkipChildren, then the method moves to the next sibling of desc
+// without visiting the children of desc.
+//
+// Otherwise, if cb returns an error, iteration stops, and the error is
+// returned.
+func (inst *Instance) ForEachDescendant(cb func(desc *Instance) error) error {
+	for _, child := range inst.children {
+		if err := cb(child); err != nil {
+			if err == SkipChildren {
+				continue
+			}
+			return err
+		}
+		if err := child.ForEachDescendant(cb); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ForEachProperty iterates over each property of the instance.
+//
+// The order in which properties are visited is undefined.
+//
+// If cb returns an error, iteration stops, and the error is returned.
+func (inst *Instance) ForEachProperty(cb func(name string, value types.PropValue) error) error {
+	for name, value := range inst.properties {
+		if err := cb(name, value); err != nil {
+			return err
+		}
+	}
+	return nil
+}
