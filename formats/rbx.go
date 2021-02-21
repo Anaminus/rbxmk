@@ -11,12 +11,152 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(RBXL) }
+func RBXL() rbxmk.Format {
+	return rbxmk.Format{
+		Name:       "rbxl",
+		MediaTypes: []string{"application/x-roblox-studio"},
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+			return typeName == "Instance"
+		},
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxl.DeserializePlace, r)
+		},
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxl.SerializePlace, w, v)
+		},
+	}
+}
+
+func init() { register(RBXM) }
+func RBXM() rbxmk.Format {
+	return rbxmk.Format{
+		Name:       "rbxm",
+		MediaTypes: []string{"application/x-roblox-studio"},
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+			return typeName == "Instance"
+		},
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxl.DeserializeModel, r)
+		},
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxl.SerializeModel, w, v)
+		},
+	}
+}
+
+func init() { register(RBXLX) }
+func RBXLX() rbxmk.Format {
+	return rbxmk.Format{
+		Name:       "rbxlx",
+		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+			return typeName == "Instance"
+		},
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			return decodeRBX(rbxlx.Deserialize, r)
+		},
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxlx.Serialize, w, v)
+		},
+	}
+}
+
+func init() { register(RBXMX) }
+func RBXMX() rbxmk.Format {
+	return rbxmk.Format{
+		Name:       "rbxmx",
+		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+			return typeName == "Instance"
+		},
+		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+			root, err := decodeRBX(rbxlx.Deserialize, r)
+			if err != nil {
+				return nil, err
+			}
+			return root, nil
+		},
+		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			return encodeRBX(rbxlx.Serialize, w, v)
+		},
+	}
+}
+
+func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Reader) (v types.Value, err error) {
+	root, err := method(r)
+	if err != nil {
+		return nil, err
+	}
+	t, err := decodeDataModel(root)
+	if err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
+func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
+	t = rtypes.NewDataModel()
+	meta := t.Metadata()
+	for k, v := range r.Metadata {
+		meta[k] = v
+	}
+	refs := decinst{}
+	prefs := []decprop{}
+	for _, rc := range r.Instances {
+		tc, err := decodeInstance(rc, refs, &prefs)
+		if err != nil {
+			return nil, err
+		}
+		t.AddChild(tc)
+	}
+	for _, pref := range prefs {
+		if t, ok := refs[pref.Value]; ok {
+			pref.Instance.Set(pref.Property, t)
+		}
+	}
+	return t, nil
+}
+
 type decinst map[*rbxfile.Instance]*rtypes.Instance
 
 type decprop struct {
 	Instance *rtypes.Instance
 	Property string
 	Value    *rbxfile.Instance
+}
+
+func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rtypes.Instance, err error) {
+	if t, ok := refs[r]; ok {
+		return t, nil
+	}
+	t = rtypes.NewInstance(r.ClassName, nil)
+	t.IsService = r.IsService
+	t.Reference = r.Reference
+	refs[r] = t
+	for prop, value := range r.Properties {
+		if v, ok := value.(rbxfile.ValueReference); ok {
+			*prefs = append(*prefs, decprop{
+				Instance: t,
+				Property: prop,
+				Value:    v.Instance,
+			})
+			continue
+		}
+		v, err := decodeValue(value)
+		if err != nil {
+			return nil, err
+		}
+		t.Set(prop, v)
+	}
+	for _, rc := range r.Children {
+		tc, err := decodeInstance(rc, refs, prefs)
+		if err != nil {
+			return nil, err
+		}
+		t.AddChild(tc)
+	}
+	return t, nil
 }
 
 func decodeValue(r rbxfile.Value) (t types.PropValue, err error) {
@@ -112,60 +252,31 @@ func decodeValue(r rbxfile.Value) (t types.PropValue, err error) {
 	}
 }
 
-func decodeInstance(r *rbxfile.Instance, refs decinst, prefs *[]decprop) (t *rtypes.Instance, err error) {
-	if t, ok := refs[r]; ok {
-		return t, nil
-	}
-	t = rtypes.NewInstance(r.ClassName, nil)
-	t.IsService = r.IsService
-	t.Reference = r.Reference
-	refs[r] = t
-	for prop, value := range r.Properties {
-		if v, ok := value.(rbxfile.ValueReference); ok {
-			*prefs = append(*prefs, decprop{
-				Instance: t,
-				Property: prop,
-				Value:    v.Instance,
-			})
-			continue
-		}
-		v, err := decodeValue(value)
-		if err != nil {
-			return nil, err
-		}
-		t.Set(prop, v)
-	}
-	for _, rc := range r.Children {
-		tc, err := decodeInstance(rc, refs, prefs)
-		if err != nil {
-			return nil, err
-		}
-		t.AddChild(tc)
-	}
-	return t, nil
-}
+////////////////////////////////////////////////////////////////////////////////
 
-func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
-	t = rtypes.NewDataModel()
-	meta := t.Metadata()
-	for k, v := range r.Metadata {
-		meta[k] = v
-	}
-	refs := decinst{}
-	prefs := []decprop{}
-	for _, rc := range r.Instances {
-		tc, err := decodeInstance(rc, refs, &prefs)
-		if err != nil {
-			return nil, err
+func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Writer, v types.Value) error {
+	var t *rtypes.Instance
+	switch v := v.(type) {
+	case *rtypes.Instance:
+		if !v.IsDataModel() {
+			t = rtypes.NewDataModel()
+			t.AddChild(v)
+			break
 		}
-		t.AddChild(tc)
-	}
-	for _, pref := range prefs {
-		if t, ok := refs[pref.Value]; ok {
-			pref.Instance.Set(pref.Property, t)
+		t = v
+	case rtypes.Objects:
+		t = rtypes.NewDataModel()
+		for _, inst := range v {
+			t.AddChild(inst)
 		}
+	default:
+		return cannotEncode(v)
 	}
-	return t, nil
+	r, err := encodeDataModel(t)
+	if err != nil {
+		return err
+	}
+	return method(w, r)
 }
 
 type encinst map[*rtypes.Instance]*rbxfile.Instance
@@ -174,6 +285,63 @@ type encprop struct {
 	Instance *rbxfile.Instance
 	Property string
 	Value    *rtypes.Instance
+}
+
+func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
+	r = rbxfile.NewRoot()
+	meta := t.Metadata()
+	r.Metadata = make(map[string]string, len(meta))
+	for k, v := range meta {
+		r.Metadata[k] = v
+	}
+	refs := encinst{}
+	prefs := []encprop{}
+	for _, tc := range t.Children() {
+		rc, err := encodeInstance(tc, refs, &prefs)
+		if err != nil {
+			return nil, err
+		}
+		r.Instances = append(r.Instances, rc)
+	}
+	for _, pref := range prefs {
+		if r, ok := refs[pref.Value]; ok {
+			pref.Instance.Properties[pref.Property] = rbxfile.ValueReference{Instance: r}
+		}
+	}
+	return
+}
+
+func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxfile.Instance, err error) {
+	if r, ok := refs[t]; ok {
+		return r, nil
+	}
+	r = rbxfile.NewInstance(t.ClassName)
+	r.IsService = t.IsService
+	r.Reference = t.Reference
+	refs[t] = r
+	for prop, value := range t.Properties() {
+		if v, ok := value.(*rtypes.Instance); ok {
+			*prefs = append(*prefs, encprop{
+				Instance: r,
+				Property: prop,
+				Value:    v,
+			})
+			continue
+		}
+		v, err := encodeValue(value)
+		if err != nil {
+			return nil, err
+		}
+		r.Properties[prop] = v
+	}
+	for _, tc := range t.Children() {
+		rc, err := encodeInstance(tc, refs, prefs)
+		if err != nil {
+			return nil, err
+		}
+		r.Children = append(r.Children, rc)
+	}
+	return r, nil
 }
 
 func encodeValue(t types.PropValue) (r rbxfile.Value, err error) {
@@ -266,163 +434,5 @@ func encodeValue(t types.PropValue) (r rbxfile.Value, err error) {
 		return rbxfile.ValueSharedString(t), nil
 	default:
 		return nil, cannotEncode(t)
-	}
-}
-
-func encodeInstance(t *rtypes.Instance, refs encinst, prefs *[]encprop) (r *rbxfile.Instance, err error) {
-	if r, ok := refs[t]; ok {
-		return r, nil
-	}
-	r = rbxfile.NewInstance(t.ClassName)
-	r.IsService = t.IsService
-	r.Reference = t.Reference
-	refs[t] = r
-	for prop, value := range t.Properties() {
-		if v, ok := value.(*rtypes.Instance); ok {
-			*prefs = append(*prefs, encprop{
-				Instance: r,
-				Property: prop,
-				Value:    v,
-			})
-			continue
-		}
-		v, err := encodeValue(value)
-		if err != nil {
-			return nil, err
-		}
-		r.Properties[prop] = v
-	}
-	for _, tc := range t.Children() {
-		rc, err := encodeInstance(tc, refs, prefs)
-		if err != nil {
-			return nil, err
-		}
-		r.Children = append(r.Children, rc)
-	}
-	return r, nil
-}
-
-func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
-	r = rbxfile.NewRoot()
-	meta := t.Metadata()
-	r.Metadata = make(map[string]string, len(meta))
-	for k, v := range meta {
-		r.Metadata[k] = v
-	}
-	refs := encinst{}
-	prefs := []encprop{}
-	for _, tc := range t.Children() {
-		rc, err := encodeInstance(tc, refs, &prefs)
-		if err != nil {
-			return nil, err
-		}
-		r.Instances = append(r.Instances, rc)
-	}
-	for _, pref := range prefs {
-		if r, ok := refs[pref.Value]; ok {
-			pref.Instance.Properties[pref.Property] = rbxfile.ValueReference{Instance: r}
-		}
-	}
-	return
-}
-
-func decodeRBX(method func(r io.Reader) (root *rbxfile.Root, err error), r io.Reader) (v types.Value, err error) {
-	root, err := method(r)
-	if err != nil {
-		return nil, err
-	}
-	return decodeDataModel(root)
-}
-
-func encodeRBX(method func(w io.Writer, root *rbxfile.Root) (err error), w io.Writer, v types.Value) error {
-	var t *rtypes.Instance
-	switch v := v.(type) {
-	case *rtypes.Instance:
-		if !v.IsDataModel() {
-			t = rtypes.NewDataModel()
-			t.AddChild(v)
-			break
-		}
-		t = v
-	case rtypes.Objects:
-		t = rtypes.NewDataModel()
-		for _, inst := range v {
-			t.AddChild(inst)
-		}
-	default:
-		return cannotEncode(v)
-	}
-	r, err := encodeDataModel(t)
-	if err != nil {
-		return err
-	}
-	return method(w, r)
-}
-
-func init() { register(RBXL) }
-func RBXL() rbxmk.Format {
-	return rbxmk.Format{
-		Name:       "rbxl",
-		MediaTypes: []string{"application/x-roblox-studio"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
-		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializePlace, r)
-		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxl.SerializePlace, w, v)
-		},
-	}
-}
-
-func init() { register(RBXM) }
-func RBXM() rbxmk.Format {
-	return rbxmk.Format{
-		Name:       "rbxm",
-		MediaTypes: []string{"application/x-roblox-studio"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
-		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxl.DeserializeModel, r)
-		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxl.SerializeModel, w, v)
-		},
-	}
-}
-
-func init() { register(RBXLX) }
-func RBXLX() rbxmk.Format {
-	return rbxmk.Format{
-		Name:       "rbxlx",
-		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
-		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxlx.Deserialize, r)
-		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxlx.Serialize, w, v)
-		},
-	}
-}
-
-func init() { register(RBXMX) }
-func RBXMX() rbxmk.Format {
-	return rbxmk.Format{
-		Name:       "rbxmx",
-		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
-		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			return decodeRBX(rbxlx.Deserialize, r)
-		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			return encodeRBX(rbxlx.Serialize, w, v)
-		},
 	}
 }
