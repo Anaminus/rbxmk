@@ -72,14 +72,14 @@ func JSON() rbxmk.Format {
 		Options: map[string]string{
 			"Indent": "string",
 		},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {
 			case "nil", "bool", "double", "string", "Array", "Dictionary":
 				return true
 			}
 			return false
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var u interface{}
 			j := json.NewDecoder(r)
 			if err := j.Decode(&u); err != nil {
@@ -87,7 +87,7 @@ func JSON() rbxmk.Format {
 			}
 			return decodeJSON(u), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			j := json.NewEncoder(w)
 			j.SetIndent("", "\t")
 			if v, ok := stringOf(f, "Indent"); ok {

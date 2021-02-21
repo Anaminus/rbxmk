@@ -15,17 +15,17 @@ func Desc() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "desc.json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "RootDesc"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			root, err := rbxdumpjson.Decode(r)
 			if err != nil {
 				return nil, err
 			}
 			return &rtypes.RootDesc{Root: root}, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			root := v.(*rtypes.RootDesc).Root
 			if err := rbxdumpjson.Encode(w, root); err != nil {
 				return err
@@ -40,10 +40,10 @@ func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "desc-patch.json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "DescActions"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var actions rtypes.DescActions
 			j := json.NewDecoder(r)
 			if err := j.Decode(&actions); err != nil {
@@ -51,7 +51,7 @@ func DescPatch() rbxmk.Format {
 			}
 			return rtypes.DescActions(actions), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			actions := v.(rtypes.DescActions)
 			j := json.NewEncoder(w)
 			j.SetIndent("", "\t")

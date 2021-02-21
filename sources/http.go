@@ -26,6 +26,8 @@ func HTTP() rbxmk.Source {
 }
 
 type HTTPRequest struct {
+	global rbxmk.Global
+
 	cancel context.CancelFunc
 
 	respch chan *http.Response
@@ -70,7 +72,7 @@ func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 			Cookies:       headers.RetrieveSetCookies(),
 		}
 		if r.fmt.Name != "" {
-			if r.resp.Body, r.err = r.fmt.Decode(r.sel, resp.Body); r.err != nil {
+			if r.resp.Body, r.err = r.fmt.Decode(r.global, r.sel, resp.Body); r.err != nil {
 				return nil, r.err
 			}
 		}
@@ -99,7 +101,7 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 		}
 		if options.Body != nil {
 			buf = new(bytes.Buffer)
-			if err := reqfmt.Encode(options.RequestFormat, buf, options.Body); err != nil {
+			if err := reqfmt.Encode(s.Global, options.RequestFormat, buf, options.Body); err != nil {
 				return nil, fmt.Errorf("encode body: %w", err)
 			}
 		}
@@ -129,6 +131,7 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 
 	// Push request object.
 	request = &HTTPRequest{
+		global: s.Global,
 		cancel: cancel,
 		respch: make(chan *http.Response),
 		errch:  make(chan error),

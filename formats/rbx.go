@@ -16,13 +16,13 @@ func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "rbxl",
 		MediaTypes: []string{"application/x-roblox-studio"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializePlace, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			return encodeRBX(rbxl.SerializePlace, w, v)
 		},
 	}
@@ -33,13 +33,13 @@ func RBXM() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "rbxm",
 		MediaTypes: []string{"application/x-roblox-studio"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			return decodeRBX(rbxl.DeserializeModel, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			return encodeRBX(rbxl.SerializeModel, w, v)
 		},
 	}
@@ -50,13 +50,13 @@ func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "rbxlx",
 		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			return decodeRBX(rbxlx.Deserialize, r)
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			return encodeRBX(rbxlx.Serialize, w, v)
 		},
 	}
@@ -67,17 +67,17 @@ func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "rbxmx",
 		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			root, err := decodeRBX(rbxlx.Deserialize, r)
 			if err != nil {
 				return nil, err
 			}
 			return root, nil
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			return encodeRBX(rbxlx.Serialize, w, v)
 		},
 	}

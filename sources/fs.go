@@ -96,7 +96,7 @@ func fsRead(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	defer r.Close()
-	v, err := format.Decode(selector, r)
+	v, err := format.Decode(s.Global, selector, r)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -195,7 +195,7 @@ func fsWrite(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	defer w.Close()
-	if err := format.Encode(selector, w, value); err != nil {
+	if err := format.Encode(s.Global, selector, w, value); err != nil {
 		return s.RaiseError("%s", err)
 	}
 	if err := w.Sync(); err != nil {

@@ -14,22 +14,22 @@ func Binary() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "bin",
 		MediaTypes: []string{"application/octet-stream"},
-		CanDecode: func(f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "BinaryString"
 		},
-		Decode: func(f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			b, err := ioutil.ReadAll(r)
 			if err != nil {
 				return nil, err
 			}
 			return types.BinaryString(b), nil
 		},
-		Encode: func(f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			s, ok := rtypes.Stringable(v)
+		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+			b, ok := rtypes.Stringable(v)
 			if !ok {
 				return cannotEncode(v)
 			}
-			_, err := w.Write([]byte(s))
+			_, err := w.Write([]byte(b))
 			return err
 		},
 	}

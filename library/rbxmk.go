@@ -268,7 +268,7 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
 	var w bytes.Buffer
-	if err := format.Encode(selector, &w, s.Pull(2, "Variant")); err != nil {
+	if err := format.Encode(s.Global, selector, &w, s.Pull(2, "Variant")); err != nil {
 		return s.RaiseError("%s", err)
 	}
 	return s.Push(types.BinaryString(w.Bytes()))
@@ -284,7 +284,7 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		return s.RaiseError("cannot decode with format %s", format.Name)
 	}
 	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
-	v, err := format.Decode(selector, r)
+	v, err := format.Decode(s.Global, selector, r)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -301,7 +301,7 @@ func rbxmkFormatCanDecode(s rbxmk.State) int {
 	if format.CanDecode == nil {
 		return s.RaiseError("undefined decode type for %s", format.Name)
 	}
-	return s.Push(types.Bool(format.CanDecode(selector, typeName)))
+	return s.Push(types.Bool(format.CanDecode(s.Global, selector, typeName)))
 }
 
 func rbxmkNewCookie(s rbxmk.State) int {
