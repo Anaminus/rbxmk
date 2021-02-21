@@ -46,13 +46,13 @@ var RBXMK = rbxmk.Library{
 		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
 			switch field := s.Pull(2, "string").(types.String); field {
 			case "globalDesc":
-				desc := s.DescOf(nil)
+				desc := s.Desc.Of(nil)
 				if desc == nil {
 					return s.Push(rtypes.Nil)
 				}
 				return s.Push(desc)
 			case "globalAttrConfig":
-				attrcfg := s.AttrConfigOf(nil)
+				attrcfg := s.AttrConfig.Of(nil)
 				if attrcfg == nil {
 					return s.Push(rtypes.Nil)
 				}

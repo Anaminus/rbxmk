@@ -176,7 +176,7 @@ func Instance() Reflector {
 				}
 
 				name := string(s.Pull(2, "string").(types.String))
-				desc := s.DescOf(inst)
+				desc := s.Desc.Of(inst)
 				var classDesc *rbxdump.Class
 				if desc != nil {
 					classDesc = desc.Classes[inst.ClassName]
@@ -346,7 +346,7 @@ func Instance() Reflector {
 				// Try property.
 				value := PullVariant(s, 3)
 
-				desc := s.DescOf(inst)
+				desc := s.Desc.Of(inst)
 				var classDesc *rbxdump.Class
 				if desc != nil {
 					classDesc = desc.Classes[inst.ClassName]
@@ -619,7 +619,7 @@ func Instance() Reflector {
 					checkDesc := desc
 					if checkDesc == nil {
 						// Use global descriptor, if available.
-						checkDesc = s.DescOf(nil)
+						checkDesc = s.Desc.Of(nil)
 					}
 					if checkDesc != nil {
 						class := checkDesc.Classes[className]

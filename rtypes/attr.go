@@ -16,3 +16,13 @@ func (*AttrConfig) Type() string {
 func (*AttrConfig) String() string {
 	return "Attr"
 }
+
+// Of returns the AttrConfig of an instance. If inst is nil, a is returned.
+func (a *AttrConfig) Of(inst *Instance) *AttrConfig {
+	if inst != nil {
+		if attrcfg := inst.AttrConfig(); attrcfg != nil {
+			return attrcfg
+		}
+	}
+	return a
+}

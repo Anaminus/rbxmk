@@ -79,6 +79,16 @@ func (d *RootDesc) GenerateEnumTypes() {
 	d.EnumTypes = NewEnums(enums...)
 }
 
+// Of returns the root descriptor of an instance. If inst is nil, r is returned.
+func (d *RootDesc) Of(inst *Instance) *RootDesc {
+	if inst != nil {
+		if desc := inst.Desc(); desc != nil {
+			return desc
+		}
+	}
+	return d
+}
+
 // ClassDesc wraps a rbxdump.Class to implement types.Value.
 type ClassDesc struct {
 	*rbxdump.Class
