@@ -71,13 +71,19 @@ func osExpand(s rbxmk.State) int {
 	expanded := os.Expand(s.CheckString(1), func(v string) string {
 		switch v {
 		case "script_name", "sn":
-			if fi, ok := s.PeekFile(); ok {
-				path, _ := filepath.Abs(fi.Path)
+			if entry, ok := s.PeekFile(); ok {
+				if entry.Path == "" {
+					return ""
+				}
+				path, _ := filepath.Abs(entry.Path)
 				return filepath.Base(path)
 			}
 		case "script_directory", "script_dir", "sd":
-			if fi, ok := s.PeekFile(); ok {
-				path, _ := filepath.Abs(fi.Path)
+			if entry, ok := s.PeekFile(); ok {
+				if entry.Path == "" {
+					return ""
+				}
+				path, _ := filepath.Abs(entry.Path)
 				return filepath.Dir(path)
 			}
 		case "root_script_directory", "root_script_dir", "rsd":

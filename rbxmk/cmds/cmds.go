@@ -3,33 +3,28 @@ package cmds
 import (
 	"flag"
 	"fmt"
+	"io"
+	"io/fs"
 	"os"
 	"sort"
 	"strings"
 )
 
-// FileReader represents a file that can be read from, and includes file
-// information.
-type FileReader interface {
-	Name() string
-	Stat() (os.FileInfo, error)
-	Read([]byte) (int, error)
-}
+// FileReader represents a file that can be read from.
+type ReadFile = fs.File
 
-// FileWriter represents a file that can be written to, and includes file
-// information.
-type FileWriter interface {
-	Name() string
-	Stat() (os.FileInfo, error)
-	Write([]byte) (int, error)
+// FileWriter represents a file that can be written to.
+type WriteFile interface {
+	fs.File
+	io.Writer
 }
 
 // Flags bundles a FlagSet with arguments and file descriptors.
 type Flags struct {
 	*flag.FlagSet
-	Stdin  FileReader
-	Stdout FileWriter
-	Stderr FileWriter
+	Stdin  ReadFile
+	Stdout WriteFile
+	Stderr WriteFile
 
 	args []string
 }

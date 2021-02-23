@@ -2,6 +2,7 @@ package rbxmk
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -19,7 +20,7 @@ import (
 // and registered Reflectors, Formats, and Sources.
 type World struct {
 	l          *lua.LState
-	fileStack  []FileInfo
+	fileStack  []FileEntry
 	rootdir    string
 	reflectors map[string]Reflector
 	formats    map[string]Format
@@ -535,8 +536,9 @@ func (w *World) PullAnyOf(n int, t ...string) types.Value {
 	return State{World: w, L: w.l}.PullAnyOf(n, t...)
 }
 
-// FileInfo describes a file, including the full path.
-type FileInfo struct {
+// FileEntry describes a file, including the full path. An empty Path indicates
+// stdin.
+type FileEntry struct {
 	Path string
 	os.FileInfo
 }
@@ -544,20 +546,23 @@ type FileInfo struct {
 // PushFile marks a file as the currently running file. Returns an error if the
 // file is already running. If the file is the first file pushed, its directory
 // is added as a root to w.FS.
-func (w *World) PushFile(fi FileInfo) error {
+func (w *World) PushFile(entry FileEntry) error {
 	for _, f := range w.fileStack {
-		if os.SameFile(fi.FileInfo, f.FileInfo) {
-			return fmt.Errorf("\"%s\" is already running", fi.Path)
+		if os.SameFile(entry.FileInfo, f.FileInfo) {
+			return fmt.Errorf("\"%s\" is already running", entry.Path)
 		}
 	}
 	if len(w.fileStack) == 0 {
-		// Set RootDir to file at bottom of stack.
-		if abs, err := filepath.Abs(fi.Path); err == nil {
-			w.rootdir = filepath.Dir(abs)
-			w.FS.AddRoot(w.rootdir)
+		// If not stdin.
+		if entry.Path != "" {
+			// Set RootDir to file at bottom of stack.
+			if abs, err := filepath.Abs(entry.Path); err == nil {
+				w.rootdir = filepath.Dir(abs)
+				w.FS.AddRoot(w.rootdir)
+			}
 		}
 	}
-	w.fileStack = append(w.fileStack, fi)
+	w.fileStack = append(w.fileStack, entry)
 	return nil
 }
 
@@ -565,7 +570,7 @@ func (w *World) PushFile(fi FileInfo) error {
 // popped, the file's directory is removed as a root from w.FS.
 func (w *World) PopFile() {
 	if len(w.fileStack) > 0 {
-		w.fileStack[len(w.fileStack)-1] = FileInfo{}
+		w.fileStack[len(w.fileStack)-1] = FileEntry{}
 		w.fileStack = w.fileStack[:len(w.fileStack)-1]
 		if len(w.fileStack) == 0 {
 			w.FS.RemoveRoot(w.rootdir)
@@ -576,11 +581,11 @@ func (w *World) PopFile() {
 
 // PeekFile returns the info of the currently running file. Returns false if
 // there is no running file.
-func (w *World) PeekFile() (fi FileInfo, ok bool) {
+func (w *World) PeekFile() (entry FileEntry, ok bool) {
 	if len(w.fileStack) == 0 {
 		return
 	}
-	fi = w.fileStack[len(w.fileStack)-1]
+	entry = w.fileStack[len(w.fileStack)-1]
 	ok = true
 	return
 }
@@ -604,7 +609,7 @@ func (w *World) DoFile(fileName string, args int) error {
 	if err != nil {
 		return err
 	}
-	if err = w.PushFile(FileInfo{fileName, fi}); err != nil {
+	if err = w.PushFile(FileEntry{fileName, fi}); err != nil {
 		return err
 	}
 
@@ -639,22 +644,18 @@ func (w *World) TempDir() string {
 	return w.tmpdir
 }
 
-// File represents a file that can be read from, and includes file information.
-type File interface {
-	Name() string
-	Stat() (os.FileInfo, error)
-	Read([]byte) (int, error)
-}
-
 // DoFile executes the contents of file f as Lua. args is the number of
 // arguments currently on the stack that should be passed in. The file is marked
 // as actively running, and is unmarked when the file returns.
-func (w *World) DoFileHandle(f File, args int) error {
+func (w *World) DoFileHandle(f fs.File, name string, args int) error {
+	if f == nil {
+		return fmt.Errorf("expected non-nil file handle")
+	}
 	fi, err := f.Stat()
 	if err != nil {
 		return err
 	}
-	if err = w.PushFile(FileInfo{f.Name(), fi}); err != nil {
+	if err = w.PushFile(FileEntry{name, fi}); err != nil {
 		return err
 	}
 

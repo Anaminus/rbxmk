@@ -401,9 +401,9 @@ The **expand** function scans *path* for certain variables of the form `$var` or
 
 Variable                                             | Description
 -----------------------------------------------------|------------
-`$script_name`, `$sn`                                | The base name of the currently running script.
-`$script_directory`, `$script_dir`, `$sd`            | The directory of the currently running script.
-`$root_script_directory`, `$root_script_dir`, `$rsd` | The directory of the first running script.
+`$script_name`, `$sn`                                | The base name of the currently running script. Empty for stdin.
+`$script_directory`, `$script_dir`, `$sd`            | The directory of the currently running script. Empty for stdin.
+`$root_script_directory`, `$root_script_dir`, `$rsd` | The directory of the first running script. Empty for stdin.
 `$working_directory`, `$working_dir`, `$wd`          | The current working directory.
 `$temp_directory`, `$temp_dir`, `$tmp`               | The directory for temporary files.
 

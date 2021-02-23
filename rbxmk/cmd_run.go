@@ -115,7 +115,7 @@ func Run(flags cmds.Flags, init func(rbxmk.State)) error {
 
 	// Run stdin as script.
 	if file == "-" {
-		return world.DoFileHandle(flags.Stdin, len(args))
+		return world.DoFileHandle(flags.Stdin, "", len(args))
 	}
 
 	// Run file as script.

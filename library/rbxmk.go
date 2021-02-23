@@ -113,7 +113,7 @@ func rbxmkRunFile(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
-	if err = s.PushFile(rbxmk.FileInfo{Path: fileName, FileInfo: fi}); err != nil {
+	if err = s.PushFile(rbxmk.FileEntry{Path: fileName, FileInfo: fi}); err != nil {
 		return s.RaiseError("%s", err)
 	}
 
