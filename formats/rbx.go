@@ -232,7 +232,7 @@ func decodeValue(r rbxfile.Value) (t types.PropValue, err error) {
 		return t, nil
 	case rbxfile.ValueNumberRange:
 		return types.NumberRange(r), nil
-	case rbxfile.ValueRect2D:
+	case rbxfile.ValueRect:
 		return types.Rect{
 			Min: types.Vector2(r.Min),
 			Max: types.Vector2(r.Max),
@@ -419,7 +419,7 @@ func encodeValue(t types.PropValue) (r rbxfile.Value, err error) {
 	case types.NumberRange:
 		return rbxfile.ValueNumberRange(t), nil
 	case types.Rect:
-		return rbxfile.ValueRect2D{
+		return rbxfile.ValueRect{
 			Min: rbxfile.ValueVector2(t.Min),
 			Max: rbxfile.ValueVector2(t.Max),
 		}, nil

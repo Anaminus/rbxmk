@@ -6,6 +6,7 @@ branch is the latest unreleased version.
 **Fixes:**
 - Fix version displayed by rbxmk.
 - Fix type of BrickColor properties decoded by Roblox XML formats.
+- Fixes to encoding of Roblox file formats.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
