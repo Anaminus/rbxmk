@@ -27,7 +27,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
@@ -127,7 +126,7 @@ func main() {
 }
 
 func readVersion() (v Version) {
-	b, err := ioutil.ReadFile(versiongo)
+	b, err := os.ReadFile(versiongo)
 	IfFatalf(err, "read version.go")
 	_, err = fmt.Sscanf(string(b), versiongoContent, &v.Major, &v.Minor, &v.Patch)
 	IfFatalf(err, "parse version.go")
@@ -136,7 +135,7 @@ func readVersion() (v Version) {
 
 func writeVersion(v Version) {
 	b := []byte(fmt.Sprintf(versiongoContent, v.Major, v.Minor, v.Patch))
-	err := ioutil.WriteFile(versiongo, b, 0666)
+	err := os.WriteFile(versiongo, b, 0666)
 	IfFatalf(err, "write version.go")
 }
 
@@ -177,7 +176,7 @@ func updateCHANGELOG(prev, next Version) {
 	buf.Write(section)
 	buf.Write(suffix)
 
-	err = ioutil.WriteFile(changelog, buf.Bytes(), 0666)
+	err = os.WriteFile(changelog, buf.Bytes(), 0666)
 	IfFatalf(err, "write CHANGELOG")
 }
 

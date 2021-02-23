@@ -2,7 +2,6 @@ package formats
 
 import (
 	"io"
-	"io/ioutil"
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -18,7 +17,7 @@ func Text() rbxmk.Format {
 			return typeName == "string"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
-			b, err := ioutil.ReadAll(r)
+			b, err := io.ReadAll(r)
 			if err != nil {
 				return nil, err
 			}

@@ -2,7 +2,6 @@ package rbxmk
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -632,7 +631,7 @@ func (w *World) RootDir() string {
 func (w *World) TempDir() string {
 	// Create directory lazily.
 	w.tmponce.Do(func() {
-		if tmp, err := ioutil.TempDir("", "rbxmk_"); err == nil {
+		if tmp, err := os.MkdirTemp("", "rbxmk_"); err == nil {
 			w.tmpdir = tmp
 			w.FS.AddRoot(tmp)
 		}

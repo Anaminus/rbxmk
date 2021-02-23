@@ -2,7 +2,6 @@ package formats
 
 import (
 	"io"
-	"io/ioutil"
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -11,7 +10,7 @@ import (
 
 func decodeScript(r io.Reader, className string) (v types.Value, err error) {
 	script := rtypes.NewInstance(className, nil)
-	s, err := ioutil.ReadAll(r)
+	s, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,6 @@ package sfs
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -170,15 +169,15 @@ func (fs *FS) Open(name string) (*os.File, error) {
 	return os.Open(name)
 }
 
-// Create wraps ioutil.ReadDir, returning an error if dirname cannot be
-// accessed. dirname is allowed to be a root.
-func (fs *FS) ReadDir(dirname string) ([]os.FileInfo, error) {
+// Create wraps os.ReadDir, returning an error if dirname cannot be accessed.
+// dirname is allowed to be a root.
+func (fs *FS) ReadDir(dirname string) ([]os.DirEntry, error) {
 	fs.mtx.RLock()
 	defer fs.mtx.RUnlock()
 	if err := fs.accessible(dirname, Root); err != nil {
 		return nil, err
 	}
-	return ioutil.ReadDir(dirname)
+	return os.ReadDir(dirname)
 }
 
 // Create wraps os.Remove, returning an error if name cannot be accessed.

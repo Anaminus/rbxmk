@@ -41,7 +41,11 @@ func fsDir(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
-	for _, info := range files {
+	for _, entry := range files {
+		info, err := entry.Info()
+		if err != nil {
+			continue
+		}
 		tinfo := s.L.CreateTable(0, 4)
 		tinfo.RawSetString("Name", lua.LString(info.Name()))
 		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
