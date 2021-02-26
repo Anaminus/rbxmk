@@ -1,5 +1,3 @@
-github.com/anaminus/but v0.2.0 h1:UPKY6UtvTZH8seod0rfVRsQxP8qssz+P6VE9a2AYeNY=
-github.com/anaminus/but v0.2.0/go.mod h1:44z5qYo/3MWnZDi6ifH3IgrFWa1VFfdTttL3IYN/9R4=
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/anaminus/gopher-lua v0.2.0 h1:g5GwIZilvORCw3xijo/Nku4/TXP6J7DCxq9rC5dQ1y0=
 github.com/anaminus/gopher-lua v0.2.0/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=

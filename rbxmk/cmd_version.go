@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/anaminus/but"
+	"fmt"
+
 	"github.com/anaminus/snek"
 )
 
@@ -20,6 +21,6 @@ func (VersionCommand) Run(opt snek.Options) error {
 	if err := opt.ParseFlags(); err != nil {
 		return err
 	}
-	but.Log(Version)
+	fmt.Fprintln(opt.Stdout, Version)
 	return nil
 }
