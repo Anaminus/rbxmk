@@ -11,8 +11,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/rbxmk/cmds"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/anaminus/snek"
 	"github.com/robloxapi/types"
 )
 
@@ -155,6 +155,14 @@ func initMain(s rbxmk.State, t *testing.T) {
 // line starts with a comment that contains "fail", then the script is expected
 // to throw an error. All scripts receive the arguments from scriptArguments.
 func TestScripts(t *testing.T) {
+	program := snek.NewProgram("", scriptArguments[:])
+	program.Register(snek.Def{
+		Name: "run",
+		New: func() snek.Command {
+			return RunCommand{Init: func(s rbxmk.State) { initMain(s, t) }}
+		},
+	})
+
 	var files []string
 	wd, _ := os.Getwd()
 	for _, arg := range os.Args[2:] {
@@ -187,8 +195,10 @@ func TestScripts(t *testing.T) {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
 			args := scriptArguments
 			args[1] = file
-			flags := cmds.NewFlags(args[0], args[1:])
-			err := Run(flags, func(s rbxmk.State) { initMain(s, t) })
+			err := program.RunWithInput("run", snek.Input{
+				Program:   args[0],
+				Arguments: args[1:],
+			})
 			if err != nil {
 				t.Errorf("script %s: %s", file, err)
 			}

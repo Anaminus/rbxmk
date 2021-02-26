@@ -6,6 +6,7 @@ require (
 	github.com/anaminus/but v0.2.0
 	github.com/anaminus/gopher-lua v0.2.0
 	github.com/anaminus/parse v0.1.0
+	github.com/anaminus/snek v0.1.1
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.3.2
 	github.com/robloxapi/rbxfile v0.3.0

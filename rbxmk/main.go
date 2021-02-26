@@ -3,31 +3,22 @@ package main
 import (
 	"os"
 
-	"github.com/anaminus/but"
-	"github.com/anaminus/rbxmk/rbxmk/cmds"
+	"github.com/anaminus/snek"
 )
 
-// GlobalOptions contains flag options that apply to all commands.
-type GlobalOptions struct {
-}
+var Program = snek.NewProgram("rbxmk", os.Args).Usage(
+	`rbxmk is a tool for managing Roblox projects.
 
-// SetFlags registers global options for the given flags.
-func (opt GlobalOptions) SetFlags(flags cmds.Flags) {
-}
+Usage:
 
-// Commands contains the subcommands for the program.
-var Commands = cmds.NewCommands("")
+	%[1]s <command> [options]
+
+Commands:
+
+%[2]s
+Run "%[1]s help <command>" for more information about a command.
+`)
 
 func main() {
-	Commands.Name = os.Args[0]
-	if len(os.Args) <= 1 {
-		Commands.Do("help", nil)
-		return
-	}
-	if Commands.Has(os.Args[1]) {
-		Commands.Do(os.Args[1], os.Args[2:])
-		return
-	}
-	but.Logf("unknown command %q\n", os.Args[1])
-	Commands.Do("help", nil)
+	Program.Main()
 }

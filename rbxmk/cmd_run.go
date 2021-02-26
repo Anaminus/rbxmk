@@ -5,13 +5,12 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/anaminus/but"
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
-	"github.com/anaminus/rbxmk/rbxmk/cmds"
 	"github.com/anaminus/rbxmk/sources"
+	"github.com/anaminus/snek"
 )
 
 // shortenPath transforms the given path so that it is relative to the working
@@ -46,10 +45,10 @@ func ParseLuaValue(s string) lua.LValue {
 }
 
 func init() {
-	Commands.Register(cmds.Command{
-		Name:    "run",
-		Summary: "Execute a script.",
-		Usage:   `rbxmk run [ FILE ] [ ...VALUE ]`,
+	Program.Register(snek.Def{
+		Name:      "run",
+		Summary:   "Execute a script.",
+		Arguments: `[ FILE ] [ ...VALUE ]`,
 		Description: `
 Receives a file to be executed as a Lua script. If "-" is given, then the script
 will be read from stdin instead.
@@ -58,24 +57,25 @@ Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
 nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string. Within the script, these arguments can be received from
 the ... operator.`,
-		Func: RunCommand,
+		New: func() snek.Command { return RunCommand{} },
 	})
 }
 
-// RunCommand executes the run command.
-func RunCommand(flags cmds.Flags) {
-	but.IfFatal(Run(flags, nil))
+type RunCommand struct {
+	Init func(rbxmk.State)
 }
 
 // Run is the entrypoint to the command for running scripts. init runs after the
 // World envrionment is fully initialized and arguments have been pushed, and
 // before the script runs.
-func Run(flags cmds.Flags, init func(rbxmk.State)) error {
+func (c RunCommand) Run(opt snek.Options) error {
 	// Parse flags.
-	but.IfFatal(flags.Parse(), "parse flags")
-	args := flags.Args()
+	if err := opt.ParseFlags(); err != nil {
+		return err
+	}
+	args := opt.Args()
 	if len(args) == 0 {
-		flags.Usage()
+		opt.Usage()
 		return nil
 	}
 	file := args[0]
@@ -98,7 +98,7 @@ func Run(flags cmds.Flags, init func(rbxmk.State)) error {
 	}
 	for _, lib := range library.All() {
 		if err := world.Open(lib); err != nil {
-			but.Fatal(err)
+			return err
 		}
 	}
 
@@ -109,13 +109,13 @@ func Run(flags cmds.Flags, init func(rbxmk.State)) error {
 		world.State().Push(ParseLuaValue(arg))
 	}
 
-	if init != nil {
-		init(rbxmk.State{World: world, L: world.State()})
+	if c.Init != nil {
+		c.Init(rbxmk.State{World: world, L: world.State()})
 	}
 
 	// Run stdin as script.
 	if file == "-" {
-		return world.DoFileHandle(flags.Stdin, "", len(args))
+		return world.DoFileHandle(opt.Stdin, "", len(args))
 	}
 
 	// Run file as script.

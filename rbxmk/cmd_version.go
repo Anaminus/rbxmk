@@ -2,22 +2,24 @@ package main
 
 import (
 	"github.com/anaminus/but"
-	"github.com/anaminus/rbxmk/rbxmk/cmds"
+	"github.com/anaminus/snek"
 )
 
 func init() {
-	Commands.Register(cmds.Command{
-		Name:    "version",
-		Summary: "Display the version.",
-		Usage:   `rbxmk version`,
-		Description: `
-Displays the current version of rbxmk.`,
-		Func: VersionCommand,
+	Program.Register(snek.Def{
+		Name:        "version",
+		Summary:     "Display the version.",
+		Description: "Displays the current version of rbxmk.",
+		New:         func() snek.Command { return VersionCommand{} },
 	})
 }
 
-// VersionCommand executes the version command.
-func VersionCommand(flags cmds.Flags) {
-	but.IfFatal(flags.Parse(), "parse flags")
+type VersionCommand struct{}
+
+func (VersionCommand) Run(opt snek.Options) error {
+	if err := opt.ParseFlags(); err != nil {
+		return err
+	}
 	but.Log(Version)
+	return nil
 }
