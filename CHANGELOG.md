@@ -7,6 +7,7 @@ branch is the latest unreleased version.
 - Fix version displayed by rbxmk.
 - Fix type of BrickColor properties decoded by Roblox XML formats.
 - Fixes to encoding of Roblox file formats.
+- Fix RBXAssetOptions.Cookies not being optional.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

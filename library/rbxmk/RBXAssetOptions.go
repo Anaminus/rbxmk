@@ -36,7 +36,7 @@ func RBXAssetOptions() Reflector {
 			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),
 				Format:  s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector),
-				Cookies: s.PullFromTable(table, lua.LString("Cookies"), "Cookies").(rtypes.Cookies),
+				Cookies: s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
 				Body:    s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
 			}
 			if options.AssetID <= 0 {
