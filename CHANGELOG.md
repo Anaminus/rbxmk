@@ -9,6 +9,7 @@ branch is the latest unreleased version.
 - Fix type of BrickColor properties decoded by Roblox XML formats.
 - Fixes to encoding of Roblox file formats.
 - Fix RBXAssetOptions.Cookies not being optional.
+- Fix missing properties encoded by Roblox binary formats in certain cases.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

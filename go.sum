@@ -11,8 +11,8 @@ github.com/robloxapi/rbxattr v0.1.1 h1:L9PwMXRD7uGT/CIz511IHKY3HXGNOgQjONoml3VWT
 github.com/robloxapi/rbxattr v0.1.1/go.mod h1:2MGyMj13Jdzd6f13sraJ0duhoKtE89H84XfLHGOhrC8=
 github.com/robloxapi/rbxdump v0.3.2 h1:zw4apIDtghb+PyuZ/BC+SfgQBcq+YUgZTaA83poxrYA=
 github.com/robloxapi/rbxdump v0.3.2/go.mod h1:8imPIe5ZmLAhvmNKLu2E2S0QStvvXtt/0m5pxUGdGM0=
-github.com/robloxapi/rbxfile v0.3.0 h1:RNmkYVIvGZmZxVcwoR44uAdjN3x80DM8lEV9UrHI1I0=
-github.com/robloxapi/rbxfile v0.3.0/go.mod h1:5Cmi/NJzx+bzXd355c4r2n2thZ9FoEsxbFSlv8fBd9k=
+github.com/robloxapi/rbxfile v0.3.1 h1:dMhSMzZ+5uOjN5hIbBuZXjkAvwcUpE4CqArwFGUxoLE=
+github.com/robloxapi/rbxfile v0.3.1/go.mod h1:5Cmi/NJzx+bzXd355c4r2n2thZ9FoEsxbFSlv8fBd9k=
 github.com/robloxapi/types v0.1.0 h1:OF573t3Gqkur0Y6b7G9BXANVLe/KptAUkxweLsqIYjM=
 github.com/robloxapi/types v0.1.0/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
 golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78 h1:nVuTkr9L6Bq62qpUqKo/RnZCFfzDBL0bYo6w9OJUqZY=
