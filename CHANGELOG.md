@@ -5,6 +5,7 @@ branch is the latest unreleased version.
 ## imperative
 **Fixes:**
 - Fix version displayed by rbxmk.
+- Fix error when assigning a property to a DataModel.
 - Fix type of BrickColor properties decoded by Roblox XML formats.
 - Fixes to encoding of Roblox file formats.
 - Fix RBXAssetOptions.Cookies not being optional.

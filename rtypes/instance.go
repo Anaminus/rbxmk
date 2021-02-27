@@ -31,7 +31,7 @@ type Instance struct {
 func NewInstance(className string, parent *Instance) *Instance {
 	inst := &Instance{
 		ClassName:  className,
-		properties: make(map[string]types.PropValue, 0),
+		properties: map[string]types.PropValue{},
 	}
 	if parent != nil {
 		inst.SetParent(parent)
@@ -43,8 +43,9 @@ func NewInstance(className string, parent *Instance) *Instance {
 // the root of a tree of instances.
 func NewDataModel() *Instance {
 	return &Instance{
-		ClassName: "DataModel",
-		metadata:  map[string]string{},
+		ClassName:  "DataModel",
+		properties: map[string]types.PropValue{},
+		metadata:   map[string]string{},
 	}
 }
 
