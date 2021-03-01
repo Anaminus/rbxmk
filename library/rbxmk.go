@@ -5,10 +5,8 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
-	"time"
 
 	lua "github.com/anaminus/gopher-lua"
-	"github.com/anaminus/parse"
 	"github.com/anaminus/rbxmk"
 	reflect "github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -313,41 +311,12 @@ func rbxmkNewCookie(s rbxmk.State) int {
 
 func rbxmkCookiesFrom(s rbxmk.State) int {
 	location := string(s.Pull(1, "string").(types.String))
-	switch strings.ToLower(location) {
-	case "studio":
-		if cookies := cookiesFromStudio(); len(cookies) > 0 {
-			return s.Push(cookies)
-		}
-		return s.Push(rtypes.Nil)
-	default:
+	cookies, err := rbxmk.CookiesFrom(location)
+	if err != nil {
 		return s.RaiseError("unknown location %q", location)
 	}
-}
-
-func parseRegistryCookie(cookie *http.Cookie, v string) bool {
-	r := parse.NewTextReader(strings.NewReader(v))
-	if r.Is("SEC::<YES>") {
-		cookie.Secure = true
-		r.Is(",")
+	if len(cookies) == 0 {
+		s.Push(rtypes.Nil)
 	}
-	if r.Is("EXP::<") {
-		value, ok := r.Until('>')
-		if !ok {
-			return false
-		}
-		t, err := time.Parse(time.RFC3339, value)
-		if err != nil {
-			return false
-		}
-		cookie.Expires = t
-		r.Is(",")
-	}
-	if r.Is("COOK::<") {
-		value, ok := r.UntilEOF()
-		if !ok {
-			return false
-		}
-		cookie.Value = value[:len(value)-1]
-	}
-	return r.IsEOF()
+	return s.Push(cookies)
 }

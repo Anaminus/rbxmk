@@ -1,6 +1,6 @@
 // +build !windows
 
-package library
+package rbxmk
 
 import (
 	"github.com/anaminus/rbxmk/rtypes"
