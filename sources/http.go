@@ -11,20 +11,28 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-func init() { register(HTTP) }
-func HTTP() rbxmk.Source {
+func init() { register(HTTPSource) }
+func HTTPSource() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "http",
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 1)
-				lib.RawSetString("request", s.WrapFunc(httpRequest))
+				lib.RawSetString("request", s.WrapFunc(func(s rbxmk.State) int {
+					options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
+					request, err := BeginHTTPRequest(s.World, options)
+					if err != nil {
+						return s.RaiseError("%s", err)
+					}
+					return s.Push(request)
+				}))
 				return lib
 			},
 		},
 	}
 }
 
+// HTTPRequest performs and HTTP request with a promise-like API.
 type HTTPRequest struct {
 	global rbxmk.Global
 
@@ -45,6 +53,7 @@ func (*HTTPRequest) Type() string {
 	return "HTTPRequest"
 }
 
+// do concurrently begins the request.
 func (r *HTTPRequest) do(client *rbxmk.Client, req *http.Request) {
 	defer close(r.respch)
 	defer close(r.errch)
@@ -56,6 +65,7 @@ func (r *HTTPRequest) do(client *rbxmk.Client, req *http.Request) {
 	r.respch <- resp
 }
 
+// Resolve blocks until the request resolves.
 func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 	if r.resp != nil || r.err != nil {
 		return r.resp, r.err
@@ -82,6 +92,7 @@ func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 	}
 }
 
+// Cancel cancels the request.
 func (r *HTTPRequest) Cancel() {
 	if r.resp != nil || r.err != nil {
 		return
@@ -92,23 +103,27 @@ func (r *HTTPRequest) Cancel() {
 	r.err = <-r.errch
 }
 
-func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
+// BeginHTTPRequest begins an HTTP request according to the given options, in
+// the context of the given world.
+//
+// The request starts immediately, and can either be resolved or canceled.
+func BeginHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
 	var buf *bytes.Buffer
 	if options.RequestFormat.Format != "" {
-		reqfmt := s.Format(options.RequestFormat.Format)
+		reqfmt := w.Format(options.RequestFormat.Format)
 		if reqfmt.Encode == nil {
 			return nil, fmt.Errorf("cannot encode with format %s", reqfmt.Name)
 		}
 		if options.Body != nil {
 			buf = new(bytes.Buffer)
-			if err := reqfmt.Encode(s.Global, options.RequestFormat, buf, options.Body); err != nil {
+			if err := reqfmt.Encode(w.Global, options.RequestFormat, buf, options.Body); err != nil {
 				return nil, fmt.Errorf("encode body: %w", err)
 			}
 		}
 	}
 	var respfmt rbxmk.Format
 	if options.ResponseFormat.Format != "" {
-		respfmt = s.Format(options.ResponseFormat.Format)
+		respfmt = w.Format(options.ResponseFormat.Format)
 		if respfmt.Decode == nil {
 			return nil, fmt.Errorf("cannot decode with format %s", respfmt.Name)
 		}
@@ -131,22 +146,29 @@ func doHTTPRequest(s rbxmk.State, options rtypes.HTTPOptions) (request *HTTPRequ
 
 	// Push request object.
 	request = &HTTPRequest{
-		global: s.Global,
+		global: w.Global,
 		cancel: cancel,
 		respch: make(chan *http.Response),
 		errch:  make(chan error),
 		fmt:    respfmt,
 		sel:    options.ResponseFormat,
 	}
-	go request.do(s.Client, req)
+	go request.do(w.Client, req)
 	return request, nil
 }
 
-func httpRequest(s rbxmk.State) int {
-	options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
-	request, err := doHTTPRequest(s, options)
+// DoHTTPRequest begins and resolves an HTTPRequest. Returns an error if the
+// reponse did not return a successful status.
+func DoHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (resp *rtypes.HTTPResponse, err error) {
+	request, err := BeginHTTPRequest(w, options)
 	if err != nil {
-		return s.RaiseError("%s", err)
+		return nil, err
 	}
-	return s.Push(request)
+	if resp, err = request.Resolve(); err != nil {
+		return nil, err
+	}
+	if !resp.Success {
+		return nil, fmt.Errorf("%s", resp.StatusMessage)
+	}
+	return resp, nil
 }

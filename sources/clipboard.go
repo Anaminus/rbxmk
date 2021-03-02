@@ -11,85 +11,107 @@ import (
 	"github.com/robloxapi/types"
 )
 
-type formatSelector struct {
-	Format  rbxmk.Format
-	Options rtypes.Dictionary
-}
-
-// ValueOf returns the value of field. Returns nil if the value does not exist.
-func (f formatSelector) ValueOf(field string) types.Value {
-	return f.Options[field]
-}
-
-// Get list of each unique format from arguments.
-func getFormatSelectors(s rbxmk.State, n int, decode bool) (selectors []formatSelector, err error) {
+// getFormatSelectors produces a list of FormatSelectors from arguments.
+func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector, err error) {
 	values := s.Pull(n, "Tuple").(rtypes.Tuple)
-	selectors = make([]formatSelector, 0, len(values))
-loop:
+	selectors = make([]rtypes.FormatSelector, 0, len(values))
 	for i, value := range values {
 		selector, ok := value.(rtypes.FormatSelector)
 		if !ok {
 			return nil, rbxmk.TypeError(s.L, i+n, "FormatSelector")
 		}
-		format := s.Format(selector.Format)
-		if format.Name == "" {
-			return nil, fmt.Errorf("unknown format %q", selector.Format)
-		}
-		if decode {
-			if format.Decode == nil {
-				return nil, fmt.Errorf("cannot encode with format %s", format.Name)
-			}
-		} else {
-			if format.Encode == nil {
-				return nil, fmt.Errorf("cannot encode with format %s", format.Name)
-			}
-		}
-		for _, f := range selectors {
-			if format.Name == f.Format.Name {
-				// Skip duplicate formats.
-				continue loop
-			}
-		}
-		selectors = append(selectors, formatSelector{
-			Format:  format,
-			Options: selector.Options,
-		})
+		selectors = append(selectors, selector)
 	}
 	return selectors, nil
 }
 
-func init() { register(Clipboard) }
-func Clipboard() rbxmk.Source {
+func init() { register(ClipboardSource) }
+func ClipboardSource() rbxmk.Source {
 	return rbxmk.Source{
 		Name: "clipboard",
 		Library: rbxmk.Library{
 			Open: func(s rbxmk.State) *lua.LTable {
 				lib := s.L.CreateTable(0, 2)
-				lib.RawSetString("read", s.WrapFunc(clipboardRead))
-				lib.RawSetString("write", s.WrapFunc(clipboardWrite))
+				lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
+					selectors, err := getFormatSelectors(s, 1)
+					if err != nil {
+						return s.RaiseError("%s", err)
+					}
+					v, err := Clipboard{World: s.World}.Read(selectors...)
+					if err != nil {
+						return s.RaiseError("%s", err)
+					}
+					return s.Push(v)
+				}))
+				lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
+					value := s.Pull(1, "Variant")
+					selectors, err := getFormatSelectors(s, 2)
+					if err != nil {
+						return s.RaiseError("%s", err)
+					}
+					err = Clipboard{World: s.World}.Write(value, selectors...)
+					if err != nil {
+						return s.RaiseError("%s", err)
+					}
+					return 0
+				}))
 				return lib
 			},
 		},
 	}
 }
 
-func clipboardRead(s rbxmk.State) int {
-	selectors, err := getFormatSelectors(s, 1, true)
-	if err != nil {
-		return s.RaiseError("%s", err)
+// Clipboard provides access to the clipboard of the operating system.
+type Clipboard struct {
+	*rbxmk.World
+}
+
+// formatOptions implements rbxmk.FormatOptions.
+type formatOptions struct {
+	Format  rbxmk.Format
+	Options rtypes.Dictionary
+}
+
+// ValueOf returns the value of field. Returns nil if the value does not exist.
+func (f formatOptions) ValueOf(field string) types.Value {
+	return f.Options[field]
+}
+
+// Read reads a value from the clipboard according to the given formats.
+func (s Clipboard) Read(formats ...rtypes.FormatSelector) (v types.Value, err error) {
+	options := make([]formatOptions, 0, len(formats))
+loop:
+	for _, selector := range formats {
+		format := s.Format(selector.Format)
+		if format.Name == "" {
+			return nil, fmt.Errorf("unknown format %q", selector.Format)
+		}
+		if format.Decode == nil {
+			return nil, fmt.Errorf("cannot decode with format %s", format.Name)
+		}
+		for _, option := range options {
+			if format.Name == option.Format.Name {
+				// Skip duplicate formats.
+				continue loop
+			}
+		}
+		options = append(options, formatOptions{
+			Format:  format,
+			Options: selector.Options,
+		})
 	}
 
 	// Get list of media types from each format.
 	mediaTypes := []string{}
-	mediaFormats := []formatSelector{}
+	mediaFormats := []formatOptions{}
 	mediaDefined := map[string]struct{}{}
-	for _, selector := range selectors {
-		for _, mediaType := range selector.Format.MediaTypes {
+	for _, option := range options {
+		for _, mediaType := range option.Format.MediaTypes {
 			if _, ok := mediaDefined[mediaType]; ok {
 				continue
 			}
 			mediaTypes = append(mediaTypes, mediaType)
-			mediaFormats = append(mediaFormats, selector)
+			mediaFormats = append(mediaFormats, option)
 			mediaDefined[mediaType] = struct{}{}
 		}
 	}
@@ -97,22 +119,41 @@ func clipboardRead(s rbxmk.State) int {
 	// Read and decode.
 	f, b, err := clipboard.Read(mediaTypes...)
 	if err != nil {
-		return s.RaiseError("%s", err)
+		return nil, err
 	}
-	selector := mediaFormats[f]
-	v, err := selector.Format.Decode(s.Global, selector, bytes.NewReader(b))
+	option := mediaFormats[f]
+	if option.Format.Decode == nil {
+		return nil, fmt.Errorf("cannot decode with format %s", option.Format.Name)
+	}
+	v, err = option.Format.Decode(s.Global, option, bytes.NewReader(b))
 	if err != nil {
-		return s.RaiseError("%s", err)
+		return nil, err
 	}
-	return s.Push(v)
+	return v, nil
 }
 
-func clipboardWrite(s rbxmk.State) int {
-	value := s.Pull(1, "Variant")
-
-	selectors, err := getFormatSelectors(s, 2, false)
-	if err != nil {
-		return s.RaiseError("%s", err)
+// Write writes a value to the clipboard according to the given formats.
+func (s Clipboard) Write(value types.Value, formats ...rtypes.FormatSelector) error {
+	options := make([]formatOptions, 0, len(formats))
+loop:
+	for _, selector := range formats {
+		format := s.Format(selector.Format)
+		if format.Name == "" {
+			return fmt.Errorf("unknown format %q", selector.Format)
+		}
+		if format.Encode == nil {
+			return fmt.Errorf("cannot encode with format %s", format.Name)
+		}
+		for _, option := range options {
+			if format.Name == option.Format.Name {
+				// Skip duplicate formats.
+				continue loop
+			}
+		}
+		options = append(options, formatOptions{
+			Format:  format,
+			Options: selector.Options,
+		})
 	}
 
 	// Get list of media types and content from each format. The same content is
@@ -120,16 +161,19 @@ func clipboardWrite(s rbxmk.State) int {
 	// for each media type is written.
 	clipboardFormats := []clipboard.Format{}
 	mediaDefined := map[string]struct{}{}
-	for _, selector := range selectors {
+	for _, option := range options {
 		var w bytes.Buffer
 		var written bool
-		for _, mediaType := range selector.Format.MediaTypes {
+		for _, mediaType := range option.Format.MediaTypes {
 			if _, ok := mediaDefined[mediaType]; ok {
 				continue
 			}
 			if !written {
-				if err := selector.Format.Encode(s.Global, selector, &w, value); err != nil {
-					return s.RaiseError("%s", err)
+				if option.Format.Encode == nil {
+					return fmt.Errorf("cannot encode with format %s", option.Format.Name)
+				}
+				if err := option.Format.Encode(s.Global, option, &w, value); err != nil {
+					return err
 				}
 				written = true
 			}
@@ -143,7 +187,7 @@ func clipboardWrite(s rbxmk.State) int {
 
 	// Write to clipboard.
 	if err := clipboard.Write(clipboardFormats); err != nil {
-		return s.RaiseError("%s", err)
+		return err
 	}
-	return 0
+	return nil
 }
