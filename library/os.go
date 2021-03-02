@@ -1,7 +1,6 @@
 package library
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -17,7 +16,7 @@ var OS = rbxmk.Library{
 		lib := s.L.CreateTable(0, 4)
 		lib.RawSetString("expand", s.WrapFunc(func(s rbxmk.State) int {
 			path := s.CheckString(1)
-			expanded := OSLibrary{World: s.World}.Expand(path)
+			expanded := s.World.Expand(path)
 			s.L.Push(lua.LString(expanded))
 			return 1
 
@@ -47,7 +46,7 @@ var OS = rbxmk.Library{
 			for i := 2; i <= n; i++ {
 				components[i-2] = s.CheckString(i)
 			}
-			components, err := OSLibrary{World: s.World}.Split(path, components...)
+			components, err := s.World.Split(path, components...)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}
@@ -58,76 +57,4 @@ var OS = rbxmk.Library{
 		}))
 		return lib
 	},
-}
-
-// OSLibrary provides additional functions to the standard os library.
-type OSLibrary struct {
-	*rbxmk.World
-}
-
-// Expand expands a string containing predefined variables.
-func (l OSLibrary) Expand(path string) string {
-	return os.Expand(path, func(v string) string {
-		switch v {
-		case "script_name", "sn":
-			if entry, ok := l.PeekFile(); ok {
-				if entry.Path == "" {
-					return ""
-				}
-				path, _ := filepath.Abs(entry.Path)
-				return filepath.Base(path)
-			}
-		case "script_directory", "script_dir", "sd":
-			if entry, ok := l.PeekFile(); ok {
-				if entry.Path == "" {
-					return ""
-				}
-				path, _ := filepath.Abs(entry.Path)
-				return filepath.Dir(path)
-			}
-		case "root_script_directory", "root_script_dir", "rsd":
-			return l.RootDir()
-		case "working_directory", "working_dir", "wd":
-			wd, _ := os.Getwd()
-			return wd
-		case "temp_directory", "temp_dir", "tmp":
-			return l.TempDir()
-		}
-		return ""
-	})
-}
-
-// Split returns the components of a file path.
-func (l OSLibrary) Split(path string, components ...string) ([]string, error) {
-	parts := make([]string, len(components))
-	for i, comp := range components {
-		var result string
-		switch comp {
-		case "dir":
-			result = filepath.Dir(path)
-		case "base":
-			result = filepath.Base(path)
-		case "ext":
-			result = filepath.Ext(path)
-		case "stem":
-			result = filepath.Base(path)
-			result = result[:len(result)-len(filepath.Ext(path))]
-		case "fext":
-			result = l.Ext(path)
-			if result != "" && result != "." {
-				result = "." + result
-			}
-		case "fstem":
-			ext := l.Ext(path)
-			if ext != "" && ext != "." {
-				ext = "." + ext
-			}
-			result = filepath.Base(path)
-			result = result[:len(result)-len(ext)]
-		default:
-			return nil, fmt.Errorf("unknown argument %q", comp)
-		}
-		parts[i] = result
-	}
-	return parts, nil
 }

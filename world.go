@@ -434,6 +434,73 @@ func (w *World) Ext(filename string) (ext string) {
 	}
 }
 
+// Expand expands a string containing predefined variables.
+func (w *World) Expand(path string) string {
+	return os.Expand(path, func(v string) string {
+		switch v {
+		case "script_name", "sn":
+			if entry, ok := w.PeekFile(); ok {
+				if entry.Path == "" {
+					return ""
+				}
+				path, _ := filepath.Abs(entry.Path)
+				return filepath.Base(path)
+			}
+		case "script_directory", "script_dir", "sd":
+			if entry, ok := w.PeekFile(); ok {
+				if entry.Path == "" {
+					return ""
+				}
+				path, _ := filepath.Abs(entry.Path)
+				return filepath.Dir(path)
+			}
+		case "root_script_directory", "root_script_dir", "rsd":
+			return w.RootDir()
+		case "working_directory", "working_dir", "wd":
+			wd, _ := os.Getwd()
+			return wd
+		case "temp_directory", "temp_dir", "tmp":
+			return w.TempDir()
+		}
+		return ""
+	})
+}
+
+// Split returns the components of a file path.
+func (w *World) Split(path string, components ...string) ([]string, error) {
+	parts := make([]string, len(components))
+	for i, comp := range components {
+		var result string
+		switch comp {
+		case "dir":
+			result = filepath.Dir(path)
+		case "base":
+			result = filepath.Base(path)
+		case "ext":
+			result = filepath.Ext(path)
+		case "stem":
+			result = filepath.Base(path)
+			result = result[:len(result)-len(filepath.Ext(path))]
+		case "fext":
+			result = w.Ext(path)
+			if result != "" && result != "." {
+				result = "." + result
+			}
+		case "fstem":
+			ext := w.Ext(path)
+			if ext != "" && ext != "." {
+				ext = "." + ext
+			}
+			result = filepath.Base(path)
+			result = result[:len(result)-len(ext)]
+		default:
+			return nil, fmt.Errorf("unknown argument %q", comp)
+		}
+		parts[i] = result
+	}
+	return parts, nil
+}
+
 // RegisterSource registers a source. Panics if the source is already
 // registered, or the source's library could not be opened.
 func (w *World) RegisterSource(s Source) {
