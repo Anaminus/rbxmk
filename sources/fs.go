@@ -26,13 +26,11 @@ func FSSource() rbxmk.Source {
 						return s.RaiseError("%s", err)
 					}
 					tfiles := s.L.CreateTable(len(files), 0)
-					for _, info := range files {
-						tinfo := s.L.CreateTable(0, 4)
-						tinfo.RawSetString("Name", lua.LString(info.Name()))
-						tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-						tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-						tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-						tfiles.Append(tinfo)
+					for _, entry := range files {
+						tentry := s.L.CreateTable(0, 2)
+						tentry.RawSetString("Name", lua.LString(entry.Name()))
+						tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
+						tfiles.Append(tentry)
 					}
 					s.L.Push(tfiles)
 					return 1
@@ -129,21 +127,13 @@ type FS struct {
 }
 
 // Dir returns a list of files in the given directory.
-func (s FS) Dir(dirname string) (files []fs.FileInfo, err error) {
-	entries, err := s.FS.ReadDir(dirname)
+func (s FS) Dir(dirname string) (files []fs.DirEntry, err error) {
+	files, err = s.FS.ReadDir(dirname)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, nil
 		}
 		return nil, err
-	}
-	files = make([]fs.FileInfo, 0, len(entries))
-	for _, entry := range entries {
-		info, err := entry.Info()
-		if err != nil {
-			continue
-		}
-		files = append(files, info)
 	}
 	return files, nil
 }

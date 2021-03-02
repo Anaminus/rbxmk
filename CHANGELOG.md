@@ -3,6 +3,11 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+**Highlights:**
+- Entries returned by fs.dir contain only Name and IsDir fields.
+	- For large directories, getting files is much faster.
+	- Use fs.stat to get full metadata of a file.
+
 **Fixes:**
 - Fix version displayed by rbxmk.
 - Fix error when assigning a property to a DataModel.

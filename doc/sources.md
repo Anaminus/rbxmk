@@ -93,10 +93,15 @@ Name                   | Description
 
 ### fs.dir
 [fs.dir]: #user-content-fsdir
-<code>fs.dir(path: [string](##)): {[File](##)}?</code>
+<code>fs.dir(path: [string](##)): {[DirEntry](##)}?</code>
 
 The **dir** function returns a list of files in the given directory. Each file
-is a table with the same fields as returned by [fs.stat][fs.stat].
+is a table with the following fields:
+
+Field   | Type    | Description
+--------|---------|------------
+Name    | string  | The base name of the file.
+IsDir   | boolean | Whether the file is a directory.
 
 dir returns nil if the directory does not exist. An error is thrown if a problem
 otherwise occurred while reading the directory.
@@ -150,7 +155,7 @@ moving the file.
 
 ### fs.stat
 [fs.stat]: #user-content-fsstat
-<code>fs.stat(path: [string](##)): [File](##)?</code>
+<code>fs.stat(path: [string](##)): [FileInfo](##)?</code>
 
 The **stat** function gets metadata of the given file. Returns a table with the
 following fields:
