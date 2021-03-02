@@ -218,7 +218,7 @@ Throws an error if a problem occurred while downloading the asset.
 <code>rbxassetid.write(options: [RBXAssetOptions][RBXAssetOptions])</code>
 
 The **write** function uploads to an existing asset according to the given
-[options][RBXAssetOptions]. The Body is encoding according to Format, then
+[options][RBXAssetOptions]. The Body is encoded according to Format, then
 uploaded to AssetID. AssetID must be the ID of an existing asset.
 
 Throws an error if a problem occurred while uploading the asset.
