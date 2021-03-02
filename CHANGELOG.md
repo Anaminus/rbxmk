@@ -7,6 +7,7 @@ branch is the latest unreleased version.
 - Entries returned by fs.dir contain only Name and IsDir fields.
 	- For large directories, getting files is much faster.
 	- Use fs.stat to get full metadata of a file.
+- Improve speed of table.clear.
 
 **Fixes:**
 - Fix version displayed by rbxmk.
