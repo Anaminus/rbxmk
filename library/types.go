@@ -16,17 +16,16 @@ func setUserdata(s rbxmk.State, t string) int {
 
 func init() { register(Types, 10) }
 
-var Types = rbxmk.Library{
-	Name: "types",
-	Open: func(s rbxmk.State) *lua.LTable {
-		exprims := s.Reflectors(rbxmk.Exprim)
-		lib := s.L.CreateTable(0, len(exprims))
-		for _, t := range exprims {
-			name := t.Name
-			lib.RawSetString(t.Name, s.WrapFunc(func(s rbxmk.State) int {
-				return setUserdata(s, name)
-			}))
-		}
-		return lib
-	},
+var Types = rbxmk.Library{Name: "types", Open: openTypes}
+
+func openTypes(s rbxmk.State) *lua.LTable {
+	exprims := s.Reflectors(rbxmk.Exprim)
+	lib := s.L.CreateTable(0, len(exprims))
+	for _, t := range exprims {
+		name := t.Name
+		lib.RawSetString(t.Name, s.WrapFunc(func(s rbxmk.State) int {
+			return setUserdata(s, name)
+		}))
+	}
+	return lib
 }

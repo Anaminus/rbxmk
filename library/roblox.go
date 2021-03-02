@@ -8,20 +8,19 @@ import (
 
 func init() { register(Roblox, 1) }
 
-var Roblox = rbxmk.Library{
-	Name: "",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 1)
-		lib.RawSetString("typeof", s.L.NewFunction(robloxTypeof))
+var Roblox = rbxmk.Library{Name: "", Open: openRoblox}
 
-		for _, f := range reflect.All() {
-			r := f()
-			s.RegisterReflector(r)
-			s.ApplyReflector(r, lib)
-		}
+func openRoblox(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 1)
+	lib.RawSetString("typeof", s.L.NewFunction(robloxTypeof))
 
-		return lib
-	},
+	for _, f := range reflect.All() {
+		r := f()
+		s.RegisterReflector(r)
+		s.ApplyReflector(r, lib)
+	}
+
+	return lib
 }
 
 func robloxTypeof(l *lua.LState) int {

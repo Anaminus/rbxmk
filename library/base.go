@@ -7,12 +7,11 @@ import (
 
 func init() { register(Base, -1) }
 
-var Base = rbxmk.Library{
-	Name: "",
-	Open: func(s rbxmk.State) *lua.LTable {
-		openFilteredLibs(s.L, filteredStdLib)
-		return nil
-	},
+var Base = rbxmk.Library{Name: "", Open: openBase}
+
+func openBase(s rbxmk.State) *lua.LTable {
+	openFilteredLibs(s.L, filteredStdLib)
+	return nil
 }
 
 type libFilter struct {

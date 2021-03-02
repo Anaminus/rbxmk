@@ -7,18 +7,17 @@ import (
 
 func init() { register(Table, 10) }
 
-var Table = rbxmk.Library{
-	Name: "table",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 6)
-		lib.RawSetString("clear", s.WrapFunc(tableClear))
-		lib.RawSetString("create", s.WrapFunc(tableCreate))
-		lib.RawSetString("find", s.WrapFunc(tableFind))
-		lib.RawSetString("move", s.WrapFunc(tableMove))
-		lib.RawSetString("pack", s.WrapFunc(tablePack))
-		lib.RawSetString("unpack", s.WrapFunc(tableUnpack))
-		return lib
-	},
+var Table = rbxmk.Library{Name: "table", Open: openTable}
+
+func openTable(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 6)
+	lib.RawSetString("clear", s.WrapFunc(tableClear))
+	lib.RawSetString("create", s.WrapFunc(tableCreate))
+	lib.RawSetString("find", s.WrapFunc(tableFind))
+	lib.RawSetString("move", s.WrapFunc(tableMove))
+	lib.RawSetString("pack", s.WrapFunc(tablePack))
+	lib.RawSetString("unpack", s.WrapFunc(tableUnpack))
+	return lib
 }
 
 func tableClear(s rbxmk.State) int {

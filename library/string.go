@@ -9,13 +9,12 @@ import (
 
 func init() { register(String, 10) }
 
-var String = rbxmk.Library{
-	Name: "string",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 1)
-		lib.RawSetString("split", s.WrapFunc(stringSplit))
-		return lib
-	},
+var String = rbxmk.Library{Name: "string", Open: openString}
+
+func openString(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 1)
+	lib.RawSetString("split", s.WrapFunc(stringSplit))
+	return lib
 }
 
 func stringSplit(s rbxmk.State) int {

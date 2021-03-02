@@ -9,16 +9,15 @@ import (
 
 func init() { register(Math, 10) }
 
-var Math = rbxmk.Library{
-	Name: "math",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 4)
-		lib.RawSetString("clamp", s.WrapFunc(mathClamp))
-		lib.RawSetString("log", s.WrapFunc(mathLog))
-		lib.RawSetString("round", s.WrapFunc(mathRound))
-		lib.RawSetString("sign", s.WrapFunc(mathSign))
-		return lib
-	},
+var Math = rbxmk.Library{Name: "math", Open: openMath}
+
+func openMath(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 4)
+	lib.RawSetString("clamp", s.WrapFunc(mathClamp))
+	lib.RawSetString("log", s.WrapFunc(mathLog))
+	lib.RawSetString("round", s.WrapFunc(mathRound))
+	lib.RawSetString("sign", s.WrapFunc(mathSign))
+	return lib
 }
 
 func mathClamp(s rbxmk.State) int {

@@ -17,72 +17,71 @@ import (
 
 func init() { register(RBXMK, 0) }
 
-var RBXMK = rbxmk.Library{
-	Name: "rbxmk",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 12)
-		lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
-		lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
-		lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
-		lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
-		lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
-		lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
-		lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
-		lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
-		lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
-		lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
-		lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
-		lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
+var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK}
 
-		for _, f := range reflect.All() {
-			r := f()
-			s.RegisterReflector(r)
-			s.ApplyReflector(r, lib)
+func openRBXMK(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 12)
+	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
+	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
+	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
+	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
+	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
+	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
+	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
+	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
+	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
+	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
+	lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
+	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
+
+	for _, f := range reflect.All() {
+		r := f()
+		s.RegisterReflector(r)
+		s.ApplyReflector(r, lib)
+	}
+
+	mt := s.L.CreateTable(0, 2)
+	mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
+		switch field := s.Pull(2, "string").(types.String); field {
+		case "globalDesc":
+			desc := s.Desc.Of(nil)
+			if desc == nil {
+				return s.Push(rtypes.Nil)
+			}
+			return s.Push(desc)
+		case "globalAttrConfig":
+			attrcfg := s.AttrConfig.Of(nil)
+			if attrcfg == nil {
+				return s.Push(rtypes.Nil)
+			}
+			return s.Push(attrcfg)
+		default:
+			return s.RaiseError("unknown field %q", field)
 		}
-
-		mt := s.L.CreateTable(0, 2)
-		mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
-			switch field := s.Pull(2, "string").(types.String); field {
-			case "globalDesc":
-				desc := s.Desc.Of(nil)
-				if desc == nil {
-					return s.Push(rtypes.Nil)
-				}
-				return s.Push(desc)
-			case "globalAttrConfig":
-				attrcfg := s.AttrConfig.Of(nil)
-				if attrcfg == nil {
-					return s.Push(rtypes.Nil)
-				}
-				return s.Push(attrcfg)
-			default:
-				return s.RaiseError("unknown field %q", field)
+	}))
+	mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
+		switch field := s.Pull(2, "string").(types.String); field {
+		case "globalDesc":
+			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
+			if desc == nil {
+				s.Desc = nil
 			}
-		}))
-		mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
-			switch field := s.Pull(2, "string").(types.String); field {
-			case "globalDesc":
-				desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
-				if desc == nil {
-					s.Desc = nil
-				}
-				s.Desc = desc
-				return 0
-			case "globalAttrConfig":
-				attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
-				if attrcfg == nil {
-					s.AttrConfig = nil
-				}
-				s.AttrConfig = attrcfg
-				return 0
-			default:
-				return s.RaiseError("unknown field %q", field)
+			s.Desc = desc
+			return 0
+		case "globalAttrConfig":
+			attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
+			if attrcfg == nil {
+				s.AttrConfig = nil
 			}
-		}))
-		s.L.SetMetatable(lib, mt)
+			s.AttrConfig = attrcfg
+			return 0
+		default:
+			return s.RaiseError("unknown field %q", field)
+		}
+	}))
+	s.L.SetMetatable(lib, mt)
 
-		return lib
-	},
+	return lib
 }
 
 func rbxmkLoadFile(s rbxmk.State) int {
