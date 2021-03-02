@@ -32,10 +32,11 @@ func NewClient(client *http.Client) *Client {
 	}
 }
 
-// Do sends a request, with the following additional behaviors.
-// - Includes a configured user agent header with the request, if the header is
-//   unset.
-// - Handles CSRF token validation.
+// Do sends a request, with the following additional behaviors:
+//
+//     - Includes a configured user agent header with the request, if the header
+//       is unset.
+//     - Handles CSRF token validation.
 func (c *Client) Do(req *http.Request) (resp *http.Response, err error) {
 	for i := 2; i > 0; i-- {
 		// Merge headers.
