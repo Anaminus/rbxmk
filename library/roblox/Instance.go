@@ -496,6 +496,20 @@ func Instance() Reflector {
 					}
 				},
 			},
+			"Descend": Member{Method: true, Get: func(s State, v types.Value) int {
+				n := s.L.GetTop()
+				if n-1 <= 0 {
+					return s.RaiseError("expected at least 1 string")
+				}
+				names := make([]string, n-1)
+				for i := 2; i <= n; i++ {
+					names[i-2] = s.L.CheckString(i)
+				}
+				if child := v.(*rtypes.Instance).Descend(names...); child != nil {
+					return s.Push(child)
+				}
+				return s.Push(rtypes.Nil)
+			}},
 			"ClearAllChildren": Member{Method: true, Get: func(s State, v types.Value) int {
 				v.(*rtypes.Instance).RemoveAll()
 				return 0

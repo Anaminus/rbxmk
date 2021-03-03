@@ -805,6 +805,7 @@ Member                                                                   | Kind
 [Instance.Parent][Instance.Parent]                                       | property
 [Instance.ClearAllChildren][Instance.ClearAllChildren]                   | method
 [Instance.Clone][Instance.Clone]                                         | method
+[Instance.Descend][Instance.Descend]                                     | method
 [Instance.Destroy][Instance.Destroy]                                     | method
 [Instance.FindFirstAncestor][Instance.FindFirstAncestor]                 | method
 [Instance.FindFirstAncestorOfClass][Instance.FindFirstAncestorOfClass]   | method
@@ -884,6 +885,22 @@ The **Clone** method returns a copy of the instance.
 
 Unlike in Roblox, Clone does not ignore an instance if its Archivable property
 is set to false.
+
+### Instance.Descend
+[Instance.Descend]: #user-content-instancedescend
+<code>Instance:Descend(names: ...[string](##)): [Instance][Instance]?</code>
+
+The **Descend** method returns a descendant of the instance by recursively
+searching for each name in succession according to
+[FindFirstChild][Instance.FindFirstChild]. Returns nil if a child could not be
+found. Throws an error if no arguments are given.
+
+Descend provides a safe alternative to indexing the children of an instance,
+which is not implemented by rbxmk.
+
+```lua
+local face = game:Descend("Workspace", "Noob", "Head", "face")
+```
 
 ### Instance.Destroy
 [Instance.Destroy]: #user-content-instancedestroy

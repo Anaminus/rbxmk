@@ -4,6 +4,8 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
+- Add Instance.Descend as an alternative to child indexing, which is not
+  implemented by rbxmk.
 - Entries returned by fs.dir contain only Name and IsDir fields.
 	- For large directories, getting files is much faster.
 	- Use fs.stat to get full metadata of a file.

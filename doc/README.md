@@ -158,6 +158,19 @@ arbitrary properties, this does not mean such instances will be interpreted in
 any meaningful way when sent over to Roblox. The most convenient way to enforce
 the correctness of instances is to use [descriptors][descriptors].
 
+Another notable difference is that children cannot be indexed by name directly.
+Without a descriptor, *all* properties are considered valid, so no there would
+be no room to interpret an index as a child.
+
+More generally, child indexing has been proven to have poor forward
+compatibility. New properties are added to the API all the time, and every such
+change has the potential to cause a script to break, because the script expected
+a child and got a new property instead.
+
+rbxmk moves past this problem by simply not implementing child indexing.
+Instead, the [Instance.Descend][Instance.Descend] method is introduced to
+provide a convenient and safe alternative.
+
 ## Attributes
 [Attributes]: #user-content-attributes
 
@@ -403,6 +416,7 @@ The following directories are marked as roots:
 [fs.dir]: sources.md#user-content-fsdir
 [fs.rename]: sources.md#user-content-fsrename
 [FunctionDesc]: types.md#user-content-functiondesc
+[Instance.Descend]: libraries.md#user-content-instancedescend
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.RawAttrConfig]: types.md#user-content-instancesymrawattrconfig

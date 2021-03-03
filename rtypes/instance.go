@@ -411,6 +411,19 @@ func (inst *Instance) FindFirstChildOfClass(class string, recurse bool) *Instanc
 	return nil
 }
 
+// Descend returns a descendant of the instance by recursively searching for
+// each name in succession according to FindFirstChild. Returns the instance
+// itself if no arguments are given. Returns nil if a child could not be found.
+func (inst *Instance) Descend(names ...string) *Instance {
+	child := inst
+	for _, name := range names {
+		if child = child.FindFirstChild(name, false); child == nil {
+			return nil
+		}
+	}
+	return child
+}
+
 // Get returns the value of a property in the instance. The value will be nil
 // if the property is not defined.
 //
