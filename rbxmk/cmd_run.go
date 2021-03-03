@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -120,6 +121,9 @@ func (c *RunCommand) Run(opt snek.Options) error {
 
 	// Run stdin as script.
 	if file == "-" {
+		if opt.Stdin == nil {
+			return fmt.Errorf("no file handle")
+		}
 		return world.DoFileHandle(opt.Stdin, "", len(args))
 	}
 
