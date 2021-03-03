@@ -23,12 +23,16 @@ const (
 // A path is accessible if it is a descendant of a root in FS. A root is not
 // accessible unless the Root flag is specified.
 type FS struct {
-	mtx   sync.RWMutex
-	roots []string
+	mtx      sync.RWMutex
+	roots    []string
+	insecure bool
 }
 
 // access returns whether the given path can be accessed.
 func (fs *FS) access(path string, flags Flags) bool {
+	if fs.insecure {
+		return true
+	}
 	path, err := filepath.Abs(path)
 	if err != nil {
 		return false
@@ -112,6 +116,24 @@ func (fs *FS) RemoveRoot(path string) error {
 		}
 	}
 	return nil
+}
+
+// Secured returns whether paths are secured. If false, then any path can be
+// accessed.
+func (fs *FS) Secured() bool {
+	fs.mtx.RLock()
+	defer fs.mtx.RUnlock()
+
+	return !fs.insecure
+}
+
+// SetSecured sets whether paths are secured. If false, then any path can be
+// accessed.
+func (fs *FS) SetSecured(secured bool) {
+	fs.mtx.Lock()
+	defer fs.mtx.Unlock()
+
+	fs.insecure = !secured
 }
 
 // accessible returns a common error if path cannot be accessed.

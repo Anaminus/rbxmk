@@ -77,12 +77,14 @@ func (s *repeatedString) Set(v string) error {
 
 type RunCommand struct {
 	IncludedRoots []string
+	InsecurePaths bool
 	Debug         bool
 	Init          func(rbxmk.State)
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
 	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory.")
+	flags.BoolVar(&c.InsecurePaths, "allow-insecure-paths", false, "Disable path restrictions, allowing scripts to access any path in the file system.")
 	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
 }
 
@@ -107,6 +109,9 @@ func (c *RunCommand) Run(opt snek.Options) error {
 		SkipOpenLibs:        true,
 		IncludeGoStackTrace: c.Debug,
 	}))
+	if c.InsecurePaths {
+		world.FS.SetSecured(false)
+	}
 	if wd, err := os.Getwd(); err == nil {
 		// Working directory is an accessible root.
 		world.FS.AddRoot(wd)
