@@ -3,8 +3,42 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
+
+func setAxesFromAxisName(axes *types.Axes, name string) {
+	switch name {
+	case "X":
+		axes.X = true
+	case "Y":
+		axes.Y = true
+	case "Z":
+		axes.Z = true
+	}
+}
+
+func setAxesFromAxisValue(axes *types.Axes, value int) {
+	switch value {
+	case 0:
+		axes.X = true
+	case 1:
+		axes.Y = true
+	case 2:
+		axes.Z = true
+	}
+}
+
+func setAxesFromNormalIdName(axes *types.Axes, name string) {
+	switch name {
+	case "Right", "Left":
+		axes.X = true
+	case "Top", "Bottom":
+		axes.Y = true
+	case "Back", "Front":
+		axes.Z = true
+	}
+}
 
 func init() { register(Axes) }
 func Axes() Reflector {
@@ -37,8 +71,31 @@ func Axes() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			// TODO: match API.
 			"new": func(s State) int {
+				var v types.Axes
+				n := s.L.GetTop()
+				for i := 1; i <= n; i++ {
+					switch value := PullVariant(s, i).(type) {
+					case *rtypes.EnumItem:
+						if enum := value.Enum(); enum != nil {
+							switch enum.Name() {
+							case "Axis":
+								setAxesFromAxisName(&v, value.Name())
+							case "NormalId":
+								setAxesFromNormalIdName(&v, value.Name())
+							}
+						}
+					case types.Intlike:
+						setAxesFromAxisValue(&v, int(value.Intlike()))
+					case types.Numberlike:
+						setAxesFromAxisValue(&v, int(value.Numberlike()))
+					case types.Stringlike:
+						setAxesFromNormalIdName(&v, value.Stringlike())
+					}
+				}
+				return s.Push(v)
+			},
+			"fromComponents": func(s State) int {
 				var v types.Axes
 				switch s.Count() {
 				case 3:

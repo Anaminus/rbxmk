@@ -6,30 +6,32 @@ This document contains a reference to the types available to rbxmk scripts.
 <tbody><tr><td>
 
 1. [AttrConfig][AttrConfig]
-2. [CallbackDesc][CallbackDesc]
-3. [ClassDesc][ClassDesc]
-4. [Cookie][Cookie]
-5. [Cookies][Cookies]
-6. [DataModel][DataModel]
-7. [DescAction][DescAction]
-8. [EnumDesc][EnumDesc]
-9. [EnumItemDesc][EnumItemDesc]
-10. [EventDesc][EventDesc]
-11. [FormatSelector][FormatSelector]
-12. [FunctionDesc][FunctionDesc]
-13. [HTTPHeaders][HTTPHeaders]
-14. [HTTPOptions][HTTPOptions]
-15. [HTTPRequest][HTTPRequest]
-16. [HTTPResponse][HTTPResponse]
-17. [Instance][Instance]
-18. [Intlike][Intlike]
-19. [Numberlike][Numberlike]
-20. [ParameterDesc][ParameterDesc]
-21. [PropertyDesc][PropertyDesc]
-22. [RBXAssetOptions][RBXAssetOptions]
-23. [RootDesc][RootDesc]
-24. [Stringlike][Stringlike]
-25. [TypeDesc][TypeDesc]
+2. [Axes][Axes]
+3. [CallbackDesc][CallbackDesc]
+4. [ClassDesc][ClassDesc]
+5. [Cookie][Cookie]
+6. [Cookies][Cookies]
+7. [DataModel][DataModel]
+8. [DescAction][DescAction]
+9. [EnumDesc][EnumDesc]
+10. [EnumItemDesc][EnumItemDesc]
+11. [EventDesc][EventDesc]
+12. [Faces][Faces]
+13. [FormatSelector][FormatSelector]
+14. [FunctionDesc][FunctionDesc]
+15. [HTTPHeaders][HTTPHeaders]
+16. [HTTPOptions][HTTPOptions]
+17. [HTTPRequest][HTTPRequest]
+18. [HTTPResponse][HTTPResponse]
+19. [Instance][Instance]
+20. [Intlike][Intlike]
+21. [Numberlike][Numberlike]
+22. [ParameterDesc][ParameterDesc]
+23. [PropertyDesc][PropertyDesc]
+24. [RBXAssetOptions][RBXAssetOptions]
+25. [RootDesc][RootDesc]
+26. [Stringlike][Stringlike]
+27. [TypeDesc][TypeDesc]
 
 </td></tr></tbody>
 </table>
@@ -67,6 +69,41 @@ The **AttrConfig.new** constructor returns a new AttrConfig. *property* sets the
 The **Property** property determines which property of an [Instance][Instance]
 attributes are applied to. If an empty string, instances will default to
 "AttributesSerialize".
+
+### Axes
+[Axes]: #user-content-axes
+
+The **Axes** type corresponds to the [Axes][Axes-roblox] Roblox type.
+
+[Axes-roblox]: https://developer.roblox.com/en-us/api-reference/datatype/Axes
+
+#### Axes.new
+[Axes.new]: #user-content-axesnew
+<code>Axes.new(...any?)</code>
+
+The **Axes.new** constructor returns a new Axes value. Each valid argument sets a
+component of the value, depending on the type:
+
+- EnumItem:
+	- Enum name is `"Axis"`, and item name is `"X"`, `"Y"`, or `"Z"`.
+	- Enum name is `"NormalId"`, and item name is one of the following:
+		- `"Right"`, `"Left"`: sets X.
+		- `"Top"`, `"Bottom"`: sets Y.
+		- `"Back"`, `"Front"`: sets Z.
+- number: value is one of the following:
+	- `0`: sets X.
+	- `1`: sets Y.
+	- `2`: sets Z.
+- string: value is `"X"`, `"Y"`, or `"Z"`.
+
+Other values will be ignored.
+
+#### Axes.fromComponents
+[Axes.fromComponents]: #user-content-axesfromcomponents
+<code>Axes.fromComponents(x: bool, y: bool, z: bool)</code>
+
+The **Axes.fromComponents** constructor returns a new Axes value, with each
+argument setting the corresponding component.
 
 ## CallbackDesc
 [CallbackDesc]: #user-content-callbackdesc
@@ -547,6 +584,46 @@ The **SetTag** method sets the given tags on the descriptor.
 <code>EventDesc:UnsetTag(tags: ...[string](##))</code>
 
 The **UnsetTag** method unsets the given tags on the descriptor.
+
+### Faces
+[Faces]: #user-content-faces
+
+The **Faces** type corresponds to the [Faces][Faces-roblox] Roblox type.
+
+[Faces-roblox]: https://developer.roblox.com/en-us/api-reference/datatype/Faces
+
+#### Faces.new
+[Faces.new]: #user-content-axesnew
+<code>Faces.new(...any?)</code>
+
+The **Faces.new** constructor returns a new Faces value. Each valid argument
+sets a component of the value, depending on the type:
+
+- EnumItem:
+	- Enum name is `"Axis"`, and item name is one of the following:
+		- `"X"`: sets Right and Left.
+		- `"Y"`: sets Top and Bottom.
+		- `"Z"`: sets Back and Front.
+	- Enum name is `"NormalId"`, and item name is `"Right"`, `"Top"`, `"Back"`,
+	  `"Left"`, `"Bottom"`, or `"Front"`.
+- number: value is one of the following:
+	- `0`: sets Right.
+	- `1`: sets Top.
+	- `2`: sets Back.
+	- `3`: sets Left.
+	- `4`: sets Bottom.
+	- `5`: sets Front.
+- string: value is `"Right"`, `"Top"`, `"Back"`, `"Left"`, `"Bottom"`, or
+  `"Front"`.
+
+Other values will be ignored.
+
+#### Faces.fromComponents
+[Faces.fromComponents]: #user-content-axesfromcomponents
+<code>Faces.fromComponents(right: bool, top: bool, back: bool, left: bool, bottom: bool, front: bool)</code>
+
+The **Faces.fromComponents** constructor returns a new Faces value, with each
+argument setting the corresponding component.
 
 ## FormatSelector
 [FormatSelector]: #user-content-formatselector

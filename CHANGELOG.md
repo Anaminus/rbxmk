@@ -8,6 +8,9 @@ branch is the latest unreleased version.
 	- For large directories, getting files is much faster.
 	- Use fs.stat to get full metadata of a file.
 - Improve speed of table.clear.
+- Implementations of Axes.new and Faces.new match Roblox API.
+	- Previous implementations exist as Axes.fromComponents and
+	  Faces.fromComponents.
 
 **Fixes:**
 - Fix version displayed by rbxmk.

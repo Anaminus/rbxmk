@@ -3,8 +3,57 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
+
+func setFacesFromNormalIdName(faces *types.Faces, name string) {
+	switch name {
+	case "Right":
+		faces.Right = true
+	case "Left":
+		faces.Left = true
+	case "Top":
+		faces.Top = true
+	case "Bottom":
+		faces.Bottom = true
+	case "Back":
+		faces.Back = true
+	case "Front":
+		faces.Front = true
+	}
+}
+
+func setFacesFromNormalIdValue(faces *types.Faces, value int) {
+	switch value {
+	case 0:
+		faces.Right = true
+	case 1:
+		faces.Left = true
+	case 2:
+		faces.Top = true
+	case 3:
+		faces.Bottom = true
+	case 4:
+		faces.Back = true
+	case 5:
+		faces.Front = true
+	}
+}
+
+func setFacesFromAxisName(faces *types.Faces, name string) {
+	switch name {
+	case "X":
+		faces.Right = true
+		faces.Left = true
+	case "Y":
+		faces.Top = true
+		faces.Bottom = true
+	case "Z":
+		faces.Back = true
+		faces.Front = true
+	}
+}
 
 func init() { register(Faces) }
 func Faces() Reflector {
@@ -46,8 +95,31 @@ func Faces() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			// TODO: match API.
 			"new": func(s State) int {
+				var v types.Faces
+				n := s.L.GetTop()
+				for i := 1; i <= n; i++ {
+					switch value := PullVariant(s, i).(type) {
+					case *rtypes.EnumItem:
+						if enum := value.Enum(); enum != nil {
+							switch enum.Name() {
+							case "NormalId":
+								setFacesFromNormalIdName(&v, value.Name())
+							case "Axis":
+								setFacesFromAxisName(&v, value.Name())
+							}
+						}
+					case types.Intlike:
+						setFacesFromNormalIdValue(&v, int(value.Intlike()))
+					case types.Numberlike:
+						setFacesFromNormalIdValue(&v, int(value.Numberlike()))
+					case types.Stringlike:
+						setFacesFromNormalIdName(&v, value.Stringlike())
+					}
+				}
+				return s.Push(v)
+			},
+			"fromComponents": func(s State) int {
 				var v types.Faces
 				switch s.Count() {
 				case 6:
