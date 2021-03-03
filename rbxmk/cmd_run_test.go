@@ -18,8 +18,13 @@ import (
 
 const testdata = "testdata"
 
+// Replace scriptArguments[x] with test script.
+const replaceIndex = 3
+
 var scriptArguments = [...]string{
 	"rbxmk_test",
+	"run",
+	"--debug",
 	"-",
 	"true",
 	"false",
@@ -159,7 +164,7 @@ func TestScripts(t *testing.T) {
 	program.Register(snek.Def{
 		Name: "run",
 		New: func() snek.Command {
-			return RunCommand{Init: func(s rbxmk.State) { initMain(s, t) }}
+			return &RunCommand{Init: func(s rbxmk.State) { initMain(s, t) }}
 		},
 	})
 
@@ -193,11 +198,12 @@ func TestScripts(t *testing.T) {
 	}
 	for _, file := range files {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
-			args := scriptArguments
-			args[1] = file
+			args := make([]string, len(scriptArguments))
+			copy(args, scriptArguments[:])
+			args[replaceIndex] = file
 			err := program.RunWithInput("run", snek.Input{
 				Program:   args[0],
-				Arguments: args[1:],
+				Arguments: args[2:],
 			})
 			if err != nil {
 				t.Errorf("script %s: %s", file, err)

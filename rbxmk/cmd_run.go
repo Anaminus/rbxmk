@@ -57,18 +57,23 @@ Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
 nil are parsed into their respective types in Lua, and any other value is
 interpreted as a string. Within the script, these arguments can be received from
 the ... operator.`,
-		New: func() snek.Command { return RunCommand{} },
+		New: func() snek.Command { return &RunCommand{} },
 	})
 }
 
 type RunCommand struct {
-	Init func(rbxmk.State)
+	Debug bool
+	Init  func(rbxmk.State)
+}
+
+func (c *RunCommand) SetFlags(flags snek.FlagSet) {
+	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
 }
 
 // Run is the entrypoint to the command for running scripts. init runs after the
 // World envrionment is fully initialized and arguments have been pushed, and
 // before the script runs.
-func (c RunCommand) Run(opt snek.Options) error {
+func (c *RunCommand) Run(opt snek.Options) error {
 	// Parse flags.
 	if err := opt.ParseFlags(); err != nil {
 		return err
@@ -84,7 +89,7 @@ func (c RunCommand) Run(opt snek.Options) error {
 	// Initialize world.
 	world := rbxmk.NewWorld(lua.NewState(lua.Options{
 		SkipOpenLibs:        true,
-		IncludeGoStackTrace: false,
+		IncludeGoStackTrace: c.Debug,
 	}))
 	if wd, err := os.Getwd(); err == nil {
 		// Working directory is an accessible root.
