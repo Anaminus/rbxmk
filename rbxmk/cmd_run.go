@@ -83,7 +83,7 @@ type RunCommand struct {
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
-	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory.")
+	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory. May be specified any number of times.")
 	flags.BoolVar(&c.InsecurePaths, "allow-insecure-paths", false, "Disable path restrictions, allowing scripts to access any path in the file system.")
 	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
 }
