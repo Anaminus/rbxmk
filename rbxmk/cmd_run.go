@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
@@ -62,12 +63,26 @@ the ... operator.`,
 	})
 }
 
+// repeatedString is a string flag that can be specified multiple times.
+type repeatedString []string
+
+func (s repeatedString) String() string {
+	return strings.Join(s, ",")
+}
+
+func (s *repeatedString) Set(v string) error {
+	*s = append(*s, v)
+	return nil
+}
+
 type RunCommand struct {
-	Debug bool
-	Init  func(rbxmk.State)
+	IncludedRoots []string
+	Debug         bool
+	Init          func(rbxmk.State)
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
+	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory.")
 	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
 }
 
@@ -95,6 +110,9 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	if wd, err := os.Getwd(); err == nil {
 		// Working directory is an accessible root.
 		world.FS.AddRoot(wd)
+	}
+	for _, root := range c.IncludedRoots {
+		world.FS.AddRoot(root)
 	}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
