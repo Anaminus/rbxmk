@@ -31,7 +31,10 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 }
 
 func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
-	enumValue := desc.EnumTypes.Enum(name)
+	var enumValue *rtypes.Enum
+	if desc.EnumTypes != nil {
+		enumValue = desc.EnumTypes.Enum(name)
+	}
 	if enumValue == nil {
 		if desc.Enums[name] == nil {
 			s.RaiseError(
