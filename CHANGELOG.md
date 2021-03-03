@@ -11,6 +11,7 @@ branch is the latest unreleased version.
 - Implementations of Axes.new and Faces.new match Roblox API.
 	- Previous implementations exist as Axes.fromComponents and
 	  Faces.fromComponents.
+- Implement face fields on Axes, matching Roblox API.
 
 **Fixes:**
 - Fix version displayed by rbxmk.

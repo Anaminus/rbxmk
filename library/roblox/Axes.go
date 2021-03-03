@@ -69,6 +69,24 @@ func Axes() Reflector {
 			"Z": {Get: func(s State, v types.Value) int {
 				return s.Push(types.Bool(v.(types.Axes).Z))
 			}},
+			"Right": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).X))
+			}},
+			"Top": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).Y))
+			}},
+			"Back": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).Z))
+			}},
+			"Left": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).X))
+			}},
+			"Bottom": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).Y))
+			}},
+			"Front": {Get: func(s State, v types.Value) int {
+				return s.Push(types.Bool(v.(types.Axes).Z))
+			}},
 		},
 		Constructors: Constructors{
 			"new": func(s State) int {
