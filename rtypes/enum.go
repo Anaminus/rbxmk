@@ -2,6 +2,8 @@ package rtypes
 
 import (
 	"sort"
+
+	lua "github.com/anaminus/gopher-lua"
 )
 
 // Enums is a collection of Enum values.
@@ -75,6 +77,32 @@ func (e *Enum) Items() []*EnumItem {
 		items[i] = item
 	}
 	return items
+}
+
+// Pull attempts to convert a Lua value to an item of the enum. Returns nil if
+// the value could not be converted.
+//
+// A value is converted if it is a number that matches the value of an item, if
+// it is a string that matches the name of an item, or if it is an EnumItem
+// userdata that is an item of the enum.
+func (e *Enum) Pull(lv lua.LValue) *EnumItem {
+	switch lv := lv.(type) {
+	case lua.LNumber:
+		if item, ok := e.valueIndex[int(lv)]; ok {
+			return item
+		}
+	case lua.LString:
+		if item, ok := e.nameIndex[string(lv)]; ok {
+			return item
+		}
+	case *lua.LUserData:
+		if item, ok := lv.Value.(*EnumItem); ok {
+			if item.Enum() == e {
+				return item
+			}
+		}
+	}
+	return nil
 }
 
 // EnumItem represents one possible value of an enum.
