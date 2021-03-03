@@ -50,7 +50,7 @@ func init() {
 	Program.Register(snek.Def{
 		Name:      "run",
 		Summary:   "Execute a script.",
-		Arguments: `[ FILE ] [ ...VALUE ]`,
+		Arguments: `[ FLAGS ] [ FILE ] [ ...VALUE ]`,
 		Description: `
 Receives a file to be executed as a Lua script. If "-" is given, then the script
 will be read from stdin instead.
