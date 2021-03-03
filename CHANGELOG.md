@@ -12,6 +12,8 @@ branch is the latest unreleased version.
 	- Previous implementations exist as Axes.fromComponents and
 	  Faces.fromComponents.
 - Implement face fields on Axes, matching Roblox API.
+- Add `--include-root` flag to run command to include paths as root directories.
+- Add `--allow-insecure-paths` flag to run command to disable path restrictions.
 
 **Fixes:**
 - Fix version displayed by rbxmk.
