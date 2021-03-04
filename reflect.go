@@ -104,7 +104,9 @@ type Constructors map[string]Constructor
 
 // Constructor creates a new value of a Reflector. The function can receive
 // arguments from s.L, and must push a new value to s.L.
-type Constructor func(s State) int
+type Constructor struct {
+	Func func(s State) int
+}
 
 // PushTypeTo returns a Reflector.PushTo that converts v to a userdata set with
 // a type metatable registered as type t.

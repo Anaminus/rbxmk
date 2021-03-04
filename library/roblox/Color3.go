@@ -47,32 +47,38 @@ func Color3() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Color3
-				switch s.Count() {
-				case 0:
-				case 3:
-					v.R = float32(s.Pull(1, "float").(types.Float))
-					v.G = float32(s.Pull(2, "float").(types.Float))
-					v.B = float32(s.Pull(3, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 0 or 3 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Color3
+					switch s.Count() {
+					case 0:
+					case 3:
+						v.R = float32(s.Pull(1, "float").(types.Float))
+						v.G = float32(s.Pull(2, "float").(types.Float))
+						v.B = float32(s.Pull(3, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 0 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
-			"fromRGB": func(s State) int {
-				return s.Push(types.NewColor3FromRGB(
-					int(s.Pull(1, "int").(types.Int)),
-					int(s.Pull(2, "int").(types.Int)),
-					int(s.Pull(3, "int").(types.Int)),
-				))
+			"fromRGB": {
+				Func: func(s State) int {
+					return s.Push(types.NewColor3FromRGB(
+						int(s.Pull(1, "int").(types.Int)),
+						int(s.Pull(2, "int").(types.Int)),
+						int(s.Pull(3, "int").(types.Int)),
+					))
+				},
 			},
-			"fromHSV": func(s State) int {
-				return s.Push(types.NewColor3FromHSV(
-					float64(s.Pull(1, "number").(types.Double)),
-					float64(s.Pull(2, "number").(types.Double)),
-					float64(s.Pull(3, "number").(types.Double)),
-				))
+			"fromHSV": {
+				Func: func(s State) int {
+					return s.Push(types.NewColor3FromHSV(
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
+					))
+				},
 			},
 		},
 		ConvertFrom: func(v types.Value) types.Value {

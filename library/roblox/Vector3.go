@@ -99,18 +99,20 @@ func Vector3() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Vector3
-				switch s.Count() {
-				case 0:
-				case 3:
-					v.X = float32(s.Pull(1, "float").(types.Float))
-					v.Y = float32(s.Pull(2, "float").(types.Float))
-					v.Z = float32(s.Pull(3, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 0 or 3 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Vector3
+					switch s.Count() {
+					case 0:
+					case 3:
+						v.X = float32(s.Pull(1, "float").(types.Float))
+						v.Y = float32(s.Pull(2, "float").(types.Float))
+						v.Z = float32(s.Pull(3, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 0 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

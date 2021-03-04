@@ -75,18 +75,20 @@ func Vector3int16() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Vector3int16
-				switch s.Count() {
-				case 0:
-				case 3:
-					v.X = int16(s.Pull(1, "int").(types.Int))
-					v.Y = int16(s.Pull(2, "int").(types.Int))
-					v.Z = int16(s.Pull(3, "int").(types.Int))
-				default:
-					return s.RaiseError("expected 0 or 3 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Vector3int16
+					switch s.Count() {
+					case 0:
+					case 3:
+						v.X = int16(s.Pull(1, "int").(types.Int))
+						v.Y = int16(s.Pull(2, "int").(types.Int))
+						v.Z = int16(s.Pull(3, "int").(types.Int))
+					default:
+						return s.RaiseError("expected 0 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

@@ -366,10 +366,11 @@ func (w *World) ApplyReflector(r Reflector, t *lua.LTable) {
 	if r.Constructors != nil {
 		ctors := w.l.CreateTable(0, len(r.Constructors))
 		for name, ctor := range r.Constructors {
-			c := ctor
-			ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
-				return c(State{World: w, L: w.l})
-			}))
+			if c := ctor.Func; c != nil {
+				ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
+					return c(State{World: w, L: w.l})
+				}))
+			}
 		}
 		t.RawSetString(r.Name, ctors)
 	}

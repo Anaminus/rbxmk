@@ -34,19 +34,21 @@ func NumberRange() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.NumberRange
-				switch s.Count() {
-				case 1:
-					v.Min = float32(s.Pull(1, "float").(types.Float))
-					v.Max = v.Min
-				case 2:
-					v.Min = float32(s.Pull(1, "float").(types.Float))
-					v.Max = float32(s.Pull(2, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 1 or 2 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.NumberRange
+					switch s.Count() {
+					case 1:
+						v.Min = float32(s.Pull(1, "float").(types.Float))
+						v.Max = v.Min
+					case 2:
+						v.Min = float32(s.Pull(1, "float").(types.Float))
+						v.Max = float32(s.Pull(2, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 1 or 2 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

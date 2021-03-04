@@ -91,17 +91,19 @@ func Vector2() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Vector2
-				switch s.Count() {
-				case 0:
-				case 2:
-					v.X = float32(s.Pull(1, "float").(types.Float))
-					v.Y = float32(s.Pull(2, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 0 or 2 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Vector2
+					switch s.Count() {
+					case 0:
+					case 2:
+						v.X = float32(s.Pull(1, "float").(types.Float))
+						v.Y = float32(s.Pull(2, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 0 or 2 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

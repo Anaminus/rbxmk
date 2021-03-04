@@ -48,11 +48,13 @@ func UDim() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				return s.Push(types.UDim{
-					Scale:  float32(s.Pull(1, "float").(types.Float)),
-					Offset: int32(s.Pull(2, "int").(types.Int)),
-				})
+			"new": {
+				Func: func(s State) int {
+					return s.Push(types.UDim{
+						Scale:  float32(s.Pull(1, "float").(types.Float)),
+						Offset: int32(s.Pull(2, "int").(types.Int)),
+					})
+				},
 			},
 		},
 	}

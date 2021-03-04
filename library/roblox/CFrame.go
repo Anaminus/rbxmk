@@ -179,95 +179,109 @@ func CFrame() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.CFrame
-				switch s.Count() {
-				case 0:
-					v = types.NewCFrame()
-				case 1:
-					pos := s.Pull(1, "Vector3").(types.Vector3)
-					v = types.NewCFrameFromVector3(pos)
-				case 2:
-					pos := s.Pull(1, "Vector3").(types.Vector3)
-					lookAt := s.Pull(2, "Vector3").(types.Vector3)
-					v = types.NewCFrameFromLook(pos, lookAt)
-				case 3:
-					v = types.NewCFrameFromPosition(
+			"new": {
+				Func: func(s State) int {
+					var v types.CFrame
+					switch s.Count() {
+					case 0:
+						v = types.NewCFrame()
+					case 1:
+						pos := s.Pull(1, "Vector3").(types.Vector3)
+						v = types.NewCFrameFromVector3(pos)
+					case 2:
+						pos := s.Pull(1, "Vector3").(types.Vector3)
+						lookAt := s.Pull(2, "Vector3").(types.Vector3)
+						v = types.NewCFrameFromLook(pos, lookAt)
+					case 3:
+						v = types.NewCFrameFromPosition(
+							float64(s.Pull(1, "number").(types.Double)),
+							float64(s.Pull(2, "number").(types.Double)),
+							float64(s.Pull(3, "number").(types.Double)),
+						)
+					case 7:
+						v = types.NewCFrameFromQuat(
+							float64(s.Pull(1, "number").(types.Double)),
+							float64(s.Pull(2, "number").(types.Double)),
+							float64(s.Pull(3, "number").(types.Double)),
+							float64(s.Pull(4, "number").(types.Double)),
+							float64(s.Pull(5, "number").(types.Double)),
+							float64(s.Pull(6, "number").(types.Double)),
+							float64(s.Pull(7, "number").(types.Double)),
+						)
+					case 12:
+						v = types.NewCFrameFromComponents(
+							float64(s.Pull(1, "number").(types.Double)),
+							float64(s.Pull(2, "number").(types.Double)),
+							float64(s.Pull(3, "number").(types.Double)),
+							float64(s.Pull(4, "number").(types.Double)),
+							float64(s.Pull(5, "number").(types.Double)),
+							float64(s.Pull(6, "number").(types.Double)),
+							float64(s.Pull(7, "number").(types.Double)),
+							float64(s.Pull(8, "number").(types.Double)),
+							float64(s.Pull(9, "number").(types.Double)),
+							float64(s.Pull(10, "number").(types.Double)),
+							float64(s.Pull(11, "number").(types.Double)),
+							float64(s.Pull(12, "number").(types.Double)),
+						)
+					default:
+						return s.RaiseError("unexpected number of arguments")
+					}
+					return s.Push(v)
+				},
+			},
+			"fromEulerAnglesXYZ": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromAngles(
 						float64(s.Pull(1, "number").(types.Double)),
 						float64(s.Pull(2, "number").(types.Double)),
 						float64(s.Pull(3, "number").(types.Double)),
-					)
-				case 7:
-					v = types.NewCFrameFromQuat(
+					))
+				},
+			},
+			"fromEulerAnglesYXZ": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromOrientation(
 						float64(s.Pull(1, "number").(types.Double)),
 						float64(s.Pull(2, "number").(types.Double)),
 						float64(s.Pull(3, "number").(types.Double)),
-						float64(s.Pull(4, "number").(types.Double)),
-						float64(s.Pull(5, "number").(types.Double)),
-						float64(s.Pull(6, "number").(types.Double)),
-						float64(s.Pull(7, "number").(types.Double)),
-					)
-				case 12:
-					v = types.NewCFrameFromComponents(
+					))
+				},
+			},
+			"Angles": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromAngles(
 						float64(s.Pull(1, "number").(types.Double)),
 						float64(s.Pull(2, "number").(types.Double)),
 						float64(s.Pull(3, "number").(types.Double)),
-						float64(s.Pull(4, "number").(types.Double)),
-						float64(s.Pull(5, "number").(types.Double)),
-						float64(s.Pull(6, "number").(types.Double)),
-						float64(s.Pull(7, "number").(types.Double)),
-						float64(s.Pull(8, "number").(types.Double)),
-						float64(s.Pull(9, "number").(types.Double)),
-						float64(s.Pull(10, "number").(types.Double)),
-						float64(s.Pull(11, "number").(types.Double)),
-						float64(s.Pull(12, "number").(types.Double)),
-					)
-				default:
-					return s.RaiseError("unexpected number of arguments")
-				}
-				return s.Push(v)
+					))
+				},
 			},
-			"fromEulerAnglesXYZ": func(s State) int {
-				return s.Push(types.NewCFrameFromAngles(
-					float64(s.Pull(1, "number").(types.Double)),
-					float64(s.Pull(2, "number").(types.Double)),
-					float64(s.Pull(3, "number").(types.Double)),
-				))
+			"fromOrientation": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromOrientation(
+						float64(s.Pull(1, "number").(types.Double)),
+						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(3, "number").(types.Double)),
+					))
+				},
 			},
-			"fromEulerAnglesYXZ": func(s State) int {
-				return s.Push(types.NewCFrameFromOrientation(
-					float64(s.Pull(1, "number").(types.Double)),
-					float64(s.Pull(2, "number").(types.Double)),
-					float64(s.Pull(3, "number").(types.Double)),
-				))
+			"fromAxisAngle": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromAxisAngle(
+						s.Pull(1, "Vector3").(types.Vector3),
+						float64(s.Pull(2, "number").(types.Double)),
+					))
+				},
 			},
-			"Angles": func(s State) int {
-				return s.Push(types.NewCFrameFromAngles(
-					float64(s.Pull(1, "number").(types.Double)),
-					float64(s.Pull(2, "number").(types.Double)),
-					float64(s.Pull(3, "number").(types.Double)),
-				))
-			},
-			"fromOrientation": func(s State) int {
-				return s.Push(types.NewCFrameFromOrientation(
-					float64(s.Pull(1, "number").(types.Double)),
-					float64(s.Pull(2, "number").(types.Double)),
-					float64(s.Pull(3, "number").(types.Double)),
-				))
-			},
-			"fromAxisAngle": func(s State) int {
-				return s.Push(types.NewCFrameFromAxisAngle(
-					s.Pull(1, "Vector3").(types.Vector3),
-					float64(s.Pull(2, "number").(types.Double)),
-				))
-			},
-			"fromMatrix": func(s State) int {
-				return s.Push(types.NewCFrameFromMatrix(
-					s.Pull(1, "Vector3").(types.Vector3),
-					s.Pull(2, "Vector3").(types.Vector3),
-					s.Pull(3, "Vector3").(types.Vector3),
-					s.Pull(4, "Vector3").(types.Vector3),
-				))
+			"fromMatrix": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromMatrix(
+						s.Pull(1, "Vector3").(types.Vector3),
+						s.Pull(2, "Vector3").(types.Vector3),
+						s.Pull(3, "Vector3").(types.Vector3),
+						s.Pull(4, "Vector3").(types.Vector3),
+					))
+				},
 			},
 		},
 	}

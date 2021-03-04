@@ -72,17 +72,19 @@ func Vector2int16() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Vector2int16
-				switch s.Count() {
-				case 0:
-				case 2:
-					v.X = int16(s.Pull(1, "int").(types.Int))
-					v.Y = int16(s.Pull(2, "int").(types.Int))
-				default:
-					return s.RaiseError("expected 0 or 2 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Vector2int16
+					switch s.Count() {
+					case 0:
+					case 2:
+						v.X = int16(s.Pull(1, "int").(types.Int))
+						v.Y = int16(s.Pull(2, "int").(types.Int))
+					default:
+						return s.RaiseError("expected 0 or 2 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

@@ -34,11 +34,13 @@ func Region3int16() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				return s.Push(types.Region3int16{
-					Min: s.Pull(1, "Vector3int16").(types.Vector3int16),
-					Max: s.Pull(2, "Vector3int16").(types.Vector3int16),
-				})
+			"new": {
+				Func: func(s State) int {
+					return s.Push(types.Region3int16{
+						Min: s.Pull(1, "Vector3int16").(types.Vector3int16),
+						Max: s.Pull(2, "Vector3int16").(types.Vector3int16),
+					})
+				},
 			},
 		},
 	}

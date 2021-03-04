@@ -43,23 +43,25 @@ func PhysicalProperties() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.PhysicalProperties
-				switch s.Count() {
-				case 3:
-					v.Density = float32(s.Pull(1, "float").(types.Float))
-					v.Friction = float32(s.Pull(2, "float").(types.Float))
-					v.Elasticity = float32(s.Pull(3, "float").(types.Float))
-				case 5:
-					v.Density = float32(s.Pull(1, "float").(types.Float))
-					v.Friction = float32(s.Pull(2, "float").(types.Float))
-					v.Elasticity = float32(s.Pull(3, "float").(types.Float))
-					v.FrictionWeight = float32(s.Pull(4, "float").(types.Float))
-					v.ElasticityWeight = float32(s.Pull(5, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 3 or 5 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.PhysicalProperties
+					switch s.Count() {
+					case 3:
+						v.Density = float32(s.Pull(1, "float").(types.Float))
+						v.Friction = float32(s.Pull(2, "float").(types.Float))
+						v.Elasticity = float32(s.Pull(3, "float").(types.Float))
+					case 5:
+						v.Density = float32(s.Pull(1, "float").(types.Float))
+						v.Friction = float32(s.Pull(2, "float").(types.Float))
+						v.Elasticity = float32(s.Pull(3, "float").(types.Float))
+						v.FrictionWeight = float32(s.Pull(4, "float").(types.Float))
+						v.ElasticityWeight = float32(s.Pull(5, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 3 or 5 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

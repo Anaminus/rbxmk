@@ -59,33 +59,39 @@ func UDim2() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.UDim2
-				switch s.Count() {
-				case 2:
-					v.X = s.Pull(1, "UDim").(types.UDim)
-					v.Y = s.Pull(2, "UDim").(types.UDim)
-				case 4:
-					v.X.Scale = float32(s.Pull(1, "float").(types.Float))
-					v.X.Offset = int32(s.Pull(2, "int").(types.Int))
-					v.Y.Scale = float32(s.Pull(3, "float").(types.Float))
-					v.Y.Offset = int32(s.Pull(4, "int").(types.Int))
-				default:
-					return s.RaiseError("expected 0 or 3 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.UDim2
+					switch s.Count() {
+					case 2:
+						v.X = s.Pull(1, "UDim").(types.UDim)
+						v.Y = s.Pull(2, "UDim").(types.UDim)
+					case 4:
+						v.X.Scale = float32(s.Pull(1, "float").(types.Float))
+						v.X.Offset = int32(s.Pull(2, "int").(types.Int))
+						v.Y.Scale = float32(s.Pull(3, "float").(types.Float))
+						v.Y.Offset = int32(s.Pull(4, "int").(types.Int))
+					default:
+						return s.RaiseError("expected 0 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
-			"fromScale": func(s State) int {
-				return s.Push(types.UDim2{
-					X: types.UDim{Scale: float32(s.Pull(1, "float").(types.Float))},
-					Y: types.UDim{Scale: float32(s.Pull(2, "float").(types.Float))},
-				})
+			"fromScale": {
+				Func: func(s State) int {
+					return s.Push(types.UDim2{
+						X: types.UDim{Scale: float32(s.Pull(1, "float").(types.Float))},
+						Y: types.UDim{Scale: float32(s.Pull(2, "float").(types.Float))},
+					})
+				},
 			},
-			"fromOffset": func(s State) int {
-				return s.Push(types.UDim2{
-					X: types.UDim{Offset: int32(s.Pull(1, "int").(types.Int))},
-					Y: types.UDim{Offset: int32(s.Pull(2, "int").(types.Int))},
-				})
+			"fromOffset": {
+				Func: func(s State) int {
+					return s.Push(types.UDim2{
+						X: types.UDim{Offset: int32(s.Pull(1, "int").(types.Int))},
+						Y: types.UDim{Offset: int32(s.Pull(2, "int").(types.Int))},
+					})
+				},
 			},
 		},
 	}

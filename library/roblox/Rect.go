@@ -40,21 +40,23 @@ func Rect() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Rect
-				switch s.Count() {
-				case 2:
-					v.Min = s.Pull(1, "Vector2").(types.Vector2)
-					v.Max = s.Pull(2, "Vector2").(types.Vector2)
-				case 4:
-					v.Min.X = float32(s.Pull(1, "float").(types.Float))
-					v.Min.Y = float32(s.Pull(2, "float").(types.Float))
-					v.Max.Y = float32(s.Pull(3, "float").(types.Float))
-					v.Max.Y = float32(s.Pull(4, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 2 or 4 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.Rect
+					switch s.Count() {
+					case 2:
+						v.Min = s.Pull(1, "Vector2").(types.Vector2)
+						v.Max = s.Pull(2, "Vector2").(types.Vector2)
+					case 4:
+						v.Min.X = float32(s.Pull(1, "float").(types.Float))
+						v.Min.Y = float32(s.Pull(2, "float").(types.Float))
+						v.Max.Y = float32(s.Pull(3, "float").(types.Float))
+						v.Max.Y = float32(s.Pull(4, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 2 or 4 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

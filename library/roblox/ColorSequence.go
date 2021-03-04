@@ -53,47 +53,49 @@ func ColorSequence() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.ColorSequence
-				switch s.Count() {
-				case 1:
-					switch c := s.PullAnyOf(1, "Color3", "table").(type) {
-					case types.Color3:
-						v = types.ColorSequence{
-							types.ColorSequenceKeypoint{Time: 0, Value: c},
-							types.ColorSequenceKeypoint{Time: 1, Value: c},
-						}
-					case rtypes.Table:
-						n := c.Len()
-						if n < 2 {
-							return s.RaiseError("ColorSequence requires at least 2 keypoints")
-						}
-						v = make(types.ColorSequence, n)
-						keypointRfl := s.Reflector("ColorSequenceKeypoint")
-						for i := 1; i <= n; i++ {
-							k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
-							if err != nil {
-								return s.RaiseError("%s", err)
+			"new": {
+				Func: func(s State) int {
+					var v types.ColorSequence
+					switch s.Count() {
+					case 1:
+						switch c := s.PullAnyOf(1, "Color3", "table").(type) {
+						case types.Color3:
+							v = types.ColorSequence{
+								types.ColorSequenceKeypoint{Time: 0, Value: c},
+								types.ColorSequenceKeypoint{Time: 1, Value: c},
 							}
-							v[i] = k.(types.ColorSequenceKeypoint)
+						case rtypes.Table:
+							n := c.Len()
+							if n < 2 {
+								return s.RaiseError("ColorSequence requires at least 2 keypoints")
+							}
+							v = make(types.ColorSequence, n)
+							keypointRfl := s.Reflector("ColorSequenceKeypoint")
+							for i := 1; i <= n; i++ {
+								k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
+								if err != nil {
+									return s.RaiseError("%s", err)
+								}
+								v[i] = k.(types.ColorSequenceKeypoint)
+							}
+							const epsilon = 1e-4
+							if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
+								return s.RaiseError("ColorSequence time must end at 1.0")
+							}
+							if t := v[0].Time; t < -epsilon || t > epsilon {
+								return s.RaiseError("ColorSequence time must start at 0.0")
+							}
 						}
-						const epsilon = 1e-4
-						if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
-							return s.RaiseError("ColorSequence time must end at 1.0")
+					case 2:
+						v = types.ColorSequence{
+							types.ColorSequenceKeypoint{Time: 0, Value: s.Pull(1, "Color3").(types.Color3)},
+							types.ColorSequenceKeypoint{Time: 1, Value: s.Pull(2, "Color3").(types.Color3)},
 						}
-						if t := v[0].Time; t < -epsilon || t > epsilon {
-							return s.RaiseError("ColorSequence time must start at 0.0")
-						}
+					default:
+						return s.RaiseError("expected 1 or 2 arguments")
 					}
-				case 2:
-					v = types.ColorSequence{
-						types.ColorSequenceKeypoint{Time: 0, Value: s.Pull(1, "Color3").(types.Color3)},
-						types.ColorSequenceKeypoint{Time: 1, Value: s.Pull(2, "Color3").(types.Color3)},
-					}
-				default:
-					return s.RaiseError("expected 1 or 2 arguments")
-				}
-				return s.Push(v)
+					return s.Push(v)
+				},
 			},
 		},
 	}

@@ -95,44 +95,48 @@ func Faces() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Faces
-				n := s.L.GetTop()
-				for i := 1; i <= n; i++ {
-					switch value := PullVariant(s, i).(type) {
-					case *rtypes.EnumItem:
-						if enum := value.Enum(); enum != nil {
-							switch enum.Name() {
-							case "NormalId":
-								setFacesFromNormalIdName(&v, value.Name())
-							case "Axis":
-								setFacesFromAxisName(&v, value.Name())
+			"new": {
+				Func: func(s State) int {
+					var v types.Faces
+					n := s.L.GetTop()
+					for i := 1; i <= n; i++ {
+						switch value := PullVariant(s, i).(type) {
+						case *rtypes.EnumItem:
+							if enum := value.Enum(); enum != nil {
+								switch enum.Name() {
+								case "NormalId":
+									setFacesFromNormalIdName(&v, value.Name())
+								case "Axis":
+									setFacesFromAxisName(&v, value.Name())
+								}
 							}
+						case types.Intlike:
+							setFacesFromNormalIdValue(&v, int(value.Intlike()))
+						case types.Numberlike:
+							setFacesFromNormalIdValue(&v, int(value.Numberlike()))
+						case types.Stringlike:
+							setFacesFromNormalIdName(&v, value.Stringlike())
 						}
-					case types.Intlike:
-						setFacesFromNormalIdValue(&v, int(value.Intlike()))
-					case types.Numberlike:
-						setFacesFromNormalIdValue(&v, int(value.Numberlike()))
-					case types.Stringlike:
-						setFacesFromNormalIdName(&v, value.Stringlike())
 					}
-				}
-				return s.Push(v)
+					return s.Push(v)
+				},
 			},
-			"fromComponents": func(s State) int {
-				var v types.Faces
-				switch s.Count() {
-				case 6:
-					v.Right = bool(s.Pull(1, "bool").(types.Bool))
-					v.Top = bool(s.Pull(2, "bool").(types.Bool))
-					v.Back = bool(s.Pull(3, "bool").(types.Bool))
-					v.Left = bool(s.Pull(4, "bool").(types.Bool))
-					v.Bottom = bool(s.Pull(5, "bool").(types.Bool))
-					v.Front = bool(s.Pull(6, "bool").(types.Bool))
-				default:
-					return s.RaiseError("expected 0 or 6 arguments")
-				}
-				return s.Push(v)
+			"fromComponents": {
+				Func: func(s State) int {
+					var v types.Faces
+					switch s.Count() {
+					case 6:
+						v.Right = bool(s.Pull(1, "bool").(types.Bool))
+						v.Top = bool(s.Pull(2, "bool").(types.Bool))
+						v.Back = bool(s.Pull(3, "bool").(types.Bool))
+						v.Left = bool(s.Pull(4, "bool").(types.Bool))
+						v.Bottom = bool(s.Pull(5, "bool").(types.Bool))
+						v.Front = bool(s.Pull(6, "bool").(types.Bool))
+					default:
+						return s.RaiseError("expected 0 or 6 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

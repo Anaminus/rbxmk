@@ -23,3 +23,4 @@ type Metatable = rbxmk.Metatable
 type Member = rbxmk.Member
 type Members = rbxmk.Members
 type Constructors = rbxmk.Constructors
+type Constructor = rbxmk.Constructor

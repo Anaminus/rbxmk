@@ -89,41 +89,45 @@ func Axes() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.Axes
-				n := s.L.GetTop()
-				for i := 1; i <= n; i++ {
-					switch value := PullVariant(s, i).(type) {
-					case *rtypes.EnumItem:
-						if enum := value.Enum(); enum != nil {
-							switch enum.Name() {
-							case "Axis":
-								setAxesFromAxisName(&v, value.Name())
-							case "NormalId":
-								setAxesFromNormalIdName(&v, value.Name())
+			"new": {
+				Func: func(s State) int {
+					var v types.Axes
+					n := s.L.GetTop()
+					for i := 1; i <= n; i++ {
+						switch value := PullVariant(s, i).(type) {
+						case *rtypes.EnumItem:
+							if enum := value.Enum(); enum != nil {
+								switch enum.Name() {
+								case "Axis":
+									setAxesFromAxisName(&v, value.Name())
+								case "NormalId":
+									setAxesFromNormalIdName(&v, value.Name())
+								}
 							}
+						case types.Intlike:
+							setAxesFromAxisValue(&v, int(value.Intlike()))
+						case types.Numberlike:
+							setAxesFromAxisValue(&v, int(value.Numberlike()))
+						case types.Stringlike:
+							setAxesFromNormalIdName(&v, value.Stringlike())
 						}
-					case types.Intlike:
-						setAxesFromAxisValue(&v, int(value.Intlike()))
-					case types.Numberlike:
-						setAxesFromAxisValue(&v, int(value.Numberlike()))
-					case types.Stringlike:
-						setAxesFromNormalIdName(&v, value.Stringlike())
 					}
-				}
-				return s.Push(v)
+					return s.Push(v)
+				},
 			},
-			"fromComponents": func(s State) int {
-				var v types.Axes
-				switch s.Count() {
-				case 3:
-					v.X = bool(s.Pull(1, "bool").(types.Bool))
-					v.Y = bool(s.Pull(2, "bool").(types.Bool))
-					v.Z = bool(s.Pull(3, "bool").(types.Bool))
-				default:
-					return s.RaiseError("expected 0 or 3 arguments")
-				}
-				return s.Push(v)
+			"fromComponents": {
+				Func: func(s State) int {
+					var v types.Axes
+					switch s.Count() {
+					case 3:
+						v.X = bool(s.Pull(1, "bool").(types.Bool))
+						v.Y = bool(s.Pull(2, "bool").(types.Bool))
+						v.Z = bool(s.Pull(3, "bool").(types.Bool))
+					default:
+						return s.RaiseError("expected 0 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}

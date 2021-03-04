@@ -34,10 +34,12 @@ func AttrConfig() Reflector {
 			},
 		},
 		Constructors: rbxmk.Constructors{
-			"new": func(s State) int {
-				var v rtypes.AttrConfig
-				v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
-				return s.Push(&v)
+			"new": {
+				Func: func(s State) int {
+					var v rtypes.AttrConfig
+					v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
+					return s.Push(&v)
+				},
 			},
 		},
 	}

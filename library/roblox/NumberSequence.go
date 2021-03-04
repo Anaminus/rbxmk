@@ -53,47 +53,49 @@ func NumberSequence() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.NumberSequence
-				switch s.Count() {
-				case 1:
-					switch c := s.PullAnyOf(1, "float", "table").(type) {
-					case types.Float:
-						v = types.NumberSequence{
-							types.NumberSequenceKeypoint{Time: 0, Value: float32(c)},
-							types.NumberSequenceKeypoint{Time: 1, Value: float32(c)},
-						}
-					case rtypes.Table:
-						n := c.Len()
-						if n < 2 {
-							return s.RaiseError("NumberSequence requires at least 2 keypoints")
-						}
-						v = make(types.NumberSequence, n)
-						keypointRfl := s.Reflector("NumberSequenceKeypoint")
-						for i := 1; i <= n; i++ {
-							k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
-							if err != nil {
-								return s.RaiseError("%s", err)
+			"new": {
+				Func: func(s State) int {
+					var v types.NumberSequence
+					switch s.Count() {
+					case 1:
+						switch c := s.PullAnyOf(1, "float", "table").(type) {
+						case types.Float:
+							v = types.NumberSequence{
+								types.NumberSequenceKeypoint{Time: 0, Value: float32(c)},
+								types.NumberSequenceKeypoint{Time: 1, Value: float32(c)},
 							}
-							v[i] = k.(types.NumberSequenceKeypoint)
+						case rtypes.Table:
+							n := c.Len()
+							if n < 2 {
+								return s.RaiseError("NumberSequence requires at least 2 keypoints")
+							}
+							v = make(types.NumberSequence, n)
+							keypointRfl := s.Reflector("NumberSequenceKeypoint")
+							for i := 1; i <= n; i++ {
+								k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
+								if err != nil {
+									return s.RaiseError("%s", err)
+								}
+								v[i] = k.(types.NumberSequenceKeypoint)
+							}
+							const epsilon = 1e-4
+							if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
+								return s.RaiseError("NumberSequence time must end at 1.0")
+							}
+							if t := v[0].Time; t < -epsilon || t > epsilon {
+								return s.RaiseError("NumberSequence time must start at 0.0")
+							}
 						}
-						const epsilon = 1e-4
-						if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
-							return s.RaiseError("NumberSequence time must end at 1.0")
+					case 2:
+						v = types.NumberSequence{
+							types.NumberSequenceKeypoint{Time: 0, Value: float32(s.Pull(1, "float").(types.Float))},
+							types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, "float").(types.Float))},
 						}
-						if t := v[0].Time; t < -epsilon || t > epsilon {
-							return s.RaiseError("NumberSequence time must start at 0.0")
-						}
+					default:
+						return s.RaiseError("expected 1 or 2 arguments")
 					}
-				case 2:
-					v = types.NumberSequence{
-						types.NumberSequenceKeypoint{Time: 0, Value: float32(s.Pull(1, "float").(types.Float))},
-						types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, "float").(types.Float))},
-					}
-				default:
-					return s.RaiseError("expected 1 or 2 arguments")
-				}
-				return s.Push(v)
+					return s.Push(v)
+				},
 			},
 		},
 	}

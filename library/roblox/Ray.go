@@ -42,11 +42,13 @@ func Ray() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				return s.Push(types.Ray{
-					Origin:    s.Pull(1, "Vector3").(types.Vector3),
-					Direction: s.Pull(2, "Vector3").(types.Vector3),
-				})
+			"new": {
+				Func: func(s State) int {
+					return s.Push(types.Ray{
+						Origin:    s.Pull(1, "Vector3").(types.Vector3),
+						Direction: s.Pull(2, "Vector3").(types.Vector3),
+					})
+				},
 			},
 		},
 	}

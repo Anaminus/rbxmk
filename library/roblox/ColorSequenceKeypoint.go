@@ -37,20 +37,22 @@ func ColorSequenceKeypoint() Reflector {
 			}},
 		},
 		Constructors: Constructors{
-			"new": func(s State) int {
-				var v types.ColorSequenceKeypoint
-				switch s.Count() {
-				case 2:
-					v.Time = float32(s.Pull(1, "float").(types.Float))
-					v.Value = s.Pull(2, "Color3").(types.Color3)
-				case 3:
-					v.Time = float32(s.Pull(1, "float").(types.Float))
-					v.Value = s.Pull(2, "Color3").(types.Color3)
-					v.Envelope = float32(s.Pull(3, "float").(types.Float))
-				default:
-					return s.RaiseError("expected 2 or 3 arguments")
-				}
-				return s.Push(v)
+			"new": {
+				Func: func(s State) int {
+					var v types.ColorSequenceKeypoint
+					switch s.Count() {
+					case 2:
+						v.Time = float32(s.Pull(1, "float").(types.Float))
+						v.Value = s.Pull(2, "Color3").(types.Color3)
+					case 3:
+						v.Time = float32(s.Pull(1, "float").(types.Float))
+						v.Value = s.Pull(2, "Color3").(types.Color3)
+						v.Envelope = float32(s.Pull(3, "float").(types.Float))
+					default:
+						return s.RaiseError("expected 2 or 3 arguments")
+					}
+					return s.Push(v)
+				},
 			},
 		},
 	}
