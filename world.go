@@ -378,6 +378,24 @@ func (w *World) ApplyReflector(r Reflector, t *lua.LTable) {
 	}
 }
 
+// Typeof returns the type of the given Lua value. If it is a userdata, Typeof
+// attempts to get the type according to the value's metatable. Panics if v is
+// nil (not if nil Lua value).
+func (w *World) Typeof(v lua.LValue) string {
+	if v == nil {
+		panic("value expected")
+	}
+	u, ok := v.(*lua.LUserData)
+	if !ok {
+		return v.Type().String()
+	}
+	t, ok := w.l.GetMetaField(u, "__type").(lua.LString)
+	if !ok {
+		return u.Type().String()
+	}
+	return string(t)
+}
+
 // RegisterFormat registers a format. Panics if the format is already
 // registered.
 func (w *World) RegisterFormat(f Format) {

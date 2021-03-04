@@ -12,7 +12,12 @@ var Roblox = rbxmk.Library{Name: "", Open: openRoblox}
 
 func openRoblox(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("typeof", s.L.NewFunction(robloxTypeof))
+	lib.RawSetString("typeof", s.WrapFunc(func(s rbxmk.State) int {
+		v := s.L.CheckAny(1)
+		t := s.Typeof(v)
+		s.L.Push(lua.LString(t))
+		return 1
+	}))
 
 	for _, f := range reflect.All() {
 		r := f()
@@ -21,20 +26,4 @@ func openRoblox(s rbxmk.State) *lua.LTable {
 	}
 
 	return lib
-}
-
-func robloxTypeof(l *lua.LState) int {
-	v := l.CheckAny(1)
-	u, ok := v.(*lua.LUserData)
-	if !ok {
-		l.Push(lua.LString(v.Type().String()))
-		return 1
-	}
-	t, ok := l.GetMetaField(u, "__type").(lua.LString)
-	if !ok {
-		l.Push(lua.LString(u.Type().String()))
-		return 1
-	}
-	l.Push(lua.LString(t))
-	return 1
 }
