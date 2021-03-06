@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,21 +28,36 @@ func PhysicalProperties() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Density": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.PhysicalProperties).Density))
-			}},
-			"Friction": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.PhysicalProperties).Friction))
-			}},
-			"Elasticity": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.PhysicalProperties).Elasticity))
-			}},
-			"FrictionWeight": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.PhysicalProperties).FrictionWeight))
-			}},
-			"ElasticityWeight": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.PhysicalProperties).ElasticityWeight))
-			}},
+			"Density": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.PhysicalProperties).Density))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Friction": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.PhysicalProperties).Friction))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Elasticity": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.PhysicalProperties).Elasticity))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"FrictionWeight": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.PhysicalProperties).FrictionWeight))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"ElasticityWeight": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.PhysicalProperties).ElasticityWeight))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -62,7 +79,43 @@ func PhysicalProperties() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "material", Type: dt.Prim("EnumItem")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("PhysicalProperties")},
+							},
+							Description: "Not supported.",
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "density", Type: dt.Prim("float")},
+								{Name: "friction", Type: dt.Prim("float")},
+								{Name: "elasticity", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("PhysicalProperties")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "density", Type: dt.Prim("float")},
+								{Name: "friction", Type: dt.Prim("float")},
+								{Name: "elasticity", Type: dt.Prim("float")},
+								{Name: "frictionWeight", Type: dt.Prim("float")},
+								{Name: "elasticityWeight", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("PhysicalProperties")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

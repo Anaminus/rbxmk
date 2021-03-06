@@ -5,6 +5,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -43,6 +45,14 @@ func RBXAssetOptions() Reflector {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
 			}
 			return options, nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{Underlying: dt.Struct{
+				"AssetID": dt.Prim("int64"),
+				"Cookies": dt.Optional{T: dt.Prim("Cookies")},
+				"Format":  dt.Prim("FormatSelector"),
+				"Body":    dt.Optional{T: dt.Prim("any")},
+			}}
 		},
 	}
 }

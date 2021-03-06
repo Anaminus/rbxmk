@@ -3,11 +3,13 @@ package library
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func init() { register(Base, -1) }
 
-var Base = rbxmk.Library{Name: "", Open: openBase}
+var Base = rbxmk.Library{Name: "", Open: openBase, Dump: dumpBase}
 
 func openBase(s rbxmk.State) *lua.LTable {
 	openFilteredLibs(s.L, filteredStdLib)
@@ -194,5 +196,700 @@ func openFilteredLibs(l *lua.LState, libs []libFilter, upvalues ...lua.LValue) {
 				table.RawSet(k, lua.LNil)
 			}
 		}
+	}
+}
+
+func dumpBase(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"_G":       dump.Property{ValueType: dt.Prim("table")},
+				"_VERSION": dump.Property{ValueType: dt.Prim("table")},
+				"assert": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "message", Type: dt.Optional{T: dt.Prim("string")}, Default: `"assertion failed!"`},
+					},
+				},
+				"error": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "message", Type: dt.Prim("any")},
+						{Name: "level", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+					},
+				},
+				"ipairs": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+					},
+					Returns: dump.Parameters{
+						{Name: "iterator", Type: dt.Prim("function")},
+						{Name: "t", Type: dt.Prim("table")},
+						{Name: "start", Type: dt.Prim("int")},
+					},
+				},
+				"next": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+						{Name: "index", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "index", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+				"pairs": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+					},
+					Returns: dump.Parameters{
+						{Name: "next", Type: dt.Prim("function")},
+						{Name: "t", Type: dt.Prim("table")},
+						{Name: "start", Type: dt.Prim("nil")},
+					},
+				},
+				"pcall": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "f", Type: dt.Prim("function")},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "ok", Type: dt.Prim("boolean")},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+				"print": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+				"select": dump.MultiFunction{
+					{
+						Parameters: dump.Parameters{
+							{Name: "index", Type: dt.Prim("int")},
+							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+						Returns: dump.Parameters{
+							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					},
+					{
+						Parameters: dump.Parameters{
+							{Name: "count", Type: dt.Prim("string"), Enums: dt.Enums{`"#"`}},
+							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("int")},
+						},
+					},
+				},
+				"tonumber": dump.MultiFunction{
+					{
+						Parameters: dump.Parameters{
+							{Name: "x", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("number")},
+						},
+					},
+					{
+						Parameters: dump.Parameters{
+							{Name: "x", Type: dt.Prim("string")},
+							{Name: "base", Type: dt.Prim("int")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("number")},
+						},
+					},
+				},
+				"tostring": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("string")},
+					},
+				},
+				"type": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "v", Type: dt.Prim("any")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("string")},
+					},
+				},
+				"unpack": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "list", Type: dt.Prim("table")},
+						{Name: "i", Type: dt.Optional{T: dt.Prim("int")}},
+						{Name: "j", Type: dt.Optional{T: dt.Prim("int")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+				"xpcall": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "f", Type: dt.Prim("function")},
+						{Name: "msgh", Type: dt.Prim("function")},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "ok", Type: dt.Prim("boolean")},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+				"getmetatable": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "v", Type: dt.Prim("any")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Prim("table")}},
+					},
+				},
+				"setmetatable": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "v", Type: dt.Prim("any")},
+						{Name: "metatable", Type: dt.Optional{T: dt.Prim("table")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"math": dump.Struct{
+					Fields: dump.Fields{
+						"abs": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"acos": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"asin": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"atan": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"atan2": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+								{Name: "y", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"ceil": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("int")},
+							},
+						},
+						"cos": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"cosh": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"deg": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"exp": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"floor": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("int")},
+							},
+						},
+						"fmod": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+								{Name: "y", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"frexp": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Name: "m", Type: dt.Prim("number")},
+								{Name: "e", Type: dt.Prim("int")},
+							},
+						},
+						"huge": dump.Property{ValueType: dt.Prim("number")},
+						"ldexp": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "m", Type: dt.Prim("number")},
+								{Name: "e", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"log": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"log10": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"max": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "...", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"min": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "...", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"modf": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("int")},
+								{Type: dt.Prim("number")},
+							},
+						},
+						"pi": dump.Property{ValueType: dt.Prim("number")},
+						"pow": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"rad": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"random": dump.MultiFunction{
+							{
+								Returns: dump.Parameters{
+									{Type: dt.Prim("number")},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "m", Type: dt.Prim("int")},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("number")},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "m", Type: dt.Prim("int")},
+									{Name: "n", Type: dt.Prim("int")},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("number")},
+								},
+							},
+						},
+						"randomseed": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+						},
+						"sin": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"sinh": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"sqrt": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"tan": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"tanh": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+					},
+				},
+				"os": dump.Struct{
+					Fields: dump.Fields{
+						"clock": dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"date": dump.MultiFunction{
+							{
+								Returns: dump.Parameters{
+									{Type: dt.Prim("string")},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "format", Type: dt.Prim("string"), Enums: dt.Enums{`"*t"`, `!*t`}},
+									{Name: "time", Type: dt.Optional{T: dt.Prim("number")}},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Optional{T: dt.Struct{
+										"year":  dt.Prim("int"),
+										"month": dt.Prim("int"),
+										"day":   dt.Prim("int"),
+										"hour":  dt.Optional{T: dt.Prim("int")},
+										"min":   dt.Optional{T: dt.Prim("int")},
+										"sec":   dt.Optional{T: dt.Prim("int")},
+										"wday":  dt.Optional{T: dt.Prim("int")},
+										"yday":  dt.Optional{T: dt.Prim("int")},
+										"isdst": dt.Optional{T: dt.Prim("boolean")},
+									}}},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "format", Type: dt.Prim("string")},
+									{Name: "time", Type: dt.Optional{T: dt.Prim("number")}},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("string")},
+								},
+							},
+						},
+						"difftime": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t2", Type: dt.Prim("number")},
+								{Name: "t1", Type: dt.Prim("number")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+						"time": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t", Type: dt.Optional{T: dt.Struct{
+									"year":  dt.Prim("int"),
+									"month": dt.Prim("int"),
+									"day":   dt.Prim("int"),
+									"hour":  dt.Optional{T: dt.Prim("int")},
+									"min":   dt.Optional{T: dt.Prim("int")},
+									"sec":   dt.Optional{T: dt.Prim("int")},
+									"isdst": dt.Optional{T: dt.Prim("boolean")},
+								}}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("number")},
+							},
+						},
+					},
+				},
+				"string": dump.Struct{
+					Fields: dump.Fields{
+						"byte": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "i", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+								{Name: "j", Type: dt.Optional{T: dt.Prim("int")}, Default: `i`},
+							},
+							Returns: dump.Parameters{
+								{Name: "...", Type: dt.Prim("int")},
+							},
+						},
+						"char": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "...", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"find": dump.MultiFunction{
+							{
+								Parameters: dump.Parameters{
+									{Name: "s", Type: dt.Prim("string")},
+									{Name: "pattern", Type: dt.Prim("string")},
+									{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+								},
+								Returns: dump.Parameters{
+									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
+									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "s", Type: dt.Prim("string")},
+									{Name: "pattern", Type: dt.Prim("string")},
+									{Name: "init", Type: dt.Prim("int")},
+									{Name: "plain", Type: dt.Optional{T: dt.Prim("boolean")}, Default: `false`},
+								},
+								Returns: dump.Parameters{
+									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
+									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
+								},
+							},
+						},
+						"format": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "format", Type: dt.Prim("string")},
+								{Name: "...", Type: dt.Prim("any")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"gmatch": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "pattern", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Function{
+									Returns: dump.Parameters{
+										{Name: "...", Type: dt.Prim("string")},
+									},
+								}},
+							},
+						},
+						"gsub": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "pattern", Type: dt.Prim("string")},
+								{Name: "repl", Type: dt.Or{
+									dt.Prim("string"),
+									dt.Map{
+										K: dt.Prim("string"),
+										V: dt.Or{dt.Prim("string"), dt.Prim("number"), dt.Prim("false")},
+									},
+									dt.Function{
+										Parameters: dump.Parameters{
+											{Name: "...", Type: dt.Prim("string")},
+										},
+										Returns: dump.Parameters{
+											{Type: dt.Or{dt.Prim("string"), dt.Prim("number"), dt.Prim("false"), dt.Prim("nil")}},
+										},
+									},
+								}},
+								{Name: "n", Type: dt.Optional{T: dt.Prim("int")}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+								{Type: dt.Prim("int")},
+							},
+						},
+						"len": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("int")},
+							},
+						},
+						"lower": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"match": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "pattern", Type: dt.Prim("string")},
+								{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+							},
+							Returns: dump.Parameters{
+								{Name: "...", Type: dt.Optional{T: dt.Prim("string")}},
+							},
+						},
+						"rep": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "n", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"reverse": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"sub": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "i", Type: dt.Prim("int")},
+								{Name: "j", Type: dt.Optional{T: dt.Prim("int")}, Default: `-1`},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"upper": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+					},
+				},
+				"table": dump.Struct{
+					Fields: dump.Fields{
+						"concat": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t", Type: dt.Array{T: dt.Or{dt.Prim("string"), dt.Prim("number")}}},
+								{Name: "sep", Type: dt.Optional{T: dt.Prim("string")}, Default: `""`},
+								{Name: "i", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+								{Name: "j", Type: dt.Optional{T: dt.Prim("int")}, Default: `#t`},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("string")},
+							},
+						},
+						"insert": dump.MultiFunction{
+							{
+								Parameters: dump.Parameters{
+									{Name: "t", Type: dt.Prim("table")},
+									{Name: "index", Type: dt.Prim("int")},
+									{Name: "value", Type: dt.Prim("any")},
+								},
+							},
+							{
+								Parameters: dump.Parameters{
+									{Name: "t", Type: dt.Prim("table")},
+									{Name: "value", Type: dt.Prim("any")},
+								},
+							},
+						},
+						"maxn": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t", Type: dt.Prim("table")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("int")},
+							},
+						},
+						"remove": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t", Type: dt.Prim("table")},
+								{Name: "index", Type: dt.Optional{T: dt.Prim("int")}, Default: `#t`},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("any")},
+							},
+						},
+						"sort": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "t", Type: dt.Prim("table")},
+								{Name: "comp", Type: dt.Optional{T: dt.Function{
+									Parameters: dump.Parameters{
+										{Name: "a", Type: dt.Prim("any")},
+										{Name: "b", Type: dt.Prim("any")},
+									},
+									Returns: dump.Parameters{
+										{Type: dt.Prim("boolean")},
+									},
+								}}},
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -41,6 +43,17 @@ func HTTPOptions() Reflector {
 				Body:           s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
 			}
 			return options, nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{Underlying: dt.Struct{
+				"URL":            dt.Prim("string"),
+				"Method":         dt.Optional{T: dt.Prim("string")},
+				"RequestFormat":  dt.Optional{T: dt.Prim("FormatSelector")},
+				"ResponseFormat": dt.Optional{T: dt.Prim("FormatSelector")},
+				"Headers":        dt.Optional{T: dt.Prim("HTTPHeaders")},
+				"Cookies":        dt.Optional{T: dt.Prim("Cookies")},
+				"Body":           dt.Optional{T: dt.Prim("any")},
+			}}
 		},
 	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -60,33 +62,60 @@ func Axes() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).X))
-			}},
-			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Y))
-			}},
-			"Z": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Z))
-			}},
-			"Right": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).X))
-			}},
-			"Top": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Y))
-			}},
-			"Back": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Z))
-			}},
-			"Left": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).X))
-			}},
-			"Bottom": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Y))
-			}},
-			"Front": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Axes).Z))
-			}},
+			"X": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).X))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Y": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Y))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Z": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Z))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Right": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).X))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Top": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Y))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Back": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Z))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Left": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).X))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Bottom": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Y))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
+			"Front": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Axes).Z))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -114,6 +143,13 @@ func Axes() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					}}
+				},
 			},
 			"fromComponents": {
 				Func: func(s State) int {
@@ -128,7 +164,17 @@ func Axes() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "x", Type: dt.Prim("bool")},
+							{Name: "y", Type: dt.Prim("bool")},
+							{Name: "z", Type: dt.Prim("bool")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

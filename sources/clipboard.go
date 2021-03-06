@@ -6,6 +6,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/rbxmk/sources/internal/clipboard"
 	"github.com/robloxapi/types"
@@ -56,6 +58,28 @@ func ClipboardSource() rbxmk.Source {
 					return 0
 				}))
 				return lib
+			},
+			Dump: func(s rbxmk.State) dump.Library {
+				return dump.Library{
+					Struct: dump.Struct{
+						Fields: dump.Fields{
+							"read": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "...", Type: dt.Prim("string")},
+								},
+								Returns: dump.Parameters{
+									{Name: "value", Type: dt.Prim("any")},
+								},
+							},
+							"write": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "value", Type: dt.Prim("any")},
+									{Name: "...", Type: dt.Prim("string")},
+								},
+							},
+						},
+					},
+				}
 			},
 		},
 	}

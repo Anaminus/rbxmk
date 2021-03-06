@@ -5,11 +5,13 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func init() { register(String, 10) }
 
-var String = rbxmk.Library{Name: "string", Open: openString}
+var String = rbxmk.Library{Name: "string", Open: openString, Dump: dumpString}
 
 func openString(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
@@ -33,4 +35,22 @@ func stringSplit(s rbxmk.State) int {
 	}
 	s.L.Push(t)
 	return 1
+}
+
+func dumpString(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"split": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "s", Type: dt.Prim("string")},
+						{Name: "sep", Type: dt.Optional{T: dt.Prim("string")}, Default: `","`},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Array{T: dt.Prim("string")}},
+					},
+				},
+			},
+		},
+	}
 }

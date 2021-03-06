@@ -5,6 +5,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -28,24 +30,42 @@ func BrickColor() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Name": {Get: func(s State, v types.Value) int {
-				return s.Push(types.String(v.(types.BrickColor).Name()))
-			}},
-			"Number": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Int(v.(types.BrickColor).Number()))
-			}},
-			"R": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Double(v.(types.BrickColor).R()))
-			}},
-			"G": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Double(v.(types.BrickColor).G()))
-			}},
-			"B": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Double(v.(types.BrickColor).B()))
-			}},
-			"Color": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.BrickColor).Color())
-			}},
+			"Name": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.String(v.(types.BrickColor).Name()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+			},
+			"Number": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Int(v.(types.BrickColor).Number()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+			},
+			"R": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Double(v.(types.BrickColor).R()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+			},
+			"G": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Double(v.(types.BrickColor).G()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+			},
+			"B": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Double(v.(types.BrickColor).B()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+			},
+			"Color": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.BrickColor).Color())
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -72,11 +92,59 @@ func BrickColor() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "value", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("BrickColor")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "r", Type: dt.Prim("float")},
+								{Name: "g", Type: dt.Prim("float")},
+								{Name: "b", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("BrickColor")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "name", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("BrickColor")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "color", Type: dt.Prim("Color3")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("BrickColor")},
+							},
+						},
+					}
+				},
 			},
 			"palette": {
 				Func: func(s State) int {
 					index := int(s.Pull(1, "int").(types.Int))
 					return s.Push(types.NewBrickColorFromPalette(index))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "index", Type: dt.Prim("int")},
+						},
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
 				},
 			},
 			"random": {
@@ -84,47 +152,111 @@ func BrickColor() Reflector {
 					index := rand.Intn(types.BrickColorIndexSize)
 					return s.Push(types.NewBrickColorFromIndex(index))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
+				},
 			},
 			"White": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("White"))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
 				},
 			},
 			"Gray": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Medium stone grey"))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
+				},
 			},
 			"DarkGray": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Dark stone grey"))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
 				},
 			},
 			"Black": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Black"))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
+				},
 			},
 			"Red": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Bright red"))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
 				},
 			},
 			"Yellow": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Bright yellow"))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
+				},
 			},
 			"Green": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Dark green"))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
 				},
 			},
 			"Blue": {
 				Func: func(s State) int {
 					return s.Push(types.NewBrickColorFromName("Bright blue"))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Returns: dump.Parameters{
+							{Name: "", Type: dt.Prim("BrickColor")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

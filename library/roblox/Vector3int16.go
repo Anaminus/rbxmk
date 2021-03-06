@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -64,15 +66,24 @@ func Vector3int16() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector3int16).X))
-			}},
-			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector3int16).Y))
-			}},
-			"Z": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector3int16).Z))
-			}},
+			"X": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector3int16).X))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+			},
+			"Y": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector3int16).Y))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+			},
+			"Z": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector3int16).Z))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -89,7 +100,27 @@ func Vector3int16() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Vector3int16")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("int")},
+								{Name: "y", Type: dt.Prim("int")},
+								{Name: "z", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Vector3int16")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

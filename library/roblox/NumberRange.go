@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,12 +28,18 @@ func NumberRange() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Min": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.NumberRange).Min))
-			}},
-			"Max": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.NumberRange).Max))
-			}},
+			"Min": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.NumberRange).Min))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"Max": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.NumberRange).Max))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -49,7 +57,29 @@ func NumberRange() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "value", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("NumberRange")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "minimum", Type: dt.Prim("float")},
+								{Name: "maxmimum", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("NumberRange")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

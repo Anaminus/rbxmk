@@ -8,6 +8,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -116,6 +118,89 @@ func FSSource() rbxmk.Source {
 					return 0
 				}))
 				return lib
+			},
+			Dump: func(s rbxmk.State) dump.Library {
+				return dump.Library{
+					Struct: dump.Struct{
+						Fields: dump.Fields{
+							"dir": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
+								},
+							},
+							"mkdir": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+									{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("bool")},
+								},
+							},
+							"read": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+									{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+								},
+								Returns: dump.Parameters{
+									{Name: "value", Type: dt.Prim("any")},
+								},
+							},
+							"remove": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+									{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("bool")},
+								},
+							},
+							"rename": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "old", Type: dt.Prim("string")},
+									{Name: "new", Type: dt.Prim("string")},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Prim("bool")},
+								},
+							},
+							"stat": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+								},
+								Returns: dump.Parameters{
+									{Type: dt.Optional{T: dt.Prim("FileInfo")}},
+								},
+							},
+							"write": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "path", Type: dt.Prim("string")},
+									{Name: "value", Type: dt.Prim("any")},
+									{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+								},
+							},
+						},
+					},
+					Types: dump.TypeDefs{
+						"DirEntry": dump.TypeDef{
+							Underlying: dt.Struct{
+								"Name":  dt.Prim("string"),
+								"IsDir": dt.Prim("bool"),
+							},
+						},
+						"FileInfo": dump.TypeDef{
+							Underlying: dt.Struct{
+								"Name":    dt.Prim("string"),
+								"IsDir":   dt.Prim("bool"),
+								"Size":    dt.Prim("int"),
+								"ModTime": dt.Prim("int"),
+							},
+						},
+					},
+				}
 			},
 		},
 	}

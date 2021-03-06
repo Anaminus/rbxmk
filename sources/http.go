@@ -8,6 +8,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
@@ -27,6 +29,22 @@ func HTTPSource() rbxmk.Source {
 					return s.Push(request)
 				}))
 				return lib
+			},
+			Dump: func(s rbxmk.State) dump.Library {
+				return dump.Library{
+					Struct: dump.Struct{
+						Fields: dump.Fields{
+							"request": dump.Function{
+								Parameters: dump.Parameters{
+									{Name: "options", Type: dt.Prim("HTTPOptions")},
+								},
+								Returns: dump.Parameters{
+									{Name: "req", Type: dt.Prim("HTTPRequest")},
+								},
+							},
+						},
+					},
+				}
 			},
 		},
 	}

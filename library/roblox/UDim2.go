@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -40,23 +42,48 @@ func UDim2() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.UDim2).X)
-			}},
-			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.UDim2).Y)
-			}},
-			"Width": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.UDim2).X)
-			}},
-			"Height": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.UDim2).Y)
-			}},
-			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
-				goal := s.Pull(2, "UDim2").(types.UDim2)
-				alpha := float64(s.Pull(3, "number").(types.Double))
-				return s.Push(v.(types.UDim2).Lerp(goal, alpha))
-			}},
+			"X": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.UDim2).X)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+			},
+			"Y": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.UDim2).Y)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+			},
+			"Width": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.UDim2).X)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+			},
+			"Height": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.UDim2).Y)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+			},
+			"Lerp": {Method: true,
+				Get: func(s State, v types.Value) int {
+					goal := s.Pull(2, "UDim2").(types.UDim2)
+					alpha := float64(s.Pull(3, "number").(types.Double))
+					return s.Push(v.(types.UDim2).Lerp(goal, alpha))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "goal", Type: dt.Prim("UDim2")},
+							{Name: "alpha", Type: dt.Prim("float")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("UDim2")},
+						},
+					}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -76,6 +103,30 @@ func UDim2() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "xScale", Type: dt.Prim("float")},
+								{Name: "xOffset", Type: dt.Prim("int")},
+								{Name: "yScale", Type: dt.Prim("float")},
+								{Name: "yOffset", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("UDim2")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("UDim")},
+								{Name: "y", Type: dt.Prim("UDim")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("UDim2")},
+							},
+						},
+					}
+				},
 			},
 			"fromScale": {
 				Func: func(s State) int {
@@ -83,6 +134,19 @@ func UDim2() Reflector {
 						X: types.UDim{Scale: float32(s.Pull(1, "float").(types.Float))},
 						Y: types.UDim{Scale: float32(s.Pull(2, "float").(types.Float))},
 					})
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("float")},
+								{Name: "y", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("UDim2")},
+							},
+						},
+					}
 				},
 			},
 			"fromOffset": {
@@ -92,7 +156,30 @@ func UDim2() Reflector {
 						Y: types.UDim{Offset: int32(s.Pull(2, "int").(types.Int))},
 					})
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("int")},
+								{Name: "y", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("UDim2")},
+							},
+						},
+					}
+				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators: &dump.Operators{
+					Eq:  true,
+					Add: []dump.Binop{{Operand: dt.Prim("UDim2"), Result: dt.Prim("UDim2")}},
+					Sub: []dump.Binop{{Operand: dt.Prim("UDim2"), Result: dt.Prim("UDim2")}},
+					Unm: &dump.Unop{Result: dt.Prim("UDim2")},
+				},
+			}
 		},
 	}
 }

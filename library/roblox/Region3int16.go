@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,12 +28,18 @@ func Region3int16() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Min": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Region3int16).Min)
-			}},
-			"Max": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Region3int16).Max)
-			}},
+			"Min": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Region3int16).Min)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3int16")} },
+			},
+			"Max": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Region3int16).Max)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3int16")} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -41,7 +49,19 @@ func Region3int16() Reflector {
 						Max: s.Pull(2, "Vector3int16").(types.Vector3int16),
 					})
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "min", Type: dt.Prim("Vector3int16")},
+							{Name: "max", Type: dt.Prim("Vector3int16")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Region3int16")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

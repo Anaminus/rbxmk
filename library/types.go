@@ -3,6 +3,8 @@ package library
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func setUserdata(s rbxmk.State, t string) int {
@@ -16,7 +18,7 @@ func setUserdata(s rbxmk.State, t string) int {
 
 func init() { register(Types, 10) }
 
-var Types = rbxmk.Library{Name: "types", Open: openTypes}
+var Types = rbxmk.Library{Name: "types", Open: openTypes, Dump: dumpTypes}
 
 func openTypes(s rbxmk.State) *lua.LTable {
 	exprims := s.Reflectors(rbxmk.Exprim)
@@ -28,4 +30,13 @@ func openTypes(s rbxmk.State) *lua.LTable {
 		}))
 	}
 	return lib
+}
+
+func dumpTypes(s rbxmk.State) dump.Library {
+	exprims := s.Reflectors(rbxmk.Exprim)
+	root := dump.Library{Struct: dump.Struct{Fields: make(dump.Fields, len(exprims))}}
+	for _, t := range exprims {
+		root.Struct.Fields[t.Name] = dump.Property{ValueType: dt.Prim(t.Name)}
+	}
+	return root
 }

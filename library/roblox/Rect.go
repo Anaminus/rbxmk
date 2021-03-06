@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,18 +28,30 @@ func Rect() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Min": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Rect).Min)
-			}},
-			"Max": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Rect).Max)
-			}},
-			"Width": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Double(v.(types.Rect).Width()))
-			}},
-			"Height": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Double(v.(types.Rect).Height()))
-			}},
+			"Min": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Rect).Min)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+			},
+			"Max": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Rect).Max)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+			},
+			"Width": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Double(v.(types.Rect).Width()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Height": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Double(v.(types.Rect).Height()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -57,7 +71,32 @@ func Rect() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "min", Type: dt.Prim("Vector2")},
+								{Name: "max", Type: dt.Prim("Vector2")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Rect")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "minX", Type: dt.Prim("float")},
+								{Name: "minY", Type: dt.Prim("float")},
+								{Name: "maxX", Type: dt.Prim("float")},
+								{Name: "maxY", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Rect")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

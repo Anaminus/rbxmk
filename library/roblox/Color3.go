@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -27,24 +29,57 @@ func Color3() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"R": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Color3).R))
-			}},
-			"G": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Color3).G))
-			}},
-			"B": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Color3).B))
-			}},
-			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
-				goal := s.Pull(2, "Color3").(types.Color3)
-				alpha := float64(s.Pull(3, "number").(types.Double))
-				return s.Push(v.(types.Color3).Lerp(goal, alpha))
-			}},
-			"ToHSV": {Method: true, Get: func(s State, v types.Value) int {
-				hue, sat, val := v.(types.Color3).ToHSV()
-				return s.Push(rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
-			}},
+			"R": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Color3).R))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"G": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Color3).G))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"B": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Color3).B))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"Lerp": {Method: true,
+				Get: func(s State, v types.Value) int {
+					goal := s.Pull(2, "Color3").(types.Color3)
+					alpha := float64(s.Pull(3, "number").(types.Double))
+					return s.Push(v.(types.Color3).Lerp(goal, alpha))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "goal", Type: dt.Prim("Color3")},
+							{Name: "alpha", Type: dt.Prim("float")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Color3")},
+						},
+					}
+				},
+			},
+			"ToHSV": {Method: true,
+				Get: func(s State, v types.Value) int {
+					hue, sat, val := v.(types.Color3).ToHSV()
+					return s.Push(rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Name: "h", Type: dt.Prim("float")},
+							{Name: "s", Type: dt.Prim("float")},
+							{Name: "v", Type: dt.Prim("float")},
+						},
+					}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -61,6 +96,25 @@ func Color3() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Color3")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "r", Type: dt.Prim("float")},
+								{Name: "g", Type: dt.Prim("float")},
+								{Name: "b", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Color3")},
+							},
+						},
+					}
+				},
 			},
 			"fromRGB": {
 				Func: func(s State) int {
@@ -70,6 +124,18 @@ func Color3() Reflector {
 						int(s.Pull(3, "int").(types.Int)),
 					))
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "r", Type: dt.Prim("int")},
+							{Name: "g", Type: dt.Prim("int")},
+							{Name: "b", Type: dt.Prim("int")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Color3")},
+						},
+					}}
+				},
 			},
 			"fromHSV": {
 				Func: func(s State) int {
@@ -78,6 +144,18 @@ func Color3() Reflector {
 						float64(s.Pull(2, "number").(types.Double)),
 						float64(s.Pull(3, "number").(types.Double)),
 					))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "h", Type: dt.Prim("float")},
+							{Name: "s", Type: dt.Prim("float")},
+							{Name: "v", Type: dt.Prim("float")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Color3")},
+						},
+					}}
 				},
 			},
 		},
@@ -90,5 +168,6 @@ func Color3() Reflector {
 			}
 			return nil
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

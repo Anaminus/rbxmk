@@ -3,11 +3,13 @@ package library
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func init() { register(Table, 10) }
 
-var Table = rbxmk.Library{Name: "table", Open: openTable}
+var Table = rbxmk.Library{Name: "table", Open: openTable, Dump: dumpTable}
 
 func openTable(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 6)
@@ -18,6 +20,69 @@ func openTable(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("pack", s.WrapFunc(tablePack))
 	lib.RawSetString("unpack", s.WrapFunc(tableUnpack))
 	return lib
+}
+
+func dumpTable(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"clear": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+					},
+				},
+				"create": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "cap", Type: dt.Prim("int")},
+						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"find": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+						{Name: "value", Type: dt.Prim("any")},
+						{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Prim("int")}},
+					},
+				},
+				"move": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "a1", Type: dt.Prim("table")},
+						{Name: "f", Type: dt.Prim("int")},
+						{Name: "e", Type: dt.Prim("int")},
+						{Name: "t", Type: dt.Prim("int")},
+						{Name: "a2", Type: dt.Optional{T: dt.Prim("table")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"pack": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"unpack": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "list", Type: dt.Prim("table")},
+						{Name: "i", Type: dt.Optional{T: dt.Prim("int")}},
+						{Name: "j", Type: dt.Optional{T: dt.Prim("int")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+			},
+		},
+	}
 }
 
 func tableClear(s rbxmk.State) int {

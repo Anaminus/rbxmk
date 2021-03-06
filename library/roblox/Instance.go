@@ -7,6 +7,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
@@ -467,6 +469,7 @@ func Instance() Reflector {
 					}
 					inst.ClassName = string(s.Pull(3, "string").(types.String))
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"Name": Member{
 				Get: func(s State, v types.Value) int {
@@ -475,6 +478,7 @@ func Instance() Reflector {
 				Set: func(s State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"Parent": Member{
 				Get: func(s State, v types.Value) int {
@@ -495,124 +499,330 @@ func Instance() Reflector {
 						s.RaiseError("%s", err)
 					}
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
 			},
-			"Descend": Member{Method: true, Get: func(s State, v types.Value) int {
-				n := s.L.GetTop()
-				if n-1 <= 0 {
-					return s.RaiseError("expected at least 1 string")
-				}
-				names := make([]string, n-1)
-				for i := 2; i <= n; i++ {
-					names[i-2] = s.L.CheckString(i)
-				}
-				if child := v.(*rtypes.Instance).Descend(names...); child != nil {
-					return s.Push(child)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"ClearAllChildren": Member{Method: true, Get: func(s State, v types.Value) int {
-				v.(*rtypes.Instance).RemoveAll()
-				return 0
-			}},
-			"Clone": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push(v.(*rtypes.Instance).Clone())
-			}},
-			"Destroy": Member{Method: true, Get: func(s State, v types.Value) int {
-				v.(*rtypes.Instance).SetParent(nil)
-				return 0
-			}},
-			"FindFirstAncestor": Member{Method: true, Get: func(s State, v types.Value) int {
-				name := string(s.Pull(2, "string").(types.String))
-				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
-					return s.Push(ancestor)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"FindFirstAncestorOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
-				className := string(s.Pull(2, "string").(types.String))
-				if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
-					return s.Push(ancestor)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"FindFirstAncestorWhichIsA": Member{Method: true, Get: func(s State, v types.Value) int {
-				className := string(s.Pull(2, "string").(types.String))
-				if ancestor := v.(*rtypes.Instance).FindFirstAncestorWhichIsA(className); ancestor != nil {
-					return s.Push(ancestor)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"FindFirstChild": Member{Method: true, Get: func(s State, v types.Value) int {
-				name := string(s.Pull(2, "string").(types.String))
-				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
-				if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
-					return s.Push(child)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"FindFirstChildOfClass": Member{Method: true, Get: func(s State, v types.Value) int {
-				className := string(s.Pull(2, "string").(types.String))
-				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
-				if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
-					return s.Push(child)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"FindFirstChildWhichIsA": Member{Method: true, Get: func(s State, v types.Value) int {
-				className := string(s.Pull(2, "string").(types.String))
-				recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
-				if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
-					return s.Push(child)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"GetAttribute": Member{Method: true, Get: func(s State, v types.Value) int {
-				attribute := string(s.Pull(2, "string").(types.String))
-				dict := getAttributes(s, v.(*rtypes.Instance))
-				if v, ok := dict[attribute]; ok {
-					return s.Push(v)
-				}
-				return s.Push(rtypes.Nil)
-			}},
-			"GetAttributes": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push(getAttributes(s, v.(*rtypes.Instance)))
-			}},
-			"GetChildren": Member{Method: true, Get: func(s State, v types.Value) int {
-				t := v.(*rtypes.Instance).Children()
-				return s.Push(rtypes.Objects(t))
-			}},
-			"GetDescendants": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push(rtypes.Objects(v.(*rtypes.Instance).Descendants()))
-			}},
-			"GetFullName": Member{Method: true, Get: func(s State, v types.Value) int {
-				return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
-			}},
-			"IsA": Member{Method: true, Get: func(s State, v types.Value) int {
-				className := string(s.Pull(2, "string").(types.String))
-				return s.Push(types.Bool(v.(*rtypes.Instance).IsA(className)))
-			}},
-			"IsAncestorOf": Member{Method: true, Get: func(s State, v types.Value) int {
-				descendant := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push(types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
-			}},
-			"IsDescendantOf": Member{Method: true, Get: func(s State, v types.Value) int {
-				ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
-				return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
-			}},
-			"SetAttribute": Member{Method: true, Get: func(s State, v types.Value) int {
-				inst := v.(*rtypes.Instance)
-				attribute := string(s.Pull(2, "string").(types.String))
-				value := s.Pull(3, "Variant")
-				dict := getAttributes(s, inst)
-				dict[attribute] = value
-				setAttributes(s, inst, dict)
-				return 0
-			}},
-			"SetAttributes": Member{Method: true, Get: func(s State, v types.Value) int {
-				dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
-				setAttributes(s, v.(*rtypes.Instance), dict)
-				return 0
-			}},
+			"Descend": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					n := s.L.GetTop()
+					if n-1 <= 0 {
+						return s.RaiseError("expected at least 1 string")
+					}
+					names := make([]string, n-1)
+					for i := 2; i <= n; i++ {
+						names[i-2] = s.L.CheckString(i)
+					}
+					if child := v.(*rtypes.Instance).Descend(names...); child != nil {
+						return s.Push(child)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"ClearAllChildren": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					v.(*rtypes.Instance).RemoveAll()
+					return 0
+				},
+				Dump: func() dump.Value { return dump.Function{} },
+			},
+			"Clone": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(*rtypes.Instance).Clone())
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Instance")},
+						},
+					}
+				},
+			},
+			"Destroy": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					v.(*rtypes.Instance).SetParent(nil)
+					return 0
+				},
+				Dump: func() dump.Value { return dump.Function{} },
+			},
+			"FindFirstAncestor": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					name := string(s.Pull(2, "string").(types.String))
+					if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
+						return s.Push(ancestor)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "name", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"FindFirstAncestorOfClass": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					className := string(s.Pull(2, "string").(types.String))
+					if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
+						return s.Push(ancestor)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"FindFirstAncestorWhichIsA": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					className := string(s.Pull(2, "string").(types.String))
+					if ancestor := v.(*rtypes.Instance).FindFirstAncestorWhichIsA(className); ancestor != nil {
+						return s.Push(ancestor)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"FindFirstChild": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					name := string(s.Pull(2, "string").(types.String))
+					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
+						return s.Push(child)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "name", Type: dt.Prim("string")},
+							{Name: "recurse", Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"FindFirstChildOfClass": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					className := string(s.Pull(2, "string").(types.String))
+					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
+						return s.Push(child)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+							{Name: "recurse", Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"FindFirstChildWhichIsA": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					className := string(s.Pull(2, "string").(types.String))
+					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
+						return s.Push(child)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+							{Name: "recurse", Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+					}
+				},
+			},
+			"GetAttribute": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					attribute := string(s.Pull(2, "string").(types.String))
+					dict := getAttributes(s, v.(*rtypes.Instance))
+					if v, ok := dict[attribute]; ok {
+						return s.Push(v)
+					}
+					return s.Push(rtypes.Nil)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "attribute", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					}
+				},
+			},
+			"GetAttributes": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					return s.Push(getAttributes(s, v.(*rtypes.Instance)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Dictionary")},
+						},
+					}
+				},
+			},
+			"GetChildren": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					t := v.(*rtypes.Instance).Children()
+					return s.Push(rtypes.Objects(t))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Objects")},
+						},
+					}
+				},
+			},
+			"GetDescendants": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					return s.Push(rtypes.Objects(v.(*rtypes.Instance).Descendants()))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Objects")},
+						},
+					}
+				},
+			},
+			"GetFullName": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("string")},
+						},
+					}
+				},
+			},
+			"IsA": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					className := string(s.Pull(2, "string").(types.String))
+					return s.Push(types.Bool(v.(*rtypes.Instance).IsA(className)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("bool")},
+						},
+					}
+				},
+			},
+			"IsAncestorOf": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					descendant := s.Pull(2, "Instance").(*rtypes.Instance)
+					return s.Push(types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "descendant", Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("bool")},
+						},
+					}
+				},
+			},
+			"IsDescendantOf": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
+					return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "ancestor", Type: dt.Optional{T: dt.Prim("Instance")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("bool")},
+						},
+					}
+				},
+			},
+			"SetAttribute": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					attribute := string(s.Pull(2, "string").(types.String))
+					value := s.Pull(3, "Variant")
+					dict := getAttributes(s, inst)
+					dict[attribute] = value
+					setAttributes(s, inst, dict)
+					return 0
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "attribute", Type: dt.Prim("string")},
+							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					}
+				},
+			},
+			"SetAttributes": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
+					setAttributes(s, v.(*rtypes.Instance), dict)
+					return 0
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "attributes", Type: dt.Prim("Dictionary")},
+						},
+					}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -650,6 +860,18 @@ func Instance() Reflector {
 					inst.SetDesc(desc, blocked)
 					return s.Push(inst)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "className", Type: dt.Prim("string")},
+							{Name: "parent", Type: dt.Optional{T: dt.Prim("Instance")}},
+							{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Instance")},
+						},
+					}}
+				},
 			},
 		},
 		Environment: func(s State, env *lua.LTable) {
@@ -674,6 +896,27 @@ func Instance() Reflector {
 				return s.Push(dataModel)
 			}))
 			env.RawSetString("DataModel", t)
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators: &dump.Operators{
+					Eq: true,
+					Index: dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					},
+					Newindex: dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},
+							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					},
+				},
+			}
 		},
 	}
 }

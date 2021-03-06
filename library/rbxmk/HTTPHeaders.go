@@ -5,6 +5,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -50,6 +52,9 @@ func HTTPHeaders() Reflector {
 				return nil, err
 			}
 			return headers, nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{Underlying: dt.Map{K: dt.Prim("string"), V: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}}}
 		},
 	}
 }

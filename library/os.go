@@ -6,11 +6,13 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func init() { register(OS, 10) }
 
-var OS = rbxmk.Library{Name: "os", Open: openOS}
+var OS = rbxmk.Library{Name: "os", Open: openOS, Dump: dumpOS}
 
 func openOS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)
@@ -56,4 +58,46 @@ func openOS(s rbxmk.State) *lua.LTable {
 		return n - 1
 	}))
 	return lib
+}
+
+func dumpOS(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"expand": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("string")},
+					},
+				},
+				"getenv": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}},
+					},
+				},
+				"join": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "...", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("string")},
+					},
+				},
+				"split": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Prim("string")},
+					},
+				},
+			},
+		},
+	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -75,24 +77,42 @@ func Faces() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Right": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Right))
-			}},
-			"Top": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Top))
-			}},
-			"Back": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Back))
-			}},
-			"Left": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Left))
-			}},
-			"Bottom": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Bottom))
-			}},
-			"Front": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Bool(v.(types.Faces).Front))
-			}},
+			"Right": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Right))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
+			"Top": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Top))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
+			"Back": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Back))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
+			"Left": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Left))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
+			"Bottom": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Bottom))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
+			"Front": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Bool(v.(types.Faces).Front))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -120,6 +140,13 @@ func Faces() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						},
+					}}
+				},
 			},
 			"fromComponents": {
 				Func: func(s State) int {
@@ -137,7 +164,20 @@ func Faces() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "right", Type: dt.Prim("bool")},
+							{Name: "top", Type: dt.Prim("bool")},
+							{Name: "back", Type: dt.Prim("bool")},
+							{Name: "left", Type: dt.Prim("bool")},
+							{Name: "bottom", Type: dt.Prim("bool")},
+							{Name: "front", Type: dt.Prim("bool")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

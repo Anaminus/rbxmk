@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -64,31 +66,80 @@ func Vector2() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"X": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector2).X))
-			}},
-			"Y": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector2).Y))
-			}},
-			"Magnitude": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.Vector2).Magnitude()))
-			}},
-			"Unit": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Vector2).Unit())
-			}},
-			"Lerp": {Method: true, Get: func(s State, v types.Value) int {
-				goal := s.Pull(2, "Vector2").(types.Vector2)
-				alpha := float64(s.Pull(3, "number").(types.Double))
-				return s.Push(v.(types.Vector2).Lerp(goal, alpha))
-			}},
-			"Dot": {Method: true, Get: func(s State, v types.Value) int {
-				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push(types.Double(v.(types.Vector2).Dot(op)))
-			}},
-			"Cross": {Method: true, Get: func(s State, v types.Value) int {
-				op := s.Pull(2, "Vector2").(types.Vector2)
-				return s.Push(types.Double(v.(types.Vector2).Cross(op)))
-			}},
+			"X": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector2).X))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Y": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector2).Y))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Magnitude": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.Vector2).Magnitude()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+			},
+			"Unit": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Vector2).Unit())
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+			},
+			"Lerp": {Method: true,
+				Get: func(s State, v types.Value) int {
+					goal := s.Pull(2, "Vector2").(types.Vector2)
+					alpha := float64(s.Pull(3, "number").(types.Double))
+					return s.Push(v.(types.Vector2).Lerp(goal, alpha))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "goal", Type: dt.Prim("Vector2")},
+							{Name: "alpha", Type: dt.Prim("float")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Vector2")},
+						},
+					}
+				},
+			},
+			"Dot": {Method: true,
+				Get: func(s State, v types.Value) int {
+					op := s.Pull(2, "Vector2").(types.Vector2)
+					return s.Push(types.Double(v.(types.Vector2).Dot(op)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "op", Type: dt.Prim("Vector2")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("float")},
+						},
+					}
+				},
+			},
+			"Cross": {Method: true,
+				Get: func(s State, v types.Value) int {
+					op := s.Pull(2, "Vector2").(types.Vector2)
+					return s.Push(types.Double(v.(types.Vector2).Cross(op)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "op", Type: dt.Prim("Vector2")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("float")},
+						},
+					}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -104,7 +155,26 @@ func Vector2() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Vector2")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("float")},
+								{Name: "y", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Vector2")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
@@ -32,30 +34,49 @@ func FunctionDesc() Reflector {
 					desc := v.(rtypes.FunctionDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Parameters": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				array := make(rtypes.Array, len(desc.Parameters))
-				for i, param := range desc.Parameters {
-					p := param
-					array[i] = rtypes.ParameterDesc{Parameter: p}
-				}
-				return s.Push(array)
-			}},
-			"SetParameters": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				array := s.Pull(2, "Array").(rtypes.Array)
-				params := make([]rbxdump.Parameter, len(array))
-				for i, paramDesc := range array {
-					param, ok := paramDesc.(rtypes.ParameterDesc)
-					if !ok {
-						rbxmk.TypeError(s.L, 3, param.Type())
+			"Parameters": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					array := make(rtypes.Array, len(desc.Parameters))
+					for i, param := range desc.Parameters {
+						p := param
+						array[i] = rtypes.ParameterDesc{Parameter: p}
 					}
-					params[i] = param.Parameter
-				}
-				desc.Parameters = params
-				return 0
-			}},
+					return s.Push(array)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
+						},
+					}
+				},
+			},
+			"SetParameters": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					array := s.Pull(2, "Array").(rtypes.Array)
+					params := make([]rbxdump.Parameter, len(array))
+					for i, paramDesc := range array {
+						param, ok := paramDesc.(rtypes.ParameterDesc)
+						if !ok {
+							rbxmk.TypeError(s.L, 3, param.Type())
+						}
+						params[i] = param.Parameter
+					}
+					desc.Parameters = params
+					return 0
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
+						},
+					}
+				},
+			},
 			"ReturnType": Member{
 				Get: func(s State, v types.Value) int {
 					desc := v.(rtypes.FunctionDesc)
@@ -66,6 +87,7 @@ func FunctionDesc() Reflector {
 					desc := v.(rtypes.FunctionDesc)
 					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
 			},
 			"Security": Member{
 				Get: func(s State, v types.Value) int {
@@ -76,39 +98,80 @@ func FunctionDesc() Reflector {
 					desc := v.(rtypes.FunctionDesc)
 					desc.Security = string(s.Pull(3, "string").(types.String))
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Tag": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				tag := string(s.Pull(2, "string").(types.String))
-				return s.Push(types.Bool(desc.GetTag(tag)))
-			}},
-			"Tags": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				tags := desc.GetTags()
-				array := make(rtypes.Array, len(tags))
-				for i, tag := range tags {
-					array[i] = types.String(tag)
-				}
-				return s.Push(array)
-			}},
-			"SetTag": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				tags := make([]string, s.Count()-1)
-				for i := 2; i <= s.Count(); i++ {
-					tags[i-2] = string(s.Pull(i, "string").(types.String))
-				}
-				desc.SetTag(tags...)
-				return 0
-			}},
-			"UnsetTag": Member{Method: true, Get: func(s State, v types.Value) int {
-				desc := v.(rtypes.FunctionDesc)
-				tags := make([]string, s.Count()-1)
-				for i := 2; i <= s.Count(); i++ {
-					tags[i-2] = string(s.Pull(i, "string").(types.String))
-				}
-				desc.UnsetTag(tags...)
-				return 0
-			}},
+			"Tag": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					tag := string(s.Pull(2, "string").(types.String))
+					return s.Push(types.Bool(desc.GetTag(tag)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "name", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("bool")},
+						},
+					}
+				},
+			},
+			"Tags": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					tags := desc.GetTags()
+					array := make(rtypes.Array, len(tags))
+					for i, tag := range tags {
+						array[i] = types.String(tag)
+					}
+					return s.Push(array)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Array{T: dt.Prim("string")}},
+						},
+					}
+				},
+			},
+			"SetTag": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					tags := make([]string, s.Count()-1)
+					for i := 2; i <= s.Count(); i++ {
+						tags[i-2] = string(s.Pull(i, "string").(types.String))
+					}
+					desc.SetTag(tags...)
+					return 0
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Prim("string")},
+						},
+					}
+				},
+			},
+			"UnsetTag": Member{Method: true,
+				Get: func(s State, v types.Value) int {
+					desc := v.(rtypes.FunctionDesc)
+					tags := make([]string, s.Count()-1)
+					for i := 2; i <= s.Count(); i++ {
+						tags[i-2] = string(s.Pull(i, "string").(types.String))
+					}
+					desc.UnsetTag(tags...)
+					return 0
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Prim("string")},
+						},
+					}
+				},
+			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

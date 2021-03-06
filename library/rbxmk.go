@@ -8,6 +8,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	reflect "github.com/anaminus/rbxmk/library/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
@@ -17,7 +19,7 @@ import (
 
 func init() { register(RBXMK, 0) }
 
-var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK}
+var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK, Dump: dumpRBXMK}
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 12)
@@ -82,6 +84,157 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	s.L.SetMetatable(lib, mt)
 
 	return lib
+}
+
+func dumpRBXMK(s rbxmk.State) dump.Library {
+	root := dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"cookiesFrom": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "location", Type: dt.Prim("string"),
+							Enums: dt.Enums{
+								`"studio"`,
+							},
+						},
+					},
+					Returns: dump.Parameters{
+						{Name: "cookies", Type: dt.Prim("Cookies")},
+					},
+				},
+				"decodeFormat": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "format", Type: dt.Prim("string")},
+						{Name: "bytes", Type: dt.Prim("BinaryString")},
+					},
+					Returns: dump.Parameters{
+						{Name: "value", Type: dt.Prim("any")},
+					},
+				},
+				"diffDesc": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "prev", Type: dt.Optional{T: dt.Prim("RootDesc")}},
+						{Name: "next", Type: dt.Optional{T: dt.Prim("RootDesc")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "diff", Type: dt.Array{T: dt.Prim("DescAction")}},
+					},
+				},
+				"encodeFormat": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "format", Type: dt.Prim("string")},
+						{Name: "value", Type: dt.Prim("any")},
+					},
+					Returns: dump.Parameters{
+						{Name: "bytes", Type: dt.Prim("BinaryString")},
+					},
+				},
+				"formatCanDecode": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "format", Type: dt.Prim("string")},
+						{Name: "type", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("bool")},
+					},
+				},
+				"globalAttrConfig": dump.Property{ValueType: dt.Optional{T: dt.Prim("AttrConfig")}},
+				"globalDesc":       dump.Property{ValueType: dt.Optional{T: dt.Prim("RootDesc")}},
+				"loadFile": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Name: "func", Type: dt.Prim("function")},
+					},
+				},
+				"loadString": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "source", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Name: "func", Type: dt.Prim("function")},
+					},
+				},
+				"newCookie": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "name", Type: dt.Prim("string")},
+						{Name: "value", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("Cookie")},
+					},
+				},
+				"newDesc": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "name", Type: dt.Prim("string"),
+							Enums: dt.Enums{
+								`"RootDesc"`,
+								`"ClassDesc"`,
+								`"PropertyDesc"`,
+								`"FunctionDesc"`,
+								`"EventDesc"`,
+								`"CallbackDesc"`,
+								`"ParameterDesc"`,
+								`"TypeDesc"`,
+								`"EnumDesc"`,
+								`"EnumItemDesc"`,
+							},
+						},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("Descriptor")},
+					},
+				},
+				"patchDesc": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "desc", Type: dt.Prim("RootDesc")},
+						{Name: "actions", Type: dt.Array{T: dt.Prim("DescAction")}},
+					},
+				},
+				"runFile": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim("any")},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Prim("any")},
+					},
+				},
+				"runString": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "source", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim("any")},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Prim("any")},
+					},
+				},
+			},
+		},
+		Types: dump.TypeDefs{
+			"Descriptor": dump.TypeDef{
+				Underlying: dt.Or{
+					dt.Prim("RootDesc"),
+					dt.Prim("ClassDesc"),
+					dt.Prim("PropertyDesc"),
+					dt.Prim("FunctionDesc"),
+					dt.Prim("EventDesc"),
+					dt.Prim("CallbackDesc"),
+					dt.Prim("ParameterDesc"),
+					dt.Prim("TypeDesc"),
+					dt.Prim("EnumDesc"),
+					dt.Prim("EnumItemDesc"),
+				},
+			},
+		},
+	}
+	for _, f := range reflect.All() {
+		if r := f(); r.Dump != nil {
+			root.Types[r.Name] = r.Dump()
+		}
+	}
+	return root
 }
 
 func rbxmkLoadFile(s rbxmk.State) int {

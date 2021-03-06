@@ -5,6 +5,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -100,6 +102,9 @@ func FormatSelector() Reflector {
 			default:
 				return nil, rbxmk.TypeError(nil, 0, "string or table")
 			}
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{Underlying: dt.Or{dt.Prim("string"), dt.Struct{"Format": dt.Prim("string"), "...": dt.Prim("any")}}}
 		},
 	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,15 +28,24 @@ func NumberSequenceKeypoint() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Time": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Time))
-			}},
-			"Value": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Value))
-			}},
-			"Envelope": {Get: func(s State, v types.Value) int {
-				return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Envelope))
-			}},
+			"Time": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Time))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"Value": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Value))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
+			"Envelope": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Float(v.(types.NumberSequenceKeypoint).Envelope))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -53,7 +64,31 @@ func NumberSequenceKeypoint() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "time", Type: dt.Prim("float")},
+								{Name: "value", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ColorSequenceKeypoint")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "time", Type: dt.Prim("float")},
+								{Name: "value", Type: dt.Prim("float")},
+								{Name: "envelope", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ColorSequenceKeypoint")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

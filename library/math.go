@@ -5,11 +5,13 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 )
 
 func init() { register(Math, 10) }
 
-var Math = rbxmk.Library{Name: "math", Open: openMath}
+var Math = rbxmk.Library{Name: "math", Open: openMath, Dump: dumpMath}
 
 func openMath(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)
@@ -18,6 +20,50 @@ func openMath(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("round", s.WrapFunc(mathRound))
 	lib.RawSetString("sign", s.WrapFunc(mathSign))
 	return lib
+}
+
+func dumpMath(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"clamp": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+						{Name: "min", Type: dt.Prim("number")},
+						{Name: "max", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+				"log": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+						{Name: "base", Type: dt.Optional{T: dt.Prim("number")}, Default: "𝑒"},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+				"round": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+				"sign": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+			},
+		},
+	}
 }
 
 func mathClamp(s rbxmk.State) int {

@@ -2,6 +2,8 @@ package reflect
 
 import (
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -30,6 +32,15 @@ func EnumItem() Reflector {
 				name := string(s.Pull(2, "string").(types.String))
 				return s.RaiseError("%s cannot be assigned to", name)
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Properties: dump.Properties{
+					"Name":     dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
+					"Value":    dump.Property{ValueType: dt.Prim("int"), ReadOnly: true},
+					"EnumType": dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true},
+				},
+			}
 		},
 	}
 }

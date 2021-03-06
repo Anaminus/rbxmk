@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -31,6 +33,7 @@ func AttrConfig() Reflector {
 					attrConfig := v.(*rtypes.AttrConfig)
 					attrConfig.Property = string(s.Pull(3, "string").(types.String))
 				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -40,7 +43,18 @@ func AttrConfig() Reflector {
 					v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
 					return s.Push(&v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "property", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("AttrConfig")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

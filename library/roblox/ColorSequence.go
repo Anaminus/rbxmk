@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -37,20 +39,25 @@ func ColorSequence() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Keypoints": {Get: func(s State, v types.Value) int {
-				u := v.(types.ColorSequence)
-				keypointRfl := s.Reflector("ColorSequenceKeypoint")
-				table := s.L.CreateTable(len(u), 0)
-				for i, v := range u {
-					lv, err := keypointRfl.PushTo(s, v)
-					if err != nil {
-						return s.RaiseError("%s", err)
+			"Keypoints": {
+				Get: func(s State, v types.Value) int {
+					u := v.(types.ColorSequence)
+					keypointRfl := s.Reflector("ColorSequenceKeypoint")
+					table := s.L.CreateTable(len(u), 0)
+					for i, v := range u {
+						lv, err := keypointRfl.PushTo(s, v)
+						if err != nil {
+							return s.RaiseError("%s", err)
+						}
+						table.RawSetInt(i, lv[0])
 					}
-					table.RawSetInt(i, lv[0])
-				}
-				s.L.Push(table)
-				return 1
-			}},
+					s.L.Push(table)
+					return 1
+				},
+				Dump: func() dump.Value {
+					return dump.Property{ValueType: dt.Array{T: dt.Prim("ColorSequenceKeypoint")}, ReadOnly: true}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -96,7 +103,37 @@ func ColorSequence() Reflector {
 					}
 					return s.Push(v)
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{
+						{
+							Parameters: dump.Parameters{
+								{Name: "color", Type: dt.Prim("Color3")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ColorSequence")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "color0", Type: dt.Prim("Color3")},
+								{Name: "color1", Type: dt.Prim("Color3")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ColorSequence")},
+							},
+						},
+						{
+							Parameters: dump.Parameters{
+								{Name: "keypoints", Type: dt.Array{T: dt.Prim("ColorSequenceKeypoint")}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ColorSequence")},
+							},
+						},
+					}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -26,20 +28,50 @@ func Ray() Reflector {
 			},
 		},
 		Members: map[string]Member{
-			"Origin": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Ray).Origin)
-			}},
-			"Direction": {Get: func(s State, v types.Value) int {
-				return s.Push(v.(types.Ray).Direction)
-			}},
-			"ClosestPoint": {Method: true, Get: func(s State, v types.Value) int {
-				point := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(v.(types.Ray).ClosestPoint(point))
-			}},
-			"Distance": {Method: true, Get: func(s State, v types.Value) int {
-				point := s.Pull(2, "Vector3").(types.Vector3)
-				return s.Push(types.Double(v.(types.Ray).Distance(point)))
-			}},
+			"Origin": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Ray).Origin)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+			},
+			"Direction": {
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(types.Ray).Direction)
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+			},
+			"ClosestPoint": {Method: true,
+				Get: func(s State, v types.Value) int {
+					point := s.Pull(2, "Vector3").(types.Vector3)
+					return s.Push(v.(types.Ray).ClosestPoint(point))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "point", Type: dt.Prim("Vector3")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Vector3")},
+						},
+					}
+				},
+			},
+			"Distance": {Method: true,
+				Get: func(s State, v types.Value) int {
+					point := s.Pull(2, "Vector3").(types.Vector3)
+					return s.Push(types.Double(v.(types.Ray).Distance(point)))
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "point", Type: dt.Prim("Vector3")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("float")},
+						},
+					}
+				},
+			},
 		},
 		Constructors: Constructors{
 			"new": {
@@ -49,7 +81,19 @@ func Ray() Reflector {
 						Direction: s.Pull(2, "Vector3").(types.Vector3),
 					})
 				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "origin", Type: dt.Prim("Vector3")},
+							{Name: "direction", Type: dt.Prim("Vector3")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("Ray")},
+						},
+					}}
+				},
 			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

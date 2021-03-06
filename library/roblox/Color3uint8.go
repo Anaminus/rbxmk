@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -37,5 +39,6 @@ func Color3uint8() Reflector {
 			}
 			return nil
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Prim("Color3")} },
 	}
 }
