@@ -12,6 +12,7 @@ import (
 	"unsafe"
 
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/sfs"
 	"github.com/robloxapi/types"
 )
@@ -116,6 +117,8 @@ type Library struct {
 	Name string
 	// Open returns a table with the contents of the library.
 	Open func(s State) *lua.LTable
+	// Dump returns a description of the library's API.
+	Dump func(s State) dump.Library
 }
 
 // Open opens lib according to OpenAs by using the Name of the library.

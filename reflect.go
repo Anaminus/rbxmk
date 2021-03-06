@@ -2,6 +2,7 @@ package rbxmk
 
 import (
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/robloxapi/types"
 )
 
@@ -51,6 +52,11 @@ type Reflector struct {
 	// ConvertFrom receives an arbitrary value and attempts to convert it to the
 	// reflector's type. Returns nil if the value could not be converted.
 	ConvertFrom func(v types.Value) types.Value
+
+	// Dump returns an additonal description of the API of the reflector's type.
+	// Member and constructor APIs should be described by their respective
+	// fields.
+	Dump func() dump.TypeDef
 }
 
 type ReflectorFlags uint8
@@ -97,6 +103,8 @@ type Member struct {
 	Set func(s State, v types.Value)
 	// Method marks the member as being a method.
 	Method bool
+	// Dump returns a description of the member's API.
+	Dump func() dump.Value
 }
 
 // Constructors is a set of constructor functions keyed by name.
@@ -106,6 +114,9 @@ type Constructors map[string]Constructor
 // arguments from s.L, and must push a new value to s.L.
 type Constructor struct {
 	Func func(s State) int
+	// Dump returns a description of constructor's API. Each function describes
+	// one possible signature of the constructor.
+	Dump func() dump.MultiFunction
 }
 
 // PushTypeTo returns a Reflector.PushTo that converts v to a userdata set with
