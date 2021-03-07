@@ -28,22 +28,8 @@ func Enum() Reflector {
 				return 1
 			},
 			"__index": func(s State) int {
-				name := string(s.Pull(2, "string").(types.String))
-
-				if name == "GetEnumItems" {
-					s.L.Push(s.WrapFunc(func(s State) int {
-						enum := s.Pull(1, "Enum").(*rtypes.Enum)
-						items := enum.Items()
-						array := make(rtypes.Array, len(items))
-						for i, item := range items {
-							array[i] = item
-						}
-						return s.Push(array)
-					}))
-					return 1
-				}
-
 				enum := s.Pull(1, "Enum").(*rtypes.Enum)
+				name := string(s.Pull(2, "string").(types.String))
 				item := enum.Item(name)
 				if item == nil {
 					return s.RaiseError("%s is not a valid EnumItem", name)
@@ -55,15 +41,27 @@ func Enum() Reflector {
 				return s.RaiseError("%s cannot be assigned to", name)
 			},
 		},
-		Dump: func() dump.TypeDef {
-			return dump.TypeDef{
-				Methods: dump.Methods{
-					"GetEnumItems": dump.Function{
+		Members: rbxmk.Members{
+			"GetEnumItems": {Method: true,
+				Get: func(s State, v types.Value) int {
+					items := v.(*rtypes.Enum).Items()
+					array := make(rtypes.Array, len(items))
+					for i, item := range items {
+						array[i] = item
+					}
+					return s.Push(array)
+				},
+				Dump: func() dump.Value {
+					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumItem")}},
 						},
-					},
+					}
 				},
+			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: true,
 					Index: dump.Function{

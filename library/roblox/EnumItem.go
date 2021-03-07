@@ -27,33 +27,27 @@ func EnumItem() Reflector {
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__index": func(s State) int {
-				item := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
-				name := string(s.Pull(2, "string").(types.String))
-				switch name {
-				case "Name":
-					return s.Push(types.String(item.Name()))
-				case "Value":
-					return s.Push(types.Int(item.Value()))
-				case "EnumType":
-					return s.Push(item.Enum())
-				}
-				return s.RaiseError("%s is not a valid member", name)
-			},
-			"__newindex": func(s State) int {
-				name := string(s.Pull(2, "string").(types.String))
-				return s.RaiseError("%s cannot be assigned to", name)
-			},
 		},
-		Dump: func() dump.TypeDef {
-			return dump.TypeDef{
-				Properties: dump.Properties{
-					"Name":     dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
-					"Value":    dump.Property{ValueType: dt.Prim("int"), ReadOnly: true},
-					"EnumType": dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true},
+		Members: rbxmk.Members{
+			"Name": Member{
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.String(v.(*rtypes.EnumItem).Name()))
 				},
-				Operators: &dump.Operators{Eq: true},
-			}
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+			},
+			"Value": Member{
+				Get: func(s State, v types.Value) int {
+					return s.Push(types.Int(v.(*rtypes.EnumItem).Value()))
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+			},
+			"EnumType": Member{
+				Get: func(s State, v types.Value) int {
+					return s.Push(v.(*rtypes.EnumItem).Enum())
+				},
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },
+			},
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }
