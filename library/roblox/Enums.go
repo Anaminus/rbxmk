@@ -15,6 +15,12 @@ func Enums() Reflector {
 		PushTo:   rbxmk.PushTypeTo("Enums"),
 		PullFrom: rbxmk.PullTypeFrom("Enums"),
 		Metatable: Metatable{
+			"__eq": func(s State) int {
+				v := s.Pull(1, "Enums").(*rtypes.Enums)
+				op := s.Pull(2, "Enums").(*rtypes.Enums)
+				s.L.Push(lua.LBool(v == op))
+				return 1
+			},
 			"__index": func(s State) int {
 				name := string(s.Pull(2, "string").(types.String))
 
@@ -53,6 +59,7 @@ func Enums() Reflector {
 					},
 				},
 				Operators: &dump.Operators{
+					Eq: true,
 					Index: dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},

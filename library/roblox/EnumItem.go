@@ -15,6 +15,12 @@ func EnumItem() Reflector {
 		PushTo:   rbxmk.PushTypeTo("EnumItem"),
 		PullFrom: rbxmk.PullTypeFrom("EnumItem"),
 		Metatable: Metatable{
+			"__eq": func(s State) int {
+				v := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
+				op := s.Pull(2, "EnumItem").(*rtypes.EnumItem)
+				s.L.Push(lua.LBool(v == op))
+				return 1
+			},
 			"__index": func(s State) int {
 				item := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
 				name := string(s.Pull(2, "string").(types.String))
@@ -40,6 +46,7 @@ func EnumItem() Reflector {
 					"Value":    dump.Property{ValueType: dt.Prim("int"), ReadOnly: true},
 					"EnumType": dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true},
 				},
+				Operators: &dump.Operators{Eq: true},
 			}
 		},
 	}
