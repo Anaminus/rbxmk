@@ -119,6 +119,9 @@ func (*EnumItem) Type() string {
 
 // String returns a string representation of the value.
 func (e *EnumItem) String() string {
+	if e.enum == nil {
+		return e.name
+	}
 	return "Enum." + e.enum.name + "." + e.name
 }
 

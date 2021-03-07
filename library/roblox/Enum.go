@@ -1,6 +1,7 @@
 package reflect
 
 import (
+	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -15,6 +16,11 @@ func Enum() Reflector {
 		PushTo:   rbxmk.PushTypeTo("Enum"),
 		PullFrom: rbxmk.PullTypeFrom("Enum"),
 		Metatable: Metatable{
+			"__tostring": func(s State) int {
+				v := s.Pull(1, "Enum").(*rtypes.Enum)
+				s.L.Push(lua.LString(v.String()))
+				return 1
+			},
 			"__eq": func(s State) int {
 				v := s.Pull(1, "Enum").(*rtypes.Enum)
 				op := s.Pull(2, "Enum").(*rtypes.Enum)
