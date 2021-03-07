@@ -30,6 +30,7 @@ branch is the latest unreleased version.
 - Fix tostring of Enums, Enum, and EnumItem types.
 - Fix handling of nil Instance properties.
 - Fix Instance properties not checking inherited classes.
+- Fix handling of nil PhysicalProperties properties.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

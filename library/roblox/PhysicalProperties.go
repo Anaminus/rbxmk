@@ -5,15 +5,47 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
 func init() { register(PhysicalProperties) }
 func PhysicalProperties() Reflector {
 	return Reflector{
-		Name:     "PhysicalProperties",
-		PushTo:   rbxmk.PushTypeTo("PhysicalProperties"),
-		PullFrom: rbxmk.PullTypeFrom("PhysicalProperties"),
+		Name: "PhysicalProperties",
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
+				return append(lvs, lua.LNil), nil
+			}
+			u := s.UserDataOf(v, "PhysicalProperties")
+			return append(lvs, u), nil
+		},
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+			switch lv := lvs[0].(type) {
+			case *lua.LNilType:
+				return types.PhysicalProperties{}, nil
+			case *lua.LUserData:
+				if lv.Metatable != s.L.GetTypeMetatable("PhysicalProperties") {
+					return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+				}
+				v, ok := lv.Value.(types.Value)
+				if !ok {
+					return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+				}
+				return v, nil
+			default:
+				return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+			}
+		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case rtypes.NilType:
+				return types.PhysicalProperties{}
+			case types.PhysicalProperties:
+				return v
+			}
+			return nil
+		},
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "PhysicalProperties").(types.PhysicalProperties)
