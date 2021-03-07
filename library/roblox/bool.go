@@ -3,6 +3,8 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/robloxapi/types"
 )
 
@@ -19,5 +21,6 @@ func Bool() Reflector {
 			}
 			return nil, rbxmk.TypeError(nil, 0, "bool")
 		},
+		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Prim("boolean")} },
 	}
 }
