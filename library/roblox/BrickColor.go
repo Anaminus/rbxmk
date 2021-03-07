@@ -44,21 +44,21 @@ func BrickColor() Reflector {
 			},
 			"R": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Double(v.(types.BrickColor).R()))
+					return s.Push(types.Float(v.(types.BrickColor).R()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"G": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Double(v.(types.BrickColor).G()))
+					return s.Push(types.Float(v.(types.BrickColor).G()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"B": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Double(v.(types.BrickColor).B()))
+					return s.Push(types.Float(v.(types.BrickColor).B()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("double"), ReadOnly: true} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Color": {
 				Get: func(s State, v types.Value) int {
