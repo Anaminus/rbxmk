@@ -109,9 +109,31 @@ func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 func init() { register(Instance) }
 func Instance() Reflector {
 	return Reflector{
-		Name:     "Instance",
-		PushTo:   rbxmk.PushTypeTo("Instance"),
-		PullFrom: rbxmk.PullTypeFrom("Instance"),
+		Name: "Instance",
+		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+			if inst, ok := v.(*rtypes.Instance); ok && inst == nil {
+				return append(lvs, lua.LNil), nil
+			}
+			u := s.UserDataOf(v, "Instance")
+			return append(lvs, u), nil
+		},
+		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+			switch lv := lvs[0].(type) {
+			case *lua.LNilType:
+				return (*rtypes.Instance)(nil), nil
+			case *lua.LUserData:
+				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
+					return nil, rbxmk.TypeError(nil, 0, "Instance")
+				}
+				v, ok := lv.Value.(types.Value)
+				if !ok {
+					return nil, rbxmk.TypeError(nil, 0, "Instance")
+				}
+				return v, nil
+			default:
+				return nil, rbxmk.TypeError(nil, 0, "Instance")
+			}
+		},
 		Metatable: Metatable{
 			"__tostring": func(s State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -234,18 +256,22 @@ func Instance() Reflector {
 					}
 					switch propDesc.ValueType.Category {
 					case "Class":
-						inst, ok := value.(*rtypes.Instance)
-						if !ok {
+						switch value := value.(type) {
+						case *rtypes.Instance:
+							if value == nil {
+								return s.Push(rtypes.Nil)
+							}
+							class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+							if class == nil {
+								return 0
+							}
+							if !value.WithDescIsA(desc, class.Name) {
+								return s.RaiseError("instance of class %s expected, got %s", class.Name, value.ClassName)
+							}
+							return s.Push(value)
+						default:
 							return s.RaiseError("stored value type %s is not an instance", value.Type())
 						}
-						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if class == nil {
-							return 0
-						}
-						if !inst.WithDescIsA(desc, class.Name) {
-							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
-						}
-						return s.Push(inst)
 					case "Enum":
 						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
 						if enum == nil {
@@ -363,19 +389,27 @@ func Instance() Reflector {
 					}
 					switch propDesc.ValueType.Category {
 					case "Class":
-						inst, ok := value.(*rtypes.Instance)
-						if !ok {
+						switch value := value.(type) {
+						case rtypes.NilType:
+							inst.Set(name, (*rtypes.Instance)(nil))
+							return 0
+						case *rtypes.Instance:
+							if value == nil {
+								inst.Set(name, value)
+								return 0
+							}
+							class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+							if class == nil {
+								return 0
+							}
+							if !value.WithDescIsA(desc, class.Name) {
+								return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
+							}
+							inst.Set(name, value)
+							return 0
+						default:
 							return s.RaiseError("Instance expected, got %s", value.Type())
 						}
-						class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if class == nil {
-							return 0
-						}
-						if !inst.WithDescIsA(desc, class.Name) {
-							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
-						}
-						inst.Set(name, inst)
-						return 0
 					case "Enum":
 						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
 						if enum == nil {
@@ -447,6 +481,10 @@ func Instance() Reflector {
 						}
 					}
 				}
+				if _, ok := value.(rtypes.NilType); ok {
+					inst.Set(name, nil)
+					return 0
+				}
 				prop, ok := value.(types.PropValue)
 				if !ok {
 					return s.RaiseError("cannot assign %s as property", value.Type())
@@ -454,6 +492,15 @@ func Instance() Reflector {
 				inst.Set(name, prop)
 				return 0
 			},
+		},
+		ConvertFrom: func(v types.Value) types.Value {
+			switch v := v.(type) {
+			case rtypes.NilType:
+				return (*rtypes.Instance)(nil)
+			case *rtypes.Instance:
+				return v
+			}
+			return nil
 		},
 		Members: Members{
 			"ClassName": Member{

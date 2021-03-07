@@ -113,9 +113,7 @@ func decodeDataModel(r *rbxfile.Root) (t *rtypes.Instance, err error) {
 		t.AddChild(tc)
 	}
 	for _, pref := range prefs {
-		if t, ok := refs[pref.Value]; ok {
-			pref.Instance.Set(pref.Property, t)
-		}
+		pref.Instance.Set(pref.Property, refs[pref.Value])
 	}
 	return t, nil
 }
@@ -307,9 +305,7 @@ func encodeDataModel(t *rtypes.Instance) (r *rbxfile.Root, err error) {
 		r.Instances = append(r.Instances, rc)
 	}
 	for _, pref := range prefs {
-		if r, ok := refs[pref.Value]; ok {
-			pref.Instance.Properties[pref.Property] = rbxfile.ValueReference{Instance: r}
-		}
+		pref.Instance.Properties[pref.Property] = rbxfile.ValueReference{Instance: refs[pref.Value]}
 	}
 	return
 }

@@ -28,7 +28,8 @@ branch is the latest unreleased version.
 - Fix Instance.FindFirstAncestor behaving as FindFirstAncestorOfClass.
 - Fix equality of Enums, Enum, and EnumItem types.
 - Fix tostring of Enums, Enum, and EnumItem types.
-- Fix instance properties not checking inherited classes.
+- Fix handling of nil Instance properties.
+- Fix Instance properties not checking inherited classes.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
