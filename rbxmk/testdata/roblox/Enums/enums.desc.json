@@ -1,0 +1,1897 @@
+{
+	"Enums": [
+		{
+			"Items": [
+				{
+					"Name": "Image",
+					"Value": 1
+				},
+				{
+					"Name": "TeeShirt",
+					"Value": 2
+				},
+				{
+					"Name": "Audio",
+					"Value": 3
+				},
+				{
+					"Name": "Mesh",
+					"Value": 4
+				},
+				{
+					"Name": "Lua",
+					"Value": 5
+				},
+				{
+					"Name": "Hat",
+					"Value": 8
+				},
+				{
+					"Name": "Place",
+					"Value": 9
+				},
+				{
+					"Name": "Model",
+					"Value": 10
+				},
+				{
+					"Name": "Shirt",
+					"Value": 11
+				},
+				{
+					"Name": "Pants",
+					"Value": 12
+				},
+				{
+					"Name": "Decal",
+					"Value": 13
+				},
+				{
+					"Name": "Head",
+					"Value": 17
+				},
+				{
+					"Name": "Face",
+					"Value": 18
+				},
+				{
+					"Name": "Gear",
+					"Value": 19
+				},
+				{
+					"Name": "Badge",
+					"Value": 21
+				},
+				{
+					"Name": "Animation",
+					"Value": 24
+				},
+				{
+					"Name": "Torso",
+					"Value": 27
+				},
+				{
+					"Name": "RightArm",
+					"Value": 28
+				},
+				{
+					"Name": "LeftArm",
+					"Value": 29
+				},
+				{
+					"Name": "LeftLeg",
+					"Value": 30
+				},
+				{
+					"Name": "RightLeg",
+					"Value": 31
+				},
+				{
+					"Name": "Package",
+					"Value": 32
+				},
+				{
+					"Name": "GamePass",
+					"Value": 34
+				},
+				{
+					"Name": "Plugin",
+					"Value": 38
+				},
+				{
+					"Name": "MeshPart",
+					"Value": 40
+				},
+				{
+					"Name": "HairAccessory",
+					"Value": 41
+				},
+				{
+					"Name": "FaceAccessory",
+					"Value": 42
+				},
+				{
+					"Name": "NeckAccessory",
+					"Value": 43
+				},
+				{
+					"Name": "ShoulderAccessory",
+					"Value": 44
+				},
+				{
+					"Name": "FrontAccessory",
+					"Value": 45
+				},
+				{
+					"Name": "BackAccessory",
+					"Value": 46
+				},
+				{
+					"Name": "WaistAccessory",
+					"Value": 47
+				},
+				{
+					"Name": "ClimbAnimation",
+					"Value": 48
+				},
+				{
+					"Name": "DeathAnimation",
+					"Value": 49
+				},
+				{
+					"Name": "FallAnimation",
+					"Value": 50
+				},
+				{
+					"Name": "IdleAnimation",
+					"Value": 51
+				},
+				{
+					"Name": "JumpAnimation",
+					"Value": 52
+				},
+				{
+					"Name": "RunAnimation",
+					"Value": 53
+				},
+				{
+					"Name": "SwimAnimation",
+					"Value": 54
+				},
+				{
+					"Name": "WalkAnimation",
+					"Value": 55
+				},
+				{
+					"Name": "PoseAnimation",
+					"Value": 56
+				},
+				{
+					"Name": "EarAccessory",
+					"Value": 57
+				},
+				{
+					"Name": "EyeAccessory",
+					"Value": 58
+				},
+				{
+					"Name": "EmoteAnimation",
+					"Value": 61
+				},
+				{
+					"Name": "Video",
+					"Value": 62
+				}
+			],
+			"Name": "AssetType"
+		},
+		{
+			"Items": [
+				{
+					"Name": "X",
+					"Value": 0
+				},
+				{
+					"Name": "Y",
+					"Value": 1
+				},
+				{
+					"Name": "Z",
+					"Value": 2
+				}
+			],
+			"Name": "Axis"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Other",
+					"Value": 0
+				},
+				{
+					"Name": "Error",
+					"Value": 1
+				},
+				{
+					"Name": "UserBreakpoint",
+					"Value": 3
+				},
+				{
+					"Name": "SpecialBreakpoint",
+					"Value": 2
+				}
+			],
+			"Name": "BreakReason"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Jump",
+					"Value": 32
+				},
+				{
+					"Name": "Dismount",
+					"Value": 8
+				}
+			],
+			"Name": "Button"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Fixed",
+					"Value": 0
+				},
+				{
+					"Name": "Watch",
+					"Value": 2
+				},
+				{
+					"Name": "Attach",
+					"Value": 1
+				},
+				{
+					"Name": "Track",
+					"Value": 3
+				},
+				{
+					"Name": "Follow",
+					"Value": 4
+				},
+				{
+					"Name": "Custom",
+					"Value": 5
+				},
+				{
+					"Name": "Scriptable",
+					"Value": 6
+				},
+				{
+					"Name": "Orbital",
+					"Value": 7
+				}
+			],
+			"Name": "CameraType"
+		},
+		{
+			"Items": [
+				{
+					"Name": "OK",
+					"Value": 0
+				},
+				{
+					"Name": "DisconnectErrors",
+					"Value": 256
+				},
+				{
+					"Name": "DisconnectBadhash",
+					"Value": 257
+				},
+				{
+					"Name": "DisconnectSecurityKeyMismatch",
+					"Value": 258
+				},
+				{
+					"Name": "DisconnectNewSecurityKeyMismatch",
+					"Value": 272
+				},
+				{
+					"Name": "DisconnectProtocolMismatch",
+					"Value": 259
+				},
+				{
+					"Name": "DisconnectReceivePacketError",
+					"Value": 260
+				},
+				{
+					"Name": "DisconnectReceivePacketStreamError",
+					"Value": 261
+				},
+				{
+					"Name": "DisconnectSendPacketError",
+					"Value": 262
+				},
+				{
+					"Name": "DisconnectIllegalTeleport",
+					"Value": 263
+				},
+				{
+					"Name": "DisconnectDuplicatePlayer",
+					"Value": 264
+				},
+				{
+					"Name": "DisconnectDuplicateTicket",
+					"Value": 265
+				},
+				{
+					"Name": "DisconnectTimeout",
+					"Value": 266
+				},
+				{
+					"Name": "DisconnectLuaKick",
+					"Value": 267
+				},
+				{
+					"Name": "DisconnectOnRemoteSysStats",
+					"Value": 268
+				},
+				{
+					"Name": "DisconnectHashTimeout",
+					"Value": 269
+				},
+				{
+					"Name": "DisconnectCloudEditKick",
+					"Value": 270
+				},
+				{
+					"Name": "DisconnectPlayerless",
+					"Value": 271
+				},
+				{
+					"Name": "DisconnectEvicted",
+					"Value": 273
+				},
+				{
+					"Name": "DisconnectDevMaintenance",
+					"Value": 274
+				},
+				{
+					"Name": "DisconnectRobloxMaintenance",
+					"Value": 275
+				},
+				{
+					"Name": "DisconnectRejoin",
+					"Value": 276
+				},
+				{
+					"Name": "DisconnectConnectionLost",
+					"Value": 277
+				},
+				{
+					"Name": "DisconnectIdle",
+					"Value": 278
+				},
+				{
+					"Name": "DisconnectRaknetErrors",
+					"Value": 279
+				},
+				{
+					"Name": "DisconnectWrongVersion",
+					"Value": 280
+				},
+				{
+					"Name": "DisconnectBySecurityPolicy",
+					"Value": 281
+				},
+				{
+					"Name": "DisconnectBlockedIP",
+					"Value": 282
+				},
+				{
+					"Name": "PlacelaunchErrors",
+					"Value": 512
+				},
+				{
+					"Name": "PlacelaunchDisabled",
+					"Value": 515
+				},
+				{
+					"Name": "PlacelaunchError",
+					"Value": 516
+				},
+				{
+					"Name": "PlacelaunchGameEnded",
+					"Value": 517
+				},
+				{
+					"Name": "PlacelaunchGameFull",
+					"Value": 518
+				},
+				{
+					"Name": "PlacelaunchUserLeft",
+					"Value": 522
+				},
+				{
+					"Name": "PlacelaunchRestricted",
+					"Value": 523
+				},
+				{
+					"Name": "PlacelaunchUnauthorized",
+					"Value": 524
+				},
+				{
+					"Name": "PlacelaunchFlooded",
+					"Value": 525
+				},
+				{
+					"Name": "PlacelaunchHashExpired",
+					"Value": 526
+				},
+				{
+					"Name": "PlacelaunchHashException",
+					"Value": 527
+				},
+				{
+					"Name": "PlacelaunchPartyCannotFit",
+					"Value": 528
+				},
+				{
+					"Name": "PlacelaunchHttpError",
+					"Value": 529
+				},
+				{
+					"Name": "PlacelaunchCustomMessage",
+					"Value": 610
+				},
+				{
+					"Name": "PlacelaunchOtherError",
+					"Value": 611
+				},
+				{
+					"Name": "TeleportErrors",
+					"Value": 768
+				},
+				{
+					"Name": "TeleportFailure",
+					"Value": 769
+				},
+				{
+					"Name": "TeleportGameNotFound",
+					"Value": 770
+				},
+				{
+					"Name": "TeleportGameEnded",
+					"Value": 771
+				},
+				{
+					"Name": "TeleportGameFull",
+					"Value": 772
+				},
+				{
+					"Name": "TeleportUnauthorized",
+					"Value": 773
+				},
+				{
+					"Name": "TeleportFlooded",
+					"Value": 774
+				},
+				{
+					"Name": "TeleportIsTeleporting",
+					"Value": 775
+				}
+			],
+			"Name": "ConnectionError"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Legacy",
+					"Value": 0
+				},
+				{
+					"Name": "Arial",
+					"Value": 1
+				},
+				{
+					"Name": "ArialBold",
+					"Value": 2
+				},
+				{
+					"Name": "SourceSans",
+					"Value": 3
+				},
+				{
+					"Name": "SourceSansBold",
+					"Value": 4
+				},
+				{
+					"Name": "SourceSansSemibold",
+					"Value": 16
+				},
+				{
+					"Name": "SourceSansLight",
+					"Value": 5
+				},
+				{
+					"Name": "SourceSansItalic",
+					"Value": 6
+				},
+				{
+					"Name": "Bodoni",
+					"Value": 7
+				},
+				{
+					"Name": "Garamond",
+					"Value": 8
+				},
+				{
+					"Name": "Cartoon",
+					"Value": 9
+				},
+				{
+					"Name": "Code",
+					"Value": 10
+				},
+				{
+					"Name": "Highway",
+					"Value": 11
+				},
+				{
+					"Name": "SciFi",
+					"Value": 12
+				},
+				{
+					"Name": "Arcade",
+					"Value": 13
+				},
+				{
+					"Name": "Fantasy",
+					"Value": 14
+				},
+				{
+					"Name": "Antique",
+					"Value": 15
+				},
+				{
+					"Name": "Gotham",
+					"Value": 17
+				},
+				{
+					"Name": "GothamSemibold",
+					"Value": 18
+				},
+				{
+					"Name": "GothamBold",
+					"Value": 19
+				},
+				{
+					"Name": "GothamBlack",
+					"Value": 20
+				}
+			],
+			"Name": "Font"
+		},
+		{
+			"Items": [
+				{
+					"Name": "AllGenres",
+					"Tags": [
+						"Deprecated"
+					],
+					"Value": 0
+				},
+				{
+					"Name": "MatchingGenreOnly",
+					"Tags": [
+						"Deprecated"
+					],
+					"Value": 1
+				}
+			],
+			"Name": "GearGenreSetting",
+			"Tags": [
+				"Deprecated"
+			]
+		},
+		{
+			"Items": [
+				{
+					"Name": "Unknown",
+					"Value": 0
+				},
+				{
+					"Name": "Backspace",
+					"Value": 8
+				},
+				{
+					"Name": "Tab",
+					"Value": 9
+				},
+				{
+					"Name": "Clear",
+					"Value": 12
+				},
+				{
+					"Name": "Return",
+					"Value": 13
+				},
+				{
+					"Name": "Pause",
+					"Value": 19
+				},
+				{
+					"Name": "Escape",
+					"Value": 27
+				},
+				{
+					"Name": "Space",
+					"Value": 32
+				},
+				{
+					"Name": "QuotedDouble",
+					"Value": 34
+				},
+				{
+					"Name": "Hash",
+					"Value": 35
+				},
+				{
+					"Name": "Dollar",
+					"Value": 36
+				},
+				{
+					"Name": "Percent",
+					"Value": 37
+				},
+				{
+					"Name": "Ampersand",
+					"Value": 38
+				},
+				{
+					"Name": "Quote",
+					"Value": 39
+				},
+				{
+					"Name": "LeftParenthesis",
+					"Value": 40
+				},
+				{
+					"Name": "RightParenthesis",
+					"Value": 41
+				},
+				{
+					"Name": "Asterisk",
+					"Value": 42
+				},
+				{
+					"Name": "Plus",
+					"Value": 43
+				},
+				{
+					"Name": "Comma",
+					"Value": 44
+				},
+				{
+					"Name": "Minus",
+					"Value": 45
+				},
+				{
+					"Name": "Period",
+					"Value": 46
+				},
+				{
+					"Name": "Slash",
+					"Value": 47
+				},
+				{
+					"Name": "Zero",
+					"Value": 48
+				},
+				{
+					"Name": "One",
+					"Value": 49
+				},
+				{
+					"Name": "Two",
+					"Value": 50
+				},
+				{
+					"Name": "Three",
+					"Value": 51
+				},
+				{
+					"Name": "Four",
+					"Value": 52
+				},
+				{
+					"Name": "Five",
+					"Value": 53
+				},
+				{
+					"Name": "Six",
+					"Value": 54
+				},
+				{
+					"Name": "Seven",
+					"Value": 55
+				},
+				{
+					"Name": "Eight",
+					"Value": 56
+				},
+				{
+					"Name": "Nine",
+					"Value": 57
+				},
+				{
+					"Name": "Colon",
+					"Value": 58
+				},
+				{
+					"Name": "Semicolon",
+					"Value": 59
+				},
+				{
+					"Name": "LessThan",
+					"Value": 60
+				},
+				{
+					"Name": "Equals",
+					"Value": 61
+				},
+				{
+					"Name": "GreaterThan",
+					"Value": 62
+				},
+				{
+					"Name": "Question",
+					"Value": 63
+				},
+				{
+					"Name": "At",
+					"Value": 64
+				},
+				{
+					"Name": "LeftBracket",
+					"Value": 91
+				},
+				{
+					"Name": "BackSlash",
+					"Value": 92
+				},
+				{
+					"Name": "RightBracket",
+					"Value": 93
+				},
+				{
+					"Name": "Caret",
+					"Value": 94
+				},
+				{
+					"Name": "Underscore",
+					"Value": 95
+				},
+				{
+					"Name": "Backquote",
+					"Value": 96
+				},
+				{
+					"Name": "A",
+					"Value": 97
+				},
+				{
+					"Name": "B",
+					"Value": 98
+				},
+				{
+					"Name": "C",
+					"Value": 99
+				},
+				{
+					"Name": "D",
+					"Value": 100
+				},
+				{
+					"Name": "E",
+					"Value": 101
+				},
+				{
+					"Name": "F",
+					"Value": 102
+				},
+				{
+					"Name": "G",
+					"Value": 103
+				},
+				{
+					"Name": "H",
+					"Value": 104
+				},
+				{
+					"Name": "I",
+					"Value": 105
+				},
+				{
+					"Name": "J",
+					"Value": 106
+				},
+				{
+					"Name": "K",
+					"Value": 107
+				},
+				{
+					"Name": "L",
+					"Value": 108
+				},
+				{
+					"Name": "M",
+					"Value": 109
+				},
+				{
+					"Name": "N",
+					"Value": 110
+				},
+				{
+					"Name": "O",
+					"Value": 111
+				},
+				{
+					"Name": "P",
+					"Value": 112
+				},
+				{
+					"Name": "Q",
+					"Value": 113
+				},
+				{
+					"Name": "R",
+					"Value": 114
+				},
+				{
+					"Name": "S",
+					"Value": 115
+				},
+				{
+					"Name": "T",
+					"Value": 116
+				},
+				{
+					"Name": "U",
+					"Value": 117
+				},
+				{
+					"Name": "V",
+					"Value": 118
+				},
+				{
+					"Name": "W",
+					"Value": 119
+				},
+				{
+					"Name": "X",
+					"Value": 120
+				},
+				{
+					"Name": "Y",
+					"Value": 121
+				},
+				{
+					"Name": "Z",
+					"Value": 122
+				},
+				{
+					"Name": "LeftCurly",
+					"Value": 123
+				},
+				{
+					"Name": "Pipe",
+					"Value": 124
+				},
+				{
+					"Name": "RightCurly",
+					"Value": 125
+				},
+				{
+					"Name": "Tilde",
+					"Value": 126
+				},
+				{
+					"Name": "Delete",
+					"Value": 127
+				},
+				{
+					"Name": "KeypadZero",
+					"Value": 256
+				},
+				{
+					"Name": "KeypadOne",
+					"Value": 257
+				},
+				{
+					"Name": "KeypadTwo",
+					"Value": 258
+				},
+				{
+					"Name": "KeypadThree",
+					"Value": 259
+				},
+				{
+					"Name": "KeypadFour",
+					"Value": 260
+				},
+				{
+					"Name": "KeypadFive",
+					"Value": 261
+				},
+				{
+					"Name": "KeypadSix",
+					"Value": 262
+				},
+				{
+					"Name": "KeypadSeven",
+					"Value": 263
+				},
+				{
+					"Name": "KeypadEight",
+					"Value": 264
+				},
+				{
+					"Name": "KeypadNine",
+					"Value": 265
+				},
+				{
+					"Name": "KeypadPeriod",
+					"Value": 266
+				},
+				{
+					"Name": "KeypadDivide",
+					"Value": 267
+				},
+				{
+					"Name": "KeypadMultiply",
+					"Value": 268
+				},
+				{
+					"Name": "KeypadMinus",
+					"Value": 269
+				},
+				{
+					"Name": "KeypadPlus",
+					"Value": 270
+				},
+				{
+					"Name": "KeypadEnter",
+					"Value": 271
+				},
+				{
+					"Name": "KeypadEquals",
+					"Value": 272
+				},
+				{
+					"Name": "Up",
+					"Value": 273
+				},
+				{
+					"Name": "Down",
+					"Value": 274
+				},
+				{
+					"Name": "Right",
+					"Value": 275
+				},
+				{
+					"Name": "Left",
+					"Value": 276
+				},
+				{
+					"Name": "Insert",
+					"Value": 277
+				},
+				{
+					"Name": "Home",
+					"Value": 278
+				},
+				{
+					"Name": "End",
+					"Value": 279
+				},
+				{
+					"Name": "PageUp",
+					"Value": 280
+				},
+				{
+					"Name": "PageDown",
+					"Value": 281
+				},
+				{
+					"Name": "LeftShift",
+					"Value": 304
+				},
+				{
+					"Name": "RightShift",
+					"Value": 303
+				},
+				{
+					"Name": "LeftMeta",
+					"Value": 310
+				},
+				{
+					"Name": "RightMeta",
+					"Value": 309
+				},
+				{
+					"Name": "LeftAlt",
+					"Value": 308
+				},
+				{
+					"Name": "RightAlt",
+					"Value": 307
+				},
+				{
+					"Name": "LeftControl",
+					"Value": 306
+				},
+				{
+					"Name": "RightControl",
+					"Value": 305
+				},
+				{
+					"Name": "CapsLock",
+					"Value": 301
+				},
+				{
+					"Name": "NumLock",
+					"Value": 300
+				},
+				{
+					"Name": "ScrollLock",
+					"Value": 302
+				},
+				{
+					"Name": "LeftSuper",
+					"Value": 311
+				},
+				{
+					"Name": "RightSuper",
+					"Value": 312
+				},
+				{
+					"Name": "Mode",
+					"Value": 313
+				},
+				{
+					"Name": "Compose",
+					"Value": 314
+				},
+				{
+					"Name": "Help",
+					"Value": 315
+				},
+				{
+					"Name": "Print",
+					"Value": 316
+				},
+				{
+					"Name": "SysReq",
+					"Value": 317
+				},
+				{
+					"Name": "Break",
+					"Value": 318
+				},
+				{
+					"Name": "Menu",
+					"Value": 319
+				},
+				{
+					"Name": "Power",
+					"Value": 320
+				},
+				{
+					"Name": "Euro",
+					"Value": 321
+				},
+				{
+					"Name": "Undo",
+					"Value": 322
+				},
+				{
+					"Name": "F1",
+					"Value": 282
+				},
+				{
+					"Name": "F2",
+					"Value": 283
+				},
+				{
+					"Name": "F3",
+					"Value": 284
+				},
+				{
+					"Name": "F4",
+					"Value": 285
+				},
+				{
+					"Name": "F5",
+					"Value": 286
+				},
+				{
+					"Name": "F6",
+					"Value": 287
+				},
+				{
+					"Name": "F7",
+					"Value": 288
+				},
+				{
+					"Name": "F8",
+					"Value": 289
+				},
+				{
+					"Name": "F9",
+					"Value": 290
+				},
+				{
+					"Name": "F10",
+					"Value": 291
+				},
+				{
+					"Name": "F11",
+					"Value": 292
+				},
+				{
+					"Name": "F12",
+					"Value": 293
+				},
+				{
+					"Name": "F13",
+					"Value": 294
+				},
+				{
+					"Name": "F14",
+					"Value": 295
+				},
+				{
+					"Name": "F15",
+					"Value": 296
+				},
+				{
+					"Name": "World0",
+					"Value": 160
+				},
+				{
+					"Name": "World1",
+					"Value": 161
+				},
+				{
+					"Name": "World2",
+					"Value": 162
+				},
+				{
+					"Name": "World3",
+					"Value": 163
+				},
+				{
+					"Name": "World4",
+					"Value": 164
+				},
+				{
+					"Name": "World5",
+					"Value": 165
+				},
+				{
+					"Name": "World6",
+					"Value": 166
+				},
+				{
+					"Name": "World7",
+					"Value": 167
+				},
+				{
+					"Name": "World8",
+					"Value": 168
+				},
+				{
+					"Name": "World9",
+					"Value": 169
+				},
+				{
+					"Name": "World10",
+					"Value": 170
+				},
+				{
+					"Name": "World11",
+					"Value": 171
+				},
+				{
+					"Name": "World12",
+					"Value": 172
+				},
+				{
+					"Name": "World13",
+					"Value": 173
+				},
+				{
+					"Name": "World14",
+					"Value": 174
+				},
+				{
+					"Name": "World15",
+					"Value": 175
+				},
+				{
+					"Name": "World16",
+					"Value": 176
+				},
+				{
+					"Name": "World17",
+					"Value": 177
+				},
+				{
+					"Name": "World18",
+					"Value": 178
+				},
+				{
+					"Name": "World19",
+					"Value": 179
+				},
+				{
+					"Name": "World20",
+					"Value": 180
+				},
+				{
+					"Name": "World21",
+					"Value": 181
+				},
+				{
+					"Name": "World22",
+					"Value": 182
+				},
+				{
+					"Name": "World23",
+					"Value": 183
+				},
+				{
+					"Name": "World24",
+					"Value": 184
+				},
+				{
+					"Name": "World25",
+					"Value": 185
+				},
+				{
+					"Name": "World26",
+					"Value": 186
+				},
+				{
+					"Name": "World27",
+					"Value": 187
+				},
+				{
+					"Name": "World28",
+					"Value": 188
+				},
+				{
+					"Name": "World29",
+					"Value": 189
+				},
+				{
+					"Name": "World30",
+					"Value": 190
+				},
+				{
+					"Name": "World31",
+					"Value": 191
+				},
+				{
+					"Name": "World32",
+					"Value": 192
+				},
+				{
+					"Name": "World33",
+					"Value": 193
+				},
+				{
+					"Name": "World34",
+					"Value": 194
+				},
+				{
+					"Name": "World35",
+					"Value": 195
+				},
+				{
+					"Name": "World36",
+					"Value": 196
+				},
+				{
+					"Name": "World37",
+					"Value": 197
+				},
+				{
+					"Name": "World38",
+					"Value": 198
+				},
+				{
+					"Name": "World39",
+					"Value": 199
+				},
+				{
+					"Name": "World40",
+					"Value": 200
+				},
+				{
+					"Name": "World41",
+					"Value": 201
+				},
+				{
+					"Name": "World42",
+					"Value": 202
+				},
+				{
+					"Name": "World43",
+					"Value": 203
+				},
+				{
+					"Name": "World44",
+					"Value": 204
+				},
+				{
+					"Name": "World45",
+					"Value": 205
+				},
+				{
+					"Name": "World46",
+					"Value": 206
+				},
+				{
+					"Name": "World47",
+					"Value": 207
+				},
+				{
+					"Name": "World48",
+					"Value": 208
+				},
+				{
+					"Name": "World49",
+					"Value": 209
+				},
+				{
+					"Name": "World50",
+					"Value": 210
+				},
+				{
+					"Name": "World51",
+					"Value": 211
+				},
+				{
+					"Name": "World52",
+					"Value": 212
+				},
+				{
+					"Name": "World53",
+					"Value": 213
+				},
+				{
+					"Name": "World54",
+					"Value": 214
+				},
+				{
+					"Name": "World55",
+					"Value": 215
+				},
+				{
+					"Name": "World56",
+					"Value": 216
+				},
+				{
+					"Name": "World57",
+					"Value": 217
+				},
+				{
+					"Name": "World58",
+					"Value": 218
+				},
+				{
+					"Name": "World59",
+					"Value": 219
+				},
+				{
+					"Name": "World60",
+					"Value": 220
+				},
+				{
+					"Name": "World61",
+					"Value": 221
+				},
+				{
+					"Name": "World62",
+					"Value": 222
+				},
+				{
+					"Name": "World63",
+					"Value": 223
+				},
+				{
+					"Name": "World64",
+					"Value": 224
+				},
+				{
+					"Name": "World65",
+					"Value": 225
+				},
+				{
+					"Name": "World66",
+					"Value": 226
+				},
+				{
+					"Name": "World67",
+					"Value": 227
+				},
+				{
+					"Name": "World68",
+					"Value": 228
+				},
+				{
+					"Name": "World69",
+					"Value": 229
+				},
+				{
+					"Name": "World70",
+					"Value": 230
+				},
+				{
+					"Name": "World71",
+					"Value": 231
+				},
+				{
+					"Name": "World72",
+					"Value": 232
+				},
+				{
+					"Name": "World73",
+					"Value": 233
+				},
+				{
+					"Name": "World74",
+					"Value": 234
+				},
+				{
+					"Name": "World75",
+					"Value": 235
+				},
+				{
+					"Name": "World76",
+					"Value": 236
+				},
+				{
+					"Name": "World77",
+					"Value": 237
+				},
+				{
+					"Name": "World78",
+					"Value": 238
+				},
+				{
+					"Name": "World79",
+					"Value": 239
+				},
+				{
+					"Name": "World80",
+					"Value": 240
+				},
+				{
+					"Name": "World81",
+					"Value": 241
+				},
+				{
+					"Name": "World82",
+					"Value": 242
+				},
+				{
+					"Name": "World83",
+					"Value": 243
+				},
+				{
+					"Name": "World84",
+					"Value": 244
+				},
+				{
+					"Name": "World85",
+					"Value": 245
+				},
+				{
+					"Name": "World86",
+					"Value": 246
+				},
+				{
+					"Name": "World87",
+					"Value": 247
+				},
+				{
+					"Name": "World88",
+					"Value": 248
+				},
+				{
+					"Name": "World89",
+					"Value": 249
+				},
+				{
+					"Name": "World90",
+					"Value": 250
+				},
+				{
+					"Name": "World91",
+					"Value": 251
+				},
+				{
+					"Name": "World92",
+					"Value": 252
+				},
+				{
+					"Name": "World93",
+					"Value": 253
+				},
+				{
+					"Name": "World94",
+					"Value": 254
+				},
+				{
+					"Name": "World95",
+					"Value": 255
+				},
+				{
+					"Name": "ButtonX",
+					"Value": 1000
+				},
+				{
+					"Name": "ButtonY",
+					"Value": 1001
+				},
+				{
+					"Name": "ButtonA",
+					"Value": 1002
+				},
+				{
+					"Name": "ButtonB",
+					"Value": 1003
+				},
+				{
+					"Name": "ButtonR1",
+					"Value": 1004
+				},
+				{
+					"Name": "ButtonL1",
+					"Value": 1005
+				},
+				{
+					"Name": "ButtonR2",
+					"Value": 1006
+				},
+				{
+					"Name": "ButtonL2",
+					"Value": 1007
+				},
+				{
+					"Name": "ButtonR3",
+					"Value": 1008
+				},
+				{
+					"Name": "ButtonL3",
+					"Value": 1009
+				},
+				{
+					"Name": "ButtonStart",
+					"Value": 1010
+				},
+				{
+					"Name": "ButtonSelect",
+					"Value": 1011
+				},
+				{
+					"Name": "DPadLeft",
+					"Value": 1012
+				},
+				{
+					"Name": "DPadRight",
+					"Value": 1013
+				},
+				{
+					"Name": "DPadUp",
+					"Value": 1014
+				},
+				{
+					"Name": "DPadDown",
+					"Value": 1015
+				},
+				{
+					"Name": "Thumbstick1",
+					"Value": 1016
+				},
+				{
+					"Name": "Thumbstick2",
+					"Value": 1017
+				}
+			],
+			"Name": "KeyCode"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Default",
+					"Value": 0
+				}
+			],
+			"Name": "Language"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Plastic",
+					"Value": 256
+				},
+				{
+					"Name": "Wood",
+					"Value": 512
+				},
+				{
+					"Name": "Slate",
+					"Value": 800
+				},
+				{
+					"Name": "Concrete",
+					"Value": 816
+				},
+				{
+					"Name": "CorrodedMetal",
+					"Value": 1040
+				},
+				{
+					"Name": "DiamondPlate",
+					"Value": 1056
+				},
+				{
+					"Name": "Foil",
+					"Value": 1072
+				},
+				{
+					"Name": "Grass",
+					"Value": 1280
+				},
+				{
+					"Name": "Ice",
+					"Value": 1536
+				},
+				{
+					"Name": "Marble",
+					"Value": 784
+				},
+				{
+					"Name": "Granite",
+					"Value": 832
+				},
+				{
+					"Name": "Brick",
+					"Value": 848
+				},
+				{
+					"Name": "Pebble",
+					"Value": 864
+				},
+				{
+					"Name": "Sand",
+					"Value": 1296
+				},
+				{
+					"Name": "Fabric",
+					"Value": 1312
+				},
+				{
+					"Name": "SmoothPlastic",
+					"Value": 272
+				},
+				{
+					"Name": "Metal",
+					"Value": 1088
+				},
+				{
+					"Name": "WoodPlanks",
+					"Value": 528
+				},
+				{
+					"Name": "Cobblestone",
+					"Value": 880
+				},
+				{
+					"Name": "Air",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1792
+				},
+				{
+					"Name": "Water",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 2048
+				},
+				{
+					"Name": "Rock",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 896
+				},
+				{
+					"Name": "Glacier",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1552
+				},
+				{
+					"Name": "Snow",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1328
+				},
+				{
+					"Name": "Sandstone",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 912
+				},
+				{
+					"Name": "Mud",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1344
+				},
+				{
+					"Name": "Basalt",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 788
+				},
+				{
+					"Name": "Ground",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1360
+				},
+				{
+					"Name": "CrackedLava",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 804
+				},
+				{
+					"Name": "Neon",
+					"Value": 288
+				},
+				{
+					"Name": "Glass",
+					"Value": 1568
+				},
+				{
+					"Name": "Asphalt",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1376
+				},
+				{
+					"Name": "LeafyGrass",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1284
+				},
+				{
+					"Name": "Salt",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 1392
+				},
+				{
+					"Name": "Limestone",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 820
+				},
+				{
+					"Name": "Pavement",
+					"Tags": [
+						"NotBrowsable"
+					],
+					"Value": 836
+				},
+				{
+					"Name": "ForceField",
+					"Value": 1584
+				}
+			],
+			"Name": "Material"
+		},
+		{
+			"Items": [
+				{
+					"Name": "Top",
+					"Value": 1
+				},
+				{
+					"Name": "Bottom",
+					"Value": 4
+				},
+				{
+					"Name": "Back",
+					"Value": 2
+				},
+				{
+					"Name": "Front",
+					"Value": 5
+				},
+				{
+					"Name": "Right",
+					"Value": 0
+				},
+				{
+					"Name": "Left",
+					"Value": 3
+				}
+			],
+			"Name": "NormalId"
+		},
+		{
+			"Items": [
+				{
+					"Name": "DDDD",
+					"Value": 4
+				},
+				{
+					"Name": "CCCC",
+					"Value": 3
+				},
+				{
+					"Name": "BBBB",
+					"Value": 2
+				},
+				{
+					"Name": "AAAA",
+					"Value": 1
+				}
+			],
+			"Name": "ZZZZ"
+		},
+		{
+			"Items": [
+				{
+					"Name": "DDDD",
+					"Value": 1
+				},
+				{
+					"Name": "CCCC",
+					"Value": 2
+				},
+				{
+					"Name": "BBBB",
+					"Value": 3
+				},
+				{
+					"Name": "AAAA",
+					"Value": 4
+				}
+			],
+			"Name": "ZZZY"
+		}
+	],
+	"Version": 1
+}
