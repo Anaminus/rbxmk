@@ -431,7 +431,7 @@ func (inst *Instance) Descend(names ...string) *Instance {
 // types.String.
 //
 // If property is "Parent", then the result of the Parent method is returned.
-func (inst *Instance) Get(property string) (value types.Value) {
+func (inst *Instance) Get(property string) (value types.PropValue) {
 	switch property {
 	case "ClassName":
 		return types.String(inst.ClassName)
