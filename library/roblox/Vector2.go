@@ -93,7 +93,7 @@ func Vector2() Reflector {
 			"Lerp": {Method: true,
 				Get: func(s State, v types.Value) int {
 					goal := s.Pull(2, "Vector2").(types.Vector2)
-					alpha := float64(s.Pull(3, "number").(types.Double))
+					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Vector2).Lerp(goal, alpha))
 				},
 				Dump: func() dump.Value {

@@ -42,13 +42,13 @@ func Rect() Reflector {
 			},
 			"Width": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Double(v.(types.Rect).Width()))
+					return s.Push(types.Float(v.(types.Rect).Width()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Height": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Double(v.(types.Rect).Height()))
+					return s.Push(types.Float(v.(types.Rect).Height()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},

@@ -42,7 +42,7 @@ func Region3() Reflector {
 			},
 			"ExpandToGrid": {Method: true,
 				Get: func(s State, v types.Value) int {
-					region := float64(s.Pull(2, "double").(types.Double))
+					region := float64(s.Pull(2, "float").(types.Float))
 					return s.Push(v.(types.Region3).ExpandToGrid(region))
 				},
 				Dump: func() dump.Value {

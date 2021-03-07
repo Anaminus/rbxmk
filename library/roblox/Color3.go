@@ -50,7 +50,7 @@ func Color3() Reflector {
 			"Lerp": {Method: true,
 				Get: func(s State, v types.Value) int {
 					goal := s.Pull(2, "Color3").(types.Color3)
-					alpha := float64(s.Pull(3, "number").(types.Double))
+					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Color3).Lerp(goal, alpha))
 				},
 				Dump: func() dump.Value {
@@ -68,7 +68,7 @@ func Color3() Reflector {
 			"ToHSV": {Method: true,
 				Get: func(s State, v types.Value) int {
 					hue, sat, val := v.(types.Color3).ToHSV()
-					return s.Push(rtypes.Tuple{types.Double(hue), types.Double(sat), types.Double(val)})
+					return s.Push(rtypes.Tuple{types.Float(hue), types.Float(sat), types.Float(val)})
 				},
 				Dump: func() dump.Value {
 					return dump.Function{
@@ -140,9 +140,9 @@ func Color3() Reflector {
 			"fromHSV": {
 				Func: func(s State) int {
 					return s.Push(types.NewColor3FromHSV(
-						float64(s.Pull(1, "number").(types.Double)),
-						float64(s.Pull(2, "number").(types.Double)),
-						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(1, "float").(types.Float)),
+						float64(s.Pull(2, "float").(types.Float)),
+						float64(s.Pull(3, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {

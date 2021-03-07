@@ -99,7 +99,7 @@ func Vector3() Reflector {
 			"Lerp": {Method: true,
 				Get: func(s State, v types.Value) int {
 					goal := s.Pull(2, "Vector3").(types.Vector3)
-					alpha := float64(s.Pull(3, "number").(types.Double))
+					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Vector3).Lerp(goal, alpha))
 				},
 				Dump: func() dump.Value {
@@ -149,7 +149,7 @@ func Vector3() Reflector {
 			"FuzzyEq": {Method: true,
 				Get: func(s State, v types.Value) int {
 					op := s.Pull(2, "Vector3").(types.Vector3)
-					epsilon := float64(s.Pull(3, "number").(types.Double))
+					epsilon := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(types.Bool(v.(types.Vector3).FuzzyEq(op, epsilon)))
 				},
 				Dump: func() dump.Value {

@@ -162,7 +162,7 @@ func CFrame() Reflector {
 			"Lerp": {Method: true,
 				Get: func(s State, v types.Value) int {
 					goal := s.Pull(2, "CFrame").(types.CFrame)
-					alpha := float64(s.Pull(3, "number").(types.Double))
+					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.CFrame).Lerp(goal, alpha))
 				},
 				Dump: func() dump.Value {
@@ -386,34 +386,34 @@ func CFrame() Reflector {
 						v = types.NewCFrameFromLook(pos, lookAt)
 					case 3:
 						v = types.NewCFrameFromPosition(
-							float64(s.Pull(1, "number").(types.Double)),
-							float64(s.Pull(2, "number").(types.Double)),
-							float64(s.Pull(3, "number").(types.Double)),
+							float64(s.Pull(1, "float").(types.Float)),
+							float64(s.Pull(2, "float").(types.Float)),
+							float64(s.Pull(3, "float").(types.Float)),
 						)
 					case 7:
 						v = types.NewCFrameFromQuat(
-							float64(s.Pull(1, "number").(types.Double)),
-							float64(s.Pull(2, "number").(types.Double)),
-							float64(s.Pull(3, "number").(types.Double)),
-							float64(s.Pull(4, "number").(types.Double)),
-							float64(s.Pull(5, "number").(types.Double)),
-							float64(s.Pull(6, "number").(types.Double)),
-							float64(s.Pull(7, "number").(types.Double)),
+							float64(s.Pull(1, "float").(types.Float)),
+							float64(s.Pull(2, "float").(types.Float)),
+							float64(s.Pull(3, "float").(types.Float)),
+							float64(s.Pull(4, "float").(types.Float)),
+							float64(s.Pull(5, "float").(types.Float)),
+							float64(s.Pull(6, "float").(types.Float)),
+							float64(s.Pull(7, "float").(types.Float)),
 						)
 					case 12:
 						v = types.NewCFrameFromComponents(
-							float64(s.Pull(1, "number").(types.Double)),
-							float64(s.Pull(2, "number").(types.Double)),
-							float64(s.Pull(3, "number").(types.Double)),
-							float64(s.Pull(4, "number").(types.Double)),
-							float64(s.Pull(5, "number").(types.Double)),
-							float64(s.Pull(6, "number").(types.Double)),
-							float64(s.Pull(7, "number").(types.Double)),
-							float64(s.Pull(8, "number").(types.Double)),
-							float64(s.Pull(9, "number").(types.Double)),
-							float64(s.Pull(10, "number").(types.Double)),
-							float64(s.Pull(11, "number").(types.Double)),
-							float64(s.Pull(12, "number").(types.Double)),
+							float64(s.Pull(1, "float").(types.Float)),
+							float64(s.Pull(2, "float").(types.Float)),
+							float64(s.Pull(3, "float").(types.Float)),
+							float64(s.Pull(4, "float").(types.Float)),
+							float64(s.Pull(5, "float").(types.Float)),
+							float64(s.Pull(6, "float").(types.Float)),
+							float64(s.Pull(7, "float").(types.Float)),
+							float64(s.Pull(8, "float").(types.Float)),
+							float64(s.Pull(9, "float").(types.Float)),
+							float64(s.Pull(10, "float").(types.Float)),
+							float64(s.Pull(11, "float").(types.Float)),
+							float64(s.Pull(12, "float").(types.Float)),
 						)
 					default:
 						return s.RaiseError("unexpected number of arguments")
@@ -496,9 +496,9 @@ func CFrame() Reflector {
 			"fromEulerAnglesXYZ": {
 				Func: func(s State) int {
 					return s.Push(types.NewCFrameFromAngles(
-						float64(s.Pull(1, "number").(types.Double)),
-						float64(s.Pull(2, "number").(types.Double)),
-						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(1, "float").(types.Float)),
+						float64(s.Pull(2, "float").(types.Float)),
+						float64(s.Pull(3, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
@@ -517,9 +517,9 @@ func CFrame() Reflector {
 			"fromEulerAnglesYXZ": {
 				Func: func(s State) int {
 					return s.Push(types.NewCFrameFromOrientation(
-						float64(s.Pull(1, "number").(types.Double)),
-						float64(s.Pull(2, "number").(types.Double)),
-						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(1, "float").(types.Float)),
+						float64(s.Pull(2, "float").(types.Float)),
+						float64(s.Pull(3, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
@@ -538,9 +538,9 @@ func CFrame() Reflector {
 			"Angles": {
 				Func: func(s State) int {
 					return s.Push(types.NewCFrameFromAngles(
-						float64(s.Pull(1, "number").(types.Double)),
-						float64(s.Pull(2, "number").(types.Double)),
-						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(1, "float").(types.Float)),
+						float64(s.Pull(2, "float").(types.Float)),
+						float64(s.Pull(3, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
@@ -559,9 +559,9 @@ func CFrame() Reflector {
 			"fromOrientation": {
 				Func: func(s State) int {
 					return s.Push(types.NewCFrameFromOrientation(
-						float64(s.Pull(1, "number").(types.Double)),
-						float64(s.Pull(2, "number").(types.Double)),
-						float64(s.Pull(3, "number").(types.Double)),
+						float64(s.Pull(1, "float").(types.Float)),
+						float64(s.Pull(2, "float").(types.Float)),
+						float64(s.Pull(3, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
@@ -581,7 +581,7 @@ func CFrame() Reflector {
 				Func: func(s State) int {
 					return s.Push(types.NewCFrameFromAxisAngle(
 						s.Pull(1, "Vector3").(types.Vector3),
-						float64(s.Pull(2, "number").(types.Double)),
+						float64(s.Pull(2, "float").(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {

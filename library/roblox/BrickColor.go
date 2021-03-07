@@ -83,9 +83,9 @@ func BrickColor() Reflector {
 						}
 					case 3:
 						v = types.NewBrickColorFromColor(
-							float64(s.Pull(1, "number").(types.Double)),
-							float64(s.Pull(2, "number").(types.Double)),
-							float64(s.Pull(3, "number").(types.Double)),
+							float64(s.Pull(1, "float").(types.Float)),
+							float64(s.Pull(2, "float").(types.Float)),
+							float64(s.Pull(3, "float").(types.Float)),
 						)
 					default:
 						return s.RaiseError("expected 1 or 3 arguments")

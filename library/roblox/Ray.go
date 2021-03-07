@@ -59,7 +59,7 @@ func Ray() Reflector {
 			"Distance": {Method: true,
 				Get: func(s State, v types.Value) int {
 					point := s.Pull(2, "Vector3").(types.Vector3)
-					return s.Push(types.Double(v.(types.Ray).Distance(point)))
+					return s.Push(types.Float(v.(types.Ray).Distance(point)))
 				},
 				Dump: func() dump.Value {
 					return dump.Function{
