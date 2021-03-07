@@ -92,7 +92,7 @@ func tableClear(s rbxmk.State) int {
 }
 
 func tableCreate(s rbxmk.State) int {
-	cap := int(s.L.CheckNumber(1))
+	cap := int(s.L.CheckInt(1))
 	value := s.L.Get(2)
 	t := s.L.CreateTable(cap, 0)
 	if value != lua.LNil {
