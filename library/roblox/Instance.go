@@ -556,7 +556,7 @@ func Instance() Reflector {
 			"FindFirstAncestor": Member{Method: true,
 				Get: func(s State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
-					if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(name); ancestor != nil {
+					if ancestor := v.(*rtypes.Instance).FindFirstAncestor(name); ancestor != nil {
 						return s.Push(ancestor)
 					}
 					return s.Push(rtypes.Nil)
