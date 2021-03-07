@@ -619,6 +619,27 @@ func CFrame() Reflector {
 					}}
 				},
 			},
+			"lookAt": {
+				Func: func(s State) int {
+					return s.Push(types.NewCFrameFromLookAt(
+						s.Pull(1, "Vector3").(types.Vector3),
+						s.Pull(2, "Vector3").(types.Vector3),
+						s.PullOpt(3, "Vector3", types.Vector3{X: 0, Y: 1, Z: 0}).(types.Vector3),
+					))
+				},
+				Dump: func() dump.MultiFunction {
+					return []dump.Function{{
+						Parameters: dump.Parameters{
+							{Name: "position", Type: dt.Prim("Vector3")},
+							{Name: "lookAt", Type: dt.Prim("Vector3")},
+							{Name: "up", Type: dt.Optional{T: dt.Prim("Vector3")}, Default: `Vector3.new(0, 1, 0)`},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("CFrame")},
+						},
+					}}
+				},
+			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{Operators: &dump.Operators{
