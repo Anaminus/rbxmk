@@ -611,6 +611,52 @@ func (inst *Instance) FindFirstAncestorWhichIsA(class string) *Instance {
 	return nil
 }
 
+// WithDescIsA is like IsA, but includes a global descriptor.
+func (inst *Instance) WithDescIsA(globalDesc *RootDesc, className string) bool {
+	desc := globalDesc.Of(inst)
+	if desc == nil {
+		return inst.ClassName == className
+	}
+	class := desc.Classes[inst.ClassName]
+	for class != nil {
+		if class.Name == className {
+			return true
+		}
+		class = desc.Classes[class.Superclass]
+	}
+	return false
+}
+
+// WithDescFindFirstChildWhichIsA is like FindFirstChildWhichIsA, but includes a
+// global descriptor.
+func (inst *Instance) WithDescFindFirstChildWhichIsA(globalDesc *RootDesc, class string, recurse bool) *Instance {
+	for _, child := range inst.children {
+		// TODO: improve performance by handling descriptors directly.
+		if child.WithDescIsA(globalDesc, class) {
+			return child
+		}
+		if recurse {
+			if descendant := child.WithDescFindFirstChildWhichIsA(globalDesc, class, true); descendant != nil {
+				return descendant
+			}
+		}
+	}
+	return nil
+}
+
+// WithDescFindFirstAncestorWhichIsA is like FindFirstAncestorWhichIsA, but
+// includes a global descriptor.
+func (inst *Instance) WithDescFindFirstAncestorWhichIsA(globalDesc *RootDesc, class string) *Instance {
+	parent := inst.parent
+	for parent != nil {
+		if parent.WithDescIsA(globalDesc, class) {
+			return parent
+		}
+		parent = parent.parent
+	}
+	return nil
+}
+
 // AttrConfig returns the nearest AttrConfig for the instance. If the AttrConfig
 // of current instance is nil, then the parent is searched, and so on, until a
 // non-nil or blocked AttrConfig is found. Nil is returned if no Attrs are

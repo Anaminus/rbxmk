@@ -242,7 +242,7 @@ func Instance() Reflector {
 						if class == nil {
 							return 0
 						}
-						if inst.ClassName != class.Name {
+						if !inst.WithDescIsA(desc, class.Name) {
 							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 						}
 						return s.Push(inst)
@@ -371,7 +371,7 @@ func Instance() Reflector {
 						if class == nil {
 							return 0
 						}
-						if inst.ClassName != class.Name {
+						if !inst.WithDescIsA(desc, class.Name) {
 							return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
 						}
 						inst.Set(name, inst)
