@@ -13,12 +13,12 @@ type Enums struct {
 }
 
 // Type returns a string identifying the type of the value.
-func (Enums) Type() string {
+func (*Enums) Type() string {
 	return "Enums"
 }
 
 // String returns a string representation of the value.
-func (Enums) String() string {
+func (*Enums) String() string {
 	return "Enums"
 }
 
