@@ -121,6 +121,23 @@ func Vector3int16() Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators: &dump.Operators{
+					Eq:  true,
+					Add: []dump.Binop{{Operand: dt.Prim("Vector3int16"), Result: dt.Prim("Vector3int16")}},
+					Sub: []dump.Binop{{Operand: dt.Prim("Vector3int16"), Result: dt.Prim("Vector3int16")}},
+					Mul: []dump.Binop{
+						{Operand: dt.Prim("Vector3int16"), Result: dt.Prim("Vector3int16")},
+						{Operand: dt.Prim("number"), Result: dt.Prim("Vector3int16")},
+					},
+					Div: []dump.Binop{
+						{Operand: dt.Prim("Vector3int16"), Result: dt.Prim("Vector3int16")},
+						{Operand: dt.Prim("number"), Result: dt.Prim("Vector3int16")},
+					},
+					Unm: &dump.Unop{Result: dt.Prim("Vector3int16")},
+				},
+			}
+		},
 	}
 }

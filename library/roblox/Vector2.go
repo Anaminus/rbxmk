@@ -175,6 +175,23 @@ func Vector2() Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators: &dump.Operators{
+					Eq:  true,
+					Add: []dump.Binop{{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")}},
+					Sub: []dump.Binop{{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")}},
+					Mul: []dump.Binop{
+						{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")},
+						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2")},
+					},
+					Div: []dump.Binop{
+						{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")},
+						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2")},
+					},
+					Unm: &dump.Unop{Result: dt.Prim("Vector2")},
+				},
+			}
+		},
 	}
 }
