@@ -68,19 +68,19 @@ func Vector3int16() Reflector {
 		Members: map[string]Member{
 			"X": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Float(v.(types.Vector3int16).X))
+					return s.Push(types.Int(v.(types.Vector3int16).X))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
 			"Y": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Float(v.(types.Vector3int16).Y))
+					return s.Push(types.Int(v.(types.Vector3int16).Y))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
 			"Z": {
 				Get: func(s State, v types.Value) int {
-					return s.Push(types.Float(v.(types.Vector3int16).Z))
+					return s.Push(types.Int(v.(types.Vector3int16).Z))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
