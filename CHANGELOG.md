@@ -25,6 +25,8 @@ branch is the latest unreleased version.
 - Fix RBXAssetOptions.Cookies not being optional.
 - Fix missing properties encoded by Roblox binary formats in certain cases.
 - Fix Instance.FindFirstAncestor behaving as FindFirstAncestorOfClass.
+- Fix equality of Enums, Enum, and EnumItem types.
+- Fix tostring of Enums, Enum, and EnumItem types.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
