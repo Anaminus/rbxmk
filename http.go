@@ -119,6 +119,9 @@ func BeginHTTPRequest(w *World, options rtypes.HTTPOptions) (request *HTTPReques
 		cancel()
 		return nil, err
 	}
+	if options.Headers == nil {
+		options.Headers = rtypes.HTTPHeaders{}
+	}
 	req.Header = http.Header(options.Headers.AppendCookies(options.Cookies))
 
 	// Push request object.
