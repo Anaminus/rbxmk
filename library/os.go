@@ -96,6 +96,7 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("string")},
 					},
+					CanError: true,
 				},
 			},
 		},

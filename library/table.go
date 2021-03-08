@@ -61,6 +61,7 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
+					CanError: true,
 				},
 				"pack": dump.Function{
 					Parameters: dump.Parameters{

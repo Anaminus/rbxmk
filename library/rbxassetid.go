@@ -58,11 +58,13 @@ var RBXAssetIDSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Name: "value", Type: dt.Prim("any")},
 						},
+						CanError: true,
 					},
 					"write": dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "options", Type: dt.Prim("RBXAssetOptions")},
 						},
+						CanError: true,
 					},
 				},
 			},

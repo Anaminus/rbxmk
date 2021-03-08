@@ -71,6 +71,7 @@ func Enum() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("EnumItem")},
 						},
+						CanError: true,
 					},
 				},
 			}

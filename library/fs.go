@@ -129,6 +129,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
 						},
+						CanError: true,
 					},
 					"mkdir": dump.Function{
 						Parameters: dump.Parameters{
@@ -138,6 +139,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						CanError: true,
 					},
 					"read": dump.Function{
 						Parameters: dump.Parameters{
@@ -147,6 +149,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Name: "value", Type: dt.Prim("any")},
 						},
+						CanError: true,
 					},
 					"remove": dump.Function{
 						Parameters: dump.Parameters{
@@ -156,6 +159,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						CanError: true,
 					},
 					"rename": dump.Function{
 						Parameters: dump.Parameters{
@@ -165,6 +169,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						CanError: true,
 					},
 					"stat": dump.Function{
 						Parameters: dump.Parameters{
@@ -173,6 +178,7 @@ var FSSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("FileInfo")}},
 						},
+						CanError: true,
 					},
 					"write": dump.Function{
 						Parameters: dump.Parameters{
@@ -180,6 +186,7 @@ var FSSource = rbxmk.Library{
 							{Name: "value", Type: dt.Prim("any")},
 							{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
 						},
+						CanError: true,
 					},
 				},
 			},

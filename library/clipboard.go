@@ -69,12 +69,14 @@ var ClipboardSource = rbxmk.Library{
 						Returns: dump.Parameters{
 							{Name: "value", Type: dt.Prim("any")},
 						},
+						CanError: true,
 					},
 					"write": dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "value", Type: dt.Prim("any")},
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						CanError: true,
 					},
 				},
 			},

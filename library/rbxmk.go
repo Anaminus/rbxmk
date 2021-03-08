@@ -101,6 +101,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "cookies", Type: dt.Prim("Cookies")},
 					},
+					CanError: true,
 				},
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
@@ -110,6 +111,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
 					},
+					CanError: true,
 				},
 				"diffDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -128,6 +130,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "bytes", Type: dt.Prim("BinaryString")},
 					},
+					CanError: true,
 				},
 				"formatCanDecode": dump.Function{
 					Parameters: dump.Parameters{
@@ -137,6 +140,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("bool")},
 					},
+					CanError: true,
 				},
 				"globalAttrConfig": dump.Property{ValueType: dt.Optional{T: dt.Prim("AttrConfig")}},
 				"globalDesc":       dump.Property{ValueType: dt.Optional{T: dt.Prim("RootDesc")}},
@@ -147,6 +151,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "func", Type: dt.Prim("function")},
 					},
+					CanError: true,
 				},
 				"loadString": dump.Function{
 					Parameters: dump.Parameters{
@@ -155,6 +160,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "func", Type: dt.Prim("function")},
 					},
+					CanError: true,
 				},
 				"newCookie": dump.Function{
 					Parameters: dump.Parameters{
@@ -185,6 +191,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("Descriptor")},
 					},
+					CanError: true,
 				},
 				"patchDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -200,6 +207,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("any")},
 					},
+					CanError: true,
 				},
 				"runString": dump.Function{
 					Parameters: dump.Parameters{
@@ -209,6 +217,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("any")},
 					},
+					CanError: true,
 				},
 			},
 		},

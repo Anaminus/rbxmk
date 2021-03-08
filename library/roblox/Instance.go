@@ -917,6 +917,7 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
+						CanError: true,
 					}}
 				},
 			},
@@ -955,12 +956,14 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						CanError: true,
 					},
 					Newindex: dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						CanError: true,
 					},
 				},
 			}

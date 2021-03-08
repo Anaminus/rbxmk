@@ -88,7 +88,8 @@ type Function struct {
 	Parameters Parameters
 	// Returns are the values returned by the function.
 	Returns Parameters
-	// CanError returns whether the function may throw an error.
+	// CanError returns whether the function may throw an error, excluding type
+	// errors from received arguments.
 	CanError bool
 	// Description is a detailed description of the function.
 	Description string

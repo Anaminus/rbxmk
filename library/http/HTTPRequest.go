@@ -37,6 +37,7 @@ func HTTPRequest() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Name: "resp", Type: dt.Prim("HTTPResponse")},
 						},
+						CanError: true,
 					}
 				},
 			},

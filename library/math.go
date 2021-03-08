@@ -35,6 +35,7 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
+					CanError: true,
 				},
 				"log": dump.Function{
 					Parameters: dump.Parameters{

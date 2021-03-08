@@ -129,6 +129,7 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
+							CanError: true,
 						},
 					}
 				},

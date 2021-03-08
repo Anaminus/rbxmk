@@ -210,12 +210,14 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
 						{Name: "message", Type: dt.Optional{T: dt.Prim("string")}, Default: `"assertion failed!"`},
 					},
+					CanError: true,
 				},
 				"error": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "message", Type: dt.Prim("any")},
 						{Name: "level", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
 					},
+					CanError: true,
 				},
 				"ipairs": dump.Function{
 					Parameters: dump.Parameters{
@@ -554,6 +556,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
+								CanError: true,
 							},
 						},
 						"randomseed": dump.Function{
@@ -703,6 +706,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
 									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
 								},
+								CanError: true,
 							},
 							{
 								Parameters: dump.Parameters{
@@ -715,6 +719,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
 									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
 								},
+								CanError: true,
 							},
 						},
 						"format": dump.Function{
@@ -725,6 +730,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							CanError: true,
 						},
 						"gmatch": dump.Function{
 							Parameters: dump.Parameters{
@@ -738,6 +744,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									},
 								}},
 							},
+							CanError: true,
 						},
 						"gsub": dump.Function{
 							Parameters: dump.Parameters{
@@ -764,6 +771,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Type: dt.Prim("string")},
 								{Type: dt.Prim("int")},
 							},
+							CanError: true,
 						},
 						"len": dump.Function{
 							Parameters: dump.Parameters{
@@ -790,6 +798,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("string")}},
 							},
+							CanError: true,
 						},
 						"rep": dump.Function{
 							Parameters: dump.Parameters{
@@ -840,6 +849,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							CanError: true,
 						},
 						"insert": dump.MultiFunction{
 							{
@@ -886,6 +896,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									},
 								}}},
 							},
+							CanError: true,
 						},
 					},
 				},

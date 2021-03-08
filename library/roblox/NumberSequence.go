@@ -129,6 +129,7 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
+							CanError: true,
 						},
 					}
 				},
