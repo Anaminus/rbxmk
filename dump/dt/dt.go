@@ -168,7 +168,7 @@ type Optional struct {
 
 func (t Optional) t() {}
 func (t Optional) String() string {
-	return t.String() + "?"
+	return t.T.String() + "?"
 }
 func (t Optional) MarshalJSON() (b []byte, err error) {
 	v := struct {
@@ -186,7 +186,7 @@ type Group struct {
 
 func (t Group) t() {}
 func (t Group) String() string {
-	return "(" + t.String() + ")"
+	return "(" + t.T.String() + ")"
 }
 func (t Group) MarshalJSON() (b []byte, err error) {
 	v := struct {
