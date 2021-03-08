@@ -97,7 +97,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	}
 	args := opt.Args()
 	if len(args) == 0 {
-		opt.Usage()
+		opt.WriteUsageOf(opt.Stderr, opt.Def)
 		return nil
 	}
 	file := args[0]
