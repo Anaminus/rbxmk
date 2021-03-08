@@ -63,6 +63,7 @@ func (t Function) String() string {
 		}
 		s.WriteString(v.Type.String())
 	}
+	s.WriteString(") -> (")
 	for i, v := range t.Returns {
 		if i > 0 {
 			s.WriteString(", ")
