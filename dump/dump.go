@@ -18,6 +18,17 @@ func marshal(v interface{}) (b []byte, err error) {
 	return buf.Bytes(), nil
 }
 
+// Root describes an entire API.
+type Root struct {
+	// Libraries contains libraries defined in the API.
+	Libraries Libraries
+	// Types contains types defined by the API.
+	Types TypeDefs `json:",omitempty"`
+}
+
+// Libraries is a list of libraries.
+type Libraries = []Library
+
 // Library describes the API of a library.
 type Library struct {
 	// Name is the name of the library.
