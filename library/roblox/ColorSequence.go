@@ -42,7 +42,7 @@ func ColorSequence() Reflector {
 			"Keypoints": {
 				Get: func(s State, v types.Value) int {
 					u := v.(types.ColorSequence)
-					keypointRfl := s.Reflector("ColorSequenceKeypoint")
+					keypointRfl := s.MustReflector("ColorSequenceKeypoint")
 					table := s.L.CreateTable(len(u), 0)
 					for i, v := range u {
 						lv, err := keypointRfl.PushTo(s, v)
@@ -77,7 +77,7 @@ func ColorSequence() Reflector {
 								return s.RaiseError("ColorSequence requires at least 2 keypoints")
 							}
 							v = make(types.ColorSequence, n)
-							keypointRfl := s.Reflector("ColorSequenceKeypoint")
+							keypointRfl := s.MustReflector("ColorSequenceKeypoint")
 							for i := 1; i <= n; i++ {
 								k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
 								if err != nil {

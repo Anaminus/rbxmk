@@ -18,7 +18,7 @@ func Cookies() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Cookies")
 			}
-			cookieRfl := s.Reflector("Cookie")
+			cookieRfl := s.MustReflector("Cookie")
 			table := s.L.CreateTable(len(cookies), 0)
 			for i, v := range cookies {
 				lv, err := cookieRfl.PushTo(s, v)
@@ -34,7 +34,7 @@ func Cookies() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
-			cookieRfl := s.Reflector("Cookie")
+			cookieRfl := s.MustReflector("Cookie")
 			n := table.Len()
 			cookies := make(rtypes.Cookies, n)
 			for i := 1; i <= n; i++ {

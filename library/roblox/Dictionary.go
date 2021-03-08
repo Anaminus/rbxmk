@@ -24,7 +24,7 @@ func Dictionary() Reflector {
 			if s.CycleMark(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
 			}
-			variantRfl := s.Reflector("Variant")
+			variantRfl := s.MustReflector("Variant")
 			table := s.L.CreateTable(0, len(dict))
 			for k, v := range dict {
 				lv, err := variantRfl.PushTo(s, v)
@@ -46,7 +46,7 @@ func Dictionary() Reflector {
 			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
-			variantRfl := s.Reflector("Variant")
+			variantRfl := s.MustReflector("Variant")
 			dict := make(rtypes.Dictionary)
 			err = table.ForEach(func(k, lv lua.LValue) error {
 				v, err := variantRfl.PullFrom(s, lv)

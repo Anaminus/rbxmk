@@ -42,7 +42,7 @@ func NumberSequence() Reflector {
 			"Keypoints": {
 				Get: func(s State, v types.Value) int {
 					u := v.(types.NumberSequence)
-					keypointRfl := s.Reflector("NumberSequenceKeypoint")
+					keypointRfl := s.MustReflector("NumberSequenceKeypoint")
 					table := s.L.CreateTable(len(u), 0)
 					for i, v := range u {
 						lv, err := keypointRfl.PushTo(s, v)
@@ -77,7 +77,7 @@ func NumberSequence() Reflector {
 								return s.RaiseError("NumberSequence requires at least 2 keypoints")
 							}
 							v = make(types.NumberSequence, n)
-							keypointRfl := s.Reflector("NumberSequenceKeypoint")
+							keypointRfl := s.MustReflector("NumberSequenceKeypoint")
 							for i := 1; i <= n; i++ {
 								k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
 								if err != nil {

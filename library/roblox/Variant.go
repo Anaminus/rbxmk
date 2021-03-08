@@ -21,14 +21,14 @@ func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	case types.Stringlike:
 		return lua.LString(v.Stringlike()), nil
 	case rtypes.Array:
-		rfl := s.Reflector("Array")
+		rfl := s.MustReflector("Array")
 		values, err := rfl.PushTo(s, v)
 		if err != nil {
 			return nil, err
 		}
 		return values[0], nil
 	case rtypes.Dictionary:
-		rfl := s.Reflector("Dictionary")
+		rfl := s.MustReflector("Dictionary")
 		values, err := rfl.PushTo(s, v)
 		if err != nil {
 			return nil, err
@@ -61,12 +61,12 @@ func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 		return types.String(lv), nil
 	case *lua.LTable:
 		if lv.Len() > 0 {
-			arrayRfl := s.Reflector("Array")
+			arrayRfl := s.MustReflector("Array")
 			if v, err = arrayRfl.PullFrom(s, lv); err == nil {
 				return v, nil
 			}
 		}
-		dictRfl := s.Reflector("Dictionary")
+		dictRfl := s.MustReflector("Dictionary")
 		v, err := dictRfl.PullFrom(s, lv)
 		return v, err
 	case *lua.LUserData:

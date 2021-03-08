@@ -65,10 +65,7 @@ func (s State) Count() int {
 // Push reflects v according to its type as registered with s.World, then pushes
 // the results to s.L.
 func (s State) Push(v types.Value) int {
-	rfl := s.Reflector(v.Type())
-	if rfl.Name == "" {
-		panic("unregistered type " + v.Type())
-	}
+	rfl := s.MustReflector(v.Type())
 	lvs, err := rfl.PushTo(s, v)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -82,7 +79,7 @@ func (s State) Push(v types.Value) int {
 // Pull gets from s.L the values starting from n, and reflects a value from them
 // according to type t registered with s.World.
 func (s State) Pull(n int, t string) types.Value {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	var v types.Value
 	var err error
 	if rfl.Count < 0 {
@@ -111,7 +108,7 @@ func (s State) Pull(n int, t string) types.Value {
 // to type t registered with s.World. If the value is nil, d is returned
 // instead.
 func (s State) PullOpt(n int, t string, d types.Value) types.Value {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	if rfl.Count < 0 {
 		panic("PullOpt cannot pull variable types")
 	} else if rfl.Count > 1 {
@@ -158,7 +155,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	max := 1
 	ts := make([]Reflector, 0, 4)
 	for _, t := range t {
-		rfl := s.Reflector(t)
+		rfl := s.MustReflector(t)
 		ts = append(ts, rfl)
 		if rfl.Count > 1 {
 			max = rfl.Count
@@ -231,10 +228,7 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 	if v == nil {
 		return
 	}
-	rfl := s.Reflector(v.Type())
-	if rfl.Name == "" {
-		panic("unregistered type " + v.Type())
-	}
+	rfl := s.MustReflector(v.Type())
 	if rfl.Count < 0 {
 		panic("PushToTable cannot push variable types")
 	} else if rfl.Count > 1 {
@@ -251,7 +245,7 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 // PullFromTable gets a value from table[field], and reflects a value from it to
 // type t registered with s.World.
 func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) types.Value {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	if rfl.Count < 0 {
 		panic("PullFromTable cannot push variable types")
 	} else if rfl.Count > 1 {
@@ -269,7 +263,7 @@ func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) type
 // to type t registered with s.World. If the value is nil, d is returned
 // instead.
 func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d types.Value) types.Value {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	if rfl.Count < 0 {
 		panic("PullFromTableOpt cannot pull variable types")
 	} else if rfl.Count > 1 {
@@ -296,7 +290,7 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 	if s.CycleMark(&v) {
 		return s.RaiseError("arrays cannot be cyclic")
 	}
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	table := s.L.CreateTable(len(v), 0)
 	for i, v := range v {
 		lv, err := rfl.PushTo(s, v)
@@ -312,7 +306,7 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 // PullArrayOf pulls an rtypes.Array from n, ensuring that each element is
 // reflected according to t.
 func (s State) PullArrayOf(n int, t string) rtypes.Array {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	lv := s.L.CheckAny(n)
 	if s.CycleGuard() {
 		defer s.CycleClear()
@@ -345,7 +339,7 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 	if s.CycleMark(&v) {
 		return s.RaiseError("dictionaries cannot be cyclic")
 	}
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	table := s.L.CreateTable(0, len(v))
 	for k, v := range v {
 		lv, err := rfl.PushTo(s, v)
@@ -359,7 +353,7 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 }
 
 func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
-	rfl := s.Reflector(t)
+	rfl := s.MustReflector(t)
 	lv := s.L.CheckAny(n)
 	if s.CycleGuard() {
 		defer s.CycleClear()

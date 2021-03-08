@@ -348,6 +348,16 @@ func (w *World) Reflector(name string) Reflector {
 	return w.reflectors[name]
 }
 
+// MustReflector returns the Reflector registered with the given name. If the
+// name is not registered, then MustReflector panics.
+func (w *World) MustReflector(name string) Reflector {
+	rfl, ok := w.reflectors[name]
+	if !ok {
+		panic("unregistered type " + name)
+	}
+	return rfl
+}
+
 // Reflectors returns a list of reflectors that have all of the given flags set.
 func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 	ts := []Reflector{}

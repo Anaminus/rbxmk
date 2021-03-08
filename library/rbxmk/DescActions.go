@@ -18,7 +18,7 @@ func DescActions() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "DescActions")
 			}
-			actionRfl := s.Reflector("DescAction")
+			actionRfl := s.MustReflector("DescAction")
 			table := s.L.CreateTable(len(actions), 0)
 			for i, v := range actions {
 				lv, err := actionRfl.PushTo(s, v)
@@ -34,7 +34,7 @@ func DescActions() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
-			actionRfl := s.Reflector("DescAction")
+			actionRfl := s.MustReflector("DescAction")
 			n := table.Len()
 			actions := make(rtypes.DescActions, n)
 			for i := 1; i <= n; i++ {

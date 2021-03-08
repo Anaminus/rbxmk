@@ -24,7 +24,7 @@ func Array() Reflector {
 			if s.CycleMark(&array) {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
 			}
-			variantRfl := s.Reflector("Variant")
+			variantRfl := s.MustReflector("Variant")
 			table := s.L.CreateTable(len(array), 0)
 			for i, v := range array {
 				lv, err := variantRfl.PushTo(s, v)
@@ -46,7 +46,7 @@ func Array() Reflector {
 			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
-			variantRfl := s.Reflector("Variant")
+			variantRfl := s.MustReflector("Variant")
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {

@@ -18,7 +18,7 @@ func Objects() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Objects")
 			}
-			instRfl := s.Reflector("Instance")
+			instRfl := s.MustReflector("Instance")
 			table := s.L.CreateTable(len(objects), 0)
 			for i, v := range objects {
 				lv, err := instRfl.PushTo(s, v)
@@ -34,7 +34,7 @@ func Objects() Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")
 			}
-			instRfl := s.Reflector("Instance")
+			instRfl := s.MustReflector("Instance")
 			n := table.Len()
 			objects := make(rtypes.Objects, n)
 			for i := 1; i <= n; i++ {
