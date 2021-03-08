@@ -2,8 +2,21 @@
 package dump
 
 import (
+	"bytes"
+	"encoding/json"
+
 	"github.com/anaminus/rbxmk/dump/dt"
 )
+
+func marshal(v interface{}) (b []byte, err error) {
+	var buf bytes.Buffer
+	j := json.NewEncoder(&buf)
+	j.SetEscapeHTML(false)
+	if err = j.Encode(v); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
 
 // Library describes the API of a library.
 type Library struct {
@@ -13,13 +26,38 @@ type Library struct {
 	// that the contents of the library are merged into the global environment.
 	ImportedAs string
 	// Struct contains the items of the library.
-	Struct Struct
-	// Types contains definitions of types used in the library.
-	Types TypeDefs
+	Struct Struct `json:",omitempty"`
+	// Types contains types defined by the library.
+	Types TypeDefs `json:",omitempty"`
 }
 
 // Fields maps a name to a value.
-type Fields = map[string]Value
+type Fields map[string]Value
+
+func (f Fields) MarshalJSON() (b []byte, err error) {
+	type field struct {
+		Kind  string
+		Value Value
+	}
+	m := make(map[string]field, len(f))
+	for k, v := range f {
+		f := field{Kind: "", Value: v}
+		switch v.(type) {
+		case Property:
+			f.Kind = "Property"
+		case Struct:
+			f.Kind = "Struct"
+		case Function:
+			f.Kind = "Function"
+		case MultiFunction:
+			f.Kind = "MultiFunction"
+		default:
+			continue
+		}
+		m[k] = f
+	}
+	return marshal(m)
+}
 
 // TypeDefs maps a name to a type definition.
 type TypeDefs = map[string]TypeDef
@@ -34,9 +72,9 @@ type Property struct {
 	// ValueType is the type of the property's value.
 	ValueType dt.Type
 	// ReadOnly indicates whether the property can be written to.
-	ReadOnly bool
+	ReadOnly bool `json:",omitempty"`
 	// Description is a detailed description of the property.
-	Description string
+	Description string `json:",omitempty"`
 }
 
 // Type implements Value by returning v.ValueType.
@@ -49,7 +87,7 @@ type Struct struct {
 	// Fields are the fields of the structure.
 	Fields Fields
 	// Description is a detailed description of the structure.
-	Description string
+	Description string `json:",omitempty"`
 }
 
 // Type implements Value by returning a dt.Struct that maps each field name the
@@ -65,17 +103,17 @@ func (v Struct) Type() dt.Type {
 // TypeDef describes the definition of a type.
 type TypeDef struct {
 	// Underlying indicates that the type has an underlying type.
-	Underlying dt.Type
+	Underlying dt.Type `json:",omitempty"`
 	// Operators describes the operators defined on the type.
-	Operators *Operators
+	Operators *Operators `json:",omitempty"`
 	// Operators describes the properties defined on the type.
-	Properties Properties
+	Properties Properties `json:",omitempty"`
 	// Operators describes the methods defined on the type.
-	Methods Methods
+	Methods Methods `json:",omitempty"`
 	// Operators describes constructor functions that create the type.
-	Constructors Constructors
+	Constructors Constructors `json:",omitempty"`
 	// Description is a detailed description of the type definition.
-	Description string
+	Description string `json:",omitempty"`
 }
 
 // Properties maps a name to a Property.
@@ -90,14 +128,14 @@ type Constructors = map[string]MultiFunction
 // Function describes the API of a function.
 type Function struct {
 	// Parameters are the values received by the function.
-	Parameters Parameters
+	Parameters Parameters `json:",omitempty"`
 	// Returns are the values returned by the function.
-	Returns Parameters
+	Returns Parameters `json:",omitempty"`
 	// CanError returns whether the function may throw an error, excluding type
 	// errors from received arguments.
-	CanError bool
+	CanError bool `json:",omitempty"`
 	// Description is a detailed description of the function.
-	Description string
+	Description string `json:",omitempty"`
 }
 
 // Type implements Value by returning a dt.Function with the parameters and
@@ -129,38 +167,38 @@ type Parameters = []Parameter
 // Operators describes the operators of a type.
 type Operators struct {
 	// Add describes a number of signatures for the __add operator.
-	Add []Binop
+	Add []Binop `json:"__add,omitempty"`
 	// Add describes a number of signatures for the __sub operator.
-	Sub []Binop
+	Sub []Binop `json:"__sub,omitempty"`
 	// Add describes a number of signatures for the __mul operator.
-	Mul []Binop
+	Mul []Binop `json:"__mul,omitempty"`
 	// Add describes a number of signatures for the __div operator.
-	Div []Binop
+	Div []Binop `json:"__div,omitempty"`
 	// Add describes a number of signatures for the __mod operator.
-	Mod []Binop
+	Mod []Binop `json:"__mod,omitempty"`
 	// Add describes a number of signatures for the __pow operator.
-	Pow []Binop
+	Pow []Binop `json:"__pow,omitempty"`
 	// Add describes a number of signatures for the __concat operator.
-	Concat []Binop
+	Concat []Binop `json:"__concat,omitempty"`
 
 	// Eq indicates whether the type defines a __eq operator.
-	Eq bool
+	Eq bool `json:"__eq,omitempty"`
 	// Eq indicates whether the type defines a __le operator.
-	Le bool
+	Le bool `json:"__le,omitempty"`
 	// Eq indicates whether the type defines a __lt operator.
-	Lt bool
+	Lt bool `json:"__lt,omitempty"`
 
 	// Len describes the signature for the __len operator, if defined.
-	Len *Unop
+	Len *Unop `json:"__len,omitempty"`
 	// Len describes the signature for the __unm operator, if defined.
-	Unm *Unop
+	Unm *Unop `json:"__unm,omitempty"`
 
 	// Call describes the function signature for the __call operator, if
 	// defined.
-	Call *Function
+	Call *Function `json:"__call,omitempty"`
 
-	Index    Value
-	Newindex Value
+	Index    Value `json:"__index,omitempty"`
+	Newindex Value `json:"__newindex,omitempty"`
 }
 
 // Binop describes a binary operator. The left operand is assumed to be of an
@@ -171,7 +209,7 @@ type Binop struct {
 	// Result is the type of the result of the operation.
 	Result dt.Type
 	// Description is a detailed description of the operator.
-	Description string
+	Description string `json:",omitempty"`
 }
 
 // Unop describes a unary operator. The operand is assumed to be of an outer
@@ -180,5 +218,5 @@ type Unop struct {
 	// Result is the type of the result of the operation.
 	Result dt.Type
 	// Description is a detailed description of the operator.
-	Description string
+	Description string `json:",omitempty"`
 }
