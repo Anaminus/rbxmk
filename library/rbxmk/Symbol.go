@@ -8,13 +8,13 @@ import (
 )
 
 func init() { register(Symbol) }
-func Symbol() Reflector {
-	return Reflector{
+func Symbol() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Symbol",
 		PushTo:   rbxmk.PushTypeTo("Symbol"),
 		PullFrom: rbxmk.PullTypeFrom("Symbol"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Symbol").(rtypes.Symbol)
 				op := s.Pull(2, "Symbol").(rtypes.Symbol)
 				s.L.Push(lua.LBool(v == op))

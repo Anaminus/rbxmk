@@ -9,22 +9,22 @@ import (
 )
 
 func init() { register(HTTPRequest) }
-func HTTPRequest() Reflector {
-	return Reflector{
+func HTTPRequest() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "HTTPRequest",
 		PushTo:   rbxmk.PushTypeTo("HTTPRequest"),
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "HTTPRequest").(*rbxmk.HTTPRequest)
 				op := s.Pull(2, "HTTPRequest").(*rbxmk.HTTPRequest)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Resolve": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Resolve": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					req := v.(*rbxmk.HTTPRequest)
 					resp, err := req.Resolve()
 					if err != nil {
@@ -40,8 +40,8 @@ func HTTPRequest() Reflector {
 					}
 				},
 			},
-			"Cancel": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Cancel": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					req := v.(*rbxmk.HTTPRequest)
 					req.Cancel()
 					return 0

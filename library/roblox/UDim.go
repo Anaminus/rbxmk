@@ -9,55 +9,55 @@ import (
 )
 
 func init() { register(UDim) }
-func UDim() Reflector {
-	return Reflector{
+func UDim() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "UDim",
 		PushTo:   rbxmk.PushTypeTo("UDim"),
 		PullFrom: rbxmk.PullTypeFrom("UDim"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim").(types.UDim)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim").(types.UDim)
 				op := s.Pull(2, "UDim").(types.UDim)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__add": func(s State) int {
+			"__add": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim").(types.UDim)
 				op := s.Pull(2, "UDim").(types.UDim)
 				return s.Push(v.Add(op))
 			},
-			"__sub": func(s State) int {
+			"__sub": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim").(types.UDim)
 				op := s.Pull(2, "UDim").(types.UDim)
 				return s.Push(v.Sub(op))
 			},
-			"__unm": func(s State) int {
+			"__unm": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim").(types.UDim)
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Scale": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.UDim).Scale))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Offset": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.UDim).Offset))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.UDim{
 						Scale:  float32(s.Pull(1, "float").(types.Float)),
 						Offset: int32(s.Pull(2, "int").(types.Int)),

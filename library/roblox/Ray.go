@@ -9,39 +9,39 @@ import (
 )
 
 func init() { register(Ray) }
-func Ray() Reflector {
-	return Reflector{
+func Ray() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Ray",
 		PushTo:   rbxmk.PushTypeTo("Ray"),
 		PullFrom: rbxmk.PullTypeFrom("Ray"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Ray").(types.Ray)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Ray").(types.Ray)
 				op := s.Pull(2, "Ray").(types.Ray)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Origin": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Origin)
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
 			},
 			"Direction": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Direction)
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
 			},
 			"ClosestPoint": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					point := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.Ray).ClosestPoint(point))
 				},
@@ -57,7 +57,7 @@ func Ray() Reflector {
 				},
 			},
 			"Distance": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					point := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(types.Float(v.(types.Ray).Distance(point)))
 				},
@@ -73,9 +73,9 @@ func Ray() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.Ray{
 						Origin:    s.Pull(1, "Vector3").(types.Vector3),
 						Direction: s.Pull(2, "Vector3").(types.Vector3),

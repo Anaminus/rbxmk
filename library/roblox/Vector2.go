@@ -9,34 +9,34 @@ import (
 )
 
 func init() { register(Vector2) }
-func Vector2() Reflector {
-	return Reflector{
+func Vector2() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Vector2",
 		PushTo:   rbxmk.PushTypeTo("Vector2"),
 		PullFrom: rbxmk.PullTypeFrom("Vector2"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				op := s.Pull(2, "Vector2").(types.Vector2)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__add": func(s State) int {
+			"__add": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				op := s.Pull(2, "Vector2").(types.Vector2)
 				return s.Push(v.Add(op))
 			},
-			"__sub": func(s State) int {
+			"__sub": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				op := s.Pull(2, "Vector2").(types.Vector2)
 				return s.Push(v.Sub(op))
 			},
-			"__mul": func(s State) int {
+			"__mul": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
 				case types.Double:
@@ -48,7 +48,7 @@ func Vector2() Reflector {
 					return 0
 				}
 			},
-			"__div": func(s State) int {
+			"__div": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				switch op := s.PullAnyOf(2, "number", "Vector2").(type) {
 				case types.Double:
@@ -60,38 +60,38 @@ func Vector2() Reflector {
 					return 0
 				}
 			},
-			"__unm": func(s State) int {
+			"__unm": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2").(types.Vector2)
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"X": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).X))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Y": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Y))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Magnitude": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Magnitude()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Unit": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector2).Unit())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
 			},
 			"Lerp": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "Vector2").(types.Vector2)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Vector2).Lerp(goal, alpha))
@@ -109,7 +109,7 @@ func Vector2() Reflector {
 				},
 			},
 			"Dot": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector2").(types.Vector2)
 					return s.Push(types.Double(v.(types.Vector2).Dot(op)))
 				},
@@ -125,7 +125,7 @@ func Vector2() Reflector {
 				},
 			},
 			"Cross": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector2").(types.Vector2)
 					return s.Push(types.Double(v.(types.Vector2).Cross(op)))
 				},
@@ -141,9 +141,9 @@ func Vector2() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Vector2
 					switch s.Count() {
 					case 0:

@@ -8,13 +8,13 @@ import (
 )
 
 func init() { register(Nil) }
-func Nil() Reflector {
-	return Reflector{
+func Nil() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "nil",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNil}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			if lvs[0] == lua.LNil {
 				return rtypes.Nil, nil
 			}

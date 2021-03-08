@@ -10,24 +10,24 @@ import (
 )
 
 func init() { register(Enums) }
-func Enums() Reflector {
-	return Reflector{
+func Enums() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Enums",
 		PushTo:   rbxmk.PushTypeTo("Enums"),
 		PullFrom: rbxmk.PullTypeFrom("Enums"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Enums").(*rtypes.Enums)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Enums").(*rtypes.Enums)
 				op := s.Pull(2, "Enums").(*rtypes.Enums)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__index": func(s State) int {
+			"__index": func(s rbxmk.State) int {
 				enums := s.Pull(1, "Enums").(*rtypes.Enums)
 				name := string(s.Pull(2, "string").(types.String))
 				enum := enums.Enum(name)
@@ -36,14 +36,14 @@ func Enums() Reflector {
 				}
 				return s.Push(enum)
 			},
-			"__newindex": func(s State) int {
+			"__newindex": func(s rbxmk.State) int {
 				name := string(s.Pull(2, "string").(types.String))
 				return s.RaiseError("%s cannot be assigned to", name)
 			},
 		},
 		Members: rbxmk.Members{
 			"GetEnums": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					enums := v.(*rtypes.Enums).Enums()
 					array := make(rtypes.Array, len(enums))
 					for i, enum := range enums {

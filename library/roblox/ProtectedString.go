@@ -7,14 +7,14 @@ import (
 )
 
 func init() { register(ProtectedString) }
-func ProtectedString() Reflector {
-	return Reflector{
+func ProtectedString() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:  "ProtectedString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.ProtectedString))}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				return types.ProtectedString(v), nil

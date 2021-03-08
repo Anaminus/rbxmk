@@ -9,34 +9,34 @@ import (
 )
 
 func init() { register(Vector3) }
-func Vector3() Reflector {
-	return Reflector{
+func Vector3() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Vector3",
 		PushTo:   rbxmk.PushTypeTo("Vector3"),
 		PullFrom: rbxmk.PullTypeFrom("Vector3"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__add": func(s State) int {
+			"__add": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push(v.Add(op))
 			},
-			"__sub": func(s State) int {
+			"__sub": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				op := s.Pull(2, "Vector3").(types.Vector3)
 				return s.Push(v.Sub(op))
 			},
-			"__mul": func(s State) int {
+			"__mul": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
@@ -48,7 +48,7 @@ func Vector3() Reflector {
 					return 0
 				}
 			},
-			"__div": func(s State) int {
+			"__div": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				switch op := s.PullAnyOf(2, "number", "Vector3").(type) {
 				case types.Double:
@@ -60,44 +60,44 @@ func Vector3() Reflector {
 					return 0
 				}
 			},
-			"__unm": func(s State) int {
+			"__unm": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3").(types.Vector3)
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"X": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).X))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Y": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Y))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Z": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Z))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Magnitude": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Magnitude()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Unit": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector3).Unit())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
 			},
 			"Lerp": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "Vector3").(types.Vector3)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Vector3).Lerp(goal, alpha))
@@ -115,7 +115,7 @@ func Vector3() Reflector {
 				},
 			},
 			"Dot": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(types.Float(v.(types.Vector3).Dot(op)))
 				},
@@ -131,7 +131,7 @@ func Vector3() Reflector {
 				},
 			},
 			"Cross": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.Vector3).Cross(op))
 				},
@@ -147,7 +147,7 @@ func Vector3() Reflector {
 				},
 			},
 			"FuzzyEq": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector3").(types.Vector3)
 					epsilon := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(types.Bool(v.(types.Vector3).FuzzyEq(op, epsilon)))
@@ -165,9 +165,9 @@ func Vector3() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Vector3
 					switch s.Count() {
 					case 0:

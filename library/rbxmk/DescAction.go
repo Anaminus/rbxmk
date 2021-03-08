@@ -8,18 +8,18 @@ import (
 )
 
 func init() { register(DescAction) }
-func DescAction() Reflector {
-	return Reflector{
+func DescAction() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "DescAction",
 		PushTo:   rbxmk.PushTypeTo("DescAction"),
 		PullFrom: rbxmk.PullTypeFrom("DescAction"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "DescAction").(*rtypes.DescAction)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "DescAction").(*rtypes.DescAction)
 				op := s.Pull(2, "DescAction").(*rtypes.DescAction)
 				s.L.Push(lua.LBool(v == op))

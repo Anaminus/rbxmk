@@ -10,18 +10,18 @@ import (
 )
 
 func init() { register(EnumItem) }
-func EnumItem() Reflector {
-	return Reflector{
+func EnumItem() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "EnumItem",
 		PushTo:   rbxmk.PushTypeTo("EnumItem"),
 		PullFrom: rbxmk.PullTypeFrom("EnumItem"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
 				op := s.Pull(2, "EnumItem").(*rtypes.EnumItem)
 				s.L.Push(lua.LBool(v == op))
@@ -29,20 +29,20 @@ func EnumItem() Reflector {
 			},
 		},
 		Members: rbxmk.Members{
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.EnumItem).Name()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
-			"Value": Member{
-				Get: func(s State, v types.Value) int {
+			"Value": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(*rtypes.EnumItem).Value()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
-			"EnumType": Member{
-				Get: func(s State, v types.Value) int {
+			"EnumType": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(*rtypes.EnumItem).Enum())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },

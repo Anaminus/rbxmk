@@ -10,17 +10,17 @@ import (
 )
 
 func init() { register(PhysicalProperties) }
-func PhysicalProperties() Reflector {
-	return Reflector{
+func PhysicalProperties() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "PhysicalProperties",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
 				return append(lvs, lua.LNil), nil
 			}
 			u := s.UserDataOf(v, "PhysicalProperties")
 			return append(lvs, u), nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch lv := lvs[0].(type) {
 			case *lua.LNilType:
 				return types.PhysicalProperties{}, nil
@@ -46,54 +46,54 @@ func PhysicalProperties() Reflector {
 			}
 			return nil
 		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "PhysicalProperties").(types.PhysicalProperties)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "PhysicalProperties").(types.PhysicalProperties)
 				op := s.Pull(2, "PhysicalProperties").(types.PhysicalProperties)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Density": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.PhysicalProperties).Density))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Friction": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.PhysicalProperties).Friction))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Elasticity": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.PhysicalProperties).Elasticity))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"FrictionWeight": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.PhysicalProperties).FrictionWeight))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"ElasticityWeight": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.PhysicalProperties).ElasticityWeight))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.PhysicalProperties
 					switch s.Count() {
 					case 3:

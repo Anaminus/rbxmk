@@ -11,65 +11,65 @@ import (
 )
 
 func init() { register(BrickColor) }
-func BrickColor() Reflector {
-	return Reflector{
+func BrickColor() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "BrickColor",
 		PushTo:   rbxmk.PushTypeTo("BrickColor"),
 		PullFrom: rbxmk.PullTypeFrom("BrickColor"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "BrickColor").(types.BrickColor)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "BrickColor").(types.BrickColor)
 				op := s.Pull(2, "BrickColor").(types.BrickColor)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Name": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(types.BrickColor).Name()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
 			"Number": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.BrickColor).Number()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"R": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).R()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"G": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).G()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"B": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).B()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Color": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.BrickColor).Color())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.BrickColor
 					switch s.Count() {
 					case 1:
@@ -132,7 +132,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"palette": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					index := int(s.Pull(1, "int").(types.Int))
 					return s.Push(types.NewBrickColorFromPalette(index))
 				},
@@ -148,7 +148,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"random": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					index := rand.Intn(types.BrickColorIndexSize)
 					return s.Push(types.NewBrickColorFromIndex(index))
 				},
@@ -161,7 +161,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"White": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("White"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -173,7 +173,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Gray": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Medium stone grey"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -185,7 +185,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"DarkGray": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Dark stone grey"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -197,7 +197,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Black": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Black"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -209,7 +209,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Red": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Bright red"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -221,7 +221,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Yellow": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Bright yellow"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -233,7 +233,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Green": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Dark green"))
 				},
 				Dump: func() dump.MultiFunction {
@@ -245,7 +245,7 @@ func BrickColor() Reflector {
 				},
 			},
 			"Blue": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewBrickColorFromName("Bright blue"))
 				},
 				Dump: func() dump.MultiFunction {

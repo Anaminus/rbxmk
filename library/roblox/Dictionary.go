@@ -10,10 +10,10 @@ import (
 )
 
 func init() { register(Dictionary) }
-func Dictionary() Reflector {
-	return Reflector{
+func Dictionary() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "Dictionary",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -35,7 +35,7 @@ func Dictionary() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}

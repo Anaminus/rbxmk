@@ -9,39 +9,39 @@ import (
 )
 
 func init() { register(Region3) }
-func Region3() Reflector {
-	return Reflector{
+func Region3() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Region3",
 		PushTo:   rbxmk.PushTypeTo("Region3"),
 		PullFrom: rbxmk.PullTypeFrom("Region3"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Region3").(types.Region3)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Region3").(types.Region3)
 				op := s.Pull(2, "Region3").(types.Region3)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"CFrame": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).CFrame())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("CFrame")} },
 			},
 			"Size": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).Size())
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
 			},
 			"ExpandToGrid": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					region := float64(s.Pull(2, "float").(types.Float))
 					return s.Push(v.(types.Region3).ExpandToGrid(region))
 				},
@@ -57,9 +57,9 @@ func Region3() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.Region3{
 						Min: s.Pull(1, "Vector3").(types.Vector3),
 						Max: s.Pull(2, "Vector3").(types.Vector3),

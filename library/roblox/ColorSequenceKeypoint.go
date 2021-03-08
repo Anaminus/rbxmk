@@ -9,47 +9,47 @@ import (
 )
 
 func init() { register(ColorSequenceKeypoint) }
-func ColorSequenceKeypoint() Reflector {
-	return Reflector{
+func ColorSequenceKeypoint() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "ColorSequenceKeypoint",
 		PushTo:   rbxmk.PushTypeTo("ColorSequenceKeypoint"),
 		PullFrom: rbxmk.PullTypeFrom("ColorSequenceKeypoint"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)
 				op := s.Pull(2, "ColorSequenceKeypoint").(types.ColorSequenceKeypoint)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Time": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Time))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Value": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.ColorSequenceKeypoint).Value)
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
 			},
 			"Envelope": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Envelope))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.ColorSequenceKeypoint
 					switch s.Count() {
 					case 2:

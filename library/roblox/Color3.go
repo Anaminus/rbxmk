@@ -10,45 +10,45 @@ import (
 )
 
 func init() { register(Color3) }
-func Color3() Reflector {
-	return Reflector{
+func Color3() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Color3",
 		PushTo:   rbxmk.PushTypeTo("Color3"),
 		PullFrom: rbxmk.PullTypeFrom("Color3"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Color3").(types.Color3)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Color3").(types.Color3)
 				op := s.Pull(2, "Color3").(types.Color3)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"R": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).R))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"G": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).G))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"B": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).B))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Lerp": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "Color3").(types.Color3)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Color3).Lerp(goal, alpha))
@@ -66,7 +66,7 @@ func Color3() Reflector {
 				},
 			},
 			"ToHSV": {Method: true,
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					hue, sat, val := v.(types.Color3).ToHSV()
 					return s.Push(rtypes.Tuple{types.Float(hue), types.Float(sat), types.Float(val)})
 				},
@@ -81,9 +81,9 @@ func Color3() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Color3
 					switch s.Count() {
 					case 0:
@@ -117,7 +117,7 @@ func Color3() Reflector {
 				},
 			},
 			"fromRGB": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewColor3FromRGB(
 						int(s.Pull(1, "int").(types.Int)),
 						int(s.Pull(2, "int").(types.Int)),
@@ -138,7 +138,7 @@ func Color3() Reflector {
 				},
 			},
 			"fromHSV": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewColor3FromHSV(
 						float64(s.Pull(1, "float").(types.Float)),
 						float64(s.Pull(2, "float").(types.Float)),

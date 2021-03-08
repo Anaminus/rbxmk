@@ -9,41 +9,41 @@ import (
 )
 
 func init() { register(NumberRange) }
-func NumberRange() Reflector {
-	return Reflector{
+func NumberRange() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "NumberRange",
 		PushTo:   rbxmk.PushTypeTo("NumberRange"),
 		PullFrom: rbxmk.PullTypeFrom("NumberRange"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)
 				op := s.Pull(2, "NumberRange").(types.NumberRange)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Min": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Min))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Max": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Max))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.NumberRange
 					switch s.Count() {
 					case 1:

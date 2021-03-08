@@ -17,7 +17,7 @@ import (
 
 // pushPropertyTo behaves like PushVariantTo, except that exprims types are
 // reflected as userdata.
-func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
+func pushPropertyTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	rfl := s.Reflector(v.Type())
 	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
@@ -32,7 +32,7 @@ func pushPropertyTo(s State, v types.Value) (lv lua.LValue, err error) {
 	return u, nil
 }
 
-func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
+func checkEnumDesc(s rbxmk.State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
 	var enumValue *rtypes.Enum
 	if desc.EnumTypes != nil {
 		enumValue = desc.EnumTypes.Enum(name)
@@ -58,7 +58,7 @@ func checkEnumDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rt
 	return enumValue
 }
 
-func checkClassDesc(s State, desc *rtypes.RootDesc, name, class, prop string) *rbxdump.Class {
+func checkClassDesc(s rbxmk.State, desc *rtypes.RootDesc, name, class, prop string) *rbxdump.Class {
 	classDesc := desc.Classes[name]
 	if classDesc == nil {
 		s.RaiseError(
@@ -80,7 +80,7 @@ func defaultAttrConfig(inst *rtypes.Instance) rtypes.AttrConfig {
 	return rtypes.AttrConfig{Property: "AttributesSerialize"}
 }
 
-func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
+func getAttributes(s rbxmk.State, inst *rtypes.Instance) rtypes.Dictionary {
 	attrcfg := defaultAttrConfig(inst)
 	sv, ok := inst.Get(attrcfg.Property).(types.Stringlike)
 	if ok {
@@ -96,7 +96,7 @@ func getAttributes(s State, inst *rtypes.Instance) rtypes.Dictionary {
 	return dict.(rtypes.Dictionary)
 }
 
-func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
+func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 	attrcfg := defaultAttrConfig(inst)
 	var w bytes.Buffer
 	if err := formats.RBXAttr().Encode(s.Global, nil, &w, dict); err != nil {
@@ -107,17 +107,17 @@ func setAttributes(s State, inst *rtypes.Instance, dict rtypes.Dictionary) {
 }
 
 func init() { register(Instance) }
-func Instance() Reflector {
-	return Reflector{
+func Instance() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "Instance",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			if inst, ok := v.(*rtypes.Instance); ok && inst == nil {
 				return append(lvs, lua.LNil), nil
 			}
 			u := s.UserDataOf(v, "Instance")
 			return append(lvs, u), nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch lv := lvs[0].(type) {
 			case *lua.LNilType:
 				return (*rtypes.Instance)(nil), nil
@@ -134,19 +134,19 @@ func Instance() Reflector {
 				return nil, rbxmk.TypeError(nil, 0, "Instance")
 			}
 		},
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)
 				op := s.Pull(2, "Instance").(*rtypes.Instance)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__index": func(s State) int {
+			"__index": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 
 				// Try symbol.
@@ -222,7 +222,7 @@ func Instance() Reflector {
 							rbxmk.TypeError(l, 1, "Instance")
 							return 0
 						}
-						s := State{World: s.World, L: l}
+						s := rbxmk.State{World: s.World, L: l}
 						className := string(s.Pull(2, "string").(types.String))
 						if desc != nil {
 							classDesc := desc.Classes[className]
@@ -306,7 +306,7 @@ func Instance() Reflector {
 				s.L.Push(lv)
 				return 1
 			},
-			"__newindex": func(s State) int {
+			"__newindex": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 
 				// Try symbol.
@@ -502,13 +502,13 @@ func Instance() Reflector {
 			}
 			return nil
 		},
-		Members: Members{
-			"ClassName": Member{
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"ClassName": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).ClassName))
 				},
 				// Allowed to be set for convenience.
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
 					if inst.IsDataModel() {
 						s.RaiseError("%s cannot be assigned to", "ClassName")
@@ -518,23 +518,23 @@ func Instance() Reflector {
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).Name()))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Parent": Member{
-				Get: func(s State, v types.Value) int {
+			"Parent": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					if parent := v.(*rtypes.Instance).Parent(); parent != nil {
 						return s.Push(parent)
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					var err error
 					switch parent := s.PullAnyOf(3, "Instance", "nil").(type) {
 					case *rtypes.Instance:
@@ -548,8 +548,8 @@ func Instance() Reflector {
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
 			},
-			"Descend": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Descend": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					n := s.L.GetTop()
 					if n-1 <= 0 {
 						return s.RaiseError("expected at least 1 string")
@@ -574,15 +574,15 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"ClearAllChildren": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"ClearAllChildren": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					v.(*rtypes.Instance).RemoveAll()
 					return 0
 				},
 				Dump: func() dump.Value { return dump.Function{} },
 			},
-			"Clone": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Clone": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(*rtypes.Instance).Clone())
 				},
 				Dump: func() dump.Value {
@@ -593,15 +593,15 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"Destroy": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Destroy": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					v.(*rtypes.Instance).SetParent(nil)
 					return 0
 				},
 				Dump: func() dump.Value { return dump.Function{} },
 			},
-			"FindFirstAncestor": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstAncestor": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestor(name); ancestor != nil {
 						return s.Push(ancestor)
@@ -619,8 +619,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"FindFirstAncestorOfClass": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstAncestorOfClass": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
 						return s.Push(ancestor)
@@ -638,8 +638,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"FindFirstAncestorWhichIsA": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstAncestorWhichIsA": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestorWhichIsA(className); ancestor != nil {
 						return s.Push(ancestor)
@@ -657,8 +657,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"FindFirstChild": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstChild": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
@@ -678,8 +678,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"FindFirstChildOfClass": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstChildOfClass": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
@@ -699,8 +699,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"FindFirstChildWhichIsA": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"FindFirstChildWhichIsA": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
@@ -720,8 +720,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"GetAttribute": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"GetAttribute": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					attribute := string(s.Pull(2, "string").(types.String))
 					dict := getAttributes(s, v.(*rtypes.Instance))
 					if v, ok := dict[attribute]; ok {
@@ -740,8 +740,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"GetAttributes": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"GetAttributes": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(getAttributes(s, v.(*rtypes.Instance)))
 				},
 				Dump: func() dump.Value {
@@ -752,8 +752,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"GetChildren": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"GetChildren": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					t := v.(*rtypes.Instance).Children()
 					return s.Push(rtypes.Objects(t))
 				},
@@ -765,8 +765,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"GetDescendants": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"GetDescendants": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(rtypes.Objects(v.(*rtypes.Instance).Descendants()))
 				},
 				Dump: func() dump.Value {
@@ -777,8 +777,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"GetFullName": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"GetFullName": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
 				},
 				Dump: func() dump.Value {
@@ -789,8 +789,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"IsA": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"IsA": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsA(className)))
 				},
@@ -805,8 +805,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"IsAncestorOf": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"IsAncestorOf": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					descendant := s.Pull(2, "Instance").(*rtypes.Instance)
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
 				},
@@ -821,8 +821,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"IsDescendantOf": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"IsDescendantOf": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
 				},
@@ -837,8 +837,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"SetAttribute": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetAttribute": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					attribute := string(s.Pull(2, "string").(types.String))
 					value := s.Pull(3, "Variant")
@@ -856,8 +856,8 @@ func Instance() Reflector {
 					}
 				},
 			},
-			"SetAttributes": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetAttributes": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
 					setAttributes(s, v.(*rtypes.Instance), dict)
 					return 0
@@ -871,9 +871,9 @@ func Instance() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					className := string(s.Pull(1, "string").(types.String))
 					parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
 					var desc *rtypes.RootDesc
@@ -921,7 +921,7 @@ func Instance() Reflector {
 				},
 			},
 		},
-		Environment: func(s State, env *lua.LTable) {
+		Environment: func(s rbxmk.State, env *lua.LTable) {
 			t := s.L.CreateTable(0, 1)
 			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
 				var desc *rtypes.RootDesc

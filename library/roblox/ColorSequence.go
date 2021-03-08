@@ -10,18 +10,18 @@ import (
 )
 
 func init() { register(ColorSequence) }
-func ColorSequence() Reflector {
-	return Reflector{
+func ColorSequence() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "ColorSequence",
 		PushTo:   rbxmk.PushTypeTo("ColorSequence"),
 		PullFrom: rbxmk.PullTypeFrom("ColorSequence"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "ColorSequence").(types.ColorSequence)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "ColorSequence").(types.ColorSequence)
 				op := s.Pull(2, "ColorSequence").(types.ColorSequence)
 				if len(op) != len(v) {
@@ -38,9 +38,9 @@ func ColorSequence() Reflector {
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Keypoints": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					u := v.(types.ColorSequence)
 					keypointRfl := s.MustReflector("ColorSequenceKeypoint")
 					table := s.L.CreateTable(len(u), 0)
@@ -59,9 +59,9 @@ func ColorSequence() Reflector {
 				},
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.ColorSequence
 					switch s.Count() {
 					case 1:

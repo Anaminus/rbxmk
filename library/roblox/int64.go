@@ -7,14 +7,14 @@ import (
 )
 
 func init() { register(Int64) }
-func Int64() Reflector {
-	return Reflector{
+func Int64() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:  "int64",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Int64))}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Int64(v), nil

@@ -7,13 +7,13 @@ import (
 )
 
 func init() { register(String) }
-func String() Reflector {
-	return Reflector{
+func String() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "string",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LString(v.(types.String))}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.String(n), nil
 			}

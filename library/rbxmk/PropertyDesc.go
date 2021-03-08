@@ -10,89 +10,89 @@ import (
 )
 
 func init() { register(PropertyDesc) }
-func PropertyDesc() Reflector {
-	return Reflector{
+func PropertyDesc() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "PropertyDesc",
 		PushTo:   rbxmk.PushTypeTo("PropertyDesc"),
 		PullFrom: rbxmk.PullTypeFrom("PropertyDesc"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "PropertyDesc").(rtypes.PropertyDesc)
 				op := s.Pull(2, "PropertyDesc").(rtypes.PropertyDesc)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					return s.Push(types.String(desc.Name))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"ValueType": Member{
-				Get: func(s State, v types.Value) int {
+			"ValueType": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					valueType := desc.ValueType
 					return s.Push(rtypes.TypeDesc{Embedded: valueType})
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ValueType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
 			},
-			"ReadSecurity": Member{
-				Get: func(s State, v types.Value) int {
+			"ReadSecurity": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					return s.Push(types.String(desc.ReadSecurity))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ReadSecurity = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"WriteSecurity": Member{
-				Get: func(s State, v types.Value) int {
+			"WriteSecurity": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					return s.Push(types.String(desc.WriteSecurity))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.WriteSecurity = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"CanLoad": Member{
-				Get: func(s State, v types.Value) int {
+			"CanLoad": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					return s.Push(types.Bool(desc.CanLoad))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanLoad = bool(s.Pull(3, "bool").(types.Bool))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
-			"CanSave": Member{
-				Get: func(s State, v types.Value) int {
+			"CanSave": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					return s.Push(types.Bool(desc.CanSave))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanSave = bool(s.Pull(3, "bool").(types.Bool))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
-			"Tag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
@@ -108,8 +108,8 @@ func PropertyDesc() Reflector {
 					}
 				},
 			},
-			"Tags": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tags": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -126,8 +126,8 @@ func PropertyDesc() Reflector {
 					}
 				},
 			},
-			"SetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -144,8 +144,8 @@ func PropertyDesc() Reflector {
 					}
 				},
 			},
-			"UnsetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"UnsetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {

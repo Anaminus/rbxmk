@@ -13,22 +13,22 @@ import (
 )
 
 func init() { register(RootDesc) }
-func RootDesc() Reflector {
-	return Reflector{
+func RootDesc() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "RootDesc",
 		PushTo:   rbxmk.PushTypeTo("RootDesc"),
 		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "RootDesc").(*rtypes.RootDesc)
 				op := s.Pull(2, "RootDesc").(*rtypes.RootDesc)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Class": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Class": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					class, ok := desc.Classes[name]
@@ -48,8 +48,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"Classes": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Classes": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					classes := make(rtypes.Array, 0, len(desc.Classes))
 					for _, class := range desc.Classes {
@@ -68,8 +68,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"AddClass": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"AddClass": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					class := s.Pull(2, "ClassDesc").(rtypes.ClassDesc)
 					if _, ok := desc.Classes[class.Name]; ok {
@@ -92,8 +92,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"RemoveClass": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"RemoveClass": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					if _, ok := desc.Classes[name]; !ok {
@@ -113,8 +113,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"Enum": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Enum": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					enum, ok := desc.Enums[name]
@@ -134,8 +134,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"Enums": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Enums": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					enums := make(rtypes.Array, 0, len(desc.Enums))
 					for _, enum := range desc.Enums {
@@ -154,8 +154,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"AddEnum": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"AddEnum": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					enum := s.Pull(2, "EnumDesc").(rtypes.EnumDesc)
 					if _, ok := desc.Enums[enum.Name]; ok {
@@ -178,8 +178,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"RemoveEnum": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"RemoveEnum": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					if _, ok := desc.Enums[name]; !ok {
@@ -199,8 +199,8 @@ func RootDesc() Reflector {
 					}
 				},
 			},
-			"EnumTypes": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"EnumTypes": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(*rtypes.RootDesc)
 					desc.GenerateEnumTypes()
 					return s.Push(desc.EnumTypes)

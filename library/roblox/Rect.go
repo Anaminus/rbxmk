@@ -9,53 +9,53 @@ import (
 )
 
 func init() { register(Rect) }
-func Rect() Reflector {
-	return Reflector{
+func Rect() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Rect",
 		PushTo:   rbxmk.PushTypeTo("Rect"),
 		PullFrom: rbxmk.PullTypeFrom("Rect"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Rect").(types.Rect)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Rect").(types.Rect)
 				op := s.Pull(2, "Rect").(types.Rect)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Min": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Min)
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
 			},
 			"Max": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Max)
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
 			},
 			"Width": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Width()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 			"Height": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Height()))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Rect
 					switch s.Count() {
 					case 2:

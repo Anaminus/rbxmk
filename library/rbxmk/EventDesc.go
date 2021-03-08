@@ -11,33 +11,33 @@ import (
 )
 
 func init() { register(EventDesc) }
-func EventDesc() Reflector {
-	return Reflector{
+func EventDesc() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "EventDesc",
 		PushTo:   rbxmk.PushTypeTo("EventDesc"),
 		PullFrom: rbxmk.PullTypeFrom("EventDesc"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "EventDesc").(rtypes.EventDesc)
 				op := s.Pull(2, "EventDesc").(rtypes.EventDesc)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					return s.Push(types.String(desc.Name))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.EventDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Parameters": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Parameters": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					array := make(rtypes.Array, len(desc.Parameters))
 					for i, param := range desc.Parameters {
@@ -54,8 +54,8 @@ func EventDesc() Reflector {
 					}
 				},
 			},
-			"SetParameters": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetParameters": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					array := s.Pull(2, "Array").(rtypes.Array)
 					params := make([]rbxdump.Parameter, len(array))
@@ -77,19 +77,19 @@ func EventDesc() Reflector {
 					}
 				},
 			},
-			"Security": Member{
-				Get: func(s State, v types.Value) int {
+			"Security": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					return s.Push(types.String(desc.Security))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.EventDesc)
 					desc.Security = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Tag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
@@ -105,8 +105,8 @@ func EventDesc() Reflector {
 					}
 				},
 			},
-			"Tags": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tags": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -123,8 +123,8 @@ func EventDesc() Reflector {
 					}
 				},
 			},
-			"SetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -141,8 +141,8 @@ func EventDesc() Reflector {
 					}
 				},
 			},
-			"UnsetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"UnsetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EventDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {

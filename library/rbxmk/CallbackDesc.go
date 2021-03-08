@@ -11,33 +11,33 @@ import (
 )
 
 func init() { register(CallbackDesc) }
-func CallbackDesc() Reflector {
-	return Reflector{
+func CallbackDesc() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "CallbackDesc",
 		PushTo:   rbxmk.PushTypeTo("CallbackDesc"),
 		PullFrom: rbxmk.PullTypeFrom("CallbackDesc"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "CallbackDesc").(rtypes.CallbackDesc)
 				op := s.Pull(2, "CallbackDesc").(rtypes.CallbackDesc)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					return s.Push(types.String(desc.Name))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.CallbackDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Parameters": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Parameters": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					array := make(rtypes.Array, len(desc.Parameters))
 					for i, param := range desc.Parameters {
@@ -54,8 +54,8 @@ func CallbackDesc() Reflector {
 					}
 				},
 			},
-			"SetParameters": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetParameters": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					array := s.Pull(2, "Array").(rtypes.Array)
 					params := make([]rbxdump.Parameter, len(array))
@@ -77,31 +77,31 @@ func CallbackDesc() Reflector {
 					}
 				},
 			},
-			"ReturnType": Member{
-				Get: func(s State, v types.Value) int {
+			"ReturnType": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					returnType := desc.ReturnType
 					return s.Push(rtypes.TypeDesc{Embedded: returnType})
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.CallbackDesc)
 					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
 			},
-			"Security": Member{
-				Get: func(s State, v types.Value) int {
+			"Security": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					return s.Push(types.String(desc.Security))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.CallbackDesc)
 					desc.Security = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Tag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
@@ -117,8 +117,8 @@ func CallbackDesc() Reflector {
 					}
 				},
 			},
-			"Tags": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tags": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -135,8 +135,8 @@ func CallbackDesc() Reflector {
 					}
 				},
 			},
-			"SetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -153,8 +153,8 @@ func CallbackDesc() Reflector {
 					}
 				},
 			},
-			"UnsetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"UnsetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {

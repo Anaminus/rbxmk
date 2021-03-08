@@ -13,55 +13,55 @@ import (
 )
 
 func init() { register(ClassDesc) }
-func ClassDesc() Reflector {
-	return Reflector{
+func ClassDesc() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "ClassDesc",
 		PushTo:   rbxmk.PushTypeTo("ClassDesc"),
 		PullFrom: rbxmk.PullTypeFrom("ClassDesc"),
-		Metatable: Metatable{
-			"__eq": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "ClassDesc").(rtypes.ClassDesc)
 				op := s.Pull(2, "ClassDesc").(rtypes.ClassDesc)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: Members{
-			"Name": Member{
-				Get: func(s State, v types.Value) int {
+		Members: rbxmk.Members{
+			"Name": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					return s.Push(types.String(desc.Name))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.ClassDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Superclass": Member{
-				Get: func(s State, v types.Value) int {
+			"Superclass": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					return s.Push(types.String(desc.Superclass))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.ClassDesc)
 					desc.Superclass = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"MemoryCategory": Member{
-				Get: func(s State, v types.Value) int {
+			"MemoryCategory": {
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					return s.Push(types.String(desc.MemoryCategory))
 				},
-				Set: func(s State, v types.Value) {
+				Set: func(s rbxmk.State, v types.Value) {
 					desc := v.(rtypes.ClassDesc)
 					desc.MemoryCategory = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Member": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Member": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					member, ok := desc.Members[name]
@@ -81,8 +81,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"Members": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Members": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					members := make(rtypes.Array, 0, len(desc.Members))
 					for _, member := range desc.Members {
@@ -101,8 +101,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"AddMember": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"AddMember": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					memberDesc := s.PullAnyOf(2,
 						"PropertyDesc",
@@ -145,8 +145,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"RemoveMember": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"RemoveMember": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					if _, ok := desc.Members[name]; !ok {
@@ -166,8 +166,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"Tag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
@@ -183,8 +183,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"Tags": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"Tags": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -201,8 +201,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"SetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"SetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -219,8 +219,8 @@ func ClassDesc() Reflector {
 					}
 				},
 			},
-			"UnsetTag": Member{Method: true,
-				Get: func(s State, v types.Value) int {
+			"UnsetTag": {Method: true,
+				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {

@@ -10,10 +10,10 @@ import (
 )
 
 func init() { register(Objects) }
-func Objects() Reflector {
-	return Reflector{
+func Objects() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "Objects",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Objects")
@@ -29,7 +29,7 @@ func Objects() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")

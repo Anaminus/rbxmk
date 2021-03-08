@@ -10,10 +10,10 @@ import (
 )
 
 func init() { register(Cookies) }
-func Cookies() Reflector {
-	return Reflector{
+func Cookies() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "Cookies",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			cookies, ok := v.(rtypes.Cookies)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "Cookies")
@@ -29,7 +29,7 @@ func Cookies() Reflector {
 			}
 			return []lua.LValue{table}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError(nil, 0, "table")

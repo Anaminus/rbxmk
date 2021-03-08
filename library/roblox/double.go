@@ -7,13 +7,13 @@ import (
 )
 
 func init() { register(Double) }
-func Double() Reflector {
-	return Reflector{
+func Double() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "double",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LNumber(v.(types.Double))}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LNumber:
 				return types.Double(v), nil

@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
-func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
+func PushVariantTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return lua.LNil, nil
@@ -49,7 +50,7 @@ func PushVariantTo(s State, v types.Value) (lv lua.LValue, err error) {
 	return values[0], nil
 }
 
-func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
+func PullVariantFrom(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return rtypes.Nil, nil
@@ -89,7 +90,7 @@ func PullVariantFrom(s State, lv lua.LValue) (v types.Value, err error) {
 
 // PullVariant gets from the Lua state the value at n, and reflects a value from
 // it according to the Variant type.
-func PullVariant(s State, n int) (v types.Value) {
+func PullVariant(s rbxmk.State, n int) (v types.Value) {
 	v, err := PullVariantFrom(s, s.L.CheckAny(n))
 	if err != nil {
 		s.L.ArgError(n, err.Error())
@@ -99,17 +100,17 @@ func PullVariant(s State, n int) (v types.Value) {
 }
 
 func init() { register(Variant) }
-func Variant() Reflector {
-	return Reflector{
+func Variant() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "Variant",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			lv, err := PushVariantTo(s, v)
 			if err != nil {
 				return nil, err
 			}
 			return []lua.LValue{lv}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			v, err = PullVariantFrom(s, lvs[0])
 			return v, err
 		},

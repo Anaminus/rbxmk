@@ -9,13 +9,13 @@ import (
 )
 
 func init() { register(Bool) }
-func Bool() Reflector {
-	return Reflector{
+func Bool() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "bool",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			return []lua.LValue{lua.LBool(v.(types.Bool))}, nil
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			if n, ok := lvs[0].(lua.LBool); ok {
 				return types.Bool(n), nil
 			}

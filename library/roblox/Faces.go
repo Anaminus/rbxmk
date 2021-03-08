@@ -58,65 +58,65 @@ func setFacesFromAxisName(faces *types.Faces, name string) {
 }
 
 func init() { register(Faces) }
-func Faces() Reflector {
-	return Reflector{
+func Faces() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Faces",
 		PushTo:   rbxmk.PushTypeTo("Faces"),
 		PullFrom: rbxmk.PullTypeFrom("Faces"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Faces").(types.Faces)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Faces").(types.Faces)
 				op := s.Pull(2, "Faces").(types.Faces)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"Right": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Right))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"Top": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Top))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"Back": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Back))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"Left": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Left))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"Bottom": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Bottom))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"Front": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Front))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Faces
 					n := s.L.GetTop()
 					for i := 1; i <= n; i++ {
@@ -149,7 +149,7 @@ func Faces() Reflector {
 				},
 			},
 			"fromComponents": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Faces
 					switch s.Count() {
 					case 6:

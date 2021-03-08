@@ -9,34 +9,34 @@ import (
 )
 
 func init() { register(Vector2int16) }
-func Vector2int16() Reflector {
-	return Reflector{
+func Vector2int16() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name:     "Vector2int16",
 		PushTo:   rbxmk.PushTypeTo("Vector2int16"),
 		PullFrom: rbxmk.PullTypeFrom("Vector2int16"),
-		Metatable: Metatable{
-			"__tostring": func(s State) int {
+		Metatable: rbxmk.Metatable{
+			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s State) int {
+			"__eq": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
-			"__add": func(s State) int {
+			"__add": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
 				return s.Push(v.Add(op))
 			},
-			"__sub": func(s State) int {
+			"__sub": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
 				return s.Push(v.Sub(op))
 			},
-			"__mul": func(s State) int {
+			"__mul": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
 				case types.Double:
@@ -48,7 +48,7 @@ func Vector2int16() Reflector {
 					return 0
 				}
 			},
-			"__div": func(s State) int {
+			"__div": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
 				case types.Double:
@@ -60,28 +60,28 @@ func Vector2int16() Reflector {
 					return 0
 				}
 			},
-			"__unm": func(s State) int {
+			"__unm": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]Member{
+		Members: map[string]rbxmk.Member{
 			"X": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).X))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
 			"Y": {
-				Get: func(s State, v types.Value) int {
+				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).Y))
 				},
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
 			},
 		},
-		Constructors: Constructors{
+		Constructors: rbxmk.Constructors{
 			"new": {
-				Func: func(s State) int {
+				Func: func(s rbxmk.State) int {
 					var v types.Vector2int16
 					switch s.Count() {
 					case 0:

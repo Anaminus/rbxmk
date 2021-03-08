@@ -12,10 +12,10 @@ import (
 )
 
 func init() { register(FormatSelector) }
-func FormatSelector() Reflector {
-	return Reflector{
+func FormatSelector() rbxmk.Reflector {
+	return rbxmk.Reflector{
 		Name: "FormatSelector",
-		PushTo: func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			switch v := v.(type) {
 			case types.Stringlike:
 				table := s.L.CreateTable(0, 1)
@@ -57,7 +57,7 @@ func FormatSelector() Reflector {
 				return nil, rbxmk.TypeError(nil, 0, "FormatSelector or string")
 			}
 		},
-		PullFrom: func(s State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			switch v := lvs[0].(type) {
 			case lua.LString:
 				format := s.Format(string(v))
