@@ -423,9 +423,6 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{
 						{
-							Parameters: dump.Parameters{
-								{Name: "", Type: dt.Prim("")},
-							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},

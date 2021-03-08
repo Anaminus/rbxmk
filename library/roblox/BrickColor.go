@@ -142,7 +142,7 @@ func BrickColor() rbxmk.Reflector {
 							{Name: "index", Type: dt.Prim("int")},
 						},
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -155,7 +155,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -167,7 +167,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -179,7 +179,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -191,7 +191,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -203,7 +203,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -215,7 +215,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -227,7 +227,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -239,7 +239,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
@@ -251,7 +251,7 @@ func BrickColor() rbxmk.Reflector {
 				Dump: func() dump.MultiFunction {
 					return []dump.Function{{
 						Returns: dump.Parameters{
-							{Name: "", Type: dt.Prim("BrickColor")},
+							{Type: dt.Prim("BrickColor")},
 						},
 					}}
 				},
