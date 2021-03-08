@@ -22,27 +22,43 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	13. [rbxmk.runFile][rbxmk.runFile]
 	14. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
-4. [math][math]
+4. [clipboard][clipboard]
+	1. [clipboard.read][clipboard.read]
+	2. [clipboard.write][clipboard.write]
+5. [fs][fs]
+	1. [fs.dir][fs.dir]
+	1. [fs.mkdir][fs.mkdir]
+	2. [fs.read][fs.read]
+	2. [fs.remove][fs.remove]
+	2. [fs.rename][fs.rename]
+	3. [fs.stat][fs.stat]
+	4. [fs.write][fs.write]
+6. [http][http]
+	1. [http.request][http.request]
+7. [math][math]
 	1. [math.clamp][math.clamp]
 	2. [math.log][math.log]
 	3. [math.round][math.round]
 	4. [math.sign][math.sign]
-5. [os][os]
+8. [os][os]
 	1. [os.expand][os.expand]
 	2. [os.getenv][os.getenv]
 	3. [os.join][os.join]
 	4. [os.split][os.split]
-6. [string][string]
+9. [rbxassetid][rbxassetid]
+	1. [rbxassetid.read][rbxassetid.read]
+	2. [rbxassetid.write][rbxassetid.write]
+10. [string][string]
 	1. [string.split][string.split]
-7. [sym][sym]
-8. [table][table]
+11. [sym][sym]
+12. [table][table]
 	1. [table.clear][table.clear]
 	2. [table.create][table.create]
 	3. [table.find][table.find]
 	4. [table.move][table.move]
 	5. [table.pack][table.pack]
 	6. [table.unpack][table.unpack]
-9. [types][types]
+13. [types][types]
 
 </td></tr></tbody>
 </table>
@@ -63,10 +79,6 @@ Library            | Description
 [table][table]     | Extensions to the standard table library.
 [sym][sym]         | Symbols for accessing instance metadata.
 [types][types]     | Fallbacks for constructing certain types.
-
-Additionally, each source provides a library that enables access to the source.
-See the [Sources document](sources.md) for more information about each source
-library.
 
 The **\_RBXMK_VERSION** global variable is defined as a string containing the
 current version of rbxmk, formatted according to [semantic
@@ -337,6 +349,175 @@ information about the API of such types.
 Additionally, the [DataModel.new][DataModel] constructor creates a special
 Instance of the DataModel class, to be used to contain instances in a game tree.
 
+## clipboard
+[clipboard]: #user-content-clipboard
+
+The **clipboard** library provides an interface to the operating system's
+clipboard.
+
+Name                               | Description
+-----------------------------------|------------
+[clipboard.read][clipboard.read]   | Gets data from the clipboard in one of a number of formats.
+[clipboard.write][clipboard.write] | Sets data to the clipboard in a number of formats.
+
+**The clipboard is currently available only on Windows. Other operating systems
+return no data.**
+
+### clipboard.read
+[clipboard.read]: #user-content-clipboardread
+<code>clipboard.read(formats: ...[string](##)): (value: [any](##))</code>
+
+The **read** function gets a value from the clipboard according to one of the
+given [formats](formats.md).
+
+Each format has a number of associated [media
+types](https://en.wikipedia.org/wiki/Media_type). Each format is traversed in
+order, and each media type within a format is traversed in order. The data that
+matches the first media type found in the clipboard is selected. This data is
+decoded by the format corresponding to the matched media type, and the result is
+returned.
+
+Throws an error if *value* could not be decoded from the format, or if data
+could not be retrieved from the clipboard.
+
+### clipboard.write
+[clipboard.write]: #user-content-clipboardwrite
+<code>clipboard.write(value: [any](##), formats: ...[string](##))</code>
+
+The **write** function sets *value* to the clipboard according to the given
+[formats](formats.md).
+
+Each format has a number of associated [media
+types](https://en.wikipedia.org/wiki/Media_type). For each format, the data is
+encoded in the format, which is then sent to the clipboard for each of the
+format's media type. Data is not sent for a media type if that media type was
+already sent.
+
+Throws an error if *value* could not be encoded in a format, or if data could
+not be sent to the clipboard.
+
+## fs
+[fs]: #user-content-fs
+
+The **fs** library provides an interface to the file system.
+
+Name                   | Description
+-----------------------|------------
+[fs.dir][fs.dir]       | Gets a list of files in a directory.
+[fs.mkdir][fs.mkdir]   | Makes a new directory.
+[fs.read][fs.read]     | Reads data from a file in a certain format.
+[fs.remove][fs.remove] | Removes a file or directory.
+[fs.rename][fs.rename] | Moves a file or directory.
+[fs.stat][fs.stat]     | Gets metadata about a file.
+[fs.write][fs.write]   | Writes data to a file in a certain format.
+
+### fs.dir
+[fs.dir]: #user-content-fsdir
+<code>fs.dir(path: [string](##)): {[DirEntry](##)}?</code>
+
+The **dir** function returns a list of files in the given directory. Each file
+is a table with the following fields:
+
+Field   | Type    | Description
+--------|---------|------------
+Name    | string  | The base name of the file.
+IsDir   | boolean | Whether the file is a directory.
+
+dir returns nil if the directory does not exist. An error is thrown if a problem
+otherwise occurred while reading the directory.
+
+### fs.mkdir
+[fs.mkdir]: #user-content-fsmkdir
+<code>fs.mkdir(path: [string](##), all: [bool](##)?): [bool](##)</code>
+
+The **mkdir** function creates a directory at *path*. If *all* is true, then
+mkdir will create each parent directory as needed. *all* defaults to false.
+
+Returns true if all the directories were created successfully. Returns false if
+all of the directories already exist. Throws an error if a problem otherwise
+occurred while creating a directory.
+
+### fs.read
+[fs.read]: #user-content-fsread
+<code>fs.read(path: [string](##), format: [string](##)?): (value: [any](##))</code>
+
+The **read** function reads the content of the file at *path*, and decodes it
+into *value* according to the [format](formats.md) matching the file extension
+of *path*. If *format* is given, then it will be used instead of the file
+extension.
+
+If the format returns an [Instance][Instance], then the Name property will be
+set to the "fstem" component of *path* according to
+[os.split](libraries.md#user-content-ossplit).
+
+### fs.remove
+[fs.remove]: #user-content-fsremove
+<code>fs.remove(path: [string](##), all: [bool](##)?): [bool](##)</code>
+
+The **remove** function removes the file or directory at *path*. If *all* is
+true, then removing a directory will also recursively remove all of its
+children. *all* defaults to false.
+
+Returns true if every file is removed successfully. Returns false if the file or
+directory does not exist. Throws an error if a problem occurred while removing a
+file.
+
+### fs.rename
+[fs.rename]: #user-content-fsrename
+<code>fs.rename(old: [string](##), new: [string](##)): [bool](##)</code>
+
+The **rename** functions moves the file or directory at path *old* to path
+*new*. If *new* exists and is not a directory, it is replaced.
+
+Returns true if the file was moved successfully. Returns false if the file or
+directory does not exist. Throws an error if a problem otherwise occurred while
+moving the file.
+
+### fs.stat
+[fs.stat]: #user-content-fsstat
+<code>fs.stat(path: [string](##)): [FileInfo](##)?</code>
+
+The **stat** function gets metadata of the given file. Returns a table with the
+following fields:
+
+Field   | Type    | Description
+--------|---------|------------
+Name    | string  | The base name of the file.
+IsDir   | boolean | Whether the file is a directory.
+Size    | number  | The size of the file, in bytes.
+ModTime | number  | The modification time of the file, in Unix time.
+
+stats returns nil if the file does not exist. An error will be thrown if a
+problem otherwise occurred while getting the metadata.
+
+stat does not follow symbolic links.
+
+### fs.write
+[fs.write]: #user-content-fswrite
+<code>fs.write(path: [string](##), value: [any](##), format: [string](##)?)</code>
+
+The **write** function encodes *value* according to the [format](formats.md)
+matching the file extension of *path*, and writes the result to the file at
+*path*. If *format* is given, then it will be used instead of the file
+extension.
+
+## http
+[http]: #user-content-http
+
+The **http** library provides an interface to resources on the network via HTTP.
+
+Name                         | Description
+-----------------------------|------------
+[http.request][http.request] | Begins an HTTP request.
+
+### http.request
+[http.request]: #user-content-httprequest
+<code>http.request(options: [HTTPOptions][HTTPOptions]): (req: [HTTPRequest][HTTPRequest])</code>
+
+The **request** function begins a request with the specified
+[options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
+resolved or canceled. Throws an error if the request could not be started.
+
 ## math
 [math]: #user-content-math
 
@@ -438,6 +619,37 @@ Component | `project/scripts/main.script.lua` | Description
 
 A format extension depends on the available formats. See [Formats](formats.md)
 for more information.
+
+## rbxassetid
+[rbxassetid]: #user-content-rbxassetid
+
+The **rbxassetid** library provides an interface to assets on the Roblox
+website.
+
+Name                                 | Description
+-------------------------------------|------------
+[rbxassetid.read][rbxassetid.read]   | Reads data from a rbxassetid in a certain format.
+[rbxassetid.write][rbxassetid.write] | Writes data to a rbxassetid in a certain format.
+
+### rbxassetid.read
+[rbxassetid.read]: #user-content-rbxassetidread
+<code>rbxassetid.read(options: [RBXAssetOptions][RBXAssetOptions]): (value: [any](##))</code>
+
+The **read** function downloads an asset according to the given
+[options][RBXAssetOptions]. Returns the content of the asset corresponding to
+AssetID, decoded according to Format.
+
+Throws an error if a problem occurred while downloading the asset.
+
+### rbxassetid.write
+[rbxassetid.write]: #user-content-rbxassetidwrite
+<code>rbxassetid.write(options: [RBXAssetOptions][RBXAssetOptions])</code>
+
+The **write** function uploads to an existing asset according to the given
+[options][RBXAssetOptions]. The Body is encoded according to Format, then
+uploaded to AssetID. AssetID must be the ID of an existing asset.
+
+Throws an error if a problem occurred while uploading the asset.
 
 ## string
 [string]: #user-content-string
@@ -589,6 +801,8 @@ token           | number
 [EnumItemDesc]: types.md#user-content-enumitemdesc
 [EventDesc]: types.md#user-content-eventdesc
 [FunctionDesc]: types.md#user-content-functiondesc
+[HTTPOptions]: types.md#user-content-httpoptions
+[HTTPRequest]: types.md#user-content-httprequest
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.IsService]: types.md#user-content-instancesymisservice
@@ -598,5 +812,6 @@ token           | number
 [Instance]: types.md#user-content-instance
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
+[RBXAssetOptions]: types.md#user-content-rbxassetoptions
 [RootDesc]: types.md#user-content-rootdesc
 [TypeDesc]: types.md#user-content-typedesc

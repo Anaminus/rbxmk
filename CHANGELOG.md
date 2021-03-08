@@ -36,6 +36,7 @@ branch is the latest unreleased version.
 - Automated tests run on Windows in addition to Linux.
 - Add tool for automatically incrementing version number.
 - Improve documentation.
+- Remove concept of "sources"; they're just libraries.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

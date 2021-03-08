@@ -42,7 +42,6 @@ Document                     | Description
 [README.md](README.md)       | Describes abstract concepts present in rbxmk (this document).
 [formats.md](formats.md)     | Lists formats used to encode and decode data.
 [libraries.md](libraries.md) | Lists the libraries provided by the rbxmk environment.
-[sources.md](sources.md)     | Lists sources from which data can be read from or written to.
 [types.md](types.md)         | Lists the data types present throughout the rbxmk environment.
 
 ## Command line
@@ -413,8 +412,8 @@ The following directories are marked as roots:
 [EnumDesc]: types.md#user-content-enumdesc
 [EnumItemDesc]: types.md#user-content-enumitemdesc
 [EventDesc]: types.md#user-content-eventdesc
-[fs.dir]: sources.md#user-content-fsdir
-[fs.rename]: sources.md#user-content-fsrename
+[fs.dir]: libraries.md#user-content-fsdir
+[fs.rename]: libraries.md#user-content-fsrename
 [FunctionDesc]: types.md#user-content-functiondesc
 [Instance.Descend]: libraries.md#user-content-instancedescend
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
