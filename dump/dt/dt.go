@@ -204,7 +204,13 @@ type Struct map[string]Type
 func (t Struct) t() {}
 func (t Struct) String() string {
 	f := make([]string, 0, 16)
-	for k := range t {
+	var variadic Type
+	for k, v := range t {
+		if k == "..." {
+			w := v
+			variadic = w
+			continue
+		}
 		f = append(f, k)
 	}
 	var s strings.Builder
@@ -218,6 +224,13 @@ func (t Struct) String() string {
 		s.WriteString(k)
 		s.WriteString(": ")
 		s.WriteString(v.String())
+	}
+	if variadic != nil {
+		if len(f) > 0 {
+			s.WriteString(", ")
+		}
+		s.WriteString("...: ")
+		s.WriteString(variadic.String())
 	}
 	s.WriteByte('}')
 	return s.String()
