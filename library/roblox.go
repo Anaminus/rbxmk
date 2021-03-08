@@ -32,6 +32,7 @@ func openRoblox(s rbxmk.State) *lua.LTable {
 
 func dumpRoblox(s rbxmk.State) dump.Library {
 	lib := dump.Library{
+		Name: "roblox",
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"typeof": dump.Function{

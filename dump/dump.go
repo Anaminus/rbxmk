@@ -7,6 +7,11 @@ import (
 
 // Library describes the API of a library.
 type Library struct {
+	// Name is the name of the library.
+	Name string
+	// ImportedAs is the name that the library is imported as. Empty indicates
+	// that the contents of the library are merged into the global environment.
+	ImportedAs string
 	// Struct contains the items of the library.
 	Struct Struct
 	// Types contains definitions of types used in the library.
