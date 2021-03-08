@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/anaminus/rbxmk/sources/internal/winapi"
+	"github.com/anaminus/rbxmk/library/internal/winapi"
 	"golang.org/x/sys/windows"
 )
 

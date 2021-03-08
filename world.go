@@ -25,7 +25,6 @@ type World struct {
 	rootdir    string
 	reflectors map[string]Reflector
 	formats    map[string]Format
-	sources    map[string]Source
 
 	Global
 
@@ -521,45 +520,6 @@ func (w *World) Split(path string, components ...string) ([]string, error) {
 		parts[i] = result
 	}
 	return parts, nil
-}
-
-// RegisterSource registers a source. Panics if the source is already
-// registered, or the source's library could not be opened.
-func (w *World) RegisterSource(s Source) {
-	if _, ok := w.sources[s.Name]; ok {
-		panic("source " + s.Name + " already registered")
-	}
-	if w.sources == nil {
-		w.sources = map[string]Source{}
-	}
-	w.sources[s.Name] = s
-	if s.Library.Open != nil {
-		name := s.Library.Name
-		if name == "" {
-			name = s.Name
-		}
-		if err := w.OpenAs(name, s.Library); err != nil {
-			panic(err.Error())
-		}
-	}
-}
-
-// Source returns the Source registered with the given name. If the name is not
-// registered, then Source.Name will be an empty string.
-func (w *World) Source(name string) Source {
-	return w.sources[name]
-}
-
-// Sources returns a list of registered sources.
-func (w *World) Sources() []Source {
-	sources := []Source{}
-	for _, source := range w.sources {
-		sources = append(sources, source)
-	}
-	sort.Slice(sources, func(i, j int) bool {
-		return sources[i].Name < sources[j].Name
-	})
-	return sources
 }
 
 // State returns the underlying Lua state.

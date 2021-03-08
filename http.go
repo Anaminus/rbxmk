@@ -1,4 +1,4 @@
-package sources
+package rbxmk
 
 import (
 	"bytes"
@@ -6,53 +6,12 @@ import (
 	"fmt"
 	"net/http"
 
-	lua "github.com/anaminus/gopher-lua"
-	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/dump"
-	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-func init() { register(HTTPSource) }
-func HTTPSource() rbxmk.Source {
-	return rbxmk.Source{
-		Name: "http",
-		Library: rbxmk.Library{
-			Open: func(s rbxmk.State) *lua.LTable {
-				lib := s.L.CreateTable(0, 1)
-				lib.RawSetString("request", s.WrapFunc(func(s rbxmk.State) int {
-					options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
-					request, err := BeginHTTPRequest(s.World, options)
-					if err != nil {
-						return s.RaiseError("%s", err)
-					}
-					return s.Push(request)
-				}))
-				return lib
-			},
-			Dump: func(s rbxmk.State) dump.Library {
-				return dump.Library{
-					Struct: dump.Struct{
-						Fields: dump.Fields{
-							"request": dump.Function{
-								Parameters: dump.Parameters{
-									{Name: "options", Type: dt.Prim("HTTPOptions")},
-								},
-								Returns: dump.Parameters{
-									{Name: "req", Type: dt.Prim("HTTPRequest")},
-								},
-							},
-						},
-					},
-				}
-			},
-		},
-	}
-}
-
 // HTTPRequest performs and HTTP request with a promise-like API.
 type HTTPRequest struct {
-	global rbxmk.Global
+	global Global
 
 	cancel context.CancelFunc
 
@@ -62,7 +21,7 @@ type HTTPRequest struct {
 	errch chan error
 	err   error
 
-	fmt rbxmk.Format
+	fmt Format
 	sel rtypes.FormatSelector
 }
 
@@ -72,7 +31,7 @@ func (*HTTPRequest) Type() string {
 }
 
 // do concurrently begins the request.
-func (r *HTTPRequest) do(client *rbxmk.Client, req *http.Request) {
+func (r *HTTPRequest) do(client *Client, req *http.Request) {
 	defer close(r.respch)
 	defer close(r.errch)
 	resp, err := client.Do(req)
@@ -125,7 +84,7 @@ func (r *HTTPRequest) Cancel() {
 // the context of the given world.
 //
 // The request starts immediately, and can either be resolved or canceled.
-func BeginHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
+func BeginHTTPRequest(w *World, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
 	var buf *bytes.Buffer
 	if options.RequestFormat.Format != "" {
 		reqfmt := w.Format(options.RequestFormat.Format)
@@ -139,7 +98,7 @@ func BeginHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (request *HTTP
 			}
 		}
 	}
-	var respfmt rbxmk.Format
+	var respfmt Format
 	if options.ResponseFormat.Format != "" {
 		respfmt = w.Format(options.ResponseFormat.Format)
 		if respfmt.Decode == nil {
@@ -177,7 +136,7 @@ func BeginHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (request *HTTP
 
 // DoHTTPRequest begins and resolves an HTTPRequest. Returns an error if the
 // reponse did not return a successful status.
-func DoHTTPRequest(w *rbxmk.World, options rtypes.HTTPOptions) (resp *rtypes.HTTPResponse, err error) {
+func DoHTTPRequest(w *World, options rtypes.HTTPOptions) (resp *rtypes.HTTPResponse, err error) {
 	request, err := BeginHTTPRequest(w, options)
 	if err != nil {
 		return nil, err

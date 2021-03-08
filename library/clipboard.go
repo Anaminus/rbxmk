@@ -1,4 +1,4 @@
-package sources
+package library
 
 import (
 	"bytes"
@@ -8,8 +8,8 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/library/internal/clipboard"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/rbxmk/sources/internal/clipboard"
 	"github.com/robloxapi/types"
 )
 
@@ -27,62 +27,59 @@ func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector
 	return selectors, nil
 }
 
-func init() { register(ClipboardSource) }
-func ClipboardSource() rbxmk.Source {
-	return rbxmk.Source{
-		Name: "clipboard",
-		Library: rbxmk.Library{
-			Open: func(s rbxmk.State) *lua.LTable {
-				lib := s.L.CreateTable(0, 2)
-				lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-					selectors, err := getFormatSelectors(s, 1)
-					if err != nil {
-						return s.RaiseError("%s", err)
-					}
-					v, err := Clipboard{World: s.World}.Read(selectors...)
-					if err != nil {
-						return s.RaiseError("%s", err)
-					}
-					return s.Push(v)
-				}))
-				lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-					value := s.Pull(1, "Variant")
-					selectors, err := getFormatSelectors(s, 2)
-					if err != nil {
-						return s.RaiseError("%s", err)
-					}
-					err = Clipboard{World: s.World}.Write(value, selectors...)
-					if err != nil {
-						return s.RaiseError("%s", err)
-					}
-					return 0
-				}))
-				return lib
-			},
-			Dump: func(s rbxmk.State) dump.Library {
-				return dump.Library{
-					Struct: dump.Struct{
-						Fields: dump.Fields{
-							"read": dump.Function{
-								Parameters: dump.Parameters{
-									{Name: "...", Type: dt.Prim("string")},
-								},
-								Returns: dump.Parameters{
-									{Name: "value", Type: dt.Prim("any")},
-								},
-							},
-							"write": dump.Function{
-								Parameters: dump.Parameters{
-									{Name: "value", Type: dt.Prim("any")},
-									{Name: "...", Type: dt.Prim("string")},
-								},
-							},
+func init() { register(ClipboardSource, 10) }
+
+var ClipboardSource = rbxmk.Library{
+	Name: "clipboard",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 2)
+		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
+			selectors, err := getFormatSelectors(s, 1)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			v, err := Clipboard{World: s.World}.Read(selectors...)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			return s.Push(v)
+		}))
+		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
+			value := s.Pull(1, "Variant")
+			selectors, err := getFormatSelectors(s, 2)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			err = Clipboard{World: s.World}.Write(value, selectors...)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			return 0
+		}))
+		return lib
+	},
+	Dump: func(s rbxmk.State) dump.Library {
+		return dump.Library{
+			Struct: dump.Struct{
+				Fields: dump.Fields{
+					"read": dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "...", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Name: "value", Type: dt.Prim("any")},
 						},
 					},
-				}
+					"write": dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "value", Type: dt.Prim("any")},
+							{Name: "...", Type: dt.Prim("string")},
+						},
+					},
+				},
 			},
-		},
-	}
+		}
+	},
 }
 
 // Clipboard provides access to the clipboard of the operating system.

@@ -5,7 +5,6 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	"github.com/anaminus/rbxmk/sources"
 	"github.com/robloxapi/types"
 )
 
@@ -17,8 +16,8 @@ func HTTPRequest() Reflector {
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
 		Metatable: Metatable{
 			"__eq": func(s State) int {
-				v := s.Pull(1, "HTTPRequest").(*sources.HTTPRequest)
-				op := s.Pull(2, "HTTPRequest").(*sources.HTTPRequest)
+				v := s.Pull(1, "HTTPRequest").(*rbxmk.HTTPRequest)
+				op := s.Pull(2, "HTTPRequest").(*rbxmk.HTTPRequest)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -26,7 +25,7 @@ func HTTPRequest() Reflector {
 		Members: Members{
 			"Resolve": Member{Method: true,
 				Get: func(s State, v types.Value) int {
-					req := v.(*sources.HTTPRequest)
+					req := v.(*rbxmk.HTTPRequest)
 					resp, err := req.Resolve()
 					if err != nil {
 						return s.RaiseError("%s", err)
@@ -43,7 +42,7 @@ func HTTPRequest() Reflector {
 			},
 			"Cancel": Member{Method: true,
 				Get: func(s State, v types.Value) int {
-					req := v.(*sources.HTTPRequest)
+					req := v.(*rbxmk.HTTPRequest)
 					req.Cancel()
 					return 0
 				},

@@ -11,7 +11,6 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
-	"github.com/anaminus/rbxmk/sources"
 	"github.com/anaminus/snek"
 )
 
@@ -121,9 +120,6 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
-	}
-	for _, s := range sources.All() {
-		world.RegisterSource(s())
 	}
 	for _, lib := range library.All() {
 		if err := world.Open(lib); err != nil {
