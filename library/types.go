@@ -34,9 +34,9 @@ func openTypes(s rbxmk.State) *lua.LTable {
 
 func dumpTypes(s rbxmk.State) dump.Library {
 	exprims := s.Reflectors(rbxmk.Exprim)
-	root := dump.Library{Struct: dump.Struct{Fields: make(dump.Fields, len(exprims))}}
+	lib := dump.Library{Struct: dump.Struct{Fields: make(dump.Fields, len(exprims))}}
 	for _, t := range exprims {
-		root.Struct.Fields[t.Name] = dump.Property{ValueType: dt.Prim(t.Name)}
+		lib.Struct.Fields[t.Name] = dump.Property{ValueType: dt.Prim(t.Name)}
 	}
-	return root
+	return lib
 }

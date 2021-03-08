@@ -53,8 +53,8 @@ type Reflector struct {
 	// reflector's type. Returns nil if the value could not be converted.
 	ConvertFrom func(v types.Value) types.Value
 
-	// Dump returns an additonal description of the API of the reflector's type.
-	// Member and constructor APIs should be described by their respective
+	// Dump returns an additional description of the API of the reflector's
+	// type. Member and constructor APIs should be described by their respective
 	// fields.
 	Dump func() dump.TypeDef
 }
@@ -76,6 +76,49 @@ func (r Reflector) ValueCount() int {
 		return -1
 	}
 	return r.Count
+}
+
+// DumpAll returns a full description of the API of the reflector's type by
+// merging the result of Dump, Members, and Constructors.
+func (r Reflector) DumpAll() dump.TypeDef {
+	var def dump.TypeDef
+	if r.Dump != nil {
+		def = r.Dump()
+	}
+	for name, member := range r.Members {
+		if member.Dump == nil {
+			continue
+		}
+		switch v := member.Dump().(type) {
+		case dump.Property:
+			if _, ok := def.Properties[name]; !ok {
+				if def.Properties == nil {
+					def.Properties = dump.Properties{}
+				}
+				def.Properties[name] = v
+			}
+		case dump.Function:
+			if _, ok := def.Methods[name]; !ok {
+				if def.Methods == nil {
+					def.Methods = dump.Methods{}
+				}
+				def.Methods[name] = v
+			}
+		}
+	}
+	for name, ctor := range r.Constructors {
+		if ctor.Dump == nil {
+			continue
+		}
+		funcs := append(def.Constructors[name], ctor.Dump()...)
+		if len(funcs) > 0 {
+			if def.Constructors == nil {
+				def.Constructors = dump.Constructors{}
+			}
+			def.Constructors[name] = funcs
+		}
+	}
+	return def
 }
 
 // Metatable defines the metamethods of a custom type.

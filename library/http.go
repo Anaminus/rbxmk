@@ -33,7 +33,7 @@ var HTTPSource = rbxmk.Library{
 		return lib
 	},
 	Dump: func(s rbxmk.State) dump.Library {
-		return dump.Library{
+		lib := dump.Library{
 			Struct: dump.Struct{
 				Fields: dump.Fields{
 					"request": dump.Function{
@@ -47,5 +47,10 @@ var HTTPSource = rbxmk.Library{
 				},
 			},
 		}
+		for _, f := range reflect.All() {
+			r := f()
+			lib.Types[r.Name] = r.DumpAll()
+		}
+		return lib
 	},
 }

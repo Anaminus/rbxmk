@@ -31,7 +31,7 @@ func openRoblox(s rbxmk.State) *lua.LTable {
 }
 
 func dumpRoblox(s rbxmk.State) dump.Library {
-	root := dump.Library{
+	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"typeof": dump.Function{
@@ -71,9 +71,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 		},
 	}
 	for _, f := range reflect.All() {
-		if r := f(); r.Dump != nil {
-			root.Types[r.Name] = r.Dump()
-		}
+		r := f()
+		lib.Types[r.Name] = r.DumpAll()
 	}
-	return root
+	return lib
 }
