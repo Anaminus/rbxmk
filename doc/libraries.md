@@ -34,14 +34,14 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	4. [os.split][os.split]
 6. [string][string]
 	1. [string.split][string.split]
-7. [table][table]
+7. [sym][sym]
+8. [table][table]
 	1. [table.clear][table.clear]
 	2. [table.create][table.create]
 	3. [table.find][table.find]
 	4. [table.move][table.move]
 	5. [table.pack][table.pack]
 	6. [table.unpack][table.unpack]
-8. [sym][sym]
 9. [types][types]
 
 </td></tr></tbody>
@@ -464,6 +464,33 @@ If *sep* is empty, then *s* is split after each UTF-8 sequence.
 **Note**: Roblox's implementation splits per byte, while this implementation
 splits per UTF-8 character.
 
+## sym
+[sym]: #user-content-sym
+
+The **sym** library contains **Symbol** values. A symbol is a unique identifier
+that can be used to access certain metadata fields of an [Instance][Instance].
+
+An instance can be indexed with a symbol to get a metadata value in the same way
+it can be indexed with a string to get a property value:
+
+```lua
+local instance = Instance.new("Workspace")
+instance[sym.IsService] = true
+print(instance[sym.IsService]) --> true
+```
+
+The following symbols are defined:
+
+Symbol                                          | Description
+------------------------------------------------|------------
+[sym.AttrConfig][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
+[sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
+[sym.IsService][Instance.sym.IsService]         | Determines whether an instance is a service.
+[sym.Metadata][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
+[sym.RawAttrConfig][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
+[sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
+[sym.Reference][Instance.sym.Reference]         | Determines the value used to identify the instance.
+
 ## table
 [table]: #user-content-table
 
@@ -530,33 +557,6 @@ Returns the elements from *list*, equivalent to
 	list[i], list[i+1], ..., list[j]
 
 By default, *i* is 1 and *j* is the length of *list*.
-
-## sym
-[sym]: #user-content-sym
-
-The **sym** library contains **Symbol** values. A symbol is a unique identifier
-that can be used to access certain metadata fields of an [Instance][Instance].
-
-An instance can be indexed with a symbol to get a metadata value in the same way
-it can be indexed with a string to get a property value:
-
-```lua
-local instance = Instance.new("Workspace")
-instance[sym.IsService] = true
-print(instance[sym.IsService]) --> true
-```
-
-The following symbols are defined:
-
-Symbol                                          | Description
-------------------------------------------------|------------
-[sym.AttrConfig][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
-[sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
-[sym.IsService][Instance.sym.IsService]         | Determines whether an instance is a service.
-[sym.Metadata][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
-[sym.RawAttrConfig][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
-[sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
-[sym.Reference][Instance.sym.Reference]         | Determines the value used to identify the instance.
 
 ## types
 [types]: #user-content-types
