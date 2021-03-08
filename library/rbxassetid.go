@@ -68,6 +68,7 @@ var RBXAssetIDSource = rbxmk.Library{
 					},
 				},
 			},
+			Types: dump.TypeDefs{},
 		}
 		for _, f := range reflect.All() {
 			r := f()
