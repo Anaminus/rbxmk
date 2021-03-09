@@ -187,7 +187,10 @@ func RBXAttr() rbxmk.Format {
 			model.Value = make(rbxattr.ValueDictionary, 0, len(dict))
 			for _, key := range keys {
 				value, err := encodeAttributeValue(dict[key])
-				if err != nil || value == nil {
+				if err != nil {
+					return err
+				}
+				if value == nil {
 					continue
 				}
 				model.Value = append(model.Value, rbxattr.Entry{
