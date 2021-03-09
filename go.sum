@@ -3,8 +3,8 @@ github.com/anaminus/gopher-lua v0.3.0 h1:TQ0VJ/NQr8f8zTs0OP+qF5UHUGOvhz13Rw67LCW
 github.com/anaminus/gopher-lua v0.3.0/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
 github.com/anaminus/parse v0.1.0 h1:KbkRU9EAJLoGXrASCZvqfzdcwelc8evFU14xfBraE+8=
 github.com/anaminus/parse v0.1.0/go.mod h1:5EP2T2CqY4EDBxl2S/qhFSSb2VjW+iIqG+8Scy3mZN8=
-github.com/anaminus/snek v0.1.1 h1:N2+6V8UmsNKxsB8K9ppejX+rnefp+hAh72bqe+XRmvk=
-github.com/anaminus/snek v0.1.1/go.mod h1:/rvdBX4VaAF7JsuMyf29H8YaEY27Qga4WkIsItksWUg=
+github.com/anaminus/snek v0.2.0 h1:jQweDs4uwbdyWy//swZZPu6p89uyIlvfQLV1m68SF78=
+github.com/anaminus/snek v0.2.0/go.mod h1:/rvdBX4VaAF7JsuMyf29H8YaEY27Qga4WkIsItksWUg=
 github.com/bkaradzic/go-lz4 v1.0.0 h1:RXc4wYsyz985CkXXeX04y4VnZFGG8Rd43pRaHsOXAKk=
 github.com/bkaradzic/go-lz4 v1.0.0/go.mod h1:0YdlkowM3VswSROI7qDxhRvJ3sLhlFrRRwjwegp5jy4=
 github.com/robloxapi/rbxattr v0.1.1 h1:L9PwMXRD7uGT/CIz511IHKY3HXGNOgQjONoml3VWTak=
