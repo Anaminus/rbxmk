@@ -4,6 +4,9 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
+- Add `rbxmk dump` command to dump the rbxmk Lua API in various formats.
+	- Supports generic JSON and minified JSON format.
+	- Supports selene TOML format.
 - Add Instance.Descend as an alternative to child indexing, which is not
   implemented by rbxmk.
 - Entries returned by fs.dir contain only Name and IsDir fields.
