@@ -64,7 +64,7 @@ func Enum() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: true,
-					Index: dump.Function{
+					Index: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
 						},

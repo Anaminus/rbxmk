@@ -208,8 +208,8 @@ type Operators struct {
 	// defined.
 	Call *Function `json:"__call,omitempty"`
 
-	Index    Value `json:"__index,omitempty"`
-	Newindex Value `json:"__newindex,omitempty"`
+	Index    *Function `json:"__index,omitempty"`
+	Newindex *Function `json:"__newindex,omitempty"`
 }
 
 // Binop describes a binary operator. The left operand is assumed to be of an
