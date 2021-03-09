@@ -70,25 +70,25 @@ func Vector2() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Magnitude": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Magnitude()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Unit": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector2).Unit())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
 			},
 			"Lerp": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {

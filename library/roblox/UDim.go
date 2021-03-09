@@ -46,13 +46,13 @@ func UDim() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.UDim).Scale))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Offset": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.UDim).Offset))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

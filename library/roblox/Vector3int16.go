@@ -70,19 +70,19 @@ func Vector3int16() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector3int16).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector3int16).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector3int16).Z))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

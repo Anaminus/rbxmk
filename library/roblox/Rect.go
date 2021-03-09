@@ -32,25 +32,25 @@ func Rect() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Min)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
 			},
 			"Max": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Max)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
 			},
 			"Width": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Width()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Height": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Height()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

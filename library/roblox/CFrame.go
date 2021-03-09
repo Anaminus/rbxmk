@@ -55,31 +55,31 @@ func CFrame() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"Position": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).X()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Y()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Z()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"LookVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -90,7 +90,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"RightVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -101,7 +101,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"UpVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -112,7 +112,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"XVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -123,7 +123,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"YVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -134,7 +134,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"ZVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -145,7 +145,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"Inverse": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {

@@ -204,8 +204,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 		Name: "base",
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"_G":       dump.Property{ValueType: dt.Prim("table")},
-				"_VERSION": dump.Property{ValueType: dt.Prim("table")},
+				"_G":       dump.Property{ValueType: dt.Prim("table"), ReadOnly: true},
+				"_VERSION": dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
 				"assert": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
@@ -467,7 +467,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "e", Type: dt.Prim("int")},
 							},
 						},
-						"huge": dump.Property{ValueType: dt.Prim("number")},
+						"huge": dump.Property{ValueType: dt.Prim("number"), ReadOnly: true},
 						"ldexp": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "m", Type: dt.Prim("number")},
@@ -518,7 +518,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Type: dt.Prim("number")},
 							},
 						},
-						"pi": dump.Property{ValueType: dt.Prim("number")},
+						"pi": dump.Property{ValueType: dt.Prim("number"), ReadOnly: true},
 						"pow": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "x", Type: dt.Prim("number")},

@@ -85,7 +85,7 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 		Name:       "executable",
 		ImportedAs: "",
 		Struct: dump.Struct{Fields: dump.Fields{
-			"_RBXMK_VERSION": dump.Property{ValueType: dt.Prim("string")},
+			"_RBXMK_VERSION": dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
 		}},
 	})
 

@@ -46,25 +46,25 @@ func UDim2() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).X)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).Y)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
 			},
 			"Width": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).X)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
 			},
 			"Height": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).Y)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
 			},
 			"Lerp": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {

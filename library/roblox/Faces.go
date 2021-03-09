@@ -81,37 +81,37 @@ func Faces() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Right))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Top": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Top))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Back": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Back))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Left": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Left))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Bottom": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Bottom))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Front": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Front))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

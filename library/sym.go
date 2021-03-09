@@ -28,13 +28,13 @@ func dumpSym(s rbxmk.State) dump.Library {
 	return dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"AttrConfig":    dump.Property{ValueType: dt.Prim("Symbol")},
-				"Desc":          dump.Property{ValueType: dt.Prim("Symbol")},
-				"IsService":     dump.Property{ValueType: dt.Prim("Symbol")},
-				"Metadata":      dump.Property{ValueType: dt.Prim("Symbol")},
-				"RawAttrConfig": dump.Property{ValueType: dt.Prim("Symbol")},
-				"RawDesc":       dump.Property{ValueType: dt.Prim("Symbol")},
-				"Reference":     dump.Property{ValueType: dt.Prim("Symbol")},
+				"AttrConfig":    dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"Desc":          dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"IsService":     dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"Metadata":      dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"RawAttrConfig": dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"RawDesc":       dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"Reference":     dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
 			},
 		},
 	}

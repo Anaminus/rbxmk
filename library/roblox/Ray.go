@@ -32,13 +32,13 @@ func Ray() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Origin)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"Direction": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Direction)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"ClosestPoint": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {

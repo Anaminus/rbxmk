@@ -32,13 +32,13 @@ func Region3() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).CFrame())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("CFrame")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("CFrame"), ReadOnly: true} },
 			},
 			"Size": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).Size())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3")} },
+				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"ExpandToGrid": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {
