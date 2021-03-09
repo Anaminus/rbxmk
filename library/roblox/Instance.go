@@ -82,8 +82,12 @@ func defaultAttrConfig(inst *rtypes.Instance) rtypes.AttrConfig {
 
 func getAttributes(s rbxmk.State, inst *rtypes.Instance) rtypes.Dictionary {
 	attrcfg := defaultAttrConfig(inst)
-	sv, ok := inst.Get(attrcfg.Property).(types.Stringlike)
-	if ok {
+	v := inst.Get(attrcfg.Property)
+	if v == nil {
+		return rtypes.Dictionary{}
+	}
+	sv, ok := v.(types.Stringlike)
+	if !ok {
 		s.RaiseError("property %q is not string-like", attrcfg.Property)
 		return nil
 	}
