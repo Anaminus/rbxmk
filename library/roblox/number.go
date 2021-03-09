@@ -17,7 +17,7 @@ func Number() rbxmk.Reflector {
 			if n, ok := lvs[0].(lua.LNumber); ok {
 				return types.Double(n), nil
 			}
-			return nil, rbxmk.TypeError(nil, 0, "number")
+			return nil, rbxmk.TypeError("number", lvs[0].Type().String())
 		},
 	}
 }

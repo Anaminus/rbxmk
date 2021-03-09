@@ -24,7 +24,7 @@ func Double() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError(nil, 0, "double")
+			return nil, rbxmk.TypeError("double", lvs[0].Type().String())
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

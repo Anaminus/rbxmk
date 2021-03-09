@@ -25,7 +25,7 @@ func Token() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError(nil, 0, "token")
+			return nil, rbxmk.TypeError("token", lvs[0].Type().String())
 		},
 	}
 }

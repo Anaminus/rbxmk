@@ -16,7 +16,7 @@ func Objects() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "Objects")
+				return nil, rbxmk.TypeError("Objects", v.Type())
 			}
 			instRfl := s.MustReflector("Instance")
 			table := s.L.CreateTable(len(objects), 0)
@@ -32,7 +32,7 @@ func Objects() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			instRfl := s.MustReflector("Instance")
 			n := table.Len()

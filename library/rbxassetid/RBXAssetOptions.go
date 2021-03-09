@@ -18,7 +18,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			options, ok := v.(rtypes.RBXAssetOptions)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "RBXAssetOptions")
+				return nil, rbxmk.TypeError("RBXAssetOptions", v.Type())
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
@@ -33,7 +33,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),

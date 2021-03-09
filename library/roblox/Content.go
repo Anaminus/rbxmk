@@ -25,7 +25,7 @@ func Content() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError(nil, 0, "Content")
+			return nil, rbxmk.TypeError("Content", lvs[0].Type().String())
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

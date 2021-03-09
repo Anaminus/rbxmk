@@ -123,15 +123,15 @@ func Instance() rbxmk.Reflector {
 				return (*rtypes.Instance)(nil), nil
 			case *lua.LUserData:
 				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
-					return nil, rbxmk.TypeError(nil, 0, "Instance")
+					return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
 				}
 				v, ok := lv.Value.(types.Value)
 				if !ok {
-					return nil, rbxmk.TypeError(nil, 0, "Instance")
+					return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
 				}
 				return v, nil
 			default:
-				return nil, rbxmk.TypeError(nil, 0, "Instance")
+				return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
 			}
 		},
 		Metatable: rbxmk.Metatable{
@@ -211,18 +211,8 @@ func Instance() rbxmk.Reflector {
 
 				// Try GetService.
 				if inst.IsDataModel() && name == "GetService" {
-					s.L.Push(s.L.NewFunction(func(l *lua.LState) int {
-						u := l.CheckUserData(1)
-						if u.Metatable != l.GetTypeMetatable("Instance") {
-							rbxmk.TypeError(l, 1, "Instance")
-							return 0
-						}
-						inst, ok := u.Value.(*rtypes.Instance)
-						if !ok {
-							rbxmk.TypeError(l, 1, "Instance")
-							return 0
-						}
-						s := rbxmk.State{World: s.World, L: l}
+					s.L.Push(s.WrapMethod(func(s rbxmk.State) int {
+						inst := s.Pull(1, "Instance").(*rtypes.Instance)
 						className := string(s.Pull(2, "string").(types.String))
 						if desc != nil {
 							classDesc := desc.Classes[className]

@@ -14,17 +14,18 @@ import (
 )
 
 // getFormatSelectors produces a list of FormatSelectors from arguments.
-func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector, err error) {
+func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector) {
 	values := s.Pull(n, "Tuple").(rtypes.Tuple)
 	selectors = make([]rtypes.FormatSelector, 0, len(values))
 	for i, value := range values {
 		selector, ok := value.(rtypes.FormatSelector)
 		if !ok {
-			return nil, rbxmk.TypeError(s.L, i+n, "FormatSelector")
+			s.TypeError(n+i, "FormatSelector", value.Type())
+			return nil
 		}
 		selectors = append(selectors, selector)
 	}
-	return selectors, nil
+	return selectors
 }
 
 func init() { register(ClipboardSource, 10) }
@@ -34,10 +35,7 @@ var ClipboardSource = rbxmk.Library{
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 2)
 		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-			selectors, err := getFormatSelectors(s, 1)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
+			selectors := getFormatSelectors(s, 1)
 			v, err := Clipboard{World: s.World}.Read(selectors...)
 			if err != nil {
 				return s.RaiseError("%s", err)
@@ -46,11 +44,8 @@ var ClipboardSource = rbxmk.Library{
 		}))
 		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
 			value := s.Pull(1, "Variant")
-			selectors, err := getFormatSelectors(s, 2)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			err = Clipboard{World: s.World}.Write(value, selectors...)
+			selectors := getFormatSelectors(s, 2)
+			err := Clipboard{World: s.World}.Write(value, selectors...)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}

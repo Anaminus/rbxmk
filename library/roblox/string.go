@@ -17,7 +17,7 @@ func String() rbxmk.Reflector {
 			if n, ok := lvs[0].(lua.LString); ok {
 				return types.String(n), nil
 			}
-			return nil, rbxmk.TypeError(nil, 0, "string")
+			return nil, rbxmk.TypeError("string", lvs[0].Type().String())
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

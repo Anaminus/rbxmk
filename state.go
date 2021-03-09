@@ -8,11 +8,26 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// FrameType indicates the kind of frame for a State.
+type FrameType uint8
+
+const (
+	// Frame is a regular function.
+	Function FrameType = iota
+	// Frame is a method; exclude first argument.
+	Method
+	// Frame is an operator, avoid displaying arguments.
+	Operator
+)
+
 // State contains references to an environment surrounding a value.
 type State struct {
 	*World
 
 	L *lua.LState
+
+	// FrameType provides a hint to how errors should be produced.
+	FrameType FrameType
 
 	// cycle is used to mark a table as having been traversed. This is non-nil
 	// only for types that can contain other types.
@@ -98,7 +113,7 @@ func (s State) Pull(n int, t string) types.Value {
 		v, err = rfl.PullFrom(s, s.L.CheckAny(n))
 	}
 	if err != nil {
-		s.L.ArgError(n, err.Error())
+		s.ArgError(n, err.Error())
 		return nil
 	}
 	return v
@@ -120,7 +135,7 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	}
 	v, err := rfl.PullFrom(s, lv)
 	if err != nil {
-		s.L.ArgError(n, err.Error())
+		s.ArgError(n, err.Error())
 		return d
 	}
 	return v
@@ -147,7 +162,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	if n > s.L.GetTop() {
 		// Every type must reflect at least one value, so no values is an
 		// immediate error.
-		s.L.ArgError(n, "value expected")
+		s.ArgError(n, "value expected")
 		return nil
 	}
 	// Find the maximum count among the given types. 0 is treated the same as 1.
@@ -217,7 +232,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			return v
 		}
 	}
-	TypeError(s.L, n, listTypes(t))
+	s.TypeError(n, listTypes(t), "")
 	return nil
 }
 
@@ -313,11 +328,11 @@ func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
+		s.ArgError(n, TypeError("table", lv.Type().String()).Error())
 		return nil
 	}
 	if s.CycleMark(table) {
-		s.L.ArgError(n, "tables cannot be cyclic")
+		s.ArgError(n, "tables cannot be cyclic")
 		return nil
 	}
 	l := table.Len()
@@ -325,7 +340,7 @@ func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	for i := 1; i <= l; i++ {
 		var err error
 		if array[i-1], err = rfl.PullFrom(s, table.RawGetInt(i)); err != nil {
-			s.L.ArgError(n, err.Error())
+			s.ArgError(n, err.Error())
 			return nil
 		}
 	}
@@ -360,11 +375,11 @@ func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		s.L.ArgError(n, TypeError(nil, 0, "table").Error())
+		s.ArgError(n, TypeError("table", lv.Type().String()).Error())
 		return nil
 	}
 	if s.CycleMark(table) {
-		s.L.ArgError(n, "tables cannot be cyclic")
+		s.ArgError(n, "tables cannot be cyclic")
 		return nil
 	}
 	dict := make(rtypes.Dictionary)
@@ -377,7 +392,7 @@ func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 		return nil
 	})
 	if err != nil {
-		s.L.ArgError(n, err.Error())
+		s.ArgError(n, err.Error())
 		return nil
 	}
 	return dict
@@ -389,6 +404,41 @@ func (s State) RaiseError(format string, args ...interface{}) int {
 	return 0
 }
 
+// ArgError raises an argument error depending on the state's frame type.
+func (s State) ArgError(n int, msg string) int {
+	switch s.FrameType {
+	case Method:
+		if n <= 1 {
+			s.RaiseError("bad method receiver: %s", msg)
+		} else {
+			s.L.ArgError(n-1, msg)
+		}
+	case Operator:
+		s.RaiseError(msg)
+	default:
+		s.L.ArgError(n, msg)
+	}
+	return 0
+}
+
+// TypeError raises an argument type error depending on the state's frame type.
+func (s State) TypeError(n int, want, got string) int {
+	err := TypeError(want, got)
+	switch s.FrameType {
+	case Method:
+		if n <= 1 {
+			s.RaiseError("bad method receiver: %s", err)
+		} else {
+			s.L.ArgError(n-1, err.Error())
+		}
+	case Operator:
+		s.RaiseError("%s", err.Error())
+	default:
+		s.L.ArgError(n, err.Error())
+	}
+	return 0
+}
+
 // CheckString is like lua.LState.CheckString, except that it does not try to
 // convert non-string values into a string.
 func (s State) CheckString(n int) string {
@@ -396,6 +446,6 @@ func (s State) CheckString(n int) string {
 	if lv, ok := v.(lua.LString); ok {
 		return string(lv)
 	}
-	s.L.TypeError(n, lua.LTString)
+	s.TypeError(n, lua.LTString.String(), v.Type().String())
 	return ""
 }

@@ -177,13 +177,13 @@ func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err
 	return func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 		u, ok := lvs[0].(*lua.LUserData)
 		if !ok {
-			return nil, TypeError(nil, 0, t)
+			return nil, TypeError(t, lvs[0].Type().String())
 		}
 		if u.Metatable != s.L.GetTypeMetatable(t) {
-			return nil, TypeError(nil, 0, t)
+			return nil, TypeError(t, lvs[0].Type().String())
 		}
 		if v, ok = u.Value.(types.Value); !ok {
-			return nil, TypeError(nil, 0, t)
+			return nil, TypeError(t, lvs[0].Type().String())
 		}
 		return v, nil
 	}
@@ -191,27 +191,21 @@ func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err
 
 // typeError is an error where a type was received where another was expected.
 type typeError struct {
-	expected string
-	got      string
+	want string
+	got  string
 }
 
 // Error implements the error interface.
 func (err typeError) Error() string {
 	if err.got == "" {
-		return err.expected + " expected"
+		return err.want + " expected"
 	}
-	return err.expected + " expected, got " + err.got
+	return err.want + " expected, got " + err.got
 }
 
 // TypeError raises an argument error indicating that a given type was expected.
-func TypeError(l *lua.LState, n int, typ string) (err error) {
-	if l != nil {
-		err = typeError{expected: typ, got: l.Get(n).Type().String()}
-		l.ArgError(n, err.Error())
-	} else {
-		err = typeError{expected: typ}
-	}
-	return err
+func TypeError(want, got string) (err error) {
+	return typeError{want: want, got: got}
 }
 
 // CheckType returns the underlying value if the value at n is a userdata that
@@ -222,7 +216,7 @@ func CheckType(l *lua.LState, n int, typ string) interface{} {
 			return u.Value
 		}
 	}
-	TypeError(l, n, typ)
+	TypeError(typ, l.Get(n).Type().String())
 	return nil
 }
 
@@ -237,6 +231,6 @@ func OptType(l *lua.LState, n int, typ string) interface{} {
 			return u.Value
 		}
 	}
-	TypeError(l, n, typ)
+	TypeError(typ, l.Get(n).Type().String())
 	return nil
 }

@@ -25,7 +25,7 @@ func Int64() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError(nil, 0, "int64")
+			return nil, rbxmk.TypeError("int64", lvs[0].Type().String())
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

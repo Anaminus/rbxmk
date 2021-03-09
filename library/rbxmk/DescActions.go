@@ -16,7 +16,7 @@ func DescActions() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			actions, ok := v.(rtypes.DescActions)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "DescActions")
+				return nil, rbxmk.TypeError("DescActions", v.Type())
 			}
 			actionRfl := s.MustReflector("DescAction")
 			table := s.L.CreateTable(len(actions), 0)
@@ -32,7 +32,7 @@ func DescActions() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			actionRfl := s.MustReflector("DescAction")
 			n := table.Len()

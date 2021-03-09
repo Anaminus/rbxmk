@@ -16,7 +16,7 @@ func HTTPResponse() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			resp, ok := v.(rtypes.HTTPResponse)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "HTTPResponse")
+				return nil, rbxmk.TypeError("HTTPResponse", v.Type())
 			}
 			table := s.L.CreateTable(0, 5)
 			s.PushToTable(table, lua.LString("Success"), types.Bool(resp.Success))
@@ -29,7 +29,7 @@ func HTTPResponse() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			resp := rtypes.HTTPResponse{
 				Success:       bool(s.PullFromTable(table, lua.LString("Success"), "bool").(types.Bool)),

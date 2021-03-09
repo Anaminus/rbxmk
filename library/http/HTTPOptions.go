@@ -16,7 +16,7 @@ func HTTPOptions() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "HTTPOptions")
+				return nil, rbxmk.TypeError("HTTPOptions", v.Type())
 			}
 			table := s.L.CreateTable(0, 7)
 			s.PushToTable(table, lua.LString("URL"), types.String(options.URL))
@@ -31,7 +31,7 @@ func HTTPOptions() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			options := rtypes.HTTPOptions{
 				URL:            string(s.PullFromTable(table, lua.LString("URL"), "string").(types.String)),

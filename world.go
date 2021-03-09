@@ -234,7 +234,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		// Set each defined metamethod, overriding predefined values.
 		for name, method := range r.Metatable {
 			m := method
-			mt.RawSetString(name, w.WrapFunc(m))
+			mt.RawSetString(name, w.WrapOperator(m))
 		}
 		// If available, remember index and newindex for member indexing.
 		index = r.Metatable["__index"]
@@ -244,15 +244,10 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	if r.Members != nil {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
-			u := l.CheckUserData(1)
-			if u.Metatable != mt {
-				TypeError(l, 1, r.Name)
-				return 0
-			}
-			v, ok := u.Value.(types.Value)
-			if !ok {
-				TypeError(l, 1, r.Name)
-				return 0
+			s := State{World: w, L: l, FrameType: Operator}
+			v, err := r.PullFrom(s, s.L.CheckAny(1))
+			if err != nil {
+				s.ArgError(1, err.Error())
 			}
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
@@ -264,9 +259,12 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				if member.Method {
 					// Push as method.
 					l.Push(l.NewFunction(func(l *lua.LState) int {
-						// TODO: validate that s.L.Get(1) matches v, or at least has
-						// the expected type.
-						return member.Get(State{World: w, L: l}, v)
+						s := State{World: w, L: l, FrameType: Method}
+						v, err := r.PullFrom(s, s.L.CheckAny(1))
+						if err != nil {
+							return s.ArgError(1, err.Error())
+						}
+						return member.Get(s, v)
 					}))
 					return 1
 				}
@@ -275,25 +273,20 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		customIndex:
 			if index != nil {
 				// Fallback to custom index.
-				return index(State{World: w, L: l})
+				return index(s)
 			}
 			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, r.Name)
 			} else {
-				l.ArgError(2, "string expected, got "+idx.Type().String())
+				l.RaiseError("string expected for member name, got %s", idx.Type().String())
 			}
 			return 0
 		}))
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
-			u := l.CheckUserData(1)
-			if u.Metatable != mt {
-				TypeError(l, 1, r.Name)
-				return 0
-			}
-			v, ok := u.Value.(types.Value)
-			if !ok {
-				TypeError(l, 1, r.Name)
-				return 0
+			s := State{World: w, L: l, FrameType: Operator}
+			v, err := r.PullFrom(s, s.L.CheckAny(1))
+			if err != nil {
+				s.ArgError(1, err.Error())
 			}
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
@@ -305,18 +298,18 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				if member.Method || member.Set == nil {
 					l.RaiseError("%s cannot be assigned to", name)
 				}
-				member.Set(State{World: w, L: l}, v)
+				member.Set(s, v)
 				return 0
 			}
 		customNewindex:
 			if newindex != nil {
 				// Fallback to custom newindex.
-				return newindex(State{World: w, L: l})
+				return newindex(s)
 			}
 			if ok {
 				l.RaiseError("%q is not a valid member of %s", name, r.Name)
 			} else {
-				l.ArgError(2, "string expected, got "+idx.Type().String())
+				l.RaiseError("string expected for member name, got %s", idx.Type().String())
 			}
 			return 0
 		}))
@@ -541,6 +534,20 @@ func (w *World) State() *lua.LState {
 func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
 		return f(State{World: w, L: l})
+	})
+}
+
+// WrapMethod is like WrapFunc, but marks the state as being a method.
+func (w *World) WrapMethod(f func(State) int) *lua.LFunction {
+	return w.l.NewFunction(func(l *lua.LState) int {
+		return f(State{World: w, L: l, FrameType: Method})
+	})
+}
+
+// WrapOperator is like WrapFunc, but marks the state as being an operator.
+func (w *World) WrapOperator(f func(State) int) *lua.LFunction {
+	return w.l.NewFunction(func(l *lua.LState) int {
+		return f(State{World: w, L: l, FrameType: Operator})
 	})
 }
 

@@ -14,14 +14,14 @@ func Table() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			table, ok := v.(rtypes.Table)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "*lua.LTable")
+				return nil, rbxmk.TypeError("*lua.LTable", v.Type())
 			}
 			return []lua.LValue{table.LTable}, nil
 		},
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError(nil, 0, "table")
+				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
 			}
 			return rtypes.Table{LTable: table}, nil
 		},

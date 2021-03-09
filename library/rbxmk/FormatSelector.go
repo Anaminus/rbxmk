@@ -54,7 +54,7 @@ func FormatSelector() rbxmk.Reflector {
 				}
 				return []lua.LValue{table}, nil
 			default:
-				return nil, rbxmk.TypeError(nil, 0, "FormatSelector or string")
+				return nil, rbxmk.TypeError("FormatSelector or string", v.Type())
 			}
 		},
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
@@ -100,7 +100,7 @@ func FormatSelector() rbxmk.Reflector {
 				}
 				return sel, nil
 			default:
-				return nil, rbxmk.TypeError(nil, 0, "string or table")
+				return nil, rbxmk.TypeError("string or table", v.Type().String())
 			}
 		},
 		Dump: func() dump.TypeDef {

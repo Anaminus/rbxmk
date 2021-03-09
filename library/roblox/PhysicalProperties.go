@@ -26,15 +26,15 @@ func PhysicalProperties() rbxmk.Reflector {
 				return types.PhysicalProperties{}, nil
 			case *lua.LUserData:
 				if lv.Metatable != s.L.GetTypeMetatable("PhysicalProperties") {
-					return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+					return nil, rbxmk.TypeError("PhysicalProperties", lvs[0].Type().String())
 				}
 				v, ok := lv.Value.(types.Value)
 				if !ok {
-					return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+					return nil, rbxmk.TypeError("PhysicalProperties", lvs[0].Type().String())
 				}
 				return v, nil
 			default:
-				return nil, rbxmk.TypeError(nil, 0, "PhysicalProperties")
+				return nil, rbxmk.TypeError("PhysicalProperties", lvs[0].Type().String())
 			}
 		},
 		ConvertFrom: func(v types.Value) types.Value {

@@ -43,7 +43,7 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	}
 
 	mt := s.L.CreateTable(0, 2)
-	mt.RawSetString("__index", s.WrapFunc(func(s rbxmk.State) int {
+	mt.RawSetString("__index", s.WrapOperator(func(s rbxmk.State) int {
 		switch field := s.Pull(2, "string").(types.String); field {
 		case "globalDesc":
 			desc := s.Desc.Of(nil)
@@ -61,7 +61,7 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 			return s.RaiseError("unknown field %q", field)
 		}
 	}))
-	mt.RawSetString("__newindex", s.WrapFunc(func(s rbxmk.State) int {
+	mt.RawSetString("__newindex", s.WrapOperator(func(s rbxmk.State) int {
 		switch field := s.Pull(2, "string").(types.String); field {
 		case "globalDesc":
 			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)

@@ -18,7 +18,7 @@ func Nil() rbxmk.Reflector {
 			if lvs[0] == lua.LNil {
 				return rtypes.Nil, nil
 			}
-			return nil, rbxmk.TypeError(nil, 0, "nil")
+			return nil, rbxmk.TypeError("nil", lvs[0].Type().String())
 		},
 	}
 }

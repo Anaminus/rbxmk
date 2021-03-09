@@ -56,7 +56,7 @@ func Vector2() rbxmk.Reflector {
 				case types.Vector2:
 					return s.Push(v.Div(op))
 				default:
-					s.L.ArgError(2, "attempt to multiply a Vector2 with an incompatible value type or nil")
+					s.ArgError(2, "attempt to multiply a Vector2 with an incompatible value type or nil")
 					return 0
 				}
 			},
