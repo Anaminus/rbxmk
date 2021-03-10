@@ -950,6 +950,14 @@ func Instance() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Properties: dump.Properties{
+					"sym.AttrConfig":    dump.Property{ValueType: dt.Prim("Symbol")},
+					"sym.Desc":          dump.Property{ValueType: dt.Prim("Symbol")},
+					"sym.IsService":     dump.Property{ValueType: dt.Prim("Symbol")},
+					"sym.RawAttrConfig": dump.Property{ValueType: dt.Prim("Symbol")},
+					"sym.RawDesc":       dump.Property{ValueType: dt.Prim("Symbol")},
+					"sym.Reference":     dump.Property{ValueType: dt.Prim("Symbol")},
+				},
 				Operators: &dump.Operators{
 					Eq: true,
 					Index: &dump.Function{
