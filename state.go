@@ -1,6 +1,7 @@
 package rbxmk
 
 import (
+	"fmt"
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -412,7 +413,10 @@ func (s State) RaiseError(format string, args ...interface{}) int {
 }
 
 // ArgError raises an argument error depending on the state's frame type.
-func (s State) ArgError(n int, msg string) int {
+func (s State) ArgError(n int, msg string, v ...interface{}) int {
+	if len(v) > 0 {
+		msg = fmt.Sprintf(msg, v...)
+	}
 	switch s.FrameType {
 	case Method:
 		if n <= 1 {
