@@ -76,13 +76,13 @@ func initMain(s rbxmk.State, t *testing.T) {
 		msg := l.OptString(2, "expected pass")
 		switch v := v.(type) {
 		case *lua.LFunction:
-			n := s.L.GetTop()
+			n := s.Count()
 			s.L.Push(v)
 			if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
 				t.Errorf("%s: %s", msg, err.Error())
 				return 0
 			}
-			if s.L.GetTop() > n {
+			if s.Count() > n {
 				if !s.L.ToBool(n + 1) {
 					if m := s.L.ToString(n + 2); m != "" {
 						t.Errorf("%s: %s", msg, m)
@@ -113,10 +113,10 @@ func initMain(s rbxmk.State, t *testing.T) {
 		msg := l.OptString(2, "expected fail")
 		switch v := v.(type) {
 		case *lua.LFunction:
-			n := s.L.GetTop()
+			n := s.Count()
 			s.L.Push(v)
 			if err := s.L.PCall(0, lua.MultRet, nil); err == nil {
-				if s.L.GetTop() > n {
+				if s.Count() > n {
 					if s.L.ToBool(n + 1) {
 						if m := s.L.ToString(n + 2); m != "" {
 							t.Errorf("%s: %s", msg, m)

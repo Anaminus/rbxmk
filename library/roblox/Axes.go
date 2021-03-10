@@ -121,7 +121,7 @@ func Axes() rbxmk.Reflector {
 			"new": {
 				Func: func(s rbxmk.State) int {
 					var v types.Axes
-					n := s.L.GetTop()
+					n := s.Count()
 					for i := 1; i <= n; i++ {
 						switch value := PullVariant(s, i).(type) {
 						case *rtypes.EnumItem:

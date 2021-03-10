@@ -33,8 +33,8 @@ func openOS(s rbxmk.State) *lua.LTable {
 		return 1
 	}))
 	lib.RawSetString("join", s.WrapFunc(func(s rbxmk.State) int {
-		j := make([]string, s.L.GetTop())
-		for i := 1; i <= s.L.GetTop(); i++ {
+		j := make([]string, s.Count())
+		for i := 1; i <= s.Count(); i++ {
 			j[i-1] = s.CheckString(i)
 		}
 		filename := filepath.Join(j...)
@@ -43,7 +43,7 @@ func openOS(s rbxmk.State) *lua.LTable {
 	}))
 	lib.RawSetString("split", s.WrapFunc(func(s rbxmk.State) int {
 		path := s.CheckString(1)
-		n := s.L.GetTop()
+		n := s.Count()
 		components := make([]string, n-2)
 		for i := 2; i <= n; i++ {
 			components[i-2] = s.CheckString(i)

@@ -275,7 +275,7 @@ func rbxmkRunFile(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 
-	nt := s.L.GetTop()
+	nt := s.Count()
 
 	// Load file as function.
 	fn, err := s.L.LoadFile(fileName)
@@ -297,12 +297,12 @@ func rbxmkRunFile(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
-	return s.L.GetTop() - nt
+	return s.Count() - nt
 }
 
 func rbxmkRunString(s rbxmk.State) int {
 	source := s.CheckString(1)
-	nt := s.L.GetTop()
+	nt := s.Count()
 
 	// Load file as function.
 	fn, err := s.L.LoadString(source)
@@ -323,7 +323,7 @@ func rbxmkRunString(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
-	return s.L.GetTop() - nt
+	return s.Count() - nt
 }
 
 func rbxmkNewDesc(s rbxmk.State) int {

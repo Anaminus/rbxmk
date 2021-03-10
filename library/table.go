@@ -158,7 +158,7 @@ func tableMove(s rbxmk.State) int {
 }
 
 func tablePack(s rbxmk.State) int {
-	n := s.L.GetTop()
+	n := s.Count()
 	t := s.L.CreateTable(n, 1)
 	for i := n; i >= 1; i-- {
 		t.RawSetInt(i, s.L.Get(i))

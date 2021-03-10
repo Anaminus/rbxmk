@@ -99,7 +99,7 @@ func (s State) Pull(n int, t string) types.Value {
 	var err error
 	if rfl.Count < 0 {
 		lvs := make([]lua.LValue, 0, 4)
-		for i := n; i <= s.L.GetTop(); i++ {
+		for i := n; i <= s.Count(); i++ {
 			lvs = append(lvs, s.L.Get(i))
 		}
 		v, err = rfl.PullFrom(s, lvs...)
@@ -166,7 +166,7 @@ func (s State) ReflectorError(n int) int {
 // first successful reflection among the types in t. If no types succeeded, then
 // a type error is thrown.
 func (s State) PullAnyOf(n int, t ...string) types.Value {
-	if n > s.L.GetTop() {
+	if n > s.Count() {
 		// Every type must reflect at least one value, so no values is an
 		// immediate error.
 		s.ArgError(n, "value expected")
@@ -202,7 +202,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			var err error
 			if t.Count < 0 {
 				// Append all values.
-				for i := n; i <= s.L.GetTop(); i++ {
+				for i := n; i <= s.Count(); i++ {
 					lvs = append(lvs, s.L.Get(i))
 				}
 				v, err = t.PullFrom(s, lvs...)

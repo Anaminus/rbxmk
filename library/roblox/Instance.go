@@ -550,7 +550,7 @@ func Instance() rbxmk.Reflector {
 			},
 			"Descend": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {
-					n := s.L.GetTop()
+					n := s.Count()
 					if n-1 <= 0 {
 						return s.RaiseError("expected at least 1 string")
 					}
@@ -878,7 +878,7 @@ func Instance() rbxmk.Reflector {
 					parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
 					var desc *rtypes.RootDesc
 					var blocked bool
-					if s.L.GetTop() >= 3 {
+					if s.Count() >= 3 {
 						switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
 						case rtypes.NilType:
 						case types.Bool:
@@ -929,7 +929,7 @@ func Instance() rbxmk.Reflector {
 			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
 				var desc *rtypes.RootDesc
 				var blocked bool
-				if s.L.GetTop() >= 3 {
+				if s.Count() >= 3 {
 					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
 					case rtypes.NilType:
 					case types.Bool:
