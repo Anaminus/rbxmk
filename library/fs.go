@@ -16,198 +16,198 @@ import (
 
 func init() { register(FS, 10) }
 
-var FS = rbxmk.Library{
-	Name: "fs",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 6)
-		lib.RawSetString("dir", s.WrapFunc(func(s rbxmk.State) int {
-			dirname := s.CheckString(1)
-			files, err := FSSource{World: s.World}.Dir(dirname)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			tfiles := s.L.CreateTable(len(files), 0)
-			for _, entry := range files {
-				tentry := s.L.CreateTable(0, 2)
-				tentry.RawSetString("Name", lua.LString(entry.Name()))
-				tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
-				tfiles.Append(tentry)
-			}
-			s.L.Push(tfiles)
-			return 1
+var FS = rbxmk.Library{Name: "fs", Open: openFS, Dump: dumpFS}
 
-		}))
-		lib.RawSetString("mkdir", s.WrapFunc(func(s rbxmk.State) int {
-			path := string(s.Pull(1, "string").(types.String))
-			all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
-			ok, err := FSSource{World: s.World}.MkDir(path, all)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			if ok {
-				s.L.Push(lua.LTrue)
-			} else {
-				s.L.Push(lua.LFalse)
-			}
-			return 1
-		}))
-		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-			filename := string(s.Pull(1, "string").(types.String))
-			selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
-			v, err := FSSource{World: s.World}.Read(filename, selector)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			return s.Push(v)
-		}))
-		lib.RawSetString("remove", s.WrapFunc(func(s rbxmk.State) int {
-			path := string(s.Pull(1, "string").(types.String))
-			all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
-			ok, err := FSSource{World: s.World}.Remove(path, all)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			if ok {
-				s.L.Push(lua.LTrue)
-			} else {
-				s.L.Push(lua.LFalse)
-			}
-			return 1
-		}))
-		lib.RawSetString("rename", s.WrapFunc(func(s rbxmk.State) int {
-			from := string(s.Pull(1, "string").(types.String))
-			to := string(s.Pull(2, "string").(types.String))
-			ok, err := FSSource{World: s.World}.Rename(from, to)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			if ok {
-				s.L.Push(lua.LTrue)
-			} else {
-				s.L.Push(lua.LFalse)
-			}
-			return 1
-		}))
-		lib.RawSetString("stat", s.WrapFunc(func(s rbxmk.State) int {
-			filename := s.CheckString(1)
-			info, err := FSSource{World: s.World}.Stat(filename)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			if info == nil {
-				s.L.Push(lua.LNil)
-				return 1
-			}
-			tinfo := s.L.CreateTable(0, 4)
-			tinfo.RawSetString("Name", lua.LString(info.Name()))
-			tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-			tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-			tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-			s.L.Push(tinfo)
-			return 1
-		}))
-		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-			filename := string(s.Pull(1, "string").(types.String))
-			value := s.Pull(2, "Variant")
-			selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
-			err := FSSource{World: s.World}.Write(filename, value, selector)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			return 0
-		}))
-		return lib
-	},
-	Dump: func(s rbxmk.State) dump.Library {
-		return dump.Library{
-			Struct: dump.Struct{
-				Fields: dump.Fields{
-					"dir": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
-						},
-						CanError: true,
-					},
-					"mkdir": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-							{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
-						},
-						CanError: true,
-					},
-					"read": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-							{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
-						},
-						Returns: dump.Parameters{
-							{Name: "value", Type: dt.Prim("any")},
-						},
-						CanError: true,
-					},
-					"remove": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-							{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
-						},
-						CanError: true,
-					},
-					"rename": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "old", Type: dt.Prim("string")},
-							{Name: "new", Type: dt.Prim("string")},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
-						},
-						CanError: true,
-					},
-					"stat": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("FileInfo")}},
-						},
-						CanError: true,
-					},
-					"write": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "path", Type: dt.Prim("string")},
-							{Name: "value", Type: dt.Prim("any")},
-							{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
-						},
-						CanError: true,
-					},
-				},
-			},
-			Types: dump.TypeDefs{
-				"DirEntry": dump.TypeDef{
-					Underlying: dt.Struct{
-						"Name":  dt.Prim("string"),
-						"IsDir": dt.Prim("bool"),
-					},
-				},
-				"FileInfo": dump.TypeDef{
-					Underlying: dt.Struct{
-						"Name":    dt.Prim("string"),
-						"IsDir":   dt.Prim("bool"),
-						"Size":    dt.Prim("int"),
-						"ModTime": dt.Prim("int"),
-					},
-				},
-			},
+func openFS(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 6)
+	lib.RawSetString("dir", s.WrapFunc(func(s rbxmk.State) int {
+		dirname := s.CheckString(1)
+		files, err := FSSource{World: s.World}.Dir(dirname)
+		if err != nil {
+			return s.RaiseError("%s", err)
 		}
-	},
+		tfiles := s.L.CreateTable(len(files), 0)
+		for _, entry := range files {
+			tentry := s.L.CreateTable(0, 2)
+			tentry.RawSetString("Name", lua.LString(entry.Name()))
+			tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
+			tfiles.Append(tentry)
+		}
+		s.L.Push(tfiles)
+		return 1
+
+	}))
+	lib.RawSetString("mkdir", s.WrapFunc(func(s rbxmk.State) int {
+		path := string(s.Pull(1, "string").(types.String))
+		all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+		ok, err := FSSource{World: s.World}.MkDir(path, all)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		if ok {
+			s.L.Push(lua.LTrue)
+		} else {
+			s.L.Push(lua.LFalse)
+		}
+		return 1
+	}))
+	lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
+		filename := string(s.Pull(1, "string").(types.String))
+		selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+		v, err := FSSource{World: s.World}.Read(filename, selector)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		return s.Push(v)
+	}))
+	lib.RawSetString("remove", s.WrapFunc(func(s rbxmk.State) int {
+		path := string(s.Pull(1, "string").(types.String))
+		all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+		ok, err := FSSource{World: s.World}.Remove(path, all)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		if ok {
+			s.L.Push(lua.LTrue)
+		} else {
+			s.L.Push(lua.LFalse)
+		}
+		return 1
+	}))
+	lib.RawSetString("rename", s.WrapFunc(func(s rbxmk.State) int {
+		from := string(s.Pull(1, "string").(types.String))
+		to := string(s.Pull(2, "string").(types.String))
+		ok, err := FSSource{World: s.World}.Rename(from, to)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		if ok {
+			s.L.Push(lua.LTrue)
+		} else {
+			s.L.Push(lua.LFalse)
+		}
+		return 1
+	}))
+	lib.RawSetString("stat", s.WrapFunc(func(s rbxmk.State) int {
+		filename := s.CheckString(1)
+		info, err := FSSource{World: s.World}.Stat(filename)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		if info == nil {
+			s.L.Push(lua.LNil)
+			return 1
+		}
+		tinfo := s.L.CreateTable(0, 4)
+		tinfo.RawSetString("Name", lua.LString(info.Name()))
+		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
+		tinfo.RawSetString("Size", lua.LNumber(info.Size()))
+		tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
+		s.L.Push(tinfo)
+		return 1
+	}))
+	lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
+		filename := string(s.Pull(1, "string").(types.String))
+		value := s.Pull(2, "Variant")
+		selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+		err := FSSource{World: s.World}.Write(filename, value, selector)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		return 0
+	}))
+	return lib
+}
+
+func dumpFS(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"dir": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
+					},
+					CanError: true,
+				},
+				"mkdir": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("bool")},
+					},
+					CanError: true,
+				},
+				"read": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "value", Type: dt.Prim("any")},
+					},
+					CanError: true,
+				},
+				"remove": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("bool")},
+					},
+					CanError: true,
+				},
+				"rename": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "old", Type: dt.Prim("string")},
+						{Name: "new", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("bool")},
+					},
+					CanError: true,
+				},
+				"stat": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Prim("FileInfo")}},
+					},
+					CanError: true,
+				},
+				"write": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+						{Name: "value", Type: dt.Prim("any")},
+						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+					},
+					CanError: true,
+				},
+			},
+		},
+		Types: dump.TypeDefs{
+			"DirEntry": dump.TypeDef{
+				Underlying: dt.Struct{
+					"Name":  dt.Prim("string"),
+					"IsDir": dt.Prim("bool"),
+				},
+			},
+			"FileInfo": dump.TypeDef{
+				Underlying: dt.Struct{
+					"Name":    dt.Prim("string"),
+					"IsDir":   dt.Prim("bool"),
+					"Size":    dt.Prim("int"),
+					"ModTime": dt.Prim("int"),
+				},
+			},
+		},
+	}
 }
 
 // FSSource provides access to the file system.

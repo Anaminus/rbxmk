@@ -30,53 +30,53 @@ func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector
 
 func init() { register(Clipboard, 10) }
 
-var Clipboard = rbxmk.Library{
-	Name: "clipboard",
-	Open: func(s rbxmk.State) *lua.LTable {
-		lib := s.L.CreateTable(0, 2)
-		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-			selectors := getFormatSelectors(s, 1)
-			v, err := ClipboardSource{World: s.World}.Read(selectors...)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			return s.Push(v)
-		}))
-		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-			value := s.Pull(1, "Variant")
-			selectors := getFormatSelectors(s, 2)
-			err := ClipboardSource{World: s.World}.Write(value, selectors...)
-			if err != nil {
-				return s.RaiseError("%s", err)
-			}
-			return 0
-		}))
-		return lib
-	},
-	Dump: func(s rbxmk.State) dump.Library {
-		return dump.Library{
-			Struct: dump.Struct{
-				Fields: dump.Fields{
-					"read": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "...", Type: dt.Prim("string")},
-						},
-						Returns: dump.Parameters{
-							{Name: "value", Type: dt.Prim("any")},
-						},
-						CanError: true,
+var Clipboard = rbxmk.Library{Name: "clipboard", Open: openClipboard, Dump: dumpClipboard}
+
+func openClipboard(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 2)
+	lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
+		selectors := getFormatSelectors(s, 1)
+		v, err := ClipboardSource{World: s.World}.Read(selectors...)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		return s.Push(v)
+	}))
+	lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
+		value := s.Pull(1, "Variant")
+		selectors := getFormatSelectors(s, 2)
+		err := ClipboardSource{World: s.World}.Write(value, selectors...)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		return 0
+	}))
+	return lib
+}
+
+func dumpClipboard(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"read": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "...", Type: dt.Prim("string")},
 					},
-					"write": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "value", Type: dt.Prim("any")},
-							{Name: "...", Type: dt.Prim("string")},
-						},
-						CanError: true,
+					Returns: dump.Parameters{
+						{Name: "value", Type: dt.Prim("any")},
 					},
+					CanError: true,
+				},
+				"write": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "value", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim("string")},
+					},
+					CanError: true,
 				},
 			},
-		}
-	},
+		},
+	}
 }
 
 // ClipboardSource provides access to the clipboard of the operating system.
