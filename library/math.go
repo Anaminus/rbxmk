@@ -68,9 +68,9 @@ func dumpMath(s rbxmk.State) dump.Library {
 }
 
 func mathClamp(s rbxmk.State) int {
-	x := s.L.CheckNumber(1)
-	min := s.L.CheckNumber(2)
-	max := s.L.CheckNumber(3)
+	x := s.CheckNumber(1)
+	min := s.CheckNumber(2)
+	max := s.CheckNumber(3)
 	if min > max {
 		s.L.RaiseError("max must be greater than min")
 	}
@@ -84,13 +84,13 @@ func mathClamp(s rbxmk.State) int {
 }
 
 func mathLog(s rbxmk.State) int {
-	x := s.L.CheckNumber(1)
+	x := s.CheckNumber(1)
 	if s.L.Get(2) == lua.LNil {
 		s.L.Push(lua.LNumber(math.Log(float64(x))))
 		return 1
 	}
 	var res float64
-	switch base := s.L.CheckNumber(2); base {
+	switch base := s.CheckNumber(2); base {
 	case 2:
 		res = math.Log2(float64(x))
 	case 10:
@@ -104,12 +104,12 @@ func mathLog(s rbxmk.State) int {
 
 func mathRound(s rbxmk.State) int {
 	// Half away from zero.
-	s.L.Push(lua.LNumber(math.Round(float64(s.L.CheckNumber(1)))))
+	s.L.Push(lua.LNumber(math.Round(float64(s.CheckNumber(1)))))
 	return 1
 }
 
 func mathSign(s rbxmk.State) int {
-	x := s.L.CheckNumber(1)
+	x := s.CheckNumber(1)
 	if x > 0 {
 		s.L.Push(lua.LNumber(1))
 	} else if x < 0 {

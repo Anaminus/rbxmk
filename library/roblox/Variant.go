@@ -91,7 +91,7 @@ func PullVariantFrom(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
 // PullVariant gets from the Lua state the value at n, and reflects a value from
 // it according to the Variant type.
 func PullVariant(s rbxmk.State, n int) (v types.Value) {
-	v, err := PullVariantFrom(s, s.L.CheckAny(n))
+	v, err := PullVariantFrom(s, s.CheckAny(n))
 	if err != nil {
 		s.ArgError(n, err.Error())
 		return nil

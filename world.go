@@ -245,7 +245,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
 			s := State{World: w, L: l, FrameType: Operator}
-			v, err := r.PullFrom(s, s.L.CheckAny(1))
+			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
@@ -260,7 +260,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 					// Push as method.
 					l.Push(l.NewFunction(func(l *lua.LState) int {
 						s := State{World: w, L: l, FrameType: Method}
-						v, err := r.PullFrom(s, s.L.CheckAny(1))
+						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
 						}
@@ -284,7 +284,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		}))
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
 			s := State{World: w, L: l, FrameType: Operator}
-			v, err := r.PullFrom(s, s.L.CheckAny(1))
+			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}

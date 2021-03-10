@@ -15,7 +15,7 @@ var Roblox = rbxmk.Library{Name: "", Open: openRoblox, Dump: dumpRoblox}
 func openRoblox(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
 	lib.RawSetString("typeof", s.WrapFunc(func(s rbxmk.State) int {
-		v := s.L.CheckAny(1)
+		v := s.CheckAny(1)
 		t := s.Typeof(v)
 		s.L.Push(lua.LString(t))
 		return 1

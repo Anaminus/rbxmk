@@ -87,13 +87,13 @@ func dumpTable(s rbxmk.State) dump.Library {
 }
 
 func tableClear(s rbxmk.State) int {
-	t := s.L.CheckTable(1)
+	t := s.CheckTable(1)
 	t.Clear()
 	return 0
 }
 
 func tableCreate(s rbxmk.State) int {
-	cap := int(s.L.CheckInt(1))
+	cap := int(s.CheckInt(1))
 	value := s.L.Get(2)
 	t := s.L.CreateTable(cap, 0)
 	if value != lua.LNil {
@@ -106,9 +106,9 @@ func tableCreate(s rbxmk.State) int {
 }
 
 func tableFind(s rbxmk.State) int {
-	t := s.L.CheckTable(1)
+	t := s.CheckTable(1)
 	v := s.L.Get(2)
-	init := s.L.OptInt(3, 1)
+	init := s.OptInt(3, 1)
 	if v != lua.LNil {
 		for i, n := init, t.Len(); i <= n; i++ {
 			if t.RawGetInt(i) == v {
@@ -122,15 +122,15 @@ func tableFind(s rbxmk.State) int {
 }
 
 func tableMove(s rbxmk.State) int {
-	a1 := s.L.CheckTable(1)
-	f := s.L.CheckInt(2)
-	e := s.L.CheckInt(3)
-	t := s.L.CheckInt(4)
+	a1 := s.CheckTable(1)
+	f := s.CheckInt(2)
+	e := s.CheckInt(3)
+	t := s.CheckInt(4)
 	var a2 *lua.LTable
 	if s.L.Get(5) == lua.LNil {
 		a2 = a1
 	} else {
-		a2 = s.L.CheckTable(5)
+		a2 = s.CheckTable(5)
 	}
 	if e >= f {
 		const LUA_MAXINTEGER = 1<<31 - 1
@@ -169,9 +169,9 @@ func tablePack(s rbxmk.State) int {
 }
 
 func tableUnpack(s rbxmk.State) int {
-	t := s.L.CheckTable(1)
-	i := s.L.OptInt(2, 1)
-	j := s.L.OptInt(3, t.Len())
+	t := s.CheckTable(1)
+	i := s.OptInt(2, 1)
+	j := s.OptInt(3, t.Len())
 	for k := i; k <= j; k++ {
 		s.L.Push(t.RawGetInt(k))
 	}

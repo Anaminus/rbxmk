@@ -20,14 +20,14 @@ func openString(s rbxmk.State) *lua.LTable {
 }
 
 func stringSplit(s rbxmk.State) int {
-	str := s.L.CheckString(1)
+	str := s.CheckString(1)
 	if str == "" && s.L.Get(2) == lua.LNil {
 		t := s.L.CreateTable(1, 0)
 		t.RawSetInt(1, lua.LString(""))
 		s.L.Push(t)
 		return 1
 	}
-	sep := s.L.OptString(2, "")
+	sep := s.OptString(2, "")
 	a := strings.Split(str, sep)
 	t := s.L.CreateTable(len(a), 0)
 	for i, v := range a {

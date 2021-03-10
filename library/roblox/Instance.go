@@ -155,7 +155,7 @@ func Instance() rbxmk.Reflector {
 
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, s.CheckAny(2)); err == nil {
 						name := sym.(rtypes.Symbol).Name
 						switch name {
 						case "Reference":
@@ -305,7 +305,7 @@ func Instance() rbxmk.Reflector {
 
 				// Try symbol.
 				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, s.L.CheckAny(2)); err == nil {
+					if sym, err := typ.PullFrom(s, s.CheckAny(2)); err == nil {
 						name := sym.(rtypes.Symbol).Name
 						switch name {
 						case "Reference":
@@ -556,7 +556,7 @@ func Instance() rbxmk.Reflector {
 					}
 					names := make([]string, n-1)
 					for i := 2; i <= n; i++ {
-						names[i-2] = s.L.CheckString(i)
+						names[i-2] = s.CheckString(i)
 					}
 					if child := v.(*rtypes.Instance).Descend(names...); child != nil {
 						return s.Push(child)

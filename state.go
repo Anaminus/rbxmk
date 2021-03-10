@@ -106,11 +106,11 @@ func (s State) Pull(n int, t string) types.Value {
 	} else if rfl.Count > 1 {
 		lvs := make([]lua.LValue, 0, 4)
 		for i := n; i <= rfl.Count; i++ {
-			lvs = append(lvs, s.L.CheckAny(i))
+			lvs = append(lvs, s.CheckAny(i))
 		}
 		v, err = rfl.PullFrom(s, lvs...)
 	} else {
-		v, err = rfl.PullFrom(s, s.L.CheckAny(n))
+		v, err = rfl.PullFrom(s, s.CheckAny(n))
 	}
 	if err != nil {
 		s.ArgError(n, err.Error())
@@ -188,7 +188,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	switch max {
 	case 1: // All types have 1 value.
-		v := s.L.CheckAny(n)
+		v := s.CheckAny(n)
 		for _, t := range ts {
 			if v, err := t.PullFrom(s, v); err == nil {
 				return v
@@ -209,12 +209,12 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			} else if t.Count > 1 {
 				// Append up to type count.
 				for i := n; i <= t.Count; i++ {
-					lvs = append(lvs, s.L.CheckAny(i))
+					lvs = append(lvs, s.CheckAny(i))
 				}
 				v, err = t.PullFrom(s, lvs...)
 			} else {
 				// Append single value.
-				v, err = t.PullFrom(s, s.L.CheckAny(n))
+				v, err = t.PullFrom(s, s.CheckAny(n))
 			}
 			if err != nil {
 				continue
@@ -230,7 +230,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 				n = 1
 			}
 			for i := n; i <= t.Count; i++ {
-				lvs = append(lvs, s.L.CheckAny(i))
+				lvs = append(lvs, s.CheckAny(i))
 			}
 			v, err := t.PullFrom(s, lvs...)
 			if err != nil {
@@ -329,7 +329,7 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 // reflected according to t.
 func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	rfl := s.MustReflector(t)
-	lv := s.L.CheckAny(n)
+	lv := s.CheckAny(n)
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}
@@ -376,7 +376,7 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 
 func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 	rfl := s.MustReflector(t)
-	lv := s.L.CheckAny(n)
+	lv := s.CheckAny(n)
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}
@@ -446,8 +446,59 @@ func (s State) TypeError(n int, want, got string) int {
 	return 0
 }
 
-// CheckString is like lua.LState.CheckString, except that it does not try to
-// convert non-string values into a string.
+// CheckAny returns the nth argument, which can be any type as long as the
+// argument exists.
+func (s State) CheckAny(n int) lua.LValue {
+	if n > s.Count() {
+		s.ArgError(n, "value expected")
+		return nil
+	}
+	return s.L.Get(n)
+}
+
+// CheckBool returns the nth argument, expecting a boolean.
+func (s State) CheckBool(n int) bool {
+	v := s.L.Get(n)
+	if lv, ok := v.(lua.LBool); ok {
+		return bool(lv)
+	}
+	s.TypeError(n, lua.LTBool.String(), v.Type().String())
+	return false
+}
+
+// CheckInt returns the nth argument as an int, expecting a number.
+func (s State) CheckInt(n int) int {
+	v := s.L.Get(n)
+	if lv, ok := v.(lua.LNumber); ok {
+		return int(lv)
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// CheckInt64 returns the nth argument as an int64, expecting a number.
+func (s State) CheckInt64(n int) int64 {
+	v := s.L.Get(n)
+	if lv, ok := v.(lua.LNumber); ok {
+		return int64(lv)
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// CheckNumber returns the nth argument, expecting a number.
+func (s State) CheckNumber(n int) lua.LNumber {
+	v := s.L.Get(n)
+	if lv, ok := v.(lua.LNumber); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// CheckString returns the nth argument, expecting a string. Unlike
+// LState.CheckString, it does not try to convert non-string values into a
+// string.
 func (s State) CheckString(n int) string {
 	v := s.L.Get(n)
 	if lv, ok := v.(lua.LString); ok {
@@ -455,4 +506,150 @@ func (s State) CheckString(n int) string {
 	}
 	s.TypeError(n, lua.LTString.String(), v.Type().String())
 	return ""
+}
+
+// CheckTable returns the nth argument, expecting a table.
+func (s State) CheckTable(n int) *lua.LTable {
+	v := s.L.Get(n)
+	if lv, ok := v.(*lua.LTable); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTTable.String(), v.Type().String())
+	return nil
+}
+
+// CheckFunction returns the nth argument, expecting a function.
+func (s State) CheckFunction(n int) *lua.LFunction {
+	v := s.L.Get(n)
+	if lv, ok := v.(*lua.LFunction); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTFunction.String(), v.Type().String())
+	return nil
+}
+
+// CheckUserData returns the nth argument, expecting a userdata.
+func (s State) CheckUserData(n int) *lua.LUserData {
+	v := s.L.Get(n)
+	if lv, ok := v.(*lua.LUserData); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTUserData.String(), v.Type().String())
+	return nil
+}
+
+// CheckThread returns the nth argument, expecting a thread.
+func (s State) CheckThread(n int) *lua.LState {
+	v := s.L.Get(n)
+	if lv, ok := v.(*lua.LState); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTThread.String(), v.Type().String())
+	return nil
+}
+
+// OptBool returns the nth argument as a bool, or d if the argument is nil.
+func (s State) OptBool(n int, d bool) bool {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(lua.LBool); ok {
+		return bool(lv)
+	}
+	s.TypeError(n, lua.LTBool.String(), v.Type().String())
+	return false
+}
+
+// OptInt returns the nth argument as an int, or d if the argument is nil.
+func (s State) OptInt(n int, d int) int {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(lua.LNumber); ok {
+		return int(lv)
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// OptInt64 returns the nth argument as an int64, or d if the argument is nil.
+func (s State) OptInt64(n int, d int64) int64 {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(lua.LNumber); ok {
+		return int64(lv)
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// OptNumber returns the nth argument as a number, or d if the argument is nil.
+func (s State) OptNumber(n int, d lua.LNumber) lua.LNumber {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(lua.LNumber); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTNumber.String(), v.Type().String())
+	return 0
+}
+
+// OptString returns the nth argument as a string, or d if the argument is nil.
+func (s State) OptString(n int, d string) string {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(lua.LString); ok {
+		return string(lv)
+	}
+	s.TypeError(n, lua.LTString.String(), v.Type().String())
+	return ""
+}
+
+// OptTable returns the nth argument as a table, or d if the argument is nil.
+func (s State) OptTable(n int, d *lua.LTable) *lua.LTable {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(*lua.LTable); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTTable.String(), v.Type().String())
+	return nil
+}
+
+// OptFunction returns the nth argument as a function, or d if the argument is
+// nil.
+func (s State) OptFunction(n int, d *lua.LFunction) *lua.LFunction {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(*lua.LFunction); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTFunction.String(), v.Type().String())
+	return nil
+}
+
+// OptUserData returns the nth argument as a userdata, or d if the argument is
+// nil.
+func (s State) OptUserData(n int, d *lua.LUserData) *lua.LUserData {
+	v := s.L.Get(n)
+	if v == lua.LNil {
+		return d
+	}
+	if lv, ok := v.(*lua.LUserData); ok {
+		return lv
+	}
+	s.TypeError(n, lua.LTUserData.String(), v.Type().String())
+	return nil
 }
