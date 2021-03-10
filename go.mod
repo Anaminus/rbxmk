@@ -3,7 +3,7 @@ module github.com/anaminus/rbxmk
 go 1.16
 
 require (
-	github.com/anaminus/gopher-lua v0.3.0
+	github.com/anaminus/gopher-lua v0.3.1
 	github.com/anaminus/parse v0.1.0
 	github.com/anaminus/snek v0.2.0
 	github.com/robloxapi/rbxattr v0.1.1
