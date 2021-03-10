@@ -28,15 +28,15 @@ func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector
 	return selectors
 }
 
-func init() { register(ClipboardSource, 10) }
+func init() { register(Clipboard, 10) }
 
-var ClipboardSource = rbxmk.Library{
+var Clipboard = rbxmk.Library{
 	Name: "clipboard",
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 2)
 		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
 			selectors := getFormatSelectors(s, 1)
-			v, err := Clipboard{World: s.World}.Read(selectors...)
+			v, err := ClipboardSource{World: s.World}.Read(selectors...)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}
@@ -45,7 +45,7 @@ var ClipboardSource = rbxmk.Library{
 		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
 			value := s.Pull(1, "Variant")
 			selectors := getFormatSelectors(s, 2)
-			err := Clipboard{World: s.World}.Write(value, selectors...)
+			err := ClipboardSource{World: s.World}.Write(value, selectors...)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}
@@ -79,8 +79,8 @@ var ClipboardSource = rbxmk.Library{
 	},
 }
 
-// Clipboard provides access to the clipboard of the operating system.
-type Clipboard struct {
+// ClipboardSource provides access to the clipboard of the operating system.
+type ClipboardSource struct {
 	*rbxmk.World
 }
 
@@ -96,7 +96,7 @@ func (f formatOptions) ValueOf(field string) types.Value {
 }
 
 // Read reads a value from the clipboard according to the given formats.
-func (s Clipboard) Read(formats ...rtypes.FormatSelector) (v types.Value, err error) {
+func (s ClipboardSource) Read(formats ...rtypes.FormatSelector) (v types.Value, err error) {
 	options := make([]formatOptions, 0, len(formats))
 loop:
 	for _, selector := range formats {
@@ -151,7 +151,7 @@ loop:
 }
 
 // Write writes a value to the clipboard according to the given formats.
-func (s Clipboard) Write(value types.Value, formats ...rtypes.FormatSelector) error {
+func (s ClipboardSource) Write(value types.Value, formats ...rtypes.FormatSelector) error {
 	options := make([]formatOptions, 0, len(formats))
 loop:
 	for _, selector := range formats {

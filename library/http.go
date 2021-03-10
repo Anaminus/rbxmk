@@ -9,9 +9,9 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-func init() { register(HTTPSource, 10) }
+func init() { register(HTTP, 10) }
 
-var HTTPSource = rbxmk.Library{
+var HTTP = rbxmk.Library{
 	Name: "http",
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)

@@ -16,15 +16,15 @@ import (
 const rbxassetidReadURL = "https://assetdelivery.roblox.com/v1/assetId/%d"
 const rbxassetidWriteURL = "https://data.roblox.com/Data/Upload.ashx?assetid=%d"
 
-func init() { register(RBXAssetIDSource, 10) }
+func init() { register(RBXAssetID, 10) }
 
-var RBXAssetIDSource = rbxmk.Library{
+var RBXAssetID = rbxmk.Library{
 	Name: "rbxassetid",
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 2)
 		lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
 			options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
-			body, err := RBXAssetID{World: s.World}.Read(options)
+			body, err := RBXAssetIDSource{World: s.World}.Read(options)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}
@@ -32,7 +32,7 @@ var RBXAssetIDSource = rbxmk.Library{
 		}))
 		lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
 			options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
-			err := RBXAssetID{World: s.World}.Write(options)
+			err := RBXAssetIDSource{World: s.World}.Write(options)
 			if err != nil {
 				return s.RaiseError("%s", err)
 			}
@@ -78,13 +78,13 @@ var RBXAssetIDSource = rbxmk.Library{
 	},
 }
 
-// RBXAssetID provides access to assets on the Roblox website.
-type RBXAssetID struct {
+// RBXAssetIDSource provides access to assets on the Roblox website.
+type RBXAssetIDSource struct {
 	*rbxmk.World
 }
 
 // Read downloads an asset according to the given options.
-func (s RBXAssetID) Read(options rtypes.RBXAssetOptions) (body types.Value, err error) {
+func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value, err error) {
 	if options.Format.Format == "" {
 		return nil, fmt.Errorf("must specify Format for decoding")
 	}
@@ -116,7 +116,7 @@ func (s RBXAssetID) Read(options rtypes.RBXAssetOptions) (body types.Value, err 
 }
 
 // Write uploads an asset according to the given options.
-func (s RBXAssetID) Write(options rtypes.RBXAssetOptions) error {
+func (s RBXAssetIDSource) Write(options rtypes.RBXAssetOptions) error {
 	if options.Format.Format == "" {
 		return fmt.Errorf("must specify Format for encoding")
 	}
