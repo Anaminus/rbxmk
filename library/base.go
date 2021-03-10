@@ -12,7 +12,7 @@ func init() { register(Base, -1) }
 var Base = rbxmk.Library{Name: "", Open: openBase, Dump: dumpBase}
 
 func openBase(s rbxmk.State) *lua.LTable {
-	openFilteredLibs(s.L, filteredStdLib)
+	openFilteredLibs(s, filteredStdLib)
 	return nil
 }
 
@@ -177,20 +177,20 @@ var filteredStdLib = []libFilter{
 	// }},
 }
 
-func openFilteredLibs(l *lua.LState, libs []libFilter, upvalues ...lua.LValue) {
+func openFilteredLibs(s rbxmk.State, libs []libFilter, upvalues ...lua.LValue) {
 	for _, lib := range libs {
-		l.Push(l.NewClosure(lib.OpenFunc, upvalues...))
+		s.L.Push(s.L.NewClosure(lib.OpenFunc, upvalues...))
 		// LState.OpenLibs passes the library name as an argument for whatever
 		// reason.
-		l.Push(lua.LString(lib.Name))
+		s.L.Push(lua.LString(lib.Name))
 
 		if lib.Filter == nil {
-			l.Call(1, 0)
+			s.L.Call(1, 0)
 			continue
 		}
-		l.Call(1, 1)
-		table := l.CheckTable(1)
-		l.Pop(1)
+		s.L.Call(1, 1)
+		table := s.L.CheckTable(1)
+		s.L.Pop(1)
 		for k, _ := table.Next(lua.LNil); k != lua.LNil; k, _ = table.Next(k) {
 			if !lib.Filter[k] {
 				table.RawSet(k, lua.LNil)
