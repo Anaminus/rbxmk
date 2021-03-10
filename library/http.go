@@ -15,14 +15,7 @@ var HTTP = rbxmk.Library{Name: "http", Open: openHTTP, Dump: dumpHTTP}
 
 func openHTTP(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("request", s.WrapFunc(func(s rbxmk.State) int {
-		options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
-		request, err := rbxmk.BeginHTTPRequest(s.World, options)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return s.Push(request)
-	}))
+	lib.RawSetString("request", s.WrapFunc(httpRequest))
 
 	for _, f := range reflect.All() {
 		r := f()
@@ -31,6 +24,15 @@ func openHTTP(s rbxmk.State) *lua.LTable {
 	}
 
 	return lib
+}
+
+func httpRequest(s rbxmk.State) int {
+	options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
+	request, err := rbxmk.BeginHTTPRequest(s.World, options)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(request)
 }
 
 func dumpHTTP(s rbxmk.State) dump.Library {

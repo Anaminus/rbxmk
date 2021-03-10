@@ -43,47 +43,51 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	}
 
 	mt := s.L.CreateTable(0, 2)
-	mt.RawSetString("__index", s.WrapOperator(func(s rbxmk.State) int {
-		switch field := s.Pull(2, "string").(types.String); field {
-		case "globalDesc":
-			desc := s.Desc.Of(nil)
-			if desc == nil {
-				return s.Push(rtypes.Nil)
-			}
-			return s.Push(desc)
-		case "globalAttrConfig":
-			attrcfg := s.AttrConfig.Of(nil)
-			if attrcfg == nil {
-				return s.Push(rtypes.Nil)
-			}
-			return s.Push(attrcfg)
-		default:
-			return s.RaiseError("unknown field %q", field)
-		}
-	}))
-	mt.RawSetString("__newindex", s.WrapOperator(func(s rbxmk.State) int {
-		switch field := s.Pull(2, "string").(types.String); field {
-		case "globalDesc":
-			desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
-			if desc == nil {
-				s.Desc = nil
-			}
-			s.Desc = desc
-			return 0
-		case "globalAttrConfig":
-			attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
-			if attrcfg == nil {
-				s.AttrConfig = nil
-			}
-			s.AttrConfig = attrcfg
-			return 0
-		default:
-			return s.RaiseError("unknown field %q", field)
-		}
-	}))
+	mt.RawSetString("__index", s.WrapOperator(rbxmkOpIndex))
+	mt.RawSetString("__newindex", s.WrapOperator(rbxmkOpNewindex))
 	s.L.SetMetatable(lib, mt)
 
 	return lib
+}
+
+func rbxmkOpIndex(s rbxmk.State) int {
+	switch field := s.Pull(2, "string").(types.String); field {
+	case "globalDesc":
+		desc := s.Desc.Of(nil)
+		if desc == nil {
+			return s.Push(rtypes.Nil)
+		}
+		return s.Push(desc)
+	case "globalAttrConfig":
+		attrcfg := s.AttrConfig.Of(nil)
+		if attrcfg == nil {
+			return s.Push(rtypes.Nil)
+		}
+		return s.Push(attrcfg)
+	default:
+		return s.RaiseError("unknown field %q", field)
+	}
+}
+
+func rbxmkOpNewindex(s rbxmk.State) int {
+	switch field := s.Pull(2, "string").(types.String); field {
+	case "globalDesc":
+		desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
+		if desc == nil {
+			s.Desc = nil
+		}
+		s.Desc = desc
+		return 0
+	case "globalAttrConfig":
+		attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
+		if attrcfg == nil {
+			s.AttrConfig = nil
+		}
+		s.AttrConfig = attrcfg
+		return 0
+	default:
+		return s.RaiseError("unknown field %q", field)
+	}
 }
 
 func dumpRBXMK(s rbxmk.State) dump.Library {

@@ -14,12 +14,7 @@ var Roblox = rbxmk.Library{Name: "", Open: openRoblox, Dump: dumpRoblox}
 
 func openRoblox(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
-	lib.RawSetString("typeof", s.WrapFunc(func(s rbxmk.State) int {
-		v := s.CheckAny(1)
-		t := s.Typeof(v)
-		s.L.Push(lua.LString(t))
-		return 1
-	}))
+	lib.RawSetString("typeof", s.WrapFunc(robloxTypeof))
 
 	for _, f := range reflect.All() {
 		r := f()
@@ -28,6 +23,13 @@ func openRoblox(s rbxmk.State) *lua.LTable {
 	}
 
 	return lib
+}
+
+func robloxTypeof(s rbxmk.State) int {
+	v := s.CheckAny(1)
+	t := s.Typeof(v)
+	s.L.Push(lua.LString(t))
+	return 1
 }
 
 func dumpRoblox(s rbxmk.State) dump.Library {

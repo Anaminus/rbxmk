@@ -34,24 +34,28 @@ var Clipboard = rbxmk.Library{Name: "clipboard", Open: openClipboard, Dump: dump
 
 func openClipboard(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 2)
-	lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-		selectors := getFormatSelectors(s, 1)
-		v, err := ClipboardSource{World: s.World}.Read(selectors...)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return s.Push(v)
-	}))
-	lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-		value := s.Pull(1, "Variant")
-		selectors := getFormatSelectors(s, 2)
-		err := ClipboardSource{World: s.World}.Write(value, selectors...)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return 0
-	}))
+	lib.RawSetString("read", s.WrapFunc(clipboardRead))
+	lib.RawSetString("write", s.WrapFunc(clipboardWrite))
 	return lib
+}
+
+func clipboardRead(s rbxmk.State) int {
+	selectors := getFormatSelectors(s, 1)
+	v, err := ClipboardSource{World: s.World}.Read(selectors...)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(v)
+}
+
+func clipboardWrite(s rbxmk.State) int {
+	value := s.Pull(1, "Variant")
+	selectors := getFormatSelectors(s, 2)
+	err := ClipboardSource{World: s.World}.Write(value, selectors...)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return 0
 }
 
 func dumpClipboard(s rbxmk.State) dump.Library {

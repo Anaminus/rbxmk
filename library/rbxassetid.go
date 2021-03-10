@@ -22,22 +22,8 @@ var RBXAssetID = rbxmk.Library{Name: "rbxassetid", Open: openRBXAssetID, Dump: d
 
 func openRBXAssetID(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 2)
-	lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-		options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
-		body, err := RBXAssetIDSource{World: s.World}.Read(options)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return s.Push(body)
-	}))
-	lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-		options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
-		err := RBXAssetIDSource{World: s.World}.Write(options)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return 0
-	}))
+	lib.RawSetString("read", s.WrapFunc(rbxassetidRead))
+	lib.RawSetString("write", s.WrapFunc(rbxassetidWrite))
 
 	for _, f := range reflect.All() {
 		r := f()
@@ -46,6 +32,24 @@ func openRBXAssetID(s rbxmk.State) *lua.LTable {
 	}
 
 	return lib
+}
+
+func rbxassetidRead(s rbxmk.State) int {
+	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
+	body, err := RBXAssetIDSource{World: s.World}.Read(options)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(body)
+}
+
+func rbxassetidWrite(s rbxmk.State) int {
+	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
+	err := RBXAssetIDSource{World: s.World}.Write(options)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return 0
 }
 
 func dumpRBXAssetID(s rbxmk.State) dump.Library {

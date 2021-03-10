@@ -16,48 +16,56 @@ var OS = rbxmk.Library{Name: "os", Open: openOS, Dump: dumpOS}
 
 func openOS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)
-	lib.RawSetString("expand", s.WrapFunc(func(s rbxmk.State) int {
-		path := s.CheckString(1)
-		expanded := s.World.Expand(path)
-		s.L.Push(lua.LString(expanded))
-		return 1
-
-	}))
-	lib.RawSetString("getenv", s.WrapFunc(func(s rbxmk.State) int {
-		value, ok := os.LookupEnv(s.CheckString(1))
-		if ok {
-			s.L.Push(lua.LString(value))
-		} else {
-			s.L.Push(lua.LNil)
-		}
-		return 1
-	}))
-	lib.RawSetString("join", s.WrapFunc(func(s rbxmk.State) int {
-		j := make([]string, s.Count())
-		for i := 1; i <= s.Count(); i++ {
-			j[i-1] = s.CheckString(i)
-		}
-		filename := filepath.Join(j...)
-		s.L.Push(lua.LString(filename))
-		return 1
-	}))
-	lib.RawSetString("split", s.WrapFunc(func(s rbxmk.State) int {
-		path := s.CheckString(1)
-		n := s.Count()
-		components := make([]string, n-2)
-		for i := 2; i <= n; i++ {
-			components[i-2] = s.CheckString(i)
-		}
-		components, err := s.World.Split(path, components...)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		for _, comp := range components {
-			s.L.Push(lua.LString(comp))
-		}
-		return n - 1
-	}))
+	lib.RawSetString("expand", s.WrapFunc(osExpand))
+	lib.RawSetString("getenv", s.WrapFunc(osGetenv))
+	lib.RawSetString("join", s.WrapFunc(osJoin))
+	lib.RawSetString("split", s.WrapFunc(osSplit))
 	return lib
+}
+
+func osExpand(s rbxmk.State) int {
+	path := s.CheckString(1)
+	expanded := s.World.Expand(path)
+	s.L.Push(lua.LString(expanded))
+	return 1
+
+}
+
+func osGetenv(s rbxmk.State) int {
+	value, ok := os.LookupEnv(s.CheckString(1))
+	if ok {
+		s.L.Push(lua.LString(value))
+	} else {
+		s.L.Push(lua.LNil)
+	}
+	return 1
+}
+
+func osJoin(s rbxmk.State) int {
+	j := make([]string, s.Count())
+	for i := 1; i <= s.Count(); i++ {
+		j[i-1] = s.CheckString(i)
+	}
+	filename := filepath.Join(j...)
+	s.L.Push(lua.LString(filename))
+	return 1
+}
+
+func osSplit(s rbxmk.State) int {
+	path := s.CheckString(1)
+	n := s.Count()
+	components := make([]string, n-2)
+	for i := 2; i <= n; i++ {
+		components[i-2] = s.CheckString(i)
+	}
+	components, err := s.World.Split(path, components...)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	for _, comp := range components {
+		s.L.Push(lua.LString(comp))
+	}
+	return n - 1
 }
 
 func dumpOS(s rbxmk.State) dump.Library {

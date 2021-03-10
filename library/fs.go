@@ -20,103 +20,117 @@ var FS = rbxmk.Library{Name: "fs", Open: openFS, Dump: dumpFS}
 
 func openFS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 6)
-	lib.RawSetString("dir", s.WrapFunc(func(s rbxmk.State) int {
-		dirname := s.CheckString(1)
-		files, err := FSSource{World: s.World}.Dir(dirname)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		tfiles := s.L.CreateTable(len(files), 0)
-		for _, entry := range files {
-			tentry := s.L.CreateTable(0, 2)
-			tentry.RawSetString("Name", lua.LString(entry.Name()))
-			tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
-			tfiles.Append(tentry)
-		}
-		s.L.Push(tfiles)
-		return 1
-
-	}))
-	lib.RawSetString("mkdir", s.WrapFunc(func(s rbxmk.State) int {
-		path := string(s.Pull(1, "string").(types.String))
-		all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
-		ok, err := FSSource{World: s.World}.MkDir(path, all)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		if ok {
-			s.L.Push(lua.LTrue)
-		} else {
-			s.L.Push(lua.LFalse)
-		}
-		return 1
-	}))
-	lib.RawSetString("read", s.WrapFunc(func(s rbxmk.State) int {
-		filename := string(s.Pull(1, "string").(types.String))
-		selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
-		v, err := FSSource{World: s.World}.Read(filename, selector)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return s.Push(v)
-	}))
-	lib.RawSetString("remove", s.WrapFunc(func(s rbxmk.State) int {
-		path := string(s.Pull(1, "string").(types.String))
-		all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
-		ok, err := FSSource{World: s.World}.Remove(path, all)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		if ok {
-			s.L.Push(lua.LTrue)
-		} else {
-			s.L.Push(lua.LFalse)
-		}
-		return 1
-	}))
-	lib.RawSetString("rename", s.WrapFunc(func(s rbxmk.State) int {
-		from := string(s.Pull(1, "string").(types.String))
-		to := string(s.Pull(2, "string").(types.String))
-		ok, err := FSSource{World: s.World}.Rename(from, to)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		if ok {
-			s.L.Push(lua.LTrue)
-		} else {
-			s.L.Push(lua.LFalse)
-		}
-		return 1
-	}))
-	lib.RawSetString("stat", s.WrapFunc(func(s rbxmk.State) int {
-		filename := s.CheckString(1)
-		info, err := FSSource{World: s.World}.Stat(filename)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		if info == nil {
-			s.L.Push(lua.LNil)
-			return 1
-		}
-		tinfo := s.L.CreateTable(0, 4)
-		tinfo.RawSetString("Name", lua.LString(info.Name()))
-		tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-		tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-		tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-		s.L.Push(tinfo)
-		return 1
-	}))
-	lib.RawSetString("write", s.WrapFunc(func(s rbxmk.State) int {
-		filename := string(s.Pull(1, "string").(types.String))
-		value := s.Pull(2, "Variant")
-		selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
-		err := FSSource{World: s.World}.Write(filename, value, selector)
-		if err != nil {
-			return s.RaiseError("%s", err)
-		}
-		return 0
-	}))
+	lib.RawSetString("dir", s.WrapFunc(fsDir))
+	lib.RawSetString("mkdir", s.WrapFunc(fsMkdir))
+	lib.RawSetString("read", s.WrapFunc(fsRead))
+	lib.RawSetString("remove", s.WrapFunc(fsRemove))
+	lib.RawSetString("rename", s.WrapFunc(fsRename))
+	lib.RawSetString("stat", s.WrapFunc(fsStat))
+	lib.RawSetString("write", s.WrapFunc(fsWrite))
 	return lib
+}
+
+func fsDir(s rbxmk.State) int {
+	dirname := s.CheckString(1)
+	files, err := FSSource{World: s.World}.Dir(dirname)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	tfiles := s.L.CreateTable(len(files), 0)
+	for _, entry := range files {
+		tentry := s.L.CreateTable(0, 2)
+		tentry.RawSetString("Name", lua.LString(entry.Name()))
+		tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
+		tfiles.Append(tentry)
+	}
+	s.L.Push(tfiles)
+	return 1
+
+}
+
+func fsMkdir(s rbxmk.State) int {
+	path := string(s.Pull(1, "string").(types.String))
+	all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+	ok, err := FSSource{World: s.World}.MkDir(path, all)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	if ok {
+		s.L.Push(lua.LTrue)
+	} else {
+		s.L.Push(lua.LFalse)
+	}
+	return 1
+}
+
+func fsRead(s rbxmk.State) int {
+	filename := string(s.Pull(1, "string").(types.String))
+	selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	v, err := FSSource{World: s.World}.Read(filename, selector)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(v)
+}
+
+func fsRemove(s rbxmk.State) int {
+	path := string(s.Pull(1, "string").(types.String))
+	all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+	ok, err := FSSource{World: s.World}.Remove(path, all)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	if ok {
+		s.L.Push(lua.LTrue)
+	} else {
+		s.L.Push(lua.LFalse)
+	}
+	return 1
+}
+
+func fsRename(s rbxmk.State) int {
+	from := string(s.Pull(1, "string").(types.String))
+	to := string(s.Pull(2, "string").(types.String))
+	ok, err := FSSource{World: s.World}.Rename(from, to)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	if ok {
+		s.L.Push(lua.LTrue)
+	} else {
+		s.L.Push(lua.LFalse)
+	}
+	return 1
+}
+
+func fsStat(s rbxmk.State) int {
+	filename := s.CheckString(1)
+	info, err := FSSource{World: s.World}.Stat(filename)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	if info == nil {
+		s.L.Push(lua.LNil)
+		return 1
+	}
+	tinfo := s.L.CreateTable(0, 4)
+	tinfo.RawSetString("Name", lua.LString(info.Name()))
+	tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
+	tinfo.RawSetString("Size", lua.LNumber(info.Size()))
+	tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
+	s.L.Push(tinfo)
+	return 1
+}
+
+func fsWrite(s rbxmk.State) int {
+	filename := string(s.Pull(1, "string").(types.String))
+	value := s.Pull(2, "Variant")
+	selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	err := FSSource{World: s.World}.Write(filename, value, selector)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return 0
 }
 
 func dumpFS(s rbxmk.State) dump.Library {
