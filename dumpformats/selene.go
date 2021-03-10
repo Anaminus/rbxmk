@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"sort"
 
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -357,59 +356,4 @@ func seleneEscapeString(w *bufio.Writer, s string) {
 		}
 	}
 	w.WriteByte('"')
-}
-
-func sortTypeDefs(m dump.TypeDefs, cb func(k string, v dump.TypeDef)) {
-	keys := make([]string, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		cb(key, m[key])
-	}
-}
-
-func sortProperties(m dump.Properties, cb func(k string, v dump.Property)) {
-	keys := make([]string, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		cb(key, m[key])
-	}
-}
-
-func sortMethods(m dump.Methods, cb func(k string, v dump.Function)) {
-	keys := make([]string, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		cb(key, m[key])
-	}
-}
-
-func sortFields(m dump.Fields, cb func(k string, v dump.Value)) {
-	keys := make([]string, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		cb(key, m[key])
-	}
-}
-
-func sortConstructors(m dump.Constructors, cb func(k string, v dump.MultiFunction)) {
-	keys := make([]string, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, key := range keys {
-		cb(key, m[key])
-	}
 }

@@ -81,3 +81,73 @@ func (f Formats) WriteTo(w io.Writer) (n int64, err error) {
 	}
 	return n, nil
 }
+
+func sortTypeDefs(m dump.TypeDefs, cb func(k string, v dump.TypeDef)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
+
+func sortProperties(m dump.Properties, cb func(k string, v dump.Property)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
+
+func sortMethods(m dump.Methods, cb func(k string, v dump.Function)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
+
+func sortFields(m dump.Fields, cb func(k string, v dump.Value)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
+
+func sortConstructors(m dump.Constructors, cb func(k string, v dump.MultiFunction)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
