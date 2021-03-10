@@ -18,7 +18,7 @@ func HTTPHeaders() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			headers, ok := v.(rtypes.HTTPHeaders)
 			if !ok {
-				return nil, rbxmk.TypeError("HTTPHeaders", v.Type())
+				return nil, rbxmk.TypeError{Want: "HTTPHeaders", Got: v.Type()}
 			}
 			table := s.L.CreateTable(0, len(headers))
 			for name, values := range headers {
@@ -33,7 +33,7 @@ func HTTPHeaders() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
 			}
 			headers := make(rtypes.HTTPHeaders)
 			err = table.ForEach(func(k, lv lua.LValue) error {

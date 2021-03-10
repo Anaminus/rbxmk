@@ -25,7 +25,7 @@ func Float() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError("float", lvs[0].Type().String())
+			return nil, rbxmk.TypeError{Want: "float", Got: lvs[0].Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

@@ -177,33 +177,28 @@ func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err
 	return func(s State, lvs ...lua.LValue) (v types.Value, err error) {
 		u, ok := lvs[0].(*lua.LUserData)
 		if !ok {
-			return nil, TypeError(t, lvs[0].Type().String())
+			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
 		}
 		if u.Metatable != s.L.GetTypeMetatable(t) {
-			return nil, TypeError(t, lvs[0].Type().String())
+			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
 		}
 		if v, ok = u.Value.(types.Value); !ok {
-			return nil, TypeError(t, lvs[0].Type().String())
+			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
 		}
 		return v, nil
 	}
 }
 
 // typeError is an error where a type was received where another was expected.
-type typeError struct {
-	want string
-	got  string
+type TypeError struct {
+	Want string
+	Got  string
 }
 
 // Error implements the error interface.
-func (err typeError) Error() string {
-	if err.got == "" {
-		return err.want + " expected"
+func (err TypeError) Error() string {
+	if err.Got == "" {
+		return err.Want + " expected"
 	}
-	return err.want + " expected, got " + err.got
-}
-
-// TypeError raises an argument error indicating that a given type was expected.
-func TypeError(want, got string) (err error) {
-	return typeError{want: want, got: got}
+	return err.Want + " expected, got " + err.Got
 }

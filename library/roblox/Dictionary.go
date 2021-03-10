@@ -19,7 +19,7 @@ func Dictionary() rbxmk.Reflector {
 			}
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
-				return nil, rbxmk.TypeError("Dictionary", v.Type())
+				return nil, rbxmk.TypeError{Want: "Dictionary", Got: v.Type()}
 			}
 			if s.CycleMark(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
@@ -41,7 +41,7 @@ func Dictionary() rbxmk.Reflector {
 			}
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
 			}
 			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")

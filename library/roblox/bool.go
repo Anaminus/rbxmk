@@ -19,7 +19,7 @@ func Bool() rbxmk.Reflector {
 			if n, ok := lvs[0].(lua.LBool); ok {
 				return types.Bool(n), nil
 			}
-			return nil, rbxmk.TypeError("bool", lvs[0].Type().String())
+			return nil, rbxmk.TypeError{Want: "bool", Got: lvs[0].Type().String()}
 		},
 		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Prim("boolean")} },
 	}

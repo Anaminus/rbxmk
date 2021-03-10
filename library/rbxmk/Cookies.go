@@ -16,7 +16,7 @@ func Cookies() rbxmk.Reflector {
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			cookies, ok := v.(rtypes.Cookies)
 			if !ok {
-				return nil, rbxmk.TypeError("Cookies", v.Type())
+				return nil, rbxmk.TypeError{Want: "Cookies", Got: v.Type()}
 			}
 			cookieRfl := s.MustReflector("Cookie")
 			table := s.L.CreateTable(len(cookies), 0)
@@ -32,7 +32,7 @@ func Cookies() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
 			}
 			cookieRfl := s.MustReflector("Cookie")
 			n := table.Len()

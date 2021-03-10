@@ -25,7 +25,7 @@ func BinaryString() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError("BinaryString", lvs[0].Type().String())
+			return nil, rbxmk.TypeError{Want: "BinaryString", Got: lvs[0].Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

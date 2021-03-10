@@ -127,15 +127,15 @@ func Instance() rbxmk.Reflector {
 				return (*rtypes.Instance)(nil), nil
 			case *lua.LUserData:
 				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
-					return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
+					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
 				}
 				v, ok := lv.Value.(types.Value)
 				if !ok {
-					return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
+					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
 				}
 				return v, nil
 			default:
-				return nil, rbxmk.TypeError("Instance", lvs[0].Type().String())
+				return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
 			}
 		},
 		Metatable: rbxmk.Metatable{

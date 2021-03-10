@@ -25,7 +25,7 @@ func SharedString() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError("SharedString", lvs[0].Type().String())
+			return nil, rbxmk.TypeError{Want: "SharedString", Got: lvs[0].Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

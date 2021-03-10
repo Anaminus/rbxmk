@@ -28,7 +28,7 @@ func Color3uint8() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError("Color3uint8", lvs[0].Type().String())
+			return nil, rbxmk.TypeError{Want: "Color3uint8", Got: lvs[0].Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

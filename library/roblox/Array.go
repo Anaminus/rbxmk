@@ -19,7 +19,7 @@ func Array() rbxmk.Reflector {
 			}
 			array, ok := v.(rtypes.Array)
 			if !ok {
-				return nil, rbxmk.TypeError("Array", v.Type())
+				return nil, rbxmk.TypeError{Want: "Array", Got: v.Type()}
 			}
 			if s.CycleMark(&array) {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
@@ -41,7 +41,7 @@ func Array() rbxmk.Reflector {
 			}
 			table, ok := lvs[0].(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError("table", lvs[0].Type().String())
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
 			}
 			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")

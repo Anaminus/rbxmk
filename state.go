@@ -335,7 +335,7 @@ func (s State) PullArrayOf(n int, t string) rtypes.Array {
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		s.ArgError(n, TypeError("table", lv.Type().String()).Error())
+		s.ArgError(n, TypeError{Want: "table", Got: lv.Type().String()}.Error())
 		return nil
 	}
 	if s.CycleMark(table) {
@@ -382,7 +382,7 @@ func (s State) PullDictionaryOf(n int, t string) rtypes.Dictionary {
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		s.ArgError(n, TypeError("table", lv.Type().String()).Error())
+		s.ArgError(n, TypeError{Want: "table", Got: lv.Type().String()}.Error())
 		return nil
 	}
 	if s.CycleMark(table) {
@@ -430,7 +430,7 @@ func (s State) ArgError(n int, msg string) int {
 
 // TypeError raises an argument type error depending on the state's frame type.
 func (s State) TypeError(n int, want, got string) int {
-	err := TypeError(want, got)
+	err := TypeError{Want: want, Got: got}
 	switch s.FrameType {
 	case Method:
 		if n <= 1 {
