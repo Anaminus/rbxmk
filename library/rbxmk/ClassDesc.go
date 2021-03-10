@@ -120,6 +120,8 @@ func ClassDesc() rbxmk.Reflector {
 						member = m.Event
 					case rtypes.CallbackDesc:
 						member = m.Callback
+					default:
+						return s.ReflectorError(2)
 					}
 					if member == nil {
 						return s.Push(types.False)

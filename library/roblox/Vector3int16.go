@@ -44,7 +44,7 @@ func Vector3int16() rbxmk.Reflector {
 				case types.Vector3int16:
 					return s.Push(v.Mul(op))
 				default:
-					return s.ArgError(2, "unreachable error: reflector mismatch")
+					return s.ReflectorError(2)
 				}
 			},
 			"__div": func(s rbxmk.State) int {
@@ -55,7 +55,7 @@ func Vector3int16() rbxmk.Reflector {
 				case types.Vector3int16:
 					return s.Push(v.Div(op))
 				default:
-					return s.ArgError(2, "unreachable error: reflector mismatch")
+					return s.ReflectorError(2)
 				}
 			},
 			"__unm": func(s rbxmk.State) int {

@@ -325,6 +325,8 @@ func Instance() rbxmk.Reflector {
 								inst.SetDesc(nil, true)
 							case rtypes.NilType:
 								inst.SetDesc(nil, false)
+							default:
+								return s.ReflectorError(3)
 							}
 							return 0
 						case "AttrConfig", "RawAttrConfig":
@@ -338,6 +340,8 @@ func Instance() rbxmk.Reflector {
 								inst.SetAttrConfig(nil, true)
 							case rtypes.NilType:
 								inst.SetAttrConfig(nil, false)
+							default:
+								return s.ReflectorError(3)
 							}
 							return 0
 						case "Metadata":
@@ -535,6 +539,8 @@ func Instance() rbxmk.Reflector {
 						err = v.(*rtypes.Instance).SetParent(parent)
 					case nil:
 						err = v.(*rtypes.Instance).SetParent(nil)
+					default:
+						s.ReflectorError(3)
 					}
 					if err != nil {
 						s.RaiseError("%s", err)
@@ -882,6 +888,8 @@ func Instance() rbxmk.Reflector {
 							blocked = true
 						case *rtypes.RootDesc:
 							desc = v
+						default:
+							return s.ReflectorError(3)
 						}
 					}
 					if !blocked {
@@ -931,6 +939,7 @@ func Instance() rbxmk.Reflector {
 						blocked = true
 					case *rtypes.RootDesc:
 						desc = v
+						return s.ReflectorError(3)
 					}
 				}
 				dataModel := rtypes.NewDataModel()

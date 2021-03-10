@@ -92,6 +92,8 @@ func NumberSequence() rbxmk.Reflector {
 							if t := v[0].Time; t < -epsilon || t > epsilon {
 								return s.RaiseError("NumberSequence time must start at 0.0")
 							}
+						default:
+							return s.ReflectorError(1)
 						}
 					case 2:
 						v = types.NumberSequence{

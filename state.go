@@ -154,6 +154,13 @@ func listTypes(types []string) string {
 	return strings.Join(types[:len(types)-2], ", ") + ", or " + types[len(types)-1]
 }
 
+// ReflectorError raises an error indicating that a reflector pushed or pulled
+// an unexpected type. Under normal circumstances, this error should be
+// unreachable.
+func (s State) ReflectorError(n int) int {
+	return s.ArgError(n, "unreachable error: reflector mismatch")
+}
+
 // PullAnyOf gets from s.L the values starting from n, and reflects a value from
 // them according to any of the types in t registered with s.World. Returns the
 // first successful reflection among the types in t. If no types succeeded, then

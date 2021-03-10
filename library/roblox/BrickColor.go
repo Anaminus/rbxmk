@@ -80,6 +80,8 @@ func BrickColor() rbxmk.Reflector {
 							v = types.NewBrickColorFromName(string(arg))
 						case types.Color3:
 							v = types.NewBrickColorFromColor3(arg)
+						default:
+							return s.ReflectorError(1)
 						}
 					case 3:
 						v = types.NewBrickColorFromColor(

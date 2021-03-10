@@ -44,7 +44,7 @@ func Vector2() rbxmk.Reflector {
 				case types.Vector2:
 					return s.Push(v.Mul(op))
 				default:
-					return s.ArgError(2, "unreachable error: reflector mismatch")
+					return s.ReflectorError(2)
 				}
 			},
 			"__div": func(s rbxmk.State) int {
@@ -55,8 +55,7 @@ func Vector2() rbxmk.Reflector {
 				case types.Vector2:
 					return s.Push(v.Div(op))
 				default:
-					s.ArgError(2, "attempt to multiply a Vector2 with an incompatible value type or nil")
-					return 0
+					return s.ReflectorError(2)
 				}
 			},
 			"__unm": func(s rbxmk.State) int {

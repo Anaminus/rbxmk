@@ -391,11 +391,15 @@ func rbxmkDiffDesc(s rbxmk.State) int {
 	case rtypes.NilType:
 	case *rtypes.RootDesc:
 		prev = v.Root
+	default:
+		return s.ReflectorError(1)
 	}
 	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
 	case rtypes.NilType:
 	case *rtypes.RootDesc:
 		next = v.Root
+	default:
+		return s.ReflectorError(2)
 	}
 	actions := diff.Diff{Prev: prev, Next: next}.Diff()
 	descActions := make(rtypes.DescActions, len(actions))
