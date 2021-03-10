@@ -135,11 +135,11 @@ func tableMove(s rbxmk.State) int {
 	if e >= f {
 		const LUA_MAXINTEGER = 1<<31 - 1
 		if !(f > 0 || e < LUA_MAXINTEGER+f) {
-			s.L.ArgError(3, "too many elements to move")
+			return s.ArgError(3, "too many elements to move")
 		}
 		n := e - f + 1
 		if !(t <= LUA_MAXINTEGER-n+1) {
-			s.L.ArgError(4, "destination wrap around")
+			return s.ArgError(4, "destination wrap around")
 		}
 		if t > e || t <= f || a1 != a2 {
 			for i := 0; i < n; i++ {

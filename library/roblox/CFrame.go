@@ -45,8 +45,7 @@ func CFrame() rbxmk.Reflector {
 				case types.Vector3:
 					return s.Push(v.MulV3(op))
 				default:
-					s.L.ArgError(2, "attempt to multiply a CFrame with an incompatible types.value type or nil")
-					return 0
+					return s.ArgError(2, "unreachable error: reflector mismatch")
 				}
 			},
 		},

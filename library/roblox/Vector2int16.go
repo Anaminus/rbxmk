@@ -44,8 +44,7 @@ func Vector2int16() rbxmk.Reflector {
 				case types.Vector2int16:
 					return s.Push(v.Mul(op))
 				default:
-					s.L.ArgError(2, "attempt to multiply a Vector2int16 with an incompatible value type or nil")
-					return 0
+					return s.ArgError(2, "unreachable error: reflector mismatch")
 				}
 			},
 			"__div": func(s rbxmk.State) int {
@@ -56,8 +55,7 @@ func Vector2int16() rbxmk.Reflector {
 				case types.Vector2int16:
 					return s.Push(v.Div(op))
 				default:
-					s.L.ArgError(2, "attempt to multiply a Vector2int16 with an incompatible value type or nil")
-					return 0
+					return s.ArgError(2, "unreachable error: reflector mismatch")
 				}
 			},
 			"__unm": func(s rbxmk.State) int {
