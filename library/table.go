@@ -22,70 +22,6 @@ func openTable(s rbxmk.State) *lua.LTable {
 	return lib
 }
 
-func dumpTable(s rbxmk.State) dump.Library {
-	return dump.Library{
-		Struct: dump.Struct{
-			Fields: dump.Fields{
-				"clear": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "t", Type: dt.Prim("table")},
-					},
-				},
-				"create": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "cap", Type: dt.Prim("int")},
-						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("table")},
-					},
-				},
-				"find": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "t", Type: dt.Prim("table")},
-						{Name: "value", Type: dt.Prim("any")},
-						{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Prim("int")}},
-					},
-				},
-				"move": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "a1", Type: dt.Prim("table")},
-						{Name: "f", Type: dt.Prim("int")},
-						{Name: "e", Type: dt.Prim("int")},
-						{Name: "t", Type: dt.Prim("int")},
-						{Name: "a2", Type: dt.Optional{T: dt.Prim("table")}},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("table")},
-					},
-					CanError: true,
-				},
-				"pack": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("table")},
-					},
-				},
-				"unpack": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "list", Type: dt.Prim("table")},
-						{Name: "i", Type: dt.Optional{T: dt.Prim("int")}},
-						{Name: "j", Type: dt.Optional{T: dt.Prim("int")}},
-					},
-					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
-					},
-				},
-			},
-		},
-	}
-}
-
 func tableClear(s rbxmk.State) int {
 	t := s.CheckTable(1)
 	t.Clear()
@@ -180,4 +116,68 @@ func tableUnpack(s rbxmk.State) int {
 		return 0
 	}
 	return r
+}
+
+func dumpTable(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"clear": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+					},
+				},
+				"create": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "cap", Type: dt.Prim("int")},
+						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"find": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "t", Type: dt.Prim("table")},
+						{Name: "value", Type: dt.Prim("any")},
+						{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Prim("int")}},
+					},
+				},
+				"move": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "a1", Type: dt.Prim("table")},
+						{Name: "f", Type: dt.Prim("int")},
+						{Name: "e", Type: dt.Prim("int")},
+						{Name: "t", Type: dt.Prim("int")},
+						{Name: "a2", Type: dt.Optional{T: dt.Prim("table")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+					CanError: true,
+				},
+				"pack": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("table")},
+					},
+				},
+				"unpack": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "list", Type: dt.Prim("table")},
+						{Name: "i", Type: dt.Optional{T: dt.Prim("int")}},
+						{Name: "j", Type: dt.Optional{T: dt.Prim("int")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+				},
+			},
+		},
+	}
 }

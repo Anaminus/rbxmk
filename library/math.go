@@ -22,51 +22,6 @@ func openMath(s rbxmk.State) *lua.LTable {
 	return lib
 }
 
-func dumpMath(s rbxmk.State) dump.Library {
-	return dump.Library{
-		Struct: dump.Struct{
-			Fields: dump.Fields{
-				"clamp": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-						{Name: "min", Type: dt.Prim("number")},
-						{Name: "max", Type: dt.Prim("number")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
-					},
-					CanError: true,
-				},
-				"log": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-						{Name: "base", Type: dt.Optional{T: dt.Prim("number")}, Default: "𝑒"},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
-					},
-				},
-				"round": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
-					},
-				},
-				"sign": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
-					},
-				},
-			},
-		},
-	}
-}
-
 func mathClamp(s rbxmk.State) int {
 	x := s.CheckNumber(1)
 	min := s.CheckNumber(2)
@@ -118,4 +73,49 @@ func mathSign(s rbxmk.State) int {
 		s.L.Push(lua.LNumber(0))
 	}
 	return 1
+}
+
+func dumpMath(s rbxmk.State) dump.Library {
+	return dump.Library{
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"clamp": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+						{Name: "min", Type: dt.Prim("number")},
+						{Name: "max", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+					CanError: true,
+				},
+				"log": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+						{Name: "base", Type: dt.Optional{T: dt.Prim("number")}, Default: "𝑒"},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+				"round": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+				"sign": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Prim("number")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("number")},
+					},
+				},
+			},
+		},
+	}
 }

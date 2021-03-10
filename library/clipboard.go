@@ -13,6 +13,17 @@ import (
 	"github.com/robloxapi/types"
 )
 
+func init() { register(Clipboard, 10) }
+
+var Clipboard = rbxmk.Library{Name: "clipboard", Open: openClipboard, Dump: dumpClipboard}
+
+func openClipboard(s rbxmk.State) *lua.LTable {
+	lib := s.L.CreateTable(0, 2)
+	lib.RawSetString("read", s.WrapFunc(clipboardRead))
+	lib.RawSetString("write", s.WrapFunc(clipboardWrite))
+	return lib
+}
+
 // getFormatSelectors produces a list of FormatSelectors from arguments.
 func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector) {
 	values := s.Pull(n, "Tuple").(rtypes.Tuple)
@@ -26,17 +37,6 @@ func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector
 		selectors = append(selectors, selector)
 	}
 	return selectors
-}
-
-func init() { register(Clipboard, 10) }
-
-var Clipboard = rbxmk.Library{Name: "clipboard", Open: openClipboard, Dump: dumpClipboard}
-
-func openClipboard(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 2)
-	lib.RawSetString("read", s.WrapFunc(clipboardRead))
-	lib.RawSetString("write", s.WrapFunc(clipboardWrite))
-	return lib
 }
 
 func clipboardRead(s rbxmk.State) int {

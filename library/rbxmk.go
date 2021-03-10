@@ -23,18 +23,18 @@ var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK, Dump: dumpRBXMK}
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 12)
+	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
+	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
+	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
+	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
+	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
+	lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
+	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
+	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
-	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
-	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
-	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
-	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
-	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
-	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
-	lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
-	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
 
 	for _, f := range reflect.All() {
 		r := f()
@@ -48,6 +48,246 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	s.L.SetMetatable(lib, mt)
 
 	return lib
+}
+
+func rbxmkCookiesFrom(s rbxmk.State) int {
+	location := string(s.Pull(1, "string").(types.String))
+	cookies, err := rbxmk.CookiesFrom(location)
+	if err != nil {
+		return s.RaiseError("unknown location %q", location)
+	}
+	if len(cookies) == 0 {
+		s.Push(rtypes.Nil)
+	}
+	return s.Push(cookies)
+}
+
+func rbxmkDecodeFormat(s rbxmk.State) int {
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Decode == nil {
+		return s.RaiseError("cannot decode with format %s", format.Name)
+	}
+	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
+	v, err := format.Decode(s.Global, selector, r)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(v)
+}
+
+func rbxmkDiffDesc(s rbxmk.State) int {
+	var prev *rbxdump.Root
+	var next *rbxdump.Root
+	switch v := s.PullAnyOf(1, "RootDesc", "nil").(type) {
+	case rtypes.NilType:
+	case *rtypes.RootDesc:
+		prev = v.Root
+	default:
+		return s.ReflectorError(1)
+	}
+	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
+	case rtypes.NilType:
+	case *rtypes.RootDesc:
+		next = v.Root
+	default:
+		return s.ReflectorError(2)
+	}
+	actions := diff.Diff{Prev: prev, Next: next}.Diff()
+	descActions := make(rtypes.DescActions, len(actions))
+	for i, action := range actions {
+		descActions[i] = &rtypes.DescAction{Action: action}
+	}
+	return s.Push(descActions)
+}
+
+func rbxmkEncodeFormat(s rbxmk.State) int {
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.Encode == nil {
+		return s.RaiseError("cannot encode with format %s", format.Name)
+	}
+	var w bytes.Buffer
+	if err := format.Encode(s.Global, selector, &w, s.Pull(2, "Variant")); err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Push(types.BinaryString(w.Bytes()))
+}
+
+func rbxmkFormatCanDecode(s rbxmk.State) int {
+	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
+	typeName := string(s.Pull(2, "string").(types.String))
+	format := s.Format(selector.Format)
+	if format.Name == "" {
+		return s.RaiseError("unknown format %q", selector.Format)
+	}
+	if format.CanDecode == nil {
+		return s.RaiseError("undefined decode type for %s", format.Name)
+	}
+	return s.Push(types.Bool(format.CanDecode(s.Global, selector, typeName)))
+}
+
+func rbxmkLoadFile(s rbxmk.State) int {
+	fileName := filepath.Clean(s.CheckString(1))
+	fn, err := s.L.LoadFile(fileName)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(fn)
+	return 1
+}
+
+func rbxmkLoadString(s rbxmk.State) int {
+	source := s.CheckString(1)
+	fn, err := s.L.LoadString(source)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(fn)
+	return 1
+}
+
+func rbxmkNewCookie(s rbxmk.State) int {
+	name := string(s.Pull(1, "string").(types.String))
+	value := string(s.Pull(2, "string").(types.String))
+	cookie := rtypes.Cookie{Cookie: &http.Cookie{Name: name, Value: value}}
+	return s.Push(cookie)
+}
+
+func rbxmkNewDesc(s rbxmk.State) int {
+	switch name := string(s.Pull(1, "string").(types.String)); name {
+	case "RootDesc":
+		return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
+			Classes: make(map[string]*rbxdump.Class),
+			Enums:   make(map[string]*rbxdump.Enum),
+		}})
+	case "ClassDesc":
+		return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
+			Members: make(map[string]rbxdump.Member),
+		}})
+	case "PropertyDesc":
+		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
+			ReadSecurity:  "None",
+			WriteSecurity: "None",
+		}})
+	case "FunctionDesc":
+		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
+			Security: "None",
+		}})
+	case "EventDesc":
+		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
+			Security: "None",
+		}})
+	case "CallbackDesc":
+		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
+			Security: "None",
+		}})
+	case "ParameterDesc":
+		var param rbxdump.Parameter
+		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
+		param.Name = string(s.PullOpt(3, "string", types.String("")).(types.String))
+		switch def := s.PullOpt(4, "string", rtypes.Nil).(type) {
+		case rtypes.NilType:
+			param.Optional = false
+		case types.String:
+			param.Optional = true
+			param.Default = string(def)
+		}
+		return s.Push(rtypes.ParameterDesc{Parameter: param})
+	case "TypeDesc":
+		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
+		name := string(s.PullOpt(3, "string", types.String("")).(types.String))
+		return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
+			Category: category,
+			Name:     name,
+		}})
+	case "EnumDesc":
+		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
+			Items: make(map[string]*rbxdump.EnumItem),
+		}})
+	case "EnumItemDesc":
+		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
+	default:
+		return s.RaiseError("unable to create descriptor of type %q", name)
+	}
+}
+
+func rbxmkPatchDesc(s rbxmk.State) int {
+	desc := s.Pull(1, "RootDesc").(*rtypes.RootDesc).Root
+	descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
+	actions := make([]diff.Action, len(descActions))
+	for i, action := range descActions {
+		actions[i] = action.Action
+	}
+	diff.Patch{Root: desc}.Patch(actions)
+	return 0
+}
+
+func rbxmkRunFile(s rbxmk.State) int {
+	fileName := filepath.Clean(s.CheckString(1))
+	fi, err := s.FS.Stat(fileName)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	if err = s.PushFile(rbxmk.FileEntry{Path: fileName, FileInfo: fi}); err != nil {
+		return s.RaiseError("%s", err)
+	}
+
+	nt := s.Count()
+
+	// Load file as function.
+	fn, err := s.L.LoadFile(fileName)
+	if err != nil {
+		s.PopFile()
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(fn) // +function
+
+	// Push extra arguments as arguments to loaded function.
+	for i := 2; i <= nt; i++ {
+		s.L.Push(s.L.Get(i)) // function, ..., +arg
+	}
+	// function, +args...
+
+	// Call loaded function.
+	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
+	s.PopFile()
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Count() - nt
+}
+
+func rbxmkRunString(s rbxmk.State) int {
+	source := s.CheckString(1)
+	nt := s.Count()
+
+	// Load file as function.
+	fn, err := s.L.LoadString(source)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(fn) // +function
+
+	// Push extra arguments as arguments to loaded function.
+	for i := 2; i <= nt; i++ {
+		s.L.Push(s.L.Get(i)) // function, ..., +arg
+	}
+	// function, +args...
+
+	// Call loaded function.
+	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
+	s.PopFile()
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return s.Count() - nt
 }
 
 func rbxmkOpIndex(s rbxmk.State) int {
@@ -247,244 +487,4 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 		lib.Types[r.Name] = r.DumpAll()
 	}
 	return lib
-}
-
-func rbxmkLoadFile(s rbxmk.State) int {
-	fileName := filepath.Clean(s.CheckString(1))
-	fn, err := s.L.LoadFile(fileName)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	s.L.Push(fn)
-	return 1
-}
-
-func rbxmkLoadString(s rbxmk.State) int {
-	source := s.CheckString(1)
-	fn, err := s.L.LoadString(source)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	s.L.Push(fn)
-	return 1
-}
-
-func rbxmkRunFile(s rbxmk.State) int {
-	fileName := filepath.Clean(s.CheckString(1))
-	fi, err := s.FS.Stat(fileName)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	if err = s.PushFile(rbxmk.FileEntry{Path: fileName, FileInfo: fi}); err != nil {
-		return s.RaiseError("%s", err)
-	}
-
-	nt := s.Count()
-
-	// Load file as function.
-	fn, err := s.L.LoadFile(fileName)
-	if err != nil {
-		s.PopFile()
-		return s.RaiseError("%s", err)
-	}
-	s.L.Push(fn) // +function
-
-	// Push extra arguments as arguments to loaded function.
-	for i := 2; i <= nt; i++ {
-		s.L.Push(s.L.Get(i)) // function, ..., +arg
-	}
-	// function, +args...
-
-	// Call loaded function.
-	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
-	s.PopFile()
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	return s.Count() - nt
-}
-
-func rbxmkRunString(s rbxmk.State) int {
-	source := s.CheckString(1)
-	nt := s.Count()
-
-	// Load file as function.
-	fn, err := s.L.LoadString(source)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	s.L.Push(fn) // +function
-
-	// Push extra arguments as arguments to loaded function.
-	for i := 2; i <= nt; i++ {
-		s.L.Push(s.L.Get(i)) // function, ..., +arg
-	}
-	// function, +args...
-
-	// Call loaded function.
-	err = s.L.PCall(nt-1, lua.MultRet, nil) // -function, -args..., +returns...
-	s.PopFile()
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	return s.Count() - nt
-}
-
-func rbxmkNewDesc(s rbxmk.State) int {
-	switch name := string(s.Pull(1, "string").(types.String)); name {
-	case "RootDesc":
-		return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
-			Classes: make(map[string]*rbxdump.Class),
-			Enums:   make(map[string]*rbxdump.Enum),
-		}})
-	case "ClassDesc":
-		return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
-			Members: make(map[string]rbxdump.Member),
-		}})
-	case "PropertyDesc":
-		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
-			ReadSecurity:  "None",
-			WriteSecurity: "None",
-		}})
-	case "FunctionDesc":
-		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
-			Security: "None",
-		}})
-	case "EventDesc":
-		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
-			Security: "None",
-		}})
-	case "CallbackDesc":
-		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
-			Security: "None",
-		}})
-	case "ParameterDesc":
-		var param rbxdump.Parameter
-		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
-		param.Name = string(s.PullOpt(3, "string", types.String("")).(types.String))
-		switch def := s.PullOpt(4, "string", rtypes.Nil).(type) {
-		case rtypes.NilType:
-			param.Optional = false
-		case types.String:
-			param.Optional = true
-			param.Default = string(def)
-		}
-		return s.Push(rtypes.ParameterDesc{Parameter: param})
-	case "TypeDesc":
-		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
-		name := string(s.PullOpt(3, "string", types.String("")).(types.String))
-		return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
-			Category: category,
-			Name:     name,
-		}})
-	case "EnumDesc":
-		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
-			Items: make(map[string]*rbxdump.EnumItem),
-		}})
-	case "EnumItemDesc":
-		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
-	default:
-		return s.RaiseError("unable to create descriptor of type %q", name)
-	}
-}
-
-func rbxmkDiffDesc(s rbxmk.State) int {
-	var prev *rbxdump.Root
-	var next *rbxdump.Root
-	switch v := s.PullAnyOf(1, "RootDesc", "nil").(type) {
-	case rtypes.NilType:
-	case *rtypes.RootDesc:
-		prev = v.Root
-	default:
-		return s.ReflectorError(1)
-	}
-	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
-	case rtypes.NilType:
-	case *rtypes.RootDesc:
-		next = v.Root
-	default:
-		return s.ReflectorError(2)
-	}
-	actions := diff.Diff{Prev: prev, Next: next}.Diff()
-	descActions := make(rtypes.DescActions, len(actions))
-	for i, action := range actions {
-		descActions[i] = &rtypes.DescAction{Action: action}
-	}
-	return s.Push(descActions)
-}
-
-func rbxmkPatchDesc(s rbxmk.State) int {
-	desc := s.Pull(1, "RootDesc").(*rtypes.RootDesc).Root
-	descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
-	actions := make([]diff.Action, len(descActions))
-	for i, action := range descActions {
-		actions[i] = action.Action
-	}
-	diff.Patch{Root: desc}.Patch(actions)
-	return 0
-}
-
-func rbxmkEncodeFormat(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
-	format := s.Format(selector.Format)
-	if format.Name == "" {
-		return s.RaiseError("unknown format %q", selector.Format)
-	}
-	if format.Encode == nil {
-		return s.RaiseError("cannot encode with format %s", format.Name)
-	}
-	var w bytes.Buffer
-	if err := format.Encode(s.Global, selector, &w, s.Pull(2, "Variant")); err != nil {
-		return s.RaiseError("%s", err)
-	}
-	return s.Push(types.BinaryString(w.Bytes()))
-}
-
-func rbxmkDecodeFormat(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
-	format := s.Format(selector.Format)
-	if format.Name == "" {
-		return s.RaiseError("unknown format %q", selector.Format)
-	}
-	if format.Decode == nil {
-		return s.RaiseError("cannot decode with format %s", format.Name)
-	}
-	r := strings.NewReader(string(s.Pull(2, "BinaryString").(types.BinaryString)))
-	v, err := format.Decode(s.Global, selector, r)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	return s.Push(v)
-}
-
-func rbxmkFormatCanDecode(s rbxmk.State) int {
-	selector := s.Pull(1, "FormatSelector").(rtypes.FormatSelector)
-	typeName := string(s.Pull(2, "string").(types.String))
-	format := s.Format(selector.Format)
-	if format.Name == "" {
-		return s.RaiseError("unknown format %q", selector.Format)
-	}
-	if format.CanDecode == nil {
-		return s.RaiseError("undefined decode type for %s", format.Name)
-	}
-	return s.Push(types.Bool(format.CanDecode(s.Global, selector, typeName)))
-}
-
-func rbxmkNewCookie(s rbxmk.State) int {
-	name := string(s.Pull(1, "string").(types.String))
-	value := string(s.Pull(2, "string").(types.String))
-	cookie := rtypes.Cookie{Cookie: &http.Cookie{Name: name, Value: value}}
-	return s.Push(cookie)
-}
-
-func rbxmkCookiesFrom(s rbxmk.State) int {
-	location := string(s.Pull(1, "string").(types.String))
-	cookies, err := rbxmk.CookiesFrom(location)
-	if err != nil {
-		return s.RaiseError("unknown location %q", location)
-	}
-	if len(cookies) == 0 {
-		s.Push(rtypes.Nil)
-	}
-	return s.Push(cookies)
 }
