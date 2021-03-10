@@ -207,30 +207,3 @@ func (err typeError) Error() string {
 func TypeError(want, got string) (err error) {
 	return typeError{want: want, got: got}
 }
-
-// CheckType returns the underlying value if the value at n is a userdata that
-// has type metatable corresponding to typ.
-func CheckType(l *lua.LState, n int, typ string) interface{} {
-	if u, ok := l.Get(n).(*lua.LUserData); ok {
-		if u.Metatable == l.GetTypeMetatable(typ) {
-			return u.Value
-		}
-	}
-	TypeError(typ, l.Get(n).Type().String())
-	return nil
-}
-
-// OptType is like CheckType, but returns nil if the value is nil.
-func OptType(l *lua.LState, n int, typ string) interface{} {
-	v := l.Get(n)
-	if v == lua.LNil {
-		return nil
-	}
-	if u, ok := v.(*lua.LUserData); ok {
-		if u.Metatable == l.GetTypeMetatable(typ) {
-			return u.Value
-		}
-	}
-	TypeError(typ, l.Get(n).Type().String())
-	return nil
-}
