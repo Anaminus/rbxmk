@@ -2,6 +2,7 @@ package dumpformats
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"sort"
 
@@ -332,11 +333,29 @@ func getPrim(t dt.Type) dt.Type {
 	}
 }
 
-// Escape a TOML string.
+// Write an escaped TOML string.
 func seleneEscapeString(w *bufio.Writer, s string) {
-	//TODO: Escape TOML string.
 	w.WriteByte('"')
-	w.WriteString(s)
+	for _, r := range s {
+		switch {
+		case r == '\b':
+			w.WriteString(`\b`)
+		case r == '\t':
+			w.WriteString(`\t`)
+		case r == '\n':
+			w.WriteString(`\n`)
+		case r == '\r':
+			w.WriteString(`\r`)
+		case r == '"':
+			w.WriteString(`\"`)
+		case r == '\\':
+			w.WriteString(`\\`)
+		case r < 0x20:
+			fmt.Fprintf(w, `\u%04X`, r)
+		default:
+			w.WriteRune(r)
+		}
+	}
 	w.WriteByte('"')
 }
 
