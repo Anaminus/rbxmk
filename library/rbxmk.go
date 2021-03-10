@@ -22,7 +22,7 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK, Dump: dumpRBXMK}
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 12)
+	lib := s.L.CreateTable(0, 13)
 	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
@@ -30,6 +30,7 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
+	lib.RawSetString("newAttrConfig", s.WrapFunc(rbxmkNewAttrConfig))
 	lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
 	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
@@ -151,6 +152,12 @@ func rbxmkLoadString(s rbxmk.State) int {
 	}
 	s.L.Push(fn)
 	return 1
+}
+
+func rbxmkNewAttrConfig(s rbxmk.State) int {
+	var v rtypes.AttrConfig
+	v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
+	return s.Push(&v)
 }
 
 func rbxmkNewCookie(s rbxmk.State) int {
@@ -405,6 +412,14 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "func", Type: dt.Prim("function")},
 					},
 					CanError: true,
+				},
+				"newAttrConfig": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "property", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("AttrConfig")},
+					},
 				},
 				"newCookie": dump.Function{
 					Parameters: dump.Parameters{

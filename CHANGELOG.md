@@ -20,6 +20,7 @@ branch is the latest unreleased version.
 - Add `--include-root` flag to run command to include paths as root directories.
 - Add `--allow-insecure-paths` flag to run command to disable path restrictions.
 - Add CFrame.lookAt constructor.
+- Rename AttrConfig.new to rbxmk.newAttrConfig.
 
 **Fixes:**
 - Fix version displayed by rbxmk.

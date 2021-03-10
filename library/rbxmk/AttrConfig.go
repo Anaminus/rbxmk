@@ -36,25 +36,6 @@ func AttrConfig() rbxmk.Reflector {
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 		},
-		Constructors: rbxmk.Constructors{
-			"new": {
-				Func: func(s rbxmk.State) int {
-					var v rtypes.AttrConfig
-					v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
-					return s.Push(&v)
-				},
-				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "property", Type: dt.Prim("string")},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("AttrConfig")},
-						},
-					}}
-				},
-			},
-		},
 		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

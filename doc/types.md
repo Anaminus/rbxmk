@@ -52,15 +52,8 @@ Member                                     | Kind
 -------------------------------------------|-----
 [AttrConfig.Property][AttrConfig.Property] | property
 
-An AttrConfig can be created with the [AttrConfig.new][AttrConfig.new]
-constructor.
-
-### AttrConfig.new
-[AttrConfig.new]: #user-content-attrconfignew
-<code>AttrConfig.new(property: [string](##)?): [AttrConfig][AttrConfig]</code>
-
-The **AttrConfig.new** constructor returns a new AttrConfig. *property* sets the
-[Property][AttrConfig.Property] field, defaulting to an empty string.
+An AttrConfig can be created with the
+[rbxmk.newAttrConfig](libraries.md#user-content-rbxmknewattrconfig) constructor.
 
 ### AttrConfig.Property
 [AttrConfig.Property]: #user-content-attrconfigproperty
