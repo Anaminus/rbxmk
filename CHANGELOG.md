@@ -34,6 +34,7 @@ branch is the latest unreleased version.
 - Fix handling of nil Instance properties.
 - Fix Instance properties not checking inherited classes.
 - Fix handling of nil PhysicalProperties properties.
+- Fix handling of arguments in fs.mkdir, fs.remove, and fs.rename.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

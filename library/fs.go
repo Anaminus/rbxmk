@@ -39,7 +39,7 @@ var FSSource = rbxmk.Library{
 		}))
 		lib.RawSetString("mkdir", s.WrapFunc(func(s rbxmk.State) int {
 			path := string(s.Pull(1, "string").(types.String))
-			all := bool(s.PullOpt(1, "bool", types.Bool(false)).(types.Bool))
+			all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
 			ok, err := FS{World: s.World}.MkDir(path, all)
 			if err != nil {
 				return s.RaiseError("%s", err)
@@ -62,7 +62,7 @@ var FSSource = rbxmk.Library{
 		}))
 		lib.RawSetString("remove", s.WrapFunc(func(s rbxmk.State) int {
 			path := string(s.Pull(1, "string").(types.String))
-			all := bool(s.PullOpt(1, "bool", types.Bool(false)).(types.Bool))
+			all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
 			ok, err := FS{World: s.World}.Remove(path, all)
 			if err != nil {
 				return s.RaiseError("%s", err)
@@ -76,7 +76,7 @@ var FSSource = rbxmk.Library{
 		}))
 		lib.RawSetString("rename", s.WrapFunc(func(s rbxmk.State) int {
 			from := string(s.Pull(1, "string").(types.String))
-			to := string(s.Pull(1, "string").(types.String))
+			to := string(s.Pull(2, "string").(types.String))
 			ok, err := FS{World: s.World}.Rename(from, to)
 			if err != nil {
 				return s.RaiseError("%s", err)
