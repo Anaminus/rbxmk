@@ -62,7 +62,8 @@ func FunctionDesc() rbxmk.Reflector {
 					for i, paramDesc := range array {
 						param, ok := paramDesc.(rtypes.ParameterDesc)
 						if !ok {
-							return s.TypeError(2, param.Type(), paramDesc.Type())
+							err := rbxmk.TypeError{Want: param.Type(), Got: paramDesc.Type()}
+							return s.ArgError(2, "Array[%d]: %s", i, err)
 						}
 						params[i] = param.Parameter
 					}
