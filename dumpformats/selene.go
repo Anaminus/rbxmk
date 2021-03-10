@@ -58,6 +58,9 @@ var Selene = Format{
 
 				// Properties.
 				sortProperties(def.Properties, func(propName string, prop dump.Property) {
+					if !isName(propName) {
+						return
+					}
 					buf.WriteString("[selene.structs.")
 					buf.WriteString(defName)
 					buf.WriteString(".")
@@ -68,6 +71,9 @@ var Selene = Format{
 
 				// Methods.
 				sortMethods(def.Methods, func(methodName string, method dump.Function) {
+					if !isName(methodName) {
+						return
+					}
 					buf.WriteString("[selene.structs.")
 					buf.WriteString(defName)
 					buf.WriteString(".")

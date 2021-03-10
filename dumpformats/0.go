@@ -82,6 +82,21 @@ func (f Formats) WriteTo(w io.Writer) (n int64, err error) {
 	return n, nil
 }
 
+func isName(s string) bool {
+	if s == "" {
+		return false
+	}
+	if r := s[0]; !('A' <= r && r <= 'Z' || 'a' <= r && r <= 'z' || r == '_') {
+		return false
+	}
+	for i := 1; i < len(s); i++ {
+		if r := s[i]; !('0' <= r && r <= '9' || 'A' <= r && r <= 'Z' || 'a' <= r && r <= 'z' || r == '_') {
+			return false
+		}
+	}
+	return true
+}
+
 func sortTypeDefs(m dump.TypeDefs, cb func(k string, v dump.TypeDef)) {
 	if len(m) == 0 {
 		return
