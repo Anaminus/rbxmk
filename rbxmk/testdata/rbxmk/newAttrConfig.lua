@@ -1,0 +1,6 @@
+T.Fail(function() rbxmk.newAttrConfig(42) end                 , "expects a string for its first argument")
+T.Pass(rbxmk.newAttrConfig()                                  , "can pass no value")
+T.Pass(rbxmk.newAttrConfig("Foobar")                          , "can pass string")
+T.Pass(typeof(rbxmk.newAttrConfig("Foobar")) == "AttrConfig"  , "returns AttrConfig")
+T.Pass(rbxmk.newAttrConfig().Property == ""                   , "passing no value sets Property to empty string")
+T.Pass(rbxmk.newAttrConfig("Foobar").Property == "Foobar"     , "passing string sets Property to string")
