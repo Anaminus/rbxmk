@@ -36,6 +36,8 @@ branch is the latest unreleased version.
 - Fix Instance properties not checking inherited classes.
 - Fix handling of nil PhysicalProperties properties.
 - Fix handling of arguments in fs.mkdir, fs.remove, and fs.rename.
+- Fix FormatSelectors being received incorrectly in clipboard.read and
+  clipboard.write.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

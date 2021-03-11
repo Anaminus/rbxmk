@@ -26,14 +26,10 @@ func openClipboard(s rbxmk.State) *lua.LTable {
 
 // getFormatSelectors produces a list of FormatSelectors from arguments.
 func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector) {
-	values := s.Pull(n, "Tuple").(rtypes.Tuple)
-	selectors = make([]rtypes.FormatSelector, 0, len(values))
-	for i, value := range values {
-		selector, ok := value.(rtypes.FormatSelector)
-		if !ok {
-			s.TypeError(n+i, "FormatSelector", value.Type())
-			return nil
-		}
+	c := s.Count()
+	selectors = make([]rtypes.FormatSelector, 0, c-n+1)
+	for i := n; i <= c; i++ {
+		selector := s.Pull(i, "FormatSelector").(rtypes.FormatSelector)
 		selectors = append(selectors, selector)
 	}
 	return selectors
