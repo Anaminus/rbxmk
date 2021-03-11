@@ -96,7 +96,7 @@ func (e *Enum) Pull(lv lua.LValue) *EnumItem {
 			return item
 		}
 	case *lua.LUserData:
-		if item, ok := lv.Value.(*EnumItem); ok {
+		if item, ok := lv.Value().(*EnumItem); ok {
 			if item.Enum() == e {
 				return item
 			}

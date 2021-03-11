@@ -20,7 +20,7 @@ func Int64() rbxmk.Reflector {
 				return types.Int64(v), nil
 			case *lua.LUserData:
 				if v.Metatable == s.L.GetTypeMetatable("int64") {
-					if v, ok := v.Value.(types.Int64); ok {
+					if v, ok := v.Value().(types.Int64); ok {
 						return v, nil
 					}
 				}

@@ -17,8 +17,7 @@ func PhysicalProperties() rbxmk.Reflector {
 			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
 				return append(lvs, lua.LNil), nil
 			}
-			u := s.L.NewUserData()
-			u.Value = v
+			u := s.L.NewUserData(v)
 			s.L.SetMetatable(u, s.L.GetTypeMetatable("PhysicalProperties"))
 			return append(lvs, u), nil
 		},
@@ -30,7 +29,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				if lv.Metatable != s.L.GetTypeMetatable("PhysicalProperties") {
 					return nil, rbxmk.TypeError{Want: "PhysicalProperties", Got: lvs[0].Type().String()}
 				}
-				v, ok := lv.Value.(types.Value)
+				v, ok := lv.Value().(types.Value)
 				if !ok {
 					return nil, rbxmk.TypeError{Want: "PhysicalProperties", Got: lvs[0].Type().String()}
 				}

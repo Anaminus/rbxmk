@@ -20,7 +20,7 @@ func SharedString() rbxmk.Reflector {
 				return types.SharedString(v), nil
 			case *lua.LUserData:
 				if v.Metatable == s.L.GetTypeMetatable("SharedString") {
-					if v, ok := v.Value.(types.SharedString); ok {
+					if v, ok := v.Value().(types.SharedString); ok {
 						return v, nil
 					}
 				}

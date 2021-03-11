@@ -168,8 +168,7 @@ type Constructor struct {
 // as a table key.
 func PushTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
 	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
-		u := s.L.NewUserData()
-		u.Value = v
+		u := s.L.NewUserData(v)
 		s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
 		return append(lvs, u), nil
 	}
@@ -196,7 +195,7 @@ func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err
 		if u.Metatable != s.L.GetTypeMetatable(t) {
 			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
 		}
-		if v, ok = u.Value.(types.Value); !ok {
+		if v, ok = u.Value().(types.Value); !ok {
 			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
 		}
 		return v, nil

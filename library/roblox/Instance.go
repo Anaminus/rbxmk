@@ -129,7 +129,7 @@ func Instance() rbxmk.Reflector {
 				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
 					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
 				}
-				v, ok := lv.Value.(types.Value)
+				v, ok := lv.Value().(types.Value)
 				if !ok {
 					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
 				}

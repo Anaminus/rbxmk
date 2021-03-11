@@ -20,7 +20,7 @@ func Float() rbxmk.Reflector {
 				return types.Float(v), nil
 			case *lua.LUserData:
 				if v.Metatable == s.L.GetTypeMetatable("float") {
-					if v, ok := v.Value.(types.Float); ok {
+					if v, ok := v.Value().(types.Float); ok {
 						return v, nil
 					}
 				}

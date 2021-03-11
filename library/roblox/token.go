@@ -20,7 +20,7 @@ func Token() rbxmk.Reflector {
 				return types.Token(v), nil
 			case *lua.LUserData:
 				if v.Metatable == s.L.GetTypeMetatable("token") {
-					if v, ok := v.Value.(types.Token); ok {
+					if v, ok := v.Value().(types.Token); ok {
 						return v, nil
 					}
 				}

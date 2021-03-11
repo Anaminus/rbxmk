@@ -51,13 +51,12 @@ const cacheUserdata = true
 
 // UserDataOf returns the userdata value associated with v. If there is no such
 // userdata, then a new one is created, with the metatable set to the type
-// corresponding to t. The Value field of the userdata must never be modified.
+// corresponding to t.
 func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	if !cacheUserdata {
 		// Fallback in case it turns out that pointer fiddling fails
 		// catastrophically for some reason.
-		u := w.State().NewUserData()
-		u.Value = v
+		u := w.State().NewUserData(v)
 		w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
 		return u
 	}
@@ -87,8 +86,7 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 		return u
 	}
 
-	u := w.State().NewUserData()
-	u.Value = v
+	u := w.State().NewUserData(v)
 	w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
 
 	if w.userdata == nil {
@@ -98,7 +96,7 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	runtime.SetFinalizer(u, func(u *lua.LUserData) {
 		w.udmut.Lock()
 		defer w.udmut.Unlock()
-		delete(w.userdata, u.Value)
+		delete(w.userdata, u.Value())
 	})
 	return u
 }
@@ -212,7 +210,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		// Show type and value, if possible.
 		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
 			if u, ok := l.Get(1).(*lua.LUserData); ok {
-				if v, ok := u.Value.(types.Stringer); ok {
+				if v, ok := u.Value().(types.Stringer); ok {
 					l.Push(lua.LString(r.Name + ": " + v.String()))
 					return 1
 				}

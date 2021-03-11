@@ -20,7 +20,7 @@ func Int() rbxmk.Reflector {
 				return types.Int(v), nil
 			case *lua.LUserData:
 				if v.Metatable == s.L.GetTypeMetatable("int") {
-					if v, ok := v.Value.(types.Int); ok {
+					if v, ok := v.Value().(types.Int); ok {
 						return v, nil
 					}
 				}
