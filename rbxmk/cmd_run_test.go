@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -149,6 +150,11 @@ func initMain(s rbxmk.State, t *testing.T) {
 	// UserDataCacheLen returns the number of cached userdata values.
 	T.RawSetString("UserDataCacheLen", s.WrapFunc(func(s rbxmk.State) int {
 		return s.Push(types.Int(s.UserDataCacheLen()))
+	}))
+
+	// UserDataID returns a string that identifies a userdata value.
+	T.RawSetString("UserDataID", s.WrapFunc(func(s rbxmk.State) int {
+		return s.Push(types.String(fmt.Sprintf("%p", s.CheckUserData(1))))
 	}))
 
 	T.RawSetString("DummySymbol", s.UserDataOf(rtypes.Symbol{Name: "DummySymbol"}, "Symbol"))
