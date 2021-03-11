@@ -163,8 +163,22 @@ type Constructor struct {
 }
 
 // PushTypeTo returns a Reflector.PushTo that converts v to a userdata set with
-// a type metatable registered as type t.
+// a type metatable registered as type t. Each push always produces a new
+// userdata. This results in better performance, but makes the value unsuitable
+// as a table key.
 func PushTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
+	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
+		u := s.L.NewUserData()
+		u.Value = v
+		s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
+		return append(lvs, u), nil
+	}
+}
+
+// PushPtrTypeTo returns a Reflector.PushTo that converts v to a userdata set
+// with a type metatable registered as type t. The same value will push the same
+// userdata, making the value usable as a table key.
+func PushPtrTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
 	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
 		u := s.UserDataOf(v, t)
 		return append(lvs, u), nil

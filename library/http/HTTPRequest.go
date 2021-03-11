@@ -12,7 +12,7 @@ func init() { register(HTTPRequest) }
 func HTTPRequest() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "HTTPRequest",
-		PushTo:   rbxmk.PushTypeTo("HTTPRequest"),
+		PushTo:   rbxmk.PushPtrTypeTo("HTTPRequest"),
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

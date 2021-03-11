@@ -11,7 +11,7 @@ func init() { register(DescAction) }
 func DescAction() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "DescAction",
-		PushTo:   rbxmk.PushTypeTo("DescAction"),
+		PushTo:   rbxmk.PushPtrTypeTo("DescAction"),
 		PullFrom: rbxmk.PullTypeFrom("DescAction"),
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {

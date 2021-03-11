@@ -13,7 +13,7 @@ func init() { register(AttrConfig) }
 func AttrConfig() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "AttrConfig",
-		PushTo:   rbxmk.PushTypeTo("AttrConfig"),
+		PushTo:   rbxmk.PushPtrTypeTo("AttrConfig"),
 		PullFrom: rbxmk.PullTypeFrom("AttrConfig"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

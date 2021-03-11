@@ -38,6 +38,8 @@ branch is the latest unreleased version.
 - Fix handling of arguments in fs.mkdir, fs.remove, and fs.rename.
 - Fix FormatSelectors being received incorrectly in clipboard.read and
   clipboard.write.
+- Fix userdata caching. Immutable types like Vector3 which were equal would
+  incorrectly produce the same userdata. Makes creation of such types faster.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.

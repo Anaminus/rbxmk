@@ -16,7 +16,7 @@ func init() { register(EnumDesc) }
 func EnumDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "EnumDesc",
-		PushTo:   rbxmk.PushTypeTo("EnumDesc"),
+		PushTo:   rbxmk.PushPtrTypeTo("EnumDesc"),
 		PullFrom: rbxmk.PullTypeFrom("EnumDesc"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

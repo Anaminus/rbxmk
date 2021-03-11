@@ -14,7 +14,7 @@ func init() { register(FunctionDesc) }
 func FunctionDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "FunctionDesc",
-		PushTo:   rbxmk.PushTypeTo("FunctionDesc"),
+		PushTo:   rbxmk.PushPtrTypeTo("FunctionDesc"),
 		PullFrom: rbxmk.PullTypeFrom("FunctionDesc"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

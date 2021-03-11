@@ -13,7 +13,7 @@ func init() { register(PropertyDesc) }
 func PropertyDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "PropertyDesc",
-		PushTo:   rbxmk.PushTypeTo("PropertyDesc"),
+		PushTo:   rbxmk.PushPtrTypeTo("PropertyDesc"),
 		PullFrom: rbxmk.PullTypeFrom("PropertyDesc"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

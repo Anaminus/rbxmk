@@ -13,7 +13,7 @@ func init() { register(EnumItem) }
 func EnumItem() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "EnumItem",
-		PushTo:   rbxmk.PushTypeTo("EnumItem"),
+		PushTo:   rbxmk.PushPtrTypeTo("EnumItem"),
 		PullFrom: rbxmk.PullTypeFrom("EnumItem"),
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {

@@ -11,7 +11,7 @@ func init() { register(Symbol) }
 func Symbol() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "Symbol",
-		PushTo:   rbxmk.PushTypeTo("Symbol"),
+		PushTo:   rbxmk.PushPtrTypeTo("Symbol"),
 		PullFrom: rbxmk.PullTypeFrom("Symbol"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {

@@ -16,7 +16,7 @@ func init() { register(RootDesc) }
 func RootDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:     "RootDesc",
-		PushTo:   rbxmk.PushTypeTo("RootDesc"),
+		PushTo:   rbxmk.PushPtrTypeTo("RootDesc"),
 		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
 		Metatable: rbxmk.Metatable{
 			"__eq": func(s rbxmk.State) int {
