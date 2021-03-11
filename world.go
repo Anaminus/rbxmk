@@ -93,12 +93,15 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 		w.userdata = map[interface{}]uintptr{}
 	}
 	w.userdata[v] = uintptr(unsafe.Pointer(u))
-	runtime.SetFinalizer(u, func(u *lua.LUserData) {
-		w.udmut.Lock()
-		defer w.udmut.Unlock()
-		delete(w.userdata, u.Value())
-	})
+	runtime.SetFinalizer(u, w.finalize)
 	return u
+}
+
+// finalize is the finalizer for a userdata cached by the world.
+func (w *World) finalize(u *lua.LUserData) {
+	w.udmut.Lock()
+	defer w.udmut.Unlock()
+	delete(w.userdata, u.Value())
 }
 
 // UserDataCacheLen return the number of userdata values in the cache.
