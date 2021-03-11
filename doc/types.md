@@ -450,7 +450,7 @@ The **UnsetTag** method unsets the given tags on the descriptor.
 ## EnumItemDesc
 [EnumItemDesc]: #user-content-enumitemdesc
 
-The **EnumDesc** type describes an enum item. It has the following members:
+The **EnumItemDesc** type describes an enum item. It has the following members:
 
 Member                                         | Kind
 -----------------------------------------------|-----
@@ -1085,7 +1085,6 @@ The **Desc** symbol is the descriptor being used by the instance. Desc is
 inherited, the behavior of which is described in the [Value
 inheritance](README.md#user-content-value-inheritance) section.
 
-
 ### Instance[sym.IsService]
 [Instance.sym.IsService]: #user-content-instancesymisservice
 <code>Instance\[sym.IsService\]: [bool](##)</code>
@@ -1242,7 +1241,7 @@ decoding from a file.
 [PropertyDesc.CanSave]: #user-content-propertydesccansave
 <code>PropertyDesc.CanSave: [bool](##)</code>
 
-The **CanLoad** property indicates whether the property is serialized when
+The **CanSave** property indicates whether the property is serialized when
 encoding to a file.
 
 ### PropertyDesc.Tag
