@@ -21,12 +21,6 @@ func EnumItem() rbxmk.Reflector {
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "EnumItem").(*rtypes.EnumItem)
-				op := s.Pull(2, "EnumItem").(*rtypes.EnumItem)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
 		},
 		Members: rbxmk.Members{
 			"Name": {
@@ -48,6 +42,5 @@ func EnumItem() rbxmk.Reflector {
 				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

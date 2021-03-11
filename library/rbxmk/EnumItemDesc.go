@@ -1,7 +1,6 @@
 package reflect
 
 import (
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -15,14 +14,6 @@ func EnumItemDesc() rbxmk.Reflector {
 		Name:     "EnumItemDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("EnumItemDesc"),
 		PullFrom: rbxmk.PullTypeFrom("EnumItemDesc"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "EnumItemDesc").(rtypes.EnumItemDesc)
-				op := s.Pull(2, "EnumItemDesc").(rtypes.EnumItemDesc)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
-		},
 		Members: rbxmk.Members{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -129,6 +120,5 @@ func EnumItemDesc() rbxmk.Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

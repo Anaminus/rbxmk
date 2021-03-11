@@ -3,7 +3,6 @@ package reflect
 import (
 	"sort"
 
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -18,14 +17,6 @@ func RootDesc() rbxmk.Reflector {
 		Name:     "RootDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("RootDesc"),
 		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "RootDesc").(*rtypes.RootDesc)
-				op := s.Pull(2, "RootDesc").(*rtypes.RootDesc)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
-		},
 		Members: rbxmk.Members{
 			"Class": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -214,6 +205,5 @@ func RootDesc() rbxmk.Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

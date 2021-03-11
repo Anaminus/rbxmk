@@ -1,7 +1,6 @@
 package reflect
 
 import (
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -14,14 +13,6 @@ func HTTPRequest() rbxmk.Reflector {
 		Name:     "HTTPRequest",
 		PushTo:   rbxmk.PushPtrTypeTo("HTTPRequest"),
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "HTTPRequest").(*rbxmk.HTTPRequest)
-				op := s.Pull(2, "HTTPRequest").(*rbxmk.HTTPRequest)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
-		},
 		Members: rbxmk.Members{
 			"Resolve": {Method: true,
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -50,6 +41,5 @@ func HTTPRequest() rbxmk.Reflector {
 				Dump: func() dump.Value { return dump.Function{} },
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

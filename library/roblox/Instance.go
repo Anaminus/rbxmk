@@ -144,12 +144,6 @@ func Instance() rbxmk.Reflector {
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Instance").(*rtypes.Instance)
-				op := s.Pull(2, "Instance").(*rtypes.Instance)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
 			"__index": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 
@@ -959,7 +953,6 @@ func Instance() rbxmk.Reflector {
 					"sym.Reference":     dump.Property{ValueType: dt.Prim("Symbol")},
 				},
 				Operators: &dump.Operators{
-					Eq: true,
 					Index: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},

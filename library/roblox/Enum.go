@@ -21,12 +21,6 @@ func Enum() rbxmk.Reflector {
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Enum").(*rtypes.Enum)
-				op := s.Pull(2, "Enum").(*rtypes.Enum)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
 			"__index": func(s rbxmk.State) int {
 				enum := s.Pull(1, "Enum").(*rtypes.Enum)
 				name := string(s.Pull(2, "string").(types.String))
@@ -63,7 +57,6 @@ func Enum() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq: true,
 					Index: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},

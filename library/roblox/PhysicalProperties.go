@@ -52,12 +52,6 @@ func PhysicalProperties() rbxmk.Reflector {
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "PhysicalProperties").(types.PhysicalProperties)
-				op := s.Pull(2, "PhysicalProperties").(types.PhysicalProperties)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
 		},
 		Members: map[string]rbxmk.Member{
 			"Density": {
@@ -148,6 +142,5 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }

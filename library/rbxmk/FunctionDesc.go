@@ -1,7 +1,6 @@
 package reflect
 
 import (
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
@@ -16,14 +15,6 @@ func FunctionDesc() rbxmk.Reflector {
 		Name:     "FunctionDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("FunctionDesc"),
 		PullFrom: rbxmk.PullTypeFrom("FunctionDesc"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "FunctionDesc").(rtypes.FunctionDesc)
-				op := s.Pull(2, "FunctionDesc").(rtypes.FunctionDesc)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
-		},
 		Members: rbxmk.Members{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -173,6 +164,5 @@ func FunctionDesc() rbxmk.Reflector {
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
 	}
 }
