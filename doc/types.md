@@ -788,8 +788,7 @@ Body          | [any](##)?                 | The decoded body of the response.
 [Instance]: #user-content-instance
 
 The **Instance** type provides a similar API to that of Roblox. In addition to
-getting and setting properties as described previously, instances have the
-following members defined:
+getting and setting properties, instances have the following members defined:
 
 Member                                                                   | Kind
 -------------------------------------------------------------------------|-----
