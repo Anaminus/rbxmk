@@ -47,3 +47,33 @@ go install github.com/anaminus/rbxmk/rbxmk@latest
 
 If you installed Go correctly, this will install the latest version of rbxmk to
 `$GOPATH/bin`, which will allow you run it directly from a shell.
+
+A specific version of rbxmk may be installed by replacing `latest` with a
+version number (e.g. `v0.5.1`).
+
+### Development
+To compile and install the bleeding-edge version, the best way is to clone the
+repository:
+
+```bash
+git clone https://github.com/anaminus/rbxmk
+cd rbxmk/rbxmk
+go install
+```
+
+Extra version information can be included by passing the `-X` flag to the
+linker:
+
+```bash
+go install -ldflags="-X $VARIABLE=$VALUE"
+```
+
+- The `main.Prerelease` variable appends a prerelease version.
+- The `main.Build` variable appends build metadata.
+
+For example:
+```bash
+go install -ldflags="-X main.Prerelease=rc.1 -X main.Build=$(echo $(git log -1 --format=%cI | date --utc +%Y%m%d)-$(git rev-parse --short HEAD))"
+rbxmk version
+# e.g. 0.5.1-rc.1+20210312-2070bf8
+```
