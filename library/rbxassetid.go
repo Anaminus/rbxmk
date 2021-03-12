@@ -133,3 +133,13 @@ func (s RBXAssetIDSource) Write(options rtypes.RBXAssetOptions) error {
 	})
 	return err
 }
+
+// Create creates and uploads a new asset according to the given options.
+// Returns the ID of the created asset.
+func (s RBXAssetIDSource) Create(options rtypes.RBXAssetOptions) (assetID int64, err error) {
+	if options.Format.Format == "" {
+		return -1, fmt.Errorf("must specify Format for encoding")
+	}
+	//TODO: Implement.
+	return -1, fmt.Errorf("creating new assets not implemented")
+}

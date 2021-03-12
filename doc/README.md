@@ -56,11 +56,13 @@ rbxmk COMMAND [ OPTIONS... ]
 The rbxmk command receives the name of a subcommand followed by a number of
 options, which depend on the subcommand. The following subcommands are provided:
 
-Subcommand                         | Description
------------------------------------|------------
-[`rbxmk run`][run-command]         | Executes a Lua script.
-[`rbxmk help`][help-command]       | Displays help for rbxmk.
-[`rbxmk version`][version-command] | Displays the version of rbxmk.
+Subcommand                                       | Description
+-------------------------------------------------|------------
+[`rbxmk run`][run-command]                       | Executes a Lua script.
+[`rbxmk help`][help-command]                     | Displays help for rbxmk.
+[`rbxmk version`][version-command]               | Displays the version of rbxmk.
+[`rbxmk download-asset`][download-asset-command] | Downloads a Roblox asset.
+[`rbxmk upload-asset`][upload-asset-command]     | Uploads a Roblox asset.
 
 [cli]: https://en.wikipedia.org/wiki/Command-line_interface
 
@@ -119,6 +121,34 @@ rbxmk version
 
 The **version** command displays the version of the rbxmk command. The result is
 a string formatted according to [semantic versioning](https://semver.org/).
+
+### Download asset command
+[download-asset-command]: #user-content-download-asset-command
+
+```bash
+rbxmk download-asset [ FLAGS ] -id INT [ PATH ]
+```
+
+The **download-asset** command downloads an asset from the roblox website.
+
+The `-id` flag, which is required, specifies the ID of the asset to download.
+
+The first non-flag argument is the path to a file to write to. If not specified,
+then the file will be written to standard output.
+
+### Upload asset command
+[upload-asset-command]: #user-content-upload-asset-command
+
+```bash
+rbxmk upload-asset [ FLAGS ] [ -id INT ] PATH
+```
+
+Uploads an asset to the roblox website.
+
+The `-id` flag specifies the ID of the asset to upload.
+
+The first non-flag argument is the path to a file to read from, which is
+required. If the path is `-`, then the file will be read from standard input.
 
 ## Instances
 [instances]: #user-content-instances
