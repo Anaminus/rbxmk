@@ -599,10 +599,11 @@ Variable                                             | Description
 
 ### os.getenv
 [os.getenv]: #user-content-osgetenv
-<code>os.getenv(name: [string](##)?): [string](##) \| {[string](##)}</code>
+<code>os.getenv(name: [string](##)?): [string](##)? \| {\[[string](##)\]: [string](##)}</code>
 
-The **getenv** function returns the value of the *name* environment variable. If
-*name* is not specified, then a list of environment variables is returned.
+The **getenv** function returns the value of the *name* environment variable, or
+nil if no such value is defined. If *name* is not specified, then a table of
+environment variable names mapped to values is returned.
 
 ### os.join
 [os.join]: #user-content-osjoin

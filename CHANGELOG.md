@@ -40,6 +40,7 @@ branch is the latest unreleased version.
   clipboard.write.
 - Fix userdata caching. Immutable types like Vector3 which were equal would
   incorrectly produce the same userdata. Makes creation of such types faster.
+- Fix os.getenv so that passing no name returns all variables.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
