@@ -41,6 +41,9 @@ func clipboardRead(s rbxmk.State) int {
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
+	if v == nil {
+		return s.Push(rtypes.Nil)
+	}
 	return s.Push(v)
 }
 
@@ -63,7 +66,7 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 						{Name: "...", Type: dt.Prim("string")},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 					},
 					CanError: true,
 				},
@@ -95,8 +98,12 @@ func (f formatOptions) ValueOf(field string) types.Value {
 	return f.Options[field]
 }
 
-// Read reads a value from the clipboard according to the given formats.
+// Read reads a value from the clipboard according to the given formats. If no
+// formats are given, or no data is found, then nil is returned with no error.
 func (s ClipboardSource) Read(formats ...rtypes.FormatSelector) (v types.Value, err error) {
+	if len(formats) == 0 {
+		return nil, nil
+	}
 	options := make([]formatOptions, 0, len(formats))
 loop:
 	for _, selector := range formats {
@@ -137,7 +144,13 @@ loop:
 	// Read and decode.
 	f, b, err := clipboard.Read(mediaTypes...)
 	if err != nil {
+		if clipboard.IsNoData(err) {
+			return nil, nil
+		}
 		return nil, err
+	}
+	if f < 0 {
+		return nil, nil
 	}
 	option := mediaFormats[f]
 	if option.Format.Decode == nil {
@@ -150,8 +163,17 @@ loop:
 	return v, nil
 }
 
-// Write writes a value to the clipboard according to the given formats.
+// Write writes a value to the clipboard according to the given formats. If no
+// formats are given, then the clipboard is cleared.
 func (s ClipboardSource) Write(value types.Value, formats ...rtypes.FormatSelector) error {
+	if len(formats) == 0 {
+		if err := clipboard.Clear(); err != nil {
+			if clipboard.IsNoData(err) {
+				return nil
+			}
+			return err
+		}
+	}
 	options := make([]formatOptions, 0, len(formats))
 loop:
 	for _, selector := range formats {
@@ -205,6 +227,9 @@ loop:
 
 	// Write to clipboard.
 	if err := clipboard.Write(clipboardFormats); err != nil {
+		if clipboard.IsNoData(err) {
+			return nil
+		}
 		return err
 	}
 	return nil

@@ -18,7 +18,7 @@ var mediaToFormat = map[string]uint32{
 	"image/tiff": winapi.CF_TIFF,
 }
 
-// Clear empties the clipboard.
+// Clear removes all data from the clipboard.
 func Clear() error {
 	if err := winapi.OpenClipboard(0); err != nil {
 		return fmt.Errorf("OpenClipboard: %w", err)
@@ -26,12 +26,16 @@ func Clear() error {
 	defer winapi.CloseClipboard()
 
 	if err := winapi.EmptyClipboard(); err != nil {
-		return fmt.Errorf("EmptyClipboard:%w", err)
+		return fmt.Errorf("EmptyClipboard: %w", err)
 	}
 	return nil
 }
 
-// Write empties the clipboard, then populates it with each format.
+// Write sets data to the clipboard. If multiple formats are supported, then
+// each given format is written according to the specified media type.
+// Otherwise, which format is selected is implementation-defined.
+//
+// If no formats are given, then the clipboard is cleared with no other action.
 func Write(formats []Format) (err error) {
 	if err := winapi.OpenClipboard(0); err != nil {
 		return fmt.Errorf("OpenClipboard: %w", err)
@@ -96,11 +100,21 @@ func Write(formats []Format) (err error) {
 	return nil
 }
 
-// Read returns the content of the first given format that is successful. f is
-// the index of the format that was selected.
+// Read gets data from the clipboard. If multiple clipboard formats are
+// supported, Read selects the first format that matches one of the given
+// media types.
+//
+// Each argument is a media type (e.g. "text/plain").
+//
+// If an error is returned, then f will be less than 0. If no data was found,
+// then the error will contain NoDataError. If no formats were given, then f
+// will be less than 0, and err will be nil.
 func Read(formats ...string) (f int, b []byte, err error) {
+	if len(formats) == 0 {
+		return -1, nil, nil
+	}
 	if err := winapi.OpenClipboard(0); err != nil {
-		return 0, nil, fmt.Errorf("OpenClipboard: %w", err)
+		return -1, nil, fmt.Errorf("OpenClipboard: %w", err)
 	}
 	defer winapi.CloseClipboard()
 
@@ -124,13 +138,13 @@ func Read(formats ...string) (f int, b []byte, err error) {
 		break
 	}
 	if hMem == 0 {
-		return 0, nil, fmt.Errorf("no clipboard data for given formats")
+		return -1, nil, NoDataError{}
 	}
 
 	// Copy from clipboard memory.
 	p, err := winapi.GlobalLock(hMem)
 	if err != nil {
-		return 0, nil, fmt.Errorf("GlobalLock: %w", err)
+		return -1, nil, fmt.Errorf("GlobalLock: %w", err)
 	}
 	defer winapi.GlobalUnlock(hMem)
 
@@ -142,7 +156,7 @@ func Read(formats ...string) (f int, b []byte, err error) {
 		// Decode from raw bytes.
 		length, err := winapi.GlobalSize(hMem)
 		if err != nil {
-			return 0, nil, fmt.Errorf("GlobalSize: %w", err)
+			return -1, nil, fmt.Errorf("GlobalSize: %w", err)
 		}
 
 		//WARN
