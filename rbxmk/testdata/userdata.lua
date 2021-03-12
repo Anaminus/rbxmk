@@ -24,6 +24,8 @@ T.Pass(T.UserDataCacheLen() == baseLen+1, "userdata cache length is 1")
 
 set = nil
 T.GC()
+-- Requires two cycles to fully finalize.
+T.GC()
 T.Pass(T.UserDataCacheLen() == baseLen+0, "userdata cache length is 0")
 
 T.GC()

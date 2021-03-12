@@ -17,6 +17,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// udptr holds an untracked reference to a userdata.
+type udptr struct {
+	p           uintptr
+	resurrected bool
+}
+
 // World contains the entire state of a Lua environment, including a Lua state,
 // and registered Reflectors, Formats, and Sources.
 type World struct {
@@ -35,7 +41,7 @@ type World struct {
 	FS     sfs.FS
 
 	udmut    sync.Mutex
-	userdata map[interface{}]uintptr
+	userdata map[interface{}]*udptr
 }
 
 // NewWorld returns a World initialized with the given Lua state.
@@ -82,7 +88,10 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	defer w.udmut.Unlock()
 
 	if p, ok := w.userdata[v]; ok {
-		u := (*lua.LUserData)(unsafe.Pointer(p))
+		u := (*lua.LUserData)(unsafe.Pointer(p.p))
+		// GC may have finalized u during this time, so tell the finalizer that
+		// u has been resurrected.
+		p.resurrected = true
 		return u
 	}
 
@@ -90,9 +99,9 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
 
 	if w.userdata == nil {
-		w.userdata = map[interface{}]uintptr{}
+		w.userdata = map[interface{}]*udptr{}
 	}
-	w.userdata[v] = uintptr(unsafe.Pointer(u))
+	w.userdata[v] = &udptr{p: uintptr(unsafe.Pointer(u))}
 	runtime.SetFinalizer(u, w.finalize)
 	return u
 }
@@ -101,7 +110,14 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 func (w *World) finalize(u *lua.LUserData) {
 	w.udmut.Lock()
 	defer w.udmut.Unlock()
-	delete(w.userdata, u.Value())
+	v := u.Value()
+	if p := w.userdata[v]; p.resurrected {
+		// u was resurrected while the GC finalized it; reset the finalizer.
+		p.resurrected = false
+		runtime.SetFinalizer(u, w.finalize)
+		return
+	}
+	delete(w.userdata, v)
 }
 
 // UserDataCacheLen return the number of userdata values in the cache.
