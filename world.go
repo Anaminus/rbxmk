@@ -52,21 +52,10 @@ func NewWorld(l *lua.LState) *World {
 	}
 }
 
-// cacheUserData causes userdata created by the world to be cached per value.
-const cacheUserdata = true
-
 // UserDataOf returns the userdata value associated with v. If there is no such
 // userdata, then a new one is created, with the metatable set to the type
 // corresponding to t.
 func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
-	if !cacheUserdata {
-		// Fallback in case it turns out that pointer fiddling fails
-		// catastrophically for some reason.
-		u := w.State().NewUserData(v)
-		w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
-		return u
-	}
-
 	// Normally, a new userdata will be created every single time a value needs
 	// to be pushed. This is fine for most cases; __eq will take care of most
 	// comparison checks. One problem is that such userdata cannot be properly
