@@ -11,6 +11,9 @@ details on how rbxmk works.
 	1. [Run command][run-command]
 	2. [Help command][help-command]
 	3. [Version command][version-command]
+	4. [Download asset command][download-asset-command]
+	5. [Upload asset command][upload-asset-command]
+	6. [Dump command][dump-command]
 3. [Instances][instances]
 4. [Attributes][attributes]
 5. [Descriptors][descriptors]
@@ -63,6 +66,7 @@ Subcommand                                       | Description
 [`rbxmk version`][version-command]               | Displays the version of rbxmk.
 [`rbxmk download-asset`][download-asset-command] | Downloads a Roblox asset.
 [`rbxmk upload-asset`][upload-asset-command]     | Uploads a Roblox asset.
+[`rbxmk dump`][dump-command]                     | Dumps the rbxmk Lua API.
 
 [cli]: https://en.wikipedia.org/wiki/Command-line_interface
 
@@ -149,6 +153,23 @@ The `-id` flag specifies the ID of the asset to upload.
 
 The first non-flag argument is the path to a file to read from, which is
 required. If the path is `-`, then the file will be read from standard input.
+
+### Dump command
+[dump-command]: #user-content-dump-command
+
+```bash
+rbxmk dump FORMAT
+```
+
+Dumps the API of the rbxmk Lua environment. The following formats are supported:
+
+Format   | Description
+---------|------------
+json     | General JSON format.
+json-min | Minified JSON format.
+selene   | [Selene][selene] TOML format.
+
+[selene]: https://kampfkarren.github.io/selene/
 
 ## Instances
 [instances]: #user-content-instances
