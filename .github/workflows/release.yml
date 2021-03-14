@@ -13,27 +13,8 @@ env:
 
 jobs:
 
-  test:
-    name: Run tests
-    strategy:
-      matrix:
-        os: [windows-2019, ubuntu-latest]
-    runs-on: ${{matrix.os}}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{env.GOVERSION}}
-
-      - name: Run tests
-        run: go test -v ${{env.PROGRAM}}
-
   build:
     name: Build executables
-    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:

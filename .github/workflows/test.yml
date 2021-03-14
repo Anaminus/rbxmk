@@ -1,0 +1,33 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+    - imperative
+  pull_request:
+    branches:
+    - imperative
+
+env:
+  PROGRAM   : './rbxmk' # Location of program.
+  GOVERSION : 1.16      # Version of Go to compile with.
+
+jobs:
+
+  test:
+    name: Run tests
+    strategy:
+      matrix:
+        os: [windows-2019, ubuntu-latest]
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{env.GOVERSION}}
+
+      - name: Run tests
+        run: go test -v -trimpath ${{env.PROGRAM}}
