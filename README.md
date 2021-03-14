@@ -12,7 +12,7 @@ files into a final product, be it a game, plugin, model, and so on.
 ## Download
 **This project is unstable! Use at your own risk!**
 
-The current version of rbxmk is **<version>v0.5.1</version>**. The following
+The current version of rbxmk is **<version>v0.6.0</version>**. The following
 builds are available for download:
 
 | Windows                     | Mac                | Linux                       |
@@ -22,13 +22,13 @@ builds are available for download:
 
 See the [Release page][release] for more information on the current version.
 
-[win64]: https://github.com/Anaminus/rbxmk/releases/download/v0.5.1/rbxmk-v0.5.1-windows-amd64.zip
-[win32]: https://github.com/Anaminus/rbxmk/releases/download/v0.5.1/rbxmk-v0.5.1-windows-386.zip
-[macos]: https://github.com/Anaminus/rbxmk/releases/download/v0.5.1/rbxmk-v0.5.1-darwin-amd64.zip
-[linux64]: https://github.com/Anaminus/rbxmk/releases/download/v0.5.1/rbxmk-v0.5.1-linux-amd64.zip
-[linux32]: https://github.com/Anaminus/rbxmk/releases/download/v0.5.1/rbxmk-v0.5.1-linux-386.zip
-[source]: https://github.com/Anaminus/rbxmk/archive/v0.5.1.zip
-[release]: https://github.com/Anaminus/rbxmk/releases/tag/v0.5.1
+[win64]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.0/rbxmk-v0.6.0-windows-amd64.zip
+[win32]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.0/rbxmk-v0.6.0-windows-386.zip
+[macos]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.0/rbxmk-v0.6.0-darwin-amd64.zip
+[linux64]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.0/rbxmk-v0.6.0-linux-amd64.zip
+[linux32]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.0/rbxmk-v0.6.0-linux-386.zip
+[source]: https://github.com/Anaminus/rbxmk/archive/v0.6.0.zip
+[release]: https://github.com/Anaminus/rbxmk/releases/tag/v0.6.0
 
 ## Usage
 The [Documentation page](doc/README.md) provides a complete reference on how
@@ -49,7 +49,7 @@ If you installed Go correctly, this will install the latest version of rbxmk to
 `$GOPATH/bin`, which will allow you run it directly from a shell.
 
 A specific version of rbxmk may be installed by replacing `latest` with a
-version number (e.g. `v0.5.1`).
+version number (e.g. `v0.6.0`).
 
 ### Development
 To compile and install the bleeding-edge version, the best way is to clone the
