@@ -127,7 +127,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 		}
 	}
 
-	world.State().SetGlobal("_RBXMK_VERSION", lua.LString(Version))
+	world.State().SetGlobal("_RBXMK_VERSION", lua.LString(VersionString()))
 
 	// Add script arguments.
 	for _, arg := range args {

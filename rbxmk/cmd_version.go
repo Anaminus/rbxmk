@@ -15,12 +15,7 @@ func init() {
 	})
 }
 
-type VersionCommand struct{}
-
-func (VersionCommand) Run(opt snek.Options) error {
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
+func VersionString() string {
 	s := Version
 	if Prerelease != "" {
 		s += "-" + Prerelease
@@ -28,6 +23,15 @@ func (VersionCommand) Run(opt snek.Options) error {
 	if Build != "" {
 		s += "+" + Build
 	}
-	fmt.Fprintln(opt.Stdout, s)
+	return s
+}
+
+type VersionCommand struct{}
+
+func (VersionCommand) Run(opt snek.Options) error {
+	if err := opt.ParseFlags(); err != nil {
+		return err
+	}
+	fmt.Fprintln(opt.Stdout, VersionString())
 	return nil
 }
