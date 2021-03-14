@@ -2,11 +2,9 @@
 
 package clipboard
 
-import "errors"
-
 // Clear removes all data from the clipboard.
 func Clear() error {
-	return NoData{notImplemented: true}
+	return NoDataError{notImplemented: true}
 }
 
 // Read gets data from the clipboard. If multiple clipboard formats are
@@ -19,7 +17,7 @@ func Clear() error {
 // then the error will contain NoDataError. If no formats were given, then f
 // will be less than 0, and err will be nil.
 func Read(formats ...string) (f int, b []byte, err error) {
-	return 0, nil, NoData{notImplemented: true}
+	return 0, nil, NoDataError{notImplemented: true}
 }
 
 // Write sets data to the clipboard. If multiple formats are supported, then
@@ -28,5 +26,5 @@ func Read(formats ...string) (f int, b []byte, err error) {
 //
 // If no formats are given, then the clipboard is cleared with no other action.
 func Write(formats []Format) (err error) {
-	return NoData{notImplemented: true}
+	return NoDataError{notImplemented: true}
 }
