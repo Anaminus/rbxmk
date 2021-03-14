@@ -4,47 +4,41 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
-- Add `rbxmk download-asset` command to quickly download an asset from the
-  Roblox website.
-- Add `rbxmk upload-asset` command to quickly upload an asset to the Roblox
-  website.
-- Add `rbxmk dump` command to dump the rbxmk Lua API in various formats.
+- Add [`rbxmk download-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-download-asset-command) command to quickly download an asset from the Roblox website.
+- Add [`rbxmk upload-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-upload-asset-command) command to quickly upload an asset to the Roblox website.
+- Add [`rbxmk dump`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-dump-command) command to dump the rbxmk Lua API in various formats.
 	- Supports generic JSON and minified JSON format.
-	- Supports selene TOML format.
-- Add Instance.Descend as an alternative to child indexing, which is not
-  implemented by rbxmk.
-- Entries returned by fs.dir contain only Name and IsDir fields.
+	- Supports [selene](https://kampfkarren.github.io/selene/) TOML format.
+- Add [Instance.Descend](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancedescend) as an alternative to child indexing, which rbxmk deliberately does not implement.
+- Add `--include-root` flag to [run command](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) to include paths as root directories.
+- Add `--allow-insecure-paths` flag to [run command](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) to disable path restrictions.
+- Add [CFrame.lookAt](https://developer.roblox.com/en-us/api-reference/datatype/CFrame) constructor.
+- Implementations of [Axes.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-axesnew) and [Faces.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-facesnew) match Roblox API.
+	- Previous implementations exist as [Axes.fromComponents](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-axesfromcomponents) and [Faces.fromComponents](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-facesfromcomponents).
+- Implement face fields on [Axes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-axes), matching Roblox API.
+- Rename AttrConfig.new to [rbxmk.newAttrConfig](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-rbxmknewattrconfig).
+- Improve speed of [table.clear](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-tableclear).
+- Entries returned by [fs.dir](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-fsdir) contain only Name and IsDir fields.
 	- For large directories, getting files is much faster.
-	- Use fs.stat to get full metadata of a file.
-- Improve speed of table.clear.
-- Implementations of Axes.new and Faces.new match Roblox API.
-	- Previous implementations exist as Axes.fromComponents and
-	  Faces.fromComponents.
-- Implement face fields on Axes, matching Roblox API.
-- Add `--include-root` flag to run command to include paths as root directories.
-- Add `--allow-insecure-paths` flag to run command to disable path restrictions.
-- Add CFrame.lookAt constructor.
-- Rename AttrConfig.new to rbxmk.newAttrConfig.
+	- Use [fs.stat](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-fsstat) to get full metadata of a file.
 
 **Fixes:**
 - Fix version displayed by rbxmk.
-- Fix error when assigning a property to a DataModel.
-- Fix type of BrickColor properties decoded by Roblox XML formats.
-- Fixes to encoding of Roblox file formats.
-- Fix RBXAssetOptions.Cookies not being optional.
-- Fix missing properties encoded by Roblox binary formats in certain cases.
-- Fix Instance.FindFirstAncestor behaving as FindFirstAncestorOfClass.
-- Fix equality of Enums, Enum, and EnumItem types.
-- Fix tostring of Enums, Enum, and EnumItem types.
-- Fix handling of nil Instance properties.
-- Fix Instance properties not checking inherited classes.
-- Fix handling of nil PhysicalProperties properties.
-- Fix handling of arguments in fs.mkdir, fs.remove, and fs.rename.
-- Fix FormatSelectors being received incorrectly in clipboard.read and
-  clipboard.write.
-- Fix userdata caching. Immutable types like Vector3 which were equal would
-  incorrectly produce the same userdata. Makes creation of such types faster.
-- Fix os.getenv so that passing no name returns all variables.
+- Fix error when assigning a property to a [DataModel](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-datamodel).
+- Fix type of [BrickColor](https://developer.roblox.com/en-us/api-reference/datatype/BrickColor) properties decoded by [Roblox XML formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxlx).
+- Fixes to encoding of [Roblox file formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
+- Fix [RBXAssetOptions.Cookies](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rbxassetoptions) not being optional.
+- Fix missing properties encoded by [Roblox binary formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) in certain cases.
+- Fix [Instance.FindFirstAncestor](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancefindfirstancestor) behaving as FindFirstAncestorOfClass.
+- Fix equality of [Enums](https://developer.roblox.com/en-us/api-reference/datatype/Enums), [Enum](https://developer.roblox.com/en-us/api-reference/datatype/Enum), and [EnumItem](https://developer.roblox.com/en-us/api-reference/datatype/EnumItem) types.
+- Fix tostring of [Enums](https://developer.roblox.com/en-us/api-reference/datatype/Enums), [Enum](https://developer.roblox.com/en-us/api-reference/datatype/Enum), and [EnumItem](https://developer.roblox.com/en-us/api-reference/datatype/EnumItem) types.
+- Fix handling of nil [Instance](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instance) properties.
+- Fix [Instance](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instance) properties not checking inherited classes.
+- Fix handling of nil [PhysicalProperties](https://developer.roblox.com/en-us/api-reference/datatype/PhysicalProperties) properties.
+- Fix handling of arguments in [fs.mkdir](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-fsmkdir), [fs.remove](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-fsremove), and [fs.rename](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-fsrename).
+- Fix [FormatSelectors](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-formatselector) being received incorrectly in [clipboard.read](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-clipboardread) and [clipboard.write](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-clipboardwrite).
+- Fix userdata caching. Immutable types like Vector3 which were equal would incorrectly produce the same userdata. Makes creation of such types faster.
+- Fix [os.getenv](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osgetenv) not returning all variables when no value is passed.
 
 **Internal:**
 - Automated tests run on Windows in addition to Linux.
