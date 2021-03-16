@@ -13,6 +13,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/rbxmk/sfs"
 	"github.com/robloxapi/types"
 )
@@ -178,6 +179,7 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	if len(r.Metatable) == 0 &&
 		len(r.Properties) == 0 &&
+		len(r.Symbols) == 0 &&
 		len(r.Methods) == 0 &&
 		r.Flags&Exprim == 0 {
 		// No metatable.
@@ -203,14 +205,20 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		}
 	}
 	// Validate properties.
-	for _, member := range r.Properties {
-		if member.Get == nil {
+	for _, property := range r.Properties {
+		if property.Get == nil {
 			panic("property must define Get field")
 		}
 	}
+	// Validate symbols.
+	for _, symbol := range r.Symbols {
+		if symbol.Get == nil {
+			panic("symbol must define Get field")
+		}
+	}
 	// Validate methods.
-	for _, member := range r.Methods {
-		if member.Func == nil {
+	for _, method := range r.Methods {
+		if method.Func == nil {
 			panic("method must define Func field")
 		}
 	}
@@ -254,17 +262,16 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		newindex = r.Metatable["__newindex"]
 	}
 
-	if len(r.Properties) > 0 || len(r.Methods) > 0 {
+	if len(r.Properties) > 0 || len(r.Symbols) > 0 || len(r.Methods) > 0 {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
-				s.ArgError(1, err.Error())
+				return s.ArgError(1, err.Error())
 			}
-			idx := s.L.Get(2)
-			name, ok := idx.(lua.LString)
-			if ok {
-				if method, ok := r.Methods[string(name)]; ok {
+			switch idx := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			case types.String:
+				if method, ok := r.Methods[string(idx)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
 						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
@@ -274,46 +281,97 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 					}))
 					return 1
 				}
-				if property, ok := r.Properties[string(name)]; ok {
+				if property, ok := r.Properties[string(idx)]; ok {
 					return property.Get(s, v)
 				}
+				if index != nil {
+					// Fallback to custom index.
+					return index(s)
+				}
+				return s.RaiseError("%q is not a valid member of %s", idx, r.Name)
+			case rtypes.Symbol:
+				if property, ok := r.Symbols[idx]; ok {
+					return property.Get(s, v)
+				}
+				if index != nil {
+					// Fallback to custom index.
+					return index(s)
+				}
+				return s.RaiseError("symbol %s is not a valid member of %s", idx.Name, r.Name)
+			default:
+				if index != nil {
+					// Fallback to custom index.
+					return index(s)
+				}
+				if idx == nil {
+					idx = rtypes.Nil
+				}
+				switch {
+				case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
+					return s.RaiseError("string or symbol expected for member index, got %s", idx.Type())
+				case len(r.Properties)+len(r.Methods) > 0:
+					return s.RaiseError("string expected for member name, got %s", idx.Type())
+				case len(r.Symbols) > 0:
+					return s.RaiseError("symbol expected for member index, got %s", idx.Type())
+				default:
+					return s.RaiseError("attempt to index %s with %q", r.Name, idx.Type())
+				}
 			}
-			if index != nil {
-				// Fallback to custom index.
-				return index(s)
-			}
-			if !ok {
-				return s.RaiseError("string expected for member name, got %s", idx.Type().String())
-			}
-			return s.RaiseError("%q is not a valid member of %s", name, r.Name)
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			idx := s.L.Get(2)
-			name, ok := idx.(lua.LString)
-			if ok {
-				if _, ok := r.Methods[string(name)]; ok {
-					return s.RaiseError("%s cannot be assigned to", name)
+			switch idx := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			case types.String:
+				if _, ok := r.Methods[string(idx)]; ok {
+					return s.RaiseError("%s cannot be assigned to in %s", idx, r.Name)
 				}
-				if property, ok := r.Properties[string(name)]; ok {
+				if property, ok := r.Properties[string(idx)]; ok {
 					if property.Set == nil {
-						return s.RaiseError("%s cannot be assigned to", name)
+						return s.RaiseError("%s cannot be assigned to in %s", idx, r.Name)
 					}
 					property.Set(s, v)
 					return 0
 				}
+				if newindex != nil {
+					// Fallback to custom newindex.
+					return newindex(s)
+				}
+				return s.RaiseError("%q is not a valid member of %s", idx, r.Name)
+			case rtypes.Symbol:
+				if property, ok := r.Symbols[idx]; ok {
+					if property.Set == nil {
+						return s.RaiseError("symbol %s cannot be assigned to in %s", idx.Name, r.Name)
+					}
+					property.Set(s, v)
+					return 0
+				}
+				if newindex != nil {
+					// Fallback to custom newindex.
+					return newindex(s)
+				}
+				return s.RaiseError("symbol %s is not a valid member of %s", idx.Name, r.Name)
+			default:
+				if newindex != nil {
+					// Fallback to custom newindex.
+					return newindex(s)
+				}
+				if idx == nil {
+					idx = rtypes.Nil
+				}
+				switch {
+				case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
+					return s.RaiseError("string or symbol expected for member index, got %s", idx.Type())
+				case len(r.Properties)+len(r.Methods) > 0:
+					return s.RaiseError("string expected for member name, got %s", idx.Type())
+				case len(r.Symbols) > 0:
+					return s.RaiseError("symbol expected for member index, got %s", idx.Type())
+				default:
+					return s.RaiseError("attempt to index %s with %q", r.Name, idx.Type())
+				}
 			}
-			if newindex != nil {
-				// Fallback to custom newindex.
-				return newindex(s)
-			}
-			if !ok {
-				return s.RaiseError("string expected for member name, got %s", idx.Type().String())
-			}
-			return s.RaiseError("%q is not a valid member of %s", name, r.Name)
 		}))
 	}
 

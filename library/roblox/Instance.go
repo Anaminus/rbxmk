@@ -146,60 +146,6 @@ func Instance() rbxmk.Reflector {
 			},
 			"__index": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
-
-				// Try symbol.
-				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, s.CheckAny(2)); err == nil {
-						name := sym.(rtypes.Symbol).Name
-						switch name {
-						case "Reference":
-							return s.Push(types.String(inst.Reference))
-						case "IsService":
-							return s.Push(types.Bool(inst.IsService))
-						case "Desc":
-							desc := inst.Desc()
-							if desc == nil {
-								return s.Push(rtypes.Nil)
-							}
-							return s.Push(desc)
-						case "RawDesc":
-							desc, blocked := inst.RawDesc()
-							if blocked {
-								return s.Push(types.False)
-							}
-							if desc == nil {
-								return s.Push(rtypes.Nil)
-							}
-							return s.Push(desc)
-						case "AttrConfig":
-							attrcfg := inst.AttrConfig()
-							if attrcfg == nil {
-								return s.Push(rtypes.Nil)
-							}
-							return s.Push(attrcfg)
-						case "RawAttrConfig":
-							attrcfg, blocked := inst.RawAttrConfig()
-							if blocked {
-								return s.Push(types.False)
-							}
-							if attrcfg == nil {
-								return s.Push(rtypes.Nil)
-							}
-							return s.Push(attrcfg)
-						case "Metadata":
-							if meta := inst.Metadata(); meta != nil {
-								dict := make(rtypes.Dictionary, len(meta))
-								for k, v := range meta {
-									dict[k] = types.String(v)
-								}
-								return s.Push(dict)
-							}
-						}
-						s.L.RaiseError("symbol %s is not a valid member", name)
-						return 0
-					}
-				}
-
 				name := string(s.Pull(2, "string").(types.String))
 				desc := s.Desc.Of(inst)
 				var classDesc *rbxdump.Class
@@ -296,69 +242,6 @@ func Instance() rbxmk.Reflector {
 			},
 			"__newindex": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
-
-				// Try symbol.
-				if typ := s.Reflector("Symbol"); typ.Name != "" {
-					if sym, err := typ.PullFrom(s, s.CheckAny(2)); err == nil {
-						name := sym.(rtypes.Symbol).Name
-						switch name {
-						case "Reference":
-							inst.Reference = string(s.Pull(3, "string").(types.String))
-							return 0
-						case "IsService":
-							inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
-							return 0
-						case "Desc", "RawDesc":
-							switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
-							case *rtypes.RootDesc:
-								inst.SetDesc(v, false)
-							case types.Bool:
-								if v {
-									return s.RaiseError("descriptor cannot be true")
-								}
-								inst.SetDesc(nil, true)
-							case rtypes.NilType:
-								inst.SetDesc(nil, false)
-							default:
-								return s.ReflectorError(3)
-							}
-							return 0
-						case "AttrConfig", "RawAttrConfig":
-							switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
-							case *rtypes.AttrConfig:
-								inst.SetAttrConfig(v, false)
-							case types.Bool:
-								if v {
-									return s.RaiseError("AttrConfig cannot be true")
-								}
-								inst.SetAttrConfig(nil, true)
-							case rtypes.NilType:
-								inst.SetAttrConfig(nil, false)
-							default:
-								return s.ReflectorError(3)
-							}
-							return 0
-						case "Metadata":
-							if meta := inst.Metadata(); meta != nil {
-								dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
-								for k := range meta {
-									delete(meta, k)
-								}
-								for k, v := range dict {
-									w, ok := v.(types.String)
-									if !ok {
-										return s.RaiseError("field %q: string expected, got %s (%T)", k, v.Type(), v)
-									}
-									meta[k] = string(w)
-								}
-								return 0
-							}
-						}
-						s.L.RaiseError("symbol %s is not a valid member", name)
-						return 0
-					}
-				}
-
 				name := string(s.Pull(2, "string").(types.String))
 
 				// Try GetService.
@@ -541,6 +424,174 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 				Dump: func() dump.Property { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
+			},
+		},
+		Symbols: rbxmk.Symbols{
+			rtypes.Symbol{Name: "Reference"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					return s.Push(types.String(inst.Reference))
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					inst.Reference = string(s.Pull(3, "string").(types.String))
+				},
+			},
+			rtypes.Symbol{Name: "IsService"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					return s.Push(types.Bool(inst.IsService))
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
+				},
+			},
+			rtypes.Symbol{Name: "Desc"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					desc := inst.Desc()
+					if desc == nil {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(desc)
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+					case *rtypes.RootDesc:
+						inst.SetDesc(v, false)
+					case types.Bool:
+						if v {
+							s.RaiseError("descriptor cannot be true")
+							return
+						}
+						inst.SetDesc(nil, true)
+					case rtypes.NilType:
+						inst.SetDesc(nil, false)
+					default:
+						s.ReflectorError(3)
+					}
+				},
+			},
+			rtypes.Symbol{Name: "RawDesc"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					desc, blocked := inst.RawDesc()
+					if blocked {
+						return s.Push(types.False)
+					}
+					if desc == nil {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(desc)
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+					case *rtypes.RootDesc:
+						inst.SetDesc(v, false)
+					case types.Bool:
+						if v {
+							s.RaiseError("descriptor cannot be true")
+							return
+						}
+						inst.SetDesc(nil, true)
+					case rtypes.NilType:
+						inst.SetDesc(nil, false)
+					default:
+						s.ReflectorError(3)
+					}
+				},
+			},
+			rtypes.Symbol{Name: "AttrConfig"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					attrcfg := inst.AttrConfig()
+					if attrcfg == nil {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(attrcfg)
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
+					case *rtypes.AttrConfig:
+						inst.SetAttrConfig(v, false)
+					case types.Bool:
+						if v {
+							s.RaiseError("AttrConfig cannot be true")
+							return
+						}
+						inst.SetAttrConfig(nil, true)
+					case rtypes.NilType:
+						inst.SetAttrConfig(nil, false)
+					default:
+						s.ReflectorError(3)
+					}
+				},
+			},
+			rtypes.Symbol{Name: "RawAttrConfig"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					attrcfg, blocked := inst.RawAttrConfig()
+					if blocked {
+						return s.Push(types.False)
+					}
+					if attrcfg == nil {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(attrcfg)
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
+					case *rtypes.AttrConfig:
+						inst.SetAttrConfig(v, false)
+					case types.Bool:
+						if v {
+							s.RaiseError("AttrConfig cannot be true")
+							return
+						}
+						inst.SetAttrConfig(nil, true)
+					case rtypes.NilType:
+						inst.SetAttrConfig(nil, false)
+					default:
+						s.ReflectorError(3)
+					}
+				},
+			},
+			rtypes.Symbol{Name: "Metadata"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					if meta := inst.Metadata(); meta != nil {
+						dict := make(rtypes.Dictionary, len(meta))
+						for k, v := range meta {
+							dict[k] = types.String(v)
+						}
+						return s.Push(dict)
+					}
+					return s.RaiseError("symbol Metadata is not a valid member of Instance")
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					if meta := inst.Metadata(); meta != nil {
+						dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
+						for k := range meta {
+							delete(meta, k)
+						}
+						for k, v := range dict {
+							w, ok := v.(types.String)
+							if !ok {
+								s.RaiseError("field %q: string expected, got %s (%T)", k, v.Type(), v)
+								return
+							}
+							meta[k] = string(w)
+						}
+						return
+					}
+					s.RaiseError("symbol Metadata is not a valid member of Instance")
+				},
 			},
 		},
 		Methods: rbxmk.Methods{

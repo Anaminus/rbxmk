@@ -117,11 +117,13 @@ type TypeDef struct {
 	Underlying dt.Type `json:",omitempty"`
 	// Operators describes the operators defined on the type.
 	Operators *Operators `json:",omitempty"`
-	// Operators describes the properties defined on the type.
+	// Properties describes the properties defined on the type.
 	Properties Properties `json:",omitempty"`
-	// Operators describes the methods defined on the type.
+	// Symbols describes the symbols defined on the type.
+	Symbols Symbols `json:",omitempty"`
+	// Methods describes the methods defined on the type.
 	Methods Methods `json:",omitempty"`
-	// Operators describes constructor functions that create the type.
+	// Constructors describes constructor functions that create the type.
 	Constructors Constructors `json:",omitempty"`
 	// Description is a detailed description of the type definition.
 	Description string `json:",omitempty"`
@@ -129,6 +131,9 @@ type TypeDef struct {
 
 // Properties maps a name to a Property.
 type Properties = map[string]Property
+
+// Symbols maps a name to a Property.
+type Symbols = map[string]Property
 
 // Methods maps a name to a method.
 type Methods = map[string]Function

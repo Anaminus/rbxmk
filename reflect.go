@@ -3,6 +3,7 @@ package rbxmk
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -40,6 +41,11 @@ type Reflector struct {
 	// defines them according to the given properties. In case of name
 	// conflicts, methods are prioritized over properties.
 	Properties Properties
+
+	// Symbols defines the symbols of a custom type. If the __index and
+	// __newindex metamethods are not defined by Metatable, then Symbols defines
+	// them according to the given properties.
+	Symbols Symbols
 
 	// Methods defines the methods of a custom type. If the __index and
 	// __newindex metamethods are not defined by Metatable, then Methods defines
@@ -103,6 +109,17 @@ func (r Reflector) DumpAll() dump.TypeDef {
 			def.Properties[name] = property.Dump()
 		}
 	}
+	for symbol, property := range r.Symbols {
+		if property.Dump == nil {
+			continue
+		}
+		if _, ok := def.Symbols[symbol.Name]; !ok {
+			if def.Symbols == nil {
+				def.Symbols = dump.Symbols{}
+			}
+			def.Symbols[symbol.Name] = property.Dump()
+		}
+	}
 	for name, method := range r.Methods {
 		if method.Dump == nil {
 			continue
@@ -137,6 +154,9 @@ type Metamethod func(s State) int
 
 // Properties is a set of properties keyed by name.
 type Properties map[string]Property
+
+// Symbols is a set of properties keyed by symbol.
+type Symbols map[rtypes.Symbol]Property
 
 // Property defines a property of a custom type.
 type Property struct {
