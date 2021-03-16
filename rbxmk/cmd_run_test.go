@@ -72,9 +72,9 @@ func initMain(s rbxmk.State, t *testing.T) {
 	// testing.T, but does not cause a Lua error to be thrown. The second
 	// optional argument is a string that describes the assertion, which is
 	// included with an emitted error.
-	T.RawSetString("Pass", s.L.NewFunction(func(l *lua.LState) int {
-		v := l.CheckAny(1)
-		msg := l.OptString(2, "expected pass")
+	T.RawSetString("Pass", s.WrapFunc(func(s rbxmk.State) int {
+		v := s.CheckAny(1)
+		msg := s.OptString(2, "expected pass")
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.Count()
@@ -109,9 +109,9 @@ func initMain(s rbxmk.State, t *testing.T) {
 	// emitted to testing.T, but does not cause a Lua error to be thrown. The
 	// second optional argument is a string that describes the assertion, which
 	// is included with an emitted error.
-	T.RawSetString("Fail", s.L.NewFunction(func(l *lua.LState) int {
-		v := l.CheckAny(1)
-		msg := l.OptString(2, "expected fail")
+	T.RawSetString("Fail", s.WrapFunc(func(s rbxmk.State) int {
+		v := s.CheckAny(1)
+		msg := s.OptString(2, "expected fail")
 		switch v := v.(type) {
 		case *lua.LFunction:
 			n := s.Count()

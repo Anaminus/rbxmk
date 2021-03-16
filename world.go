@@ -256,18 +256,16 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 
 	if len(r.Properties) > 0 || len(r.Methods) > 0 {
 		// Setup member getting and setting.
-		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
-			s := State{World: w, L: l, FrameType: OperatorFrame}
+		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			idx := l.Get(2)
+			idx := s.L.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
 				if method, ok := r.Methods[string(name)]; ok {
-					l.Push(l.NewFunction(func(l *lua.LState) int {
-						s := State{World: w, L: l, FrameType: MethodFrame}
+					s.L.Push(s.WrapMethod(func(s State) int {
 						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
@@ -277,37 +275,32 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 					return 1
 				}
 				if property, ok := r.Properties[string(name)]; ok {
-					return property.Get(State{World: w, L: l}, v)
+					return property.Get(s, v)
 				}
 			}
 			if index != nil {
 				// Fallback to custom index.
 				return index(s)
 			}
-			if ok {
-				l.RaiseError("%q is not a valid member of %s", name, r.Name)
-			} else {
-				l.RaiseError("string expected for member name, got %s", idx.Type().String())
+			if !ok {
+				return s.RaiseError("string expected for member name, got %s", idx.Type().String())
 			}
-			return 0
+			return s.RaiseError("%q is not a valid member of %s", name, r.Name)
 		}))
-		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
-			s := State{World: w, L: l, FrameType: OperatorFrame}
+		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			idx := l.Get(2)
+			idx := s.L.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
 				if _, ok := r.Methods[string(name)]; ok {
-					l.RaiseError("%s cannot be assigned to", name)
-					return 0
+					return s.RaiseError("%s cannot be assigned to", name)
 				}
 				if property, ok := r.Properties[string(name)]; ok {
 					if property.Set == nil {
-						l.RaiseError("%s cannot be assigned to", name)
-						return 0
+						return s.RaiseError("%s cannot be assigned to", name)
 					}
 					property.Set(s, v)
 					return 0
@@ -317,12 +310,10 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				// Fallback to custom newindex.
 				return newindex(s)
 			}
-			if ok {
-				l.RaiseError("%q is not a valid member of %s", name, r.Name)
-			} else {
-				l.RaiseError("string expected for member name, got %s", idx.Type().String())
+			if !ok {
+				return s.RaiseError("string expected for member name, got %s", idx.Type().String())
 			}
-			return 0
+			return s.RaiseError("%q is not a valid member of %s", name, r.Name)
 		}))
 	}
 
@@ -383,8 +374,8 @@ func (w *World) ApplyReflector(r Reflector, t *lua.LTable) {
 		ctors := w.l.CreateTable(0, len(r.Constructors))
 		for name, ctor := range r.Constructors {
 			if c := ctor.Func; c != nil {
-				ctors.RawSetString(name, w.l.NewFunction(func(l *lua.LState) int {
-					return c(State{World: w, L: w.l})
+				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
+					return c(s)
 				}))
 			}
 		}

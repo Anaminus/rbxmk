@@ -922,7 +922,7 @@ func Instance() rbxmk.Reflector {
 		},
 		Environment: func(s rbxmk.State, env *lua.LTable) {
 			t := s.L.CreateTable(0, 1)
-			t.RawSetString("new", s.L.NewFunction(func(l *lua.LState) int {
+			t.RawSetString("new", s.WrapFunc(func(s rbxmk.State) int {
 				var desc *rtypes.RootDesc
 				var blocked bool
 				if s.Count() >= 3 {
