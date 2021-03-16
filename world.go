@@ -250,7 +250,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	if r.Members != nil {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
-			s := State{World: w, L: l, FrameType: Operator}
+			s := State{World: w, L: l, FrameType: OperatorFrame}
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
@@ -265,7 +265,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				if member.Method {
 					// Push as method.
 					l.Push(l.NewFunction(func(l *lua.LState) int {
-						s := State{World: w, L: l, FrameType: Method}
+						s := State{World: w, L: l, FrameType: MethodFrame}
 						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
@@ -289,7 +289,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			return 0
 		}))
 		mt.RawSetString("__newindex", w.l.NewFunction(func(l *lua.LState) int {
-			s := State{World: w, L: l, FrameType: Operator}
+			s := State{World: w, L: l, FrameType: OperatorFrame}
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
@@ -546,14 +546,14 @@ func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 // WrapMethod is like WrapFunc, but marks the state as being a method.
 func (w *World) WrapMethod(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
-		return f(State{World: w, L: l, FrameType: Method})
+		return f(State{World: w, L: l, FrameType: MethodFrame})
 	})
 }
 
 // WrapOperator is like WrapFunc, but marks the state as being an operator.
 func (w *World) WrapOperator(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
-		return f(State{World: w, L: l, FrameType: Operator})
+		return f(State{World: w, L: l, FrameType: OperatorFrame})
 	})
 }
 

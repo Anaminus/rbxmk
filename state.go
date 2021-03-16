@@ -14,11 +14,11 @@ type FrameType uint8
 
 const (
 	// Frame is a regular function.
-	Function FrameType = iota
+	FunctionFrame FrameType = iota
 	// Frame is a method; exclude first argument.
-	Method
+	MethodFrame
 	// Frame is an operator, avoid displaying arguments.
-	Operator
+	OperatorFrame
 )
 
 // State contains references to an environment surrounding a value.
@@ -418,13 +418,13 @@ func (s State) ArgError(n int, msg string, v ...interface{}) int {
 		msg = fmt.Sprintf(msg, v...)
 	}
 	switch s.FrameType {
-	case Method:
+	case MethodFrame:
 		if n <= 1 {
 			s.RaiseError("bad method receiver: %s", msg)
 		} else {
 			s.L.ArgError(n-1, msg)
 		}
-	case Operator:
+	case OperatorFrame:
 		s.RaiseError(msg)
 	default:
 		s.L.ArgError(n, msg)
@@ -436,13 +436,13 @@ func (s State) ArgError(n int, msg string, v ...interface{}) int {
 func (s State) TypeError(n int, want, got string) int {
 	err := TypeError{Want: want, Got: got}
 	switch s.FrameType {
-	case Method:
+	case MethodFrame:
 		if n <= 1 {
 			s.RaiseError("bad method receiver: %s", err)
 		} else {
 			s.L.ArgError(n-1, err.Error())
 		}
-	case Operator:
+	case OperatorFrame:
 		s.RaiseError("%s", err.Error())
 	default:
 		s.L.ArgError(n, err.Error())
