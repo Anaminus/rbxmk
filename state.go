@@ -175,7 +175,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	v := s.PullAnyOfOpt(n, t...)
 	if v == nil {
-		s.TypeError(n, listTypes(t), s.Pull(n, "Variant").Type())
+		s.TypeError(n, listTypes(t), s.Typeof(s.L.Get(n)))
 	}
 	return v
 }
