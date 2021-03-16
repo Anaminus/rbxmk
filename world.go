@@ -577,33 +577,6 @@ func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error)
 	return rfl.PullFrom(State{World: w, L: w.l}, lvs...)
 }
 
-// Push reflects v according to its type as registered, then pushes the results
-// to the world's state.
-func (w *World) Push(v types.Value) int {
-	return State{World: w, L: w.l}.Push(v)
-}
-
-// Pull gets from the world's Lua state the values starting from n, and reflects
-// a value from them according to registered type t.
-func (w *World) Pull(n int, t string) types.Value {
-	return State{World: w, L: w.l}.Pull(n, t)
-}
-
-// PullOpt gets from the world's Lua state the value at n, and reflects a value
-// from it according to registered type t. If the value is nil, d is returned
-// instead.
-func (w *World) PullOpt(n int, t string, d types.Value) types.Value {
-	return State{World: w, L: w.l}.PullOpt(n, t, d)
-}
-
-// PullAnyOf gets from the world's Lua state the values starting from n, and
-// reflects a value from them according to any of the registered types in t.
-// Returns the first successful reflection among the types in t. If no types
-// succeeded, then a type error is thrown.
-func (w *World) PullAnyOf(n int, t ...string) types.Value {
-	return State{World: w, L: w.l}.PullAnyOf(n, t...)
-}
-
 // FileEntry describes a file, including the full path. An empty Path indicates
 // stdin.
 type FileEntry struct {
