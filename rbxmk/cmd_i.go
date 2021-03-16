@@ -149,11 +149,11 @@ func loadLine(l *lua.LState, line *liner.State) (string, error) {
 		return "", nil
 	}
 	if chunk[0] == '=' {
-		chunk = chunk[1:]
-		if _, err := l.LoadString("return " + chunk); err == nil {
+		if _, err := l.LoadString("return " + chunk[1:]); err == nil {
 			line.AppendHistory(chunk)
-			return "return " + chunk, expr
+			return "return " + chunk[1:], expr
 		}
+		chunk = chunk[1:]
 	}
 	if chunk, err = loadMultiline(chunk, l, line); err != nil {
 		return "", err
