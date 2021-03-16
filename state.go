@@ -173,6 +173,21 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 		s.ArgError(n, "value expected")
 		return nil
 	}
+	v := s.PullAnyOfOpt(n, t...)
+	if v == nil {
+		s.TypeError(n, listTypes(t), "")
+	}
+	return v
+}
+
+// PullAnyOfOpt gets from s.L the values starting from n, and reflects a value from
+// them according to any of the types in t registered with s.World. Returns the
+// first successful reflection among the types in t. If no types succeeded, then
+// nil is returned.
+func (s State) PullAnyOfOpt(n int, t ...string) types.Value {
+	if n > s.Count() {
+		return nil
+	}
 	// Find the maximum count among the given types. 0 is treated the same as 1.
 	// <0 indicates an arbitrary number of values.
 	max := 1
@@ -189,9 +204,9 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	switch max {
 	case 1: // All types have 1 value.
-		v := s.CheckAny(n)
+		lv := s.CheckAny(n)
 		for _, t := range ts {
-			if v, err := t.PullFrom(s, v); err == nil {
+			if v, err := t.PullFrom(s, lv); err == nil {
 				return v
 			}
 		}
@@ -240,7 +255,6 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 			return v
 		}
 	}
-	s.TypeError(n, listTypes(t), "")
 	return nil
 }
 
