@@ -450,7 +450,6 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		// Not indexed.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
 			if customIndex != nil {
-				// Fallback to custom index.
 				return customIndex(s)
 			}
 			return s.RaiseError("attempt to index %s with %q", r.Name, s.TypeofArg(2))
