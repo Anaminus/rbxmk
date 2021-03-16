@@ -50,8 +50,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
 				Underlying: dt.Prim("Instance"),
-				Properties: dump.Properties{
-					"sym.Metadata": dump.Property{ValueType: dt.Prim("Symbol")},
+				Symbols: dump.Properties{
+					"Metadata": dump.Property{ValueType: dt.Dictionary{V: dt.Prim("string")}},
 				},
 				Methods: dump.Methods{
 					"GetService": dump.Function{

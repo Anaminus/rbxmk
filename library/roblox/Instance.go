@@ -436,6 +436,7 @@ func Instance() rbxmk.Reflector {
 					inst := v.(*rtypes.Instance)
 					inst.Reference = string(s.Pull(3, "string").(types.String))
 				},
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			rtypes.Symbol{Name: "IsService"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -446,6 +447,7 @@ func Instance() rbxmk.Reflector {
 					inst := v.(*rtypes.Instance)
 					inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
 				},
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			rtypes.Symbol{Name: "Desc"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -471,6 +473,15 @@ func Instance() rbxmk.Reflector {
 						inst.SetDesc(nil, false)
 					default:
 						s.ReflectorError(3)
+					}
+				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType: dt.Or{
+							dt.Prim("RootDesc"),
+							dt.Prim("bool"),
+							dt.Prim("nil"),
+						},
 					}
 				},
 			},
@@ -503,6 +514,15 @@ func Instance() rbxmk.Reflector {
 						s.ReflectorError(3)
 					}
 				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType: dt.Or{
+							dt.Prim("RootDesc"),
+							dt.Prim("bool"),
+							dt.Prim("nil"),
+						},
+					}
+				},
 			},
 			rtypes.Symbol{Name: "AttrConfig"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -528,6 +548,15 @@ func Instance() rbxmk.Reflector {
 						inst.SetAttrConfig(nil, false)
 					default:
 						s.ReflectorError(3)
+					}
+				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType: dt.Or{
+							dt.Prim("AttrConfig"),
+							dt.Prim("bool"),
+							dt.Prim("nil"),
+						},
 					}
 				},
 			},
@@ -558,6 +587,15 @@ func Instance() rbxmk.Reflector {
 						inst.SetAttrConfig(nil, false)
 					default:
 						s.ReflectorError(3)
+					}
+				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType: dt.Or{
+							dt.Prim("AttrConfig"),
+							dt.Prim("bool"),
+							dt.Prim("nil"),
+						},
 					}
 				},
 			},
@@ -997,18 +1035,10 @@ func Instance() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Properties: dump.Properties{
-					"sym.AttrConfig":    dump.Property{ValueType: dt.Prim("Symbol")},
-					"sym.Desc":          dump.Property{ValueType: dt.Prim("Symbol")},
-					"sym.IsService":     dump.Property{ValueType: dt.Prim("Symbol")},
-					"sym.RawAttrConfig": dump.Property{ValueType: dt.Prim("Symbol")},
-					"sym.RawDesc":       dump.Property{ValueType: dt.Prim("Symbol")},
-					"sym.Reference":     dump.Property{ValueType: dt.Prim("Symbol")},
-				},
 				Operators: &dump.Operators{
 					Index: &dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},
+							{Name: "member", Type: dt.Prim("string")},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
@@ -1017,7 +1047,7 @@ func Instance() rbxmk.Reflector {
 					},
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "member", Type: dt.Or{dt.Prim("string"), dt.Prim("Symbol")}},
+							{Name: "member", Type: dt.Prim("string")},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
 						CanError: true,
