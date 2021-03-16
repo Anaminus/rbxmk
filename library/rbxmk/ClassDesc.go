@@ -17,7 +17,7 @@ func ClassDesc() rbxmk.Reflector {
 		Name:     "ClassDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("ClassDesc"),
 		PullFrom: rbxmk.PullTypeFrom("ClassDesc"),
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
@@ -27,7 +27,7 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"Superclass": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -38,7 +38,7 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.Superclass = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"MemoryCategory": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -49,10 +49,12 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.MemoryCategory = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Member": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Member": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					member, ok := desc.Members[name]
@@ -61,7 +63,7 @@ func ClassDesc() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.NewMemberDesc(member))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -72,8 +74,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Members": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Members": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					members := make(rtypes.Array, 0, len(desc.Members))
 					for _, member := range desc.Members {
@@ -84,7 +86,7 @@ func ClassDesc() rbxmk.Reflector {
 					})
 					return s.Push(members)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("MemberDesc")}},
@@ -92,8 +94,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"AddMember": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"AddMember": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					memberDesc := s.PullAnyOf(2,
 						"PropertyDesc",
@@ -127,7 +129,7 @@ func ClassDesc() rbxmk.Reflector {
 
 					return s.Push(types.True)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "member", Type: dt.Prim("MemberDesc")},
@@ -138,8 +140,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"RemoveMember": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"RemoveMember": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					if _, ok := desc.Members[name]; !ok {
@@ -148,7 +150,7 @@ func ClassDesc() rbxmk.Reflector {
 					delete(desc.Members, name)
 					return s.Push(types.True)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -159,13 +161,13 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -176,8 +178,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tags": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tags": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -186,7 +188,7 @@ func ClassDesc() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
@@ -194,8 +196,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -204,7 +206,7 @@ func ClassDesc() rbxmk.Reflector {
 					desc.SetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
@@ -212,8 +214,8 @@ func ClassDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"UnsetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"UnsetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ClassDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -222,7 +224,7 @@ func ClassDesc() rbxmk.Reflector {
 					desc.UnsetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},

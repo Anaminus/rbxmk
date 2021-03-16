@@ -13,9 +13,9 @@ func HTTPRequest() rbxmk.Reflector {
 		Name:     "HTTPRequest",
 		PushTo:   rbxmk.PushPtrTypeTo("HTTPRequest"),
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
-		Members: rbxmk.Members{
-			"Resolve": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		Methods: rbxmk.Methods{
+			"Resolve": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					req := v.(*rbxmk.HTTPRequest)
 					resp, err := req.Resolve()
 					if err != nil {
@@ -23,7 +23,7 @@ func HTTPRequest() rbxmk.Reflector {
 					}
 					return s.Push(*resp)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "resp", Type: dt.Prim("HTTPResponse")},
@@ -32,13 +32,13 @@ func HTTPRequest() rbxmk.Reflector {
 					}
 				},
 			},
-			"Cancel": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Cancel": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					req := v.(*rbxmk.HTTPRequest)
 					req.Cancel()
 					return 0
 				},
-				Dump: func() dump.Value { return dump.Function{} },
+				Dump: func() dump.Function { return dump.Function{} },
 			},
 		},
 	}

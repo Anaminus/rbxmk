@@ -27,18 +27,18 @@ func NumberRange() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Min": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Min))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Max": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Max))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

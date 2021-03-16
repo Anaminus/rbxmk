@@ -38,7 +38,7 @@ func NumberSequence() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Keypoints": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					u := v.(types.NumberSequence)
@@ -54,7 +54,7 @@ func NumberSequence() rbxmk.Reflector {
 					s.L.Push(table)
 					return 1
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Property {
 					return dump.Property{ValueType: dt.Array{T: dt.Prim("NumberSequenceKeypoint")}, ReadOnly: true}
 				},
 			},

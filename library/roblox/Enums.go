@@ -35,9 +35,9 @@ func Enums() rbxmk.Reflector {
 				return s.RaiseError("%s cannot be assigned to", name)
 			},
 		},
-		Members: rbxmk.Members{
-			"GetEnums": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		Methods: rbxmk.Methods{
+			"GetEnums": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					enums := v.(*rtypes.Enums).Enums()
 					array := make(rtypes.Array, len(enums))
 					for i, enum := range enums {
@@ -45,7 +45,7 @@ func Enums() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("Enum")}},

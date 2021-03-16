@@ -63,18 +63,18 @@ func Vector2int16() rbxmk.Reflector {
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

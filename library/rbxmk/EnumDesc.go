@@ -17,7 +17,7 @@ func EnumDesc() rbxmk.Reflector {
 		Name:     "EnumDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("EnumDesc"),
 		PullFrom: rbxmk.PullTypeFrom("EnumDesc"),
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
@@ -27,10 +27,12 @@ func EnumDesc() rbxmk.Reflector {
 					desc := v.(rtypes.EnumDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Item": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Item": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					item, ok := desc.Items[name]
@@ -39,7 +41,7 @@ func EnumDesc() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.EnumItemDesc{EnumItem: item})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -50,8 +52,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Items": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Items": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					items := make(rtypes.Array, 0, len(desc.Items))
 					for _, item := range desc.Items {
@@ -62,7 +64,7 @@ func EnumDesc() rbxmk.Reflector {
 					})
 					return s.Push(items)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumItemDesc")}},
@@ -70,8 +72,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"AddItem": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"AddItem": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					item := s.Pull(2, "EnumItemDesc").(rtypes.EnumItemDesc)
 					if _, ok := desc.Items[item.Name]; ok {
@@ -83,7 +85,7 @@ func EnumDesc() rbxmk.Reflector {
 					desc.Items[item.Name] = item.EnumItem
 					return s.Push(types.True)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "item", Type: dt.Prim("EnumItemDesc")},
@@ -94,8 +96,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"RemoveItem": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"RemoveItem": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					name := string(s.Pull(2, "string").(types.String))
 					if _, ok := desc.Items[name]; !ok {
@@ -104,7 +106,7 @@ func EnumDesc() rbxmk.Reflector {
 					delete(desc.Items, name)
 					return s.Push(types.True)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -115,13 +117,13 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -132,8 +134,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tags": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tags": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -142,7 +144,7 @@ func EnumDesc() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
@@ -150,8 +152,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -160,7 +162,7 @@ func EnumDesc() rbxmk.Reflector {
 					desc.SetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
@@ -168,8 +170,8 @@ func EnumDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"UnsetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"UnsetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.EnumDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -178,7 +180,7 @@ func EnumDesc() rbxmk.Reflector {
 					desc.UnsetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},

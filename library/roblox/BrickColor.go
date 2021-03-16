@@ -29,42 +29,42 @@ func BrickColor() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(types.BrickColor).Name()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
 			"Number": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.BrickColor).Number()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"R": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).R()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"G": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).G()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"B": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.BrickColor).B()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Color": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.BrickColor).Color())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

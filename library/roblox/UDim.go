@@ -41,18 +41,18 @@ func UDim() rbxmk.Reflector {
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Scale": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.UDim).Scale))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Offset": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.UDim).Offset))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

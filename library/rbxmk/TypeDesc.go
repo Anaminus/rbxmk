@@ -23,20 +23,20 @@ func TypeDesc() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Category": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.TypeDesc)
 					return s.Push(types.String(desc.Embedded.Category))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.TypeDesc)
 					return s.Push(types.String(desc.Embedded.Name))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
 		},
 		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },

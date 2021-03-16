@@ -49,36 +49,36 @@ func CFrame() rbxmk.Reflector {
 				}
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: map[string]rbxmk.Property{
 			"P": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"Position": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).X()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Y()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Z()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"LookVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -89,7 +89,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"RightVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -100,7 +100,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"UpVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -111,7 +111,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"XVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -122,7 +122,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"YVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -133,7 +133,7 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"ZVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -144,13 +144,15 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
-			"Inverse": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Inverse": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Inverse())
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
@@ -158,13 +160,13 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"Lerp": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Lerp": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "CFrame").(types.CFrame)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.CFrame).Lerp(goal, alpha))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "goal", Type: dt.Prim("CFrame")},
@@ -176,12 +178,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToWorldSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToWorldSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					cf := s.Pull(2, "CFrame").(types.CFrame)
 					return s.Push(v.(types.CFrame).ToWorldSpace(cf))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "cf", Type: dt.Prim("CFrame")},
@@ -192,12 +194,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToObjectSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToObjectSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					cf := s.Pull(2, "CFrame").(types.CFrame)
 					return s.Push(v.(types.CFrame).ToObjectSpace(cf))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "cf", Type: dt.Prim("CFrame")},
@@ -208,12 +210,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"PointToWorldSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"PointToWorldSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v3 := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.CFrame).PointToWorldSpace(v3))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "v", Type: dt.Prim("Vector3")},
@@ -224,12 +226,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"PointToObjectSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"PointToObjectSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v3 := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.CFrame).PointToObjectSpace(v3))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "v", Type: dt.Prim("Vector3")},
@@ -240,12 +242,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"VectorToWorldSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"VectorToWorldSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v3 := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.CFrame).VectorToWorldSpace(v3))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "v", Type: dt.Prim("Vector3")},
@@ -256,12 +258,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"VectorToObjectSpace": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"VectorToObjectSpace": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v3 := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.CFrame).VectorToObjectSpace(v3))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "v", Type: dt.Prim("Vector3")},
@@ -272,8 +274,8 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetComponents": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetComponents": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					cf := v.(types.CFrame)
 					return s.Push(rtypes.Tuple{
 						types.Float(cf.Position.X),
@@ -290,7 +292,7 @@ func CFrame() rbxmk.Reflector {
 						types.Float(cf.Rotation[8]),
 					})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "x", Type: dt.Prim("float")},
@@ -309,12 +311,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToEulerAnglesXYZ": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToEulerAnglesXYZ": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Angles()
 					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "rx", Type: dt.Prim("float")},
@@ -324,12 +326,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToEulerAnglesYXZ": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToEulerAnglesYXZ": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Orientation()
 					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "rx", Type: dt.Prim("float")},
@@ -339,12 +341,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToOrientation": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToOrientation": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Orientation()
 					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "rx", Type: dt.Prim("float")},
@@ -354,12 +356,12 @@ func CFrame() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToAxisAngle": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToAxisAngle": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					axis, rotation := v.(types.CFrame).AxisAngle()
 					return s.Push(rtypes.Tuple{axis, types.Float(rotation)})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "axis", Type: dt.Prim("Vector3")},

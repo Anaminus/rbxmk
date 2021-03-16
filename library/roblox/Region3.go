@@ -27,25 +27,27 @@ func Region3() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"CFrame": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).CFrame())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("CFrame"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("CFrame"), ReadOnly: true} },
 			},
 			"Size": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3).Size())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
-			"ExpandToGrid": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"ExpandToGrid": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					region := float64(s.Pull(2, "float").(types.Float))
 					return s.Push(v.(types.Region3).ExpandToGrid(region))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "region", Type: dt.Prim("float")},

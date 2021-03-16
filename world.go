@@ -176,18 +176,21 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
 func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
-	if r.Metatable == nil && r.Members == nil && r.Flags&Exprim == 0 {
+	if r.Metatable == nil &&
+		r.Properties == nil &&
+		r.Methods == nil &&
+		r.Flags&Exprim == 0 {
 		// No metatable.
 		return nil
 	}
 
 	if r.Flags&Exprim != 0 {
 		// Inject Value field, if possible.
-		if r.Members == nil {
-			r.Members = make(map[string]Member, 1)
+		if r.Properties == nil {
+			r.Properties = make(map[string]Property, 1)
 		}
-		if _, ok := r.Members["Value"]; !ok {
-			r.Members["Value"] = Member{
+		if _, ok := r.Properties["Value"]; !ok {
+			r.Properties["Value"] = Property{
 				Get: func(s State, v types.Value) int {
 					if v, ok := v.(types.Aliaser); ok {
 						// Push underlying type.
@@ -199,11 +202,19 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			}
 		}
 	}
-	if r.Members != nil {
+	if r.Properties != nil {
 		// Validate members.
-		for _, member := range r.Members {
+		for _, member := range r.Properties {
 			if member.Get == nil {
-				panic("member must define Get function")
+				panic("property must define Get field")
+			}
+		}
+	}
+	if r.Methods != nil {
+		// Validate members.
+		for _, member := range r.Methods {
+			if member.Func == nil {
+				panic("method must define Func field")
 			}
 		}
 	}
@@ -247,7 +258,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		newindex = r.Metatable["__newindex"]
 	}
 
-	if r.Members != nil {
+	if r.Properties != nil || r.Methods != nil {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
 			s := State{World: w, L: l, FrameType: OperatorFrame}
@@ -258,25 +269,21 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
-				member, ok := r.Members[string(name)]
-				if !ok {
-					goto customIndex
-				}
-				if member.Method {
-					// Push as method.
+				if method, ok := r.Methods[string(name)]; ok {
 					l.Push(l.NewFunction(func(l *lua.LState) int {
 						s := State{World: w, L: l, FrameType: MethodFrame}
 						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
 						}
-						return member.Get(s, v)
+						return method.Func(s, v)
 					}))
 					return 1
 				}
-				return member.Get(State{World: w, L: l}, v)
+				if property, ok := r.Properties[string(name)]; ok {
+					return property.Get(State{World: w, L: l}, v)
+				}
 			}
-		customIndex:
 			if index != nil {
 				// Fallback to custom index.
 				return index(s)
@@ -297,17 +304,19 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			idx := l.Get(2)
 			name, ok := idx.(lua.LString)
 			if ok {
-				member, ok := r.Members[string(name)]
-				if !ok {
-					goto customNewindex
-				}
-				if member.Method || member.Set == nil {
+				if _, ok := r.Methods[string(name)]; ok {
 					l.RaiseError("%s cannot be assigned to", name)
+					return 0
 				}
-				member.Set(s, v)
-				return 0
+				if property, ok := r.Properties[string(name)]; ok {
+					if property.Set == nil {
+						l.RaiseError("%s cannot be assigned to", name)
+						return 0
+					}
+					property.Set(s, v)
+					return 0
+				}
 			}
-		customNewindex:
 			if newindex != nil {
 				// Fallback to custom newindex.
 				return newindex(s)

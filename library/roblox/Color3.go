@@ -28,32 +28,34 @@ func Color3() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"R": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).R))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"G": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).G))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"B": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).B))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
-			"Lerp": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Lerp": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "Color3").(types.Color3)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Color3).Lerp(goal, alpha))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "goal", Type: dt.Prim("Color3")},
@@ -65,12 +67,12 @@ func Color3() rbxmk.Reflector {
 					}
 				},
 			},
-			"ToHSV": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ToHSV": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					hue, sat, val := v.(types.Color3).ToHSV()
 					return s.Push(rtypes.Tuple{types.Float(hue), types.Float(sat), types.Float(val)})
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Name: "h", Type: dt.Prim("float")},

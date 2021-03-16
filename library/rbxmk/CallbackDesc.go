@@ -15,7 +15,7 @@ func CallbackDesc() rbxmk.Reflector {
 		Name:     "CallbackDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("CallbackDesc"),
 		PullFrom: rbxmk.PullTypeFrom("CallbackDesc"),
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
@@ -25,10 +25,35 @@ func CallbackDesc() rbxmk.Reflector {
 					desc := v.(rtypes.CallbackDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
-			"Parameters": {Method: true,
+			"ReturnType": {
 				Get: func(s rbxmk.State, v types.Value) int {
+					desc := v.(rtypes.CallbackDesc)
+					returnType := desc.ReturnType
+					return s.Push(rtypes.TypeDesc{Embedded: returnType})
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					desc := v.(rtypes.CallbackDesc)
+					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
+				},
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
+			},
+			"Security": {
+				Get: func(s rbxmk.State, v types.Value) int {
+					desc := v.(rtypes.CallbackDesc)
+					return s.Push(types.String(desc.Security))
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					desc := v.(rtypes.CallbackDesc)
+					desc.Security = string(s.Pull(3, "string").(types.String))
+				},
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+			},
+		},
+		Methods: rbxmk.Methods{
+			"Parameters": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					array := make(rtypes.Array, len(desc.Parameters))
 					for i, param := range desc.Parameters {
@@ -37,7 +62,7 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
@@ -45,8 +70,8 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetParameters": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetParameters": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					array := s.Pull(2, "Array").(rtypes.Array)
 					params := make([]rbxdump.Parameter, len(array))
@@ -61,7 +86,7 @@ func CallbackDesc() rbxmk.Reflector {
 					desc.Parameters = params
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
@@ -69,36 +94,13 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"ReturnType": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.CallbackDesc)
-					returnType := desc.ReturnType
-					return s.Push(rtypes.TypeDesc{Embedded: returnType})
-				},
-				Set: func(s rbxmk.State, v types.Value) {
-					desc := v.(rtypes.CallbackDesc)
-					desc.ReturnType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
-				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
-			},
-			"Security": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.CallbackDesc)
-					return s.Push(types.String(desc.Security))
-				},
-				Set: func(s rbxmk.State, v types.Value) {
-					desc := v.(rtypes.CallbackDesc)
-					desc.Security = string(s.Pull(3, "string").(types.String))
-				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
-			},
-			"Tag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -109,8 +111,8 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tags": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tags": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -119,7 +121,7 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
@@ -127,8 +129,8 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -137,7 +139,7 @@ func CallbackDesc() rbxmk.Reflector {
 					desc.SetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
@@ -145,8 +147,8 @@ func CallbackDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"UnsetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"UnsetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.CallbackDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -155,7 +157,7 @@ func CallbackDesc() rbxmk.Reflector {
 					desc.UnsetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},

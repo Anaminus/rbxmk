@@ -63,38 +63,40 @@ func Vector2() rbxmk.Reflector {
 				return s.Push(v.Neg())
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Magnitude": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Magnitude()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
 			},
 			"Unit": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector2).Unit())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
 			},
-			"Lerp": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Lerp": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					goal := s.Pull(2, "Vector2").(types.Vector2)
 					alpha := float64(s.Pull(3, "float").(types.Float))
 					return s.Push(v.(types.Vector2).Lerp(goal, alpha))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "goal", Type: dt.Prim("Vector2")},
@@ -106,12 +108,12 @@ func Vector2() rbxmk.Reflector {
 					}
 				},
 			},
-			"Dot": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Dot": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector2").(types.Vector2)
 					return s.Push(types.Double(v.(types.Vector2).Dot(op)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "op", Type: dt.Prim("Vector2")},
@@ -122,12 +124,12 @@ func Vector2() rbxmk.Reflector {
 					}
 				},
 			},
-			"Cross": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Cross": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					op := s.Pull(2, "Vector2").(types.Vector2)
 					return s.Push(types.Double(v.(types.Vector2).Cross(op)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "op", Type: dt.Prim("Vector2")},

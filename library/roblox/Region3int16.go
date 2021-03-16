@@ -27,18 +27,18 @@ func Region3int16() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Min": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3int16).Min)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3int16"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3int16"), ReadOnly: true} },
 			},
 			"Max": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Region3int16).Max)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3int16"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3int16"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

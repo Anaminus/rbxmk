@@ -61,60 +61,60 @@ func Axes() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Right": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Top": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Back": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Left": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Bottom": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 			"Front": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
 			},
 		},
 		Constructors: rbxmk.Constructors{

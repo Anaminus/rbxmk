@@ -14,7 +14,7 @@ func PropertyDesc() rbxmk.Reflector {
 		Name:     "PropertyDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("PropertyDesc"),
 		PullFrom: rbxmk.PullTypeFrom("PropertyDesc"),
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
@@ -24,7 +24,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"ValueType": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -36,7 +36,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ValueType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
 			},
 			"ReadSecurity": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -47,7 +47,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ReadSecurity = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"WriteSecurity": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -58,7 +58,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.WriteSecurity = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"CanLoad": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -69,7 +69,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanLoad = bool(s.Pull(3, "bool").(types.Bool))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
 			"CanSave": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -80,15 +80,17 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanSave = bool(s.Pull(3, "bool").(types.Bool))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
 			},
-			"Tag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Tag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tag := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(desc.GetTag(tag)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -99,8 +101,8 @@ func PropertyDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"Tags": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Tags": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := desc.GetTags()
 					array := make(rtypes.Array, len(tags))
@@ -109,7 +111,7 @@ func PropertyDesc() rbxmk.Reflector {
 					}
 					return s.Push(array)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
@@ -117,8 +119,8 @@ func PropertyDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -127,7 +129,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc.SetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
@@ -135,8 +137,8 @@ func PropertyDesc() rbxmk.Reflector {
 					}
 				},
 			},
-			"UnsetTag": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"UnsetTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.PropertyDesc)
 					tags := make([]string, s.Count()-1)
 					for i := 2; i <= s.Count(); i++ {
@@ -145,7 +147,7 @@ func PropertyDesc() rbxmk.Reflector {
 					desc.UnsetTag(tags...)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},

@@ -22,24 +22,24 @@ func EnumItem() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.EnumItem).Name()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
 			},
 			"Value": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(*rtypes.EnumItem).Value()))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
 			},
 			"EnumType": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(*rtypes.EnumItem).Enum())
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },
 			},
 		},
 	}

@@ -35,10 +35,17 @@ type Reflector struct {
 	// metatable under Name.
 	Metatable Metatable
 
-	// Members defines the members of a custom type. If the __index and
-	// __newindex metamethods are not defined by Metatable, then Members defines
-	// them according to the given members.
-	Members Members
+	// Properties defines the properties of a custom type. If the __index and
+	// __newindex metamethods are not defined by Metatable, then Properties
+	// defines them according to the given properties. In case of name
+	// conflicts, methods are prioritized over properties.
+	Properties Properties
+
+	// Methods defines the methods of a custom type. If the __index and
+	// __newindex metamethods are not defined by Metatable, then Methods defines
+	// them according to the given members. In case of name conflicts, methods
+	// are prioritized over properties.
+	Methods Methods
 
 	// Constructors defines functions that construct the type. If non-nil, a
 	// table containing each constructor is created and set as a global
@@ -85,25 +92,26 @@ func (r Reflector) DumpAll() dump.TypeDef {
 	if r.Dump != nil {
 		def = r.Dump()
 	}
-	for name, member := range r.Members {
-		if member.Dump == nil {
+	for name, property := range r.Properties {
+		if property.Dump == nil {
 			continue
 		}
-		switch v := member.Dump().(type) {
-		case dump.Property:
-			if _, ok := def.Properties[name]; !ok {
-				if def.Properties == nil {
-					def.Properties = dump.Properties{}
-				}
-				def.Properties[name] = v
+		if _, ok := def.Properties[name]; !ok {
+			if def.Properties == nil {
+				def.Properties = dump.Properties{}
 			}
-		case dump.Function:
-			if _, ok := def.Methods[name]; !ok {
-				if def.Methods == nil {
-					def.Methods = dump.Methods{}
-				}
-				def.Methods[name] = v
+			def.Properties[name] = property.Dump()
+		}
+	}
+	for name, method := range r.Methods {
+		if method.Dump == nil {
+			continue
+		}
+		if _, ok := def.Methods[name]; !ok {
+			if def.Methods == nil {
+				def.Methods = dump.Methods{}
 			}
+			def.Methods[name] = method.Dump()
 		}
 	}
 	for name, ctor := range r.Constructors {
@@ -127,27 +135,32 @@ type Metatable map[string]Metamethod
 // Metamethod is called when a metamethod is invoked.
 type Metamethod func(s State) int
 
-// Members is a set of members keyed by name.
-type Members map[string]Member
+// Properties is a set of properties keyed by name.
+type Properties map[string]Property
 
-// Member defines a member of a custom type. There are several kinds of members:
-//
-//     - Property: Method is false, Get must be defined, Set is optionally
-//       defined. If Set is not defined, then the member is marked as read-only.
-//     - Method: Method is true, Get must be defined, Set is ignored. Get is the
-//       method itself.
-type Member struct {
-	// Get gets the value of a member from v and pushes it onto l. The index is
-	// the 2nd argument in s.L. If Method is true, the function is pushed as a
-	// method. The first argument will be the same value as v.
+// Property defines a property of a custom type.
+type Property struct {
+	// Get gets the value of a member from v and pushes it onto s. The index is
+	// the 2nd argument in s.
 	Get func(s State, v types.Value) int
-	// Set gets a value from l and sets it to a member of v. The index and value
-	// are the 2nd and 3rd arguments in s.L.
+	// Set gets a value from s and sets it to a member of v. The index and value
+	// are the 2nd and 3rd arguments in s. Set is optional, if nil, the property
+	// will be treated as read-only.
 	Set func(s State, v types.Value)
-	// Method marks the member as being a method.
-	Method bool
 	// Dump returns a description of the member's API.
-	Dump func() dump.Value
+	Dump func() dump.Property
+}
+
+// Methods is a set of methods keyed by name.
+type Methods map[string]Method
+
+// Method defines a member of a custom type.
+type Method struct {
+	// Func is the body of the method. The first argument will be the same value
+	// as v.
+	Func func(s State, v types.Value) int
+	// Dump returns a description of the member's API.
+	Dump func() dump.Function
 }
 
 // Constructors is a set of constructor functions keyed by name.

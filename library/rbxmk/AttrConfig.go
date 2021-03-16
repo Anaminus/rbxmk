@@ -14,7 +14,7 @@ func AttrConfig() rbxmk.Reflector {
 		Name:     "AttrConfig",
 		PushTo:   rbxmk.PushPtrTypeTo("AttrConfig"),
 		PullFrom: rbxmk.PullTypeFrom("AttrConfig"),
-		Members: rbxmk.Members{
+		Properties: rbxmk.Properties{
 			"Property": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					attrConfig := v.(*rtypes.AttrConfig)
@@ -24,7 +24,7 @@ func AttrConfig() rbxmk.Reflector {
 					attrConfig := v.(*rtypes.AttrConfig)
 					attrConfig.Property = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 		},
 	}

@@ -27,25 +27,27 @@ func Ray() rbxmk.Reflector {
 				return 1
 			},
 		},
-		Members: map[string]rbxmk.Member{
+		Properties: rbxmk.Properties{
 			"Origin": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Origin)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
 			"Direction": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Direction)
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
 			},
-			"ClosestPoint": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"ClosestPoint": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					point := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(v.(types.Ray).ClosestPoint(point))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "point", Type: dt.Prim("Vector3")},
@@ -56,12 +58,12 @@ func Ray() rbxmk.Reflector {
 					}
 				},
 			},
-			"Distance": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Distance": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					point := s.Pull(2, "Vector3").(types.Vector3)
 					return s.Push(types.Float(v.(types.Ray).Distance(point)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "point", Type: dt.Prim("Vector3")},

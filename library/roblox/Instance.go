@@ -494,7 +494,7 @@ func Instance() rbxmk.Reflector {
 			}
 			return nil
 		},
-		Members: rbxmk.Members{
+		Properties: map[string]rbxmk.Property{
 			"ClassName": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).ClassName))
@@ -508,7 +508,7 @@ func Instance() rbxmk.Reflector {
 					}
 					inst.ClassName = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -517,7 +517,7 @@ func Instance() rbxmk.Reflector {
 				Set: func(s rbxmk.State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
 			},
 			"Parent": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -540,10 +540,12 @@ func Instance() rbxmk.Reflector {
 						s.RaiseError("%s", err)
 					}
 				},
-				Dump: func() dump.Value { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
+				Dump: func() dump.Property { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
 			},
-			"Descend": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+		},
+		Methods: rbxmk.Methods{
+			"Descend": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					n := s.Count()
 					if n-1 <= 0 {
 						return s.RaiseError("expected at least 1 string")
@@ -557,7 +559,7 @@ func Instance() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
@@ -568,18 +570,18 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"ClearAllChildren": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"ClearAllChildren": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v.(*rtypes.Instance).RemoveAll()
 					return 0
 				},
-				Dump: func() dump.Value { return dump.Function{} },
+				Dump: func() dump.Function { return dump.Function{} },
 			},
-			"Clone": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Clone": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(*rtypes.Instance).Clone())
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
@@ -587,22 +589,22 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"Destroy": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"Destroy": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					v.(*rtypes.Instance).SetParent(nil)
 					return 0
 				},
-				Dump: func() dump.Value { return dump.Function{} },
+				Dump: func() dump.Function { return dump.Function{} },
 			},
-			"FindFirstAncestor": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstAncestor": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestor(name); ancestor != nil {
 						return s.Push(ancestor)
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -613,15 +615,15 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"FindFirstAncestorOfClass": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstAncestorOfClass": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestorOfClass(className); ancestor != nil {
 						return s.Push(ancestor)
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim("string")},
@@ -632,15 +634,15 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"FindFirstAncestorWhichIsA": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstAncestorWhichIsA": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					if ancestor := v.(*rtypes.Instance).FindFirstAncestorWhichIsA(className); ancestor != nil {
 						return s.Push(ancestor)
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim("string")},
@@ -651,8 +653,8 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"FindFirstChild": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstChild": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
@@ -660,7 +662,7 @@ func Instance() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim("string")},
@@ -672,8 +674,8 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"FindFirstChildOfClass": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstChildOfClass": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
@@ -681,7 +683,7 @@ func Instance() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim("string")},
@@ -693,8 +695,8 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"FindFirstChildWhichIsA": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"FindFirstChildWhichIsA": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
@@ -702,7 +704,7 @@ func Instance() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim("string")},
@@ -714,8 +716,8 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetAttribute": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetAttribute": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					attribute := string(s.Pull(2, "string").(types.String))
 					dict := getAttributes(s, v.(*rtypes.Instance))
 					if v, ok := dict[attribute]; ok {
@@ -723,7 +725,7 @@ func Instance() rbxmk.Reflector {
 					}
 					return s.Push(rtypes.Nil)
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "attribute", Type: dt.Prim("string")},
@@ -734,11 +736,11 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetAttributes": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetAttributes": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					return s.Push(getAttributes(s, v.(*rtypes.Instance)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Dictionary")},
@@ -746,12 +748,12 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetChildren": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetChildren": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					t := v.(*rtypes.Instance).Children()
 					return s.Push(rtypes.Objects(t))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
@@ -759,11 +761,11 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetDescendants": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetDescendants": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					return s.Push(rtypes.Objects(v.(*rtypes.Instance).Descendants()))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
@@ -771,11 +773,11 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"GetFullName": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"GetFullName": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).GetFullName()))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
 							{Type: dt.Prim("string")},
@@ -783,12 +785,12 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"IsA": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"IsA": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsA(className)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim("string")},
@@ -799,12 +801,12 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"IsAncestorOf": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"IsAncestorOf": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					descendant := s.Pull(2, "Instance").(*rtypes.Instance)
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsAncestorOf(descendant)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "descendant", Type: dt.Optional{T: dt.Prim("Instance")}},
@@ -815,12 +817,12 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"IsDescendantOf": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"IsDescendantOf": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					ancestor := s.Pull(2, "Instance").(*rtypes.Instance)
 					return s.Push(types.Bool(v.(*rtypes.Instance).IsDescendantOf(ancestor)))
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "ancestor", Type: dt.Optional{T: dt.Prim("Instance")}},
@@ -831,8 +833,8 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetAttribute": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetAttribute": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					attribute := string(s.Pull(2, "string").(types.String))
 					value := s.Pull(3, "Variant")
@@ -841,7 +843,7 @@ func Instance() rbxmk.Reflector {
 					setAttributes(s, inst, dict)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "attribute", Type: dt.Prim("string")},
@@ -850,13 +852,13 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			"SetAttributes": {Method: true,
-				Get: func(s rbxmk.State, v types.Value) int {
+			"SetAttributes": {
+				Func: func(s rbxmk.State, v types.Value) int {
 					dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
 					setAttributes(s, v.(*rtypes.Instance), dict)
 					return 0
 				},
-				Dump: func() dump.Value {
+				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "attributes", Type: dt.Prim("Dictionary")},
