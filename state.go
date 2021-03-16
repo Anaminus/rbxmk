@@ -78,6 +78,11 @@ func (s State) Count() int {
 	return s.L.GetTop()
 }
 
+// TypeOfArg returns the result of World.Typeof with the given argument.
+func (s State) TypeofArg(n int) string {
+	return s.Typeof(s.L.Get(n))
+}
+
 // Push reflects v according to its type as registered with s.World, then pushes
 // the results to s.L.
 func (s State) Push(v types.Value) int {
@@ -175,7 +180,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	v := s.PullAnyOfOpt(n, t...)
 	if v == nil {
-		s.TypeError(n, listTypes(t), s.Typeof(s.L.Get(n)))
+		s.TypeError(n, listTypes(t), s.TypeofArg(n))
 	}
 	return v
 }
