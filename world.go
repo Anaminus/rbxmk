@@ -249,8 +249,8 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		}))
 	}
 
-	var index Metamethod
-	var newindex Metamethod
+	var customIndex Metamethod
+	var customNewindex Metamethod
 	if len(r.Metatable) > 0 {
 		// Set each defined metamethod, overriding predefined values.
 		for name, method := range r.Metatable {
@@ -258,20 +258,22 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			mt.RawSetString(name, w.WrapOperator(m))
 		}
 		// If available, remember index and newindex for member indexing.
-		index = r.Metatable["__index"]
-		newindex = r.Metatable["__newindex"]
+		customIndex = r.Metatable["__index"]
+		customNewindex = r.Metatable["__newindex"]
 	}
 
-	if len(r.Properties) > 0 || len(r.Symbols) > 0 || len(r.Methods) > 0 {
-		// Setup member getting and setting.
+	// Setup member getting and setting.
+	switch {
+	case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
+		// Indexed by both string and symbol.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
-			switch idx := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
 			case types.String:
-				if method, ok := r.Methods[string(idx)]; ok {
+				if method, ok := r.Methods[string(index)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
 						v, err := r.PullFrom(s, s.CheckAny(1))
 						if err != nil {
@@ -281,41 +283,26 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 					}))
 					return 1
 				}
-				if property, ok := r.Properties[string(idx)]; ok {
+				if property, ok := r.Properties[string(index)]; ok {
 					return property.Get(s, v)
 				}
-				if index != nil {
-					// Fallback to custom index.
-					return index(s)
+				if customIndex != nil {
+					return customIndex(s)
 				}
-				return s.RaiseError("%q is not a valid member of %s", idx, r.Name)
+				return s.RaiseError("%q is not a valid member of %s", index, r.Name)
 			case rtypes.Symbol:
-				if property, ok := r.Symbols[idx]; ok {
+				if property, ok := r.Symbols[index]; ok {
 					return property.Get(s, v)
 				}
-				if index != nil {
-					// Fallback to custom index.
-					return index(s)
+				if customIndex != nil {
+					return customIndex(s)
 				}
-				return s.RaiseError("symbol %s is not a valid member of %s", idx.Name, r.Name)
+				return s.RaiseError("symbol %s is not a valid member of %s", index.Name, r.Name)
 			default:
-				if index != nil {
-					// Fallback to custom index.
-					return index(s)
+				if customIndex != nil {
+					return customIndex(s)
 				}
-				if idx == nil {
-					idx = rtypes.Nil
-				}
-				switch {
-				case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
-					return s.RaiseError("string or symbol expected for member index, got %s", idx.Type())
-				case len(r.Properties)+len(r.Methods) > 0:
-					return s.RaiseError("string expected for member name, got %s", idx.Type())
-				case len(r.Symbols) > 0:
-					return s.RaiseError("symbol expected for member index, got %s", idx.Type())
-				default:
-					return s.RaiseError("attempt to index %s with %q", r.Name, idx.Type())
-				}
+				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
 			}
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
@@ -323,55 +310,156 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			switch idx := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
 			case types.String:
-				if _, ok := r.Methods[string(idx)]; ok {
-					return s.RaiseError("%s cannot be assigned to in %s", idx, r.Name)
+				if _, ok := r.Methods[string(index)]; ok {
+					return s.RaiseError("%s of %s cannot be assigned to", index, r.Name)
 				}
-				if property, ok := r.Properties[string(idx)]; ok {
+				if property, ok := r.Properties[string(index)]; ok {
 					if property.Set == nil {
-						return s.RaiseError("%s cannot be assigned to in %s", idx, r.Name)
+						return s.RaiseError("%s of %s cannot be assigned to", index, r.Name)
 					}
 					property.Set(s, v)
 					return 0
 				}
-				if newindex != nil {
-					// Fallback to custom newindex.
-					return newindex(s)
+				if customNewindex != nil {
+					return customNewindex(s)
 				}
-				return s.RaiseError("%q is not a valid member of %s", idx, r.Name)
+				return s.RaiseError("%q is not a valid member of %s", index, r.Name)
 			case rtypes.Symbol:
-				if property, ok := r.Symbols[idx]; ok {
+				if property, ok := r.Symbols[index]; ok {
 					if property.Set == nil {
-						return s.RaiseError("symbol %s cannot be assigned to in %s", idx.Name, r.Name)
+						return s.RaiseError("symbol %s of %s cannot be assigned to", index.Name, r.Name)
 					}
 					property.Set(s, v)
 					return 0
 				}
-				if newindex != nil {
-					// Fallback to custom newindex.
-					return newindex(s)
+				if customNewindex != nil {
+					return customNewindex(s)
 				}
-				return s.RaiseError("symbol %s is not a valid member of %s", idx.Name, r.Name)
+				return s.RaiseError("symbol %s is not a valid member of %s", index.Name, r.Name)
 			default:
-				if newindex != nil {
-					// Fallback to custom newindex.
-					return newindex(s)
+				if customNewindex != nil {
+					return customNewindex(s)
 				}
-				if idx == nil {
-					idx = rtypes.Nil
-				}
-				switch {
-				case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
-					return s.RaiseError("string or symbol expected for member index, got %s", idx.Type())
-				case len(r.Properties)+len(r.Methods) > 0:
-					return s.RaiseError("string expected for member name, got %s", idx.Type())
-				case len(r.Symbols) > 0:
-					return s.RaiseError("symbol expected for member index, got %s", idx.Type())
-				default:
-					return s.RaiseError("attempt to index %s with %q", r.Name, idx.Type())
-				}
+				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
 			}
+		}))
+	case len(r.Properties)+len(r.Methods) > 0:
+		// Indexed only by string.
+		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
+			v, err := r.PullFrom(s, s.CheckAny(1))
+			if err != nil {
+				return s.ArgError(1, err.Error())
+			}
+			if name, ok := s.L.Get(2).(lua.LString); ok {
+				if method, ok := r.Methods[string(name)]; ok {
+					s.L.Push(s.WrapMethod(func(s State) int {
+						v, err := r.PullFrom(s, s.CheckAny(1))
+						if err != nil {
+							return s.ArgError(1, err.Error())
+						}
+						return method.Func(s, v)
+					}))
+					return 1
+				}
+				if property, ok := r.Properties[string(name)]; ok {
+					return property.Get(s, v)
+				}
+				if customIndex != nil {
+					return customIndex(s)
+				}
+				return s.RaiseError("%q is not a valid member of %s", name, r.Name)
+			}
+			if customIndex != nil {
+				return customIndex(s)
+			}
+			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.TypeofArg(2))
+		}))
+		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
+			v, err := r.PullFrom(s, s.CheckAny(1))
+			if err != nil {
+				s.ArgError(1, err.Error())
+			}
+			if name, ok := s.L.Get(2).(lua.LString); ok {
+				if _, ok := r.Methods[string(name)]; ok {
+					return s.RaiseError("%s of %s cannot be assigned to", name, r.Name)
+				}
+				if property, ok := r.Properties[string(name)]; ok {
+					if property.Set == nil {
+						return s.RaiseError("%s of %s cannot be assigned to", name, r.Name)
+					}
+					property.Set(s, v)
+					return 0
+				}
+				if customNewindex != nil {
+					return customNewindex(s)
+				}
+				return s.RaiseError("%q is not a valid member of %s", name, r.Name)
+			}
+			if customNewindex != nil {
+				return customNewindex(s)
+			}
+			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.TypeofArg(2))
+		}))
+	case len(r.Symbols) > 0:
+		// Indexed only by symbol.
+		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
+			v, err := r.PullFrom(s, s.CheckAny(1))
+			if err != nil {
+				return s.ArgError(1, err.Error())
+			}
+			if symbol, ok := s.PullOpt(2, "Symbol", nil).(rtypes.Symbol); ok {
+				if property, ok := r.Symbols[symbol]; ok {
+					return property.Get(s, v)
+				}
+				if customIndex != nil {
+					return customIndex(s)
+				}
+				return s.RaiseError("symbol %s is not a valid member of %s", symbol.Name, r.Name)
+			}
+			if customIndex != nil {
+				return customIndex(s)
+			}
+			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+		}))
+		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
+			v, err := r.PullFrom(s, s.CheckAny(1))
+			if err != nil {
+				s.ArgError(1, err.Error())
+			}
+			if symbol, ok := s.PullOpt(2, "Symbol", nil).(rtypes.Symbol); ok {
+				if property, ok := r.Symbols[symbol]; ok {
+					if property.Set == nil {
+						return s.RaiseError("symbol %s of %s cannot be assigned to", symbol.Name, r.Name)
+					}
+					property.Set(s, v)
+					return 0
+				}
+				if customNewindex != nil {
+					return customNewindex(s)
+				}
+				return s.RaiseError("symbol %s is not a valid member of %s", symbol.Name, r.Name)
+			}
+			if customNewindex != nil {
+				return customNewindex(s)
+			}
+			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+		}))
+	default:
+		// Not indexed.
+		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
+			if customIndex != nil {
+				// Fallback to custom index.
+				return customIndex(s)
+			}
+			return s.RaiseError("attempt to index %s with %q", r.Name, s.TypeofArg(2))
+		}))
+		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
+			if customNewindex != nil {
+				return customNewindex(s)
+			}
+			return s.RaiseError("attempt to index %s with %q", r.Name, s.TypeofArg(2))
 		}))
 	}
 
