@@ -176,9 +176,9 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
 func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
-	if r.Metatable == nil &&
-		r.Properties == nil &&
-		r.Methods == nil &&
+	if len(r.Metatable) == 0 &&
+		len(r.Properties) == 0 &&
+		len(r.Methods) == 0 &&
 		r.Flags&Exprim == 0 {
 		// No metatable.
 		return nil
@@ -202,20 +202,16 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			}
 		}
 	}
-	if r.Properties != nil {
-		// Validate members.
-		for _, member := range r.Properties {
-			if member.Get == nil {
-				panic("property must define Get field")
-			}
+	// Validate properties.
+	for _, member := range r.Properties {
+		if member.Get == nil {
+			panic("property must define Get field")
 		}
 	}
-	if r.Methods != nil {
-		// Validate members.
-		for _, member := range r.Methods {
-			if member.Func == nil {
-				panic("method must define Func field")
-			}
+	// Validate methods.
+	for _, member := range r.Methods {
+		if member.Func == nil {
+			panic("method must define Func field")
 		}
 	}
 
@@ -247,7 +243,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 
 	var index Metamethod
 	var newindex Metamethod
-	if r.Metatable != nil {
+	if len(r.Metatable) > 0 {
 		// Set each defined metamethod, overriding predefined values.
 		for name, method := range r.Metatable {
 			m := method
@@ -258,7 +254,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 		newindex = r.Metatable["__newindex"]
 	}
 
-	if r.Properties != nil || r.Methods != nil {
+	if len(r.Properties) > 0 || len(r.Methods) > 0 {
 		// Setup member getting and setting.
 		mt.RawSetString("__index", w.l.NewFunction(func(l *lua.LState) int {
 			s := State{World: w, L: l, FrameType: OperatorFrame}
