@@ -66,6 +66,7 @@ func fragWriteTypes(buf *bufio.Writer, prefix, suffix string, types dump.TypeDef
 		fragWriteFile(buf, prefix+suffix)
 		if len(def.Constructors) > 0 ||
 			len(def.Properties) > 0 ||
+			len(def.Symbols) > 0 ||
 			len(def.Methods) > 0 ||
 			def.Operators != nil {
 			fragWriteDir(buf, prefix)
@@ -80,6 +81,12 @@ func fragWriteTypes(buf *bufio.Writer, prefix, suffix string, types dump.TypeDef
 			fragWriteDir(buf, prefix, "properties")
 			sortProperties(def.Properties, func(propName string, prop dump.Property) {
 				fragWriteFile(buf, prefix, "properties", propName+suffix)
+			})
+		}
+		if len(def.Symbols) > 0 {
+			fragWriteDir(buf, prefix, "symbols")
+			sortProperties(def.Symbols, func(symName string, prop dump.Property) {
+				fragWriteFile(buf, prefix, "symbols", symName+suffix)
 			})
 		}
 		if len(def.Methods) > 0 {
