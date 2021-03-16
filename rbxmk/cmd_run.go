@@ -4,13 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/formats"
-	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/snek"
 )
 
@@ -25,24 +21,6 @@ func shortenPath(filename string) string {
 		}
 	}
 	return filename
-}
-
-// ParseLuaValue parses a string into a Lua value. Numbers, bools, and nil are
-// parsed into their respective types, and any other value is interpreted as a
-// string.
-func ParseLuaValue(s string) lua.LValue {
-	switch s {
-	case "true":
-		return lua.LTrue
-	case "false":
-		return lua.LFalse
-	case "nil":
-		return lua.LNil
-	}
-	if number, err := strconv.ParseFloat(s, 64); err == nil {
-		return lua.LNumber(number)
-	}
-	return lua.LString(s)
 }
 
 func init() {
@@ -75,16 +53,12 @@ func (s *repeatedString) Set(v string) error {
 }
 
 type RunCommand struct {
-	IncludedRoots []string
-	InsecurePaths bool
-	Debug         bool
-	Init          func(rbxmk.State)
+	WorldFlags
+	Init func(rbxmk.State)
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
-	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory. May be specified any number of times.")
-	flags.BoolVar(&c.InsecurePaths, "allow-insecure-paths", false, "Disable path restrictions, allowing scripts to access any path in the file system.")
-	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
+	c.WorldFlags.SetFlags(flags)
 }
 
 // Run is the entrypoint to the command for running scripts. init runs after the
@@ -104,36 +78,13 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	args = args[1:]
 
 	// Initialize world.
-	world := rbxmk.NewWorld(lua.NewState(lua.Options{
-		SkipOpenLibs:        true,
-		IncludeGoStackTrace: c.Debug,
-	}))
-	if c.InsecurePaths {
-		world.FS.SetSecured(false)
+	world, err := InitWorld(WorldOpt{
+		WorldFlags: c.WorldFlags,
+		Args:       args,
+	})
+	if err != nil {
+		return err
 	}
-	if wd, err := os.Getwd(); err == nil {
-		// Working directory is an accessible root.
-		world.FS.AddRoot(wd)
-	}
-	for _, root := range c.IncludedRoots {
-		world.FS.AddRoot(root)
-	}
-	for _, f := range formats.All() {
-		world.RegisterFormat(f())
-	}
-	for _, lib := range library.All() {
-		if err := world.Open(lib); err != nil {
-			return err
-		}
-	}
-
-	world.State().SetGlobal("_RBXMK_VERSION", lua.LString(VersionString()))
-
-	// Add script arguments.
-	for _, arg := range args {
-		world.State().Push(ParseLuaValue(arg))
-	}
-
 	if c.Init != nil {
 		c.Init(rbxmk.State{World: world, L: world.State()})
 	}

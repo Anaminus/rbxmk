@@ -3,13 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/gopher-lua/parse"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/formats"
-	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/snek"
 	"github.com/peterh/liner"
 )
@@ -57,16 +54,12 @@ Within supported terminals, the following shortcuts are available:
 }
 
 type InteractiveCommand struct {
-	IncludedRoots []string
-	InsecurePaths bool
-	Debug         bool
-	Init          func(rbxmk.State)
+	WorldFlags
+	Init func(rbxmk.State)
 }
 
 func (c *InteractiveCommand) SetFlags(flags snek.FlagSet) {
-	flags.Var((*repeatedString)(&c.IncludedRoots), "include-root", "Mark a path as an accessible root directory. May be specified any number of times.")
-	flags.BoolVar(&c.InsecurePaths, "allow-insecure-paths", false, "Disable path restrictions, allowing scripts to access any path in the file system.")
-	flags.BoolVar(&c.Debug, "debug", false, "Display stack traces when an error occurs.")
+	c.WorldFlags.SetFlags(flags)
 }
 
 func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
@@ -76,37 +69,18 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 	}
 
 	// Initialize world.
-	world := rbxmk.NewWorld(lua.NewState(lua.Options{
-		SkipOpenLibs:        true,
-		IncludeGoStackTrace: c.Debug,
-	}))
-	if c.InsecurePaths {
-		world.FS.SetSecured(false)
+	world, err := InitWorld(WorldOpt{
+		WorldFlags: c.WorldFlags,
+	})
+	if err != nil {
+		return err
 	}
-	if wd, err := os.Getwd(); err == nil {
-		// Working directory is an accessible root.
-		world.FS.AddRoot(wd)
-	}
-	for _, root := range c.IncludedRoots {
-		world.FS.AddRoot(root)
-	}
-	for _, f := range formats.All() {
-		world.RegisterFormat(f())
-	}
-	for _, lib := range library.All() {
-		if err := world.Open(lib); err != nil {
-			return err
-		}
-	}
-
 	state := world.State()
-	state.SetGlobal("_RBXMK_VERSION", lua.LString(VersionString()))
 	exit := make(chan struct{})
 	state.GetGlobal("os").(*lua.LTable).RawSetString("exit", world.WrapFunc(func(s rbxmk.State) int {
 		close(exit)
 		return 0
 	}))
-
 	if c.Init != nil {
 		c.Init(rbxmk.State{World: world, L: state})
 	}

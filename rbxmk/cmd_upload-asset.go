@@ -5,9 +5,7 @@ import (
 	"io"
 	"os"
 
-	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/anaminus/snek"
@@ -49,6 +47,7 @@ func (c *UploadAssetCommand) SetFlags(flags snek.FlagSet) {
 }
 
 func (c *UploadAssetCommand) Run(opt snek.Options) error {
+	// Parse flags.
 	if err := opt.ParseFlags(); err != nil {
 		return err
 	}
@@ -56,12 +55,18 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 		return fmt.Errorf("must specify valid asset ID with -id flag")
 	}
 
-	world := rbxmk.NewWorld(lua.NewState(lua.Options{
-		SkipOpenLibs: true,
-	}))
-	for _, f := range formats.All() {
-		world.RegisterFormat(f())
+	// Initialize world.
+	world, err := InitWorld(WorldOpt{
+		WorldFlags:       WorldFlags{Debug: false},
+		ExcludeRoots:     true,
+		ExcludeLibraries: true,
+		ExcludeVersion:   true,
+	})
+	if err != nil {
+		return err
 	}
+
+	// Check formats.
 	assetFormat := world.Format(c.AssetFormat)
 	if assetFormat.Name == "" {
 		return fmt.Errorf("unknown asset format %q", c.AssetFormat)
@@ -82,6 +87,7 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 		}
 	}
 
+	// Upload asset.
 	var file io.ReadCloser
 	switch filename := opt.Arg(0); filename {
 	case "":
