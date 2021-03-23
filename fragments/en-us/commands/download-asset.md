@@ -2,11 +2,10 @@
 Download an asset.
 
 # Arguments
-
 	[ FLAGS ] -id INT [ PATH ]
 
 # Description
-Downloads an asset from the roblox website.
+The **download-asset** command downloads an asset from the roblox website.
 
 The `-id` flag, which is required, specifies the ID of the asset to download.
 
@@ -17,11 +16,11 @@ Each cookie flag appends to the list of cookies that will be sent with the
 request. Such flags can be specified any number of times.
 
 # Flags
-## id
-The ID of the asset to download (required).
+## file-format
+The format to encode the file as. Defaults to -format.
 
 ## format
 The format to decode the asset as.
 
-## file-format
-The format to encode the file as. Defaults to -format.
+## id
+The ID of the asset to download (required).

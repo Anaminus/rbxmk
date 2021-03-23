@@ -2,7 +2,6 @@
 Execute a script.
 
 # Arguments
-
 	[ FLAGS ] FILE [ VALUE... ]
 
 # Description

@@ -4,4 +4,5 @@ Display the version.
 # Arguments
 
 # Description
-Displays the current version of rbxmk.
+The **version** command displays the current version of rbxmk. The result is
+formatted according to [semantic versioning](https://semver.org/).

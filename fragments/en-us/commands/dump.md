@@ -2,11 +2,11 @@
 Dump the script API.
 
 # Arguments
-
 	FORMAT
 
 # Description
-Dumps the API of the rbxmk Lua environment. The following formats are supported:
+The **dump** command dumps the API of the rbxmk Lua environment. The following
+formats are supported:
 
 ```
 %s
