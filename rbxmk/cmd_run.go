@@ -25,18 +25,11 @@ func shortenPath(filename string) string {
 
 func init() {
 	Program.Register(snek.Def{
-		Name:      "run",
-		Summary:   "Execute a script.",
-		Arguments: `[ FLAGS ] FILE [ VALUE... ]`,
-		Description: `
-Receives a file to be executed as a Lua script. If "-" is given, then the script
-will be read from stdin instead.
-
-Remaining arguments are Lua values to be passed to the file. Numbers, bools, and
-nil are parsed into their respective types in Lua, and any other value is
-interpreted as a string. Within the script, these arguments can be received from
-the ... operator.`,
-		New: func() snek.Command { return &RunCommand{} },
+		Name:        "run",
+		Summary:     Doc("commands/run.md/Summary"),
+		Arguments:   Doc("commands/run.md/Arguments"),
+		Description: Doc("commands/run.md/Description"),
+		New:         func() snek.Command { return &RunCommand{} },
 	})
 }
 

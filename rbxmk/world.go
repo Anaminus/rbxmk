@@ -37,9 +37,9 @@ type WorldFlags struct {
 }
 
 func (f *WorldFlags) SetFlags(flags snek.FlagSet) {
-	flags.Var((*repeatedString)(&f.IncludedRoots), "include-root", "Mark a path as an accessible root directory. May be specified any number of times.")
-	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, "Disable path restrictions, allowing scripts to access any path in the file system.")
-	flags.BoolVar(&f.Debug, "debug", false, "Display stack traces when an error occurs.")
+	flags.Var((*repeatedString)(&f.IncludedRoots), "include-root", Doc("commands/world_flags.md/include-root"))
+	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, Doc("commands/world_flags.md/allow-insecure-paths"))
+	flags.BoolVar(&f.Debug, "debug", false, Doc("commands/world_flags.md/debug"))
 }
 
 // WorldOpt are options to InitWorld.

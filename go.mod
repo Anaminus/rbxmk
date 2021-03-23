@@ -16,4 +16,5 @@ require (
 	github.com/robloxapi/types v0.1.0
 	github.com/yuin/goldmark v1.3.3
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
+	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
 )

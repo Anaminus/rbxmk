@@ -9,8 +9,8 @@ import (
 func init() {
 	Program.Register(snek.Def{
 		Name:        "version",
-		Summary:     "Display the version.",
-		Description: "Displays the current version of rbxmk.",
+		Summary:     Doc("commands/version.md/Summary"),
+		Description: Doc("commands/version.md/Description"),
 		New:         func() snek.Command { return VersionCommand{} },
 	})
 }
