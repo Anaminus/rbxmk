@@ -1,6 +1,8 @@
 # Summary
 Enter interactive mode.
 
+# Arguments
+
 # Description
 Enters interactive mode. Each prompt executes a chunk of Lua code.
 

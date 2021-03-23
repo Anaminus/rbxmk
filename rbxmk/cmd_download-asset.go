@@ -13,11 +13,8 @@ import (
 
 func init() {
 	Program.Register(snek.Def{
-		Name:        "download-asset",
-		Summary:     Doc("commands/download-asset.md/Summary"),
-		Arguments:   Doc("commands/download-asset.md/Arguments"),
-		Description: Doc("commands/download-asset.md/Description"),
-		New:         func() snek.Command { return &DownloadAssetCommand{} },
+		Name: "download-asset",
+		New:  func() snek.Command { return &DownloadAssetCommand{} },
 	})
 }
 

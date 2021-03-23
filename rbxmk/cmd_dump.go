@@ -17,10 +17,7 @@ import (
 func init() {
 	dumpfmts := dumpformats.All()
 	Program.Register(snek.Def{
-		Name:        "dump",
-		Summary:     Doc("commands/dump.md/Summary"),
-		Arguments:   Doc("commands/dump.md/Arguments"),
-		Description: Doc("commands/dump.md/Description"),
+		Name: "dump",
 		New: func() snek.Command {
 			return &DumpCommand{Formats: dumpfmts}
 		},

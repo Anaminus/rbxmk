@@ -9,6 +9,7 @@ import (
 var Program = snek.NewProgram("rbxmk", os.Args).Usage(Doc("commands/main.md"))
 
 func main() {
+	DocumentCommands()
 	UnresolvedFragments()
 	Program.Main()
 }

@@ -6,7 +6,7 @@ require (
 	github.com/anaminus/drill v0.3.0
 	github.com/anaminus/gopher-lua v0.4.0
 	github.com/anaminus/parse v0.1.0
-	github.com/anaminus/snek v0.2.0
+	github.com/anaminus/snek v0.3.0
 	github.com/bbrks/wrap/v2 v2.5.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/peterh/liner v1.2.1

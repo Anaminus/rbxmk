@@ -25,11 +25,8 @@ func shortenPath(filename string) string {
 
 func init() {
 	Program.Register(snek.Def{
-		Name:        "run",
-		Summary:     Doc("commands/run.md/Summary"),
-		Arguments:   Doc("commands/run.md/Arguments"),
-		Description: Doc("commands/run.md/Description"),
-		New:         func() snek.Command { return &RunCommand{} },
+		Name: "run",
+		New:  func() snek.Command { return &RunCommand{} },
 	})
 }
 

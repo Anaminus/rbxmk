@@ -13,10 +13,8 @@ import (
 
 func init() {
 	Program.Register(snek.Def{
-		Name:        "i",
-		Summary:     Doc("commands/interactive.md/Summary"),
-		Description: Doc("commands/interactive.md/Description"),
-		New:         func() snek.Command { return &InteractiveCommand{} },
+		Name: "i",
+		New:  func() snek.Command { return &InteractiveCommand{} },
 	})
 }
 
