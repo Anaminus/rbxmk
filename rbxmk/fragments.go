@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"sort"
 	"strings"
 	"sync"
 
@@ -20,11 +21,29 @@ import (
 // Language determines the language of documentation text.
 var Language = "en-us"
 
+// panicLanguage writes the languages that have been embedded, then panics.
+func panicLanguage() {
+	langs := make([]string, 0, len(fragments.Languages))
+	for lang := range fragments.Languages {
+		langs = append(langs, lang)
+	}
+	sort.Strings(langs)
+	if len(langs) == 0 {
+		fmt.Fprintln(os.Stderr, "no languages are embedded")
+	} else {
+		fmt.Fprintln(os.Stderr, "the following languages are embedded:")
+		for _, lang := range langs {
+			fmt.Fprintf(os.Stderr, "\t%s\n", lang)
+		}
+	}
+	panic(fmt.Sprintf("unsupported language %q", Language))
+}
+
 func initDocs() drill.Node {
 	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 	lang, ok := fragments.Languages[Language]
 	if !ok {
-		panic(fmt.Sprintf("unsupported language %q", Language))
+		panicLanguage()
 	}
 	f, err := filesys.NewFS(lang, filesys.Handlers{
 		{Pattern: "*.md", Func: markdown.NewHandler(
@@ -40,7 +59,7 @@ func initDocs() drill.Node {
 	}
 	node := f.UnorderedChild(Language)
 	if node == nil {
-		panic(fmt.Sprintf("unsupported language %q", Language))
+		panicLanguage()
 	}
 	return node
 }
@@ -48,14 +67,36 @@ func initDocs() drill.Node {
 var docfs = initDocs()
 var docMut sync.Mutex
 var docCache = map[string]*markdown.Node{}
+var docFails = map[string]struct{}{}
 
 // docString extracts and formats the fragment from the given node. Panics if
 // the node was not found.
 func docString(fragpath string, node drill.Node) string {
 	if node == nil {
-		panic(fmt.Sprintf("unknown fragment {%s:%s}", Language, fragpath))
+		docFails[fragpath] = struct{}{}
+		return fmt.Sprintf("{%s:%s}", Language, fragpath)
 	}
 	return strings.TrimSpace(node.Fragment())
+}
+
+// UnresolvedFragments writes to stderr a list of fragment references that
+// failed to resolve. Panics if any references failed.
+func UnresolvedFragments() {
+	if len(docFails) == 0 {
+		return
+	}
+	refs := make([]string, 0, len(docFails))
+	for ref := range docFails {
+		refs = append(refs, ref)
+	}
+	sort.Strings(refs)
+	var s strings.Builder
+	fmt.Fprintf(&s, "unresolved fragments for %q:\n", Language)
+	for _, ref := range refs {
+		fmt.Fprintf(&s, "\t%s\n", ref)
+	}
+	fmt.Fprintf(&s, "\nversion: %s", VersionString())
+	panic(s.String())
 }
 
 func Doc(fragpath string) string {
