@@ -10,9 +10,7 @@ import (
 )
 
 func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
-	usage := `Append cookies from a known location. See the documentation of
-rbxmk.cookiesFrom for a list of locations. Can be given any number of times.`
-	flags.Func("cookies-from", usage, func(v string) error {
+	flags.Func("cookies-from", Doc("commands/cookie_flags.md/cookies-from"), func(v string) error {
 		cookies, err := rbxmk.CookiesFrom(v)
 		if err != nil {
 			return err
@@ -20,10 +18,7 @@ rbxmk.cookiesFrom for a list of locations. Can be given any number of times.`
 		*c = append(*c, cookies...)
 		return nil
 	})
-
-	usage = `Append cookies from a file. The file is formatted as a number of
-Set-Cookie headers. Can be given any number of times.`
-	flags.Func("cookies-file", usage, func(v string) error {
+	flags.Func("cookies-file", Doc("commands/cookie_flags.md/cookies-file"), func(v string) error {
 		f, err := os.Open(v)
 		if err != nil {
 			return err
@@ -36,10 +31,7 @@ Set-Cookie headers. Can be given any number of times.`
 		*c = append(*c, cookies...)
 		return nil
 	})
-
-	usage = `Append a cookie from an environment variable. The content is
-formatted as a number of Set-Cookie headers. Can be given any number of times.`
-	flags.Func("cookie-var", usage, func(v string) error {
+	flags.Func("cookie-var", Doc("commands/cookie_flags.md/cookie-var"), func(v string) error {
 		content := os.Getenv(v)
 		cookies, err := rbxmk.DecodeCookies(strings.NewReader(content))
 		if err != nil {
