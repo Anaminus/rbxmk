@@ -1,6 +1,6 @@
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
-github.com/anaminus/drill v0.3.0 h1:LHjvSgZKA9A6B7f8CVb95jnNRjjOyWuKHdJYXwuLTcQ=
-github.com/anaminus/drill v0.3.0/go.mod h1:jxMylfFNPudYVoo9Ulqca5oRndWVVotKcGiRefHcFxo=
+github.com/anaminus/drill v0.3.1 h1:+2HUMvczHaMEgVSzlO7hNSmC9wP959UyGY0HEENOe+s=
+github.com/anaminus/drill v0.3.1/go.mod h1:jxMylfFNPudYVoo9Ulqca5oRndWVVotKcGiRefHcFxo=
 github.com/anaminus/gopher-lua v0.4.0 h1:YPSw9DuYr/tr0Pk71w9S5Minmtjoel8lK148srnux80=
 github.com/anaminus/gopher-lua v0.4.0/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
 github.com/anaminus/parse v0.1.0 h1:KbkRU9EAJLoGXrASCZvqfzdcwelc8evFU14xfBraE+8=
