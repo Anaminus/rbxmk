@@ -108,7 +108,8 @@ func (w *writer) WriteString(s string) (n int, err error) {
 // suitable for the terminal.
 type Renderer struct {
 	// Width sets the assumed width of the terminal, which aids in wrapping
-	// text. If <= 0, then the width is treated as unbounded.
+	// text. If == 0, then the width is treated as 80. If < 0, then the width is
+	// treated as unbounded.
 	Width int
 	// TabSize indicates the number of characters that the terminal uses to
 	// render a tab. If <= 0, then tabs are assumed to have a size of 8.
@@ -127,8 +128,15 @@ func (r Renderer) Render(w io.Writer, source []byte, n ast.Node) error {
 		tabSize:  r.TabSize,
 		maxWidth: r.Width,
 	}
-	if buf.maxWidth <= 0 {
+	if buf.maxWidth == 0 {
+		buf.maxWidth = 80 - 1
+	} else if buf.maxWidth < 0 {
 		buf.maxWidth = -1
+	} else {
+		// Apparently, when a newline appears on the edge, it is wrapped around,
+		// creating the appearance of two newlines. Subtracting 1 will mitigate
+		// this.
+		buf.maxWidth--
 	}
 	if buf.tabSize <= 0 {
 		buf.tabSize = 8
@@ -187,9 +195,6 @@ func (r Renderer) Render(w io.Writer, source []byte, n ast.Node) error {
 				for i := 0; i < lines.Len(); i++ {
 					line := lines.At(i)
 					s := line.Value(source)
-					if len(bytes.TrimSpace(s)) > 0 {
-						buf.WriteString("\t")
-					}
 					buf.Write(s)
 				}
 			case *east.Table:
