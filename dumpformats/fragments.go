@@ -43,9 +43,6 @@ func fragWrite(buf *bufio.Writer, p string, path string) {
 }
 
 func fragWriteFields(buf *bufio.Writer, p string, fields dump.Fields) {
-	if len(fields) == 0 {
-		return
-	}
 	sortFields(fields, func(fieldName string, field dump.Value) {
 		p := path.Join(p, fieldName)
 		switch value := field.(type) {
@@ -69,9 +66,6 @@ func fragWriteFields(buf *bufio.Writer, p string, fields dump.Fields) {
 }
 
 func fragWriteTypes(buf *bufio.Writer, p string, types dump.TypeDefs) {
-	if len(types) == 0 {
-		return
-	}
 	sortTypeDefs(types, func(defName string, def dump.TypeDef) {
 		p := path.Join(p, defName)
 		fragWrite(buf, path.Join(p, "Summary"), def.Summary)
