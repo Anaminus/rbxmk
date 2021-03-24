@@ -57,9 +57,9 @@ func fragWriteFields(buf *bufio.Writer, p string, fields dump.Fields) {
 			fragWrite(buf, path.Join(p, "Summary"), value.Summary)
 			fragWrite(buf, path.Join(p, "Description"), value.Description)
 		case dump.MultiFunction:
-			for _, value := range value {
-				fragWrite(buf, path.Join(p, "Summary"), value.Summary)
-				fragWrite(buf, path.Join(p, "Description"), value.Description)
+			for i, value := range value {
+				fragWrite(buf, path.Join(p, strconv.Itoa(i), "Summary"), value.Summary)
+				fragWrite(buf, path.Join(p, strconv.Itoa(i), "Description"), value.Description)
 			}
 		}
 	})
