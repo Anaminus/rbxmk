@@ -10,7 +10,7 @@ import (
 )
 
 func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
-	flags.Func("cookies-from", Doc("flags/cookies#cookies-from"), func(v string) error {
+	flags.Func("cookies-from", Doc("flags/cookies:cookies-from"), func(v string) error {
 		cookies, err := rbxmk.CookiesFrom(v)
 		if err != nil {
 			return err
@@ -18,7 +18,7 @@ func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
 		*c = append(*c, cookies...)
 		return nil
 	})
-	flags.Func("cookies-file", Doc("flags/cookies#cookies-file"), func(v string) error {
+	flags.Func("cookies-file", Doc("flags/cookies:cookies-file"), func(v string) error {
 		f, err := os.Open(v)
 		if err != nil {
 			return err
@@ -31,7 +31,7 @@ func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
 		*c = append(*c, cookies...)
 		return nil
 	})
-	flags.Func("cookie-var", Doc("flags/cookies#cookie-var"), func(v string) error {
+	flags.Func("cookie-var", Doc("flags/cookies:cookie-var"), func(v string) error {
 		content := os.Getenv(v)
 		cookies, err := rbxmk.DecodeCookies(strings.NewReader(content))
 		if err != nil {

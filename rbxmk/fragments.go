@@ -113,71 +113,34 @@ func UnresolvedFragments() {
 
 // parseFragPath receives a fragment path and converts it to a file path.
 //
-// In a fragment path, dirsep is the separator that descends through
-// directories, and filesep is the separator that descends into the file. After
-// the last occurrence of dirsep, the element is appended with the given suffix,
-// then remaining elements are delimited by filesep.
+// A fragment path is like a regular file path, except that filesep is the
+// separator that descends into a file. After the first occurrence of filesep,
+// the preceding element is appended with the given suffix, and then descending
+// continues.
 //
-// For example, with ".md", '/', and '#':
+// For example, with ".md" and ":":
 //
-//     libraries/roblox/types/Region3#Properties#CFrame#Description
+//     libraries/roblox/types/Region3:Properties/CFrame/Description
 //
 // is split into the following elements:
 //
 //     libraries, roblox, types, Region3.md, Properties, CFrame, Description
 //
-func parseFragPath(s, suffix string, dirsep, filesep rune) []string {
+func parseFragPath(s, suffix string, filesep rune) []string {
 	if s == "" {
 		return []string{}
 	}
-	n := strings.Count(s, string(filesep))
-	if n == 0 {
-		a := strings.Split(s, string(dirsep))
-		a[len(a)-1] += suffix
-		return a
+	i := strings.IndexRune(s, filesep)
+	if i < 0 {
+		return strings.Split(s+".md", "/")
 	}
-	if m := strings.Count(s, string(dirsep)); m == 0 {
-		a := strings.Split(s, string(filesep))
-		a[0] += suffix
-		return a
-	} else {
-		n += m
-	}
-	a := make([]string, n+1)
-
-	i := 0
-	for i < n {
-		m := strings.IndexRune(s, dirsep)
-		if m < 0 {
-			break
-		}
-		a[i] = s[:m]
-		s = s[m+1:]
-		i++
-	}
-	m := strings.IndexRune(s, filesep)
-	if m < 0 {
-		a[i] = s + suffix
-		return a[:i+1]
-	}
-	a[i] = s[:m] + suffix
-	s = s[m+1:]
-	i++
-	for i < n {
-		m := strings.IndexRune(s, filesep)
-		if m < 0 {
-			break
-		}
-		a[i] = s[:m]
-		s = s[m+1:]
-		i++
-	}
-	a[i] = s
-	return a[:i+1]
+	items := make([]string, 0, strings.Count(s, "/")+1)
+	items = append(items, strings.Split(s[:i]+".md", "/")...)
+	items = append(items, strings.Split(s[i+1:], "/")...)
+	return items
 }
 
-const dirsep = '/'
-const filesep = '#'
+const filesep = ':'
 const suffix = ".md"
 
 func Doc(fragpath string) string {
@@ -186,12 +149,12 @@ func Doc(fragpath string) string {
 	var n drill.Node = docfs
 	var path string
 	docSeen[fragpath] = struct{}{}
-	names := parseFragPath(fragpath, suffix, dirsep, filesep)
+	names := parseFragPath(fragpath, suffix, filesep)
 	for _, name := range names {
 		if name == "" {
 			return docString(fragpath, nil)
 		}
-		path += string(dirsep) + name
+		path += "/" + name
 		if node, ok := docCache[path]; ok {
 			n = node
 		} else {

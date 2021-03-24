@@ -27,9 +27,9 @@ type DownloadAssetCommand struct {
 
 func (c *DownloadAssetCommand) SetFlags(flags snek.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
-	flags.Int64Var(&c.ID, "id", 0, Doc("commands/download-asset#Flags#id"))
-	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("commands/download-asset#Flags#format"))
-	flags.StringVar(&c.FileFormat, "file-format", "", Doc("commands/download-asset#Flags#file-format"))
+	flags.Int64Var(&c.ID, "id", 0, Doc("commands/download-asset:Flags/id"))
+	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("commands/download-asset:Flags/format"))
+	flags.StringVar(&c.FileFormat, "file-format", "", Doc("commands/download-asset:Flags/file-format"))
 }
 
 func (c DownloadAssetCommand) Run(opt snek.Options) error {
