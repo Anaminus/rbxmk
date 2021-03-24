@@ -24,6 +24,9 @@ type Root struct {
 	Libraries Libraries
 	// Types contains types defined by the API.
 	Types TypeDefs `json:",omitempty"`
+	// Description is a fragment reference pointing to a general description of
+	// the API.
+	Description string `json:",omitempty"`
 }
 
 // Libraries is a list of libraries.
@@ -84,7 +87,11 @@ type Property struct {
 	ValueType dt.Type
 	// ReadOnly indicates whether the property can be written to.
 	ReadOnly bool `json:",omitempty"`
-	// Description is a detailed description of the property.
+	// Summary is a fragment reference pointing to a short summary of the
+	// property.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the property.
 	Description string `json:",omitempty"`
 }
 
@@ -97,7 +104,11 @@ func (v Property) Type() dt.Type {
 type Struct struct {
 	// Fields are the fields of the structure.
 	Fields Fields
-	// Description is a detailed description of the structure.
+	// Summary is a fragment reference pointing to a short summary of the
+	// struct.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the struct.
 	Description string `json:",omitempty"`
 }
 
@@ -125,7 +136,10 @@ type TypeDef struct {
 	Methods Methods `json:",omitempty"`
 	// Constructors describes constructor functions that create the type.
 	Constructors Constructors `json:",omitempty"`
-	// Description is a detailed description of the type definition.
+	// Summary is a fragment reference pointing to a short summary of the type.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the type.
 	Description string `json:",omitempty"`
 }
 
@@ -150,7 +164,11 @@ type Function struct {
 	// CanError returns whether the function may throw an error, excluding type
 	// errors from received arguments.
 	CanError bool `json:",omitempty"`
-	// Description is a detailed description of the function.
+	// Summary is a fragment reference pointing to a short summary of the
+	// function.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the function.
 	Description string `json:",omitempty"`
 }
 
@@ -224,7 +242,11 @@ type Binop struct {
 	Operand dt.Type
 	// Result is the type of the result of the operation.
 	Result dt.Type
-	// Description is a detailed description of the operator.
+	// Summary is a fragment reference pointing to a short summary of the
+	// operator.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the operator.
 	Description string `json:",omitempty"`
 }
 
@@ -233,6 +255,10 @@ type Binop struct {
 type Unop struct {
 	// Result is the type of the result of the operation.
 	Result dt.Type
-	// Description is a detailed description of the operator.
+	// Summary is a fragment reference pointing to a short summary of the
+	// operator.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the operator.
 	Description string `json:",omitempty"`
 }
