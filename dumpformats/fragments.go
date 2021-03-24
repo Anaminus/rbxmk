@@ -33,10 +33,14 @@ var Fragments = Format{
 }
 
 func fragWrite(buf *bufio.Writer, p string, path string) {
-	if path == "" {
-		buf.WriteString(">>> ")
+	switch path {
+	case "":
+		buf.WriteString(">>>> ")
 		buf.WriteString(p)
-	} else {
+	case "$TODO":
+		buf.WriteString("---- ")
+		buf.WriteString(p)
+	default:
 		buf.WriteString(path)
 	}
 	buf.WriteString("\n")
