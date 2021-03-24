@@ -78,11 +78,21 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 	root.Libraries = append(root.Libraries, dump.Library{
 		Name:       "executable",
 		ImportedAs: "",
-		Struct: dump.Struct{Fields: dump.Fields{
-			"_RBXMK_VERSION": dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
-		}},
+		Struct: dump.Struct{
+			Fields: dump.Fields{
+				"_RBXMK_VERSION": dump.Property{
+					ValueType:   dt.Prim("string"),
+					ReadOnly:    true,
+					Summary:     "libraries/executable:Fields/_RBXMK_VERSION/Summary",
+					Description: "libraries/executable:Fields/_RBXMK_VERSION/Description",
+				},
+			},
+			Summary:     "libraries/executable:Summary",
+			Description: "libraries/executable:Description",
+		},
 	})
 	root.Fragments = DocFragments()
+	root.Description = "libraries"
 
 	// Dump format.
 	return format.Func(opt.Stdout, root)

@@ -47,12 +47,16 @@ func RBXAssetOptions() rbxmk.Reflector {
 			return options, nil
 		},
 		Dump: func() dump.TypeDef {
-			return dump.TypeDef{Underlying: dt.Struct{
-				"AssetID": dt.Prim("int64"),
-				"Cookies": dt.Optional{T: dt.Prim("Cookies")},
-				"Format":  dt.Prim("FormatSelector"),
-				"Body":    dt.Optional{T: dt.Prim("any")},
-			}}
+			return dump.TypeDef{
+				Underlying: dt.Struct{
+					"AssetID": dt.Prim("int64"),
+					"Cookies": dt.Optional{T: dt.Prim("Cookies")},
+					"Format":  dt.Prim("FormatSelector"),
+					"Body":    dt.Optional{T: dt.Prim("any")},
+				},
+				Summary:     TODO(),
+				Description: TODO(),
+			}
 		},
 	}
 }

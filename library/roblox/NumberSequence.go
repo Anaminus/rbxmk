@@ -55,7 +55,12 @@ func NumberSequence() rbxmk.Reflector {
 					return 1
 				},
 				Dump: func() dump.Property {
-					return dump.Property{ValueType: dt.Array{T: dt.Prim("NumberSequenceKeypoint")}, ReadOnly: true}
+					return dump.Property{
+						ValueType:   dt.Array{T: dt.Prim("NumberSequenceKeypoint")},
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/NumberSequence:Properties/Keypoints/Summary",
+						Description: "libraries/roblox/types/NumberSequence:Properties/Keypoints/Description",
+					}
 				},
 			},
 		},
@@ -106,7 +111,7 @@ func NumberSequence() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "value", Type: dt.Prim("float")},
@@ -114,6 +119,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -123,6 +130,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -131,12 +140,20 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

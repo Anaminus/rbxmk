@@ -28,14 +28,51 @@ func dumpSym(s rbxmk.State) dump.Library {
 	return dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"AttrConfig":    dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"Desc":          dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"IsService":     dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"Metadata":      dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"RawAttrConfig": dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"RawDesc":       dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
-				"Reference":     dump.Property{ValueType: dt.Prim("Symbol"), ReadOnly: true},
+				"AttrConfig": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"Desc": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"IsService": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"Metadata": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"RawAttrConfig": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"RawDesc": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"Reference": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

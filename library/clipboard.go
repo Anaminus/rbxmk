@@ -68,16 +68,22 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
 						{Name: "...", Type: dt.Prim("string")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

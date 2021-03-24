@@ -3,6 +3,7 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
@@ -18,6 +19,12 @@ func DescAction() rbxmk.Reflector {
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

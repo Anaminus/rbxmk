@@ -32,25 +32,53 @@ func Rect() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Min)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector2"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Rect:Properties/Min/Summary",
+						Description: "libraries/roblox/types/Rect:Properties/Min/Description",
+					}
+				},
 			},
 			"Max": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Rect).Max)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector2"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Rect:Properties/Max/Summary",
+						Description: "libraries/roblox/types/Rect:Properties/Max/Description",
+					}
+				},
 			},
 			"Width": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Width()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Rect:Properties/Width/Summary",
+						Description: "libraries/roblox/types/Rect:Properties/Width/Description",
+					}
+				},
 			},
 			"Height": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Rect).Height()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Rect:Properties/Height/Summary",
+						Description: "libraries/roblox/types/Rect:Properties/Height/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -72,7 +100,7 @@ func Rect() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "min", Type: dt.Prim("Vector2")},
@@ -81,6 +109,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -92,11 +122,19 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

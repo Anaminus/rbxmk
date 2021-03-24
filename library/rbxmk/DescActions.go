@@ -46,6 +46,12 @@ func DescActions() rbxmk.Reflector {
 			}
 			return actions, nil
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Array{T: dt.Prim("DescAction")}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Underlying:  dt.Array{T: dt.Prim("DescAction")},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

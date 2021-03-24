@@ -50,6 +50,8 @@ func Enum() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumItem")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -64,9 +66,13 @@ func Enum() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("EnumItem")},
 						},
-						CanError: true,
+						CanError:    true,
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

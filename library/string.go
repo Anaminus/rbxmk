@@ -49,8 +49,12 @@ func dumpString(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Array{T: dt.Prim("string")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

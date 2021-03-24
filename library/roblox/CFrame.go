@@ -54,31 +54,66 @@ func CFrame() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/P/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/P/Description",
+					}
+				},
 			},
 			"Position": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.CFrame).Position)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/Position/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/Position/Description",
+					}
+				},
 			},
 			"X": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).X()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/X/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Y()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/Y/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/Y/Description",
+					}
+				},
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.CFrame).Z()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/Z/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/Z/Description",
+					}
+				},
 			},
 			"LookVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -89,7 +124,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/LookVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/LookVector/Description",
+					}
+				},
 			},
 			"RightVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -100,7 +142,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/RightVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/RightVector/Description",
+					}
+				},
 			},
 			"UpVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -111,7 +160,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/UpVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/UpVector/Description",
+					}
+				},
 			},
 			"XVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -122,7 +178,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[6],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/XVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/XVector/Description",
+					}
+				},
 			},
 			"YVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -133,7 +196,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[7],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/YVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/YVector/Description",
+					}
+				},
 			},
 			"ZVector": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -144,7 +214,14 @@ func CFrame() rbxmk.Reflector {
 						Z: -cf.Rotation[8],
 					})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/CFrame:Properties/ZVector/Summary",
+						Description: "libraries/roblox/types/CFrame:Properties/ZVector/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -157,6 +234,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -175,6 +254,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -191,6 +272,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -207,6 +290,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -223,6 +308,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -239,6 +326,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -255,6 +344,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -271,6 +362,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -308,6 +401,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "r21", Type: dt.Prim("float")},
 							{Name: "r22", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -323,6 +418,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -338,6 +435,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -353,6 +452,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -367,6 +468,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "axis", Type: dt.Prim("Vector3")},
 							{Name: "rotation", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -422,11 +525,13 @@ func CFrame() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -435,6 +540,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -444,6 +551,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -454,6 +563,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -468,6 +579,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -487,6 +600,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -500,16 +615,20 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "rx", Type: dt.Prim("float")},
-							{Name: "ry", Type: dt.Prim("float")},
-							{Name: "rz", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "rx", Type: dt.Prim("float")},
+								{Name: "ry", Type: dt.Prim("float")},
+								{Name: "rz", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"fromEulerAnglesYXZ": {
@@ -521,16 +640,20 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "rx", Type: dt.Prim("float")},
-							{Name: "ry", Type: dt.Prim("float")},
-							{Name: "rz", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "rx", Type: dt.Prim("float")},
+								{Name: "ry", Type: dt.Prim("float")},
+								{Name: "rz", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"Angles": {
@@ -542,16 +665,20 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "rx", Type: dt.Prim("float")},
-							{Name: "ry", Type: dt.Prim("float")},
-							{Name: "rz", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "rx", Type: dt.Prim("float")},
+								{Name: "ry", Type: dt.Prim("float")},
+								{Name: "rz", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"fromOrientation": {
@@ -563,16 +690,20 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "rx", Type: dt.Prim("float")},
-							{Name: "ry", Type: dt.Prim("float")},
-							{Name: "rz", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "rx", Type: dt.Prim("float")},
+								{Name: "ry", Type: dt.Prim("float")},
+								{Name: "rz", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"fromAxisAngle": {
@@ -583,15 +714,19 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "axis", Type: dt.Prim("Vector3")},
-							{Name: "rotation", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "axis", Type: dt.Prim("Vector3")},
+								{Name: "rotation", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"fromMatrix": {
@@ -604,17 +739,21 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "position", Type: dt.Prim("Vector3")},
-							{Name: "vx", Type: dt.Prim("Vector3")},
-							{Name: "vy", Type: dt.Prim("Vector3")},
-							{Name: "vz", Type: dt.Prim("Vector3")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "position", Type: dt.Prim("Vector3")},
+								{Name: "vx", Type: dt.Prim("Vector3")},
+								{Name: "vy", Type: dt.Prim("Vector3")},
+								{Name: "vz", Type: dt.Prim("Vector3")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 			"lookAt": {
@@ -626,29 +765,61 @@ func CFrame() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "position", Type: dt.Prim("Vector3")},
-							{Name: "lookAt", Type: dt.Prim("Vector3")},
-							{Name: "up", Type: dt.Optional{T: dt.Prim("Vector3")}, Default: `Vector3.new(0, 1, 0)`},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "position", Type: dt.Prim("Vector3")},
+								{Name: "lookAt", Type: dt.Prim("Vector3")},
+								{Name: "up", Type: dt.Optional{T: dt.Prim("Vector3")}, Default: `Vector3.new(0, 1, 0)`},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CFrame")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("CFrame")},
-						},
-					}}
+					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
-			return dump.TypeDef{Operators: &dump.Operators{
-				Eq: true,
-				Mul: []dump.Binop{
-					{Operand: dt.Prim("CFrame"), Result: dt.Prim("CFrame")},
-					{Operand: dt.Prim("Vector3"), Result: dt.Prim("Vector3")},
+			return dump.TypeDef{
+				Operators: &dump.Operators{
+					Eq: true,
+					Mul: []dump.Binop{
+						{
+							Operand:     dt.Prim("CFrame"),
+							Result:      dt.Prim("CFrame"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("CFrame"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("CFrame"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
 				},
-				Add: []dump.Binop{{Operand: dt.Prim("Vector3"), Result: dt.Prim("CFrame")}},
-				Sub: []dump.Binop{{Operand: dt.Prim("Vector3"), Result: dt.Prim("CFrame")}},
-			}}
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

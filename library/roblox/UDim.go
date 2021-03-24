@@ -46,13 +46,27 @@ func UDim() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.UDim).Scale))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim:Properties/Scale/Summary",
+						Description: "libraries/roblox/types/UDim:Properties/Scale/Description",
+					}
+				},
 			},
 			"Offset": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.UDim).Offset))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("int"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim:Properties/Offset/Summary",
+						Description: "libraries/roblox/types/UDim:Properties/Offset/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -64,26 +78,50 @@ func UDim() rbxmk.Reflector {
 					})
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "scale", Type: dt.Prim("float")},
-							{Name: "offset", Type: dt.Prim("int")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "scale", Type: dt.Prim("float")},
+								{Name: "offset", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("UDim")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("UDim")},
-						},
-					}}
+					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq:  true,
-					Add: []dump.Binop{{Operand: dt.Prim("UDim"), Result: dt.Prim("UDim")}},
-					Sub: []dump.Binop{{Operand: dt.Prim("UDim"), Result: dt.Prim("UDim")}},
-					Unm: &dump.Unop{Result: dt.Prim("UDim")},
+					Eq: true,
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("UDim"),
+							Result:      dt.Prim("UDim"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("UDim"),
+							Result:      dt.Prim("UDim"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Unm: &dump.Unop{
+						Result:      dt.Prim("UDim"),
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

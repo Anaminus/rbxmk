@@ -66,55 +66,118 @@ func Axes() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/X/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Y/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Y/Description",
+					}
+				},
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Z/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Z/Description",
+					}
+				},
 			},
 			"Right": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Right/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Right/Description",
+					}
+				},
 			},
 			"Top": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Top/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Top/Description",
+					}
+				},
 			},
 			"Back": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Back/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Back/Description",
+					}
+				},
 			},
 			"Left": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Left/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Left/Description",
+					}
+				},
 			},
 			"Bottom": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Bottom/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Bottom/Description",
+					}
+				},
 			},
 			"Front": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Axes).Z))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Axes:Properties/Front/Summary",
+						Description: "libraries/roblox/types/Axes:Properties/Front/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -144,11 +207,15 @@ func Axes() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-					}}
+					}
 				},
 			},
 			"fromComponents": {
@@ -165,16 +232,26 @@ func Axes() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "x", Type: dt.Prim("bool")},
-							{Name: "y", Type: dt.Prim("bool")},
-							{Name: "z", Type: dt.Prim("bool")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "x", Type: dt.Prim("bool")},
+								{Name: "y", Type: dt.Prim("bool")},
+								{Name: "z", Type: dt.Prim("bool")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-					}}
+					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

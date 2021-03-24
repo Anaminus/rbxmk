@@ -68,13 +68,27 @@ func Vector2int16() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("int"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2int16:Properties/X/Summary",
+						Description: "libraries/roblox/types/Vector2int16:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(types.Vector2int16).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("int"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2int16:Properties/Y/Summary",
+						Description: "libraries/roblox/types/Vector2int16:Properties/Y/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -92,11 +106,13 @@ func Vector2int16() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2int16")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -106,6 +122,8 @@ func Vector2int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2int16")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -114,19 +132,59 @@ func Vector2int16() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq:  true,
-					Add: []dump.Binop{{Operand: dt.Prim("Vector2int16"), Result: dt.Prim("Vector2int16")}},
-					Sub: []dump.Binop{{Operand: dt.Prim("Vector2int16"), Result: dt.Prim("Vector2int16")}},
+					Eq: true,
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector2int16"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector2int16"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
 					Mul: []dump.Binop{
-						{Operand: dt.Prim("Vector2int16"), Result: dt.Prim("Vector2int16")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2int16")},
+						{
+							Operand:     dt.Prim("Vector2int16"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
 					Div: []dump.Binop{
-						{Operand: dt.Prim("Vector2int16"), Result: dt.Prim("Vector2int16")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2int16")},
+						{
+							Operand:     dt.Prim("Vector2int16"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector2int16"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
-					Unm: &dump.Unop{Result: dt.Prim("Vector2int16")},
+					Unm: &dump.Unop{
+						Result:      dt.Prim("Vector2int16"),
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

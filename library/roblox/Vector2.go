@@ -68,25 +68,53 @@ func Vector2() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2:Properties/X/Summary",
+						Description: "libraries/roblox/types/Vector2:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2:Properties/Y/Summary",
+						Description: "libraries/roblox/types/Vector2:Properties/Y/Description",
+					}
+				},
 			},
 			"Magnitude": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector2).Magnitude()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2:Properties/Magnitude/Summary",
+						Description: "libraries/roblox/types/Vector2:Properties/Magnitude/Description",
+					}
+				},
 			},
 			"Unit": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector2).Unit())
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector2"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector2"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector2:Properties/Unit/Summary",
+						Description: "libraries/roblox/types/Vector2:Properties/Unit/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -105,6 +133,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector2")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -121,6 +151,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -137,6 +169,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -156,11 +190,13 @@ func Vector2() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -170,6 +206,8 @@ func Vector2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -178,19 +216,59 @@ func Vector2() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq:  true,
-					Add: []dump.Binop{{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")}},
-					Sub: []dump.Binop{{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")}},
+					Eq: true,
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector2"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector2"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
 					Mul: []dump.Binop{
-						{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2")},
+						{
+							Operand:     dt.Prim("Vector2"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
 					Div: []dump.Binop{
-						{Operand: dt.Prim("Vector2"), Result: dt.Prim("Vector2")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector2")},
+						{
+							Operand:     dt.Prim("Vector2"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
-					Unm: &dump.Unop{Result: dt.Prim("Vector2")},
+					Unm: &dump.Unop{
+						Result:      dt.Prim("Vector2"),
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

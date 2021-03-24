@@ -44,14 +44,22 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
 				Underlying: dt.Prim("Instance"),
 				Symbols: dump.Properties{
-					"Metadata": dump.Property{ValueType: dt.Dictionary{V: dt.Prim("string")}},
+					"Metadata": dump.Property{
+						ValueType:   dt.Dictionary{V: dt.Prim("string")},
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
 				Methods: dump.Methods{
 					"GetService": dump.Function{
@@ -61,18 +69,26 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 				},
 				Constructors: dump.Constructors{
-					"new": dump.MultiFunction{{
-						Parameters: dump.Parameters{
-							{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+					"new": dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("DataModel")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("DataModel")},
-						},
-					}},
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			},
 		},
 	}

@@ -54,7 +54,11 @@ func HTTPHeaders() rbxmk.Reflector {
 			return headers, nil
 		},
 		Dump: func() dump.TypeDef {
-			return dump.TypeDef{Underlying: dt.Map{K: dt.Prim("string"), V: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}}}
+			return dump.TypeDef{
+				Underlying:  dt.Map{K: dt.Prim("string"), V: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

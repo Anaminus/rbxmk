@@ -25,7 +25,13 @@ func EventDesc() rbxmk.Reflector {
 					desc := v.(rtypes.EventDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/EventDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Properties/Name/Description",
+					}
+				},
 			},
 			"Security": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -36,7 +42,13 @@ func EventDesc() rbxmk.Reflector {
 					desc := v.(rtypes.EventDesc)
 					desc.Security = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/EventDesc:Properties/Security/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Properties/Security/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -55,6 +67,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -79,6 +93,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -96,6 +112,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -114,6 +132,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -132,6 +152,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -150,9 +172,17 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

@@ -204,21 +204,35 @@ func dumpBase(s rbxmk.State) dump.Library {
 		Name: "base",
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"_G":       dump.Property{ValueType: dt.Prim("table"), ReadOnly: true},
-				"_VERSION": dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
+				"_G": dump.Property{
+					ValueType:   dt.Prim("table"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"_VERSION": dump.Property{
+					ValueType:   dt.Prim("string"),
+					ReadOnly:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
 				"assert": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
 						{Name: "message", Type: dt.Optional{T: dt.Prim("string")}, Default: `"assertion failed!"`},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"error": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "message", Type: dt.Prim("any")},
 						{Name: "level", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"ipairs": dump.Function{
 					Parameters: dump.Parameters{
@@ -229,6 +243,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "t", Type: dt.Prim("table")},
 						{Name: "start", Type: dt.Prim("int")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"next": dump.Function{
 					Parameters: dump.Parameters{
@@ -239,6 +255,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "index", Type: dt.Optional{T: dt.Prim("any")}},
 						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"pairs": dump.Function{
 					Parameters: dump.Parameters{
@@ -249,6 +267,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "t", Type: dt.Prim("table")},
 						{Name: "start", Type: dt.Prim("nil")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"pcall": dump.Function{
 					Parameters: dump.Parameters{
@@ -259,11 +279,15 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "ok", Type: dt.Prim("boolean")},
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"print": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"select": dump.MultiFunction{
 					{
@@ -274,6 +298,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 					{
 						Parameters: dump.Parameters{
@@ -283,6 +309,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("int")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 				},
 				"tonumber": dump.MultiFunction{
@@ -293,6 +321,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("number")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 					{
 						Parameters: dump.Parameters{
@@ -302,6 +332,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("number")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 				},
 				"tostring": dump.Function{
@@ -311,6 +343,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"type": dump.Function{
 					Parameters: dump.Parameters{
@@ -319,6 +353,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"unpack": dump.Function{
 					Parameters: dump.Parameters{
@@ -329,6 +365,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"xpcall": dump.Function{
 					Parameters: dump.Parameters{
@@ -340,6 +378,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "ok", Type: dt.Prim("boolean")},
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"getmetatable": dump.Function{
 					Parameters: dump.Parameters{
@@ -348,6 +388,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim("table")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"setmetatable": dump.Function{
 					Parameters: dump.Parameters{
@@ -357,6 +399,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"math": dump.Struct{
 					Fields: dump.Fields{
@@ -367,6 +411,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"acos": dump.Function{
 							Parameters: dump.Parameters{
@@ -375,6 +421,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"asin": dump.Function{
 							Parameters: dump.Parameters{
@@ -383,6 +431,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"atan": dump.Function{
 							Parameters: dump.Parameters{
@@ -391,6 +441,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"atan2": dump.Function{
 							Parameters: dump.Parameters{
@@ -400,6 +452,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"ceil": dump.Function{
 							Parameters: dump.Parameters{
@@ -408,6 +462,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"cos": dump.Function{
 							Parameters: dump.Parameters{
@@ -416,6 +472,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"cosh": dump.Function{
 							Parameters: dump.Parameters{
@@ -424,6 +482,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"deg": dump.Function{
 							Parameters: dump.Parameters{
@@ -432,6 +492,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"exp": dump.Function{
 							Parameters: dump.Parameters{
@@ -440,6 +502,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"floor": dump.Function{
 							Parameters: dump.Parameters{
@@ -448,6 +512,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"fmod": dump.Function{
 							Parameters: dump.Parameters{
@@ -457,6 +523,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"frexp": dump.Function{
 							Parameters: dump.Parameters{
@@ -466,8 +534,15 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "m", Type: dt.Prim("number")},
 								{Name: "e", Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						"huge": dump.Property{ValueType: dt.Prim("number"), ReadOnly: true},
+						"huge": dump.Property{
+							ValueType:   dt.Prim("number"),
+							ReadOnly:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 						"ldexp": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "m", Type: dt.Prim("number")},
@@ -476,6 +551,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"log": dump.Function{
 							Parameters: dump.Parameters{
@@ -484,6 +561,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"log10": dump.Function{
 							Parameters: dump.Parameters{
@@ -492,6 +571,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"max": dump.Function{
 							Parameters: dump.Parameters{
@@ -500,6 +581,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"min": dump.Function{
 							Parameters: dump.Parameters{
@@ -508,6 +591,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"modf": dump.Function{
 							Parameters: dump.Parameters{
@@ -517,8 +602,15 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Type: dt.Prim("int")},
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						"pi": dump.Property{ValueType: dt.Prim("number"), ReadOnly: true},
+						"pi": dump.Property{
+							ValueType:   dt.Prim("number"),
+							ReadOnly:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 						"pow": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "x", Type: dt.Prim("number")},
@@ -526,6 +618,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"rad": dump.Function{
 							Parameters: dump.Parameters{
@@ -534,12 +628,16 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"random": dump.MultiFunction{
 							{
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -548,6 +646,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -557,13 +657,17 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
-								CanError: true,
+								CanError:    true,
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 						},
 						"randomseed": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "x", Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"sin": dump.Function{
 							Parameters: dump.Parameters{
@@ -572,6 +676,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"sinh": dump.Function{
 							Parameters: dump.Parameters{
@@ -580,6 +686,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"sqrt": dump.Function{
 							Parameters: dump.Parameters{
@@ -588,6 +696,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"tan": dump.Function{
 							Parameters: dump.Parameters{
@@ -596,6 +706,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"tanh": dump.Function{
 							Parameters: dump.Parameters{
@@ -604,8 +716,12 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"os": dump.Struct{
 					Fields: dump.Fields{
@@ -613,12 +729,16 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"date": dump.MultiFunction{
 							{
 								Returns: dump.Parameters{
 									{Type: dt.Prim("string")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -638,6 +758,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 										"isdst": dt.Optional{T: dt.Prim("boolean")},
 									}}},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -647,6 +769,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("string")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 						},
 						"difftime": dump.Function{
@@ -657,6 +781,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"time": dump.Function{
 							Parameters: dump.Parameters{
@@ -673,8 +799,12 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("number")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"string": dump.Struct{
 					Fields: dump.Fields{
@@ -687,6 +817,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Name: "...", Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"char": dump.Function{
 							Parameters: dump.Parameters{
@@ -695,6 +827,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"find": dump.MultiFunction{
 							{
@@ -707,7 +841,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
 									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
 								},
-								CanError: true,
+								CanError:    true,
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -720,7 +856,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
 									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
 								},
-								CanError: true,
+								CanError:    true,
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 						},
 						"format": dump.Function{
@@ -731,7 +869,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"gmatch": dump.Function{
 							Parameters: dump.Parameters{
@@ -745,7 +885,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 									},
 								}},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"gsub": dump.Function{
 							Parameters: dump.Parameters{
@@ -772,7 +914,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Type: dt.Prim("string")},
 								{Type: dt.Prim("int")},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"len": dump.Function{
 							Parameters: dump.Parameters{
@@ -781,6 +925,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"lower": dump.Function{
 							Parameters: dump.Parameters{
@@ -789,6 +935,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"match": dump.Function{
 							Parameters: dump.Parameters{
@@ -799,7 +947,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("string")}},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"rep": dump.Function{
 							Parameters: dump.Parameters{
@@ -809,6 +959,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"reverse": dump.Function{
 							Parameters: dump.Parameters{
@@ -817,6 +969,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"sub": dump.Function{
 							Parameters: dump.Parameters{
@@ -827,6 +981,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"upper": dump.Function{
 							Parameters: dump.Parameters{
@@ -835,8 +991,12 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"table": dump.Struct{
 					Fields: dump.Fields{
@@ -850,7 +1010,9 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"insert": dump.MultiFunction{
 							{
@@ -859,12 +1021,16 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "index", Type: dt.Prim("int")},
 									{Name: "value", Type: dt.Prim("any")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 							{
 								Parameters: dump.Parameters{
 									{Name: "t", Type: dt.Prim("table")},
 									{Name: "value", Type: dt.Prim("any")},
 								},
+								Summary:     "$TODO",
+								Description: "$TODO",
 							},
 						},
 						"maxn": dump.Function{
@@ -874,6 +1040,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("int")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"remove": dump.Function{
 							Parameters: dump.Parameters{
@@ -883,6 +1051,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("any")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						"sort": dump.Function{
 							Parameters: dump.Parameters{
@@ -897,11 +1067,17 @@ func dumpBase(s rbxmk.State) dump.Library {
 									},
 								}}},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

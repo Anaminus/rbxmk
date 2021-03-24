@@ -16,3 +16,5 @@ func register(r func() rbxmk.Reflector) {
 func All() []func() rbxmk.Reflector {
 	return registry
 }
+
+func TODO() string { return "TODO" }

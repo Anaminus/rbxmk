@@ -68,31 +68,66 @@ func Vector3() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).X))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector3:Properties/X/Summary",
+						Description: "libraries/roblox/types/Vector3:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Y))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector3:Properties/Y/Summary",
+						Description: "libraries/roblox/types/Vector3:Properties/Y/Description",
+					}
+				},
 			},
 			"Z": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Z))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector3:Properties/Z/Summary",
+						Description: "libraries/roblox/types/Vector3:Properties/Z/Description",
+					}
+				},
 			},
 			"Magnitude": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Vector3).Magnitude()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector3:Properties/Magnitude/Summary",
+						Description: "libraries/roblox/types/Vector3:Properties/Magnitude/Description",
+					}
+				},
 			},
 			"Unit": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Vector3).Unit())
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Vector3:Properties/Unit/Summary",
+						Description: "libraries/roblox/types/Vector3:Properties/Unit/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -111,6 +146,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -127,6 +164,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -143,6 +182,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -161,6 +202,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -181,11 +224,13 @@ func Vector3() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -196,6 +241,8 @@ func Vector3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -204,19 +251,59 @@ func Vector3() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq:  true,
-					Add: []dump.Binop{{Operand: dt.Prim("Vector3"), Result: dt.Prim("Vector3")}},
-					Sub: []dump.Binop{{Operand: dt.Prim("Vector3"), Result: dt.Prim("Vector3")}},
+					Eq: true,
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
 					Mul: []dump.Binop{
-						{Operand: dt.Prim("Vector3"), Result: dt.Prim("Vector3")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector3")},
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
 					Div: []dump.Binop{
-						{Operand: dt.Prim("Vector3"), Result: dt.Prim("Vector3")},
-						{Operand: dt.Prim("number"), Result: dt.Prim("Vector3")},
+						{
+							Operand:     dt.Prim("Vector3"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+						{
+							Operand:     dt.Prim("number"),
+							Result:      dt.Prim("Vector3"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
 					},
-					Unm: &dump.Unop{Result: dt.Prim("Vector3")},
+					Unm: &dump.Unop{
+						Result:      dt.Prim("Vector3"),
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

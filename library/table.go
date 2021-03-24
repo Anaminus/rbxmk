@@ -126,6 +126,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim("table")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"create": dump.Function{
 					Parameters: dump.Parameters{
@@ -135,6 +137,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"find": dump.Function{
 					Parameters: dump.Parameters{
@@ -145,6 +149,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim("int")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"move": dump.Function{
 					Parameters: dump.Parameters{
@@ -157,7 +163,9 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"pack": dump.Function{
 					Parameters: dump.Parameters{
@@ -166,6 +174,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"unpack": dump.Function{
 					Parameters: dump.Parameters{
@@ -176,8 +186,12 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

@@ -3,6 +3,7 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -24,6 +25,12 @@ func Table() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
 			}
 			return rtypes.Table{LTable: table}, nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

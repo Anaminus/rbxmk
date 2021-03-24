@@ -39,6 +39,12 @@ func Color3uint8() rbxmk.Reflector {
 			}
 			return nil
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Prim("Color3")} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Underlying:  dt.Prim("Color3"),
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

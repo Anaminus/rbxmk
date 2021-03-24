@@ -27,20 +27,47 @@ func EnumItem() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.EnumItem).Name()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/EnumItem:Properties/Name/Summary",
+						Description: "libraries/roblox/types/EnumItem:Properties/Name/Description",
+					}
+				},
 			},
 			"Value": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Int(v.(*rtypes.EnumItem).Value()))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("int"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("int"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/EnumItem:Properties/Value/Summary",
+						Description: "libraries/roblox/types/EnumItem:Properties/Value/Description",
+					}
+				},
 			},
 			"EnumType": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(*rtypes.EnumItem).Enum())
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Enum"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Enum"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/EnumItem:Properties/EnumType/Summary",
+						Description: "libraries/roblox/types/EnumItem:Properties/EnumType/Description",
+					}
+				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

@@ -352,7 +352,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "cookies", Type: dt.Prim("Cookies")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
@@ -362,7 +364,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"diffDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -372,6 +376,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "diff", Type: dt.Array{T: dt.Prim("DescAction")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"encodeFormat": dump.Function{
 					Parameters: dump.Parameters{
@@ -381,7 +387,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "bytes", Type: dt.Prim("BinaryString")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"formatCanDecode": dump.Function{
 					Parameters: dump.Parameters{
@@ -391,10 +399,20 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("bool")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
-				"globalAttrConfig": dump.Property{ValueType: dt.Optional{T: dt.Prim("AttrConfig")}},
-				"globalDesc":       dump.Property{ValueType: dt.Optional{T: dt.Prim("RootDesc")}},
+				"globalAttrConfig": dump.Property{
+					ValueType:   dt.Optional{T: dt.Prim("AttrConfig")},
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
+				"globalDesc": dump.Property{
+					ValueType:   dt.Optional{T: dt.Prim("RootDesc")},
+					Summary:     "$TODO",
+					Description: "$TODO",
+				},
 				"loadFile": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim("string")},
@@ -402,7 +420,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "func", Type: dt.Prim("function")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"loadString": dump.Function{
 					Parameters: dump.Parameters{
@@ -411,7 +431,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "func", Type: dt.Prim("function")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"newAttrConfig": dump.Function{
 					Parameters: dump.Parameters{
@@ -420,6 +442,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("AttrConfig")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"newCookie": dump.Function{
 					Parameters: dump.Parameters{
@@ -429,6 +453,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("Cookie")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"newDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -450,13 +476,17 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("Descriptor")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"patchDesc": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "desc", Type: dt.Prim("RootDesc")},
 						{Name: "actions", Type: dt.Array{T: dt.Prim("DescAction")}},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"runFile": dump.Function{
 					Parameters: dump.Parameters{
@@ -466,7 +496,9 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("any")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"runString": dump.Function{
 					Parameters: dump.Parameters{
@@ -476,9 +508,13 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("any")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 		Types: dump.TypeDefs{
 			"Descriptor": dump.TypeDef{
@@ -494,6 +530,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					dt.Prim("EnumDesc"),
 					dt.Prim("EnumItemDesc"),
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			},
 		},
 	}

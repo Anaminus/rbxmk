@@ -144,7 +144,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"mkdir": dump.Function{
 					Parameters: dump.Parameters{
@@ -154,7 +156,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("bool")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"read": dump.Function{
 					Parameters: dump.Parameters{
@@ -164,7 +168,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"remove": dump.Function{
 					Parameters: dump.Parameters{
@@ -174,7 +180,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("bool")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"rename": dump.Function{
 					Parameters: dump.Parameters{
@@ -184,7 +192,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("bool")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"stat": dump.Function{
 					Parameters: dump.Parameters{
@@ -193,7 +203,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim("FileInfo")}},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
@@ -201,9 +213,13 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "value", Type: dt.Prim("any")},
 						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 		Types: dump.TypeDefs{
 			"DirEntry": dump.TypeDef{
@@ -211,6 +227,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Name":  dt.Prim("string"),
 					"IsDir": dt.Prim("bool"),
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			},
 			"FileInfo": dump.TypeDef{
 				Underlying: dt.Struct{
@@ -219,6 +237,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Size":    dt.Prim("int"),
 					"ModTime": dt.Prim("int"),
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			},
 		},
 	}

@@ -63,15 +63,21 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "options", Type: dt.Prim("RBXAssetOptions")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 		Types: dump.TypeDefs{},
 	}

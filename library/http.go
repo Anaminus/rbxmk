@@ -46,8 +46,12 @@ func dumpHTTP(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "req", Type: dt.Prim("HTTPRequest")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 		Types: dump.TypeDefs{},
 	}

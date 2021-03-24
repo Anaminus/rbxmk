@@ -32,19 +32,40 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Time))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/ColorSequenceKeypoint:Properties/Time/Summary",
+						Description: "libraries/roblox/types/ColorSequenceKeypoint:Properties/Time/Description",
+					}
+				},
 			},
 			"Value": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.ColorSequenceKeypoint).Value)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Color3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Color3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/ColorSequenceKeypoint:Properties/Value/Summary",
+						Description: "libraries/roblox/types/ColorSequenceKeypoint:Properties/Value/Description",
+					}
+				},
 			},
 			"Envelope": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.ColorSequenceKeypoint).Envelope))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/ColorSequenceKeypoint:Properties/Envelope/Summary",
+						Description: "libraries/roblox/types/ColorSequenceKeypoint:Properties/Envelope/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -65,7 +86,7 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "time", Type: dt.Prim("float")},
@@ -74,6 +95,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -84,11 +107,19 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

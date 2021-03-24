@@ -41,14 +41,18 @@ func HTTPResponse() rbxmk.Reflector {
 			return resp, nil
 		},
 		Dump: func() dump.TypeDef {
-			return dump.TypeDef{Underlying: dt.Struct{
-				"Success":       dt.Prim("bool"),
-				"StatusCode":    dt.Prim("int"),
-				"StatusMessage": dt.Prim("string"),
-				"Headers":       dt.Prim("HTTPHeaders"),
-				"Cookies":       dt.Prim("Cookies"),
-				"Body":          dt.Optional{T: dt.Prim("any")},
-			}}
+			return dump.TypeDef{
+				Underlying: dt.Struct{
+					"Success":       dt.Prim("bool"),
+					"StatusCode":    dt.Prim("int"),
+					"StatusMessage": dt.Prim("string"),
+					"Headers":       dt.Prim("HTTPHeaders"),
+					"Cookies":       dt.Prim("Cookies"),
+					"Body":          dt.Optional{T: dt.Prim("any")},
+				},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

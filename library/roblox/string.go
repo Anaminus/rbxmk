@@ -3,6 +3,7 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/robloxapi/types"
 )
 
@@ -27,6 +28,12 @@ func String() rbxmk.Reflector {
 				return types.String(v.Stringlike())
 			}
 			return nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

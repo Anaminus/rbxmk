@@ -28,7 +28,9 @@ func HTTPRequest() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Name: "resp", Type: dt.Prim("HTTPResponse")},
 						},
-						CanError: true,
+						CanError:    true,
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -38,8 +40,19 @@ func HTTPRequest() rbxmk.Reflector {
 					req.Cancel()
 					return 0
 				},
-				Dump: func() dump.Function { return dump.Function{} },
+				Dump: func() dump.Function {
+					return dump.Function{
+						Summary:     "$TODO",
+						Description: "$TODO",
+					}
+				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

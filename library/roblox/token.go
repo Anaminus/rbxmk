@@ -3,6 +3,7 @@ package reflect
 import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/robloxapi/types"
 )
 
@@ -26,6 +27,12 @@ func Token() rbxmk.Reflector {
 				}
 			}
 			return nil, rbxmk.TypeError{Want: "token", Got: lvs[0].Type().String()}
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

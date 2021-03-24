@@ -27,7 +27,13 @@ func EnumDesc() rbxmk.Reflector {
 					desc := v.(rtypes.EnumDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/EnumDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/EnumDesc:Properties/Name/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -49,6 +55,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("EnumItemDesc")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -69,6 +77,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumItemDesc")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -93,6 +103,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -114,6 +126,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -131,6 +145,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -149,6 +165,8 @@ func EnumDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -167,6 +185,8 @@ func EnumDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -185,9 +205,17 @@ func EnumDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

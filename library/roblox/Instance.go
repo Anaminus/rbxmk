@@ -377,7 +377,7 @@ func Instance() rbxmk.Reflector {
 			}
 			return nil
 		},
-		Properties: map[string]rbxmk.Property{
+		Properties: rbxmk.Properties{
 			"ClassName": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.String(v.(*rtypes.Instance).ClassName))
@@ -391,7 +391,13 @@ func Instance() rbxmk.Reflector {
 					}
 					inst.ClassName = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/roblox/types/Instance:Properties/ClassName/Summary",
+						Description: "libraries/roblox/types/Instance:Properties/ClassName/Description",
+					}
+				},
 			},
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -400,7 +406,13 @@ func Instance() rbxmk.Reflector {
 				Set: func(s rbxmk.State, v types.Value) {
 					v.(*rtypes.Instance).SetName(string(s.Pull(3, "string").(types.String)))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/roblox/types/Instance:Properties/Name/Summary",
+						Description: "libraries/roblox/types/Instance:Properties/Name/Description",
+					}
+				},
 			},
 			"Parent": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -423,7 +435,13 @@ func Instance() rbxmk.Reflector {
 						s.RaiseError("%s", err)
 					}
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Optional{T: dt.Prim("Instance")}} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Optional{T: dt.Prim("Instance")},
+						Summary:     "libraries/roblox/types/Instance:Properties/Parent/Summary",
+						Description: "libraries/roblox/types/Instance:Properties/Parent/Description",
+					}
+				},
 			},
 		},
 		Symbols: rbxmk.Symbols{
@@ -436,7 +454,13 @@ func Instance() rbxmk.Reflector {
 					inst := v.(*rtypes.Instance)
 					inst.Reference = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/roblox/types/Instance:Symbols/Parent/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/Parent/Description",
+					}
+				},
 			},
 			rtypes.Symbol{Name: "IsService"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -447,7 +471,13 @@ func Instance() rbxmk.Reflector {
 					inst := v.(*rtypes.Instance)
 					inst.IsService = bool(s.Pull(3, "bool").(types.Bool))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						Summary:     "libraries/roblox/types/Instance:Symbols/Parent/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/Parent/Description",
+					}
+				},
 			},
 			rtypes.Symbol{Name: "Desc"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -482,6 +512,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
+						Summary:     "libraries/roblox/types/Instance:Symbols/Desc/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/Desc/Description",
 					}
 				},
 			},
@@ -521,6 +553,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
+						Summary:     "libraries/roblox/types/Instance:Symbols/RawDesc/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/RawDesc/Description",
 					}
 				},
 			},
@@ -557,6 +591,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
+						Summary:     "libraries/roblox/types/Instance:Symbols/AttrConfig/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/AttrConfig/Description",
 					}
 				},
 			},
@@ -596,6 +632,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
+						Summary:     "libraries/roblox/types/Instance:Symbols/RawAttrConfig/Summary",
+						Description: "libraries/roblox/types/Instance:Symbols/RawAttrConfig/Description",
 					}
 				},
 			},
@@ -656,6 +694,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -664,7 +704,12 @@ func Instance() rbxmk.Reflector {
 					v.(*rtypes.Instance).RemoveAll()
 					return 0
 				},
-				Dump: func() dump.Function { return dump.Function{} },
+				Dump: func() dump.Function {
+					return dump.Function{
+						Summary:     "$TODO",
+						Description: "$TODO",
+					}
+				},
 			},
 			"Clone": {
 				Func: func(s rbxmk.State, v types.Value) int {
@@ -675,6 +720,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -683,7 +730,12 @@ func Instance() rbxmk.Reflector {
 					v.(*rtypes.Instance).SetParent(nil)
 					return 0
 				},
-				Dump: func() dump.Function { return dump.Function{} },
+				Dump: func() dump.Function {
+					return dump.Function{
+						Summary:     "$TODO",
+						Description: "$TODO",
+					}
+				},
 			},
 			"FindFirstAncestor": {
 				Func: func(s rbxmk.State, v types.Value) int {
@@ -701,6 +753,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -720,6 +774,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -739,6 +795,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -760,6 +818,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -781,6 +841,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -802,6 +864,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -822,6 +886,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -834,6 +900,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Dictionary")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -847,6 +915,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -859,6 +929,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -871,6 +943,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -887,6 +961,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -903,6 +979,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -919,6 +997,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -938,6 +1018,8 @@ func Instance() rbxmk.Reflector {
 							{Name: "attribute", Type: dt.Prim("string")},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -952,6 +1034,8 @@ func Instance() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "attributes", Type: dt.Prim("Dictionary")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -995,17 +1079,21 @@ func Instance() rbxmk.Reflector {
 					return s.Push(inst)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "className", Type: dt.Prim("string")},
-							{Name: "parent", Type: dt.Optional{T: dt.Prim("Instance")}},
-							{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "className", Type: dt.Prim("string")},
+								{Name: "parent", Type: dt.Optional{T: dt.Prim("Instance")}},
+								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Instance")},
+							},
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("Instance")},
-						},
-						CanError: true,
-					}}
+					}
 				},
 			},
 		},
@@ -1043,16 +1131,22 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
 						},
-						CanError: true,
+						CanError:    true,
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "member", Type: dt.Prim("string")},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
-						CanError: true,
+						CanError:    true,
+						Summary:     "$TODO",
+						Description: "$TODO",
 					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

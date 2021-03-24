@@ -27,7 +27,13 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/ClassDesc:Properties/Name/Description",
+					}
+				},
 			},
 			"Superclass": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -38,7 +44,13 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.Superclass = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/Superclass/Summary",
+						Description: "libraries/rbxmk/types/ClassDesc:Properties/Superclass/Description",
+					}
+				},
 			},
 			"MemoryCategory": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -49,7 +61,13 @@ func ClassDesc() rbxmk.Reflector {
 					desc := v.(rtypes.ClassDesc)
 					desc.MemoryCategory = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/MemoryCategory/Summary",
+						Description: "libraries/rbxmk/types/ClassDesc:Properties/MemoryCategory/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -71,6 +89,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("MemberDesc")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -91,6 +111,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("MemberDesc")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -137,6 +159,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -158,6 +182,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -175,6 +201,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -193,6 +221,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -211,6 +241,8 @@ func ClassDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -229,9 +261,17 @@ func ClassDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

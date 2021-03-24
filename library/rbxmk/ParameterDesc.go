@@ -30,14 +30,28 @@ func ParameterDesc() rbxmk.Reflector {
 					typ := desc.Parameter.Type
 					return s.Push(rtypes.TypeDesc{Embedded: typ})
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("TypeDesc"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("TypeDesc"),
+						ReadOnly:    true,
+						Summary:     "libraries/rbxmk/types/ParameterDesc:Properties/Type/Summary",
+						Description: "libraries/rbxmk/types/ParameterDesc:Properties/Type/Description",
+					}
+				},
 			},
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.ParameterDesc)
 					return s.Push(types.String(desc.Name))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						ReadOnly:    true,
+						Summary:     "libraries/rbxmk/types/ParameterDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/ParameterDesc:Properties/Name/Description",
+					}
+				},
 			},
 			"Default": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -48,10 +62,21 @@ func ParameterDesc() rbxmk.Reflector {
 					return s.Push(types.String(desc.Default))
 				},
 				Dump: func() dump.Property {
-					return dump.Property{ValueType: dt.Optional{T: dt.Prim("string")}, ReadOnly: true}
+					return dump.Property{
+						ValueType:   dt.Optional{T: dt.Prim("string")},
+						ReadOnly:    true,
+						Summary:     "libraries/rbxmk/types/ParameterDesc:Properties/Default/Summary",
+						Description: "libraries/rbxmk/types/ParameterDesc:Properties/Default/Description",
+					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

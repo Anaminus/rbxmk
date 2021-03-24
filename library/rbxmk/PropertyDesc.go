@@ -24,7 +24,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.Name = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/Name/Description",
+					}
+				},
 			},
 			"ValueType": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -36,7 +42,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ValueType = s.Pull(3, "TypeDesc").(rtypes.TypeDesc).Embedded
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("TypeDesc")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("TypeDesc"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/ValueType/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/ValueType/Description",
+					}
+				},
 			},
 			"ReadSecurity": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -47,7 +59,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.ReadSecurity = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/ReadSecurity/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/ReadSecurity/Description",
+					}
+				},
 			},
 			"WriteSecurity": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -58,7 +76,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.WriteSecurity = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/WriteSecurity/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/WriteSecurity/Description",
+					}
+				},
 			},
 			"CanLoad": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -69,7 +93,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanLoad = bool(s.Pull(3, "bool").(types.Bool))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/CanLoad/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/CanLoad/Description",
+					}
+				},
 			},
 			"CanSave": {
 				Get: func(s rbxmk.State, v types.Value) int {
@@ -80,7 +110,13 @@ func PropertyDesc() rbxmk.Reflector {
 					desc := v.(rtypes.PropertyDesc)
 					desc.CanSave = bool(s.Pull(3, "bool").(types.Bool))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						Summary:     "libraries/rbxmk/types/PropertyDesc:Properties/CanSave/Summary",
+						Description: "libraries/rbxmk/types/PropertyDesc:Properties/CanSave/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -98,6 +134,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -116,6 +154,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -134,6 +174,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -152,9 +194,17 @@ func PropertyDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

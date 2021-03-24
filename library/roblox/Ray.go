@@ -32,13 +32,27 @@ func Ray() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Origin)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Ray:Properties/Origin/Summary",
+						Description: "libraries/roblox/types/Ray:Properties/Origin/Description",
+					}
+				},
 			},
 			"Direction": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.Ray).Direction)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("Vector3"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Vector3"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Ray:Properties/Direction/Summary",
+						Description: "libraries/roblox/types/Ray:Properties/Direction/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -55,6 +69,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -71,6 +87,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -84,18 +102,28 @@ func Ray() rbxmk.Reflector {
 					})
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "origin", Type: dt.Prim("Vector3")},
-							{Name: "direction", Type: dt.Prim("Vector3")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "origin", Type: dt.Prim("Vector3")},
+								{Name: "direction", Type: dt.Prim("Vector3")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Ray")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("Ray")},
-						},
-					}}
+					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

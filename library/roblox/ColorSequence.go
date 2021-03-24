@@ -55,7 +55,12 @@ func ColorSequence() rbxmk.Reflector {
 					return 1
 				},
 				Dump: func() dump.Property {
-					return dump.Property{ValueType: dt.Array{T: dt.Prim("ColorSequenceKeypoint")}, ReadOnly: true}
+					return dump.Property{
+						ValueType:   dt.Array{T: dt.Prim("ColorSequenceKeypoint")},
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/ColorSequence:Properties/Keypoints/Summary",
+						Description: "libraries/roblox/types/ColorSequence:Properties/Keypoints/Description",
+					}
 				},
 			},
 		},
@@ -106,7 +111,7 @@ func ColorSequence() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "color", Type: dt.Prim("Color3")},
@@ -114,6 +119,8 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -123,6 +130,8 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -131,12 +140,20 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
-							CanError: true,
+							CanError:    true,
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

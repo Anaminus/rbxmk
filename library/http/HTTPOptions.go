@@ -45,15 +45,19 @@ func HTTPOptions() rbxmk.Reflector {
 			return options, nil
 		},
 		Dump: func() dump.TypeDef {
-			return dump.TypeDef{Underlying: dt.Struct{
-				"URL":            dt.Prim("string"),
-				"Method":         dt.Optional{T: dt.Prim("string")},
-				"RequestFormat":  dt.Optional{T: dt.Prim("FormatSelector")},
-				"ResponseFormat": dt.Optional{T: dt.Prim("FormatSelector")},
-				"Headers":        dt.Optional{T: dt.Prim("HTTPHeaders")},
-				"Cookies":        dt.Optional{T: dt.Prim("Cookies")},
-				"Body":           dt.Optional{T: dt.Prim("any")},
-			}}
+			return dump.TypeDef{
+				Underlying: dt.Struct{
+					"URL":            dt.Prim("string"),
+					"Method":         dt.Optional{T: dt.Prim("string")},
+					"RequestFormat":  dt.Optional{T: dt.Prim("FormatSelector")},
+					"ResponseFormat": dt.Optional{T: dt.Prim("FormatSelector")},
+					"Headers":        dt.Optional{T: dt.Prim("HTTPHeaders")},
+					"Cookies":        dt.Optional{T: dt.Prim("Cookies")},
+					"Body":           dt.Optional{T: dt.Prim("any")},
+				},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

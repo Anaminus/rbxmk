@@ -21,6 +21,12 @@ func Bool() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "bool", Got: lvs[0].Type().String()}
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Prim("boolean")} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Underlying:  dt.Prim("boolean"),
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

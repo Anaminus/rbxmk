@@ -46,6 +46,12 @@ func Objects() rbxmk.Reflector {
 			}
 			return objects, nil
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Underlying: dt.Array{T: dt.Prim("Instance")}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Underlying:  dt.Array{T: dt.Prim("Instance")},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

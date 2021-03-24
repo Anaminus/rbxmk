@@ -81,37 +81,79 @@ func Faces() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Right))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Right/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Right/Description",
+					}
+				},
 			},
 			"Top": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Top))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Top/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Top/Description",
+					}
+				},
 			},
 			"Back": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Back))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Back/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Back/Description",
+					}
+				},
 			},
 			"Left": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Left))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Left/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Left/Description",
+					}
+				},
 			},
 			"Bottom": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Bottom))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Bottom/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Bottom/Description",
+					}
+				},
 			},
 			"Front": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Bool(v.(types.Faces).Front))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("bool"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("bool"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Faces:Properties/Front/Summary",
+						Description: "libraries/roblox/types/Faces:Properties/Front/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -141,11 +183,15 @@ func Faces() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-					}}
+					}
 				},
 			},
 			"fromComponents": {
@@ -165,19 +211,29 @@ func Faces() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "right", Type: dt.Prim("bool")},
-							{Name: "top", Type: dt.Prim("bool")},
-							{Name: "back", Type: dt.Prim("bool")},
-							{Name: "left", Type: dt.Prim("bool")},
-							{Name: "bottom", Type: dt.Prim("bool")},
-							{Name: "front", Type: dt.Prim("bool")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "right", Type: dt.Prim("bool")},
+								{Name: "top", Type: dt.Prim("bool")},
+								{Name: "back", Type: dt.Prim("bool")},
+								{Name: "left", Type: dt.Prim("bool")},
+								{Name: "bottom", Type: dt.Prim("bool")},
+								{Name: "front", Type: dt.Prim("bool")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-					}}
+					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

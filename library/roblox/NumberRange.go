@@ -32,13 +32,27 @@ func NumberRange() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Min))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/NumberRange:Properties/Min/Summary",
+						Description: "libraries/roblox/types/NumberRange:Properties/Min/Description",
+					}
+				},
 			},
 			"Max": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.NumberRange).Max))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/NumberRange:Properties/Max/Summary",
+						Description: "libraries/roblox/types/NumberRange:Properties/Max/Description",
+					}
+				},
 			},
 		},
 		Constructors: rbxmk.Constructors{
@@ -58,7 +72,7 @@ func NumberRange() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "value", Type: dt.Prim("float")},
@@ -66,6 +80,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -75,11 +91,19 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

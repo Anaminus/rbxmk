@@ -24,8 +24,20 @@ func AttrConfig() rbxmk.Reflector {
 					attrConfig := v.(*rtypes.AttrConfig)
 					attrConfig.Property = string(s.Pull(3, "string").(types.String))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string")} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						Summary:     "libraries/rbxmk/types/AttrConfig:Properties/Property/Summary",
+						Description: "libraries/rbxmk/types/AttrConfig:Properties/Property/Description",
+					}
+				},
 			},
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

@@ -29,16 +29,36 @@ func TypeDesc() rbxmk.Reflector {
 					desc := v.(rtypes.TypeDesc)
 					return s.Push(types.String(desc.Embedded.Category))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						ReadOnly:    true,
+						Summary:     "libraries/rbxmk/types/TypeDesc:Properties/Category/Summary",
+						Description: "libraries/rbxmk/types/TypeDesc:Properties/Category/Description",
+					}
+				},
 			},
 			"Name": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					desc := v.(rtypes.TypeDesc)
 					return s.Push(types.String(desc.Embedded.Name))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("string"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("string"),
+						ReadOnly:    true,
+						Summary:     "libraries/rbxmk/types/TypeDesc:Properties/Name/Summary",
+						Description: "libraries/rbxmk/types/TypeDesc:Properties/Name/Description",
+					}
+				},
 			},
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

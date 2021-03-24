@@ -46,25 +46,53 @@ func UDim2() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).X)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("UDim"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim2:Properties/X/Summary",
+						Description: "libraries/roblox/types/UDim2:Properties/X/Description",
+					}
+				},
 			},
 			"Y": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).Y)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("UDim"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim2:Properties/Y/Summary",
+						Description: "libraries/roblox/types/UDim2:Properties/Y/Description",
+					}
+				},
 			},
 			"Width": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).X)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("UDim"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim2:Properties/Width/Summary",
+						Description: "libraries/roblox/types/UDim2:Properties/Width/Description",
+					}
+				},
 			},
 			"Height": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(v.(types.UDim2).Y)
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("UDim"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("UDim"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/UDim2:Properties/Height/Summary",
+						Description: "libraries/roblox/types/UDim2:Properties/Height/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -83,6 +111,8 @@ func UDim2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("UDim2")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -106,7 +136,7 @@ func UDim2() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "xScale", Type: dt.Prim("float")},
@@ -117,6 +147,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -126,6 +158,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -138,7 +172,7 @@ func UDim2() rbxmk.Reflector {
 					})
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "x", Type: dt.Prim("float")},
@@ -147,6 +181,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -159,7 +195,7 @@ func UDim2() rbxmk.Reflector {
 					})
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
 								{Name: "x", Type: dt.Prim("int")},
@@ -168,6 +204,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -176,11 +214,31 @@ func UDim2() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq:  true,
-					Add: []dump.Binop{{Operand: dt.Prim("UDim2"), Result: dt.Prim("UDim2")}},
-					Sub: []dump.Binop{{Operand: dt.Prim("UDim2"), Result: dt.Prim("UDim2")}},
-					Unm: &dump.Unop{Result: dt.Prim("UDim2")},
+					Eq: true,
+					Add: []dump.Binop{
+						{
+							Operand:     dt.Prim("UDim2"),
+							Result:      dt.Prim("UDim2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Sub: []dump.Binop{
+						{
+							Operand:     dt.Prim("UDim2"),
+							Result:      dt.Prim("UDim2"),
+							Summary:     "$TODO",
+							Description: "$TODO",
+						},
+					},
+					Unm: &dump.Unop{
+						Result:      dt.Prim("UDim2"),
+						Summary:     "$TODO",
+						Description: "$TODO",
+					},
 				},
+				Summary:     "$TODO",
+				Description: "$TODO",
 			}
 		},
 	}

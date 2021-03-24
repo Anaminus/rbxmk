@@ -33,19 +33,40 @@ func Color3() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).R))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Color3:Properties/R/Summary",
+						Description: "libraries/roblox/types/Color3:Properties/R/Description",
+					}
+				},
 			},
 			"G": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).G))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Color3:Properties/G/Summary",
+						Description: "libraries/roblox/types/Color3:Properties/G/Description",
+					}
+				},
 			},
 			"B": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					return s.Push(types.Float(v.(types.Color3).B))
 				},
-				Dump: func() dump.Property { return dump.Property{ValueType: dt.Prim("float"), ReadOnly: true} },
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("float"),
+						ReadOnly:    true,
+						Summary:     "libraries/roblox/types/Color3:Properties/B/Summary",
+						Description: "libraries/roblox/types/Color3:Properties/B/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -64,6 +85,8 @@ func Color3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Color3")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -79,6 +102,8 @@ func Color3() rbxmk.Reflector {
 							{Name: "s", Type: dt.Prim("float")},
 							{Name: "v", Type: dt.Prim("float")},
 						},
+						Summary:     "$TODO",
+						Description: "$TODO",
 					}
 				},
 			},
@@ -99,11 +124,13 @@ func Color3() rbxmk.Reflector {
 					return s.Push(v)
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{
+					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -114,6 +141,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
 					}
 				},
@@ -127,16 +156,20 @@ func Color3() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "r", Type: dt.Prim("int")},
-							{Name: "g", Type: dt.Prim("int")},
-							{Name: "b", Type: dt.Prim("int")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "r", Type: dt.Prim("int")},
+								{Name: "g", Type: dt.Prim("int")},
+								{Name: "b", Type: dt.Prim("int")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Color3")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("Color3")},
-						},
-					}}
+					}
 				},
 			},
 			"fromHSV": {
@@ -148,16 +181,20 @@ func Color3() rbxmk.Reflector {
 					))
 				},
 				Dump: func() dump.MultiFunction {
-					return []dump.Function{{
-						Parameters: dump.Parameters{
-							{Name: "h", Type: dt.Prim("float")},
-							{Name: "s", Type: dt.Prim("float")},
-							{Name: "v", Type: dt.Prim("float")},
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "h", Type: dt.Prim("float")},
+								{Name: "s", Type: dt.Prim("float")},
+								{Name: "v", Type: dt.Prim("float")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Color3")},
+							},
+							Summary:     "$TODO",
+							Description: "$TODO",
 						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("Color3")},
-						},
-					}}
+					}
 				},
 			},
 		},
@@ -170,6 +207,12 @@ func Color3() rbxmk.Reflector {
 			}
 			return nil
 		},
-		Dump: func() dump.TypeDef { return dump.TypeDef{Operators: &dump.Operators{Eq: true}} },
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Operators:   &dump.Operators{Eq: true},
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
+		},
 	}
 }

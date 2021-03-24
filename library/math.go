@@ -88,7 +88,9 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"log": dump.Function{
 					Parameters: dump.Parameters{
@@ -98,6 +100,8 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"round": dump.Function{
 					Parameters: dump.Parameters{
@@ -106,6 +110,8 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 				"sign": dump.Function{
 					Parameters: dump.Parameters{
@@ -114,8 +120,12 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
+					Summary:     "$TODO",
+					Description: "$TODO",
 				},
 			},
+			Summary:     "$TODO",
+			Description: "$TODO",
 		},
 	}
 }

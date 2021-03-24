@@ -5,6 +5,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -60,6 +61,12 @@ func Dictionary() rbxmk.Reflector {
 				return nil, err
 			}
 			return dict, nil
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }

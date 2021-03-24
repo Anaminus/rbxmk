@@ -98,6 +98,8 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
+					Summary:     "libraries/os:Fields/path/Summary",
+					Description: "libraries/os:Fields/path/Description",
 				},
 				"getenv": dump.Function{
 					Parameters: dump.Parameters{
@@ -106,6 +108,8 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Or{dt.Optional{T: dt.Prim("string")}, dt.Dictionary{V: dt.Prim("string")}}},
 					},
+					Summary:     "libraries/os:Fields/getenv/Summary",
+					Description: "libraries/os:Fields/getenv/Description",
 				},
 				"join": dump.Function{
 					Parameters: dump.Parameters{
@@ -114,6 +118,8 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
+					Summary:     "libraries/os:Fields/join/Summary",
+					Description: "libraries/os:Fields/join/Description",
 				},
 				"split": dump.Function{
 					Parameters: dump.Parameters{
@@ -123,9 +129,13 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Prim("string")},
 					},
-					CanError: true,
+					CanError:    true,
+					Summary:     "libraries/os:Fields/split/Summary",
+					Description: "libraries/os:Fields/split/Description",
 				},
 			},
+			Summary:     "libraries/os:Summary",
+			Description: "libraries/os:Description",
 		},
 	}
 }

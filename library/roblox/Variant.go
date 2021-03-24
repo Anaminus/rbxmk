@@ -5,6 +5,7 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -113,6 +114,12 @@ func Variant() rbxmk.Reflector {
 		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
 			v, err = PullVariantFrom(s, lvs[0])
 			return v, err
+		},
+		Dump: func() dump.TypeDef {
+			return dump.TypeDef{
+				Summary:     "$TODO",
+				Description: "$TODO",
+			}
 		},
 	}
 }
