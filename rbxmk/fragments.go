@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
 	"sort"
 	"strings"
 	"sync"
@@ -65,16 +64,29 @@ func initDocs() drill.Node {
 }
 
 var docfs = initDocs()
-var docMut sync.Mutex
+var docMut sync.RWMutex
 var docCache = map[string]*markdown.Node{}
-var docFails = map[string]struct{}{}
+var docFailed = map[string]struct{}{}
+var docSeen = map[string]struct{}{}
+
+// DocFragments returns a list of requested fragments.
+func DocFragments() []string {
+	docMut.RLock()
+	defer docMut.RUnlock()
+	frags := make([]string, 0, len(docSeen))
+	for frag := range docSeen {
+		frags = append(frags, frag)
+	}
+	sort.Strings(frags)
+	return frags
+}
 
 // docString extracts and formats the fragment from the given node. Panics if
 // the node was not found.
 func docString(fragpath string, node drill.Node) string {
 	if node == nil {
-		docFails[fragpath] = struct{}{}
-		return fmt.Sprintf("{%s:%s}", Language, fragpath)
+		docFailed[fragpath] = struct{}{}
+		return "{" + Language + ":" + fragpath + "}"
 	}
 	return strings.TrimSpace(node.Fragment())
 }
@@ -82,11 +94,11 @@ func docString(fragpath string, node drill.Node) string {
 // UnresolvedFragments writes to stderr a list of fragment references that
 // failed to resolve. Panics if any references failed.
 func UnresolvedFragments() {
-	if len(docFails) == 0 {
+	if len(docFailed) == 0 {
 		return
 	}
-	refs := make([]string, 0, len(docFails))
-	for ref := range docFails {
+	refs := make([]string, 0, len(docFailed))
+	for ref := range docFailed {
 		refs = append(refs, ref)
 	}
 	sort.Strings(refs)
@@ -99,18 +111,88 @@ func UnresolvedFragments() {
 	panic(s.String())
 }
 
+// parseFragPath receives a fragment path and converts it to a file path.
+//
+// In a fragment path, dirsep is the separator that descends through
+// directories, and filesep is the separator that descends into the file. After
+// the last occurrence of dirsep, the element is appended with the given suffix,
+// then remaining elements are delimited by filesep.
+//
+// For example, with ".md", '/', and '#':
+//
+//     libraries/roblox/types/Region3#Properties#CFrame#Description
+//
+// is split into the following elements:
+//
+//     libraries, roblox, types, Region3.md, Properties, CFrame, Description
+//
+func parseFragPath(s, suffix string, dirsep, filesep rune) []string {
+	if s == "" {
+		return []string{}
+	}
+	n := strings.Count(s, string(filesep))
+	if n == 0 {
+		a := strings.Split(s, string(dirsep))
+		a[len(a)-1] += suffix
+		return a
+	}
+	if m := strings.Count(s, string(dirsep)); m == 0 {
+		a := strings.Split(s, string(filesep))
+		a[0] += suffix
+		return a
+	} else {
+		n += m
+	}
+	a := make([]string, n+1)
+
+	i := 0
+	for i < n {
+		m := strings.IndexRune(s, dirsep)
+		if m < 0 {
+			break
+		}
+		a[i] = s[:m]
+		s = s[m+1:]
+		i++
+	}
+	m := strings.IndexRune(s, filesep)
+	if m < 0 {
+		a[i] = s + suffix
+		return a[:i+1]
+	}
+	a[i] = s[:m] + suffix
+	s = s[m+1:]
+	i++
+	for i < n {
+		m := strings.IndexRune(s, filesep)
+		if m < 0 {
+			break
+		}
+		a[i] = s[:m]
+		s = s[m+1:]
+		i++
+	}
+	a[i] = s
+	return a[:i+1]
+}
+
+const dirsep = '/'
+const filesep = '#'
+const suffix = ".md"
+
 func Doc(fragpath string) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	var n drill.Node = docfs
-	var p string
-	names := strings.Split(fragpath, "/")
+	var path string
+	docSeen[fragpath] = struct{}{}
+	names := parseFragPath(fragpath, suffix, dirsep, filesep)
 	for _, name := range names {
 		if name == "" {
 			return docString(fragpath, nil)
 		}
-		p = path.Join(p, name)
-		if node, ok := docCache[p]; ok {
+		path += string(dirsep) + name
+		if node, ok := docCache[path]; ok {
 			n = node
 		} else {
 			switch v := n.(type) {
@@ -120,7 +202,7 @@ func Doc(fragpath string) string {
 				return docString(fragpath, nil)
 			}
 			if node, ok := n.(*markdown.Node); ok {
-				docCache[p] = node
+				docCache[path] = node
 			}
 		}
 	}

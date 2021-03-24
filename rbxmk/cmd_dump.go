@@ -82,6 +82,7 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 			"_RBXMK_VERSION": dump.Property{ValueType: dt.Prim("string"), ReadOnly: true},
 		}},
 	})
+	root.Fragments = DocFragments()
 
 	// Dump format.
 	return format.Func(opt.Stdout, root)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"path"
 
 	"github.com/anaminus/snek"
 )
@@ -10,9 +9,9 @@ import (
 func DocumentCommands() {
 	for _, def := range Program.List() {
 		Program.SetDoc(def.Name, snek.Doc{
-			Summary:     Doc(path.Join("commands", def.Name+".md", "Summary")),
-			Arguments:   Doc(path.Join("commands", def.Name+".md", "Arguments")),
-			Description: Doc(path.Join("commands", def.Name+".md", "Description")),
+			Summary:     Doc("commands/" + def.Name + "#Summary"),
+			Arguments:   Doc("commands/" + def.Name + "#Arguments"),
+			Description: Doc("commands/" + def.Name + "#Description"),
 		})
 		if def, ok := def.New().(snek.FlagSetter); ok {
 			def.SetFlags(flag.NewFlagSet("", 0))

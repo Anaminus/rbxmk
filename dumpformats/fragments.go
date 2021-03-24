@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"path"
+	"strconv"
 
 	"github.com/anaminus/rbxmk/dump"
 )
@@ -14,133 +15,139 @@ var Fragments = Format{
 	Name:        "fragments",
 	Description: `List of document fragment paths.`,
 	Func: func(w io.Writer, root dump.Root) error {
-		suffix := ".md"
 		buf := bufio.NewWriter(w)
-		fragWriteDir(buf, "libraries")
+		p := "libraries"
 		for _, library := range root.Libraries {
-			prefix := path.Join("libraries", library.Name)
-			fragWriteFile(buf, prefix+suffix)
-			if len(library.Struct.Fields) > 0 || len(library.Types) > 0 {
-				fragWriteDir(buf, prefix)
-			}
-			fragWriteFields(buf, prefix, suffix, library.Struct.Fields)
-			fragWriteTypes(buf, prefix, suffix, library.Types)
+			p := path.Join(p, library.Name)
+			fragWrite(buf, path.Join(p, "Summary"), library.Struct.Summary)
+			fragWrite(buf, path.Join(p, "Description"), library.Struct.Description)
+			fragWriteFields(buf, path.Join(p, "Fields"), library.Struct.Fields)
+			fragWriteTypes(buf, path.Join(p, "Types"), library.Types)
 		}
-		fragWriteTypes(buf, "", suffix, root.Types)
+		fragWriteTypes(buf, p, root.Types)
+		for _, frag := range root.Fragments {
+			fragWrite(buf, "fragments", frag)
+		}
 		return buf.Flush()
 	},
 }
 
-func fragWriteFile(buf *bufio.Writer, element ...string) {
-	buf.WriteString(path.Join(element...))
+func fragWrite(buf *bufio.Writer, p string, path string) {
+	if path == "" {
+		buf.WriteString(">>> ")
+		buf.WriteString(p)
+	} else {
+		buf.WriteString(path)
+	}
 	buf.WriteString("\n")
 }
 
-func fragWriteDir(buf *bufio.Writer, element ...string) {
-	buf.WriteString(path.Join(element...))
-	buf.WriteString("/\n")
-}
-
-func fragWriteFields(buf *bufio.Writer, prefix, suffix string, fields dump.Fields) {
+func fragWriteFields(buf *bufio.Writer, p string, fields dump.Fields) {
 	if len(fields) == 0 {
 		return
 	}
-	fragWriteDir(buf, prefix, "fields")
 	sortFields(fields, func(fieldName string, field dump.Value) {
-		fragWriteFile(buf, prefix, "fields", fieldName+suffix)
+		p := path.Join(p, fieldName)
 		switch value := field.(type) {
+		case dump.Property:
+			fragWrite(buf, path.Join(p, "Summary"), value.Summary)
+			fragWrite(buf, path.Join(p, "Description"), value.Description)
 		case dump.Struct:
-			fragWriteDir(buf, prefix, "fields", fieldName)
-			fragWriteFields(buf, path.Join(prefix, "fields", fieldName), suffix, value.Fields)
+			fragWrite(buf, path.Join(p, "Summary"), value.Summary)
+			fragWrite(buf, path.Join(p, "Description"), value.Description)
+			fragWriteFields(buf, p, value.Fields)
+		case dump.Function:
+			fragWrite(buf, path.Join(p, "Summary"), value.Summary)
+			fragWrite(buf, path.Join(p, "Description"), value.Description)
+		case dump.MultiFunction:
+			for _, value := range value {
+				fragWrite(buf, path.Join(p, "Summary"), value.Summary)
+				fragWrite(buf, path.Join(p, "Description"), value.Description)
+			}
 		}
 	})
 }
 
-func fragWriteTypes(buf *bufio.Writer, prefix, suffix string, types dump.TypeDefs) {
+func fragWriteTypes(buf *bufio.Writer, p string, types dump.TypeDefs) {
 	if len(types) == 0 {
 		return
 	}
-	fragWriteDir(buf, prefix, "types")
 	sortTypeDefs(types, func(defName string, def dump.TypeDef) {
-		prefix := path.Join(prefix, "types", defName)
-		fragWriteFile(buf, prefix+suffix)
-		if len(def.Constructors) > 0 ||
-			len(def.Properties) > 0 ||
-			len(def.Symbols) > 0 ||
-			len(def.Methods) > 0 ||
-			def.Operators != nil {
-			fragWriteDir(buf, prefix)
-		}
-		if len(def.Constructors) > 0 {
-			fragWriteDir(buf, prefix, "constructors")
-			sortConstructors(def.Constructors, func(ctorName string, ctor dump.MultiFunction) {
-				fragWriteFile(buf, prefix, "constructors", ctorName+suffix)
-			})
-		}
-		if len(def.Properties) > 0 {
-			fragWriteDir(buf, prefix, "properties")
-			sortProperties(def.Properties, func(propName string, prop dump.Property) {
-				fragWriteFile(buf, prefix, "properties", propName+suffix)
-			})
-		}
-		if len(def.Symbols) > 0 {
-			fragWriteDir(buf, prefix, "symbols")
-			sortProperties(def.Symbols, func(symName string, prop dump.Property) {
-				fragWriteFile(buf, prefix, "symbols", symName+suffix)
-			})
-		}
-		if len(def.Methods) > 0 {
-			fragWriteDir(buf, prefix, "methods")
-			sortMethods(def.Methods, func(methodName string, method dump.Function) {
-				fragWriteFile(buf, prefix, "methods", methodName+suffix)
-			})
-		}
+		p := path.Join(p, defName)
+		fragWrite(buf, path.Join(p, "Summary"), def.Summary)
+		fragWrite(buf, path.Join(p, "Description"), def.Description)
+		sortConstructors(def.Constructors, func(ctorName string, ctor dump.MultiFunction) {
+			p := path.Join(p, "Constructors", ctorName)
+			for i, fn := range ctor {
+				p := path.Join(p, strconv.Itoa(i))
+				fragWrite(buf, path.Join(p, "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Description"), fn.Description)
+			}
+		})
+		sortProperties(def.Properties, func(propName string, prop dump.Property) {
+			p := path.Join(p, "Properties", propName)
+			fragWrite(buf, path.Join(p, "Summary"), prop.Summary)
+			fragWrite(buf, path.Join(p, "Description"), prop.Description)
+		})
+		sortProperties(def.Symbols, func(symName string, prop dump.Property) {
+			p := path.Join(p, "Symbols", symName)
+			fragWrite(buf, path.Join(p, "Summary"), prop.Summary)
+			fragWrite(buf, path.Join(p, "Description"), prop.Description)
+		})
+		sortMethods(def.Methods, func(methodName string, method dump.Function) {
+			p := path.Join(p, "Methods", methodName)
+			fragWrite(buf, path.Join(p, "Summary"), method.Summary)
+			fragWrite(buf, path.Join(p, "Description"), method.Description)
+		})
 		if op := def.Operators; op != nil {
-			fragWriteDir(buf, prefix, "operators")
-			if len(op.Add) > 0 {
-				fragWriteFile(buf, prefix, "operators", "add"+suffix)
+			p := path.Join(p, "Operators")
+			for i, fn := range op.Add {
+				fragWrite(buf, path.Join(p, "Add", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Add", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Sub) > 0 {
-				fragWriteFile(buf, prefix, "operators", "sub"+suffix)
+			for i, fn := range op.Sub {
+				fragWrite(buf, path.Join(p, "Sub", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Sub", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Mul) > 0 {
-				fragWriteFile(buf, prefix, "operators", "mul"+suffix)
+			for i, fn := range op.Mul {
+				fragWrite(buf, path.Join(p, "Mul", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Mul", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Div) > 0 {
-				fragWriteFile(buf, prefix, "operators", "div"+suffix)
+			for i, fn := range op.Div {
+				fragWrite(buf, path.Join(p, "Div", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Div", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Mod) > 0 {
-				fragWriteFile(buf, prefix, "operators", "div"+suffix)
+			for i, fn := range op.Mod {
+				fragWrite(buf, path.Join(p, "Mod", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Mod", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Pow) > 0 {
-				fragWriteFile(buf, prefix, "operators", "pow"+suffix)
+			for i, fn := range op.Pow {
+				fragWrite(buf, path.Join(p, "Pow", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Pow", strconv.Itoa(i), "Description"), fn.Description)
 			}
-			if len(op.Concat) > 0 {
-				fragWriteFile(buf, prefix, "operators", "concat"+suffix)
-			}
-			if op.Eq {
-				fragWriteFile(buf, prefix, "operators", "eq"+suffix)
-			}
-			if op.Le {
-				fragWriteFile(buf, prefix, "operators", "le"+suffix)
-			}
-			if op.Lt {
-				fragWriteFile(buf, prefix, "operators", "lt"+suffix)
+			for i, fn := range op.Concat {
+				fragWrite(buf, path.Join(p, "Concat", strconv.Itoa(i), "Summary"), fn.Summary)
+				fragWrite(buf, path.Join(p, "Concat", strconv.Itoa(i), "Description"), fn.Description)
 			}
 			if op.Len != nil {
-				fragWriteFile(buf, prefix, "operators", "len"+suffix)
+				fragWrite(buf, path.Join(p, "Len", "Summary"), op.Len.Summary)
+				fragWrite(buf, path.Join(p, "Len", "Description"), op.Len.Description)
 			}
 			if op.Unm != nil {
-				fragWriteFile(buf, prefix, "operators", "unm"+suffix)
+				fragWrite(buf, path.Join(p, "Unm", "Summary"), op.Unm.Summary)
+				fragWrite(buf, path.Join(p, "Unm", "Description"), op.Unm.Description)
 			}
 			if op.Call != nil {
-				fragWriteFile(buf, prefix, "operators", "call"+suffix)
+				fragWrite(buf, path.Join(p, "Call", "Summary"), op.Call.Summary)
+				fragWrite(buf, path.Join(p, "Call", "Description"), op.Call.Description)
 			}
 			if op.Index != nil {
-				fragWriteFile(buf, prefix, "operators", "index"+suffix)
+				fragWrite(buf, path.Join(p, "Index", "Summary"), op.Index.Summary)
+				fragWrite(buf, path.Join(p, "Index", "Description"), op.Index.Description)
 			}
 			if op.Newindex != nil {
-				fragWriteFile(buf, prefix, "operators", "newindex"+suffix)
+				fragWrite(buf, path.Join(p, "Newindex", "Summary"), op.Newindex.Summary)
+				fragWrite(buf, path.Join(p, "Newindex", "Description"), op.Newindex.Description)
 			}
 		}
 	})

@@ -24,6 +24,8 @@ type Root struct {
 	Libraries Libraries
 	// Types contains types defined by the API.
 	Types TypeDefs `json:",omitempty"`
+	// Fragments contains fragment references requested by the program.
+	Fragments []string
 	// Description is a fragment reference pointing to a general description of
 	// the API.
 	Description string `json:",omitempty"`
