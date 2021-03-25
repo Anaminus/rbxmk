@@ -298,8 +298,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 						},
-						Summary:     "Libraries/base:Fields/select/1/Summary",
-						Description: "Libraries/base:Fields/select/1/Description",
+						Summary:     "Libraries/base:Fields/select/Index/Summary",
+						Description: "Libraries/base:Fields/select/Index/Description",
 					},
 					{
 						Parameters: dump.Parameters{
@@ -309,8 +309,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("int")},
 						},
-						Summary:     "Libraries/base:Fields/select/2/Summary",
-						Description: "Libraries/base:Fields/select/2/Description",
+						Summary:     "Libraries/base:Fields/select/Count/Summary",
+						Description: "Libraries/base:Fields/select/Count/Description",
 					},
 				},
 				"tonumber": dump.MultiFunction{
@@ -321,8 +321,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("number")},
 						},
-						Summary:     "Libraries/base:Fields/tonumber/1/Summary",
-						Description: "Libraries/base:Fields/tonumber/1/Description",
+						Summary:     "Libraries/base:Fields/tonumber/Base 10/Summary",
+						Description: "Libraries/base:Fields/tonumber/Base 10/Description",
 					},
 					{
 						Parameters: dump.Parameters{
@@ -332,8 +332,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("number")},
 						},
-						Summary:     "Libraries/base:Fields/tonumber/2/Summary",
-						Description: "Libraries/base:Fields/tonumber/2/Description",
+						Summary:     "Libraries/base:Fields/tonumber/Any base/Summary",
+						Description: "Libraries/base:Fields/tonumber/Any base/Description",
 					},
 				},
 				"tostring": dump.Function{
@@ -636,8 +636,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
-								Summary:     "Libraries/base/Fields/math:Fields/random/1/Summary",
-								Description: "Libraries/base/Fields/math:Fields/random/1/Description",
+								Summary:     "Libraries/base/Fields/math:Fields/random/Real/Summary",
+								Description: "Libraries/base/Fields/math:Fields/random/Real/Description",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -646,8 +646,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("number")},
 								},
-								Summary:     "Libraries/base/Fields/math:Fields/random/2/Summary",
-								Description: "Libraries/base/Fields/math:Fields/random/2/Description",
+								Summary:     "Libraries/base/Fields/math:Fields/random/Range/Summary",
+								Description: "Libraries/base/Fields/math:Fields/random/Range/Description",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -658,8 +658,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Type: dt.Prim("number")},
 								},
 								CanError:    true,
-								Summary:     "Libraries/base/Fields/math:Fields/random/3/Summary",
-								Description: "Libraries/base/Fields/math:Fields/random/3/Description",
+								Summary:     "Libraries/base/Fields/math:Fields/random/Interval/Summary",
+								Description: "Libraries/base/Fields/math:Fields/random/Interval/Description",
 							},
 						},
 						"randomseed": dump.Function{
@@ -737,8 +737,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("string")},
 								},
-								Summary:     "Libraries/base/Fields/os:Fields/date/1/Summary",
-								Description: "Libraries/base/Fields/os:Fields/date/1/Description",
+								Summary:     "Libraries/base/Fields/os:Fields/date/Current/Summary",
+								Description: "Libraries/base/Fields/os:Fields/date/Current/Description",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -758,8 +758,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 										"isdst": dt.Optional{T: dt.Prim("boolean")},
 									}}},
 								},
-								Summary:     "Libraries/base/Fields/os:Fields/date/2/Summary",
-								Description: "Libraries/base/Fields/os:Fields/date/2/Description",
+								Summary:     "Libraries/base/Fields/os:Fields/date/Tabular/Summary",
+								Description: "Libraries/base/Fields/os:Fields/date/Tabular/Description",
 							},
 							{
 								Parameters: dump.Parameters{
@@ -769,8 +769,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Returns: dump.Parameters{
 									{Type: dt.Prim("string")},
 								},
-								Summary:     "Libraries/base/Fields/os:Fields/date/3/Summary",
-								Description: "Libraries/base/Fields/os:Fields/date/3/Description",
+								Summary:     "Libraries/base/Fields/os:Fields/date/Formatted/Summary",
+								Description: "Libraries/base/Fields/os:Fields/date/Formatted/Description",
 							},
 						},
 						"difftime": dump.Function{

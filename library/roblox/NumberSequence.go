@@ -119,8 +119,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/Single/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/Single/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -130,8 +130,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/Range/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/Range/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func NumberSequence() rbxmk.Reflector {
 								{Type: dt.Prim("NumberSequence")},
 							},
 							CanError:    true,
-							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/3/Summary",
-							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/Keypoints/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/Keypoints/Description",
 						},
 					}
 				},

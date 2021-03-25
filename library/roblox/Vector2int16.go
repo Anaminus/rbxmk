@@ -111,8 +111,8 @@ func Vector2int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2int16")},
 							},
-							Summary:     "Libraries/roblox/Types/Vector2int16:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Constructors/new/Zero/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Constructors/new/Zero/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -122,8 +122,8 @@ func Vector2int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2int16")},
 							},
-							Summary:     "Libraries/roblox/Types/Vector2int16:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Constructors/new/Components/Description",
 						},
 					}
 				},
@@ -153,28 +153,28 @@ func Vector2int16() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("Vector2int16"),
 							Result:      dt.Prim("Vector2int16"),
-							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Mul/1/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Operators/Mul/1/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Mul/Vector2int16/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Operators/Mul/Vector2int16/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector2int16"),
-							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Mul/2/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Operators/Mul/2/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Mul/Number/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Operators/Mul/Number/Description",
 						},
 					},
 					Div: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector2int16"),
 							Result:      dt.Prim("Vector2int16"),
-							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Div/1/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Operators/Div/1/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Div/Vector2int16/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Operators/Div/Vector2int16/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector2int16"),
-							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Div/2/Summary",
-							Description: "Libraries/roblox/Types/Vector2int16:Operators/Div/2/Description",
+							Summary:     "Libraries/roblox/Types/Vector2int16:Operators/Div/Number/Summary",
+							Description: "Libraries/roblox/Types/Vector2int16:Operators/Div/Number/Description",
 						},
 					},
 					Unm: &dump.Unop{

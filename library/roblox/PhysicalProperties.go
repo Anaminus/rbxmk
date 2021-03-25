@@ -152,8 +152,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -166,8 +166,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Weights/Summary",
+							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Weights/Description",
 						},
 					}
 				},

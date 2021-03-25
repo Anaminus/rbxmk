@@ -129,8 +129,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/Zero/Summary",
+							Description: "Libraries/roblox/Types/Color3:Constructors/new/Zero/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/Color3:Constructors/new/Components/Description",
 						},
 					}
 				},

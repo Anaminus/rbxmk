@@ -530,8 +530,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Identity/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Identity/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -540,8 +540,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Position/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Position/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -551,8 +551,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/3/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/LookAt/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/LookAt/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -563,8 +563,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/4/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/4/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Position components/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Position components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -579,8 +579,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/5/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/5/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Quaternion/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Quaternion/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -600,8 +600,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/6/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/6/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Components/Description",
 						},
 					}
 				},
@@ -790,14 +790,14 @@ func CFrame() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("CFrame"),
 							Result:      dt.Prim("CFrame"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/1/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/1/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/CFrame/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/CFrame/Description",
 						},
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/2/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/2/Description",
+							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/Vector3/Summary",
+							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/Vector3/Description",
 						},
 					},
 					Add: []dump.Binop{

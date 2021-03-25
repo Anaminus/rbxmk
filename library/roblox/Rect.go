@@ -109,8 +109,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/Rect:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/Vector2/Summary",
+							Description: "Libraries/roblox/Types/Rect:Constructors/new/Vector2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -122,8 +122,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/Rect:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/Rect:Constructors/new/Components/Description",
 						},
 					}
 				},

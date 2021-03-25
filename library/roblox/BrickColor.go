@@ -145,8 +145,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/Number/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/Number/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -157,8 +157,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -167,8 +167,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/3/Summary",
-							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/Name/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/Name/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -177,8 +177,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/4/Summary",
-							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/4/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/Color/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/Color/Description",
 						},
 					}
 				},

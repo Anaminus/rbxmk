@@ -147,8 +147,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/UDim2:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -158,8 +158,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/UDim2:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/UDim/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/new/UDim/Description",
 						},
 					}
 				},

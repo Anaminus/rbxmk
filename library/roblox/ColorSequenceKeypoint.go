@@ -95,8 +95,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/1/Summary",
-							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Components/Summary",
+							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -107,8 +107,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/2/Summary",
-							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Envelope/Summary",
+							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Envelope/Description",
 						},
 					}
 				},
