@@ -353,8 +353,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "cookies", Type: dt.Prim("Cookies")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/cookiesFrom/Summary",
-					Description: "libraries/rbxmk:Fields/cookiesFrom/Description",
+					Summary:     "Libraries/rbxmk:Fields/cookiesFrom/Summary",
+					Description: "Libraries/rbxmk:Fields/cookiesFrom/Description",
 				},
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
@@ -365,8 +365,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "value", Type: dt.Prim("any")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/decodeFormat/Summary",
-					Description: "libraries/rbxmk:Fields/decodeFormat/Description",
+					Summary:     "Libraries/rbxmk:Fields/decodeFormat/Summary",
+					Description: "Libraries/rbxmk:Fields/decodeFormat/Description",
 				},
 				"diffDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -376,8 +376,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "diff", Type: dt.Array{T: dt.Prim("DescAction")}},
 					},
-					Summary:     "libraries/rbxmk:Fields/diffDesc/Summary",
-					Description: "libraries/rbxmk:Fields/diffDesc/Description",
+					Summary:     "Libraries/rbxmk:Fields/diffDesc/Summary",
+					Description: "Libraries/rbxmk:Fields/diffDesc/Description",
 				},
 				"encodeFormat": dump.Function{
 					Parameters: dump.Parameters{
@@ -388,8 +388,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "bytes", Type: dt.Prim("BinaryString")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/encodeFormat/Summary",
-					Description: "libraries/rbxmk:Fields/encodeFormat/Description",
+					Summary:     "Libraries/rbxmk:Fields/encodeFormat/Summary",
+					Description: "Libraries/rbxmk:Fields/encodeFormat/Description",
 				},
 				"formatCanDecode": dump.Function{
 					Parameters: dump.Parameters{
@@ -400,18 +400,18 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("bool")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/formatCanDecode/Summary",
-					Description: "libraries/rbxmk:Fields/formatCanDecode/Description",
+					Summary:     "Libraries/rbxmk:Fields/formatCanDecode/Summary",
+					Description: "Libraries/rbxmk:Fields/formatCanDecode/Description",
 				},
 				"globalAttrConfig": dump.Property{
 					ValueType:   dt.Optional{T: dt.Prim("AttrConfig")},
-					Summary:     "libraries/rbxmk:Fields/globalAttrConfig/Summary",
-					Description: "libraries/rbxmk:Fields/globalAttrConfig/Description",
+					Summary:     "Libraries/rbxmk:Fields/globalAttrConfig/Summary",
+					Description: "Libraries/rbxmk:Fields/globalAttrConfig/Description",
 				},
 				"globalDesc": dump.Property{
 					ValueType:   dt.Optional{T: dt.Prim("RootDesc")},
-					Summary:     "libraries/rbxmk:Fields/globalDesc/Summary",
-					Description: "libraries/rbxmk:Fields/globalDesc/Description",
+					Summary:     "Libraries/rbxmk:Fields/globalDesc/Summary",
+					Description: "Libraries/rbxmk:Fields/globalDesc/Description",
 				},
 				"loadFile": dump.Function{
 					Parameters: dump.Parameters{
@@ -421,8 +421,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "func", Type: dt.Prim("function")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/loadFile/Summary",
-					Description: "libraries/rbxmk:Fields/loadFile/Description",
+					Summary:     "Libraries/rbxmk:Fields/loadFile/Summary",
+					Description: "Libraries/rbxmk:Fields/loadFile/Description",
 				},
 				"loadString": dump.Function{
 					Parameters: dump.Parameters{
@@ -432,8 +432,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "func", Type: dt.Prim("function")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/loadString/Summary",
-					Description: "libraries/rbxmk:Fields/loadString/Description",
+					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",
+					Description: "Libraries/rbxmk:Fields/loadString/Description",
 				},
 				"newAttrConfig": dump.Function{
 					Parameters: dump.Parameters{
@@ -442,8 +442,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("AttrConfig")},
 					},
-					Summary:     "libraries/rbxmk:Fields/newAttrConfig/Summary",
-					Description: "libraries/rbxmk:Fields/newAttrConfig/Description",
+					Summary:     "Libraries/rbxmk:Fields/newAttrConfig/Summary",
+					Description: "Libraries/rbxmk:Fields/newAttrConfig/Description",
 				},
 				"newCookie": dump.Function{
 					Parameters: dump.Parameters{
@@ -453,8 +453,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("Cookie")},
 					},
-					Summary:     "libraries/rbxmk:Fields/newCookie/Summary",
-					Description: "libraries/rbxmk:Fields/newCookie/Description",
+					Summary:     "Libraries/rbxmk:Fields/newCookie/Summary",
+					Description: "Libraries/rbxmk:Fields/newCookie/Description",
 				},
 				"newDesc": dump.Function{
 					Parameters: dump.Parameters{
@@ -477,16 +477,16 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("Descriptor")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/newDesc/Summary",
-					Description: "libraries/rbxmk:Fields/newDesc/Description",
+					Summary:     "Libraries/rbxmk:Fields/newDesc/Summary",
+					Description: "Libraries/rbxmk:Fields/newDesc/Description",
 				},
 				"patchDesc": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "desc", Type: dt.Prim("RootDesc")},
 						{Name: "actions", Type: dt.Array{T: dt.Prim("DescAction")}},
 					},
-					Summary:     "libraries/rbxmk:Fields/patchDesc/Summary",
-					Description: "libraries/rbxmk:Fields/patchDesc/Description",
+					Summary:     "Libraries/rbxmk:Fields/patchDesc/Summary",
+					Description: "Libraries/rbxmk:Fields/patchDesc/Description",
 				},
 				"runFile": dump.Function{
 					Parameters: dump.Parameters{
@@ -497,8 +497,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "...", Type: dt.Prim("any")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/runFile/Summary",
-					Description: "libraries/rbxmk:Fields/runFile/Description",
+					Summary:     "Libraries/rbxmk:Fields/runFile/Summary",
+					Description: "Libraries/rbxmk:Fields/runFile/Description",
 				},
 				"runString": dump.Function{
 					Parameters: dump.Parameters{
@@ -509,12 +509,12 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "...", Type: dt.Prim("any")},
 					},
 					CanError:    true,
-					Summary:     "libraries/rbxmk:Fields/runString/Summary",
-					Description: "libraries/rbxmk:Fields/runString/Description",
+					Summary:     "Libraries/rbxmk:Fields/runString/Summary",
+					Description: "Libraries/rbxmk:Fields/runString/Description",
 				},
 			},
-			Summary:     "libraries/rbxmk:Summary",
-			Description: "libraries/rbxmk:Description",
+			Summary:     "Libraries/rbxmk:Summary",
+			Description: "Libraries/rbxmk:Description",
 		},
 		Types: dump.TypeDefs{
 			"Descriptor": dump.TypeDef{
@@ -530,8 +530,8 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					dt.Prim("EnumDesc"),
 					dt.Prim("EnumItemDesc"),
 				},
-				Summary:     "libraries/rbxmk/types/Descriptor:Summary",
-				Description: "libraries/rbxmk/types/Descriptor:Description",
+				Summary:     "Libraries/rbxmk/Types/Descriptor:Summary",
+				Description: "Libraries/rbxmk/Types/Descriptor:Description",
 			},
 		},
 	}

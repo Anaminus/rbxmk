@@ -50,8 +50,8 @@ func UDim2() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("UDim"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/UDim2:Properties/X/Summary",
-						Description: "libraries/roblox/types/UDim2:Properties/X/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Properties/X/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Properties/X/Description",
 					}
 				},
 			},
@@ -63,8 +63,8 @@ func UDim2() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("UDim"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/UDim2:Properties/Y/Summary",
-						Description: "libraries/roblox/types/UDim2:Properties/Y/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Properties/Y/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Properties/Y/Description",
 					}
 				},
 			},
@@ -76,8 +76,8 @@ func UDim2() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("UDim"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/UDim2:Properties/Width/Summary",
-						Description: "libraries/roblox/types/UDim2:Properties/Width/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Properties/Width/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Properties/Width/Description",
 					}
 				},
 			},
@@ -89,8 +89,8 @@ func UDim2() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("UDim"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/UDim2:Properties/Height/Summary",
-						Description: "libraries/roblox/types/UDim2:Properties/Height/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Properties/Height/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Properties/Height/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func UDim2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("UDim2")},
 						},
-						Summary:     "libraries/roblox/types/UDim2:Methods/Lerp/Summary",
-						Description: "libraries/roblox/types/UDim2:Methods/Lerp/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Methods/Lerp/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Methods/Lerp/Description",
 					}
 				},
 			},
@@ -147,8 +147,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "libraries/roblox/types/UDim2:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/UDim2:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -158,8 +158,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "libraries/roblox/types/UDim2:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/UDim2:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -181,8 +181,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "libraries/roblox/types/UDim2:Constructors/fromScale/Summary",
-							Description: "libraries/roblox/types/UDim2:Constructors/fromScale/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/fromScale/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/fromScale/Description",
 						},
 					}
 				},
@@ -204,8 +204,8 @@ func UDim2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim2")},
 							},
-							Summary:     "libraries/roblox/types/UDim2:Constructors/fromOffset/Summary",
-							Description: "libraries/roblox/types/UDim2:Constructors/fromOffset/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Constructors/fromOffset/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Constructors/fromOffset/Description",
 						},
 					}
 				},
@@ -219,26 +219,26 @@ func UDim2() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("UDim2"),
 							Result:      dt.Prim("UDim2"),
-							Summary:     "libraries/roblox/types/UDim2:Operators/Add/Summary",
-							Description: "libraries/roblox/types/UDim2:Operators/Add/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Operators/Add/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("UDim2"),
 							Result:      dt.Prim("UDim2"),
-							Summary:     "libraries/roblox/types/UDim2:Operators/Sub/Summary",
-							Description: "libraries/roblox/types/UDim2:Operators/Sub/Description",
+							Summary:     "Libraries/roblox/Types/UDim2:Operators/Sub/Summary",
+							Description: "Libraries/roblox/Types/UDim2:Operators/Sub/Description",
 						},
 					},
 					Unm: &dump.Unop{
 						Result:      dt.Prim("UDim2"),
-						Summary:     "libraries/roblox/types/UDim2:Operators/Unm/Summary",
-						Description: "libraries/roblox/types/UDim2:Operators/Unm/Description",
+						Summary:     "Libraries/roblox/Types/UDim2:Operators/Unm/Summary",
+						Description: "Libraries/roblox/Types/UDim2:Operators/Unm/Description",
 					},
 				},
-				Summary:     "libraries/roblox/types/UDim2:Summary",
-				Description: "libraries/roblox/types/UDim2:Description",
+				Summary:     "Libraries/roblox/Types/UDim2:Summary",
+				Description: "Libraries/roblox/Types/UDim2:Description",
 			}
 		},
 	}

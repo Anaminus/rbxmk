@@ -58,8 +58,8 @@ func ColorSequence() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Array{T: dt.Prim("ColorSequenceKeypoint")},
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/ColorSequence:Properties/Keypoints/Summary",
-						Description: "libraries/roblox/types/ColorSequence:Properties/Keypoints/Description",
+						Summary:     "Libraries/roblox/Types/ColorSequence:Properties/Keypoints/Summary",
+						Description: "Libraries/roblox/Types/ColorSequence:Properties/Keypoints/Description",
 					}
 				},
 			},
@@ -119,8 +119,8 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
-							Summary:     "libraries/roblox/types/ColorSequence:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/ColorSequence:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/ColorSequence:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/ColorSequence:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -130,8 +130,8 @@ func ColorSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequence")},
 							},
-							Summary:     "libraries/roblox/types/ColorSequence:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/ColorSequence:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/ColorSequence:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/ColorSequence:Constructors/new/2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func ColorSequence() rbxmk.Reflector {
 								{Type: dt.Prim("ColorSequence")},
 							},
 							CanError:    true,
-							Summary:     "libraries/roblox/types/ColorSequence:Constructors/new/3/Summary",
-							Description: "libraries/roblox/types/ColorSequence:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/ColorSequence:Constructors/new/3/Summary",
+							Description: "Libraries/roblox/Types/ColorSequence:Constructors/new/3/Description",
 						},
 					}
 				},
@@ -151,8 +151,8 @@ func ColorSequence() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/ColorSequence:Summary",
-				Description: "libraries/roblox/types/ColorSequence:Description",
+				Summary:     "Libraries/roblox/Types/ColorSequence:Summary",
+				Description: "Libraries/roblox/Types/ColorSequence:Description",
 			}
 		},
 	}

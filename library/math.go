@@ -89,8 +89,8 @@ func dumpMath(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("number")},
 					},
 					CanError:    true,
-					Summary:     "libraries/math:Fields/clamp/Summary",
-					Description: "libraries/math:Fields/clamp/Description",
+					Summary:     "Libraries/math:Fields/clamp/Summary",
+					Description: "Libraries/math:Fields/clamp/Description",
 				},
 				"log": dump.Function{
 					Parameters: dump.Parameters{
@@ -100,8 +100,8 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
-					Summary:     "libraries/math:Fields/log/Summary",
-					Description: "libraries/math:Fields/log/Description",
+					Summary:     "Libraries/math:Fields/log/Summary",
+					Description: "Libraries/math:Fields/log/Description",
 				},
 				"round": dump.Function{
 					Parameters: dump.Parameters{
@@ -110,8 +110,8 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
-					Summary:     "libraries/math:Fields/round/Summary",
-					Description: "libraries/math:Fields/round/Description",
+					Summary:     "Libraries/math:Fields/round/Summary",
+					Description: "Libraries/math:Fields/round/Description",
 				},
 				"sign": dump.Function{
 					Parameters: dump.Parameters{
@@ -120,12 +120,12 @@ func dumpMath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("number")},
 					},
-					Summary:     "libraries/math:Fields/sign/Summary",
-					Description: "libraries/math:Fields/sign/Description",
+					Summary:     "Libraries/math:Fields/sign/Summary",
+					Description: "Libraries/math:Fields/sign/Description",
 				},
 			},
-			Summary:     "libraries/math:Summary",
-			Description: "libraries/math:Description",
+			Summary:     "Libraries/math:Summary",
+			Description: "Libraries/math:Description",
 		},
 	}
 }

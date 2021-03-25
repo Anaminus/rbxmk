@@ -49,12 +49,12 @@ func dumpString(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Array{T: dt.Prim("string")}},
 					},
-					Summary:     "libraries/string:Fields/split/Summary",
-					Description: "libraries/string:Fields/split/Description",
+					Summary:     "Libraries/string:Fields/split/Summary",
+					Description: "Libraries/string:Fields/split/Description",
 				},
 			},
-			Summary:     "libraries/string:Summary",
-			Description: "libraries/string:Description",
+			Summary:     "Libraries/string:Summary",
+			Description: "Libraries/string:Description",
 		},
 	}
 }

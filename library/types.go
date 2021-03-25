@@ -36,16 +36,16 @@ func dumpTypes(s rbxmk.State) dump.Library {
 	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields:      make(dump.Fields, len(exprims)),
-			Summary:     "libraries/types:Summary",
-			Description: "libraries/types:Description",
+			Summary:     "Libraries/types:Summary",
+			Description: "Libraries/types:Description",
 		},
 	}
 	for _, t := range exprims {
 		lib.Struct.Fields[t.Name] = dump.Property{
 			ValueType:   dt.Prim("exprim"),
 			ReadOnly:    true,
-			Summary:     "libraries/types:Fields/" + t.Name + "/Summary",
-			Description: "libraries/types:Fields/" + t.Name + "/Description",
+			Summary:     "Libraries/types:Fields/" + t.Name + "/Summary",
+			Description: "Libraries/types:Fields/" + t.Name + "/Description",
 		}
 	}
 	lib.Types = dump.TypeDefs{
@@ -54,12 +54,12 @@ func dumpTypes(s rbxmk.State) dump.Library {
 				"Value": dump.Property{
 					ValueType:   dt.Prim("any"),
 					ReadOnly:    true,
-					Summary:     "libraries/types/types/exprim:Properties/Value/Summary",
-					Description: "libraries/types/types/exprim:Properties/Value/Description",
+					Summary:     "Libraries/types/Types/exprim:Properties/Value/Summary",
+					Description: "Libraries/types/Types/exprim:Properties/Value/Description",
 				},
 			},
-			Summary:     "libraries/types/types/exprim:Summary",
-			Description: "libraries/types/types/exprim:Description",
+			Summary:     "Libraries/types/Types/exprim:Summary",
+			Description: "Libraries/types/Types/exprim:Description",
 		},
 	}
 

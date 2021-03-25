@@ -40,8 +40,8 @@ func Tuple() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/Tuple:Summary",
-				Description: "libraries/roblox/types/Tuple:Description",
+				Summary:     "Libraries/roblox/Types/Tuple:Summary",
+				Description: "Libraries/roblox/Types/Tuple:Description",
 			}
 		},
 	}

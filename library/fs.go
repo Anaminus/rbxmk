@@ -145,8 +145,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/dir/Summary",
-					Description: "libraries/fs:Fields/dir/Description",
+					Summary:     "Libraries/fs:Fields/dir/Summary",
+					Description: "Libraries/fs:Fields/dir/Description",
 				},
 				"mkdir": dump.Function{
 					Parameters: dump.Parameters{
@@ -157,8 +157,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("bool")},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/mkdir/Summary",
-					Description: "libraries/fs:Fields/mkdir/Description",
+					Summary:     "Libraries/fs:Fields/mkdir/Summary",
+					Description: "Libraries/fs:Fields/mkdir/Description",
 				},
 				"read": dump.Function{
 					Parameters: dump.Parameters{
@@ -169,8 +169,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "value", Type: dt.Prim("any")},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/read/Summary",
-					Description: "libraries/fs:Fields/read/Description",
+					Summary:     "Libraries/fs:Fields/read/Summary",
+					Description: "Libraries/fs:Fields/read/Description",
 				},
 				"remove": dump.Function{
 					Parameters: dump.Parameters{
@@ -181,8 +181,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("bool")},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/remove/Summary",
-					Description: "libraries/fs:Fields/remove/Description",
+					Summary:     "Libraries/fs:Fields/remove/Summary",
+					Description: "Libraries/fs:Fields/remove/Description",
 				},
 				"rename": dump.Function{
 					Parameters: dump.Parameters{
@@ -193,8 +193,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("bool")},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/rename/Summary",
-					Description: "libraries/fs:Fields/rename/Description",
+					Summary:     "Libraries/fs:Fields/rename/Summary",
+					Description: "Libraries/fs:Fields/rename/Description",
 				},
 				"stat": dump.Function{
 					Parameters: dump.Parameters{
@@ -204,8 +204,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Type: dt.Optional{T: dt.Prim("FileInfo")}},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/stat/Summary",
-					Description: "libraries/fs:Fields/stat/Description",
+					Summary:     "Libraries/fs:Fields/stat/Summary",
+					Description: "Libraries/fs:Fields/stat/Description",
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
@@ -214,12 +214,12 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
 					},
 					CanError:    true,
-					Summary:     "libraries/fs:Fields/write/Summary",
-					Description: "libraries/fs:Fields/write/Description",
+					Summary:     "Libraries/fs:Fields/write/Summary",
+					Description: "Libraries/fs:Fields/write/Description",
 				},
 			},
-			Summary:     "libraries/fs:Summary",
-			Description: "libraries/fs:Description",
+			Summary:     "Libraries/fs:Summary",
+			Description: "Libraries/fs:Description",
 		},
 		Types: dump.TypeDefs{
 			"DirEntry": dump.TypeDef{
@@ -227,8 +227,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Name":  dt.Prim("string"),
 					"IsDir": dt.Prim("bool"),
 				},
-				Summary:     "libraries/fs/types/DirEntry/Summary",
-				Description: "libraries/fs/types/DirEntry/Description",
+				Summary:     "Libraries/fs/Types/DirEntry/Summary",
+				Description: "Libraries/fs/Types/DirEntry/Description",
 			},
 			"FileInfo": dump.TypeDef{
 				Underlying: dt.Struct{
@@ -237,8 +237,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Size":    dt.Prim("int"),
 					"ModTime": dt.Prim("int"),
 				},
-				Summary:     "libraries/fs/types/FileInfo/Summary",
-				Description: "libraries/fs/types/FileInfo/Description",
+				Summary:     "Libraries/fs/Types/FileInfo/Summary",
+				Description: "Libraries/fs/Types/FileInfo/Description",
 			},
 		},
 	}

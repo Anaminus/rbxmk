@@ -36,8 +36,8 @@ func Region3int16() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3int16"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Region3int16:Properties/Min/Summary",
-						Description: "libraries/roblox/types/Region3int16:Properties/Min/Description",
+						Summary:     "Libraries/roblox/Types/Region3int16:Properties/Min/Summary",
+						Description: "Libraries/roblox/Types/Region3int16:Properties/Min/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func Region3int16() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3int16"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Region3int16:Properties/Max/Summary",
-						Description: "libraries/roblox/types/Region3int16:Properties/Max/Description",
+						Summary:     "Libraries/roblox/Types/Region3int16:Properties/Max/Summary",
+						Description: "Libraries/roblox/Types/Region3int16:Properties/Max/Description",
 					}
 				},
 			},
@@ -73,8 +73,8 @@ func Region3int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Region3int16")},
 							},
-							Summary:     "libraries/roblox/types/Region3int16:Constructors/new/Summary",
-							Description: "libraries/roblox/types/Region3int16:Constructors/new/Description",
+							Summary:     "Libraries/roblox/Types/Region3int16:Constructors/new/Summary",
+							Description: "Libraries/roblox/Types/Region3int16:Constructors/new/Description",
 						},
 					}
 				},
@@ -83,8 +83,8 @@ func Region3int16() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/Region3int16:Summary",
-				Description: "libraries/roblox/types/Region3int16:Description",
+				Summary:     "Libraries/roblox/Types/Region3int16:Summary",
+				Description: "Libraries/roblox/Types/Region3int16:Description",
 			}
 		},
 	}

@@ -59,8 +59,8 @@ func Array() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/Array:Summary",
-				Description: "libraries/roblox/types/Array:Description",
+				Summary:     "Libraries/roblox/Types/Array:Summary",
+				Description: "Libraries/roblox/Types/Array:Description",
 			}
 		},
 	}

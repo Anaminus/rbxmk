@@ -41,8 +41,8 @@ func Int64() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/int64:Summary",
-				Description: "libraries/roblox/types/int64:Description",
+				Summary:     "Libraries/roblox/Types/int64:Summary",
+				Description: "Libraries/roblox/Types/int64:Description",
 			}
 		},
 	}

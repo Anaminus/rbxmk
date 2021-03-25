@@ -58,8 +58,8 @@ func NumberSequence() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Array{T: dt.Prim("NumberSequenceKeypoint")},
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberSequence:Properties/Keypoints/Summary",
-						Description: "libraries/roblox/types/NumberSequence:Properties/Keypoints/Description",
+						Summary:     "Libraries/roblox/Types/NumberSequence:Properties/Keypoints/Summary",
+						Description: "Libraries/roblox/Types/NumberSequence:Properties/Keypoints/Description",
 					}
 				},
 			},
@@ -119,8 +119,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/NumberSequence:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -130,8 +130,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/NumberSequence:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func NumberSequence() rbxmk.Reflector {
 								{Type: dt.Prim("NumberSequence")},
 							},
 							CanError:    true,
-							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/3/Summary",
-							Description: "libraries/roblox/types/NumberSequence:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequence:Constructors/new/3/Summary",
+							Description: "Libraries/roblox/Types/NumberSequence:Constructors/new/3/Description",
 						},
 					}
 				},
@@ -151,8 +151,8 @@ func NumberSequence() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/NumberSequence:Summary",
-				Description: "libraries/roblox/types/NumberSequence:Description",
+				Summary:     "Libraries/roblox/Types/NumberSequence:Summary",
+				Description: "Libraries/roblox/Types/NumberSequence:Description",
 			}
 		},
 	}

@@ -38,8 +38,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/Name/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/Name/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/Name/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/Name/Description",
 					}
 				},
 			},
@@ -51,8 +51,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("int"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/Number/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/Number/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/Number/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/Number/Description",
 					}
 				},
 			},
@@ -64,8 +64,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/R/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/R/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/R/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/R/Description",
 					}
 				},
 			},
@@ -77,8 +77,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/G/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/G/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/G/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/G/Description",
 					}
 				},
 			},
@@ -90,8 +90,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/B/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/B/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/B/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/B/Description",
 					}
 				},
 			},
@@ -103,8 +103,8 @@ func BrickColor() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Color3"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/BrickColor:Properties/Color/Summary",
-						Description: "libraries/roblox/types/BrickColor:Properties/Color/Description",
+						Summary:     "Libraries/roblox/Types/BrickColor:Properties/Color/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Properties/Color/Description",
 					}
 				},
 			},
@@ -145,8 +145,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -157,8 +157,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -167,8 +167,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/new/3/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/new/3/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/3/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/3/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -177,8 +177,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/new/4/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/new/4/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/new/4/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/new/4/Description",
 						},
 					}
 				},
@@ -197,8 +197,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/palette/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/palette/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/palette/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/palette/Description",
 						},
 					}
 				},
@@ -214,8 +214,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/random/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/random/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/random/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/random/Description",
 						},
 					}
 				},
@@ -230,8 +230,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/White/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/White/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/White/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/White/Description",
 						},
 					}
 				},
@@ -246,8 +246,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Gray/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Gray/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Gray/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Gray/Description",
 						},
 					}
 				},
@@ -262,8 +262,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/DarkGray/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/DarkGray/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/DarkGray/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/DarkGray/Description",
 						},
 					}
 				},
@@ -278,8 +278,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Black/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Black/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Black/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Black/Description",
 						},
 					}
 				},
@@ -294,8 +294,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Red/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Red/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Red/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Red/Description",
 						},
 					}
 				},
@@ -310,8 +310,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Yellow/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Yellow/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Yellow/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Yellow/Description",
 						},
 					}
 				},
@@ -326,8 +326,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Green/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Green/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Green/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Green/Description",
 						},
 					}
 				},
@@ -342,8 +342,8 @@ func BrickColor() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("BrickColor")},
 							},
-							Summary:     "libraries/roblox/types/BrickColor:Constructors/Blue/Summary",
-							Description: "libraries/roblox/types/BrickColor:Constructors/Blue/Description",
+							Summary:     "Libraries/roblox/Types/BrickColor:Constructors/Blue/Summary",
+							Description: "Libraries/roblox/Types/BrickColor:Constructors/Blue/Description",
 						},
 					}
 				},
@@ -352,8 +352,8 @@ func BrickColor() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/BrickColor:Summary",
-				Description: "libraries/roblox/types/BrickColor:Description",
+				Summary:     "Libraries/roblox/Types/BrickColor:Summary",
+				Description: "Libraries/roblox/Types/BrickColor:Description",
 			}
 		},
 	}

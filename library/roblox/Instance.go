@@ -394,8 +394,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/roblox/types/Instance:Properties/ClassName/Summary",
-						Description: "libraries/roblox/types/Instance:Properties/ClassName/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Properties/ClassName/Summary",
+						Description: "Libraries/roblox/Types/Instance:Properties/ClassName/Description",
 					}
 				},
 			},
@@ -409,8 +409,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/roblox/types/Instance:Properties/Name/Summary",
-						Description: "libraries/roblox/types/Instance:Properties/Name/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Properties/Name/Summary",
+						Description: "Libraries/roblox/Types/Instance:Properties/Name/Description",
 					}
 				},
 			},
@@ -438,8 +438,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Optional{T: dt.Prim("Instance")},
-						Summary:     "libraries/roblox/types/Instance:Properties/Parent/Summary",
-						Description: "libraries/roblox/types/Instance:Properties/Parent/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Properties/Parent/Summary",
+						Description: "Libraries/roblox/Types/Instance:Properties/Parent/Description",
 					}
 				},
 			},
@@ -457,8 +457,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/roblox/types/Instance:Symbols/Parent/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/Parent/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/Parent/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/Parent/Description",
 					}
 				},
 			},
@@ -474,8 +474,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
-						Summary:     "libraries/roblox/types/Instance:Symbols/Parent/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/Parent/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/Parent/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/Parent/Description",
 					}
 				},
 			},
@@ -512,8 +512,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
-						Summary:     "libraries/roblox/types/Instance:Symbols/Desc/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/Desc/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/Desc/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/Desc/Description",
 					}
 				},
 			},
@@ -553,8 +553,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
-						Summary:     "libraries/roblox/types/Instance:Symbols/RawDesc/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/RawDesc/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/RawDesc/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/RawDesc/Description",
 					}
 				},
 			},
@@ -591,8 +591,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
-						Summary:     "libraries/roblox/types/Instance:Symbols/AttrConfig/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/AttrConfig/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/AttrConfig/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/AttrConfig/Description",
 					}
 				},
 			},
@@ -632,8 +632,8 @@ func Instance() rbxmk.Reflector {
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
-						Summary:     "libraries/roblox/types/Instance:Symbols/RawAttrConfig/Summary",
-						Description: "libraries/roblox/types/Instance:Symbols/RawAttrConfig/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/RawAttrConfig/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/RawAttrConfig/Description",
 					}
 				},
 			},
@@ -694,8 +694,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/Descend/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/Descend/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/Descend/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/Descend/Description",
 					}
 				},
 			},
@@ -706,8 +706,8 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
-						Summary:     "libraries/roblox/types/Instance:Methods/ClearAllChildren/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/ClearAllChildren/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/ClearAllChildren/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/ClearAllChildren/Description",
 					}
 				},
 			},
@@ -720,8 +720,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/Clone/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/Clone/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/Clone/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/Clone/Description",
 					}
 				},
 			},
@@ -732,8 +732,8 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
-						Summary:     "libraries/roblox/types/Instance:Methods/Destroy/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/Destroy/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/Destroy/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/Destroy/Description",
 					}
 				},
 			},
@@ -753,8 +753,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstAncestor/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstAncestor/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstAncestor/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstAncestor/Description",
 					}
 				},
 			},
@@ -774,8 +774,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstAncestorOfClass/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstAncestorOfClass/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstAncestorOfClass/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstAncestorOfClass/Description",
 					}
 				},
 			},
@@ -795,8 +795,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstAncestorWhichIsA/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstAncestorWhichIsA/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstAncestorWhichIsA/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstAncestorWhichIsA/Description",
 					}
 				},
 			},
@@ -818,8 +818,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstChild/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstChild/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstChild/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstChild/Description",
 					}
 				},
 			},
@@ -841,8 +841,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstChildOfClass/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstChildOfClass/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstChildOfClass/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstChildOfClass/Description",
 					}
 				},
 			},
@@ -864,8 +864,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("Instance")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/FindFirstChildWhichIsA/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/FindFirstChildWhichIsA/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/FindFirstChildWhichIsA/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/FindFirstChildWhichIsA/Description",
 					}
 				},
 			},
@@ -886,8 +886,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/GetAttribute/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/GetAttribute/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/GetAttribute/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/GetAttribute/Description",
 					}
 				},
 			},
@@ -900,8 +900,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Dictionary")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/GetAttributes/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/GetAttributes/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/GetAttributes/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/GetAttributes/Description",
 					}
 				},
 			},
@@ -915,8 +915,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/GetChildren/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/GetChildren/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/GetChildren/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/GetChildren/Description",
 					}
 				},
 			},
@@ -929,8 +929,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Objects")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/GetDescendants/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/GetDescendants/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/GetDescendants/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/GetDescendants/Description",
 					}
 				},
 			},
@@ -943,8 +943,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/GetFullName/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/GetFullName/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/GetFullName/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/GetFullName/Description",
 					}
 				},
 			},
@@ -961,8 +961,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/IsA/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/IsA/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/IsA/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/IsA/Description",
 					}
 				},
 			},
@@ -979,8 +979,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/IsAncestorOf/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/IsAncestorOf/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/IsAncestorOf/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/IsAncestorOf/Description",
 					}
 				},
 			},
@@ -997,8 +997,8 @@ func Instance() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/IsDescendantOf/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/IsDescendantOf/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/IsDescendantOf/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/IsDescendantOf/Description",
 					}
 				},
 			},
@@ -1018,8 +1018,8 @@ func Instance() rbxmk.Reflector {
 							{Name: "attribute", Type: dt.Prim("string")},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/SetAttribute/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/SetAttribute/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/SetAttribute/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/SetAttribute/Description",
 					}
 				},
 			},
@@ -1034,8 +1034,8 @@ func Instance() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "attributes", Type: dt.Prim("Dictionary")},
 						},
-						Summary:     "libraries/roblox/types/Instance:Methods/SetAttributes/Summary",
-						Description: "libraries/roblox/types/Instance:Methods/SetAttributes/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Methods/SetAttributes/Summary",
+						Description: "Libraries/roblox/Types/Instance:Methods/SetAttributes/Description",
 					}
 				},
 			},
@@ -1090,8 +1090,8 @@ func Instance() rbxmk.Reflector {
 								{Type: dt.Prim("Instance")},
 							},
 							CanError:    true,
-							Summary:     "libraries/roblox/types/Instance:Constructors/new/Summary",
-							Description: "libraries/roblox/types/Instance:Constructors/new/Description",
+							Summary:     "Libraries/roblox/Types/Instance:Constructors/new/Summary",
+							Description: "Libraries/roblox/Types/Instance:Constructors/new/Description",
 						},
 					}
 				},
@@ -1132,8 +1132,8 @@ func Instance() rbxmk.Reflector {
 							{Type: dt.Optional{T: dt.Prim("any")}},
 						},
 						CanError:    true,
-						Summary:     "libraries/roblox/types/Instance:Operators/Index/Summary",
-						Description: "libraries/roblox/types/Instance:Operators/Index/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Operators/Index/Summary",
+						Description: "Libraries/roblox/Types/Instance:Operators/Index/Description",
 					},
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
@@ -1141,12 +1141,12 @@ func Instance() rbxmk.Reflector {
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
 						CanError:    true,
-						Summary:     "libraries/roblox/types/Instance:Operators/Newindex/Summary",
-						Description: "libraries/roblox/types/Instance:Operators/Newindex/Description",
+						Summary:     "Libraries/roblox/Types/Instance:Operators/Newindex/Summary",
+						Description: "Libraries/roblox/Types/Instance:Operators/Newindex/Description",
 					},
 				},
-				Summary:     "libraries/roblox/types/Instance:Summary",
-				Description: "libraries/roblox/types/Instance:Description",
+				Summary:     "Libraries/roblox/Types/Instance:Summary",
+				Description: "Libraries/roblox/Types/Instance:Description",
 			}
 		},
 	}

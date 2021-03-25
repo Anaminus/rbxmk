@@ -106,8 +106,8 @@ func FormatSelector() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Or{dt.Prim("string"), dt.Struct{"Format": dt.Prim("string"), "...": dt.Prim("any")}},
-				Summary:     "libraries/rbxmk/types/FormatSelector:Summary",
-				Description: "libraries/rbxmk/types/FormatSelector:Description",
+				Summary:     "Libraries/rbxmk/Types/FormatSelector:Summary",
+				Description: "Libraries/rbxmk/Types/FormatSelector:Description",
 			}
 		},
 	}

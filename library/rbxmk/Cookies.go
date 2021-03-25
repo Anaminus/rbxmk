@@ -49,8 +49,8 @@ func Cookies() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Array{T: dt.Prim("Cookie")},
-				Summary:     "libraries/rbxmk/types/Cookies:Summary",
-				Description: "libraries/rbxmk/types/Cookies:Description",
+				Summary:     "Libraries/rbxmk/Types/Cookies:Summary",
+				Description: "Libraries/rbxmk/Types/Cookies:Description",
 			}
 		},
 	}

@@ -126,8 +126,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim("table")},
 					},
-					Summary:     "libraries/table:Fields/clear/Summary",
-					Description: "libraries/table:Fields/clear/Description",
+					Summary:     "Libraries/table:Fields/clear/Summary",
+					Description: "Libraries/table:Fields/clear/Description",
 				},
 				"create": dump.Function{
 					Parameters: dump.Parameters{
@@ -137,8 +137,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
-					Summary:     "libraries/table:Fields/create/Summary",
-					Description: "libraries/table:Fields/create/Description",
+					Summary:     "Libraries/table:Fields/create/Summary",
+					Description: "Libraries/table:Fields/create/Description",
 				},
 				"find": dump.Function{
 					Parameters: dump.Parameters{
@@ -149,8 +149,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim("int")}},
 					},
-					Summary:     "libraries/table:Fields/find/Summary",
-					Description: "libraries/table:Fields/find/Description",
+					Summary:     "Libraries/table:Fields/find/Summary",
+					Description: "Libraries/table:Fields/find/Description",
 				},
 				"move": dump.Function{
 					Parameters: dump.Parameters{
@@ -164,8 +164,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("table")},
 					},
 					CanError:    true,
-					Summary:     "libraries/table:Fields/move/Summary",
-					Description: "libraries/table:Fields/move/Description",
+					Summary:     "Libraries/table:Fields/move/Summary",
+					Description: "Libraries/table:Fields/move/Description",
 				},
 				"pack": dump.Function{
 					Parameters: dump.Parameters{
@@ -174,8 +174,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
-					Summary:     "libraries/table:Fields/pack/Summary",
-					Description: "libraries/table:Fields/pack/Description",
+					Summary:     "Libraries/table:Fields/pack/Summary",
+					Description: "Libraries/table:Fields/pack/Description",
 				},
 				"unpack": dump.Function{
 					Parameters: dump.Parameters{
@@ -186,12 +186,12 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
-					Summary:     "libraries/table:Fields/unpack/Summary",
-					Description: "libraries/table:Fields/unpack/Description",
+					Summary:     "Libraries/table:Fields/unpack/Summary",
+					Description: "Libraries/table:Fields/unpack/Description",
 				},
 			},
-			Summary:     "libraries/table:Summary",
-			Description: "libraries/table:Description",
+			Summary:     "Libraries/table:Summary",
+			Description: "Libraries/table:Description",
 		},
 	}
 }

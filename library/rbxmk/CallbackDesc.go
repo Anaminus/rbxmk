@@ -28,8 +28,8 @@ func CallbackDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Properties/Name/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Properties/Name/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Properties/Name/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -46,8 +46,8 @@ func CallbackDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("TypeDesc"),
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Properties/ReturnType/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Properties/ReturnType/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Properties/ReturnType/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Properties/ReturnType/Description",
 					}
 				},
 			},
@@ -63,8 +63,8 @@ func CallbackDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Properties/Security/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Properties/Security/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Properties/Security/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Properties/Security/Description",
 					}
 				},
 			},
@@ -85,8 +85,8 @@ func CallbackDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/Parameters/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/Parameters/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/Parameters/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/Parameters/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func CallbackDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/SetParameters/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/SetParameters/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/SetParameters/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/SetParameters/Description",
 					}
 				},
 			},
@@ -130,8 +130,8 @@ func CallbackDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/Tag/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/Tag/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/Tag/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -150,8 +150,8 @@ func CallbackDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/Tags/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/Tags/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/Tags/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -170,8 +170,8 @@ func CallbackDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/SetTag/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/SetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/SetTag/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -190,16 +190,16 @@ func CallbackDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/CallbackDesc:Methods/UnsetTag/Summary",
-						Description: "libraries/rbxmk/types/CallbackDesc:Methods/UnsetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/CallbackDesc:Methods/UnsetTag/Summary",
+						Description: "Libraries/rbxmk/Types/CallbackDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/CallbackDesc:Summary",
-				Description: "libraries/rbxmk/types/CallbackDesc:Description",
+				Summary:     "Libraries/rbxmk/Types/CallbackDesc:Summary",
+				Description: "Libraries/rbxmk/Types/CallbackDesc:Description",
 			}
 		},
 	}

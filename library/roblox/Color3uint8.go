@@ -42,8 +42,8 @@ func Color3uint8() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Prim("Color3"),
-				Summary:     "libraries/roblox/types/Color3uint8:Summary",
-				Description: "libraries/roblox/types/Color3uint8:Description",
+				Summary:     "Libraries/roblox/Types/Color3uint8:Summary",
+				Description: "Libraries/roblox/Types/Color3uint8:Description",
 			}
 		},
 	}

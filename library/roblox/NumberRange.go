@@ -36,8 +36,8 @@ func NumberRange() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberRange:Properties/Min/Summary",
-						Description: "libraries/roblox/types/NumberRange:Properties/Min/Description",
+						Summary:     "Libraries/roblox/Types/NumberRange:Properties/Min/Summary",
+						Description: "Libraries/roblox/Types/NumberRange:Properties/Min/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func NumberRange() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberRange:Properties/Max/Summary",
-						Description: "libraries/roblox/types/NumberRange:Properties/Max/Description",
+						Summary:     "Libraries/roblox/Types/NumberRange:Properties/Max/Summary",
+						Description: "Libraries/roblox/Types/NumberRange:Properties/Max/Description",
 					}
 				},
 			},
@@ -80,8 +80,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "libraries/roblox/types/NumberRange:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/NumberRange:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/NumberRange:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/NumberRange:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -91,8 +91,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "libraries/roblox/types/NumberRange:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/NumberRange:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/NumberRange:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/NumberRange:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -101,8 +101,8 @@ func NumberRange() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/NumberRange:Summary",
-				Description: "libraries/roblox/types/NumberRange:Description",
+				Summary:     "Libraries/roblox/Types/NumberRange:Summary",
+				Description: "Libraries/roblox/Types/NumberRange:Description",
 			}
 		},
 	}

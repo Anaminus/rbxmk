@@ -63,8 +63,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/PhysicalProperties:Properties/Density/Summary",
-						Description: "libraries/roblox/types/PhysicalProperties:Properties/Density/Description",
+						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Density/Summary",
+						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Density/Description",
 					}
 				},
 			},
@@ -76,8 +76,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/PhysicalProperties:Properties/Friction/Summary",
-						Description: "libraries/roblox/types/PhysicalProperties:Properties/Friction/Description",
+						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Friction/Summary",
+						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Friction/Description",
 					}
 				},
 			},
@@ -89,8 +89,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/PhysicalProperties:Properties/Elasticity/Summary",
-						Description: "libraries/roblox/types/PhysicalProperties:Properties/Elasticity/Description",
+						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Elasticity/Summary",
+						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Elasticity/Description",
 					}
 				},
 			},
@@ -102,8 +102,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/PhysicalProperties:Properties/FrictionWeight/Summary",
-						Description: "libraries/roblox/types/PhysicalProperties:Properties/FrictionWeight/Description",
+						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/FrictionWeight/Summary",
+						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/FrictionWeight/Description",
 					}
 				},
 			},
@@ -115,8 +115,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/PhysicalProperties:Properties/ElasticityWeight/Summary",
-						Description: "libraries/roblox/types/PhysicalProperties:Properties/ElasticityWeight/Description",
+						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/ElasticityWeight/Summary",
+						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/ElasticityWeight/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "libraries/roblox/types/PhysicalProperties:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/PhysicalProperties:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -166,8 +166,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "libraries/roblox/types/PhysicalProperties:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/PhysicalProperties:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -175,8 +175,8 @@ func PhysicalProperties() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/PhysicalProperties:Summary",
-				Description: "libraries/roblox/types/PhysicalProperties:Description",
+				Summary:     "Libraries/roblox/Types/PhysicalProperties:Summary",
+				Description: "Libraries/roblox/Types/PhysicalProperties:Description",
 			}
 		},
 	}

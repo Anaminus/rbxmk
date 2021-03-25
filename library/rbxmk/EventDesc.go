@@ -28,8 +28,8 @@ func EventDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/EventDesc:Properties/Name/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Properties/Name/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Properties/Name/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -45,8 +45,8 @@ func EventDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/EventDesc:Properties/Security/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Properties/Security/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Properties/Security/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Properties/Security/Description",
 					}
 				},
 			},
@@ -67,8 +67,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Parameters/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/Parameters/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Parameters/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Parameters/Description",
 					}
 				},
 			},
@@ -93,8 +93,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/SetParameters/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/SetParameters/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/SetParameters/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/SetParameters/Description",
 					}
 				},
 			},
@@ -112,8 +112,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Tag/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/Tag/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Tag/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -132,8 +132,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Tags/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/Tags/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Tags/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/SetTag/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/SetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/SetTag/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -172,16 +172,16 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/EventDesc:Methods/UnsetTag/Summary",
-						Description: "libraries/rbxmk/types/EventDesc:Methods/UnsetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/UnsetTag/Summary",
+						Description: "Libraries/rbxmk/Types/EventDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/EventDesc:Summary",
-				Description: "libraries/rbxmk/types/EventDesc:Description",
+				Summary:     "Libraries/rbxmk/Types/EventDesc:Summary",
+				Description: "Libraries/rbxmk/Types/EventDesc:Description",
 			}
 		},
 	}

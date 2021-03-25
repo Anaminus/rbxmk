@@ -36,8 +36,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Properties/Time/Summary",
-						Description: "libraries/roblox/types/NumberSequenceKeypoint:Properties/Time/Description",
+						Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Time/Summary",
+						Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Time/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Properties/Value/Summary",
-						Description: "libraries/roblox/types/NumberSequenceKeypoint:Properties/Value/Description",
+						Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Value/Summary",
+						Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Value/Description",
 					}
 				},
 			},
@@ -62,8 +62,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Properties/Envelope/Summary",
-						Description: "libraries/roblox/types/NumberSequenceKeypoint:Properties/Envelope/Description",
+						Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Envelope/Summary",
+						Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Properties/Envelope/Description",
 					}
 				},
 			},
@@ -95,8 +95,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -107,8 +107,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -117,8 +117,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Summary",
-				Description: "libraries/roblox/types/NumberSequenceKeypoint:Description",
+				Summary:     "Libraries/roblox/Types/NumberSequenceKeypoint:Summary",
+				Description: "Libraries/roblox/Types/NumberSequenceKeypoint:Description",
 			}
 		},
 	}

@@ -49,8 +49,8 @@ func DescActions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Array{T: dt.Prim("DescAction")},
-				Summary:     "libraries/rbxmk/types/DescActions:Summary",
-				Description: "libraries/rbxmk/types/DescActions:Description",
+				Summary:     "Libraries/rbxmk/Types/DescActions:Summary",
+				Description: "Libraries/rbxmk/Types/DescActions:Description",
 			}
 		},
 	}

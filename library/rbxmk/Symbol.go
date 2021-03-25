@@ -13,8 +13,8 @@ func Symbol() rbxmk.Reflector {
 		PullFrom: rbxmk.PullTypeFrom("Symbol"),
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/Symbol:Summary",
-				Description: "libraries/rbxmk/types/Symbol:Description",
+				Summary:     "Libraries/rbxmk/Types/Symbol:Summary",
+				Description: "Libraries/rbxmk/Types/Symbol:Description",
 			}
 		},
 	}

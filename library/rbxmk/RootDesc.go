@@ -36,8 +36,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("ClassDesc")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/Class/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/Class/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/Class/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/Class/Description",
 					}
 				},
 			},
@@ -58,8 +58,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ClassDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/Classes/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/Classes/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/Classes/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/Classes/Description",
 					}
 				},
 			},
@@ -84,8 +84,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/AddClass/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/AddClass/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/AddClass/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/AddClass/Description",
 					}
 				},
 			},
@@ -107,8 +107,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/RemoveClass/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/RemoveClass/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/RemoveClass/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/RemoveClass/Description",
 					}
 				},
 			},
@@ -130,8 +130,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("EnumDesc")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/Enum/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/Enum/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/Enum/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/Enum/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/Enums/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/Enums/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/Enums/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/Enums/Description",
 					}
 				},
 			},
@@ -178,8 +178,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/AddEnum/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/AddEnum/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/AddEnum/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/AddEnum/Description",
 					}
 				},
 			},
@@ -201,8 +201,8 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/RemoveEnum/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/RemoveEnum/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/RemoveEnum/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/RemoveEnum/Description",
 					}
 				},
 			},
@@ -217,16 +217,16 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Enums")},
 						},
-						Summary:     "libraries/rbxmk/types/RootDesc:Methods/EnumTypes/Summary",
-						Description: "libraries/rbxmk/types/RootDesc:Methods/EnumTypes/Description",
+						Summary:     "Libraries/rbxmk/Types/RootDesc:Methods/EnumTypes/Summary",
+						Description: "Libraries/rbxmk/Types/RootDesc:Methods/EnumTypes/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/RootDesc:Summary",
-				Description: "libraries/rbxmk/types/RootDesc:Description",
+				Summary:     "Libraries/rbxmk/Types/RootDesc:Summary",
+				Description: "Libraries/rbxmk/Types/RootDesc:Description",
 			}
 		},
 	}

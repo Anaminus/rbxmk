@@ -27,16 +27,16 @@ func AttrConfig() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/AttrConfig:Properties/Property/Summary",
-						Description: "libraries/rbxmk/types/AttrConfig:Properties/Property/Description",
+						Summary:     "Libraries/rbxmk/Types/AttrConfig:Properties/Property/Summary",
+						Description: "Libraries/rbxmk/Types/AttrConfig:Properties/Property/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/AttrConfig:Summary",
-				Description: "libraries/rbxmk/types/AttrConfig:Description",
+				Summary:     "Libraries/rbxmk/Types/AttrConfig:Summary",
+				Description: "Libraries/rbxmk/Types/AttrConfig:Description",
 			}
 		},
 	}

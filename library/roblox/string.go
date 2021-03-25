@@ -31,8 +31,8 @@ func String() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/string:Summary",
-				Description: "libraries/roblox/types/string:Description",
+				Summary:     "Libraries/roblox/Types/string:Summary",
+				Description: "Libraries/roblox/Types/string:Description",
 			}
 		},
 	}

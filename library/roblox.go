@@ -44,12 +44,12 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
-					Summary:     "libraries/roblox:Fields/typeof/Summary",
-					Description: "libraries/roblox:Fields/typeof/Description",
+					Summary:     "Libraries/roblox:Fields/typeof/Summary",
+					Description: "Libraries/roblox:Fields/typeof/Description",
 				},
 			},
-			Summary:     "libraries/roblox:Summary",
-			Description: "libraries/roblox:Description",
+			Summary:     "Libraries/roblox:Summary",
+			Description: "Libraries/roblox:Description",
 		},
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
@@ -57,8 +57,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 				Symbols: dump.Properties{
 					"Metadata": dump.Property{
 						ValueType:   dt.Dictionary{V: dt.Prim("string")},
-						Summary:     "libraries/roblox/types/DataModel:Symbols/Metadata/Summary",
-						Description: "libraries/roblox/types/DataModel:Symbols/Metadata/Description",
+						Summary:     "Libraries/roblox/Types/DataModel:Symbols/Metadata/Summary",
+						Description: "Libraries/roblox/Types/DataModel:Symbols/Metadata/Description",
 					},
 				},
 				Methods: dump.Methods{
@@ -69,8 +69,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
-						Summary:     "libraries/roblox/types/DataModel:Methods/GetService/Summary",
-						Description: "libraries/roblox/types/DataModel:Methods/GetService/Description",
+						Summary:     "Libraries/roblox/Types/DataModel:Methods/GetService/Summary",
+						Description: "Libraries/roblox/Types/DataModel:Methods/GetService/Description",
 					},
 				},
 				Constructors: dump.Constructors{
@@ -82,13 +82,13 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("DataModel")},
 							},
-							Summary:     "libraries/roblox/types/DataModel:Constructors/new/Summary",
-							Description: "libraries/roblox/types/DataModel:Constructors/new/Description",
+							Summary:     "Libraries/roblox/Types/DataModel:Constructors/new/Summary",
+							Description: "Libraries/roblox/Types/DataModel:Constructors/new/Description",
 						},
 					},
 				},
-				Summary:     "libraries/roblox/types/DataModel:Summary",
-				Description: "libraries/roblox/types/DataModel:Description",
+				Summary:     "Libraries/roblox/Types/DataModel:Summary",
+				Description: "Libraries/roblox/Types/DataModel:Description",
 			},
 		},
 	}

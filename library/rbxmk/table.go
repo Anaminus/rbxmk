@@ -28,8 +28,8 @@ func Table() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/table:Summary",
-				Description: "libraries/rbxmk/types/table:Description",
+				Summary:     "Libraries/rbxmk/Types/table:Summary",
+				Description: "Libraries/rbxmk/Types/table:Description",
 			}
 		},
 	}

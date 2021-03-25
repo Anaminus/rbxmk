@@ -29,8 +29,8 @@ func HTTPRequest() rbxmk.Reflector {
 							{Name: "resp", Type: dt.Prim("HTTPResponse")},
 						},
 						CanError:    true,
-						Summary:     "libraries/http/types/HTTPRequest:Methods/Resolve/Summary",
-						Description: "libraries/http/types/HTTPRequest:Methods/Resolve/Description",
+						Summary:     "Libraries/http/Types/HTTPRequest:Methods/Resolve/Summary",
+						Description: "Libraries/http/Types/HTTPRequest:Methods/Resolve/Description",
 					}
 				},
 			},
@@ -42,16 +42,16 @@ func HTTPRequest() rbxmk.Reflector {
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
-						Summary:     "libraries/http/types/HTTPRequest:Methods/Cancel/Summary",
-						Description: "libraries/http/types/HTTPRequest:Methods/Cancel/Description",
+						Summary:     "Libraries/http/Types/HTTPRequest:Methods/Cancel/Summary",
+						Description: "Libraries/http/Types/HTTPRequest:Methods/Cancel/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/http/types/HTTPRequest:Summary",
-				Description: "libraries/http/types/HTTPRequest:Description",
+				Summary:     "Libraries/http/Types/HTTPRequest:Summary",
+				Description: "Libraries/http/Types/HTTPRequest:Description",
 			}
 		},
 	}

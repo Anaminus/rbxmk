@@ -36,8 +36,8 @@ func Rect() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector2"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Rect:Properties/Min/Summary",
-						Description: "libraries/roblox/types/Rect:Properties/Min/Description",
+						Summary:     "Libraries/roblox/Types/Rect:Properties/Min/Summary",
+						Description: "Libraries/roblox/Types/Rect:Properties/Min/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func Rect() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector2"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Rect:Properties/Max/Summary",
-						Description: "libraries/roblox/types/Rect:Properties/Max/Description",
+						Summary:     "Libraries/roblox/Types/Rect:Properties/Max/Summary",
+						Description: "Libraries/roblox/Types/Rect:Properties/Max/Description",
 					}
 				},
 			},
@@ -62,8 +62,8 @@ func Rect() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Rect:Properties/Width/Summary",
-						Description: "libraries/roblox/types/Rect:Properties/Width/Description",
+						Summary:     "Libraries/roblox/Types/Rect:Properties/Width/Summary",
+						Description: "Libraries/roblox/Types/Rect:Properties/Width/Description",
 					}
 				},
 			},
@@ -75,8 +75,8 @@ func Rect() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/Rect:Properties/Height/Summary",
-						Description: "libraries/roblox/types/Rect:Properties/Height/Description",
+						Summary:     "Libraries/roblox/Types/Rect:Properties/Height/Summary",
+						Description: "Libraries/roblox/Types/Rect:Properties/Height/Description",
 					}
 				},
 			},
@@ -109,8 +109,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "libraries/roblox/types/Rect:Constructors/new/1/Summary",
-							Description: "libraries/roblox/types/Rect:Constructors/new/1/Description",
+							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/1/Summary",
+							Description: "Libraries/roblox/Types/Rect:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -122,8 +122,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "libraries/roblox/types/Rect:Constructors/new/2/Summary",
-							Description: "libraries/roblox/types/Rect:Constructors/new/2/Description",
+							Summary:     "Libraries/roblox/Types/Rect:Constructors/new/2/Summary",
+							Description: "Libraries/roblox/Types/Rect:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -132,8 +132,8 @@ func Rect() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "libraries/roblox/types/Rect:Summary",
-				Description: "libraries/roblox/types/Rect:Description",
+				Summary:     "Libraries/roblox/Types/Rect:Summary",
+				Description: "Libraries/roblox/Types/Rect:Description",
 			}
 		},
 	}

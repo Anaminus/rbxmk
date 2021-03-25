@@ -30,8 +30,8 @@ func ClassDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/Name/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Properties/Name/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Properties/Name/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -47,8 +47,8 @@ func ClassDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/Superclass/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Properties/Superclass/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Properties/Superclass/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Properties/Superclass/Description",
 					}
 				},
 			},
@@ -64,8 +64,8 @@ func ClassDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "libraries/rbxmk/types/ClassDesc:Properties/MemoryCategory/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Properties/MemoryCategory/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Properties/MemoryCategory/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Properties/MemoryCategory/Description",
 					}
 				},
 			},
@@ -89,8 +89,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("MemberDesc")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/Member/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/Member/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/Member/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/Member/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("MemberDesc")}},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/Members/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/Members/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/Members/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/Members/Description",
 					}
 				},
 			},
@@ -159,8 +159,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/AddMember/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/AddMember/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/AddMember/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/AddMember/Description",
 					}
 				},
 			},
@@ -182,8 +182,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/RemoveMember/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/RemoveMember/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/RemoveMember/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/RemoveMember/Description",
 					}
 				},
 			},
@@ -201,8 +201,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/Tag/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/Tag/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/Tag/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -221,8 +221,8 @@ func ClassDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/Tags/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/Tags/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/Tags/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -241,8 +241,8 @@ func ClassDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/SetTag/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/SetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/SetTag/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -261,16 +261,16 @@ func ClassDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "libraries/rbxmk/types/ClassDesc:Methods/UnsetTag/Summary",
-						Description: "libraries/rbxmk/types/ClassDesc:Methods/UnsetTag/Description",
+						Summary:     "Libraries/rbxmk/Types/ClassDesc:Methods/UnsetTag/Summary",
+						Description: "Libraries/rbxmk/Types/ClassDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/rbxmk/types/ClassDesc:Summary",
-				Description: "libraries/rbxmk/types/ClassDesc:Description",
+				Summary:     "Libraries/rbxmk/Types/ClassDesc:Summary",
+				Description: "Libraries/rbxmk/Types/ClassDesc:Description",
 			}
 		},
 	}

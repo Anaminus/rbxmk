@@ -31,8 +31,8 @@ func EnumItem() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/EnumItem:Properties/Name/Summary",
-						Description: "libraries/roblox/types/EnumItem:Properties/Name/Description",
+						Summary:     "Libraries/roblox/Types/EnumItem:Properties/Name/Summary",
+						Description: "Libraries/roblox/Types/EnumItem:Properties/Name/Description",
 					}
 				},
 			},
@@ -44,8 +44,8 @@ func EnumItem() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("int"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/EnumItem:Properties/Value/Summary",
-						Description: "libraries/roblox/types/EnumItem:Properties/Value/Description",
+						Summary:     "Libraries/roblox/Types/EnumItem:Properties/Value/Summary",
+						Description: "Libraries/roblox/Types/EnumItem:Properties/Value/Description",
 					}
 				},
 			},
@@ -57,16 +57,16 @@ func EnumItem() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Enum"),
 						ReadOnly:    true,
-						Summary:     "libraries/roblox/types/EnumItem:Properties/EnumType/Summary",
-						Description: "libraries/roblox/types/EnumItem:Properties/EnumType/Description",
+						Summary:     "Libraries/roblox/Types/EnumItem:Properties/EnumType/Summary",
+						Description: "Libraries/roblox/Types/EnumItem:Properties/EnumType/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "libraries/roblox/types/EnumItem:Summary",
-				Description: "libraries/roblox/types/EnumItem:Description",
+				Summary:     "Libraries/roblox/Types/EnumItem:Summary",
+				Description: "Libraries/roblox/Types/EnumItem:Description",
 			}
 		},
 	}
