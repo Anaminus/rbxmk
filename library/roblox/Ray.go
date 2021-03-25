@@ -69,8 +69,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Ray:Methods/ClosestPoint/Summary",
+						Description: "libraries/roblox/types/Ray:Methods/ClosestPoint/Description",
 					}
 				},
 			},
@@ -87,8 +87,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Ray:Methods/Distance/Summary",
+						Description: "libraries/roblox/types/Ray:Methods/Distance/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func Ray() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Ray")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Ray:Constructors/new/Summary",
+							Description: "libraries/roblox/types/Ray:Constructors/new/Description",
 						},
 					}
 				},
@@ -121,8 +121,8 @@ func Ray() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Ray:Summary",
+				Description: "libraries/roblox/types/Ray:Description",
 			}
 		},
 	}

@@ -44,12 +44,12 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/roblox:Fields/typeof/Summary",
+					Description: "libraries/roblox:Fields/typeof/Description",
 				},
 			},
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/roblox:Summary",
+			Description: "libraries/roblox:Description",
 		},
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
@@ -57,8 +57,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 				Symbols: dump.Properties{
 					"Metadata": dump.Property{
 						ValueType:   dt.Dictionary{V: dt.Prim("string")},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/DataModel:Symbols/Metadata/Summary",
+						Description: "libraries/roblox/types/DataModel:Symbols/Metadata/Description",
 					},
 				},
 				Methods: dump.Methods{
@@ -69,8 +69,8 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Instance")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/DataModel:Methods/GetService/Summary",
+						Description: "libraries/roblox/types/DataModel:Methods/GetService/Description",
 					},
 				},
 				Constructors: dump.Constructors{
@@ -82,13 +82,13 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("DataModel")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/DataModel:Constructors/new/Summary",
+							Description: "libraries/roblox/types/DataModel:Constructors/new/Description",
 						},
 					},
 				},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/DataModel:Summary",
+				Description: "libraries/roblox/types/DataModel:Description",
 			},
 		},
 	}

@@ -64,8 +64,8 @@ func Dictionary() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Dictionary:Summary",
+				Description: "libraries/roblox/types/Dictionary:Description",
 			}
 		},
 	}

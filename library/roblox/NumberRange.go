@@ -80,8 +80,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberRange:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/NumberRange:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -91,8 +91,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberRange:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/NumberRange:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -101,8 +101,8 @@ func NumberRange() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/NumberRange:Summary",
+				Description: "libraries/roblox/types/NumberRange:Description",
 			}
 		},
 	}

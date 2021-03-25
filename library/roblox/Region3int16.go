@@ -73,8 +73,8 @@ func Region3int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Region3int16")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Region3int16:Constructors/new/Summary",
+							Description: "libraries/roblox/types/Region3int16:Constructors/new/Description",
 						},
 					}
 				},
@@ -83,8 +83,8 @@ func Region3int16() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Region3int16:Summary",
+				Description: "libraries/roblox/types/Region3int16:Description",
 			}
 		},
 	}

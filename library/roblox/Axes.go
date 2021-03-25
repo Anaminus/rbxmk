@@ -212,8 +212,8 @@ func Axes() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Axes:Constructors/new/Summary",
+							Description: "libraries/roblox/types/Axes:Constructors/new/Description",
 						},
 					}
 				},
@@ -239,8 +239,8 @@ func Axes() rbxmk.Reflector {
 								{Name: "y", Type: dt.Prim("bool")},
 								{Name: "z", Type: dt.Prim("bool")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Axes:Constructors/fromComponents/Summary",
+							Description: "libraries/roblox/types/Axes:Constructors/fromComponents/Description",
 						},
 					}
 				},
@@ -249,8 +249,8 @@ func Axes() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Axes:Summary",
+				Description: "libraries/roblox/types/Axes:Description",
 			}
 		},
 	}

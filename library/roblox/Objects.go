@@ -49,8 +49,8 @@ func Objects() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Array{T: dt.Prim("Instance")},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Objects:Summary",
+				Description: "libraries/roblox/types/Objects:Description",
 			}
 		},
 	}

@@ -125,8 +125,8 @@ func Vector3int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3int16")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -137,8 +137,8 @@ func Vector3int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3int16")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -152,54 +152,54 @@ func Vector3int16() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("Vector3int16"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Add/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3int16"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Sub/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Sub/Description",
 						},
 					},
 					Mul: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3int16"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Mul/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Mul/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Mul/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Mul/Description",
 						},
 					},
 					Div: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3int16"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Div/1/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Div/1/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector3int16:Operators/Div/2/Summary",
+							Description: "libraries/roblox/types/Vector3int16:Operators/Div/2/Description",
 						},
 					},
 					Unm: &dump.Unop{
 						Result:      dt.Prim("Vector3int16"),
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Vector3int16:Operators/Unm/Summary",
+						Description: "libraries/roblox/types/Vector3int16:Operators/Unm/Description",
 					},
 				},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Vector3int16:Summary",
+				Description: "libraries/roblox/types/Vector3int16:Description",
 			}
 		},
 	}

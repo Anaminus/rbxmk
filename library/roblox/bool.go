@@ -24,8 +24,8 @@ func Bool() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Prim("boolean"),
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/bool:Summary",
+				Description: "libraries/roblox/types/bool:Description",
 			}
 		},
 	}

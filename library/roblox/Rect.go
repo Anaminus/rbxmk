@@ -109,8 +109,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Rect:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/Rect:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -122,8 +122,8 @@ func Rect() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Rect")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Rect:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/Rect:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -132,8 +132,8 @@ func Rect() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Rect:Summary",
+				Description: "libraries/roblox/types/Rect:Description",
 			}
 		},
 	}

@@ -46,12 +46,12 @@ func dumpHTTP(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "req", Type: dt.Prim("HTTPRequest")},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/http:Fields/request/Summary",
+					Description: "libraries/http:Fields/request/Description",
 				},
 			},
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/http:Summary",
+			Description: "libraries/http:Description",
 		},
 		Types: dump.TypeDefs{},
 	}

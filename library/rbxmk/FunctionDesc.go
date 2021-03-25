@@ -85,8 +85,8 @@ func FunctionDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/Parameters/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/Parameters/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func FunctionDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/SetParameters/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/SetParameters/Description",
 					}
 				},
 			},
@@ -130,8 +130,8 @@ func FunctionDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/Tag/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -150,8 +150,8 @@ func FunctionDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/Tags/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -170,8 +170,8 @@ func FunctionDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/SetTag/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -190,16 +190,16 @@ func FunctionDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/FunctionDesc:Methods/UnsetTag/Summary",
+						Description: "libraries/rbxmk/types/FunctionDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/FunctionDesc:Summary",
+				Description: "libraries/rbxmk/types/FunctionDesc:Description",
 			}
 		},
 	}

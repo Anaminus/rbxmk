@@ -69,8 +69,8 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 					},
 					CanError:    true,
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/clipboard:Fields/read/Summary",
+					Description: "libraries/clipboard:Fields/read/Description",
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
@@ -78,12 +78,12 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 						{Name: "...", Type: dt.Prim("string")},
 					},
 					CanError:    true,
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/clipboard:Fields/write/Summary",
+					Description: "libraries/clipboard:Fields/write/Description",
 				},
 			},
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/clipboard:Summary",
+			Description: "libraries/clipboard:Description",
 		},
 	}
 }

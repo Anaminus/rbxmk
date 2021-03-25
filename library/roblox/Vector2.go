@@ -133,8 +133,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector2")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Vector2:Methods/Lerp/Summary",
+						Description: "libraries/roblox/types/Vector2:Methods/Lerp/Description",
 					}
 				},
 			},
@@ -151,8 +151,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Vector2:Methods/Dot/Summary",
+						Description: "libraries/roblox/types/Vector2:Methods/Dot/Description",
 					}
 				},
 			},
@@ -169,8 +169,8 @@ func Vector2() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Vector2:Methods/Cross/Summary",
+						Description: "libraries/roblox/types/Vector2:Methods/Cross/Description",
 					}
 				},
 			},
@@ -195,8 +195,8 @@ func Vector2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/Vector2:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -206,8 +206,8 @@ func Vector2() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector2")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/Vector2:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -221,54 +221,54 @@ func Vector2() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("Vector2"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Add/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector2"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Sub/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Sub/Description",
 						},
 					},
 					Mul: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector2"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Mul/1/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Mul/1/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Mul/2/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Mul/2/Description",
 						},
 					},
 					Div: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector2"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Div/1/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Div/1/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector2"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Vector2:Operators/Div/2/Summary",
+							Description: "libraries/roblox/types/Vector2:Operators/Div/2/Description",
 						},
 					},
 					Unm: &dump.Unop{
 						Result:      dt.Prim("Vector2"),
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Vector2:Operators/Unm/Summary",
+						Description: "libraries/roblox/types/Vector2:Operators/Unm/Description",
 					},
 				},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Vector2:Summary",
+				Description: "libraries/roblox/types/Vector2:Description",
 			}
 		},
 	}

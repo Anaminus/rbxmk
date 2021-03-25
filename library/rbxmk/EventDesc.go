@@ -67,8 +67,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Parameters/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/Parameters/Description",
 					}
 				},
 			},
@@ -93,8 +93,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/SetParameters/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/SetParameters/Description",
 					}
 				},
 			},
@@ -112,8 +112,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Tag/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -132,8 +132,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/Tags/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/SetTag/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -172,16 +172,16 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EventDesc:Methods/UnsetTag/Summary",
+						Description: "libraries/rbxmk/types/EventDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/EventDesc:Summary",
+				Description: "libraries/rbxmk/types/EventDesc:Description",
 			}
 		},
 	}

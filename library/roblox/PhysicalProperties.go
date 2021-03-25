@@ -152,8 +152,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/PhysicalProperties:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/PhysicalProperties:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -166,8 +166,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/PhysicalProperties:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/PhysicalProperties:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -175,8 +175,8 @@ func PhysicalProperties() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/PhysicalProperties:Summary",
+				Description: "libraries/roblox/types/PhysicalProperties:Description",
 			}
 		},
 	}

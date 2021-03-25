@@ -188,8 +188,8 @@ func Faces() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Faces:Constructors/new/Summary",
+							Description: "libraries/roblox/types/Faces:Constructors/new/Description",
 						},
 					}
 				},
@@ -221,8 +221,8 @@ func Faces() rbxmk.Reflector {
 								{Name: "bottom", Type: dt.Prim("bool")},
 								{Name: "front", Type: dt.Prim("bool")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Faces:Constructors/fromComponents/Summary",
+							Description: "libraries/roblox/types/Faces:Constructors/fromComponents/Description",
 						},
 					}
 				},
@@ -231,8 +231,8 @@ func Faces() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Faces:Summary",
+				Description: "libraries/roblox/types/Faces:Description",
 			}
 		},
 	}

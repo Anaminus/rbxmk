@@ -33,13 +33,19 @@ func openTypes(s rbxmk.State) *lua.LTable {
 
 func dumpTypes(s rbxmk.State) dump.Library {
 	exprims := s.Reflectors(rbxmk.Exprim)
-	lib := dump.Library{Struct: dump.Struct{Fields: make(dump.Fields, len(exprims))}}
+	lib := dump.Library{
+		Struct: dump.Struct{
+			Fields:      make(dump.Fields, len(exprims)),
+			Summary:     "libraries/types:Summary",
+			Description: "libraries/types:Description",
+		},
+	}
 	for _, t := range exprims {
 		lib.Struct.Fields[t.Name] = dump.Property{
 			ValueType:   dt.Prim("exprim"),
 			ReadOnly:    true,
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/types:Fields/" + t.Name + "/Summary",
+			Description: "libraries/types:Fields/" + t.Name + "/Description",
 		}
 	}
 	lib.Types = dump.TypeDefs{
@@ -48,16 +54,14 @@ func dumpTypes(s rbxmk.State) dump.Library {
 				"Value": dump.Property{
 					ValueType:   dt.Prim("any"),
 					ReadOnly:    true,
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/types/types/exprim:Properties/Value/Summary",
+					Description: "libraries/types/types/exprim:Properties/Value/Description",
 				},
 			},
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/types/types/exprim:Summary",
+			Description: "libraries/types/types/exprim:Description",
 		},
 	}
-	lib.Struct.Summary = "$TODO"
-	lib.Struct.Description = "$TODO"
 
 	return lib
 }

@@ -41,8 +41,8 @@ func Float() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/float:Summary",
+				Description: "libraries/roblox/types/float:Description",
 			}
 		},
 	}

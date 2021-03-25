@@ -30,8 +30,8 @@ func Token() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/token:Summary",
+				Description: "libraries/roblox/types/token:Description",
 			}
 		},
 	}

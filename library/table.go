@@ -126,8 +126,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim("table")},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/clear/Summary",
+					Description: "libraries/table:Fields/clear/Description",
 				},
 				"create": dump.Function{
 					Parameters: dump.Parameters{
@@ -137,8 +137,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/create/Summary",
+					Description: "libraries/table:Fields/create/Description",
 				},
 				"find": dump.Function{
 					Parameters: dump.Parameters{
@@ -149,8 +149,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim("int")}},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/find/Summary",
+					Description: "libraries/table:Fields/find/Description",
 				},
 				"move": dump.Function{
 					Parameters: dump.Parameters{
@@ -164,8 +164,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 						{Type: dt.Prim("table")},
 					},
 					CanError:    true,
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/move/Summary",
+					Description: "libraries/table:Fields/move/Description",
 				},
 				"pack": dump.Function{
 					Parameters: dump.Parameters{
@@ -174,8 +174,8 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/pack/Summary",
+					Description: "libraries/table:Fields/pack/Description",
 				},
 				"unpack": dump.Function{
 					Parameters: dump.Parameters{
@@ -186,12 +186,12 @@ func dumpTable(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
-					Summary:     "$TODO",
-					Description: "$TODO",
+					Summary:     "libraries/table:Fields/unpack/Summary",
+					Description: "libraries/table:Fields/unpack/Description",
 				},
 			},
-			Summary:     "$TODO",
-			Description: "$TODO",
+			Summary:     "libraries/table:Summary",
+			Description: "libraries/table:Description",
 		},
 	}
 }

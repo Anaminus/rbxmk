@@ -87,8 +87,8 @@ func UDim() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("UDim")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/UDim:Constructors/new/Summary",
+							Description: "libraries/roblox/types/UDim:Constructors/new/Description",
 						},
 					}
 				},
@@ -102,26 +102,26 @@ func UDim() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("UDim"),
 							Result:      dt.Prim("UDim"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/UDim:Operators/Add/Summary",
+							Description: "libraries/roblox/types/UDim:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("UDim"),
 							Result:      dt.Prim("UDim"),
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/UDim:Operators/Sub/Summary",
+							Description: "libraries/roblox/types/UDim:Operators/Sub/Description",
 						},
 					},
 					Unm: &dump.Unop{
 						Result:      dt.Prim("UDim"),
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/UDim:Operators/Unm/Summary",
+						Description: "libraries/roblox/types/UDim:Operators/Unm/Description",
 					},
 				},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/UDim:Summary",
+				Description: "libraries/roblox/types/UDim:Description",
 			}
 		},
 	}

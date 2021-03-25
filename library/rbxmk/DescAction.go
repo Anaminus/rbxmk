@@ -22,8 +22,8 @@ func DescAction() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/DescAction:Summary",
+				Description: "libraries/rbxmk/types/DescAction:Description",
 			}
 		},
 	}

@@ -50,8 +50,8 @@ func HTTPResponse() rbxmk.Reflector {
 					"Cookies":       dt.Prim("Cookies"),
 					"Body":          dt.Optional{T: dt.Prim("any")},
 				},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/http/types/HTTPResponse:Summary",
+				Description: "libraries/http/types/HTTPResponse:Description",
 			}
 		},
 	}

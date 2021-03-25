@@ -82,8 +82,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EnumItemDesc:Methods/Tag/Summary",
+						Description: "libraries/rbxmk/types/EnumItemDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -102,8 +102,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EnumItemDesc:Methods/Tags/Summary",
+						Description: "libraries/rbxmk/types/EnumItemDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -122,8 +122,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EnumItemDesc:Methods/SetTag/Summary",
+						Description: "libraries/rbxmk/types/EnumItemDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -142,16 +142,16 @@ func EnumItemDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/rbxmk/types/EnumItemDesc:Methods/UnsetTag/Summary",
+						Description: "libraries/rbxmk/types/EnumItemDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/EnumItemDesc:Summary",
+				Description: "libraries/rbxmk/types/EnumItemDesc:Description",
 			}
 		},
 	}

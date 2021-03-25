@@ -74,8 +74,8 @@ func ParameterDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/ParameterDesc:Summary",
+				Description: "libraries/rbxmk/types/ParameterDesc:Description",
 			}
 		},
 	}

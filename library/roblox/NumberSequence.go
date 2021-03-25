@@ -119,8 +119,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/NumberSequence:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -130,8 +130,8 @@ func NumberSequence() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberSequence")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/NumberSequence:Constructors/new/2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func NumberSequence() rbxmk.Reflector {
 								{Type: dt.Prim("NumberSequence")},
 							},
 							CanError:    true,
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberSequence:Constructors/new/3/Summary",
+							Description: "libraries/roblox/types/NumberSequence:Constructors/new/3/Description",
 						},
 					}
 				},
@@ -151,8 +151,8 @@ func NumberSequence() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/NumberSequence:Summary",
+				Description: "libraries/roblox/types/NumberSequence:Description",
 			}
 		},
 	}

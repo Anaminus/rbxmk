@@ -69,8 +69,8 @@ func Region3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Region3")},
 						},
-						Summary:     "$TODO",
-						Description: "$TODO",
+						Summary:     "libraries/roblox/types/Region3:Methods/ExpandToGrid/Summary",
+						Description: "libraries/roblox/types/Region3:Methods/ExpandToGrid/Description",
 					}
 				},
 			},
@@ -93,8 +93,8 @@ func Region3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Region3")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/Region3:Constructors/new/Summary",
+							Description: "libraries/roblox/types/Region3:Constructors/new/Description",
 						},
 					}
 				},
@@ -103,8 +103,8 @@ func Region3() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/Region3:Summary",
+				Description: "libraries/roblox/types/Region3:Description",
 			}
 		},
 	}

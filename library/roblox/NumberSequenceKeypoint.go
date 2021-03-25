@@ -95,8 +95,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/1/Summary",
+							Description: "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/1/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -107,8 +107,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "$TODO",
-							Description: "$TODO",
+							Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/2/Summary",
+							Description: "libraries/roblox/types/NumberSequenceKeypoint:Constructors/new/2/Description",
 						},
 					}
 				},
@@ -117,8 +117,8 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators:   &dump.Operators{Eq: true},
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/roblox/types/NumberSequenceKeypoint:Summary",
+				Description: "libraries/roblox/types/NumberSequenceKeypoint:Description",
 			}
 		},
 	}

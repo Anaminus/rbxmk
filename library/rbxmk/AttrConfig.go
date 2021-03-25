@@ -35,8 +35,8 @@ func AttrConfig() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "$TODO",
-				Description: "$TODO",
+				Summary:     "libraries/rbxmk/types/AttrConfig:Summary",
+				Description: "libraries/rbxmk/types/AttrConfig:Description",
 			}
 		},
 	}
