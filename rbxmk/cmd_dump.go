@@ -83,16 +83,16 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 				"_RBXMK_VERSION": dump.Property{
 					ValueType:   dt.Prim("string"),
 					ReadOnly:    true,
-					Summary:     "libraries/executable:Fields/_RBXMK_VERSION/Summary",
-					Description: "libraries/executable:Fields/_RBXMK_VERSION/Description",
+					Summary:     "Libraries/executable:Fields/_RBXMK_VERSION/Summary",
+					Description: "Libraries/executable:Fields/_RBXMK_VERSION/Description",
 				},
 			},
-			Summary:     "libraries/executable:Summary",
-			Description: "libraries/executable:Description",
+			Summary:     "Libraries/executable:Summary",
+			Description: "Libraries/executable:Description",
 		},
 	})
 	root.Fragments = DocFragments()
-	root.Description = "libraries"
+	root.Description = "Libraries"
 
 	// Dump format.
 	return format.Func(opt.Stdout, root)
