@@ -2,6 +2,7 @@ package rtypes
 
 import (
 	"errors"
+	"sort"
 
 	"github.com/robloxapi/types"
 )
@@ -485,6 +486,16 @@ func (inst *Instance) Properties() map[string]types.PropValue {
 	for name, value := range inst.properties {
 		props[name] = value
 	}
+	return props
+}
+
+// PropertyNames returns a list of names of properties set on the instance.
+func (inst *Instance) PropertyNames() []string {
+	props := make([]string, 0, len(inst.properties))
+	for name := range inst.properties {
+		props = append(props, name)
+	}
+	sort.Strings(props)
 	return props
 }
 
