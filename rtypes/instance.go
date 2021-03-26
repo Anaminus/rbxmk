@@ -488,6 +488,30 @@ func (inst *Instance) Properties() map[string]types.PropValue {
 	return props
 }
 
+// SetProperties replaces the properties of the instance with props. Each entry
+// in props is a property name mapped to a value. ClassName and Parent are
+// ignored.
+//
+// If replace is true, then properties in the instance that are nil in props are
+// removed. If false, such properties are retained. If props is nil or empty,
+// and replace is true, then all properties are removed from the instance.
+func (inst *Instance) SetProperties(props map[string]types.PropValue, replace bool) {
+	if replace {
+		for name := range inst.properties {
+			if props[name] == nil {
+				delete(inst.properties, name)
+			}
+		}
+	}
+	for name, value := range props {
+		if value == nil {
+			delete(inst.properties, name)
+		} else {
+			inst.properties[name] = value
+		}
+	}
+}
+
 // Name returns the Name property of the instance, or an empty string if it is
 // invalid or not defined.
 func (inst *Instance) Name() string {
