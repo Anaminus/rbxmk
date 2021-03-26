@@ -32,44 +32,41 @@ func pushPropertyTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	return u, nil
 }
 
-func checkEnumDesc(s rbxmk.State, desc *rtypes.RootDesc, name, class, prop string) *rtypes.Enum {
+func checkEnumDesc(desc *rtypes.RootDesc, name, class, prop string) (*rtypes.Enum, error) {
 	var enumValue *rtypes.Enum
 	if desc.EnumTypes != nil {
 		enumValue = desc.EnumTypes.Enum(name)
 	}
 	if enumValue == nil {
 		if desc.Enums[name] == nil {
-			s.RaiseError(
+			return nil, fmt.Errorf(
 				"no enum descriptor %q for property descriptor %s.%s",
 				name,
 				class,
 				prop,
 			)
-			return nil
 		}
-		s.RaiseError(
+		return nil, fmt.Errorf(
 			"no enum value %q generated for property descriptor %s.%s",
 			name,
 			class,
 			prop,
 		)
-		return nil
 	}
-	return enumValue
+	return enumValue, nil
 }
 
-func checkClassDesc(s rbxmk.State, desc *rtypes.RootDesc, name, class, prop string) *rbxdump.Class {
+func checkClassDesc(desc *rtypes.RootDesc, name, class, prop string) (*rbxdump.Class, error) {
 	classDesc := desc.Classes[name]
 	if classDesc == nil {
-		s.RaiseError(
+		return nil, fmt.Errorf(
 			"no class descriptor %q for property descriptor %s.%s",
 			name,
 			class,
 			prop,
 		)
-		return nil
 	}
-	return classDesc
+	return classDesc, nil
 }
 
 func defaultAttrConfig(inst *rtypes.Instance) rtypes.AttrConfig {
@@ -195,9 +192,9 @@ func Instance() rbxmk.Reflector {
 							if value == nil {
 								return s.Push(rtypes.Nil)
 							}
-							class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-							if class == nil {
-								return 0
+							class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+							if err != nil {
+								return s.RaiseError("%s", err)
 							}
 							if !value.WithDescIsA(desc, class.Name) {
 								return s.RaiseError("instance of class %s expected, got %s", class.Name, value.ClassName)
@@ -207,9 +204,9 @@ func Instance() rbxmk.Reflector {
 							return s.RaiseError("stored value type %s is not an instance", value.Type())
 						}
 					case "Enum":
-						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if enum == nil {
-							return 0
+						enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if err != nil {
+							return s.RaiseError("%s", err)
 						}
 						token, ok := value.(types.Token)
 						if !ok {
@@ -273,9 +270,9 @@ func Instance() rbxmk.Reflector {
 								inst.Set(name, value)
 								return 0
 							}
-							class := checkClassDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-							if class == nil {
-								return 0
+							class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+							if err != nil {
+								return s.RaiseError("%s", err)
 							}
 							if !value.WithDescIsA(desc, class.Name) {
 								return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
@@ -286,9 +283,9 @@ func Instance() rbxmk.Reflector {
 							return s.RaiseError("Instance expected, got %s", value.Type())
 						}
 					case "Enum":
-						enum := checkEnumDesc(s, desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if enum == nil {
-							return 0
+						enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+						if err != nil {
+							return s.RaiseError("%s", err)
 						}
 						switch value := value.(type) {
 						case types.Token:
