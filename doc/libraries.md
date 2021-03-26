@@ -712,6 +712,7 @@ Symbol                                          | Description
 [sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
 [sym.IsService][Instance.sym.IsService]         | Determines whether an instance is a service.
 [sym.Metadata][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
+[sym.Properties][Instance.sym.Properties]       | Gets the properties of an instance.
 [sym.RawAttrConfig][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
 [sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
 [sym.Reference][Instance.sym.Reference]         | Determines the value used to identify the instance.
@@ -819,6 +820,7 @@ token           | number
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.IsService]: types.md#user-content-instancesymisservice
+[Instance.sym.Properties]: types.md#user-content-instancesymproperties
 [Instance.sym.RawAttrConfig]: types.md#user-content-instancesymrawattrconfig
 [Instance.sym.RawDesc]: types.md#user-content-instancesymrawdesc
 [Instance.sym.Reference]: types.md#user-content-instancesymreference

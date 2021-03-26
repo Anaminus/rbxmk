@@ -5,6 +5,7 @@ branch is the latest unreleased version.
 ## imperative
 **Highlights:**
 - Add `rbxmk i` command to enter an interactive prompt.
+- Add Instance\[sym.Properties\] to get or set all properties of an instance at once.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

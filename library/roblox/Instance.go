@@ -652,6 +652,43 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
+			rtypes.Symbol{Name: "Properties"}: {
+				Get: func(s rbxmk.State, v types.Value) int {
+					inst := v.(*rtypes.Instance)
+					desc := s.Desc.Of(inst)
+					props := inst.PropertyNames()
+					dict := s.L.CreateTable(0, len(props))
+					for _, name := range props {
+						if value, err := getProperty(s, inst, desc, name); err == nil {
+							dict.RawSetString(name, value)
+						}
+					}
+					s.L.Push(dict)
+					return 1
+				},
+				Set: func(s rbxmk.State, v types.Value) {
+					inst := v.(*rtypes.Instance)
+					desc := s.Desc.Of(inst)
+					dict := s.PullAnyOf(3, "Dictionary").(rtypes.Dictionary)
+					props := make(map[string]types.PropValue, len(dict))
+					for name, value := range dict {
+						prop, err := canSetProperty(s, inst, desc, name, value)
+						if err != nil {
+							s.RaiseError("%s", err)
+							return
+						}
+						props[name] = prop
+					}
+					inst.SetProperties(props, true)
+				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim("Dictionary"),
+						Summary:     "Libraries/roblox/Types/Instance:Symbols/Properties/Summary",
+						Description: "Libraries/roblox/Types/Instance:Symbols/Properties/Description",
+					}
+				},
+			},
 			rtypes.Symbol{Name: "Metadata"}: {
 				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)

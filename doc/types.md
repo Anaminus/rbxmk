@@ -818,6 +818,7 @@ Member                                                                   | Kind
 [Instance\[sym.AttrConfig\]][Instance.sym.AttrConfig]                    | symbol
 [Instance\[sym.Desc\]][Instance.sym.Desc]                                | symbol
 [Instance\[sym.IsService\]][Instance.sym.IsService]                      | symbol
+[Instance\[sym.Properties\]][Instance.sym.Properties]                    | symbol
 [Instance\[sym.RawAttrConfig\]][Instance.sym.RawAttrConfig]              | symbol
 [Instance\[sym.RawDesc\]][Instance.sym.RawDesc]                          | symbol
 [Instance\[sym.Reference\]][Instance.sym.Reference]                      | symbol
@@ -1091,6 +1092,19 @@ inheritance](README.md#user-content-value-inheritance) section.
 The **IsService** symbol indicates whether the instance is a service, such as
 Workspace or Lighting. This is used by some formats to determine how to encode
 and decode the instance.
+
+### Instance[sym.Properties]
+[Instance.sym.Properties]: #user-content-instancesymproperties
+<code>Instance\[sym.Properties\]: {\[[string](##)\]: [any](##)}</code>
+
+The **Properties** symbol gets or sets all properties of the instance. Each
+entry in the table is a property name mapped to the value of the property.
+
+When getting, properties that would produce an error are ignored.
+
+When setting, properties in the instance that are not in the table are removed.
+If any property could not be set, then an error is thrown, and no properties are
+set or removed.
 
 ### Instance[sym.RawAttrConfig]
 [Instance.sym.RawAttrConfig]: #user-content-instancesymrawattrconfig

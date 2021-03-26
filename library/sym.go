@@ -18,6 +18,7 @@ func openSym(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("Desc", s.UserDataOf(rtypes.Symbol{Name: "Desc"}, "Symbol"))
 	lib.RawSetString("IsService", s.UserDataOf(rtypes.Symbol{Name: "IsService"}, "Symbol"))
 	lib.RawSetString("Metadata", s.UserDataOf(rtypes.Symbol{Name: "Metadata"}, "Symbol"))
+	lib.RawSetString("Properties", s.UserDataOf(rtypes.Symbol{Name: "Properties"}, "Symbol"))
 	lib.RawSetString("RawAttrConfig", s.UserDataOf(rtypes.Symbol{Name: "RawAttrConfig"}, "Symbol"))
 	lib.RawSetString("RawDesc", s.UserDataOf(rtypes.Symbol{Name: "RawDesc"}, "Symbol"))
 	lib.RawSetString("Reference", s.UserDataOf(rtypes.Symbol{Name: "Reference"}, "Symbol"))
@@ -51,6 +52,12 @@ func dumpSym(s rbxmk.State) dump.Library {
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/Metadata/Summary",
 					Description: "Libraries/sym:Fields/Metadata/Description",
+				},
+				"Properties": dump.Property{
+					ValueType:   dt.Prim("Symbol"),
+					ReadOnly:    true,
+					Summary:     "Libraries/sym:Fields/Properties/Summary",
+					Description: "Libraries/sym:Fields/Properties/Description",
 				},
 				"RawAttrConfig": dump.Property{
 					ValueType:   dt.Prim("Symbol"),
