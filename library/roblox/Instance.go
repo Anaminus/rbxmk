@@ -107,6 +107,183 @@ func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary)
 	inst.Set(attrcfg.Property, types.BinaryString(w.Bytes()))
 }
 
+func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, classDesc *rbxdump.Class, name string) int {
+	var lv lua.LValue
+	var err error
+	value := inst.Get(name)
+	if classDesc != nil {
+		propDesc := desc.Property(classDesc.Name, name)
+		if propDesc == nil {
+			return s.RaiseError("%s is not a valid member", name)
+		}
+		if value == nil {
+			return s.RaiseError("property %s not initialized", name)
+		}
+		switch propDesc.ValueType.Category {
+		case "Class":
+			switch value := value.(type) {
+			case *rtypes.Instance:
+				if value == nil {
+					return s.Push(rtypes.Nil)
+				}
+				class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+				if err != nil {
+					return s.RaiseError("%s", err)
+				}
+				if !value.WithDescIsA(desc, class.Name) {
+					return s.RaiseError("instance of class %s expected, got %s", class.Name, value.ClassName)
+				}
+				return s.Push(value)
+			default:
+				return s.RaiseError("stored value type %s is not an instance", value.Type())
+			}
+		case "Enum":
+			enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			token, ok := value.(types.Token)
+			if !ok {
+				return s.RaiseError("stored value type %s is not a token", value.Type())
+			}
+			item := enum.Value(int(token))
+			if item == nil {
+				return s.RaiseError("invalid stored value %d for enum %s", value, enum.Name())
+			}
+			return s.Push(item)
+		default:
+			if a, b := value.Type(), propDesc.ValueType.Name; a != b {
+				return s.RaiseError("stored value type %s does not match property type %s", a, b)
+			}
+		}
+		// Push without converting exprims.
+		lv, err = PushVariantTo(s, value)
+	} else {
+		if value == nil {
+			// Fallback to nil.
+			return s.Push(rtypes.Nil)
+		}
+		lv, err = pushPropertyTo(s, value)
+	}
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(lv)
+	return 1
+}
+
+func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, classDesc *rbxdump.Class, name string, value types.Value) int {
+	if classDesc != nil {
+		propDesc := desc.Property(classDesc.Name, name)
+		if propDesc == nil {
+			return s.RaiseError("%s is not a valid member", name)
+		}
+		switch propDesc.ValueType.Category {
+		case "Class":
+			switch value := value.(type) {
+			case rtypes.NilType:
+				inst.Set(name, (*rtypes.Instance)(nil))
+				return 0
+			case *rtypes.Instance:
+				if value == nil {
+					inst.Set(name, value)
+					return 0
+				}
+				class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+				if err != nil {
+					return s.RaiseError("%s", err)
+				}
+				if !value.WithDescIsA(desc, class.Name) {
+					return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
+				}
+				inst.Set(name, value)
+				return 0
+			default:
+				return s.RaiseError("Instance expected, got %s", value.Type())
+			}
+		case "Enum":
+			enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+			if err != nil {
+				return s.RaiseError("%s", err)
+			}
+			switch value := value.(type) {
+			case types.Token:
+				item := enum.Value(int(value))
+				if item == nil {
+					return s.RaiseError("invalid value %d for enum %s", value, enum.Name())
+				}
+				inst.Set(name, value)
+				return 0
+			case *rtypes.EnumItem:
+				item := enum.Value(value.Value())
+				if item == nil {
+					return s.RaiseError(
+						"invalid value %s (%d) for enum %s",
+						value.String(),
+						value.Value(),
+						enum.String(),
+					)
+				}
+				if a, b := enum.Name(), value.Enum().Name(); a != b {
+					return s.RaiseError("expected enum %s, got %s", a, b)
+				}
+				if a, b := item.Name(), value.Name(); a != b {
+					return s.RaiseError("expected enum item %s, got %s", a, b)
+				}
+				inst.Set(name, types.Token(item.Value()))
+				return 0
+			case types.Intlike:
+				v := int(value.Intlike())
+				item := enum.Value(v)
+				if item == nil {
+					return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
+				}
+				inst.Set(name, types.Token(item.Value()))
+				return 0
+			case types.Numberlike:
+				v := int(value.Numberlike())
+				item := enum.Value(v)
+				if item == nil {
+					return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
+				}
+				inst.Set(name, types.Token(item.Value()))
+				return 0
+			case types.Stringlike:
+				v := value.Stringlike()
+				item := enum.Item(v)
+				if item == nil {
+					return s.RaiseError("invalid value %s for enum %s", v, enum.Name())
+				}
+				inst.Set(name, types.Token(item.Value()))
+				return 0
+			default:
+				return s.RaiseError("invalid value for enum %s", enum.Name())
+			}
+		default:
+			if pt, vt := propDesc.ValueType.Name, value.Type(); vt != pt {
+				// Attempt to convert value type to property type.
+				rfl := s.Reflector(pt)
+				if rfl.Name == "" || rfl.ConvertFrom == nil {
+					return s.RaiseError("%s expected, got %s", pt, vt)
+				}
+				if value = rfl.ConvertFrom(value); value == nil {
+					return s.RaiseError("%s expected, got %s", pt, vt)
+				}
+			}
+		}
+	}
+	if _, ok := value.(rtypes.NilType); ok {
+		inst.Set(name, nil)
+		return 0
+	}
+	prop, ok := value.(types.PropValue)
+	if !ok {
+		return s.RaiseError("cannot assign %s as property", value.Type())
+	}
+	inst.Set(name, prop)
+	return 0
+}
+
 func init() { register(Instance) }
 func Instance() rbxmk.Reflector {
 	return rbxmk.Reflector{
@@ -174,68 +351,7 @@ func Instance() rbxmk.Reflector {
 				}
 
 				// Try property.
-				var lv lua.LValue
-				var err error
-				value := inst.Get(name)
-				if classDesc != nil {
-					propDesc := desc.Property(classDesc.Name, name)
-					if propDesc == nil {
-						return s.RaiseError("%s is not a valid member", name)
-					}
-					if value == nil {
-						return s.RaiseError("property %s not initialized", name)
-					}
-					switch propDesc.ValueType.Category {
-					case "Class":
-						switch value := value.(type) {
-						case *rtypes.Instance:
-							if value == nil {
-								return s.Push(rtypes.Nil)
-							}
-							class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-							if err != nil {
-								return s.RaiseError("%s", err)
-							}
-							if !value.WithDescIsA(desc, class.Name) {
-								return s.RaiseError("instance of class %s expected, got %s", class.Name, value.ClassName)
-							}
-							return s.Push(value)
-						default:
-							return s.RaiseError("stored value type %s is not an instance", value.Type())
-						}
-					case "Enum":
-						enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if err != nil {
-							return s.RaiseError("%s", err)
-						}
-						token, ok := value.(types.Token)
-						if !ok {
-							return s.RaiseError("stored value type %s is not a token", value.Type())
-						}
-						item := enum.Value(int(token))
-						if item == nil {
-							return s.RaiseError("invalid stored value %d for enum %s", value, enum.Name())
-						}
-						return s.Push(item)
-					default:
-						if a, b := value.Type(), propDesc.ValueType.Name; a != b {
-							return s.RaiseError("stored value type %s does not match property type %s", a, b)
-						}
-					}
-					// Push without converting exprims.
-					lv, err = PushVariantTo(s, value)
-				} else {
-					if value == nil {
-						// Fallback to nil.
-						return s.Push(rtypes.Nil)
-					}
-					lv, err = pushPropertyTo(s, value)
-				}
-				if err != nil {
-					return s.RaiseError("%s", err)
-				}
-				s.L.Push(lv)
-				return 1
+				return getProperty(s, inst, desc, classDesc, name)
 			},
 			"__newindex": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -248,121 +364,12 @@ func Instance() rbxmk.Reflector {
 
 				// Try property.
 				value := PullVariant(s, 3)
-
 				desc := s.Desc.Of(inst)
 				var classDesc *rbxdump.Class
 				if desc != nil {
 					classDesc = desc.Classes[inst.ClassName]
 				}
-				if classDesc != nil {
-					propDesc := desc.Property(classDesc.Name, name)
-					if propDesc == nil {
-						return s.RaiseError("%s is not a valid member", name)
-					}
-					switch propDesc.ValueType.Category {
-					case "Class":
-						switch value := value.(type) {
-						case rtypes.NilType:
-							inst.Set(name, (*rtypes.Instance)(nil))
-							return 0
-						case *rtypes.Instance:
-							if value == nil {
-								inst.Set(name, value)
-								return 0
-							}
-							class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-							if err != nil {
-								return s.RaiseError("%s", err)
-							}
-							if !value.WithDescIsA(desc, class.Name) {
-								return s.RaiseError("instance of class %s expected, got %s", class.Name, inst.ClassName)
-							}
-							inst.Set(name, value)
-							return 0
-						default:
-							return s.RaiseError("Instance expected, got %s", value.Type())
-						}
-					case "Enum":
-						enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-						if err != nil {
-							return s.RaiseError("%s", err)
-						}
-						switch value := value.(type) {
-						case types.Token:
-							item := enum.Value(int(value))
-							if item == nil {
-								return s.RaiseError("invalid value %d for enum %s", value, enum.Name())
-							}
-							inst.Set(name, value)
-							return 0
-						case *rtypes.EnumItem:
-							item := enum.Value(value.Value())
-							if item == nil {
-								return s.RaiseError(
-									"invalid value %s (%d) for enum %s",
-									value.String(),
-									value.Value(),
-									enum.String(),
-								)
-							}
-							if a, b := enum.Name(), value.Enum().Name(); a != b {
-								return s.RaiseError("expected enum %s, got %s", a, b)
-							}
-							if a, b := item.Name(), value.Name(); a != b {
-								return s.RaiseError("expected enum item %s, got %s", a, b)
-							}
-							inst.Set(name, types.Token(item.Value()))
-							return 0
-						case types.Intlike:
-							v := int(value.Intlike())
-							item := enum.Value(v)
-							if item == nil {
-								return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
-							}
-							inst.Set(name, types.Token(item.Value()))
-							return 0
-						case types.Numberlike:
-							v := int(value.Numberlike())
-							item := enum.Value(v)
-							if item == nil {
-								return s.RaiseError("invalid value %d for enum %s", v, enum.Name())
-							}
-							inst.Set(name, types.Token(item.Value()))
-							return 0
-						case types.Stringlike:
-							v := value.Stringlike()
-							item := enum.Item(v)
-							if item == nil {
-								return s.RaiseError("invalid value %s for enum %s", v, enum.Name())
-							}
-							inst.Set(name, types.Token(item.Value()))
-							return 0
-						default:
-							return s.RaiseError("invalid value for enum %s", enum.Name())
-						}
-					default:
-						if pt, vt := propDesc.ValueType.Name, value.Type(); vt != pt {
-							// Attempt to convert value type to property type.
-							rfl := s.Reflector(pt)
-							if rfl.Name == "" || rfl.ConvertFrom == nil {
-								return s.RaiseError("%s expected, got %s", pt, vt)
-							}
-							if value = rfl.ConvertFrom(value); value == nil {
-								return s.RaiseError("%s expected, got %s", pt, vt)
-							}
-						}
-					}
-				}
-				if _, ok := value.(rtypes.NilType); ok {
-					inst.Set(name, nil)
-					return 0
-				}
-				prop, ok := value.(types.PropValue)
-				if !ok {
-					return s.RaiseError("cannot assign %s as property", value.Type())
-				}
-				inst.Set(name, prop)
-				return 0
+				return setProperty(s, inst, desc, classDesc, name, value)
 			},
 		},
 		ConvertFrom: func(v types.Value) types.Value {
