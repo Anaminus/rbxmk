@@ -107,9 +107,13 @@ func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary)
 	inst.Set(attrcfg.Property, types.BinaryString(w.Bytes()))
 }
 
-func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, classDesc *rbxdump.Class, name string) int {
+func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string) int {
 	var lv lua.LValue
 	var err error
+	var classDesc *rbxdump.Class
+	if desc != nil {
+		classDesc = desc.Classes[inst.ClassName]
+	}
 	value := inst.Get(name)
 	if classDesc != nil {
 		propDesc := desc.Property(classDesc.Name, name)
@@ -172,7 +176,11 @@ func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, cl
 	return 1
 }
 
-func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, classDesc *rbxdump.Class, name string, value types.Value) int {
+func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string, value types.Value) int {
+	var classDesc *rbxdump.Class
+	if desc != nil {
+		classDesc = desc.Classes[inst.ClassName]
+	}
 	if classDesc != nil {
 		propDesc := desc.Property(classDesc.Name, name)
 		if propDesc == nil {
@@ -348,12 +356,7 @@ func Instance() rbxmk.Reflector {
 				}
 
 				// Try property.
-				desc := s.Desc.Of(inst)
-				var classDesc *rbxdump.Class
-				if desc != nil {
-					classDesc = desc.Classes[inst.ClassName]
-				}
-				return getProperty(s, inst, desc, classDesc, name)
+				return getProperty(s, inst, s.Desc.Of(inst), name)
 			},
 			"__newindex": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
@@ -366,12 +369,7 @@ func Instance() rbxmk.Reflector {
 
 				// Try property.
 				value := PullVariant(s, 3)
-				desc := s.Desc.Of(inst)
-				var classDesc *rbxdump.Class
-				if desc != nil {
-					classDesc = desc.Classes[inst.ClassName]
-				}
-				return setProperty(s, inst, desc, classDesc, name, value)
+				return setProperty(s, inst, s.Desc.Of(inst), name, value)
 			},
 		},
 		ConvertFrom: func(v types.Value) types.Value {
