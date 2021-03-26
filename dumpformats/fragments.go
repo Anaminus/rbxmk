@@ -127,6 +127,18 @@ func fragWriteTypes(buf *bufio.Writer, p string, types dump.TypeDefs) {
 				fragWrite(buf, path.Join(p, "Concat", strconv.Itoa(i), "Summary"), fn.Summary)
 				fragWrite(buf, path.Join(p, "Concat", strconv.Itoa(i), "Description"), fn.Description)
 			}
+			if op.Eq != nil {
+				fragWrite(buf, path.Join(p, "Eq", "Summary"), op.Eq.Summary)
+				fragWrite(buf, path.Join(p, "Eq", "Description"), op.Eq.Description)
+			}
+			if op.Lt != nil {
+				fragWrite(buf, path.Join(p, "Lt", "Summary"), op.Lt.Summary)
+				fragWrite(buf, path.Join(p, "Lt", "Description"), op.Lt.Description)
+			}
+			if op.Le != nil {
+				fragWrite(buf, path.Join(p, "Le", "Summary"), op.Le.Summary)
+				fragWrite(buf, path.Join(p, "Le", "Description"), op.Le.Description)
+			}
 			if op.Len != nil {
 				fragWrite(buf, path.Join(p, "Len", "Summary"), op.Len.Summary)
 				fragWrite(buf, path.Join(p, "Len", "Description"), op.Len.Description)

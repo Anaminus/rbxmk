@@ -351,7 +351,12 @@ func BrickColor() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/BrickColor:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/BrickColor:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/roblox/Types/BrickColor:Summary",
 				Description: "Libraries/roblox/Types/BrickColor:Description",
 			}

@@ -116,7 +116,12 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Summary",
 				Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Description",
 			}

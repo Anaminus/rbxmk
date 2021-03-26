@@ -204,29 +204,29 @@ type Parameters = []Parameter
 type Operators struct {
 	// Add describes a number of signatures for the __add operator.
 	Add []Binop `json:"__add,omitempty"`
-	// Add describes a number of signatures for the __sub operator.
+	// Sub describes a number of signatures for the __sub operator.
 	Sub []Binop `json:"__sub,omitempty"`
-	// Add describes a number of signatures for the __mul operator.
+	// Mul describes a number of signatures for the __mul operator.
 	Mul []Binop `json:"__mul,omitempty"`
-	// Add describes a number of signatures for the __div operator.
+	// Div describes a number of signatures for the __div operator.
 	Div []Binop `json:"__div,omitempty"`
-	// Add describes a number of signatures for the __mod operator.
+	// Mod describes a number of signatures for the __mod operator.
 	Mod []Binop `json:"__mod,omitempty"`
-	// Add describes a number of signatures for the __pow operator.
+	// Pow describes a number of signatures for the __pow operator.
 	Pow []Binop `json:"__pow,omitempty"`
-	// Add describes a number of signatures for the __concat operator.
+	// Concat describes a number of signatures for the __concat operator.
 	Concat []Binop `json:"__concat,omitempty"`
 
-	// Eq indicates whether the type defines a __eq operator.
-	Eq bool `json:"__eq,omitempty"`
-	// Eq indicates whether the type defines a __le operator.
-	Le bool `json:"__le,omitempty"`
-	// Eq indicates whether the type defines a __lt operator.
-	Lt bool `json:"__lt,omitempty"`
+	// Eq describes the signature for the __eq operator, if defined.
+	Eq *Cmpop `json:"__eq,omitempty"`
+	// Le describes the signature for the __le operator, if defined.
+	Le *Cmpop `json:"__le,omitempty"`
+	// Lt describes the signature for the __lt operator, if defined.
+	Lt *Cmpop `json:"__lt,omitempty"`
 
 	// Len describes the signature for the __len operator, if defined.
 	Len *Unop `json:"__len,omitempty"`
-	// Len describes the signature for the __unm operator, if defined.
+	// Unm describes the signature for the __unm operator, if defined.
 	Unm *Unop `json:"__unm,omitempty"`
 
 	// Call describes the function signature for the __call operator, if
@@ -244,6 +244,17 @@ type Binop struct {
 	Operand dt.Type
 	// Result is the type of the result of the operation.
 	Result dt.Type
+	// Summary is a fragment reference pointing to a short summary of the
+	// operator.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the operator.
+	Description string `json:",omitempty"`
+}
+
+// Cmpop describes a comparison operator. The left and right operands are
+// assumed to be of the outer type definition, and a boolean is always returned.
+type Cmpop struct {
 	// Summary is a fragment reference pointing to a short summary of the
 	// operator.
 	Summary string `json:",omitempty"`

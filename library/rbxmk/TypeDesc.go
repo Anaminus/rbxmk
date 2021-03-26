@@ -55,7 +55,12 @@ func TypeDesc() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/rbxmk/Types/TypeDesc:Operators/Eq/Summary",
+						Description: "Libraries/rbxmk/Types/TypeDesc:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/rbxmk/Types/TypeDesc:Summary",
 				Description: "Libraries/rbxmk/Types/TypeDesc:Description",
 			}

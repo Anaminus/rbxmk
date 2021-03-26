@@ -97,7 +97,10 @@ func UDim() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq: true,
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/UDim:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/UDim:Operators/Eq/Description",
+					},
 					Add: []dump.Binop{
 						{
 							Operand:     dt.Prim("UDim"),

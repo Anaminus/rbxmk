@@ -248,7 +248,12 @@ func Axes() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/Axes:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/Axes:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/roblox/Types/Axes:Summary",
 				Description: "Libraries/roblox/Types/Axes:Description",
 			}

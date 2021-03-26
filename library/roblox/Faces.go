@@ -230,7 +230,12 @@ func Faces() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/Faces:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/Faces:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/roblox/Types/Faces:Summary",
 				Description: "Libraries/roblox/Types/Faces:Description",
 			}

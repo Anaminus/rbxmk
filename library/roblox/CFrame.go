@@ -785,7 +785,10 @@ func CFrame() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq: true,
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/CFrame:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/CFrame:Operators/Eq/Description",
+					},
 					Mul: []dump.Binop{
 						{
 							Operand:     dt.Prim("CFrame"),

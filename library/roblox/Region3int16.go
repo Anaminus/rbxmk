@@ -82,7 +82,12 @@ func Region3int16() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators:   &dump.Operators{Eq: true},
+				Operators: &dump.Operators{
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/Region3int16:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/Region3int16:Operators/Eq/Description",
+					},
+				},
 				Summary:     "Libraries/roblox/Types/Region3int16:Summary",
 				Description: "Libraries/roblox/Types/Region3int16:Description",
 			}

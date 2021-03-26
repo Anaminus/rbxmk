@@ -147,7 +147,10 @@ func Vector3int16() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq: true,
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/Vector3int16:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/Vector3int16:Operators/Eq/Description",
+					},
 					Add: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3int16"),

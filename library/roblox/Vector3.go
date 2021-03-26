@@ -251,7 +251,10 @@ func Vector3() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
-					Eq: true,
+					Eq: &dump.Cmpop{
+						Summary:     "Libraries/roblox/Types/Vector3:Operators/Eq/Summary",
+						Description: "Libraries/roblox/Types/Vector3:Operators/Eq/Description",
+					},
 					Add: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
