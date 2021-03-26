@@ -284,6 +284,25 @@ func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, cl
 	return 0
 }
 
+func getService(s rbxmk.State) int {
+	inst := s.Pull(1, "Instance").(*rtypes.Instance)
+	className := string(s.Pull(2, "string").(types.String))
+	if desc := s.Desc.Of(inst); desc != nil {
+		classDesc := desc.Classes[className]
+		if classDesc == nil || !classDesc.GetTag("Service") {
+			return s.RaiseError("%q is not a valid service", className)
+		}
+	}
+	service := inst.FindFirstChildOfClass(className, false)
+	if service == nil {
+		service = rtypes.NewInstance(className, nil)
+		service.IsService = true
+		service.SetName(className)
+		service.SetParent(inst)
+	}
+	return s.Push(service)
+}
+
 func init() { register(Instance) }
 func Instance() rbxmk.Reflector {
 	return rbxmk.Reflector{
@@ -321,36 +340,19 @@ func Instance() rbxmk.Reflector {
 			"__index": func(s rbxmk.State) int {
 				inst := s.Pull(1, "Instance").(*rtypes.Instance)
 				name := string(s.Pull(2, "string").(types.String))
+
+				// Try GetService.
+				if inst.IsDataModel() && name == "GetService" {
+					s.L.Push(s.WrapMethod(getService))
+					return 1
+				}
+
+				// Try property.
 				desc := s.Desc.Of(inst)
 				var classDesc *rbxdump.Class
 				if desc != nil {
 					classDesc = desc.Classes[inst.ClassName]
 				}
-
-				// Try GetService.
-				if inst.IsDataModel() && name == "GetService" {
-					s.L.Push(s.WrapMethod(func(s rbxmk.State) int {
-						inst := s.Pull(1, "Instance").(*rtypes.Instance)
-						className := string(s.Pull(2, "string").(types.String))
-						if desc != nil {
-							classDesc := desc.Classes[className]
-							if classDesc == nil || !classDesc.GetTag("Service") {
-								return s.RaiseError("%q is not a valid service", className)
-							}
-						}
-						service := inst.FindFirstChildOfClass(className, false)
-						if service == nil {
-							service = rtypes.NewInstance(className, nil)
-							service.IsService = true
-							service.SetName(className)
-							service.SetParent(inst)
-						}
-						return s.Push(service)
-					}))
-					return 1
-				}
-
-				// Try property.
 				return getProperty(s, inst, desc, classDesc, name)
 			},
 			"__newindex": func(s rbxmk.State) int {
