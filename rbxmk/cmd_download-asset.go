@@ -46,7 +46,7 @@ func (c DownloadAssetCommand) Run(opt snek.Options) error {
 		WorldFlags:       WorldFlags{Debug: false},
 		ExcludeRoots:     true,
 		ExcludeLibraries: true,
-		ExcludeVersion:   true,
+		ExcludeProgram:   true,
 	})
 	if err != nil {
 		return err

@@ -7,7 +7,6 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
-	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/dumpformats"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
@@ -61,7 +60,9 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
 	}
-	for _, l := range library.All() {
+	libraries := library.All()
+	libraries = append(libraries, ProgramLibrary)
+	for _, l := range libraries {
 		if err := world.Open(l); err != nil {
 			return err
 		}
@@ -75,22 +76,6 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 		}
 		root.Libraries = append(root.Libraries, lib)
 	}
-	root.Libraries = append(root.Libraries, dump.Library{
-		Name:       "executable",
-		ImportedAs: "",
-		Struct: dump.Struct{
-			Fields: dump.Fields{
-				"_RBXMK_VERSION": dump.Property{
-					ValueType:   dt.Prim("string"),
-					ReadOnly:    true,
-					Summary:     "Libraries/executable:Fields/_RBXMK_VERSION/Summary",
-					Description: "Libraries/executable:Fields/_RBXMK_VERSION/Description",
-				},
-			},
-			Summary:     "Libraries/executable:Summary",
-			Description: "Libraries/executable:Description",
-		},
-	})
 	root.Fragments = DocFragments()
 	root.Description = "Libraries"
 

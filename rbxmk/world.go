@@ -6,6 +6,8 @@ import (
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/snek"
@@ -48,7 +50,7 @@ type WorldOpt struct {
 	ExcludeRoots     bool
 	ExcludeFormats   bool
 	ExcludeLibraries bool
-	ExcludeVersion   bool
+	ExcludeProgram   bool
 	Args             []string
 }
 
@@ -82,11 +84,40 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 			}
 		}
 	}
-	if !opt.ExcludeVersion {
-		world.State().SetGlobal("_RBXMK_VERSION", lua.LString(VersionString()))
+	if !opt.ExcludeProgram {
+		if err := world.Open(ProgramLibrary); err != nil {
+			return nil, err
+		}
 	}
 	for _, arg := range opt.Args {
 		world.State().Push(ParseLuaValue(arg))
 	}
 	return world, nil
+}
+
+var ProgramLibrary = rbxmk.Library{
+	Name: "",
+	Open: func(s rbxmk.State) *lua.LTable {
+		lib := s.L.CreateTable(0, 1)
+		lib.RawSetString("_RBXMK_VERSION", lua.LString(VersionString()))
+		return lib
+	},
+	Dump: func(s rbxmk.State) dump.Library {
+		return dump.Library{
+			Name:       "program",
+			ImportedAs: "",
+			Struct: dump.Struct{
+				Fields: dump.Fields{
+					"_RBXMK_VERSION": dump.Property{
+						ValueType:   dt.Prim("string"),
+						ReadOnly:    true,
+						Summary:     "Libraries/program:Fields/_RBXMK_VERSION/Summary",
+						Description: "Libraries/program:Fields/_RBXMK_VERSION/Description",
+					},
+				},
+				Summary:     "Libraries/program:Summary",
+				Description: "Libraries/program:Description",
+			},
+		}
+	},
 }
