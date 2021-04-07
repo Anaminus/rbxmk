@@ -44,11 +44,13 @@ func (s *repeatedString) Set(v string) error {
 
 type RunCommand struct {
 	WorldFlags
+	DescFlags
 	Init func(rbxmk.State)
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
 	c.WorldFlags.SetFlags(flags)
+	c.DescFlags.SetFlags(flags)
 }
 
 // Run is the entrypoint to the command for running scripts. init runs after the
@@ -77,6 +79,12 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	}
 	if c.Init != nil {
 		c.Init(rbxmk.State{World: world, L: world.State()})
+	}
+
+	// Initialize global descriptor.
+	world.Desc, err = c.DescFlags.Resolve(world.Client)
+	if err != nil {
+		return err
 	}
 
 	// Run stdin as script.

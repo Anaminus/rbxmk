@@ -20,6 +20,7 @@ func init() {
 
 type InteractiveCommand struct {
 	WorldFlags
+	DescFlags
 	Init func(rbxmk.State)
 }
 
@@ -48,6 +49,12 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 	}))
 	if c.Init != nil {
 		c.Init(rbxmk.State{World: world, L: state})
+	}
+
+	// Initialize global descriptor.
+	world.Desc, err = c.DescFlags.Resolve(world.Client)
+	if err != nil {
+		return err
 	}
 
 	// Initialize terminal prompt.

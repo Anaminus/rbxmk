@@ -4,6 +4,10 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
+- Add flags to `run` and `i` commands that preset global descriptor.
+	- The `--desc-latest` flag uses the latest API dump from Roblox.
+	- The `--desc-file` flag uses a file in the descriptor format (API dump).
+	- The `--desc-patch` flag uses a file in the descriptor patch format.
 - Add `rbxmk i` command to enter an interactive prompt.
 - Add Instance\[sym.Properties\] to get or set all properties of an instance at once.
 
