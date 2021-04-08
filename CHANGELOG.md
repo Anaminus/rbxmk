@@ -11,6 +11,9 @@ branch is the latest unreleased version.
 - Add `rbxmk i` command to enter an interactive prompt.
 - Add Instance\[sym.Properties\] to get or set all properties of an instance at once.
 
+**Fixes:**
+- Fix `download-asset` flags not working.
+
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.

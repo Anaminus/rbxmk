@@ -32,7 +32,7 @@ func (c *DownloadAssetCommand) SetFlags(flags snek.FlagSet) {
 	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/download-asset:Flags/file-format"))
 }
 
-func (c DownloadAssetCommand) Run(opt snek.Options) error {
+func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 	// Parse flags.
 	if err := opt.ParseFlags(); err != nil {
 		return err
