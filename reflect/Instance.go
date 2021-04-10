@@ -584,7 +584,7 @@ func Instance() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
-					switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
+					switch v := s.PullAnyOf(3, "AttrConfig", "bool", "nil").(type) {
 					case *rtypes.AttrConfig:
 						inst.SetAttrConfig(v, false)
 					case types.Bool:
@@ -625,7 +625,7 @@ func Instance() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
-					switch v := s.PullAnyOf(3, "Attr", "bool", "nil").(type) {
+					switch v := s.PullAnyOf(3, "AttrConfig", "bool", "nil").(type) {
 					case *rtypes.AttrConfig:
 						inst.SetAttrConfig(v, false)
 					case types.Bool:
