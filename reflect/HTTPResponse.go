@@ -23,6 +23,7 @@ func HTTPResponse() rbxmk.Reflector {
 			s.PushToTable(table, lua.LString("StatusCode"), types.Int(resp.StatusCode))
 			s.PushToTable(table, lua.LString("StatusMessage"), types.String(resp.StatusMessage))
 			s.PushToTable(table, lua.LString("Headers"), resp.Headers)
+			s.PushToTable(table, lua.LString("Cookies"), resp.Cookies)
 			s.PushToTable(table, lua.LString("Body"), resp.Body)
 			return []lua.LValue{table}, nil
 		},
