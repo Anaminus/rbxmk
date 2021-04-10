@@ -5,24 +5,32 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	reflect "github.com/anaminus/rbxmk/library/http"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(HTTP, 10) }
 
-var HTTP = rbxmk.Library{Name: "http", Open: openHTTP, Dump: dumpHTTP}
+var HTTP = rbxmk.Library{
+	Name:       "http",
+	ImportedAs: "http",
+	Types:      typesHTTP,
+	Open:       openHTTP,
+	Dump:       dumpHTTP,
+}
+
+func typesHTTP() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.HTTPHeaders(),
+		reflect.HTTPOptions(),
+		reflect.HTTPRequest(),
+		reflect.HTTPResponse(),
+	}
+}
 
 func openHTTP(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)
 	lib.RawSetString("request", s.WrapFunc(httpRequest))
-
-	for _, f := range reflect.All() {
-		r := f()
-		s.RegisterReflector(r)
-		s.ApplyReflector(r, lib)
-	}
-
 	return lib
 }
 

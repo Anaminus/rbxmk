@@ -9,7 +9,12 @@ import (
 
 func init() { register(Table, 10) }
 
-var Table = rbxmk.Library{Name: "table", Open: openTable, Dump: dumpTable}
+var Table = rbxmk.Library{
+	Name:       "table",
+	ImportedAs: "table",
+	Open:       openTable,
+	Dump:       dumpTable,
+}
 
 func openTable(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 6)

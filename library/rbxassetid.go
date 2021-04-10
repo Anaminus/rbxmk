@@ -8,7 +8,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	reflect "github.com/anaminus/rbxmk/library/rbxassetid"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -18,19 +18,24 @@ const rbxassetidWriteURL = "https://data.roblox.com/Data/Upload.ashx?assetid=%d"
 
 func init() { register(RBXAssetID, 10) }
 
-var RBXAssetID = rbxmk.Library{Name: "rbxassetid", Open: openRBXAssetID, Dump: dumpRBXAssetID}
+var RBXAssetID = rbxmk.Library{
+	Name:       "rbxassetid",
+	ImportedAs: "rbxassetid",
+	Types:      typesRBXAssetID,
+	Open:       openRBXAssetID,
+	Dump:       dumpRBXAssetID,
+}
+
+func typesRBXAssetID() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.RBXAssetOptions(),
+	}
+}
 
 func openRBXAssetID(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 2)
 	lib.RawSetString("read", s.WrapFunc(rbxassetidRead))
 	lib.RawSetString("write", s.WrapFunc(rbxassetidWrite))
-
-	for _, f := range reflect.All() {
-		r := f()
-		s.RegisterReflector(r)
-		s.ApplyReflector(r, lib)
-	}
-
 	return lib
 }
 

@@ -9,7 +9,12 @@ import (
 
 func init() { register(Base, -1) }
 
-var Base = rbxmk.Library{Name: "", Open: openBase, Dump: dumpBase}
+var Base = rbxmk.Library{
+	Name:       "base",
+	ImportedAs: "",
+	Open:       openBase,
+	Dump:       dumpBase,
+}
 
 func openBase(s rbxmk.State) *lua.LTable {
 	openFilteredLibs(s, filteredStdLib)

@@ -10,13 +10,29 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
 func init() { register(FS, 10) }
 
-var FS = rbxmk.Library{Name: "fs", Open: openFS, Dump: dumpFS}
+var FS = rbxmk.Library{
+	Name:       "fs",
+	ImportedAs: "fs",
+	Types:      typesFS,
+	Open:       openFS,
+	Dump:       dumpFS,
+}
+
+func typesFS() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.Bool(),
+		reflect.FormatSelector(),
+		reflect.String(),
+		reflect.Variant(),
+	}
+}
 
 func openFS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 6)

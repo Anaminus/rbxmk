@@ -9,19 +9,33 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/library/internal/clipboard"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
 func init() { register(Clipboard, 10) }
 
-var Clipboard = rbxmk.Library{Name: "clipboard", Open: openClipboard, Dump: dumpClipboard}
+var Clipboard = rbxmk.Library{
+	Name:       "clipboard",
+	ImportedAs: "clipboard",
+	Open:       openClipboard,
+	Types:      typesClipboard,
+	Dump:       dumpClipboard,
+}
 
 func openClipboard(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 2)
 	lib.RawSetString("read", s.WrapFunc(clipboardRead))
 	lib.RawSetString("write", s.WrapFunc(clipboardWrite))
 	return lib
+}
+
+func typesClipboard() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.FormatSelector(),
+		reflect.Variant(),
+	}
 }
 
 // getFormatSelectors produces a list of FormatSelectors from arguments.

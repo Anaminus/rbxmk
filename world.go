@@ -119,28 +119,33 @@ func (w *World) UserDataCacheLen() int {
 
 // Library represents a Lua library.
 type Library struct {
-	// Name is the default name of the library.
+	// Name is a name that identifies the library.
 	Name string
+	// ImportedAs is the name that the library is imported as. Empty indicates
+	// that the contents of the library are merged into the global environment.
+	ImportedAs string
+	// Types returns a list of type reflector expected by the library. Before
+	// opening the library, each reflector is registered.
+	Types func() []Reflector
 	// Open returns a table with the contents of the library.
 	Open func(s State) *lua.LTable
 	// Dump returns a description of the library's API.
 	Dump func(s State) dump.Library
 }
 
-// Open opens lib according to OpenAs by using the Name of the library.
+// Open opens lib, then merges the result into the world's global table using
+// the ImportedAs field as the name. If the name is already present and is a
+// table, then the table of lib is merged into it, preferring the values of lib.
+// If the name is an empty string, then lib is merged into the global table
+// itself. An error is returned if the merged value is not a table.
 func (w *World) Open(lib Library) error {
-	return w.OpenAs(lib.Name, lib)
-}
-
-// OpenAs opens lib, then merges the result into the world's global table using
-// name. If the name is already present and is a table, then the table of lib is
-// merged into it, preferring the values of lib. If name is an empty string,
-// then lib is merged into the global table itself. An error is returned if the
-// merged value is not a table.
-func (w *World) OpenAs(name string, lib Library) error {
+	if lib.Types != nil {
+		for _, r := range lib.Types() {
+			w.RegisterReflector(r)
+		}
+	}
 	src := lib.Open(State{World: w, L: w.l})
-	// TODO: Is lua.LState.G.Global safe to use?
-	return w.MergeTables(w.l.G.Global, src, name)
+	return w.MergeTables(w.l.G.Global, src, lib.ImportedAs)
 }
 
 // MargeTables merges src into dst according to name. If name is empty, then
@@ -470,7 +475,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 // if the reflector is already registered.
 func (w *World) RegisterReflector(r Reflector) {
 	if _, ok := w.reflectors[r.Name]; ok {
-		panic("reflector " + r.Name + " already registered")
+		return
 	}
 	if w.reflectors == nil {
 		w.reflectors = map[string]Reflector{}
@@ -479,6 +484,26 @@ func (w *World) RegisterReflector(r Reflector) {
 
 	if mt := w.createTypeMetatable(r); mt != nil {
 		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
+	}
+
+	if r.Constructors != nil {
+		ctors := w.l.CreateTable(0, len(r.Constructors))
+		for name, ctor := range r.Constructors {
+			if c := ctor.Func; c != nil {
+				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
+					return c(s)
+				}))
+			}
+		}
+		w.l.G.Global.RawSetString(r.Name, ctors)
+	}
+
+	if r.Environment != nil {
+		r.Environment(State{World: w, L: w.l})
+	}
+
+	for _, t := range r.Types {
+		w.RegisterReflector(t())
 	}
 }
 
@@ -510,25 +535,6 @@ func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 		return ts[i].Name < ts[j].Name
 	})
 	return ts
-}
-
-// ApplyReflector applies a reflector to a table by setting contructors and
-// initializing the reflector's environment.
-func (w *World) ApplyReflector(r Reflector, t *lua.LTable) {
-	if r.Constructors != nil {
-		ctors := w.l.CreateTable(0, len(r.Constructors))
-		for name, ctor := range r.Constructors {
-			if c := ctor.Func; c != nil {
-				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
-					return c(s)
-				}))
-			}
-		}
-		t.RawSetString(r.Name, ctors)
-	}
-	if r.Environment != nil {
-		r.Environment(State{World: w, L: w.l}, t)
-	}
 }
 
 // Typeof returns the type of the given Lua value. If it is a userdata, Typeof

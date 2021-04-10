@@ -11,7 +11,12 @@ import (
 
 func init() { register(Math, 10) }
 
-var Math = rbxmk.Library{Name: "math", Open: openMath, Dump: dumpMath}
+var Math = rbxmk.Library{
+	Name:       "math",
+	ImportedAs: "math",
+	Open:       openMath,
+	Dump:       dumpMath,
+}
 
 func openMath(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)

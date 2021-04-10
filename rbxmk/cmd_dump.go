@@ -70,9 +70,11 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 			continue
 		}
 		lib := l.Dump(state)
-		lib.ImportedAs = l.Name
 		if lib.Name == "" {
 			lib.Name = l.Name
+		}
+		if lib.ImportedAs == "" {
+			lib.ImportedAs = l.ImportedAs
 		}
 		root.Libraries = append(root.Libraries, lib)
 	}

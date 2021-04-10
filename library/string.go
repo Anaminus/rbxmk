@@ -11,7 +11,12 @@ import (
 
 func init() { register(String, 10) }
 
-var String = rbxmk.Library{Name: "string", Open: openString, Dump: dumpString}
+var String = rbxmk.Library{
+	Name:       "string",
+	ImportedAs: "string",
+	Open:       openString,
+	Dump:       dumpString,
+}
 
 func openString(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 1)

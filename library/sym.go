@@ -5,12 +5,25 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(Sym, 10) }
 
-var Sym = rbxmk.Library{Name: "sym", Open: openSym, Dump: dumpSym}
+var Sym = rbxmk.Library{
+	Name:       "sym",
+	ImportedAs: "sym",
+	Types:      typesSym,
+	Open:       openSym,
+	Dump:       dumpSym,
+}
+
+func typesSym() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.Symbol(),
+	}
+}
 
 func openSym(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 7)

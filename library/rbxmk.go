@@ -10,7 +10,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	reflect "github.com/anaminus/rbxmk/library/rbxmk"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
@@ -19,7 +19,38 @@ import (
 
 func init() { register(RBXMK, 0) }
 
-var RBXMK = rbxmk.Library{Name: "rbxmk", Open: openRBXMK, Dump: dumpRBXMK}
+var RBXMK = rbxmk.Library{
+	Name:       "rbxmk",
+	ImportedAs: "rbxmk",
+	Types:      typesRBXMK,
+	Open:       openRBXMK,
+	Dump:       dumpRBXMK,
+}
+
+func typesRBXMK() []rbxmk.Reflector {
+	return []rbxmk.Reflector{
+		reflect.AttrConfig(),
+		reflect.CallbackDesc(),
+		reflect.ClassDesc(),
+		reflect.Cookie(),
+		reflect.Cookies(),
+		reflect.DescAction(),
+		reflect.DescActions(),
+		reflect.EnumDesc(),
+		reflect.EnumItemDesc(),
+		reflect.EventDesc(),
+		reflect.FormatSelector(),
+		reflect.FunctionDesc(),
+		reflect.Nil(),
+		reflect.ParameterDesc(),
+		reflect.PropertyDesc(),
+		reflect.RootDesc(),
+		reflect.String(),
+		reflect.Symbol(),
+		reflect.Table(),
+		reflect.TypeDesc(),
+	}
+}
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 13)
@@ -36,12 +67,6 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
-
-	for _, f := range reflect.All() {
-		r := f()
-		s.RegisterReflector(r)
-		s.ApplyReflector(r, lib)
-	}
 
 	mt := s.L.CreateTable(0, 2)
 	mt.RawSetString("__index", s.WrapOperator(rbxmkOpIndex))

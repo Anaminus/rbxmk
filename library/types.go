@@ -17,7 +17,12 @@ func setUserdata(s rbxmk.State, t string) int {
 
 func init() { register(Types, 10) }
 
-var Types = rbxmk.Library{Name: "types", Open: openTypes, Dump: dumpTypes}
+var Types = rbxmk.Library{
+	Name:       "types",
+	ImportedAs: "types",
+	Open:       openTypes,
+	Dump:       dumpTypes,
+}
 
 func openTypes(s rbxmk.State) *lua.LTable {
 	exprims := s.Reflectors(rbxmk.Exprim)

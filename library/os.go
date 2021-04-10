@@ -13,7 +13,12 @@ import (
 
 func init() { register(OS, 10) }
 
-var OS = rbxmk.Library{Name: "os", Open: openOS, Dump: dumpOS}
+var OS = rbxmk.Library{
+	Name:       "os",
+	ImportedAs: "os",
+	Open:       openOS,
+	Dump:       dumpOS,
+}
 
 func openOS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)

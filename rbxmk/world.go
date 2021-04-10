@@ -96,7 +96,8 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 }
 
 var ProgramLibrary = rbxmk.Library{
-	Name: "",
+	Name:       "program",
+	ImportedAs: "",
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)
 		lib.RawSetString("_RBXMK_VERSION", lua.LString(VersionString()))

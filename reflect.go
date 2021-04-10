@@ -59,12 +59,16 @@ type Reflector struct {
 	Constructors Constructors
 
 	// Environment is called after the type is registered to provide additional
-	// setup. env is the table representing the base library.
-	Environment func(s State, env *lua.LTable)
+	// setup.
+	Environment func(s State)
 
 	// ConvertFrom receives an arbitrary value and attempts to convert it to the
 	// reflector's type. Returns nil if the value could not be converted.
 	ConvertFrom func(v types.Value) types.Value
+
+	// Types is a list of additional type reflectors that this reflector depends
+	// on.
+	Types []func() Reflector
 
 	// Dump returns an additional description of the API of the reflector's
 	// type. Member and constructor APIs should be described by their respective
