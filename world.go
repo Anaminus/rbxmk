@@ -124,13 +124,13 @@ type Library struct {
 	// ImportedAs is the name that the library is imported as. Empty indicates
 	// that the contents of the library are merged into the global environment.
 	ImportedAs string
-	// Types returns a list of type reflector expected by the library. Before
-	// opening the library, each reflector is registered.
-	Types func() []Reflector
 	// Open returns a table with the contents of the library.
 	Open func(s State) *lua.LTable
 	// Dump returns a description of the library's API.
 	Dump func(s State) dump.Library
+	// Types returns a list of type reflector expected by the library. Before
+	// opening the library, each reflector is registered.
+	Types []func() Reflector
 }
 
 // Open opens lib, then merges the result into the world's global table using
@@ -140,8 +140,8 @@ type Library struct {
 // itself. An error is returned if the merged value is not a table.
 func (w *World) Open(lib Library) error {
 	if lib.Types != nil {
-		for _, r := range lib.Types() {
-			w.RegisterReflector(r)
+		for _, r := range lib.Types {
+			w.RegisterReflector(r())
 		}
 	}
 	src := lib.Open(State{World: w, L: w.l})

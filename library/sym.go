@@ -14,15 +14,11 @@ func init() { register(Sym, 10) }
 var Sym = rbxmk.Library{
 	Name:       "sym",
 	ImportedAs: "sym",
-	Types:      typesSym,
 	Open:       openSym,
 	Dump:       dumpSym,
-}
-
-func typesSym() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.Symbol(),
-	}
+	Types: []func() rbxmk.Reflector{
+		reflect.Symbol,
+	},
 }
 
 func openSym(s rbxmk.State) *lua.LTable {

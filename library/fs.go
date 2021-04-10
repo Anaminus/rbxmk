@@ -20,18 +20,14 @@ func init() { register(FS, 10) }
 var FS = rbxmk.Library{
 	Name:       "fs",
 	ImportedAs: "fs",
-	Types:      typesFS,
 	Open:       openFS,
 	Dump:       dumpFS,
-}
-
-func typesFS() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.Bool(),
-		reflect.FormatSelector(),
-		reflect.String(),
-		reflect.Variant(),
-	}
+	Types: []func() rbxmk.Reflector{
+		reflect.Bool,
+		reflect.FormatSelector,
+		reflect.String,
+		reflect.Variant,
+	},
 }
 
 func openFS(s rbxmk.State) *lua.LTable {

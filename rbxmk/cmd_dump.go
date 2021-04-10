@@ -77,10 +77,11 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 			lib.ImportedAs = l.ImportedAs
 		}
 		if l.Types != nil {
-			for _, r := range l.Types() {
+			for _, t := range l.Types {
 				if root.Types == nil {
 					root.Types = dump.TypeDefs{}
 				}
+				r := t()
 				root.Types[r.Name] = r.DumpAll()
 			}
 		}

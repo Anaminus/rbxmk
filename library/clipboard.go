@@ -20,8 +20,11 @@ var Clipboard = rbxmk.Library{
 	Name:       "clipboard",
 	ImportedAs: "clipboard",
 	Open:       openClipboard,
-	Types:      typesClipboard,
 	Dump:       dumpClipboard,
+	Types: []func() rbxmk.Reflector{
+		reflect.FormatSelector,
+		reflect.Variant,
+	},
 }
 
 func openClipboard(s rbxmk.State) *lua.LTable {
@@ -29,13 +32,6 @@ func openClipboard(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("read", s.WrapFunc(clipboardRead))
 	lib.RawSetString("write", s.WrapFunc(clipboardWrite))
 	return lib
-}
-
-func typesClipboard() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.FormatSelector(),
-		reflect.Variant(),
-	}
 }
 
 // getFormatSelectors produces a list of FormatSelectors from arguments.

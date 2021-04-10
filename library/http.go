@@ -14,18 +14,14 @@ func init() { register(HTTP, 10) }
 var HTTP = rbxmk.Library{
 	Name:       "http",
 	ImportedAs: "http",
-	Types:      typesHTTP,
 	Open:       openHTTP,
 	Dump:       dumpHTTP,
-}
-
-func typesHTTP() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.HTTPHeaders(),
-		reflect.HTTPOptions(),
-		reflect.HTTPRequest(),
-		reflect.HTTPResponse(),
-	}
+	Types: []func() rbxmk.Reflector{
+		reflect.HTTPHeaders,
+		reflect.HTTPOptions,
+		reflect.HTTPRequest,
+		reflect.HTTPResponse,
+	},
 }
 
 func openHTTP(s rbxmk.State) *lua.LTable {

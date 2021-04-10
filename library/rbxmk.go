@@ -22,34 +22,30 @@ func init() { register(RBXMK, 0) }
 var RBXMK = rbxmk.Library{
 	Name:       "rbxmk",
 	ImportedAs: "rbxmk",
-	Types:      typesRBXMK,
 	Open:       openRBXMK,
 	Dump:       dumpRBXMK,
-}
-
-func typesRBXMK() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.AttrConfig(),
-		reflect.CallbackDesc(),
-		reflect.ClassDesc(),
-		reflect.Cookie(),
-		reflect.Cookies(),
-		reflect.DescAction(),
-		reflect.DescActions(),
-		reflect.EnumDesc(),
-		reflect.EnumItemDesc(),
-		reflect.EventDesc(),
-		reflect.FormatSelector(),
-		reflect.FunctionDesc(),
-		reflect.Nil(),
-		reflect.ParameterDesc(),
-		reflect.PropertyDesc(),
-		reflect.RootDesc(),
-		reflect.String(),
-		reflect.Symbol(),
-		reflect.Table(),
-		reflect.TypeDesc(),
-	}
+	Types: []func() rbxmk.Reflector{
+		reflect.AttrConfig,
+		reflect.CallbackDesc,
+		reflect.ClassDesc,
+		reflect.Cookie,
+		reflect.Cookies,
+		reflect.DescAction,
+		reflect.DescActions,
+		reflect.EnumDesc,
+		reflect.EnumItemDesc,
+		reflect.EventDesc,
+		reflect.FormatSelector,
+		reflect.FunctionDesc,
+		reflect.Nil,
+		reflect.ParameterDesc,
+		reflect.PropertyDesc,
+		reflect.RootDesc,
+		reflect.String,
+		reflect.Symbol,
+		reflect.Table,
+		reflect.TypeDesc,
+	},
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {

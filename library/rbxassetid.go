@@ -21,15 +21,11 @@ func init() { register(RBXAssetID, 10) }
 var RBXAssetID = rbxmk.Library{
 	Name:       "rbxassetid",
 	ImportedAs: "rbxassetid",
-	Types:      typesRBXAssetID,
 	Open:       openRBXAssetID,
 	Dump:       dumpRBXAssetID,
-}
-
-func typesRBXAssetID() []rbxmk.Reflector {
-	return []rbxmk.Reflector{
-		reflect.RBXAssetOptions(),
-	}
+	Types: []func() rbxmk.Reflector{
+		reflect.RBXAssetOptions,
+	},
 }
 
 func openRBXAssetID(s rbxmk.State) *lua.LTable {
