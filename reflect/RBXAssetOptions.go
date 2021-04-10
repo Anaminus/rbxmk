@@ -54,8 +54,8 @@ func RBXAssetOptions() rbxmk.Reflector {
 					"Format":  dt.Prim("FormatSelector"),
 					"Body":    dt.Optional{T: dt.Prim("any")},
 				},
-				Summary:     "Libraries/rbxassetid/Types/RBXAssetOptions:Summary",
-				Description: "Libraries/rbxassetid/Types/RBXAssetOptions:Description",
+				Summary:     "Types/RBXAssetOptions:Summary",
+				Description: "Types/RBXAssetOptions:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

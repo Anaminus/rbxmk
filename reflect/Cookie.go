@@ -38,8 +38,8 @@ func Cookie() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/Cookie:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/Cookie:Properties/Name/Description",
+						Summary:     "Types/Cookie:Properties/Name/Summary",
+						Description: "Types/Cookie:Properties/Name/Description",
 					}
 				},
 			},
@@ -48,12 +48,12 @@ func Cookie() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/rbxmk/Types/Cookie:Operators/Eq/Summary",
-						Description: "Libraries/rbxmk/Types/Cookie:Operators/Eq/Description",
+						Summary:     "Types/Cookie:Operators/Eq/Summary",
+						Description: "Types/Cookie:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/rbxmk/Types/Cookie:Summary",
-				Description: "Libraries/rbxmk/Types/Cookie:Description",
+				Summary:     "Types/Cookie:Summary",
+				Description: "Types/Cookie:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

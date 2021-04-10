@@ -72,8 +72,8 @@ func Vector3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Vector3:Properties/X/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Properties/X/Description",
+						Summary:     "Types/Vector3:Properties/X/Summary",
+						Description: "Types/Vector3:Properties/X/Description",
 					}
 				},
 			},
@@ -85,8 +85,8 @@ func Vector3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Vector3:Properties/Y/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Properties/Y/Description",
+						Summary:     "Types/Vector3:Properties/Y/Summary",
+						Description: "Types/Vector3:Properties/Y/Description",
 					}
 				},
 			},
@@ -98,8 +98,8 @@ func Vector3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Vector3:Properties/Z/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Properties/Z/Description",
+						Summary:     "Types/Vector3:Properties/Z/Summary",
+						Description: "Types/Vector3:Properties/Z/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func Vector3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Vector3:Properties/Magnitude/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Properties/Magnitude/Description",
+						Summary:     "Types/Vector3:Properties/Magnitude/Summary",
+						Description: "Types/Vector3:Properties/Magnitude/Description",
 					}
 				},
 			},
@@ -124,8 +124,8 @@ func Vector3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Vector3:Properties/Unit/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Properties/Unit/Description",
+						Summary:     "Types/Vector3:Properties/Unit/Summary",
+						Description: "Types/Vector3:Properties/Unit/Description",
 					}
 				},
 			},
@@ -146,8 +146,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/Vector3:Methods/Lerp/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Methods/Lerp/Description",
+						Summary:     "Types/Vector3:Methods/Lerp/Summary",
+						Description: "Types/Vector3:Methods/Lerp/Description",
 					}
 				},
 			},
@@ -164,8 +164,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/Vector3:Methods/Dot/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Methods/Dot/Description",
+						Summary:     "Types/Vector3:Methods/Dot/Summary",
+						Description: "Types/Vector3:Methods/Dot/Description",
 					}
 				},
 			},
@@ -182,8 +182,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/Vector3:Methods/Cross/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Methods/Cross/Description",
+						Summary:     "Types/Vector3:Methods/Cross/Summary",
+						Description: "Types/Vector3:Methods/Cross/Description",
 					}
 				},
 			},
@@ -202,8 +202,8 @@ func Vector3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Libraries/roblox/Types/Vector3:Methods/FuzzyEq/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Methods/FuzzyEq/Description",
+						Summary:     "Types/Vector3:Methods/FuzzyEq/Summary",
+						Description: "Types/Vector3:Methods/FuzzyEq/Description",
 					}
 				},
 			},
@@ -229,8 +229,8 @@ func Vector3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3")},
 							},
-							Summary:     "Libraries/roblox/Types/Vector3:Constructors/new/Zero/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Constructors/new/Zero/Description",
+							Summary:     "Types/Vector3:Constructors/new/Zero/Summary",
+							Description: "Types/Vector3:Constructors/new/Zero/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -241,8 +241,8 @@ func Vector3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Vector3")},
 							},
-							Summary:     "Libraries/roblox/Types/Vector3:Constructors/new/Components/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Constructors/new/Components/Description",
+							Summary:     "Types/Vector3:Constructors/new/Components/Summary",
+							Description: "Types/Vector3:Constructors/new/Components/Description",
 						},
 					}
 				},
@@ -252,61 +252,61 @@ func Vector3() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Vector3:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Operators/Eq/Description",
+						Summary:     "Types/Vector3:Operators/Eq/Summary",
+						Description: "Types/Vector3:Operators/Eq/Description",
 					},
 					Add: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Add/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Add/Description",
+							Summary:     "Types/Vector3:Operators/Add/Summary",
+							Description: "Types/Vector3:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Sub/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Sub/Description",
+							Summary:     "Types/Vector3:Operators/Sub/Summary",
+							Description: "Types/Vector3:Operators/Sub/Description",
 						},
 					},
 					Mul: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Mul/Vector3/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Mul/Vector3/Description",
+							Summary:     "Types/Vector3:Operators/Mul/Vector3/Summary",
+							Description: "Types/Vector3:Operators/Mul/Vector3/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Mul/Number/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Mul/Number/Description",
+							Summary:     "Types/Vector3:Operators/Mul/Number/Summary",
+							Description: "Types/Vector3:Operators/Mul/Number/Description",
 						},
 					},
 					Div: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Div/Vector3/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Div/Vector3/Description",
+							Summary:     "Types/Vector3:Operators/Div/Vector3/Summary",
+							Description: "Types/Vector3:Operators/Div/Vector3/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/Vector3:Operators/Div/Number/Summary",
-							Description: "Libraries/roblox/Types/Vector3:Operators/Div/Number/Description",
+							Summary:     "Types/Vector3:Operators/Div/Number/Summary",
+							Description: "Types/Vector3:Operators/Div/Number/Description",
 						},
 					},
 					Unm: &dump.Unop{
 						Result:      dt.Prim("Vector3"),
-						Summary:     "Libraries/roblox/Types/Vector3:Operators/Unm/Summary",
-						Description: "Libraries/roblox/Types/Vector3:Operators/Unm/Description",
+						Summary:     "Types/Vector3:Operators/Unm/Summary",
+						Description: "Types/Vector3:Operators/Unm/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Vector3:Summary",
-				Description: "Libraries/roblox/Types/Vector3:Description",
+				Summary:     "Types/Vector3:Summary",
+				Description: "Types/Vector3:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

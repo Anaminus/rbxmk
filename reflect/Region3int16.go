@@ -36,8 +36,8 @@ func Region3int16() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3int16"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Region3int16:Properties/Min/Summary",
-						Description: "Libraries/roblox/Types/Region3int16:Properties/Min/Description",
+						Summary:     "Types/Region3int16:Properties/Min/Summary",
+						Description: "Types/Region3int16:Properties/Min/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func Region3int16() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3int16"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Region3int16:Properties/Max/Summary",
-						Description: "Libraries/roblox/Types/Region3int16:Properties/Max/Description",
+						Summary:     "Types/Region3int16:Properties/Max/Summary",
+						Description: "Types/Region3int16:Properties/Max/Description",
 					}
 				},
 			},
@@ -73,8 +73,8 @@ func Region3int16() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Region3int16")},
 							},
-							Summary:     "Libraries/roblox/Types/Region3int16:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/Region3int16:Constructors/new/Description",
+							Summary:     "Types/Region3int16:Constructors/new/Summary",
+							Description: "Types/Region3int16:Constructors/new/Description",
 						},
 					}
 				},
@@ -84,12 +84,12 @@ func Region3int16() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Region3int16:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Region3int16:Operators/Eq/Description",
+						Summary:     "Types/Region3int16:Operators/Eq/Summary",
+						Description: "Types/Region3int16:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Region3int16:Summary",
-				Description: "Libraries/roblox/Types/Region3int16:Description",
+				Summary:     "Types/Region3int16:Summary",
+				Description: "Types/Region3int16:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

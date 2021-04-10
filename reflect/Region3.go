@@ -36,8 +36,8 @@ func Region3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("CFrame"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Region3:Properties/CFrame/Summary",
-						Description: "Libraries/roblox/Types/Region3:Properties/CFrame/Description",
+						Summary:     "Types/Region3:Properties/CFrame/Summary",
+						Description: "Types/Region3:Properties/CFrame/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func Region3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Region3:Properties/Size/Summary",
-						Description: "Libraries/roblox/Types/Region3:Properties/Size/Description",
+						Summary:     "Types/Region3:Properties/Size/Summary",
+						Description: "Types/Region3:Properties/Size/Description",
 					}
 				},
 			},
@@ -69,8 +69,8 @@ func Region3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Region3")},
 						},
-						Summary:     "Libraries/roblox/Types/Region3:Methods/ExpandToGrid/Summary",
-						Description: "Libraries/roblox/Types/Region3:Methods/ExpandToGrid/Description",
+						Summary:     "Types/Region3:Methods/ExpandToGrid/Summary",
+						Description: "Types/Region3:Methods/ExpandToGrid/Description",
 					}
 				},
 			},
@@ -93,8 +93,8 @@ func Region3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Region3")},
 							},
-							Summary:     "Libraries/roblox/Types/Region3:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/Region3:Constructors/new/Description",
+							Summary:     "Types/Region3:Constructors/new/Summary",
+							Description: "Types/Region3:Constructors/new/Description",
 						},
 					}
 				},
@@ -104,12 +104,12 @@ func Region3() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Region3:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Region3:Operators/Eq/Description",
+						Summary:     "Types/Region3:Operators/Eq/Summary",
+						Description: "Types/Region3:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Region3:Summary",
-				Description: "Libraries/roblox/Types/Region3:Description",
+				Summary:     "Types/Region3:Summary",
+				Description: "Types/Region3:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

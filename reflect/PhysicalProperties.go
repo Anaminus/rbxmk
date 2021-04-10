@@ -63,8 +63,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Density/Summary",
-						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Density/Description",
+						Summary:     "Types/PhysicalProperties:Properties/Density/Summary",
+						Description: "Types/PhysicalProperties:Properties/Density/Description",
 					}
 				},
 			},
@@ -76,8 +76,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Friction/Summary",
-						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Friction/Description",
+						Summary:     "Types/PhysicalProperties:Properties/Friction/Summary",
+						Description: "Types/PhysicalProperties:Properties/Friction/Description",
 					}
 				},
 			},
@@ -89,8 +89,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/Elasticity/Summary",
-						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/Elasticity/Description",
+						Summary:     "Types/PhysicalProperties:Properties/Elasticity/Summary",
+						Description: "Types/PhysicalProperties:Properties/Elasticity/Description",
 					}
 				},
 			},
@@ -102,8 +102,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/FrictionWeight/Summary",
-						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/FrictionWeight/Description",
+						Summary:     "Types/PhysicalProperties:Properties/FrictionWeight/Summary",
+						Description: "Types/PhysicalProperties:Properties/FrictionWeight/Description",
 					}
 				},
 			},
@@ -115,8 +115,8 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/PhysicalProperties:Properties/ElasticityWeight/Summary",
-						Description: "Libraries/roblox/Types/PhysicalProperties:Properties/ElasticityWeight/Description",
+						Summary:     "Types/PhysicalProperties:Properties/ElasticityWeight/Summary",
+						Description: "Types/PhysicalProperties:Properties/ElasticityWeight/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Components/Summary",
-							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Components/Description",
+							Summary:     "Types/PhysicalProperties:Constructors/new/Components/Summary",
+							Description: "Types/PhysicalProperties:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -166,8 +166,8 @@ func PhysicalProperties() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("PhysicalProperties")},
 							},
-							Summary:     "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Weights/Summary",
-							Description: "Libraries/roblox/Types/PhysicalProperties:Constructors/new/Weights/Description",
+							Summary:     "Types/PhysicalProperties:Constructors/new/Weights/Summary",
+							Description: "Types/PhysicalProperties:Constructors/new/Weights/Description",
 						},
 					}
 				},
@@ -175,8 +175,8 @@ func PhysicalProperties() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/PhysicalProperties:Summary",
-				Description: "Libraries/roblox/Types/PhysicalProperties:Description",
+				Summary:     "Types/PhysicalProperties:Summary",
+				Description: "Types/PhysicalProperties:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

@@ -41,8 +41,8 @@ func Int() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/int:Summary",
-				Description: "Libraries/roblox/Types/int:Description",
+				Summary:     "Types/int:Summary",
+				Description: "Types/int:Description",
 			}
 		},
 	}

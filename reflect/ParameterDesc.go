@@ -34,8 +34,8 @@ func ParameterDesc() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("TypeDesc"),
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/ParameterDesc:Properties/Type/Summary",
-						Description: "Libraries/rbxmk/Types/ParameterDesc:Properties/Type/Description",
+						Summary:     "Types/ParameterDesc:Properties/Type/Summary",
+						Description: "Types/ParameterDesc:Properties/Type/Description",
 					}
 				},
 			},
@@ -48,8 +48,8 @@ func ParameterDesc() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/ParameterDesc:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/ParameterDesc:Properties/Name/Description",
+						Summary:     "Types/ParameterDesc:Properties/Name/Summary",
+						Description: "Types/ParameterDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -65,8 +65,8 @@ func ParameterDesc() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Optional{T: dt.Prim("string")},
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/ParameterDesc:Properties/Default/Summary",
-						Description: "Libraries/rbxmk/Types/ParameterDesc:Properties/Default/Description",
+						Summary:     "Types/ParameterDesc:Properties/Default/Summary",
+						Description: "Types/ParameterDesc:Properties/Default/Description",
 					}
 				},
 			},
@@ -75,12 +75,12 @@ func ParameterDesc() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/rbxmk/Types/ParameterDesc:Operators/Eq/Summary",
-						Description: "Libraries/rbxmk/Types/ParameterDesc:Operators/Eq/Description",
+						Summary:     "Types/ParameterDesc:Operators/Eq/Summary",
+						Description: "Types/ParameterDesc:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/rbxmk/Types/ParameterDesc:Summary",
-				Description: "Libraries/rbxmk/Types/ParameterDesc:Description",
+				Summary:     "Types/ParameterDesc:Summary",
+				Description: "Types/ParameterDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

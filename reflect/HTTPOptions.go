@@ -55,8 +55,8 @@ func HTTPOptions() rbxmk.Reflector {
 					"Cookies":        dt.Optional{T: dt.Prim("Cookies")},
 					"Body":           dt.Optional{T: dt.Prim("any")},
 				},
-				Summary:     "Libraries/http/Types/HTTPOptions:Summary",
-				Description: "Libraries/http/Types/HTTPOptions:Description",
+				Summary:     "Types/HTTPOptions:Summary",
+				Description: "Types/HTTPOptions:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

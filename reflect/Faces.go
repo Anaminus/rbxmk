@@ -85,8 +85,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Right/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Right/Description",
+						Summary:     "Types/Faces:Properties/Right/Summary",
+						Description: "Types/Faces:Properties/Right/Description",
 					}
 				},
 			},
@@ -98,8 +98,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Top/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Top/Description",
+						Summary:     "Types/Faces:Properties/Top/Summary",
+						Description: "Types/Faces:Properties/Top/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Back/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Back/Description",
+						Summary:     "Types/Faces:Properties/Back/Summary",
+						Description: "Types/Faces:Properties/Back/Description",
 					}
 				},
 			},
@@ -124,8 +124,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Left/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Left/Description",
+						Summary:     "Types/Faces:Properties/Left/Summary",
+						Description: "Types/Faces:Properties/Left/Description",
 					}
 				},
 			},
@@ -137,8 +137,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Bottom/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Bottom/Description",
+						Summary:     "Types/Faces:Properties/Bottom/Summary",
+						Description: "Types/Faces:Properties/Bottom/Description",
 					}
 				},
 			},
@@ -150,8 +150,8 @@ func Faces() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Faces:Properties/Front/Summary",
-						Description: "Libraries/roblox/Types/Faces:Properties/Front/Description",
+						Summary:     "Types/Faces:Properties/Front/Summary",
+						Description: "Types/Faces:Properties/Front/Description",
 					}
 				},
 			},
@@ -188,8 +188,8 @@ func Faces() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 							},
-							Summary:     "Libraries/roblox/Types/Faces:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/Faces:Constructors/new/Description",
+							Summary:     "Types/Faces:Constructors/new/Summary",
+							Description: "Types/Faces:Constructors/new/Description",
 						},
 					}
 				},
@@ -221,8 +221,8 @@ func Faces() rbxmk.Reflector {
 								{Name: "bottom", Type: dt.Prim("bool")},
 								{Name: "front", Type: dt.Prim("bool")},
 							},
-							Summary:     "Libraries/roblox/Types/Faces:Constructors/fromComponents/Summary",
-							Description: "Libraries/roblox/Types/Faces:Constructors/fromComponents/Description",
+							Summary:     "Types/Faces:Constructors/fromComponents/Summary",
+							Description: "Types/Faces:Constructors/fromComponents/Description",
 						},
 					}
 				},
@@ -232,12 +232,12 @@ func Faces() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Faces:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Faces:Operators/Eq/Description",
+						Summary:     "Types/Faces:Operators/Eq/Summary",
+						Description: "Types/Faces:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Faces:Summary",
-				Description: "Libraries/roblox/Types/Faces:Description",
+				Summary:     "Types/Faces:Summary",
+				Description: "Types/Faces:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

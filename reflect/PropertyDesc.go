@@ -27,8 +27,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/Name/Description",
+						Summary:     "Types/PropertyDesc:Properties/Name/Summary",
+						Description: "Types/PropertyDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -45,8 +45,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("TypeDesc"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/ValueType/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/ValueType/Description",
+						Summary:     "Types/PropertyDesc:Properties/ValueType/Summary",
+						Description: "Types/PropertyDesc:Properties/ValueType/Description",
 					}
 				},
 			},
@@ -62,8 +62,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/ReadSecurity/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/ReadSecurity/Description",
+						Summary:     "Types/PropertyDesc:Properties/ReadSecurity/Summary",
+						Description: "Types/PropertyDesc:Properties/ReadSecurity/Description",
 					}
 				},
 			},
@@ -79,8 +79,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/WriteSecurity/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/WriteSecurity/Description",
+						Summary:     "Types/PropertyDesc:Properties/WriteSecurity/Summary",
+						Description: "Types/PropertyDesc:Properties/WriteSecurity/Description",
 					}
 				},
 			},
@@ -96,8 +96,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/CanLoad/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/CanLoad/Description",
+						Summary:     "Types/PropertyDesc:Properties/CanLoad/Summary",
+						Description: "Types/PropertyDesc:Properties/CanLoad/Description",
 					}
 				},
 			},
@@ -113,8 +113,8 @@ func PropertyDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Properties/CanSave/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Properties/CanSave/Description",
+						Summary:     "Types/PropertyDesc:Properties/CanSave/Summary",
+						Description: "Types/PropertyDesc:Properties/CanSave/Description",
 					}
 				},
 			},
@@ -134,8 +134,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Methods/Tag/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Methods/Tag/Description",
+						Summary:     "Types/PropertyDesc:Methods/Tag/Summary",
+						Description: "Types/PropertyDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -154,8 +154,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Methods/Tags/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Methods/Tags/Description",
+						Summary:     "Types/PropertyDesc:Methods/Tags/Summary",
+						Description: "Types/PropertyDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -174,8 +174,8 @@ func PropertyDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Methods/SetTag/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Methods/SetTag/Description",
+						Summary:     "Types/PropertyDesc:Methods/SetTag/Summary",
+						Description: "Types/PropertyDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -194,16 +194,16 @@ func PropertyDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/PropertyDesc:Methods/UnsetTag/Summary",
-						Description: "Libraries/rbxmk/Types/PropertyDesc:Methods/UnsetTag/Description",
+						Summary:     "Types/PropertyDesc:Methods/UnsetTag/Summary",
+						Description: "Types/PropertyDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/rbxmk/Types/PropertyDesc:Summary",
-				Description: "Libraries/rbxmk/Types/PropertyDesc:Description",
+				Summary:     "Types/PropertyDesc:Summary",
+				Description: "Types/PropertyDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

@@ -36,8 +36,8 @@ func Ray() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Ray:Properties/Origin/Summary",
-						Description: "Libraries/roblox/Types/Ray:Properties/Origin/Description",
+						Summary:     "Types/Ray:Properties/Origin/Summary",
+						Description: "Types/Ray:Properties/Origin/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func Ray() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Ray:Properties/Direction/Summary",
-						Description: "Libraries/roblox/Types/Ray:Properties/Direction/Description",
+						Summary:     "Types/Ray:Properties/Direction/Summary",
+						Description: "Types/Ray:Properties/Direction/Description",
 					}
 				},
 			},
@@ -69,8 +69,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/Ray:Methods/ClosestPoint/Summary",
-						Description: "Libraries/roblox/Types/Ray:Methods/ClosestPoint/Description",
+						Summary:     "Types/Ray:Methods/ClosestPoint/Summary",
+						Description: "Types/Ray:Methods/ClosestPoint/Description",
 					}
 				},
 			},
@@ -87,8 +87,8 @@ func Ray() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/Ray:Methods/Distance/Summary",
-						Description: "Libraries/roblox/Types/Ray:Methods/Distance/Description",
+						Summary:     "Types/Ray:Methods/Distance/Summary",
+						Description: "Types/Ray:Methods/Distance/Description",
 					}
 				},
 			},
@@ -111,8 +111,8 @@ func Ray() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Ray")},
 							},
-							Summary:     "Libraries/roblox/Types/Ray:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/Ray:Constructors/new/Description",
+							Summary:     "Types/Ray:Constructors/new/Summary",
+							Description: "Types/Ray:Constructors/new/Description",
 						},
 					}
 				},
@@ -122,12 +122,12 @@ func Ray() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Ray:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Ray:Operators/Eq/Description",
+						Summary:     "Types/Ray:Operators/Eq/Summary",
+						Description: "Types/Ray:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Ray:Summary",
-				Description: "Libraries/roblox/Types/Ray:Description",
+				Summary:     "Types/Ray:Summary",
+				Description: "Types/Ray:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

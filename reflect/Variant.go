@@ -117,8 +117,8 @@ func Variant() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/Variant:Summary",
-				Description: "Libraries/roblox/Types/Variant:Description",
+				Summary:     "Types/Variant:Summary",
+				Description: "Types/Variant:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

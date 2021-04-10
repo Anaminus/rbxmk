@@ -28,8 +28,8 @@ func EventDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Properties/Name/Description",
+						Summary:     "Types/EventDesc:Properties/Name/Summary",
+						Description: "Types/EventDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -45,8 +45,8 @@ func EventDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Properties/Security/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Properties/Security/Description",
+						Summary:     "Types/EventDesc:Properties/Security/Summary",
+						Description: "Types/EventDesc:Properties/Security/Description",
 					}
 				},
 			},
@@ -67,8 +67,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Parameters/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Parameters/Description",
+						Summary:     "Types/EventDesc:Methods/Parameters/Summary",
+						Description: "Types/EventDesc:Methods/Parameters/Description",
 					}
 				},
 			},
@@ -93,8 +93,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "params", Type: dt.Array{T: dt.Prim("ParameterDesc")}},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/SetParameters/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/SetParameters/Description",
+						Summary:     "Types/EventDesc:Methods/SetParameters/Summary",
+						Description: "Types/EventDesc:Methods/SetParameters/Description",
 					}
 				},
 			},
@@ -112,8 +112,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Tag/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Tag/Description",
+						Summary:     "Types/EventDesc:Methods/Tag/Summary",
+						Description: "Types/EventDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -132,8 +132,8 @@ func EventDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/Tags/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/Tags/Description",
+						Summary:     "Types/EventDesc:Methods/Tags/Summary",
+						Description: "Types/EventDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -152,8 +152,8 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/SetTag/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/SetTag/Description",
+						Summary:     "Types/EventDesc:Methods/SetTag/Summary",
+						Description: "Types/EventDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -172,16 +172,16 @@ func EventDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EventDesc:Methods/UnsetTag/Summary",
-						Description: "Libraries/rbxmk/Types/EventDesc:Methods/UnsetTag/Description",
+						Summary:     "Types/EventDesc:Methods/UnsetTag/Summary",
+						Description: "Types/EventDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/rbxmk/Types/EventDesc:Summary",
-				Description: "Libraries/rbxmk/Types/EventDesc:Description",
+				Summary:     "Types/EventDesc:Summary",
+				Description: "Types/EventDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

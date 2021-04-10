@@ -40,8 +40,8 @@ func Double() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/double:Summary",
-				Description: "Libraries/roblox/Types/double:Description",
+				Summary:     "Types/double:Summary",
+				Description: "Types/double:Description",
 			}
 		},
 	}

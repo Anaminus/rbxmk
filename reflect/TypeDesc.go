@@ -33,8 +33,8 @@ func TypeDesc() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/TypeDesc:Properties/Category/Summary",
-						Description: "Libraries/rbxmk/Types/TypeDesc:Properties/Category/Description",
+						Summary:     "Types/TypeDesc:Properties/Category/Summary",
+						Description: "Types/TypeDesc:Properties/Category/Description",
 					}
 				},
 			},
@@ -47,8 +47,8 @@ func TypeDesc() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
 						ReadOnly:    true,
-						Summary:     "Libraries/rbxmk/Types/TypeDesc:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/TypeDesc:Properties/Name/Description",
+						Summary:     "Types/TypeDesc:Properties/Name/Summary",
+						Description: "Types/TypeDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -57,12 +57,12 @@ func TypeDesc() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/rbxmk/Types/TypeDesc:Operators/Eq/Summary",
-						Description: "Libraries/rbxmk/Types/TypeDesc:Operators/Eq/Description",
+						Summary:     "Types/TypeDesc:Operators/Eq/Summary",
+						Description: "Types/TypeDesc:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/rbxmk/Types/TypeDesc:Summary",
-				Description: "Libraries/rbxmk/Types/TypeDesc:Description",
+				Summary:     "Types/TypeDesc:Summary",
+				Description: "Types/TypeDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

@@ -23,8 +23,8 @@ func Nil() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/rbxmk/Types/nil:Summary",
-				Description: "Libraries/rbxmk/Types/nil:Description",
+				Summary:     "Types/nil:Summary",
+				Description: "Types/nil:Description",
 			}
 		},
 	}

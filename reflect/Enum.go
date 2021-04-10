@@ -50,8 +50,8 @@ func Enum() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("EnumItem")}},
 						},
-						Summary:     "Libraries/roblox/Types/Enum:Methods/GetEnumItems/Summary",
-						Description: "Libraries/roblox/Types/Enum:Methods/GetEnumItems/Description",
+						Summary:     "Types/Enum:Methods/GetEnumItems/Summary",
+						Description: "Types/Enum:Methods/GetEnumItems/Description",
 					}
 				},
 			},
@@ -67,12 +67,12 @@ func Enum() rbxmk.Reflector {
 							{Type: dt.Prim("EnumItem")},
 						},
 						CanError:    true,
-						Summary:     "Libraries/roblox/Types/Enum:Operators/Index/Summary",
-						Description: "Libraries/roblox/Types/Enum:Operators/Index/Description",
+						Summary:     "Types/Enum:Operators/Index/Summary",
+						Description: "Types/Enum:Operators/Index/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Enum:Summary",
-				Description: "Libraries/roblox/Types/Enum:Description",
+				Summary:     "Types/Enum:Summary",
+				Description: "Types/Enum:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

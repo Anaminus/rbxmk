@@ -36,8 +36,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Time/Summary",
-						Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Time/Description",
+						Summary:     "Types/ColorSequenceKeypoint:Properties/Time/Summary",
+						Description: "Types/ColorSequenceKeypoint:Properties/Time/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Color3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Value/Summary",
-						Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Value/Description",
+						Summary:     "Types/ColorSequenceKeypoint:Properties/Value/Summary",
+						Description: "Types/ColorSequenceKeypoint:Properties/Value/Description",
 					}
 				},
 			},
@@ -62,8 +62,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Envelope/Summary",
-						Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Properties/Envelope/Description",
+						Summary:     "Types/ColorSequenceKeypoint:Properties/Envelope/Summary",
+						Description: "Types/ColorSequenceKeypoint:Properties/Envelope/Description",
 					}
 				},
 			},
@@ -95,8 +95,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Components/Summary",
-							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Components/Description",
+							Summary:     "Types/ColorSequenceKeypoint:Constructors/new/Components/Summary",
+							Description: "Types/ColorSequenceKeypoint:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -107,8 +107,8 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("ColorSequenceKeypoint")},
 							},
-							Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Envelope/Summary",
-							Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Constructors/new/Envelope/Description",
+							Summary:     "Types/ColorSequenceKeypoint:Constructors/new/Envelope/Summary",
+							Description: "Types/ColorSequenceKeypoint:Constructors/new/Envelope/Description",
 						},
 					}
 				},
@@ -118,12 +118,12 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Operators/Eq/Description",
+						Summary:     "Types/ColorSequenceKeypoint:Operators/Eq/Summary",
+						Description: "Types/ColorSequenceKeypoint:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/ColorSequenceKeypoint:Summary",
-				Description: "Libraries/roblox/Types/ColorSequenceKeypoint:Description",
+				Summary:     "Types/ColorSequenceKeypoint:Summary",
+				Description: "Types/ColorSequenceKeypoint:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

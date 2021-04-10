@@ -37,8 +37,8 @@ func Color3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Color3:Properties/R/Summary",
-						Description: "Libraries/roblox/Types/Color3:Properties/R/Description",
+						Summary:     "Types/Color3:Properties/R/Summary",
+						Description: "Types/Color3:Properties/R/Description",
 					}
 				},
 			},
@@ -50,8 +50,8 @@ func Color3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Color3:Properties/G/Summary",
-						Description: "Libraries/roblox/Types/Color3:Properties/G/Description",
+						Summary:     "Types/Color3:Properties/G/Summary",
+						Description: "Types/Color3:Properties/G/Description",
 					}
 				},
 			},
@@ -63,8 +63,8 @@ func Color3() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Color3:Properties/B/Summary",
-						Description: "Libraries/roblox/Types/Color3:Properties/B/Description",
+						Summary:     "Types/Color3:Properties/B/Summary",
+						Description: "Types/Color3:Properties/B/Description",
 					}
 				},
 			},
@@ -85,8 +85,8 @@ func Color3() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Color3")},
 						},
-						Summary:     "Libraries/roblox/Types/Color3:Methods/Lerp/Summary",
-						Description: "Libraries/roblox/Types/Color3:Methods/Lerp/Description",
+						Summary:     "Types/Color3:Methods/Lerp/Summary",
+						Description: "Types/Color3:Methods/Lerp/Description",
 					}
 				},
 			},
@@ -102,8 +102,8 @@ func Color3() rbxmk.Reflector {
 							{Name: "s", Type: dt.Prim("float")},
 							{Name: "v", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/Color3:Methods/ToHSV/Summary",
-						Description: "Libraries/roblox/Types/Color3:Methods/ToHSV/Description",
+						Summary:     "Types/Color3:Methods/ToHSV/Summary",
+						Description: "Types/Color3:Methods/ToHSV/Description",
 					}
 				},
 			},
@@ -129,8 +129,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/Zero/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/new/Zero/Description",
+							Summary:     "Types/Color3:Constructors/new/Zero/Summary",
+							Description: "Types/Color3:Constructors/new/Zero/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -141,8 +141,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/new/Components/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/new/Components/Description",
+							Summary:     "Types/Color3:Constructors/new/Components/Summary",
+							Description: "Types/Color3:Constructors/new/Components/Description",
 						},
 					}
 				},
@@ -166,8 +166,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/fromRGB/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/fromRGB/Description",
+							Summary:     "Types/Color3:Constructors/fromRGB/Summary",
+							Description: "Types/Color3:Constructors/fromRGB/Description",
 						},
 					}
 				},
@@ -191,8 +191,8 @@ func Color3() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("Color3")},
 							},
-							Summary:     "Libraries/roblox/Types/Color3:Constructors/fromHSV/Summary",
-							Description: "Libraries/roblox/Types/Color3:Constructors/fromHSV/Description",
+							Summary:     "Types/Color3:Constructors/fromHSV/Summary",
+							Description: "Types/Color3:Constructors/fromHSV/Description",
 						},
 					}
 				},
@@ -211,12 +211,12 @@ func Color3() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Color3:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Color3:Operators/Eq/Description",
+						Summary:     "Types/Color3:Operators/Eq/Summary",
+						Description: "Types/Color3:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Color3:Summary",
-				Description: "Libraries/roblox/Types/Color3:Description",
+				Summary:     "Types/Color3:Summary",
+				Description: "Types/Color3:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

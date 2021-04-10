@@ -560,9 +560,5 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 			},
 		},
 	}
-	for _, f := range reflect.All() {
-		r := f()
-		lib.Types[r.Name] = r.DumpAll()
-	}
 	return lib
 }

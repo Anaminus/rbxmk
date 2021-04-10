@@ -76,6 +76,14 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 		if lib.ImportedAs == "" {
 			lib.ImportedAs = l.ImportedAs
 		}
+		if l.Types != nil {
+			for _, r := range l.Types() {
+				if root.Types == nil {
+					root.Types = dump.TypeDefs{}
+				}
+				root.Types[r.Name] = r.DumpAll()
+			}
+		}
 		root.Libraries = append(root.Libraries, lib)
 	}
 	root.Fragments = DocFragments()

@@ -36,8 +36,8 @@ func NumberRange() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/NumberRange:Properties/Min/Summary",
-						Description: "Libraries/roblox/Types/NumberRange:Properties/Min/Description",
+						Summary:     "Types/NumberRange:Properties/Min/Summary",
+						Description: "Types/NumberRange:Properties/Min/Description",
 					}
 				},
 			},
@@ -49,8 +49,8 @@ func NumberRange() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/NumberRange:Properties/Max/Summary",
-						Description: "Libraries/roblox/Types/NumberRange:Properties/Max/Description",
+						Summary:     "Types/NumberRange:Properties/Max/Summary",
+						Description: "Types/NumberRange:Properties/Max/Description",
 					}
 				},
 			},
@@ -80,8 +80,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "Libraries/roblox/Types/NumberRange:Constructors/new/Single/Summary",
-							Description: "Libraries/roblox/Types/NumberRange:Constructors/new/Single/Description",
+							Summary:     "Types/NumberRange:Constructors/new/Single/Summary",
+							Description: "Types/NumberRange:Constructors/new/Single/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -91,8 +91,8 @@ func NumberRange() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("NumberRange")},
 							},
-							Summary:     "Libraries/roblox/Types/NumberRange:Constructors/new/Range/Summary",
-							Description: "Libraries/roblox/Types/NumberRange:Constructors/new/Range/Description",
+							Summary:     "Types/NumberRange:Constructors/new/Range/Summary",
+							Description: "Types/NumberRange:Constructors/new/Range/Description",
 						},
 					}
 				},
@@ -102,12 +102,12 @@ func NumberRange() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/NumberRange:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/NumberRange:Operators/Eq/Description",
+						Summary:     "Types/NumberRange:Operators/Eq/Summary",
+						Description: "Types/NumberRange:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/NumberRange:Summary",
-				Description: "Libraries/roblox/Types/NumberRange:Description",
+				Summary:     "Types/NumberRange:Summary",
+				Description: "Types/NumberRange:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

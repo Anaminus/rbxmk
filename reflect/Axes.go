@@ -70,8 +70,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/X/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/X/Description",
+						Summary:     "Types/Axes:Properties/X/Summary",
+						Description: "Types/Axes:Properties/X/Description",
 					}
 				},
 			},
@@ -83,8 +83,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Y/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Y/Description",
+						Summary:     "Types/Axes:Properties/Y/Summary",
+						Description: "Types/Axes:Properties/Y/Description",
 					}
 				},
 			},
@@ -96,8 +96,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Z/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Z/Description",
+						Summary:     "Types/Axes:Properties/Z/Summary",
+						Description: "Types/Axes:Properties/Z/Description",
 					}
 				},
 			},
@@ -109,8 +109,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Right/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Right/Description",
+						Summary:     "Types/Axes:Properties/Right/Summary",
+						Description: "Types/Axes:Properties/Right/Description",
 					}
 				},
 			},
@@ -122,8 +122,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Top/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Top/Description",
+						Summary:     "Types/Axes:Properties/Top/Summary",
+						Description: "Types/Axes:Properties/Top/Description",
 					}
 				},
 			},
@@ -135,8 +135,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Back/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Back/Description",
+						Summary:     "Types/Axes:Properties/Back/Summary",
+						Description: "Types/Axes:Properties/Back/Description",
 					}
 				},
 			},
@@ -148,8 +148,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Left/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Left/Description",
+						Summary:     "Types/Axes:Properties/Left/Summary",
+						Description: "Types/Axes:Properties/Left/Description",
 					}
 				},
 			},
@@ -161,8 +161,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Bottom/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Bottom/Description",
+						Summary:     "Types/Axes:Properties/Bottom/Summary",
+						Description: "Types/Axes:Properties/Bottom/Description",
 					}
 				},
 			},
@@ -174,8 +174,8 @@ func Axes() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/Axes:Properties/Front/Summary",
-						Description: "Libraries/roblox/Types/Axes:Properties/Front/Description",
+						Summary:     "Types/Axes:Properties/Front/Summary",
+						Description: "Types/Axes:Properties/Front/Description",
 					}
 				},
 			},
@@ -212,8 +212,8 @@ func Axes() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 							},
-							Summary:     "Libraries/roblox/Types/Axes:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/Axes:Constructors/new/Description",
+							Summary:     "Types/Axes:Constructors/new/Summary",
+							Description: "Types/Axes:Constructors/new/Description",
 						},
 					}
 				},
@@ -239,8 +239,8 @@ func Axes() rbxmk.Reflector {
 								{Name: "y", Type: dt.Prim("bool")},
 								{Name: "z", Type: dt.Prim("bool")},
 							},
-							Summary:     "Libraries/roblox/Types/Axes:Constructors/fromComponents/Summary",
-							Description: "Libraries/roblox/Types/Axes:Constructors/fromComponents/Description",
+							Summary:     "Types/Axes:Constructors/fromComponents/Summary",
+							Description: "Types/Axes:Constructors/fromComponents/Description",
 						},
 					}
 				},
@@ -250,12 +250,12 @@ func Axes() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/Axes:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/Axes:Operators/Eq/Description",
+						Summary:     "Types/Axes:Operators/Eq/Summary",
+						Description: "Types/Axes:Operators/Eq/Description",
 					},
 				},
-				Summary:     "Libraries/roblox/Types/Axes:Summary",
-				Description: "Libraries/roblox/Types/Axes:Description",
+				Summary:     "Types/Axes:Summary",
+				Description: "Types/Axes:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

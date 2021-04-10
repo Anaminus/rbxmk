@@ -39,8 +39,8 @@ func BinaryString() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/BinaryString:Summary",
-				Description: "Libraries/roblox/Types/BinaryString:Description",
+				Summary:     "Types/BinaryString:Summary",
+				Description: "Types/BinaryString:Description",
 			}
 		},
 	}

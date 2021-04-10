@@ -39,8 +39,8 @@ func ProtectedString() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/ProtectedString:Summary",
-				Description: "Libraries/roblox/Types/ProtectedString:Description",
+				Summary:     "Types/ProtectedString:Summary",
+				Description: "Types/ProtectedString:Description",
 			}
 		},
 	}

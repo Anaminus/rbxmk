@@ -27,8 +27,8 @@ func EnumItemDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Properties/Name/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Properties/Name/Description",
+						Summary:     "Types/EnumItemDesc:Properties/Name/Summary",
+						Description: "Types/EnumItemDesc:Properties/Name/Description",
 					}
 				},
 			},
@@ -44,8 +44,8 @@ func EnumItemDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("int"),
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Properties/Value/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Properties/Value/Description",
+						Summary:     "Types/EnumItemDesc:Properties/Value/Summary",
+						Description: "Types/EnumItemDesc:Properties/Value/Description",
 					}
 				},
 			},
@@ -61,8 +61,8 @@ func EnumItemDesc() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("int"),
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Properties/Index/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Properties/Index/Description",
+						Summary:     "Types/EnumItemDesc:Properties/Index/Summary",
+						Description: "Types/EnumItemDesc:Properties/Index/Description",
 					}
 				},
 			},
@@ -82,8 +82,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Methods/Tag/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Methods/Tag/Description",
+						Summary:     "Types/EnumItemDesc:Methods/Tag/Summary",
+						Description: "Types/EnumItemDesc:Methods/Tag/Description",
 					}
 				},
 			},
@@ -102,8 +102,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Methods/Tags/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Methods/Tags/Description",
+						Summary:     "Types/EnumItemDesc:Methods/Tags/Summary",
+						Description: "Types/EnumItemDesc:Methods/Tags/Description",
 					}
 				},
 			},
@@ -122,8 +122,8 @@ func EnumItemDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Methods/SetTag/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Methods/SetTag/Description",
+						Summary:     "Types/EnumItemDesc:Methods/SetTag/Summary",
+						Description: "Types/EnumItemDesc:Methods/SetTag/Description",
 					}
 				},
 			},
@@ -142,16 +142,16 @@ func EnumItemDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "...", Type: dt.Prim("string")},
 						},
-						Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Methods/UnsetTag/Summary",
-						Description: "Libraries/rbxmk/Types/EnumItemDesc:Methods/UnsetTag/Description",
+						Summary:     "Types/EnumItemDesc:Methods/UnsetTag/Summary",
+						Description: "Types/EnumItemDesc:Methods/UnsetTag/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/rbxmk/Types/EnumItemDesc:Summary",
-				Description: "Libraries/rbxmk/Types/EnumItemDesc:Description",
+				Summary:     "Types/EnumItemDesc:Summary",
+				Description: "Types/EnumItemDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

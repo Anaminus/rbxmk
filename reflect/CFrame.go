@@ -58,8 +58,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/P/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/P/Description",
+						Summary:     "Types/CFrame:Properties/P/Summary",
+						Description: "Types/CFrame:Properties/P/Description",
 					}
 				},
 			},
@@ -71,8 +71,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/Position/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/Position/Description",
+						Summary:     "Types/CFrame:Properties/Position/Summary",
+						Description: "Types/CFrame:Properties/Position/Description",
 					}
 				},
 			},
@@ -84,8 +84,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/X/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/X/Description",
+						Summary:     "Types/CFrame:Properties/X/Summary",
+						Description: "Types/CFrame:Properties/X/Description",
 					}
 				},
 			},
@@ -97,8 +97,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/Y/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/Y/Description",
+						Summary:     "Types/CFrame:Properties/Y/Summary",
+						Description: "Types/CFrame:Properties/Y/Description",
 					}
 				},
 			},
@@ -110,8 +110,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("float"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/Z/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/Z/Description",
+						Summary:     "Types/CFrame:Properties/Z/Summary",
+						Description: "Types/CFrame:Properties/Z/Description",
 					}
 				},
 			},
@@ -128,8 +128,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/LookVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/LookVector/Description",
+						Summary:     "Types/CFrame:Properties/LookVector/Summary",
+						Description: "Types/CFrame:Properties/LookVector/Description",
 					}
 				},
 			},
@@ -146,8 +146,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/RightVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/RightVector/Description",
+						Summary:     "Types/CFrame:Properties/RightVector/Summary",
+						Description: "Types/CFrame:Properties/RightVector/Description",
 					}
 				},
 			},
@@ -164,8 +164,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/UpVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/UpVector/Description",
+						Summary:     "Types/CFrame:Properties/UpVector/Summary",
+						Description: "Types/CFrame:Properties/UpVector/Description",
 					}
 				},
 			},
@@ -182,8 +182,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/XVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/XVector/Description",
+						Summary:     "Types/CFrame:Properties/XVector/Summary",
+						Description: "Types/CFrame:Properties/XVector/Description",
 					}
 				},
 			},
@@ -200,8 +200,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/YVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/YVector/Description",
+						Summary:     "Types/CFrame:Properties/YVector/Summary",
+						Description: "Types/CFrame:Properties/YVector/Description",
 					}
 				},
 			},
@@ -218,8 +218,8 @@ func CFrame() rbxmk.Reflector {
 					return dump.Property{
 						ValueType:   dt.Prim("Vector3"),
 						ReadOnly:    true,
-						Summary:     "Libraries/roblox/Types/CFrame:Properties/ZVector/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Properties/ZVector/Description",
+						Summary:     "Types/CFrame:Properties/ZVector/Summary",
+						Description: "Types/CFrame:Properties/ZVector/Description",
 					}
 				},
 			},
@@ -234,8 +234,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/Inverse/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/Inverse/Description",
+						Summary:     "Types/CFrame:Methods/Inverse/Summary",
+						Description: "Types/CFrame:Methods/Inverse/Description",
 					}
 				},
 			},
@@ -254,8 +254,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/Lerp/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/Lerp/Description",
+						Summary:     "Types/CFrame:Methods/Lerp/Summary",
+						Description: "Types/CFrame:Methods/Lerp/Description",
 					}
 				},
 			},
@@ -272,8 +272,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToWorldSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToWorldSpace/Description",
+						Summary:     "Types/CFrame:Methods/ToWorldSpace/Summary",
+						Description: "Types/CFrame:Methods/ToWorldSpace/Description",
 					}
 				},
 			},
@@ -290,8 +290,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("CFrame")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToObjectSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToObjectSpace/Description",
+						Summary:     "Types/CFrame:Methods/ToObjectSpace/Summary",
+						Description: "Types/CFrame:Methods/ToObjectSpace/Description",
 					}
 				},
 			},
@@ -308,8 +308,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/PointToWorldSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/PointToWorldSpace/Description",
+						Summary:     "Types/CFrame:Methods/PointToWorldSpace/Summary",
+						Description: "Types/CFrame:Methods/PointToWorldSpace/Description",
 					}
 				},
 			},
@@ -326,8 +326,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/PointToObjectSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/PointToObjectSpace/Description",
+						Summary:     "Types/CFrame:Methods/PointToObjectSpace/Summary",
+						Description: "Types/CFrame:Methods/PointToObjectSpace/Description",
 					}
 				},
 			},
@@ -344,8 +344,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/VectorToWorldSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/VectorToWorldSpace/Description",
+						Summary:     "Types/CFrame:Methods/VectorToWorldSpace/Summary",
+						Description: "Types/CFrame:Methods/VectorToWorldSpace/Description",
 					}
 				},
 			},
@@ -362,8 +362,8 @@ func CFrame() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Vector3")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/VectorToObjectSpace/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/VectorToObjectSpace/Description",
+						Summary:     "Types/CFrame:Methods/VectorToObjectSpace/Summary",
+						Description: "Types/CFrame:Methods/VectorToObjectSpace/Description",
 					}
 				},
 			},
@@ -401,8 +401,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "r21", Type: dt.Prim("float")},
 							{Name: "r22", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/GetComponents/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/GetComponents/Description",
+						Summary:     "Types/CFrame:Methods/GetComponents/Summary",
+						Description: "Types/CFrame:Methods/GetComponents/Description",
 					}
 				},
 			},
@@ -418,8 +418,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToEulerAnglesXYZ/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToEulerAnglesXYZ/Description",
+						Summary:     "Types/CFrame:Methods/ToEulerAnglesXYZ/Summary",
+						Description: "Types/CFrame:Methods/ToEulerAnglesXYZ/Description",
 					}
 				},
 			},
@@ -435,8 +435,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToEulerAnglesYXZ/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToEulerAnglesYXZ/Description",
+						Summary:     "Types/CFrame:Methods/ToEulerAnglesYXZ/Summary",
+						Description: "Types/CFrame:Methods/ToEulerAnglesYXZ/Description",
 					}
 				},
 			},
@@ -452,8 +452,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "ry", Type: dt.Prim("float")},
 							{Name: "rz", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToOrientation/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToOrientation/Description",
+						Summary:     "Types/CFrame:Methods/ToOrientation/Summary",
+						Description: "Types/CFrame:Methods/ToOrientation/Description",
 					}
 				},
 			},
@@ -468,8 +468,8 @@ func CFrame() rbxmk.Reflector {
 							{Name: "axis", Type: dt.Prim("Vector3")},
 							{Name: "rotation", Type: dt.Prim("float")},
 						},
-						Summary:     "Libraries/roblox/Types/CFrame:Methods/ToAxisAngle/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Methods/ToAxisAngle/Description",
+						Summary:     "Types/CFrame:Methods/ToAxisAngle/Summary",
+						Description: "Types/CFrame:Methods/ToAxisAngle/Description",
 					}
 				},
 			},
@@ -530,8 +530,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Identity/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Identity/Description",
+							Summary:     "Types/CFrame:Constructors/new/Identity/Summary",
+							Description: "Types/CFrame:Constructors/new/Identity/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -540,8 +540,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Position/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Position/Description",
+							Summary:     "Types/CFrame:Constructors/new/Position/Summary",
+							Description: "Types/CFrame:Constructors/new/Position/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -551,8 +551,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/LookAt/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/LookAt/Description",
+							Summary:     "Types/CFrame:Constructors/new/LookAt/Summary",
+							Description: "Types/CFrame:Constructors/new/LookAt/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -563,8 +563,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Position components/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Position components/Description",
+							Summary:     "Types/CFrame:Constructors/new/Position components/Summary",
+							Description: "Types/CFrame:Constructors/new/Position components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -579,8 +579,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Quaternion/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Quaternion/Description",
+							Summary:     "Types/CFrame:Constructors/new/Quaternion/Summary",
+							Description: "Types/CFrame:Constructors/new/Quaternion/Description",
 						},
 						{
 							Parameters: dump.Parameters{
@@ -600,8 +600,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/new/Components/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/new/Components/Description",
+							Summary:     "Types/CFrame:Constructors/new/Components/Summary",
+							Description: "Types/CFrame:Constructors/new/Components/Description",
 						},
 					}
 				},
@@ -625,8 +625,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/fromEulerAnglesXYZ/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/fromEulerAnglesXYZ/Description",
+							Summary:     "Types/CFrame:Constructors/fromEulerAnglesXYZ/Summary",
+							Description: "Types/CFrame:Constructors/fromEulerAnglesXYZ/Description",
 						},
 					}
 				},
@@ -650,8 +650,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/fromEulerAnglesYXZ/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/fromEulerAnglesYXZ/Description",
+							Summary:     "Types/CFrame:Constructors/fromEulerAnglesYXZ/Summary",
+							Description: "Types/CFrame:Constructors/fromEulerAnglesYXZ/Description",
 						},
 					}
 				},
@@ -675,8 +675,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/Angles/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/Angles/Description",
+							Summary:     "Types/CFrame:Constructors/Angles/Summary",
+							Description: "Types/CFrame:Constructors/Angles/Description",
 						},
 					}
 				},
@@ -700,8 +700,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/fromOrientation/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/fromOrientation/Description",
+							Summary:     "Types/CFrame:Constructors/fromOrientation/Summary",
+							Description: "Types/CFrame:Constructors/fromOrientation/Description",
 						},
 					}
 				},
@@ -723,8 +723,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/fromAxisAngle/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/fromAxisAngle/Description",
+							Summary:     "Types/CFrame:Constructors/fromAxisAngle/Summary",
+							Description: "Types/CFrame:Constructors/fromAxisAngle/Description",
 						},
 					}
 				},
@@ -750,8 +750,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/fromMatrix/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/fromMatrix/Description",
+							Summary:     "Types/CFrame:Constructors/fromMatrix/Summary",
+							Description: "Types/CFrame:Constructors/fromMatrix/Description",
 						},
 					}
 				},
@@ -775,8 +775,8 @@ func CFrame() rbxmk.Reflector {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("CFrame")},
 							},
-							Summary:     "Libraries/roblox/Types/CFrame:Constructors/lookAt/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Constructors/lookAt/Description",
+							Summary:     "Types/CFrame:Constructors/lookAt/Summary",
+							Description: "Types/CFrame:Constructors/lookAt/Description",
 						},
 					}
 				},
@@ -786,42 +786,42 @@ func CFrame() rbxmk.Reflector {
 			return dump.TypeDef{
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
-						Summary:     "Libraries/roblox/Types/CFrame:Operators/Eq/Summary",
-						Description: "Libraries/roblox/Types/CFrame:Operators/Eq/Description",
+						Summary:     "Types/CFrame:Operators/Eq/Summary",
+						Description: "Types/CFrame:Operators/Eq/Description",
 					},
 					Mul: []dump.Binop{
 						{
 							Operand:     dt.Prim("CFrame"),
 							Result:      dt.Prim("CFrame"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/CFrame/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/CFrame/Description",
+							Summary:     "Types/CFrame:Operators/Mul/CFrame/Summary",
+							Description: "Types/CFrame:Operators/Mul/CFrame/Description",
 						},
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("Vector3"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Mul/Vector3/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Mul/Vector3/Description",
+							Summary:     "Types/CFrame:Operators/Mul/Vector3/Summary",
+							Description: "Types/CFrame:Operators/Mul/Vector3/Description",
 						},
 					},
 					Add: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("CFrame"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Add/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Add/Description",
+							Summary:     "Types/CFrame:Operators/Add/Summary",
+							Description: "Types/CFrame:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
 							Operand:     dt.Prim("Vector3"),
 							Result:      dt.Prim("CFrame"),
-							Summary:     "Libraries/roblox/Types/CFrame:Operators/Sub/Summary",
-							Description: "Libraries/roblox/Types/CFrame:Operators/Sub/Description",
+							Summary:     "Types/CFrame:Operators/Sub/Summary",
+							Description: "Types/CFrame:Operators/Sub/Description",
 						},
 					},
 				},
-				Summary:     "Libraries/roblox/Types/CFrame:Summary",
-				Description: "Libraries/roblox/Types/CFrame:Description",
+				Summary:     "Types/CFrame:Summary",
+				Description: "Types/CFrame:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

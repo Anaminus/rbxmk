@@ -22,8 +22,8 @@ func Number() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Libraries/roblox/Types/number:Summary",
-				Description: "Libraries/roblox/Types/number:Description",
+				Summary:     "Types/number:Summary",
+				Description: "Types/number:Description",
 			}
 		},
 	}
