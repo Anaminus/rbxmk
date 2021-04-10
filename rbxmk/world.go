@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"strconv"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
@@ -36,10 +37,12 @@ type WorldFlags struct {
 	IncludedRoots []string
 	InsecurePaths bool
 	Debug         bool
+	Libraries     []string
 }
 
 func (f *WorldFlags) SetFlags(flags snek.FlagSet) {
 	flags.Var((*repeatedString)(&f.IncludedRoots), "include-root", Doc("Flags/world:include-root"))
+	flags.Var((*repeatedString)(&f.Libraries), "libraries", Doc("Flags/world:libraries"))
 	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, Doc("Flags/world:allow-insecure-paths"))
 	flags.BoolVar(&f.Debug, "debug", false, Doc("Flags/world:debug"))
 }
@@ -78,7 +81,39 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 		}
 	}
 	if !opt.ExcludeLibraries {
-		for _, lib := range library.All() {
+		libraries := library.All()
+		included := map[string]bool{}
+		for _, lib := range libraries {
+			included[lib.Name] = true
+		}
+		for _, list := range opt.Libraries {
+			for _, name := range strings.Split(list, ",") {
+				name = strings.TrimSpace(name)
+				if name == "" {
+					continue
+				}
+				include := true
+				switch name[0] {
+				case '-':
+					include = false
+					name = name[1:]
+				case '+':
+					include = true
+					name = name[1:]
+				}
+				if name == "*" {
+					for lib := range included {
+						included[lib] = include
+					}
+				} else if _, ok := included[name]; ok {
+					included[name] = include
+				}
+			}
+		}
+		for _, lib := range libraries {
+			if !included[lib.Name] {
+				continue
+			}
 			if err := world.Open(lib); err != nil {
 				return nil, err
 			}
