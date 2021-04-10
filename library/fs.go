@@ -243,8 +243,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Name":  dt.Prim("string"),
 					"IsDir": dt.Prim("bool"),
 				},
-				Summary:     "Libraries/fs/Types/DirEntry/Summary",
-				Description: "Libraries/fs/Types/DirEntry/Description",
+				Summary:     "Libraries/fs/Types/DirEntry:Summary",
+				Description: "Libraries/fs/Types/DirEntry:Description",
 			},
 			"FileInfo": dump.TypeDef{
 				Underlying: dt.Struct{
@@ -253,8 +253,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 					"Size":    dt.Prim("int"),
 					"ModTime": dt.Prim("int"),
 				},
-				Summary:     "Libraries/fs/Types/FileInfo/Summary",
-				Description: "Libraries/fs/Types/FileInfo/Description",
+				Summary:     "Libraries/fs/Types/FileInfo:Summary",
+				Description: "Libraries/fs/Types/FileInfo:Description",
 			},
 		},
 	}
