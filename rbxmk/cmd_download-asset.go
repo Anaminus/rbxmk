@@ -74,6 +74,14 @@ func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 	}
 
 	// Download asset.
+	body, err := library.RBXAssetIDSource{World: world}.Read(rtypes.RBXAssetOptions{
+		AssetID: c.ID,
+		Cookies: c.Cookies,
+		Format:  rtypes.FormatSelector{Format: assetFormat.Name},
+	})
+	if err != nil {
+		return fmt.Errorf("download asset: %w", err)
+	}
 	var file io.WriteCloser
 	if filename := opt.Arg(0); filename == "" {
 		file = opt.Stdout
@@ -83,14 +91,6 @@ func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 			return fmt.Errorf("create file: %w", err)
 		}
 		file = f
-	}
-	body, err := library.RBXAssetIDSource{World: world}.Read(rtypes.RBXAssetOptions{
-		AssetID: c.ID,
-		Cookies: c.Cookies,
-		Format:  rtypes.FormatSelector{Format: assetFormat.Name},
-	})
-	if err != nil {
-		return fmt.Errorf("download asset: %w", err)
 	}
 	err = fileFormat.Encode(world.Global, rtypes.FormatSelector{Format: fileFormat.Name}, file, body)
 	if err != nil {
