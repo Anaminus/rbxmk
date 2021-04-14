@@ -13,6 +13,7 @@ branch is the latest unreleased version.
 
 **Fixes:**
 - Fix `download-asset` flags not working.
+- Fix error handling in `download-asset`.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

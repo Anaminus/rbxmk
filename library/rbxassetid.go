@@ -3,6 +3,7 @@ package library
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
@@ -90,6 +91,15 @@ type RBXAssetIDSource struct {
 	*rbxmk.World
 }
 
+type assetError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (err assetError) Error() string {
+	return fmt.Sprintf("%d: %s", err.Code, err.Message)
+}
+
 // Read downloads an asset according to the given options.
 func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value, err error) {
 	if options.Format.Format == "" {
@@ -102,13 +112,25 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get asset location: %w", err)
 	}
 	var assetResponse struct {
-		Location string `json:"location"`
+		Location string       `json:"location"`
+		Errors   []assetError `json:"errors"`
 	}
 	if err := json.Unmarshal(resp.Body.(types.BinaryString), &assetResponse); err != nil {
 		return nil, fmt.Errorf("decode asset response: %s", err)
+	}
+	switch n := len(assetResponse.Errors); n {
+	case 0:
+	case 1:
+		return nil, assetResponse.Errors[0]
+	default:
+		s := make([]string, n)
+		for i, err := range assetResponse.Errors {
+			s[i] = "\t" + err.Error()
+		}
+		return nil, fmt.Errorf("response errors:\n%s", strings.Join(s, "\n"))
 	}
 	resp, err = rbxmk.DoHTTPRequest(s.World, rtypes.HTTPOptions{
 		URL:            assetResponse.Location,
@@ -117,7 +139,7 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get asset content: %w", err)
 	}
 	return resp.Body, nil
 }
