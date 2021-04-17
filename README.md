@@ -77,3 +77,8 @@ go install -ldflags="-X main.Prerelease=rc.1 -X main.Build=$(echo $(git log -1 -
 rbxmk version
 # e.g. 0.5.1-rc.1+20210312-2070bf8
 ```
+
+## License
+The source code for rbxmk is available under the [MIT license][mit].
+
+[mit]: LICENSE
