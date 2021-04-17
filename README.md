@@ -2,16 +2,18 @@
 	<img src="assets/logo-flat-name.png" alt="rbxmk logo"/>
 </a>
 
-**rbxmk** is a command-line tool for manipulating Roblox files.
+**rbxmk** is a command-line tool for manipulating [Roblox][roblox] files.
 
-rbxmk is useful for development workflows that involve many separate files. If
-your project is organized into a number of files, such as Lua files for
-scripting and model files for assets, rbxmk makes it simple to combine these
-files into a final product, be it a game, plugin, model, and so on.
+rbxmk is useful for development workflows that involve the combination of many
+separate files. If your project is organized as [Lua][lua] files for scripting
+and model files for assets, rbxmk makes it simple to combine them into a final
+product, be it a game, plugin, model, module, and so on. rbxmk is also suitable
+for more simple actions, such as downloading models or publishing games.
+
+[roblox]: https://corp.roblox.com
+[lua]: https://lua.org
 
 ## Download
-**This project is unstable! Use at your own risk!**
-
 The current version of rbxmk is **<version>v0.6.2</version>**. The following
 builds are available for download:
 
@@ -22,6 +24,10 @@ builds are available for download:
 
 See the [Release page][release] for more information on the current version.
 
+*rbxmk is fully featured, but thorough testing of all features is still a work
+in progress. Please practice redundancy and use backups to reduce the risk of
+data loss. Be sure to [report][issues] issues as you encounter them!*
+
 [win64]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.2/rbxmk-v0.6.2-windows-amd64.zip
 [win32]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.2/rbxmk-v0.6.2-windows-386.zip
 [macos]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.2/rbxmk-v0.6.2-darwin-amd64.zip
@@ -29,6 +35,7 @@ See the [Release page][release] for more information on the current version.
 [linux32]: https://github.com/Anaminus/rbxmk/releases/download/v0.6.2/rbxmk-v0.6.2-linux-386.zip
 [source]: https://github.com/Anaminus/rbxmk/archive/v0.6.2.zip
 [release]: https://github.com/Anaminus/rbxmk/releases/tag/v0.6.2
+[issues]: https://github.com/Anaminus/rbxmk/issues
 
 ## Usage
 rbxmk primarily uses [Lua][lua] scripts to produce and retrieve data, transform
