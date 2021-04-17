@@ -13,7 +13,7 @@ require (
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.3.2
 	github.com/robloxapi/rbxfile v0.3.1
-	github.com/robloxapi/types v0.1.0
+	github.com/robloxapi/types v0.2.0
 	github.com/yuin/goldmark v1.3.3
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
 	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6

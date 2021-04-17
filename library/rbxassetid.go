@@ -118,7 +118,7 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 		Location string       `json:"location"`
 		Errors   []assetError `json:"errors"`
 	}
-	if err := json.Unmarshal(resp.Body.(types.BinaryString), &assetResponse); err != nil {
+	if err := json.Unmarshal([]byte(resp.Body.(types.BinaryString)), &assetResponse); err != nil {
 		return nil, fmt.Errorf("decode asset response: %s", err)
 	}
 	switch n := len(assetResponse.Errors); n {

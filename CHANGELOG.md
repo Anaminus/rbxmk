@@ -14,6 +14,7 @@ branch is the latest unreleased version.
 **Fixes:**
 - Fix `download-asset` flags not working.
 - Fix error handling in `download-asset`.
+- Fix error when getting certain string exprim types.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

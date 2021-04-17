@@ -56,6 +56,8 @@ func NewWorld(l *lua.LState) *World {
 // UserDataOf returns the userdata value associated with v. If there is no such
 // userdata, then a new one is created, with the metatable set to the type
 // corresponding to t.
+//
+// v must be comparable.
 func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	// Normally, a new userdata will be created every single time a value needs
 	// to be pushed. This is fine for most cases; __eq will take care of most
