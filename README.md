@@ -31,8 +31,18 @@ See the [Release page][release] for more information on the current version.
 [release]: https://github.com/Anaminus/rbxmk/releases/tag/v0.6.2
 
 ## Usage
+rbxmk primarily uses [Lua][lua] scripts to produce and retrieve data, transform
+it, and send it off to a variety of sources. The main subcommand is `run`, which
+executes a script:
+
+```bash
+echo 'print("Hello world!")' > hello-world.lua
+rbxmk run hello-world.lua
+# Hello world!
+```
+
 The [Documentation page](doc/README.md) provides a complete reference on how
-rbxmk is used.
+rbxmk is used, as well as the API of the Lua environment provided by rbxmk.
 
 ## Installation
 rbxmk can also be installed manually.
