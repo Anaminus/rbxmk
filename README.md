@@ -51,6 +51,15 @@ rbxmk run hello-world.lua
 The [Documentation page](doc/README.md) provides a complete reference on how
 rbxmk is used, as well as the API of the Lua environment provided by rbxmk.
 
+### Examples
+The [examples](doc/examples) directory contains examples of rbxmk scripts.
+
+- [Convert an asset URL in the clipboard to a model in the clipboard][copy-model]
+- [Download an asset to a local file][download-asset]
+
+[copy-model]: doc/examples/copy-model.rbxmk.lua
+[download-asset]: doc/examples/download-asset.rbxmk.lua
+
 ## Installation
 rbxmk can also be installed manually.
 
