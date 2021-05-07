@@ -799,7 +799,13 @@ func (w *World) DoString(s, name string, args int) (err error) {
 // number of arguments currently on the stack that should be passed in. The file
 // is marked as actively running, and is unmarked when the file returns.
 func (w *World) DoFile(fileName string, args int) error {
-	fi, err := w.FS.Stat(fileName)
+	var fi fs.FileInfo
+	var err error
+	if len(w.fileStack) == 0 {
+		fi, err = os.Stat(fileName)
+	} else {
+		fi, err = w.FS.Stat(fileName)
+	}
 	if err != nil {
 		return err
 	}
