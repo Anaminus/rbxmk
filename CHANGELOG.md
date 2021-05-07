@@ -16,6 +16,7 @@ branch is the latest unreleased version.
 - Fix error handling in `download-asset`.
 - Fix error when getting certain string exprim types.
 - Fix path security error when running a file outside of working directory.
+- Fix runtime error produced by os.split.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

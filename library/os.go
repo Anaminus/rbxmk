@@ -78,7 +78,7 @@ func osJoin(s rbxmk.State) int {
 func osSplit(s rbxmk.State) int {
 	path := s.CheckString(1)
 	n := s.Count()
-	components := make([]string, n-2)
+	components := make([]string, n-1)
 	for i := 2; i <= n; i++ {
 		components[i-2] = s.CheckString(i)
 	}
