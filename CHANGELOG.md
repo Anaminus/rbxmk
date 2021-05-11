@@ -10,6 +10,7 @@ branch is the latest unreleased version.
 	- The `--desc-patch` flag uses a file in the descriptor patch format.
 - Add `rbxmk i` command to enter an interactive prompt.
 - Add Instance\[sym.Properties\] to get or set all properties of an instance at once.
+- Add `--libraries` flag to `run` and `i` commands to include and exclude libraries.
 
 **Fixes:**
 - Fix `download-asset` flags not working.
