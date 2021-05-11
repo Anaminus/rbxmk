@@ -3,28 +3,36 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
-**Highlights:**
-- Add [Instance\[sym.Properties\]](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesymproperties) to get or set all properties of an instance at once.
-- Add [`rbxmk i`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-interactive-command) command to enter an interactive prompt.
-- Add flags to [`run`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) command that preset a global descriptor.
-	- The `--desc-latest` flag uses the latest API dump from Roblox.
-	- The `--desc-file` flag uses a file in the descriptor format (API dump).
-	- The `--desc-patch` flag uses a file in the descriptor patch format.
-- Add `--libraries` flag to [`run`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) and [`i`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-interactive-command) to include and exclude libraries.
-
-**Fixes:**
-- Fix [`download-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-download-asset-command) flags not working.
-- Fix error handling in [`download-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-download-asset-command).
-- Fix error when getting certain string exprim types.
-- Fix path security error when running a file outside of working directory.
-- Fix runtime error produced by [os.split](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-ossplit).
-
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
 
 [doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
-[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.6.2...imperative
+[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.7.0...imperative
+
+## v0.7.0
+**Highlights:**
+- Add [Instance\[sym.Properties\]](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/types.md#user-content-instancesymproperties) to get or set all properties of an instance at once.
+- Add [`rbxmk i`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-interactive-command) command to enter an interactive prompt.
+- Add flags to [`run`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-run-command) command that preset a global descriptor.
+	- The `--desc-latest` flag uses the latest API dump from Roblox.
+	- The `--desc-file` flag uses a file in the descriptor format (API dump).
+	- The `--desc-patch` flag uses a file in the descriptor patch format.
+- Add `--libraries` flag to [`run`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-run-command) and [`i`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-interactive-command) to include and exclude libraries.
+
+**Fixes:**
+- Fix [`download-asset`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-download-asset-command) flags not working.
+- Fix error handling in [`download-asset`](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-download-asset-command).
+- Fix error when getting certain string exprim types.
+- Fix path security error when running a file outside of working directory.
+- Fix runtime error produced by [os.split](https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/libraries.md#user-content-ossplit).
+
+See a [comparison with the previous version][cmp-v0.7.0] for a thorough list of changes.
+
+The [Documentation page][doc-v0.7.0] provides a complete reference for this version of rbxmk.
+
+[doc-v0.7.0]: https://github.com/Anaminus/rbxmk/blob/v0.7.0/doc/README.md#user-content-rbxmk-reference
+[cmp-v0.7.0]: https://github.com/Anaminus/rbxmk/compare/v0.6.2...v0.7.0
 
 ## v0.6.2
 **Highlights:**
