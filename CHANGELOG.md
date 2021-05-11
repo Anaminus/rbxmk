@@ -4,20 +4,20 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
-- Add flags to `run` and `i` commands that preset global descriptor.
+- Add [Instance\[sym.Properties\]](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesymproperties) to get or set all properties of an instance at once.
+- Add [`rbxmk i`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-interactive-command) command to enter an interactive prompt.
+- Add flags to [`run`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) command that preset a global descriptor.
 	- The `--desc-latest` flag uses the latest API dump from Roblox.
 	- The `--desc-file` flag uses a file in the descriptor format (API dump).
 	- The `--desc-patch` flag uses a file in the descriptor patch format.
-- Add `rbxmk i` command to enter an interactive prompt.
-- Add Instance\[sym.Properties\] to get or set all properties of an instance at once.
-- Add `--libraries` flag to `run` and `i` commands to include and exclude libraries.
+- Add `--libraries` flag to [`run`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-run-command) and [`i`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-interactive-command) to include and exclude libraries.
 
 **Fixes:**
-- Fix `download-asset` flags not working.
-- Fix error handling in `download-asset`.
+- Fix [`download-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-download-asset-command) flags not working.
+- Fix error handling in [`download-asset`](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-download-asset-command).
 - Fix error when getting certain string exprim types.
 - Fix path security error when running a file outside of working directory.
-- Fix runtime error produced by os.split.
+- Fix runtime error produced by [os.split](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-ossplit).
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
