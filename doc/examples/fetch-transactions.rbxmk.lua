@@ -38,7 +38,7 @@ end
 local cookies = rbxmk.cookiesFrom("studio")
 
 local CurrentUser do
-	local userURL = "https://www.roblox.com/mobileapi/userinfo"
+	local userURL = "https://users.roblox.com/v1/users/authenticated"
 	local resp = http.request({
 		URL = userURL,
 		Method = "GET",
@@ -50,11 +50,9 @@ local CurrentUser do
 		return
 	end
 	CurrentUser = {
-		ID = resp.Body.UserID,
-		Name = resp.Body.UserName,
-		Robux = resp.Body.RobuxBalance,
-		Thumbnail = resp.Body.ThumbnailUrl,
-		Premium = resp.Body.IsPremium,
+		ID = resp.Body.id,
+		name = resp.Body.name,
+		displayName = resp.Body.displayName,
 	}
 end
 
