@@ -77,6 +77,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
+	injectSSLKeyLogFile(world, opt.Stderr)
 	if c.Init != nil {
 		c.Init(rbxmk.State{World: world, L: world.State()})
 	}

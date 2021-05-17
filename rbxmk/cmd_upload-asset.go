@@ -51,6 +51,7 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
+	injectSSLKeyLogFile(world, opt.Stderr)
 
 	// Check formats.
 	assetFormat := world.Format(c.AssetFormat)
