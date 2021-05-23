@@ -3,15 +3,23 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
-**Fixes:**
-- Fix fragments failing to resolve due to case-sensitivity.
-
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
 
 [doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
-[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.7.1...imperative
+[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.7.2...imperative
+
+## v0.7.2
+**Fixes:**
+- Fix fragments failing to resolve due to case-sensitivity.
+
+See a [comparison with the previous version][cmp-v0.7.2] for a thorough list of changes.
+
+The [Documentation page][doc-v0.7.2] provides a complete reference for this version of rbxmk.
+
+[doc-v0.7.2]: https://github.com/Anaminus/rbxmk/blob/v0.7.2/doc/README.md#user-content-rbxmk-reference
+[cmp-v0.7.2]: https://github.com/Anaminus/rbxmk/compare/v0.7.1...v0.7.2
 
 ## v0.7.1
 **Highlights:**
