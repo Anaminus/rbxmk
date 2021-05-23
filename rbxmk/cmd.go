@@ -9,9 +9,9 @@ import (
 func DocumentCommands() {
 	for _, def := range Program.List() {
 		Program.SetDoc(def.Name, snek.Doc{
-			Summary:     Doc("Commands/" + def.Name + ":Summary"),
-			Arguments:   Doc("Commands/" + def.Name + ":Arguments"),
-			Description: Doc("Commands/" + def.Name + ":Description"),
+			Summary:     Doc("commands/" + def.Name + ":Summary"),
+			Arguments:   Doc("commands/" + def.Name + ":Arguments"),
+			Description: Doc("commands/" + def.Name + ":Description"),
 		})
 		if def, ok := def.New().(snek.FlagSetter); ok {
 			def.SetFlags(flag.NewFlagSet("", 0))

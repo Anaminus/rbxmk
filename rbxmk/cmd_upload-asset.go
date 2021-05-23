@@ -27,9 +27,9 @@ type UploadAssetCommand struct {
 
 func (c *UploadAssetCommand) SetFlags(flags snek.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
-	flags.Int64Var(&c.ID, "id", 0, Doc("Commands/upload-asset:Flags/id"))
-	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("Commands/upload-asset:Flags/format"))
-	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/upload-asset:Flags/file-format"))
+	flags.Int64Var(&c.ID, "id", 0, Doc("commands/upload-asset:Flags/id"))
+	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("commands/upload-asset:Flags/format"))
+	flags.StringVar(&c.FileFormat, "file-format", "", Doc("commands/upload-asset:Flags/file-format"))
 }
 
 func (c *UploadAssetCommand) Run(opt snek.Options) error {

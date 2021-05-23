@@ -6,7 +6,7 @@ import (
 	"github.com/anaminus/snek"
 )
 
-var Program = snek.NewProgram("rbxmk", os.Args).Usage(Doc("Commands/main"))
+var Program = snek.NewProgram("rbxmk", os.Args).Usage(Doc("commands/main"))
 
 func main() {
 	DocumentCommands()
