@@ -42,10 +42,11 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	3. [math.round][math.round]
 	4. [math.sign][math.sign]
 8. [os][os]
-	1. [os.expand][os.expand]
-	2. [os.getenv][os.getenv]
-	3. [os.join][os.join]
-	4. [os.split][os.split]
+	1. [os.clean][os.clean]
+	2. [os.expand][os.expand]
+	3. [os.getenv][os.getenv]
+	4. [os.join][os.join]
+	5. [os.split][os.split]
 9. [rbxassetid][rbxassetid]
 	1. [rbxassetid.read][rbxassetid.read]
 	2. [rbxassetid.write][rbxassetid.write]
@@ -580,10 +581,18 @@ additional functions are included:
 
 Name                   | Description
 -----------------------|------------
+[os.clean][os.clean]   | Cleans up a file path.
 [os.expand][os.expand] | Expands predefined file path variables.
 [os.getenv][os.getenv] | Gets an environment variable.
 [os.join][os.join]     | Joins a number of file paths together.
 [os.split][os.split]   | Splits a file path into its components.
+
+### os.clean
+[os.clean]: #user-content-osclean
+<code>os.clean(path: [string](##)): [string](##)</code>
+
+The **clean** function returns the shortest path equivalent to *path*.
+Separators are replaced with the OS-specific path separator.
 
 ### os.expand
 [os.expand]: #user-content-osexpand

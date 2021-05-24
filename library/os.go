@@ -22,11 +22,19 @@ var OS = rbxmk.Library{
 
 func openOS(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 4)
+	lib.RawSetString("clean", s.WrapFunc(osClean))
 	lib.RawSetString("expand", s.WrapFunc(osExpand))
 	lib.RawSetString("getenv", s.WrapFunc(osGetenv))
 	lib.RawSetString("join", s.WrapFunc(osJoin))
 	lib.RawSetString("split", s.WrapFunc(osSplit))
 	return lib
+}
+
+func osClean(s rbxmk.State) int {
+	path := s.CheckString(1)
+	filename := filepath.Clean(path)
+	s.L.Push(lua.LString(filename))
+	return 1
 }
 
 func osExpand(s rbxmk.State) int {
@@ -96,6 +104,16 @@ func dumpOS(s rbxmk.State) dump.Library {
 	return dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
+				"clean": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Prim("string")},
+					},
+					Summary:     "Libraries/os:Fields/clean/Summary",
+					Description: "Libraries/os:Fields/clean/Description",
+				},
 				"expand": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim("string")},
