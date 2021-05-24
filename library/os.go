@@ -103,8 +103,8 @@ func dumpOS(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim("string")},
 					},
-					Summary:     "Libraries/os:Fields/path/Summary",
-					Description: "Libraries/os:Fields/path/Description",
+					Summary:     "Libraries/os:Fields/expand/Summary",
+					Description: "Libraries/os:Fields/expand/Description",
 				},
 				"getenv": dump.Function{
 					Parameters: dump.Parameters{
