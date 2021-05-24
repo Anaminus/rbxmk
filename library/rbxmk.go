@@ -135,8 +135,14 @@ func rbxmkEncodeFormat(s rbxmk.State) int {
 	if format.Encode == nil {
 		return s.RaiseError("cannot encode with format %s", format.Name)
 	}
+	var value types.Value
+	if len(format.EncodeTypes) > 0 {
+		value = s.PullAnyOf(2, format.EncodeTypes...)
+	} else {
+		value = s.Pull(2, "Variant")
+	}
 	var w bytes.Buffer
-	if err := format.Encode(s.Global, selector, &w, s.Pull(2, "Variant")); err != nil {
+	if err := format.Encode(s.Global, selector, &w, value); err != nil {
 		return s.RaiseError("%s", err)
 	}
 	return s.Push(types.BinaryString(w.Bytes()))

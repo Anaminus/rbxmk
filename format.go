@@ -13,6 +13,11 @@ type Format struct {
 	// extension.
 	Name string
 
+	// EncodeTypes is an optional list of types that Encode can receive. These
+	// are called with State.PullAnyOf to reflect the value to a type known by
+	// the encoder. If empty, then the value is pulled as Variant.
+	EncodeTypes []string
+
 	// MediaTypes is a list of media types that are associated with the format,
 	// to be used by sources as needed.
 	MediaTypes []string
