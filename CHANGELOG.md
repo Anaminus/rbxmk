@@ -3,6 +3,12 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+**Fixes:**
+- Fix missing properties from sym.Properties when instance has a descriptor.
+- Fix unexpected conversion failures when getting certain property types while
+  an instance has descriptor.
+- Fix type conversion error when encoding `desc-patch.json` format.
+
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
