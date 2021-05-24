@@ -38,8 +38,9 @@ func Desc() rbxmk.Format {
 func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "desc-patch.json",
-		MediaTypes: []string{"application/json", "text/plain"},
+		Name:        "desc-patch.json",
+		EncodeTypes: []string{"DescActions"},
+		MediaTypes:  []string{"application/json", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "DescActions"
 		},
