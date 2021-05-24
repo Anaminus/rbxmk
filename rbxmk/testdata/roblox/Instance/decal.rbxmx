@@ -1,0 +1,21 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Decal" referent="RBX6323D6F6E26A4F2488110184898ED06D">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<Color3 name="Color3">
+				<R>1</R>
+				<G>1</G>
+				<B>1</B>
+			</Color3>
+			<token name="Face">1</token>
+			<string name="Name">Decal</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<Content name="Texture"><url>rbxasset://textures/SpawnLocation.png</url></Content>
+			<float name="Transparency">0</float>
+		</Properties>
+	</Item>
+</roblox>
