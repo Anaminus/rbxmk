@@ -166,6 +166,12 @@ func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, na
 			}
 			return reflectOne(s, item)
 		default:
+			rfl := s.Reflector(propDesc.ValueType.Name)
+			if rfl.Name != "" && rfl.ConvertFrom != nil {
+				if v := rfl.ConvertFrom(value); v != nil {
+					return reflectOne(s, v)
+				}
+			}
 			if a, b := value.Type(), propDesc.ValueType.Name; a != b {
 				return nil, fmt.Errorf("stored value type %s does not match property type %s", a, b)
 			}

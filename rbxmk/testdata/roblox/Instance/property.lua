@@ -27,3 +27,9 @@ v.Value = b
 T.Pass(function() return v.Value == b end, "with desc, get value")
 v.Value = nil
 T.Pass(function() return v.Value == nil end, "with desc, get nil again")
+
+rbxmk.globalDesc = desc
+local d = fs.read(os.expand("$sd/decal.rbxm"))
+T.Pass(d:Descend("Decal").Texture == "rbxasset://textures/SpawnLocation.png", "get coerced property")
+rbxmk.globalDesc = nil
+
