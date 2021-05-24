@@ -1,0 +1,44 @@
+[
+	{
+		"Type": 1,
+		"Element": "Property",
+		"Primary": "Instance",
+		"Secondary": "AttributesSerialize",
+		"Fields": {
+			"CanLoad": true,
+			"CanSave": true,
+			"Category": "Data",
+			"Name": "AttributesSerialize",
+			"ReadSecurity": "None",
+			"Tags": [
+				"NotScriptable"
+			],
+			"ValueType": {
+				"Category": "DataType",
+				"Name": "BinaryString"
+			},
+			"WriteSecurity": "None"
+		}
+	},
+	{
+		"Type": 1,
+		"Element": "Property",
+		"Primary": "Instance",
+		"Secondary": "Tags",
+		"Fields": {
+			"CanLoad": true,
+			"CanSave": true,
+			"Category": "Data",
+			"Name": "Tags",
+			"ReadSecurity": "None",
+			"Tags": [
+				"NotScriptable"
+			],
+			"ValueType": {
+				"Category": "DataType",
+				"Name": "BinaryString"
+			},
+			"WriteSecurity": "None"
+		}
+	}
+]
