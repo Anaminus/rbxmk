@@ -126,16 +126,17 @@ func UnresolvedFragments() {
 //
 //     libraries, roblox, types, Region3.md, Properties, CFrame, Description
 //
+// The file portion of the fragment path is converted to lowercase.
 func parseFragPath(s, suffix string, filesep rune) []string {
 	if s == "" {
 		return []string{}
 	}
 	i := strings.IndexRune(s, filesep)
 	if i < 0 {
-		return strings.Split(s+".md", "/")
+		return strings.Split(strings.ToLower(s)+".md", "/")
 	}
 	items := make([]string, 0, strings.Count(s, "/")+1)
-	items = append(items, strings.Split(s[:i]+".md", "/")...)
+	items = append(items, strings.Split(strings.ToLower(s[:i])+".md", "/")...)
 	items = append(items, strings.Split(s[i+1:], "/")...)
 	return items
 }
