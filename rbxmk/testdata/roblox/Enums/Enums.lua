@@ -62,3 +62,8 @@ T.Pass(items[2].Name == "CCCC" and items[2].Value == 3, "GetEnumItems[2] == CCCC
 T.Pass(items[3].Name == "BBBB" and items[3].Value == 2, "GetEnumItems[3] == BBBB")
 T.Pass(items[4].Name == "AAAA" and items[4].Value == 1, "GetEnumItems[4] == AAAA")
 
+-- IsA
+T.Pass(Enums0.NormalId.Front:IsA("NormalId"), "Front is a NormalId")
+T.Pass(not Enums0.NormalId.Front:IsA("NORMALID"), "Front is not a NORMALID")
+T.Pass(not Enums0.NormalId.Front:IsA("Unknown"), "Front is not an Unknown")
+T.Pass(not Enums0.NormalId.Front:IsA("Axis"), "Front is not an Axis")

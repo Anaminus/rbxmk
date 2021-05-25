@@ -63,6 +63,27 @@ func EnumItem() rbxmk.Reflector {
 				},
 			},
 		},
+		Methods: rbxmk.Methods{
+			"IsA": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					enumName := string(s.Pull(2, "string").(types.String))
+					item := v.(*rtypes.EnumItem)
+					return s.Push(types.Bool(item.Enum().Name() == enumName))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "enumName", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim("bool")},
+						},
+						Summary:     "Types/EnumItem:Methods/IsA/Summary",
+						Description: "Types/EnumItem:Methods/IsA/Description",
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/EnumItem:Summary",
