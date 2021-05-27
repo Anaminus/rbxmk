@@ -11,6 +11,8 @@ branch is the latest unreleased version.
 - Fix unexpected conversion failures when getting certain property types while
   an instance has descriptor.
 - Fix type conversion error when encoding `desc-patch.json` format.
+- Fix encoding of SharedStrings in rbxlx/rbxmx formats.
+- Fix incorrect use of CDATA sections in rbxlx/rbxmx formats.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
