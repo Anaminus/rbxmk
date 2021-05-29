@@ -24,6 +24,22 @@ func (d *RootDesc) String() string {
 	return "RootDesc"
 }
 
+// ClassIsA returns whether class is a subclass of superclass. Returns false if
+// d is nil, or if class or superclass are not valid classes.
+func (d *RootDesc) ClassIsA(class, superclass string) bool {
+	if d == nil {
+		return false
+	}
+	classDesc := d.Classes[class]
+	for classDesc != nil {
+		if classDesc.Superclass == superclass {
+			return true
+		}
+		classDesc = d.Classes[classDesc.Superclass]
+	}
+	return false
+}
+
 // Member gets a member descriptor from a class, or any class it inherits from.
 // Returns nil if d is nil, or if the class or member was not found.
 func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
