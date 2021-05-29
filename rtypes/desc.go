@@ -25,7 +25,11 @@ func (d *RootDesc) String() string {
 }
 
 // Member gets a member descriptor from a class, or any class it inherits from.
+// Returns nil if d is nil, or if the class or member was not found.
 func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
+	if d == nil {
+		return nil
+	}
 	classDesc := d.Classes[class]
 	for classDesc != nil {
 		if member = classDesc.Members[name]; member != nil {
@@ -37,8 +41,11 @@ func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
 }
 
 // Property gets a property descriptor from a class, or any class it inherits
-// from.
+// from. Returns nil if d is nil, or if the class or member was not found.
 func (d *RootDesc) Property(class, name string) *rbxdump.Property {
+	if d == nil {
+		return nil
+	}
 	classDesc := d.Classes[class]
 	for classDesc != nil {
 		if member := classDesc.Members[name]; member != nil {
