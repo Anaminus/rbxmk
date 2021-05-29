@@ -40,6 +40,37 @@ func (d *RootDesc) ClassIsA(class, superclass string) bool {
 	return false
 }
 
+// Class returns the class descriptor from a class name. Returns nil if d is
+// nil, or the class was not found.
+func (d *RootDesc) Class(name string) (class *rbxdump.Class) {
+	if d == nil {
+		return nil
+	}
+	return d.Classes[name]
+}
+
+// Enum returns the enum descriptor from an enum name. Returns nil if d is nil,
+// or the enum was not found.
+func (d *RootDesc) Enum(name string) (enum *rbxdump.Enum) {
+	if d == nil {
+		return nil
+	}
+	return d.Enums[name]
+}
+
+// EnumItem returns the enum item descriptor from an enum and item name. Returns
+// nil if d is nil, or the enum or item was not found.
+func (d *RootDesc) EnumItem(enum, name string) (item *rbxdump.EnumItem) {
+	if d == nil {
+		return nil
+	}
+	e := d.Enums[enum]
+	if e == nil {
+		return nil
+	}
+	return e.Items[name]
+}
+
 // Member gets a member descriptor from a class, or any class it inherits from.
 // Returns nil if d is nil, or if the class or member was not found.
 func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
