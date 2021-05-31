@@ -26,6 +26,7 @@ type InteractiveCommand struct {
 
 func (c *InteractiveCommand) SetFlags(flags snek.FlagSet) {
 	c.WorldFlags.SetFlags(flags)
+	c.DescFlags.SetFlags(flags)
 }
 
 func (c *InteractiveCommand) Run(opt snek.Options) (err error) {

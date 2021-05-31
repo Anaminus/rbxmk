@@ -17,6 +17,7 @@ branch is the latest unreleased version.
 - Fix type conversion error when encoding Objects with [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 - Fix encoding of SharedStrings in rbxlx/rbxmx formats.
 - Fix incorrect use of CDATA sections in rbxlx/rbxmx formats.
+- Fix interactive command not having descriptor flags.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
