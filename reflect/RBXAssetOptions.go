@@ -37,9 +37,13 @@ func RBXAssetOptions() rbxmk.Reflector {
 			}
 			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),
-				Format:  s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector),
 				Cookies: s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
-				Body:    s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
+			}
+			options.Format = s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector)
+			if format := s.Format(options.Format.Format); format.Name != "" {
+				options.Body = s.PullAnyFromTableOpt(table, lua.LString("Body"), nil, format.EncodeTypes...)
+			} else {
+				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil)
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)

@@ -136,8 +136,11 @@ func fsStat(s rbxmk.State) int {
 
 func fsWrite(s rbxmk.State) int {
 	filename := string(s.Pull(1, "string").(types.String))
-	value := s.Pull(2, "Variant")
 	selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	if selector.Format == "" {
+		selector.Format = s.Ext(filename)
+	}
+	value := s.PullEncoded(2, selector)
 	err := FSSource{World: s.World}.Write(filename, value, selector)
 	if err != nil {
 		return s.RaiseError("%s", err)

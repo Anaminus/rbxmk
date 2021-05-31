@@ -36,11 +36,15 @@ func HTTPOptions() rbxmk.Reflector {
 			options := rtypes.HTTPOptions{
 				URL:            string(s.PullFromTable(table, lua.LString("URL"), "string").(types.String)),
 				Method:         string(s.PullFromTableOpt(table, lua.LString("Method"), "string", types.String("GET")).(types.String)),
-				RequestFormat:  s.PullFromTableOpt(table, lua.LString("RequestFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector),
 				ResponseFormat: s.PullFromTableOpt(table, lua.LString("ResponseFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector),
 				Headers:        s.PullFromTableOpt(table, lua.LString("Headers"), "HTTPHeaders", rtypes.HTTPHeaders(nil)).(rtypes.HTTPHeaders),
 				Cookies:        s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
-				Body:           s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
+			}
+			options.RequestFormat = s.PullFromTableOpt(table, lua.LString("RequestFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+			if format := s.Format(options.RequestFormat.Format); format.Name != "" {
+				options.Body = s.PullAnyFromTableOpt(table, lua.LString("Body"), nil, format.EncodeTypes...)
+			} else {
+				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil)
 			}
 			return options, nil
 		},
