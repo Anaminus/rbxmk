@@ -14,6 +14,7 @@ branch is the latest unreleased version.
 - Fix unexpected conversion failures when getting certain property types while
   an instance has descriptor.
 - Fix type conversion error when encoding `desc-patch.json` format.
+- Fix type conversion error when encoding Objects with [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 - Fix encoding of SharedStrings in rbxlx/rbxmx formats.
 - Fix incorrect use of CDATA sections in rbxlx/rbxmx formats.
 

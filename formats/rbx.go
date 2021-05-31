@@ -16,8 +16,9 @@ import (
 func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "rbxl",
-		MediaTypes: []string{"application/x-roblox-studio"},
+		Name:        "rbxl",
+		EncodeTypes: []string{"Instance", "Objects"},
+		MediaTypes:  []string{"application/x-roblox-studio"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -55,8 +56,9 @@ func RBXL() rbxmk.Format {
 func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "rbxm",
-		MediaTypes: []string{"application/x-roblox-studio"},
+		Name:        "rbxm",
+		EncodeTypes: []string{"Instance", "Objects"},
+		MediaTypes:  []string{"application/x-roblox-studio"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -94,8 +96,9 @@ func RBXM() rbxmk.Format {
 func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "rbxlx",
-		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		Name:        "rbxlx",
+		EncodeTypes: []string{"Instance", "Objects"},
+		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -133,8 +136,9 @@ func RBXLX() rbxmk.Format {
 func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "rbxmx",
-		MediaTypes: []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		Name:        "rbxmx",
+		EncodeTypes: []string{"Instance", "Objects"},
+		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
