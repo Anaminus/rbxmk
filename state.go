@@ -147,6 +147,32 @@ func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	return v
 }
 
+// PullEncoded pulls a value to be encoded according to a FormatSelector. The
+// referred format is determined, then Format.EncodeTypes is used to pull the
+// value from n. If fs.Format is empty, or if EncodeTypes is empty, then the
+// value is pulled as a Variant.
+func (s State) PullEncoded(n int, fs rtypes.FormatSelector) types.Value {
+	if fs.Format == "" {
+		return s.Pull(n, "Variant")
+	}
+	format := s.Format(fs.Format)
+	if format.Name == "" {
+		s.RaiseError("unknown format %q", fs.Format)
+		return nil
+	}
+	return s.PullEncodedFormat(n, s.Format(fs.Format))
+}
+
+// PullEncodedFormat pulls a value to be encoded according to a Format.
+// Format.EncodeTypes is used to pull the value from n. If EncodeTypes is empty,
+// then the value is pulled as a Variant.
+func (s State) PullEncodedFormat(n int, f Format) types.Value {
+	if len(f.EncodeTypes) > 0 {
+		return s.PullAnyOf(n, f.EncodeTypes...)
+	}
+	return s.Pull(n, "Variant")
+}
+
 // listTypes returns each type listed in a natural sentence.
 func listTypes(types []string) string {
 	switch len(types) {
