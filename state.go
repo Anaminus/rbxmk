@@ -349,6 +349,48 @@ func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d
 	return v
 }
 
+// PullAnyFromTable gets a value from table[field], and reflects a value from it
+// according to the first successful type from t registered with s.World.
+func (s State) PullAnyFromTable(table *lua.LTable, field lua.LValue, t ...string) types.Value {
+	lv := table.RawGet(field)
+	for _, t := range t {
+		rfl := s.MustReflector(t)
+		if rfl.Count < 0 {
+			panic("PullAnyFromTable cannot pull variable types")
+		} else if rfl.Count > 1 {
+			panic("PullAnyFromTable cannot pull multi-value types")
+		}
+		if v, err := rfl.PullFrom(s, lv); err == nil {
+			return v
+		}
+	}
+	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.Typeof(lv))
+	return nil
+}
+
+// PullAnyFromTableOpt gets a value from table[field], and reflects a value from
+// it according to the first successful type from t registered with s.World. If
+// the field is nil, then d is returned instead.
+func (s State) PullAnyFromTableOpt(table *lua.LTable, field lua.LValue, d types.Value, t ...string) types.Value {
+	lv := table.RawGet(field)
+	if lv == lua.LNil {
+		return d
+	}
+	for _, t := range t {
+		rfl := s.MustReflector(t)
+		if rfl.Count < 0 {
+			panic("PullAnyFromTableOpt cannot pull variable types")
+		} else if rfl.Count > 1 {
+			panic("PullAnyFromTableOpt cannot pull multi-value types")
+		}
+		if v, err := rfl.PullFrom(s, lv); err == nil {
+			return v
+		}
+	}
+	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.Typeof(lv))
+	return nil
+}
+
 // PushArrayOf pushes an rtypes.Array, ensuring that each element is reflected
 // according to t.
 func (s State) PushArrayOf(t string, v rtypes.Array) int {
