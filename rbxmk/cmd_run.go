@@ -87,6 +87,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
+	world.SetEnumGlobal()
 
 	// Run stdin as script.
 	if file == "-" {

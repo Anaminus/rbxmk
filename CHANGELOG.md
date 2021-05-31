@@ -8,6 +8,8 @@ branch is the latest unreleased version.
 - Improve handling of values in the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 - Add "Desc" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set a descriptor used when encoding or decoding.
 - Add "DescMode" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set how deviations from the descriptor are handled.
+- Including `--desc-*` flags causes the "Enum" global variable to be set to the
+  enums generated from the resulting descriptor.
 
 **Fixes:**
 - Fix missing properties from sym.Properties when instance has a descriptor.

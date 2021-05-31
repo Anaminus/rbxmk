@@ -874,3 +874,23 @@ func (w *World) DoFileHandle(f fs.File, name string, args int) error {
 	w.PopFile()
 	return err
 }
+
+// SetEnumGlobal sets the "Enum" global to the generated enum types from
+// w.Global.Desc. Does nothing if Desc is nil, the Enums type is not registered,
+// or if the Enums reflector returns an error.
+func (w *World) SetEnumGlobal() {
+	if w.Desc == nil {
+		return
+	}
+	rfl := w.Reflector("Enums")
+	if rfl.Name == "" {
+		return
+	}
+	w.Desc.GenerateEnumTypes()
+	state := w.State()
+	enums, err := rfl.PushTo(state, w.Desc.EnumTypes)
+	if err != nil {
+		return
+	}
+	state.L.SetGlobal("Enum", enums[0])
+}

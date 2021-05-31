@@ -39,3 +39,6 @@ Shortcut                  | Description
 `Ctrl+Y`                  | Paste from Yank buffer (`Alt+Y` to paste next yank instead).
 `Tab`                     | Next completion.
 `Shift+Tab`               | (after `Tab`) Previous completion.
+
+The `--desc-*` flags set the `rbxmk.globalDesc` field. They also set the `Enum`
+global variable to the enums generated from the descriptor.

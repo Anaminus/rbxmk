@@ -30,3 +30,6 @@ Within the script, these arguments can be received from the `...` operator.
 ```lua
 local arg1, arg2, arg3 = ...
 ```
+
+The `--desc-*` flags set the `rbxmk.globalDesc` field. They also set the `Enum`
+global variable to the enums generated from the descriptor.

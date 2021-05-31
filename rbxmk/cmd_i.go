@@ -58,6 +58,7 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 	if err != nil {
 		return err
 	}
+	world.SetEnumGlobal()
 
 	// Initialize terminal prompt.
 	line := liner.NewLiner()
