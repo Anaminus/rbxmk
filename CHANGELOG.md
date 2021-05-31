@@ -5,6 +5,9 @@ branch is the latest unreleased version.
 ## imperative
 **Highlights:**
 - Add [os.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osclean) function to clean file paths.
+- Improve handling of values in the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
+- Add "Desc" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set a descriptor used when encoding or decoding.
+- Add "DescMode" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set how deviations from the descriptor are handled.
 
 **Fixes:**
 - Fix missing properties from sym.Properties when instance has a descriptor.
