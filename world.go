@@ -87,7 +87,7 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 		return u
 	}
 
-	u := w.State().NewUserData(v)
+	u := w.LuaState().NewUserData(v)
 	w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
 
 	if w.userdata == nil {
@@ -680,8 +680,8 @@ func (w *World) Split(path string, components ...string) ([]string, error) {
 	return parts, nil
 }
 
-// State returns the underlying Lua state.
-func (w *World) State() *lua.LState {
+// LuaState returns the underlying Lua state.
+func (w *World) LuaState() *lua.LState {
 	return w.l
 }
 

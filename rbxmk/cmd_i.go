@@ -43,7 +43,7 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 		return err
 	}
 	injectSSLKeyLogFile(world, opt.Stderr)
-	state := world.State()
+	state := world.LuaState()
 	exit := make(chan struct{})
 	state.GetGlobal("os").(*lua.LTable).RawSetString("exit", world.WrapFunc(func(s rbxmk.State) int {
 		close(exit)

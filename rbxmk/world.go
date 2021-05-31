@@ -125,7 +125,7 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 		}
 	}
 	for _, arg := range opt.Args {
-		world.State().Push(ParseLuaValue(arg))
+		world.LuaState().Push(ParseLuaValue(arg))
 	}
 	return world, nil
 }
