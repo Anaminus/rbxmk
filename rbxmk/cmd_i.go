@@ -50,7 +50,7 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 		return 0
 	}))
 	if c.Init != nil {
-		c.Init(rbxmk.State{World: world, L: state})
+		c.Init(world.State())
 	}
 
 	// Initialize global descriptor.

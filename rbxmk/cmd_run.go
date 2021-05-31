@@ -79,7 +79,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	}
 	injectSSLKeyLogFile(world, opt.Stderr)
 	if c.Init != nil {
-		c.Init(rbxmk.State{World: world, L: world.LuaState()})
+		c.Init(world.State())
 	}
 
 	// Initialize global descriptor.

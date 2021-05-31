@@ -146,7 +146,7 @@ func (w *World) Open(lib Library) error {
 			w.RegisterReflector(r())
 		}
 	}
-	src := lib.Open(State{World: w, L: w.l})
+	src := lib.Open(w.State())
 	return w.MergeTables(w.l.G.Global, src, lib.ImportedAs)
 }
 
@@ -501,7 +501,7 @@ func (w *World) RegisterReflector(r Reflector) {
 	}
 
 	if r.Environment != nil {
-		r.Environment(State{World: w, L: w.l})
+		r.Environment(w.State())
 	}
 
 	for _, t := range r.Types {
@@ -685,6 +685,11 @@ func (w *World) LuaState() *lua.LState {
 	return w.l
 }
 
+// State returns a State derived from the World.
+func (w *World) State() State {
+	return State{World: w, L: w.l}
+}
+
 // WrapFunc wraps a function that receives a State into a Lua function.
 func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
@@ -715,7 +720,7 @@ func (w *World) PushTo(t string, v types.Value) (lvs []lua.LValue, err error) {
 	if rfl.PushTo == nil {
 		return nil, fmt.Errorf("cannot cast type %q to Lua", t)
 	}
-	return rfl.PushTo(State{World: w, L: w.l}, v)
+	return rfl.PushTo(w.State(), v)
 }
 
 // PullFrom reflects lvs to v using registered type t.
@@ -727,7 +732,7 @@ func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error)
 	if rfl.PullFrom == nil {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
-	return rfl.PullFrom(State{World: w, L: w.l}, lvs...)
+	return rfl.PullFrom(w.State(), lvs...)
 }
 
 // FileEntry describes a file, including the full path. An empty Path indicates

@@ -55,7 +55,7 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 	world := rbxmk.NewWorld(lua.NewState(lua.Options{
 		SkipOpenLibs: true,
 	}))
-	state := rbxmk.State{World: world, L: world.LuaState()}
+	state := world.State()
 	var root dump.Root
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
