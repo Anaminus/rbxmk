@@ -77,9 +77,9 @@ local function getPage(next)
 			tostring(entry.agent.id),
 			tostring(entry.agent.type),
 			tostring(entry.agent.name),
-			tostring(entry.details.id),
-			tostring(entry.details.name),
-			tostring(entry.details.type),
+			entry.details and tostring(entry.details.id) or "",
+			entry.details and tostring(entry.details.name) or "",
+			entry.details and tostring(entry.details.type) or "",
 			tostring(entry.currency.amount),
 			tostring(entry.currency.type),
 		}
