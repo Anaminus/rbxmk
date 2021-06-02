@@ -358,14 +358,91 @@ This metadata is used by certain formats (e.g. ExplicitAutoJoints).
 [DescAction]: #user-content-descaction
 
 The **DescAction** type describes a single action that transforms a descriptor.
+It has the following members:
 
-Currently, DescAction has no members. However, converting a DescAction to a
-string will display the content of the action in a human-readable format.
+Member                                       | Kind
+---------------------------------------------|-----
+[DescAction.Type][DescAction.Type]           | property
+[DescAction.Element][DescAction.Element]     | property
+[DescAction.Primary][DescAction.Primary]     | property
+[DescAction.Secondary][DescAction.Secondary] | property
+[DescAction.Field][DescAction.Field]         | method
+[DescAction.Fields][DescAction.Fields]       | method
+[DescAction.SetField][DescAction.SetField]   | method
+[DescAction.SetFields][DescAction.SetFields] | method
 
 A DescAction can be created with the
 [rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) function.
 Additionally, it is returned from the
 [desc-patch.json](formats.md#user-content-desc-patchjson) format.
+
+### DescAction.Type
+[DescAction.Type]: #user-content-descactiontype
+<code>DescAction.Type: [int](##)</code>
+
+The **Type** property is the type of transformation performed by the action. It
+can be one of the following values:
+
+| Value | Description
+|------:|------------
+|    -1 | Removes the referred element.
+|     0 | Changes the referred element.
+|     1 | Adds the referred element.
+
+### DescAction.Element
+[DescAction.Element]: #user-content-descactionelement
+<code>DescAction.Element: [string](##)</code>
+
+The **Element** property is the type of element to which the action applies. It
+can be one of the following values:
+
+- Class
+- Property
+- Function
+- Event
+- Callback
+- Enum
+- EnumItem
+
+### DescAction.Primary
+[DescAction.Primary]: #user-content-descactionprimary
+<code>DescAction.Primary: [string](##)</code>
+
+The **Primary** property is the name of the primary element. For example, the
+class name or enum name.
+
+### DescAction.Secondary
+[DescAction.Secondary]: #user-content-descactionsecondary
+<code>DescAction.Secondary: [string](##)</code>
+
+The **Secondary** property is the name of the secondary element. For example,
+the name of a class member or enum item. An empty string indicates that the
+action applies to the primary element.
+
+### DescAction.Field
+[DescAction.Field]: #user-content-descactionfield
+<code>DescAction:Field(name: [string](##)): [any](##)?</code>
+
+The **Field** method returns the value of the *name* field, or nil if the action
+has no such field.
+
+### DescAction.Fields
+[DescAction.Fields]: #user-content-descactionfields
+<code>DescAction:Fields(): {\[[string](##)\]: [any](##)}</code>
+
+The **Fields** method returns a collection of field names mapped to values.
+
+### DescAction.SetField
+[DescAction.SetField]: #user-content-descactionsetfield
+<code>DescAction:SetField(name: [string](##), value: [any](##))</code>
+
+The **SetField** method sets the value of the *name* field to *value*.
+
+### DescAction.SetFields
+[DescAction.SetFields]: #user-content-descactionsetfields
+<code>DescAction:SetFields(fields: {\[[string](##)\]: [any](##)})</code>
+
+The **SetFields** method replaces all fields of the action with *fields*.
 
 ## EnumDesc
 [EnumDesc]: #user-content-enumdesc
