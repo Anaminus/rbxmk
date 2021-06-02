@@ -21,15 +21,16 @@ local txnTypes = {
 	sale                  = true,
 	traderobux            = true,
 }
+local txnNames = {}
+for k in pairs(txnTypes) do
+	table.insert(txnNames, k)
+end
+table.sort(txnNames)
 local txnType = string.lower(tostring((...) or ""))
-if not txnTypes[txnType] then
-	local s = {}
-	for k in pairs(txnTypes) do
-		table.insert(s, k)
-	end
-	table.sort(s)
+if not txnTypes[txnType] and txnType ~= "all" then
 	print("first argument must be one of the following transaction types:")
-	for i, k in ipairs(s) do
+	print("\tall")
+	for i, k in ipairs(txnNames) do
 		print("\t"..k)
 	end
 	return
@@ -56,7 +57,7 @@ local CurrentUser do
 	}
 end
 
-local function getPage(next)
+local function getPage(txnType, next)
 	local txnURL = "https://economy.roblox.com/v2/users/%d/transactions?transactionType=%s&limit=100&cursor=%s"
 	local resp = http.request({
 		URL = string.format(txnURL, CurrentUser.ID, txnType, next or ""),
@@ -85,8 +86,20 @@ local function getPage(next)
 		}
 		table.insert(rows, row)
 	end
-	print(rbxmk.encodeFormat("csv", rows):sub(1,-2))
+	if #rows > 0 then
+		print(rbxmk.encodeFormat("csv", rows):sub(1,-2))
+	end
 	return resp.Body.nextPageCursor
+end
+
+local function getPages(txnType)
+	local next
+	repeat
+		next = getPage(txnType, next)
+		if not next then
+			break
+		end
+	until not next
 end
 
 local rows = {{
@@ -104,10 +117,10 @@ local rows = {{
 	"currency.type",
 }}
 print(rbxmk.encodeFormat("csv", rows):sub(1,-2))
-local next
-repeat
-	next = getPage(next)
-	if not next then
-		break
+if txnType == "all" then
+	for _, txnType in ipairs(txnNames) do
+		getPages(txnType)
 	end
-until not next
+else
+	getPages(txnType)
+end
