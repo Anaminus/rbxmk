@@ -35,6 +35,17 @@ func (e *Enums) Enums() []*Enum {
 	return enums
 }
 
+// Include adds the given Enum values to the collection.
+func (e *Enums) Include(enums ...*Enum) {
+	e.enums = append(e.enums, enums...)
+	sort.Slice(e.enums, func(i, j int) bool {
+		return e.enums[i].name < e.enums[j].name
+	})
+	for _, enum := range enums {
+		e.enumIndex[enum.name] = enum
+	}
+}
+
 // Enum contains a set of named values.
 type Enum struct {
 	name       string
@@ -167,7 +178,7 @@ func NewEnum(name string, items ...NewItem) *Enum {
 	return &enum
 }
 
-// NewEnums creates an immutable collections of enums.
+// NewEnums creates an immutable collection of enums.
 func NewEnums(enums ...*Enum) *Enums {
 	sort.Slice(enums, func(i, j int) bool {
 		return enums[i].name < enums[j].name

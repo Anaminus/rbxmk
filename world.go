@@ -32,6 +32,7 @@ type World struct {
 	rootdir    string
 	reflectors map[string]Reflector
 	formats    map[string]Format
+	enums      *rtypes.Enums
 
 	Global
 
@@ -500,6 +501,8 @@ func (w *World) RegisterReflector(r Reflector) {
 		w.l.G.Global.RawSetString(r.Name, ctors)
 	}
 
+	w.RegisterEnums(r.Enums...)
+
 	if r.Environment != nil {
 		r.Environment(w.State())
 	}
@@ -589,6 +592,48 @@ func (w *World) Formats() []Format {
 		return formats[i].Name < formats[j].Name
 	})
 	return formats
+}
+
+// RegisterEnums registers a number of Enum values. Panics if multiple different
+// enums are registered with the same name.
+func (w *World) RegisterEnums(enums ...*rtypes.Enum) {
+	if w.enums == nil {
+		w.enums = rtypes.NewEnums()
+	}
+	for _, enum := range enums {
+		if e := w.enums.Enum(enum.Name()); e != nil && e != enum {
+			panic("enum " + enum.Name() + " already registered")
+		}
+	}
+	w.enums.Include(enums...)
+}
+
+// Enum returns the Enum registered with the given name. If the name is not
+// registered, then nil is returned.
+func (w *World) Enum(name string) *rtypes.Enum {
+	if w.enums == nil {
+		return nil
+	}
+	return w.enums.Enum(name)
+}
+
+// MustEnum returns the Enum registered with the given name. If the name is not
+// registered, then MustEnum panics.
+func (w *World) MustEnum(name string) *rtypes.Enum {
+	if w.enums != nil {
+		if enum := w.enums.Enum(name); enum != nil {
+			return enum
+		}
+	}
+	panic("unregistered enum " + name)
+}
+
+// Enums returns a list of registered enums.
+func (w *World) Enums() *rtypes.Enums {
+	if w.enums == nil {
+		w.enums = rtypes.NewEnums()
+	}
+	return w.enums
 }
 
 // Ext returns the extension of filename that most closely matches the name of a

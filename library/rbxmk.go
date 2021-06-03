@@ -32,8 +32,11 @@ var RBXMK = rbxmk.Library{
 		reflect.Cookies,
 		reflect.DescAction,
 		reflect.DescActions,
+		reflect.Enum,
 		reflect.EnumDesc,
+		reflect.EnumItem,
 		reflect.EnumItemDesc,
+		reflect.Enums,
 		reflect.EventDesc,
 		reflect.FormatSelector,
 		reflect.FunctionDesc,
@@ -49,7 +52,7 @@ var RBXMK = rbxmk.Library{
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 13)
+	lib := s.L.CreateTable(0, 14)
 	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
@@ -63,6 +66,9 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
+
+	lvs, _ := s.MustReflector("Enums").PushTo(s, s.Enums())
+	lib.RawSetString("Enum", lvs[0])
 
 	mt := s.L.CreateTable(0, 2)
 	mt.RawSetString("__index", s.WrapOperator(rbxmkOpIndex))

@@ -66,6 +66,10 @@ type Reflector struct {
 	// reflector's type. Returns nil if the value could not be converted.
 	ConvertFrom func(v types.Value) types.Value
 
+	// Enums lists Enum values that related to the type. These are registered
+	// along with the reflector.
+	Enums []*rtypes.Enum
+
 	// Types is a list of additional type reflectors that this reflector depends
 	// on.
 	Types []func() Reflector

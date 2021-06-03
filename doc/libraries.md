@@ -7,21 +7,22 @@ This document contains a reference to the libraries available to rbxmk scripts.
 
 1. [Base][base]
 2. [rbxmk][rbxmk]
-	1. [rbxmk.cookiesFrom][rbxmk.cookiesFrom]
-	2. [rbxmk.decodeFormat][rbxmk.decodeFormat]
-	3. [rbxmk.diffDesc][rbxmk.diffDesc]
-	4. [rbxmk.encodeFormat][rbxmk.encodeFormat]
-	5. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
-	6. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
-	7. [rbxmk.globalDesc][rbxmk.globalDesc]
-	8. [rbxmk.loadFile][rbxmk.loadFile]
-	9. [rbxmk.loadString][rbxmk.loadString]
-	10. [rbxmk.newAttrConfig][rbxmk.newAttrConfig]
-	11. [rbxmk.newCookie][rbxmk.newCookie]
-	12. [rbxmk.newDesc][rbxmk.newDesc]
-	13. [rbxmk.patchDesc][rbxmk.patchDesc]
-	14. [rbxmk.runFile][rbxmk.runFile]
-	15. [rbxmk.runString][rbxmk.runString]
+	1. [rbxmk.Enum][rbxmk.Enum]
+	2. [rbxmk.cookiesFrom][rbxmk.cookiesFrom]
+	3. [rbxmk.decodeFormat][rbxmk.decodeFormat]
+	4. [rbxmk.diffDesc][rbxmk.diffDesc]
+	5. [rbxmk.encodeFormat][rbxmk.encodeFormat]
+	6. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
+	7. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
+	8. [rbxmk.globalDesc][rbxmk.globalDesc]
+	9. [rbxmk.loadFile][rbxmk.loadFile]
+	10. [rbxmk.loadString][rbxmk.loadString]
+	11. [rbxmk.newAttrConfig][rbxmk.newAttrConfig]
+	12. [rbxmk.newCookie][rbxmk.newCookie]
+	13. [rbxmk.newDesc][rbxmk.newDesc]
+	14. [rbxmk.patchDesc][rbxmk.patchDesc]
+	15. [rbxmk.runFile][rbxmk.runFile]
+	16. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
@@ -125,6 +126,7 @@ The **rbxmk** library contains functions related to the rbxmk engine.
 
 Name                                             | Kind     | Description
 -------------------------------------------------|----------|------------
+[rbxmk.Enum][rbxmk.Enum]                         | Enums    | Collection of rbxmk-defined enums.
 [rbxmk.cookiesFrom][rbxmk.cookiesFrom]           | function | Retrieve cookies from a known location.
 [rbxmk.decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
 [rbxmk.diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
@@ -140,6 +142,12 @@ Name                                             | Kind     | Description
 [rbxmk.patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
 [rbxmk.runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
 [rbxmk.runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
+
+### rbxmk.Enum
+[rbxmk.Enum]: #user-content-rbxmkenum
+<code>rbxmk.Enum: [Enums](##)</code>
+
+The **Enum** field is a collection of Enum values defined by rbxmk.
 
 ### rbxmk.cookiesFrom
 [rbxmk.cookiesFrom]: #user-content-rbxmkcookiesfrom

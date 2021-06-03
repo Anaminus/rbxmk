@@ -9,6 +9,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/enums"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/snek"
@@ -52,6 +53,7 @@ type WorldOpt struct {
 	WorldFlags
 	ExcludeRoots     bool
 	ExcludeFormats   bool
+	ExcludeEnums     bool
 	ExcludeLibraries bool
 	ExcludeProgram   bool
 	Args             []string
@@ -79,6 +81,9 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 		for _, f := range formats.All() {
 			world.RegisterFormat(f())
 		}
+	}
+	if !opt.ExcludeEnums {
+		world.RegisterEnums(enums.All()...)
 	}
 	if !opt.ExcludeLibraries {
 		libraries := library.All()

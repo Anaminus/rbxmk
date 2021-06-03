@@ -45,6 +45,7 @@ func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 	world, err := InitWorld(WorldOpt{
 		WorldFlags:       WorldFlags{Debug: false},
 		ExcludeRoots:     true,
+		ExcludeEnums:     true,
 		ExcludeLibraries: true,
 		ExcludeProgram:   true,
 	})
