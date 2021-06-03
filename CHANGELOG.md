@@ -11,6 +11,7 @@ branch is the latest unreleased version.
 - Including `--desc-*` flags causes the "Enum" global variable to be set to the
   enums generated from the resulting descriptor.
 - Implement members for the DescAction type.
+- Add DescAction.new constructor.
 - Add Enum field to rbxmk library to contain enums defined by rbxmk.
 
 **Fixes:**
