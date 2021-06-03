@@ -314,6 +314,12 @@ func pushDescActionField(v interface{}) types.Value {
 			a[i] = rtypes.ParameterDesc{Parameter: v}
 		}
 		return a
+	case []string:
+		a := make(rtypes.Array, len(v))
+		for i, v := range v {
+			a[i] = types.String(v)
+		}
+		return a
 	default:
 		return nil
 	}
