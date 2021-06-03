@@ -371,10 +371,17 @@ Member                                       | Kind
 [DescAction.SetField][DescAction.SetField]   | method
 [DescAction.SetFields][DescAction.SetFields] | method
 
-A DescAction can be created with the
-[rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) function.
-Additionally, it is returned from the
+A DescAction can be created with the [DescAction.new][DescAction.new]
+constructor. It is also returned from the
+[rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) function and the
 [desc-patch.json](formats.md#user-content-desc-patchjson) format.
+
+### DescAction.new
+[DescAction.new]: #user-content-descactionnew
+<code>DescAction.new(type: [Enum.DescActionType][Enum.DescActionType], element: [Enum.DescActionElement][Enum.DescActionElement]): [DescAction][DescAction]</code>
+
+The **DescAction.new** constructor returns a new DescAction initialized with a
+type and an element.
 
 ### DescAction.Type
 [DescAction.Type]: #user-content-descactiontype

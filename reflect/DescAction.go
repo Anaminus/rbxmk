@@ -220,6 +220,44 @@ func DescAction() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					var v rtypes.DescAction
+
+					typeEnum := s.MustEnum("DescActionType")
+					actionType := typeEnum.Pull(s.L.Get(1))
+					if actionType == nil {
+						return s.ArgError(1, "invalid value %s for %s", actionType, typeEnum.Name())
+					}
+					v.Action.Type = diff.Type(actionType.Value())
+
+					elementEnum := s.MustEnum("DescActionElement")
+					actionElement := elementEnum.Pull(s.L.Get(2))
+					if actionElement == nil {
+						return s.ArgError(2, "invalid value %s for %s", actionElement, elementEnum.Name())
+					}
+					v.Action.Element = diff.Element(actionElement.Value())
+
+					return s.Push(&v)
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "type", Type: dt.Prim("Enum.DescActionType")},
+								{Name: "element", Type: dt.Prim("Enum.DescActionElement")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("DescAction")},
+							},
+							Summary:     "Types/DescAction:Constructors/new/Summary",
+							Description: "Types/DescAction:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/DescAction:Summary",
