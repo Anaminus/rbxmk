@@ -47,6 +47,7 @@ Document                     | Description
 [formats.md](formats.md)     | Lists formats used to encode and decode data.
 [libraries.md](libraries.md) | Lists the libraries provided by the rbxmk environment.
 [types.md](types.md)         | Lists the data types present throughout the rbxmk environment.
+[enums.md](enums.md)         | Lists the enums defined within the rbxmk environment.
 
 ## Command line
 [command-line]: #user-content-command-line

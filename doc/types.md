@@ -378,31 +378,19 @@ Additionally, it is returned from the
 
 ### DescAction.Type
 [DescAction.Type]: #user-content-descactiontype
-<code>DescAction.Type: [int](##)</code>
+<code>DescAction.Type: [Enum.DescActionType][Enum.DescActionType]</code>
 
-The **Type** property is the type of transformation performed by the action. It
-can be one of the following values:
+The **Type** property is the type of transformation performed by the action.
 
-| Value | Description
-|------:|------------
-|    -1 | Removes the referred element.
-|     0 | Changes the referred element.
-|     1 | Adds the referred element.
+[Enum.DescActionType]: enums.md#user-content-descactiontype
 
 ### DescAction.Element
 [DescAction.Element]: #user-content-descactionelement
-<code>DescAction.Element: [string](##)</code>
+<code>DescAction.Element: [Enum.DescActionElement][Enum.DescActionElement]</code>
 
-The **Element** property is the type of element to which the action applies. It
-can be one of the following values:
+The **Element** property is the type of element to which the action applies.
 
-- Class
-- Property
-- Function
-- Event
-- Callback
-- Enum
-- EnumItem
+[Enum.DescActionElement]: enums.md#user-content-descactionelement
 
 ### DescAction.Primary
 [DescAction.Primary]: #user-content-descactionprimary

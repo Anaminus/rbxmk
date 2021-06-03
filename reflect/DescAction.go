@@ -28,15 +28,28 @@ func DescAction() rbxmk.Reflector {
 			"Type": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					return s.Push(types.Int(action.Action.Type))
+					enum := s.MustEnum("DescActionType")
+					value := int(action.Action.Type)
+					item := enum.Value(value)
+					if item == nil {
+						s.RaiseError("invalid value %d for %s", value, enum.Name())
+					}
+					return s.Push(item)
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					action.Action.Type = diff.Type(s.Pull(3, "int").(types.Int))
+					enum := s.MustEnum("DescActionType")
+					value := s.L.Get(3)
+					item := enum.Pull(value)
+					if item == nil {
+						s.RaiseError("invalid value %s for %s", value, enum.Name())
+						return
+					}
+					action.Action.Type = diff.Type(item.Value())
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("int"),
+						ValueType:   dt.Prim("Enum.DescActionType"),
 						Summary:     "Types/DescAction:Properties/Type/Summary",
 						Description: "Types/DescAction:Properties/Type/Description",
 					}
@@ -45,32 +58,28 @@ func DescAction() rbxmk.Reflector {
 			"Element": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					return s.Push(types.String(action.Action.Element.String()))
+					enum := s.MustEnum("DescActionElement")
+					value := int(action.Action.Element)
+					item := enum.Value(value)
+					if item == nil {
+						s.RaiseError("invalid value %d for %s", value, enum.Name())
+					}
+					return s.Push(item)
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					switch e := string(s.Pull(3, "string").(types.String)); e {
-					case "Class":
-						action.Action.Element = diff.Class
-					case "Property":
-						action.Action.Element = diff.Property
-					case "Function":
-						action.Action.Element = diff.Function
-					case "Event":
-						action.Action.Element = diff.Event
-					case "Callback":
-						action.Action.Element = diff.Callback
-					case "Enum":
-						action.Action.Element = diff.Enum
-					case "EnumItem":
-						action.Action.Element = diff.EnumItem
-					default:
-						s.RaiseError("unexpected value %q", e)
+					enum := s.MustEnum("DescActionElement")
+					value := s.L.Get(3)
+					item := enum.Pull(value)
+					if item == nil {
+						s.RaiseError("invalid value %s for %s", value, enum.Name())
+						return
 					}
+					action.Action.Element = diff.Element(item.Value())
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim("Enum.DescActionElement"),
 						Summary:     "Types/DescAction:Properties/Element/Summary",
 						Description: "Types/DescAction:Properties/Element/Description",
 					}
@@ -216,6 +225,22 @@ func DescAction() rbxmk.Reflector {
 				Summary:     "Types/DescAction:Summary",
 				Description: "Types/DescAction:Description",
 			}
+		},
+		Enums: []*rtypes.Enum{
+			rtypes.NewEnum("DescActionType",
+				rtypes.NewItem{Name: diff.Remove.String(), Value: int(diff.Remove)},
+				rtypes.NewItem{Name: diff.Change.String(), Value: int(diff.Change)},
+				rtypes.NewItem{Name: diff.Add.String(), Value: int(diff.Add)},
+			),
+			rtypes.NewEnum("DescActionElement",
+				rtypes.NewItem{Name: diff.Class.String(), Value: int(diff.Class)},
+				rtypes.NewItem{Name: diff.Property.String(), Value: int(diff.Property)},
+				rtypes.NewItem{Name: diff.Function.String(), Value: int(diff.Function)},
+				rtypes.NewItem{Name: diff.Event.String(), Value: int(diff.Event)},
+				rtypes.NewItem{Name: diff.Callback.String(), Value: int(diff.Callback)},
+				rtypes.NewItem{Name: diff.Enum.String(), Value: int(diff.Enum)},
+				rtypes.NewItem{Name: diff.EnumItem.String(), Value: int(diff.EnumItem)},
+			),
 		},
 		Types: []func() rbxmk.Reflector{
 			Array,
