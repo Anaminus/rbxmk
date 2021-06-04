@@ -442,7 +442,8 @@ Name                         | Description
 
 The **request** function begins a request with the specified
 [options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
-resolved or canceled. Throws an error if the request could not be started.
+[resolved][HTTPRequest.Resolve] or [canceled][HTTPRequest.Cancel]. Throws an
+error if the request could not be started.
 
 ## math
 [math]: #user-content-math
@@ -746,6 +747,8 @@ token           | number
 [FunctionDesc]: types.md#user-content-functiondesc
 [HTTPOptions]: types.md#user-content-httpoptions
 [HTTPRequest]: types.md#user-content-httprequest
+[HTTPRequest.Resolve]: types.md#user-content-httprequestresolve
+[HTTPRequest.Cancel]: types.md#user-content-httprequestcancel
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.IsService]: types.md#user-content-instancesymisservice
