@@ -9,16 +9,14 @@ This document contains a reference to the libraries available to rbxmk scripts.
 2. [rbxmk][rbxmk]
 	1. [rbxmk.Enum][rbxmk.Enum]
 	2. [rbxmk.decodeFormat][rbxmk.decodeFormat]
-	3. [rbxmk.diffDesc][rbxmk.diffDesc]
-	4. [rbxmk.encodeFormat][rbxmk.encodeFormat]
-	5. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
-	6. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
-	7. [rbxmk.globalDesc][rbxmk.globalDesc]
-	8. [rbxmk.loadFile][rbxmk.loadFile]
-	9. [rbxmk.loadString][rbxmk.loadString]
-	10. [rbxmk.patchDesc][rbxmk.patchDesc]
-	11. [rbxmk.runFile][rbxmk.runFile]
-	12. [rbxmk.runString][rbxmk.runString]
+	3. [rbxmk.encodeFormat][rbxmk.encodeFormat]
+	4. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
+	5. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
+	6. [rbxmk.globalDesc][rbxmk.globalDesc]
+	7. [rbxmk.loadFile][rbxmk.loadFile]
+	8. [rbxmk.loadString][rbxmk.loadString]
+	9. [rbxmk.runFile][rbxmk.runFile]
+	10. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
@@ -126,14 +124,12 @@ Name                                             | Kind     | Description
 -------------------------------------------------|----------|------------
 [rbxmk.Enum][rbxmk.Enum]                         | Enums    | Collection of rbxmk-defined enums.
 [rbxmk.decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
-[rbxmk.diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
 [rbxmk.encodeFormat][rbxmk.encodeFormat]         | function | Serialize data into bytes.
 [rbxmk.formatCanDecode][rbxmk.formatCanDecode]   | function | Check whether a format decodes into a type.
 [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig] | field    | Get or set the global AttrConfig.
 [rbxmk.globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
 [rbxmk.loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
 [rbxmk.loadString][rbxmk.loadString]             | function | Load a string as a function.
-[rbxmk.patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
 [rbxmk.runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
 [rbxmk.runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
 
@@ -153,15 +149,6 @@ The **decodeFormat** function decodes *bytes* into a value according to
 
 decodeFormat will throw an error if the format does not exist, or the format has
 no decoder defined.
-
-### rbxmk.diffDesc
-[rbxmk.diffDesc]: #user-content-rbxmkdiffdesc
-<code>rbxmk.diffDesc(prev: [RootDesc][RootDesc]?, next: [RootDesc][RootDesc]?): (diff: {[DescAction][DescAction]})</code>
-
-The **diffDesc** function compares two root descriptors and returns the
-differences between them. A nil value for *prev* or *next* is treated the same
-as an empty descriptor. The result is a list of actions that describe how to
-transform *prev* into *next*.
 
 ### rbxmk.encodeFormat
 [rbxmk.encodeFormat]: #user-content-rbxmkencodeformat
@@ -221,14 +208,6 @@ The **loadString** function loads the a string as a Lua function. *source* is
 the string to load.
 
 The function runs in the context of the calling script.
-
-### rbxmk.patchDesc
-[rbxmk.patchDesc]: #user-content-rbxmkpatchdesc
-<code>rbxmk.patchDesc(desc: [RootDesc][RootDesc], actions: {[DescAction][DescAction]})</code>
-
-The **patchDesc** function transforms a root descriptor according to a list of
-actions. Each action in the list is applied in order. Actions that are
-incompatible are ignored.
 
 ### rbxmk.runFile
 [rbxmk.runFile]: #user-content-rbxmkrunfile

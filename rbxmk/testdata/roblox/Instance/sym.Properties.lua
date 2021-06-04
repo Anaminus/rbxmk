@@ -1,6 +1,6 @@
 local desc = fs.read(path.expand("$sd/../../dump.desc.json"))
 local patch = fs.read(path.expand("$sd/../../dump.desc-patch.json"))
-rbxmk.patchDesc(desc, patch)
+desc:Patch(patch)
 local Enum = desc:EnumTypes()
 
 -- Test XML without descriptors.

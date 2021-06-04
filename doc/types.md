@@ -411,9 +411,8 @@ Member                                       | Kind
 [DescAction.SetFields][DescAction.SetFields] | method
 
 A DescAction can be created with the [DescAction.new][DescAction.new]
-constructor. It is also returned from the
-[rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) function and the
-[desc-patch.json](formats.md#user-content-desc-patchjson) format.
+constructor. It is also returned from the [RootDesc.Diff][RootDesc.Diff] method
+and the [desc-patch.json](formats.md#user-content-desc-patchjson) format.
 
 ### DescAction.new
 [DescAction.new]: #user-content-descactionnew
@@ -1545,6 +1544,23 @@ matches Roblox's API:
 Enum = rootDesc:EnumTypes()
 print(Enum.NormalId.Front)
 ```
+
+### RootDesc.Diff
+[RootDesc.Diff]: #user-content-rootdescdiff
+<code>RootDesc:Diff(next: [RootDesc][RootDesc]?): (diff: [DescActions][DescActions])</code>
+
+The **Diff** method compares the root descriptor with another and returns the
+differences between them. A nil value for *next* is treated the same as an empty
+descriptor. The result is a list of actions that describe how to transform the
+descriptor into *next*.
+
+### RootDesc.Patch
+[RootDesc.Patch]: #user-content-rootdescpatch
+<code>RootDesc:Patch(actions: [DescActions][DescActions])</code>
+
+The **Patch** method transforms the root descriptor according to a list of
+actions. Each action in the list is applied in order. Actions that are
+incompatible are ignored.
 
 ## Stringlike
 [Stringlike]: #user-content-stringlike

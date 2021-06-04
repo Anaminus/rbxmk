@@ -11,8 +11,6 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/robloxapi/rbxdump"
-	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
 )
 
@@ -25,8 +23,6 @@ var RBXMK = rbxmk.Library{
 	Dump:       dumpRBXMK,
 	Types: []func() rbxmk.Reflector{
 		reflect.AttrConfig,
-		reflect.DescAction,
-		reflect.DescActions,
 		reflect.Enums,
 		reflect.FormatSelector,
 		reflect.Nil,
@@ -38,14 +34,12 @@ var RBXMK = rbxmk.Library{
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 10)
+	lib := s.L.CreateTable(0, 8)
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
-	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
 	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
-	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
 
@@ -75,31 +69,6 @@ func rbxmkDecodeFormat(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	return s.Push(v)
-}
-
-func rbxmkDiffDesc(s rbxmk.State) int {
-	var prev *rbxdump.Root
-	var next *rbxdump.Root
-	switch v := s.PullAnyOf(1, "RootDesc", "nil").(type) {
-	case rtypes.NilType:
-	case *rtypes.RootDesc:
-		prev = v.Root
-	default:
-		return s.ReflectorError(1)
-	}
-	switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
-	case rtypes.NilType:
-	case *rtypes.RootDesc:
-		next = v.Root
-	default:
-		return s.ReflectorError(2)
-	}
-	actions := diff.Diff{Prev: prev, Next: next}.Diff()
-	descActions := make(rtypes.DescActions, len(actions))
-	for i, action := range actions {
-		descActions[i] = &rtypes.DescAction{Action: action}
-	}
-	return s.Push(descActions)
 }
 
 func rbxmkEncodeFormat(s rbxmk.State) int {
@@ -150,17 +119,6 @@ func rbxmkLoadString(s rbxmk.State) int {
 	}
 	s.L.Push(fn)
 	return 1
-}
-
-func rbxmkPatchDesc(s rbxmk.State) int {
-	desc := s.Pull(1, "RootDesc").(*rtypes.RootDesc).Root
-	descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
-	actions := make([]diff.Action, len(descActions))
-	for i, action := range descActions {
-		actions[i] = action.Action
-	}
-	diff.Patch{Root: desc}.Patch(actions)
-	return 0
 }
 
 func rbxmkRunFile(s rbxmk.State) int {
@@ -280,17 +238,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Summary:     "Libraries/rbxmk:Fields/decodeFormat/Summary",
 					Description: "Libraries/rbxmk:Fields/decodeFormat/Description",
 				},
-				"diffDesc": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "prev", Type: dt.Optional{T: dt.Prim("RootDesc")}},
-						{Name: "next", Type: dt.Optional{T: dt.Prim("RootDesc")}},
-					},
-					Returns: dump.Parameters{
-						{Name: "diff", Type: dt.Array{T: dt.Prim("DescAction")}},
-					},
-					Summary:     "Libraries/rbxmk:Fields/diffDesc/Summary",
-					Description: "Libraries/rbxmk:Fields/diffDesc/Description",
-				},
 				"encodeFormat": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "format", Type: dt.Prim("string")},
@@ -346,14 +293,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",
 					Description: "Libraries/rbxmk:Fields/loadString/Description",
-				},
-				"patchDesc": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "desc", Type: dt.Prim("RootDesc")},
-						{Name: "actions", Type: dt.Array{T: dt.Prim("DescAction")}},
-					},
-					Summary:     "Libraries/rbxmk:Fields/patchDesc/Summary",
-					Description: "Libraries/rbxmk:Fields/patchDesc/Description",
 				},
 				"runFile": dump.Function{
 					Parameters: dump.Parameters{

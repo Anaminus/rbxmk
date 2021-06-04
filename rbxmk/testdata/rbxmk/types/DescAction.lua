@@ -1,7 +1,7 @@
 local root = RootDesc.new()
 root:AddClass(ClassDesc.new())
 root:AddEnum(EnumDesc.new())
-local diff = rbxmk.diffDesc(nil, root)
+local diff = RootDesc.new():Diff(root)
 local desc = diff[1]
 local other = diff[2]
 

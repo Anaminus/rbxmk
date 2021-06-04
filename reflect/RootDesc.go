@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
+	"github.com/robloxapi/rbxdump/diff"
 	"github.com/robloxapi/types"
 )
 
@@ -222,6 +223,58 @@ func RootDesc() rbxmk.Reflector {
 					}
 				},
 			},
+			"Diff": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					prev := v.(*rtypes.RootDesc).Root
+					var next *rbxdump.Root
+					switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
+					case rtypes.NilType:
+					case *rtypes.RootDesc:
+						next = v.Root
+					default:
+						return s.ReflectorError(1)
+					}
+					actions := diff.Diff{Prev: prev, Next: next}.Diff()
+					descActions := make(rtypes.DescActions, len(actions))
+					for i, action := range actions {
+						descActions[i] = &rtypes.DescAction{Action: action}
+					}
+					return s.Push(descActions)
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "next", Type: dt.Optional{T: dt.Prim("RootDesc")}},
+						},
+						Returns: dump.Parameters{
+							{Name: "diff", Type: dt.Prim("DescActions")},
+						},
+						Summary:     "Types/RootDesc:Methods/Diff/Summary",
+						Description: "Types/RootDesc:Methods/Diff/Description",
+					}
+				},
+			},
+			"Patch": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					desc := v.(*rtypes.RootDesc).Root
+					descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
+					actions := make([]diff.Action, len(descActions))
+					for i, action := range descActions {
+						actions[i] = action.Action
+					}
+					diff.Patch{Root: desc}.Patch(actions)
+					return 0
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "actions", Type: dt.Prim("DescActions")},
+						},
+						Summary:     "Types/RootDesc:Methods/Patch/Summary",
+						Description: "Types/RootDesc:Methods/Patch/Description",
+					}
+				},
+			},
 		},
 		Constructors: rbxmk.Constructors{
 			"new": rbxmk.Constructor{
@@ -253,8 +306,10 @@ func RootDesc() rbxmk.Reflector {
 		Types: []func() rbxmk.Reflector{
 			Array,
 			ClassDesc,
+			DescActions,
 			EnumDesc,
 			Enums,
+			Nil,
 			String,
 		},
 	}

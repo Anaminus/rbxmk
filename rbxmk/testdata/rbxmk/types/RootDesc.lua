@@ -82,3 +82,14 @@ desc:RemoveEnum("EnumC")
 desc:RemoveEnum("EnumD")
 local Enum = desc:EnumTypes()
 T.Pass(#Enum:GetEnums() == 0, "EnumTypes reflects no defined enums.")
+
+-- Diff
+local prev = RootDesc.new()
+local next = RootDesc.new()
+T.Fail(function() return prev:Diff(42) end        , "Diff expects a RootDesc or nil for its second argument")
+T.Pass(function() return prev:Diff(next) end      , "second argument to Diff can be a RootDesc")
+T.Pass(function() return prev:Diff(nil) end       , "second argument to Diff can be nil")
+T.Pass(function() return #prev:Diff(next) == 0 end, "Diff with no differences returns an empty table")
+T.Pass(function() return #prev:Diff(nil) == 0 end , "Diff with both nil returns an empty table")
+
+-- TODO: verify correctness of returned actions.

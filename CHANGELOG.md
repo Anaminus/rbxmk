@@ -24,6 +24,8 @@ branch is the latest unreleased version.
 	- Move os.join to path.join
 	- Move os.split to path.split
 	- os.getenv is unchanged.
+- Move rbxmk.diffDesc function to RootDesc.Diff method.
+- Move rbxmk.patchDesc function to RootDesc.Patch method.
 
 **Highlights:**
 - Add [path.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathclean) function to clean file paths.

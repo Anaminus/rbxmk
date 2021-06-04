@@ -364,17 +364,17 @@ Type                           | Description
 [diffing-and-patching]: #user-content-diffing-and-patching
 
 Descriptors can be compared and patched with the
-[rbxmk.diffDesc](libraries.md#user-content-rbxmkdiffdesc) and
-[rbxmk.patchDesc](libraries.md#user-content-rbxmkpatchdesc) functions. diffDesc
-returns a list of [**DescActions**](types.md#user-content-descaction), which
-describe how to transform the first descriptor into the second. patchDesc can
-used to apply this transformation.
+[RootDesc.Diff](types.md#user-content-rootdescdiff) and
+[RootDesc.Patch](types.md#user-content-rootdescpatch) methods. Diff returns a
+list of [**DescActions**](types.md#user-content-descaction), which describe how
+to transform the first descriptor into the second. Patch can used to apply this
+transformation.
 
 ```lua
 -- List differences.
-local diff = rbxmk.diffDesc(prevDesc, nextDesc)
+local diff = prevDesc:Diff(nextDesc)
 -- Transform prev into next.
-rbxmk.patchDesc(prevDesc, diff)
+prevDesc:Patch(diff)
 ```
 
 Patching is used primarily to augment some pregenerated descriptor with elements
