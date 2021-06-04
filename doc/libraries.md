@@ -17,12 +17,11 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	8. [rbxmk.globalDesc][rbxmk.globalDesc]
 	9. [rbxmk.loadFile][rbxmk.loadFile]
 	10. [rbxmk.loadString][rbxmk.loadString]
-	11. [rbxmk.newAttrConfig][rbxmk.newAttrConfig]
-	12. [rbxmk.newCookie][rbxmk.newCookie]
-	13. [rbxmk.newDesc][rbxmk.newDesc]
-	14. [rbxmk.patchDesc][rbxmk.patchDesc]
-	15. [rbxmk.runFile][rbxmk.runFile]
-	16. [rbxmk.runString][rbxmk.runString]
+	11. [rbxmk.newCookie][rbxmk.newCookie]
+	12. [rbxmk.newDesc][rbxmk.newDesc]
+	13. [rbxmk.patchDesc][rbxmk.patchDesc]
+	14. [rbxmk.runFile][rbxmk.runFile]
+	15. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
@@ -136,7 +135,6 @@ Name                                             | Kind     | Description
 [rbxmk.globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
 [rbxmk.loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
 [rbxmk.loadString][rbxmk.loadString]             | function | Load a string as a function.
-[rbxmk.newAttrConfig][rbxmk.newAttrConfig]       | function | Create a new AttrConfig.
 [rbxmk.newCookie][rbxmk.newCookie]               | function | Create a new cookie.
 [rbxmk.newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
 [rbxmk.patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
@@ -243,13 +241,6 @@ The **loadString** function loads the a string as a Lua function. *source* is
 the string to load.
 
 The function runs in the context of the calling script.
-
-### rbxmk.newAttrConfig
-[rbxmk.newAttrConfig]: #user-content-rbxmknewattrconfig
-<code>rbxmk.newAttrConfig(property: [string](##)?): [AttrConfig][AttrConfig]</code>
-
-The **newAttrConfig** function creates a new AttrConfig. *property* sets the
-[Property][AttrConfig.Property] field, defaulting to an empty string.
 
 ### rbxmk.newCookie
 [rbxmk.newCookie]: #user-content-rbxmknewcookie
