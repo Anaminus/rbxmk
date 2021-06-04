@@ -28,6 +28,7 @@ branch is the latest unreleased version.
 - Fix encoding of SharedStrings in rbxlx/rbxmx formats.
 - Fix incorrect use of CDATA sections in rbxlx/rbxmx formats.
 - Fix interactive command not having descriptor flags.
+- Fix Cookie.from returning incorrect values when no cookies are found.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

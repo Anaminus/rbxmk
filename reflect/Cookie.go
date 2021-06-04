@@ -55,7 +55,7 @@ func Cookie() rbxmk.Reflector {
 						return s.RaiseError("unknown location %q", location)
 					}
 					if len(cookies) == 0 {
-						s.Push(rtypes.Nil)
+						return s.Push(rtypes.Nil)
 					}
 					return s.Push(cookies)
 				},
