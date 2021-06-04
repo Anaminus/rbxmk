@@ -5,6 +5,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -196,6 +197,27 @@ func PropertyDesc() rbxmk.Reflector {
 						},
 						Summary:     "Types/PropertyDesc:Methods/UnsetTag/Summary",
 						Description: "Types/PropertyDesc:Methods/UnsetTag/Description",
+					}
+				},
+			},
+		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
+						ReadSecurity:  "None",
+						WriteSecurity: "None",
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("PropertyDesc")},
+							},
+							Summary:     "Types/PropertyDesc:Constructors/new/Summary",
+							Description: "Types/PropertyDesc:Constructors/new/Description",
+						},
 					}
 				},
 			},

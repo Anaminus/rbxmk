@@ -211,6 +211,26 @@ func EnumDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
+						Items: make(map[string]*rbxdump.EnumItem),
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("EnumDesc")},
+							},
+							Summary:     "Types/EnumDesc:Constructors/new/Summary",
+							Description: "Types/EnumDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/EnumDesc:Summary",

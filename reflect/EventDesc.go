@@ -178,6 +178,26 @@ func EventDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
+						Security: "None",
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("EventDesc")},
+							},
+							Summary:     "Types/EventDesc:Constructors/new/Summary",
+							Description: "Types/EventDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/EventDesc:Summary",

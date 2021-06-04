@@ -1,6 +1,23 @@
-local typeDesc = rbxmk.newDesc("TypeDesc", "FooCategory", "FooName")
-local desc = rbxmk.newDesc("ParameterDesc", typeDesc, "fooName")
-local descDefault = rbxmk.newDesc("ParameterDesc", typeDesc, "fooName", "FooDefault")
+T.Pass(typeof(ParameterDesc.new()) == "ParameterDesc", "new returns ParameterDesc")
+T.Pass(function()
+	local t = TypeDesc.new("FooCategory", "FooName")
+	return ParameterDesc.new(t).Type == t
+end, "new has optional second TypeDesc argument that sets Type field")
+T.Fail(function() ParameterDesc.new(42) end                             , "new with second non-TypeDesc argument throws an error")
+T.Pass(ParameterDesc.new(nil, "fooName").Name == "fooName"              , "new has optional third string argument that sets Name field")
+T.Fail(function() ParameterDesc.new(nil, 42) end                        , "new with third non-string argument throws an error")
+T.Pass(ParameterDesc.new().Default == nil                               , "new has optional fourth argument that, when nil, sets Default to nil")
+T.Pass(ParameterDesc.new(nil, nil, "FooDefault").Default == "FooDefault", "new has optional fourth argument that, when a string, sets Default")
+T.Fail(function() ParameterDesc.new(nil, nil, 42) end                   , "new with fourth non-string argument throws an error")
+T.Pass(function()
+	local t = TypeDesc.new("FooCategory", "FooName")
+	local p = ParameterDesc.new(t, "fooName", "FooDefault")
+	return p.Type == t and p.Name == "fooName" and p.Default == "FooDefault"
+end, "new with each argument sets each component")
+
+local typeDesc = TypeDesc.new("FooCategory", "FooName")
+local desc = ParameterDesc.new(typeDesc, "fooName")
+local descDefault = ParameterDesc.new(typeDesc, "fooName", "FooDefault")
 
 -- Metamethod tests
 T.Pass(typeof(desc) == "ParameterDesc"              , "type of descriptor is ParameterDesc")

@@ -16,10 +16,9 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	7. [rbxmk.globalDesc][rbxmk.globalDesc]
 	8. [rbxmk.loadFile][rbxmk.loadFile]
 	9. [rbxmk.loadString][rbxmk.loadString]
-	10. [rbxmk.newDesc][rbxmk.newDesc]
-	11. [rbxmk.patchDesc][rbxmk.patchDesc]
-	12. [rbxmk.runFile][rbxmk.runFile]
-	13. [rbxmk.runString][rbxmk.runString]
+	10. [rbxmk.patchDesc][rbxmk.patchDesc]
+	11. [rbxmk.runFile][rbxmk.runFile]
+	12. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
@@ -132,7 +131,6 @@ Name                                             | Kind     | Description
 [rbxmk.globalDesc][rbxmk.globalDesc]             | field    | Get or set the global descriptor.
 [rbxmk.loadFile][rbxmk.loadFile]                 | function | Load the content of a file as a function.
 [rbxmk.loadString][rbxmk.loadString]             | function | Load a string as a function.
-[rbxmk.newDesc][rbxmk.newDesc]                   | function | Create a new descriptor.
 [rbxmk.patchDesc][rbxmk.patchDesc]               | function | Transform a descriptor by applying differences.
 [rbxmk.runFile][rbxmk.runFile]                   | function | Run a file as a Lua chunk.
 [rbxmk.runString][rbxmk.runString]               | function | Run a string as a Lua chunk.
@@ -221,45 +219,6 @@ The **loadString** function loads the a string as a Lua function. *source* is
 the string to load.
 
 The function runs in the context of the calling script.
-
-### rbxmk.newDesc
-[rbxmk.newDesc]: #user-content-rbxmknewdesc
-<code>rbxmk.newDesc(name: [string](##)): [Descriptor](##)</code>
-
-The **newDesc** function creates a new descriptor object.
-
-newDesc returns a value of whose type corresponds to the given name. The
-following types may be constructed:
-
-- [RootDesc][RootDesc]
-- [ClassDesc][ClassDesc]
-- [PropertyDesc][PropertyDesc]
-- [FunctionDesc][FunctionDesc]
-- [EventDesc][EventDesc]
-- [CallbackDesc][CallbackDesc]
-- [ParameterDesc][ParameterDesc]
-- [TypeDesc][TypeDesc]
-- [EnumDesc][EnumDesc]
-- [EnumItemDesc][EnumItemDesc]
-
-TypeDesc values are immutable. To set the fields, they can be passed as extra
-arguments to newDesc:
-
-```lua
--- Sets .Category and .Name, respectively.
-local typeDesc = rbxmk.newDesc("TypeDesc", "Category", "Name")
-```
-
-ParameterDesc values are also immutable. To set the fields, they can be passed
-as extra arguments to newDesc:
-
-```lua
--- Sets .Type, .Name, and .Default, respectively.
--- No default value
-local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName")
--- Default value
-local paramDesc = rbxmk.newDesc("ParameterDesc", typeDesc, "paramName", "ParamDefault")
-```
 
 ### rbxmk.patchDesc
 [rbxmk.patchDesc]: #user-content-rbxmkpatchdesc

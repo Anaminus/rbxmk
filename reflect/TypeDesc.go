@@ -6,6 +6,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -49,6 +50,33 @@ func TypeDesc() rbxmk.Reflector {
 						ReadOnly:    true,
 						Summary:     "Types/TypeDesc:Properties/Name/Summary",
 						Description: "Types/TypeDesc:Properties/Name/Description",
+					}
+				},
+			},
+		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					category := string(s.PullOpt(1, "string", types.String("")).(types.String))
+					name := string(s.PullOpt(2, "string", types.String("")).(types.String))
+					return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
+						Category: category,
+						Name:     name,
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "category", Type: dt.Optional{T: dt.Prim("string")}},
+								{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("TypeDesc")},
+							},
+							Summary:     "Types/TypeDesc:Constructors/new/Summary",
+							Description: "Types/TypeDesc:Constructors/new/Description",
+						},
 					}
 				},
 			},

@@ -6,6 +6,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -67,6 +68,39 @@ func ParameterDesc() rbxmk.Reflector {
 						ReadOnly:    true,
 						Summary:     "Types/ParameterDesc:Properties/Default/Summary",
 						Description: "Types/ParameterDesc:Properties/Default/Description",
+					}
+				},
+			},
+		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					var param rbxdump.Parameter
+					param.Type = s.PullOpt(1, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
+					param.Name = string(s.PullOpt(2, "string", types.String("")).(types.String))
+					switch def := s.PullOpt(3, "string", rtypes.Nil).(type) {
+					case rtypes.NilType:
+						param.Optional = false
+					case types.String:
+						param.Optional = true
+						param.Default = string(def)
+					}
+					return s.Push(rtypes.ParameterDesc{Parameter: param})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "type", Type: dt.Optional{T: dt.Prim("TypeDesc")}},
+								{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
+								{Name: "default", Type: dt.Optional{T: dt.Prim("string")}},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ParameterDesc")},
+							},
+							Summary:     "Types/ParameterDesc:Constructors/new/Summary",
+							Description: "Types/ParameterDesc:Constructors/new/Description",
+						},
 					}
 				},
 			},

@@ -223,6 +223,27 @@ func RootDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
+						Classes: make(map[string]*rbxdump.Class),
+						Enums:   make(map[string]*rbxdump.Enum),
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("RootDesc")},
+							},
+							Summary:     "Types/RootDesc:Constructors/new/Summary",
+							Description: "Types/RootDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/RootDesc:Summary",

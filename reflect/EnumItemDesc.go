@@ -5,6 +5,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/types"
 )
 
@@ -144,6 +145,24 @@ func EnumItemDesc() rbxmk.Reflector {
 						},
 						Summary:     "Types/EnumItemDesc:Methods/UnsetTag/Summary",
 						Description: "Types/EnumItemDesc:Methods/UnsetTag/Description",
+					}
+				},
+			},
+		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("EnumItemDesc")},
+							},
+							Summary:     "Types/EnumItemDesc:Constructors/new/Summary",
+							Description: "Types/EnumItemDesc:Constructors/new/Description",
+						},
 					}
 				},
 			},

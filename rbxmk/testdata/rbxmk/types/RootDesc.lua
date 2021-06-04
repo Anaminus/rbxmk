@@ -1,20 +1,22 @@
-local desc = rbxmk.newDesc("RootDesc")
+T.Pass(typeof(RootDesc.new()) == "RootDesc", "new returns RootDesc")
+
+local desc = RootDesc.new()
 
 -- Metamethod tests
 T.Pass(typeof(desc) == "RootDesc"                   , "type of descriptor is RootDesc")
 T.Pass(type(getmetatable(desc)) == "string"         , "metatable of descriptor is locked")
 T.Pass(not string.match(tostring(desc), "^userdata"), "descriptor converts to a string")
 T.Pass(desc == desc                                 , "descriptor is equal to itself")
-T.Pass(desc ~= rbxmk.newDesc("RootDesc")            , "descriptor is not equal to another descriptor of the same type")
+T.Pass(desc ~= RootDesc.new()                       , "descriptor is not equal to another descriptor of the same type")
 
 -- Classes
-local classA = rbxmk.newDesc("ClassDesc")
+local classA = ClassDesc.new()
 classA.Name = "ClassA"
-local classB = rbxmk.newDesc("ClassDesc")
+local classB = ClassDesc.new()
 classB.Name = "ClassB"
-local classC = rbxmk.newDesc("ClassDesc")
+local classC = ClassDesc.new()
 classC.Name = "ClassC"
-local classD = rbxmk.newDesc("ClassDesc")
+local classD = ClassDesc.new()
 classD.Name = "ClassD"
 
 T.Pass(function() desc:Class("") end      , "can call Class method with string")
@@ -39,13 +41,13 @@ T.Pass(desc:Classes()[2] == classC        , "second class is Event")
 T.Pass(desc:Classes()[3] == classD        , "third class is Function")
 
 -- Enums
-local enumA = rbxmk.newDesc("EnumDesc")
+local enumA = EnumDesc.new()
 enumA.Name = "EnumA"
-local enumB = rbxmk.newDesc("EnumDesc")
+local enumB = EnumDesc.new()
 enumB.Name = "EnumB"
-local enumC = rbxmk.newDesc("EnumDesc")
+local enumC = EnumDesc.new()
 enumC.Name = "EnumC"
-local enumD = rbxmk.newDesc("EnumDesc")
+local enumD = EnumDesc.new()
 enumD.Name = "EnumD"
 
 T.Pass(function() desc:Enum("") end      , "can call Enum method with string")

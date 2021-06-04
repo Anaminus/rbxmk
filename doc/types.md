@@ -123,8 +123,14 @@ Member                                                   | Kind
 [CallbackDesc.SetTag][CallbackDesc.SetTag]               | method
 [CallbackDesc.UnsetTag][CallbackDesc.UnsetTag]           | method
 
-A CallbackDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+A CallbackDesc can be created with the [CallbackDesc.new][CallbackDesc.new]
+constructor.
+
+### CallbackDesc.new
+[CallbackDesc.new]: #user-content-callbackdescnew
+<code>CallbackDesc.new(): [CallbackDesc][CallbackDesc]</code>
+
+The **new** constructor creates a new CallbackDesc.
 
 ### CallbackDesc.Name
 [CallbackDesc.Name]: #user-content-callbackdescname
@@ -201,8 +207,13 @@ Member                                               | Kind
 [ClassDesc.SetTag][ClassDesc.SetTag]                 | method
 [ClassDesc.UnsetTag][ClassDesc.UnsetTag]             | method
 
-A ClassDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+A ClassDesc can be created with the [ClassDesc.new][ClassDesc.new] constructor.
+
+### ClassDesc.new
+[ClassDesc.new]: #user-content-classdescnew
+<code>ClassDesc.new(): [ClassDesc][ClassDesc]</code>
+
+The **new** constructor creates a new ClassDesc.
 
 ### ClassDesc.Name
 [ClassDesc.Name]: #user-content-classdescname
@@ -484,8 +495,13 @@ Member                                     | Kind
 [EnumDesc.SetTag][EnumDesc.SetTag]         | method
 [EnumDesc.UnsetTag][EnumDesc.UnsetTag]     | method
 
-An EnumDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+An EnumDesc can be created with the [EnumDesc.new][EnumDesc.new] constructor.
+
+### EnumDesc.new
+[EnumDesc.new]: #user-content-enumdescnew
+<code>EnumDesc.new(): [EnumDesc][EnumDesc]</code>
+
+The **new** constructor creates a new EnumDesc.
 
 ### EnumDesc.Name
 [EnumDesc.Name]: #user-content-enumdescname
@@ -562,8 +578,14 @@ Member                                         | Kind
 [EnumItemDesc.SetTag][EnumItemDesc.SetTag]     | method
 [EnumItemDesc.UnsetTag][EnumItemDesc.UnsetTag] | method
 
-An EnumItemDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+An EnumItemDesc can be created with the [EnumItemDesc.new][EnumItemDesc.new]
+constructor.
+
+### EnumItemDesc.new
+[EnumItemDesc.new]: #user-content-enumitemdescnew
+<code>EnumItemDesc.new(): [EnumItemDesc][EnumItemDesc]</code>
+
+The **new** constructor creates a new EnumItemDesc.
 
 ### EnumItemDesc.Name
 [EnumItemDesc.Name]: #user-content-enumitemdescname
@@ -625,8 +647,13 @@ Member                                             | Kind
 [EventDesc.SetTag][EventDesc.SetTag]               | method
 [EventDesc.UnsetTag][EventDesc.UnsetTag]           | method
 
-An EventDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+An EventDesc can be created with the [EventDesc.new][EventDesc.new] constructor.
+
+### EventDesc.new
+[EventDesc.new]: #user-content-eventdescnew
+<code>EventDesc.new(): [EventDesc][EventDesc]</code>
+
+The **new** constructor creates a new EventDesc.
 
 ### EventDesc.Name
 [EventDesc.Name]: #user-content-eventdescname
@@ -749,8 +776,14 @@ Member                                                   | Kind
 [FunctionDesc.SetTag][FunctionDesc.SetTag]               | method
 [FunctionDesc.UnsetTag][FunctionDesc.UnsetTag]           | method
 
-A FunctionDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+A FunctionDesc can be created with the [FunctionDesc.new][FunctionDesc.new]
+constructor.
+
+### FunctionDesc.new
+[FunctionDesc.new]: #user-content-callbackdescnew
+<code>FunctionDesc.new(): [FunctionDesc][FunctionDesc]</code>
+
+The **new** constructor creates a new FunctionDesc.
 
 ### FunctionDesc.Name
 [FunctionDesc.Name]: #user-content-functiondescname
@@ -1274,7 +1307,16 @@ Member                                         | Kind
 [ParameterDesc.Default][ParameterDesc.Default] | field
 
 ParameterDesc is immutable. A new value with different fields can be created
-with the [rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+with the [ParameterDesc.new][ParameterDesc.new] constructor.
+
+### ParameterDesc.new
+[ParameterDesc.new]: #user-content-parameterdescnew
+<code>ParameterDesc.new(type: [TypeDesc][TypeDesc]?, name: [string](##)?, default: [string](##)?): [ParameterDesc][ParameterDesc]</code>
+
+The **new** constructor creates a new ParameterDesc. *type* sets the
+[Type][ParameterDesc.Type] property, if specified. *name* sets the
+[Name][ParameterDesc.Name] property, if specified. *default* sets the
+[Default][ParameterDesc.Default] property, if specified.
 
 ### ParameterDesc.Type
 [ParameterDesc.Type]: #user-content-parameterdesctype
@@ -1314,8 +1356,14 @@ Member                                                   | Kind
 [PropertyDesc.SetTag][PropertyDesc.SetTag]               | method
 [PropertyDesc.UnsetTag][PropertyDesc.UnsetTag]           | method
 
-A PropertyDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+A PropertyDesc can be created with the [PropertyDesc.new][PropertyDesc.new]
+constructor.
+
+### PropertyDesc.new
+[PropertyDesc.new]: #user-content-propertydescnew
+<code>PropertyDesc.new(): [PropertyDesc][PropertyDesc]</code>
+
+The **new** constructor creates a new PropertyDesc.
 
 ### PropertyDesc.Name
 [PropertyDesc.Name]: #user-content-propertydescname
@@ -1413,8 +1461,13 @@ Member                                       | Kind
 [RootDesc.RemoveEnum][RootDesc.RemoveEnum]   | method
 [RootDesc.EnumTypes][RootDesc.EnumTypes]     | method
 
-A RootDesc can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+A RootDesc can be created with the [RootDesc.new][RootDesc.new] constructor.
+
+### RootDesc.new
+[RootDesc.new]: #user-content-rootdescnew
+<code>RootDesc.new(): [RootDesc][RootDesc]</code>
+
+The **new** constructor creates a new RootDesc.
 
 ### RootDesc.Class
 [RootDesc.Class]: #user-content-rootdescclass
@@ -1516,7 +1569,15 @@ Member                                 | Kind
 [TypeDesc.Name][TypeDesc.Name]         | field
 
 TypeDesc is immutable. A new value with different fields can be created with the
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) constructor.
+[TypeDesc.new][TypeDesc.new] constructor.
+
+### TypeDesc.new
+[TypeDesc.new]: #user-content-callbackdescnew
+<code>TypeDesc.new(category: [string](##), name: [string](##)): [TypeDesc][TypeDesc]</code>
+
+The **new** constructor creates a new TypeDesc. *category* sets the
+[Category][TypeDesc.Category] property, if specified. *name* sets the
+[Name][TypeDesc.Name] property, if specified.
 
 ### TypeDesc.Category
 [TypeDesc.Category]: #user-content-typedesccategory

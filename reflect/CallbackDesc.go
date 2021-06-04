@@ -196,6 +196,26 @@ func CallbackDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
+						Security: "None",
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("CallbackDesc")},
+							},
+							Summary:     "Types/CallbackDesc:Constructors/new/Summary",
+							Description: "Types/CallbackDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/CallbackDesc:Summary",

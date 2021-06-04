@@ -1,11 +1,11 @@
 -- Test members common to all descriptors.
-local class = rbxmk.newDesc("ClassDesc")
-local prop = rbxmk.newDesc("PropertyDesc")
-local func = rbxmk.newDesc("FunctionDesc")
-local event = rbxmk.newDesc("EventDesc")
-local callback = rbxmk.newDesc("CallbackDesc")
-local enum = rbxmk.newDesc("EnumDesc")
-local item = rbxmk.newDesc("EnumItemDesc")
+local class = ClassDesc.new()
+local prop = PropertyDesc.new()
+local func = FunctionDesc.new()
+local event = EventDesc.new()
+local callback = CallbackDesc.new()
+local enum = EnumDesc.new()
+local item = EnumItemDesc.new()
 
 -- Name
 for _, desc in ipairs({class,prop,func,event,callback,enum,item}) do

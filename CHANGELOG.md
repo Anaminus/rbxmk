@@ -7,6 +7,17 @@ branch is the latest unreleased version.
 - Move rbxmk.newAttrConfig to AttrConfig.new.
 - Move rbxmk.newCookie to Cookie.new.
 - Move rbxmk.cookiesFrom to Cookie.from.
+- Split rbxmk.newDesc into individual constructors.
+	- RootDesc.new.
+	- ClassDesc.new.
+	- PropertyDesc.new.
+	- FunctionDesc.new.
+	- EventDesc.new.
+	- CallbackDesc.new.
+	- ParameterDesc.new.
+	- TypeDesc.new.
+	- EnumDesc.new.
+	- EnumItemDesc.new.
 
 **Highlights:**
 - Add [os.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osclean) function to clean file paths.

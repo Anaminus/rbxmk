@@ -196,6 +196,26 @@ func FunctionDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
+						Security: "None",
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("FunctionDesc")},
+							},
+							Summary:     "Types/FunctionDesc:Constructors/new/Summary",
+							Description: "Types/FunctionDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/FunctionDesc:Summary",

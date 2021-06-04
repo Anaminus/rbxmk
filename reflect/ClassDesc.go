@@ -267,6 +267,26 @@ func ClassDesc() rbxmk.Reflector {
 				},
 			},
 		},
+		Constructors: rbxmk.Constructors{
+			"new": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
+						Members: make(map[string]rbxdump.Member),
+					}})
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Returns: dump.Parameters{
+								{Type: dt.Prim("ClassDesc")},
+							},
+							Summary:     "Types/ClassDesc:Constructors/new/Summary",
+							Description: "Types/ClassDesc:Constructors/new/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/ClassDesc:Summary",

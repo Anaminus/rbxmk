@@ -345,9 +345,7 @@ When an instance has a descriptor, several behaviors are enforced:
 [descriptor-types]: #user-content-descriptor-types
 
 Descriptors are first-class values like any other, and can be modified on the
-fly. There are a number of descriptor types, each with their own fields. See
-[rbxmk.newDesc](libraries.md#user-content-rbxmknewdesc) for creating
-descriptors.
+fly. There are a number of descriptor types, each with their own fields.
 
 Type                           | Description
 -------------------------------|------------

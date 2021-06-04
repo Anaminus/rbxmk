@@ -1,6 +1,6 @@
-local root = rbxmk.newDesc("RootDesc")
-root:AddClass(rbxmk.newDesc("ClassDesc"))
-root:AddEnum(rbxmk.newDesc("EnumDesc"))
+local root = RootDesc.new()
+root:AddClass(ClassDesc.new())
+root:AddEnum(EnumDesc.new())
 local diff = rbxmk.diffDesc(nil, root)
 local desc = diff[1]
 local other = diff[2]
@@ -74,12 +74,12 @@ T.Pass(function() desc:SetField("Foo", 42.2) end, "set field Foo to number")
 T.Pass(desc:Field("Foo") == 42, "Foo field is number")
 T.Pass(function() desc:SetField("Foo", "Bar") end, "set field Foo to string")
 T.Pass(desc:Field("Foo") == "Bar", "Foo field is string")
-T.Pass(function() desc:SetField("Foo", rbxmk.newDesc("TypeDesc","Foo","Bar")) end, "set field Foo to TypeDesc")
-T.Pass(desc:Field("Foo") == rbxmk.newDesc("TypeDesc","Foo","Bar"), "Foo field is TypeDesc")
+T.Pass(function() desc:SetField("Foo", TypeDesc.new("Foo", "Bar")) end, "set field Foo to TypeDesc")
+T.Pass(desc:Field("Foo") == TypeDesc.new("Foo", "Bar"), "Foo field is TypeDesc")
 local params = {
-	rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "AA", "BB"), "CC"),
-	rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "DD", "EE"), "FF", "GG"),
-	rbxmk.newDesc("ParameterDesc", rbxmk.newDesc("TypeDesc", "HH", "II"), "JJ"),
+	ParameterDesc.new(TypeDesc.new("AA", "BB"), "CC"),
+	ParameterDesc.new(TypeDesc.new("DD", "EE"), "FF", "GG"),
+	ParameterDesc.new(TypeDesc.new("HH", "II"), "JJ"),
 }
 T.Fail(function() desc:SetField("Foo", params) end, "cannot set field Foo to parameters")
 T.Pass(function() desc:SetField("Parameters", params) end, "set field Parameters to parameters")

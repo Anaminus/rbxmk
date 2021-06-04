@@ -1,11 +1,13 @@
-local desc = rbxmk.newDesc("ClassDesc")
+T.Pass(typeof(ClassDesc.new()) == "ClassDesc", "new returns ClassDesc")
+
+local desc = ClassDesc.new()
 
 -- Metamethod tests
 T.Pass(typeof(desc) == "ClassDesc"                  , "type of descriptor is ClassDesc")
 T.Pass(type(getmetatable(desc)) == "string"         , "metatable of descriptor is locked")
 T.Pass(not string.match(tostring(desc), "^userdata"), "descriptor converts to a string")
 T.Pass(desc == desc                                 , "descriptor is equal to itself")
-T.Pass(desc ~= rbxmk.newDesc("ClassDesc")           , "descriptor is not equal to another descriptor of the same type")
+T.Pass(desc ~= ClassDesc.new()                      , "descriptor is not equal to another descriptor of the same type")
 
 -- Superclass
 T.Pass(function() return desc.Superclass end                  , "can get Superclass field")
@@ -24,13 +26,13 @@ T.Fail(function() desc.MemoryCategory = 42 end                    , "cannot set 
 T.Pass(function() return desc.MemoryCategory == "Foobar" end      , "set MemoryCategory field persists")
 
 -- Members
-local prop = rbxmk.newDesc("PropertyDesc")
+local prop = PropertyDesc.new()
 prop.Name = "Property"
-local func = rbxmk.newDesc("FunctionDesc")
+local func = FunctionDesc.new()
 func.Name = "Function"
-local event = rbxmk.newDesc("EventDesc")
+local event = EventDesc.new()
 event.Name = "Event"
-local callback = rbxmk.newDesc("CallbackDesc")
+local callback = CallbackDesc.new()
 callback.Name = "Callback"
 
 T.Pass(function() desc:Member("") end        , "can call Member method with string")

@@ -25,38 +25,26 @@ var RBXMK = rbxmk.Library{
 	Dump:       dumpRBXMK,
 	Types: []func() rbxmk.Reflector{
 		reflect.AttrConfig,
-		reflect.CallbackDesc,
-		reflect.ClassDesc,
 		reflect.DescAction,
 		reflect.DescActions,
-		reflect.Enum,
-		reflect.EnumDesc,
-		reflect.EnumItem,
-		reflect.EnumItemDesc,
 		reflect.Enums,
-		reflect.EventDesc,
 		reflect.FormatSelector,
-		reflect.FunctionDesc,
 		reflect.Nil,
-		reflect.ParameterDesc,
-		reflect.PropertyDesc,
 		reflect.RootDesc,
 		reflect.String,
 		reflect.Symbol,
 		reflect.Table,
-		reflect.TypeDesc,
 	},
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 11)
+	lib := s.L.CreateTable(0, 10)
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
 	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
-	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
@@ -162,64 +150,6 @@ func rbxmkLoadString(s rbxmk.State) int {
 	}
 	s.L.Push(fn)
 	return 1
-}
-
-func rbxmkNewDesc(s rbxmk.State) int {
-	switch name := string(s.Pull(1, "string").(types.String)); name {
-	case "RootDesc":
-		return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
-			Classes: make(map[string]*rbxdump.Class),
-			Enums:   make(map[string]*rbxdump.Enum),
-		}})
-	case "ClassDesc":
-		return s.Push(rtypes.ClassDesc{Class: &rbxdump.Class{
-			Members: make(map[string]rbxdump.Member),
-		}})
-	case "PropertyDesc":
-		return s.Push(rtypes.PropertyDesc{Property: &rbxdump.Property{
-			ReadSecurity:  "None",
-			WriteSecurity: "None",
-		}})
-	case "FunctionDesc":
-		return s.Push(rtypes.FunctionDesc{Function: &rbxdump.Function{
-			Security: "None",
-		}})
-	case "EventDesc":
-		return s.Push(rtypes.EventDesc{Event: &rbxdump.Event{
-			Security: "None",
-		}})
-	case "CallbackDesc":
-		return s.Push(rtypes.CallbackDesc{Callback: &rbxdump.Callback{
-			Security: "None",
-		}})
-	case "ParameterDesc":
-		var param rbxdump.Parameter
-		param.Type = s.PullOpt(2, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
-		param.Name = string(s.PullOpt(3, "string", types.String("")).(types.String))
-		switch def := s.PullOpt(4, "string", rtypes.Nil).(type) {
-		case rtypes.NilType:
-			param.Optional = false
-		case types.String:
-			param.Optional = true
-			param.Default = string(def)
-		}
-		return s.Push(rtypes.ParameterDesc{Parameter: param})
-	case "TypeDesc":
-		category := string(s.PullOpt(2, "string", types.String("")).(types.String))
-		name := string(s.PullOpt(3, "string", types.String("")).(types.String))
-		return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
-			Category: category,
-			Name:     name,
-		}})
-	case "EnumDesc":
-		return s.Push(rtypes.EnumDesc{Enum: &rbxdump.Enum{
-			Items: make(map[string]*rbxdump.EnumItem),
-		}})
-	case "EnumItemDesc":
-		return s.Push(rtypes.EnumItemDesc{EnumItem: &rbxdump.EnumItem{}})
-	default:
-		return s.RaiseError("unable to create descriptor of type %q", name)
-	}
 }
 
 func rbxmkPatchDesc(s rbxmk.State) int {
@@ -417,30 +347,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",
 					Description: "Libraries/rbxmk:Fields/loadString/Description",
 				},
-				"newDesc": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "name", Type: dt.Prim("string"),
-							Enums: dt.Enums{
-								`"RootDesc"`,
-								`"ClassDesc"`,
-								`"PropertyDesc"`,
-								`"FunctionDesc"`,
-								`"EventDesc"`,
-								`"CallbackDesc"`,
-								`"ParameterDesc"`,
-								`"TypeDesc"`,
-								`"EnumDesc"`,
-								`"EnumItemDesc"`,
-							},
-						},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("Descriptor")},
-					},
-					CanError:    true,
-					Summary:     "Libraries/rbxmk:Fields/newDesc/Summary",
-					Description: "Libraries/rbxmk:Fields/newDesc/Description",
-				},
 				"patchDesc": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "desc", Type: dt.Prim("RootDesc")},
@@ -476,24 +382,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 			},
 			Summary:     "Libraries/rbxmk:Summary",
 			Description: "Libraries/rbxmk:Description",
-		},
-		Types: dump.TypeDefs{
-			"Descriptor": dump.TypeDef{
-				Underlying: dt.Or{
-					dt.Prim("RootDesc"),
-					dt.Prim("ClassDesc"),
-					dt.Prim("PropertyDesc"),
-					dt.Prim("FunctionDesc"),
-					dt.Prim("EventDesc"),
-					dt.Prim("CallbackDesc"),
-					dt.Prim("ParameterDesc"),
-					dt.Prim("TypeDesc"),
-					dt.Prim("EnumDesc"),
-					dt.Prim("EnumItemDesc"),
-				},
-				Summary:     "Libraries/rbxmk/Types/Descriptor:Summary",
-				Description: "Libraries/rbxmk/Types/Descriptor:Description",
-			},
 		},
 	}
 	return lib

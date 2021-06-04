@@ -1,11 +1,13 @@
-local desc = rbxmk.newDesc("EnumItemDesc")
+T.Pass(typeof(EnumItemDesc.new()) == "EnumItemDesc", "new returns EnumItemDesc")
+
+local desc = EnumItemDesc.new()
 
 -- Metamethod tests
 T.Pass(typeof(desc) == "EnumItemDesc"               , "type of descriptor is EnumItemDesc")
 T.Pass(type(getmetatable(desc)) == "string"         , "metatable of descriptor is locked")
 T.Pass(not string.match(tostring(desc), "^userdata"), "descriptor converts to a string")
 T.Pass(desc == desc                                 , "descriptor is equal to itself")
-T.Pass(desc ~= rbxmk.newDesc("EnumItemDesc")        , "descriptor is not equal to another descriptor of the same type")
+T.Pass(desc ~= EnumItemDesc.new()                   , "descriptor is not equal to another descriptor of the same type")
 
 -- Value
 T.Pass(function() return desc.Value end                  , "can get Value field")
