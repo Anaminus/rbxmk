@@ -18,9 +18,15 @@ branch is the latest unreleased version.
 	- TypeDesc.new.
 	- EnumDesc.new.
 	- EnumItemDesc.new.
+- Move os library functions to path library.
+	- Move os.clean to path.clean
+	- Move os.expand to path.expand
+	- Move os.join to path.join
+	- Move os.split to path.split
+	- os.getenv is unchanged.
 
 **Highlights:**
-- Add [os.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osclean) function to clean file paths.
+- Add [path.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathclean) function to clean file paths.
 - Improve handling of values in the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 - Add "Desc" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set a descriptor used when encoding or decoding.
 - Add "DescMode" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set how deviations from the descriptor are handled.

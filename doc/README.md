@@ -497,9 +497,9 @@ except for moving files into ([fs.rename][fs.rename]), or getting the contents
 of ([fs.dir][fs.dir]).
 
 The following directories are marked as roots:
-- The working directory (<code>[os.expand][os.expand]("$wd")</code>).
-- The directory of the first running script file (<code>[os.expand][os.expand]("$rsd")</code>).
-- The temporary directory provided by rbxmk (<code>[os.expand][os.expand]("$tmp")</code>).
+- The working directory (<code>[path.expand][path.expand]("$wd")</code>).
+- The directory of the first running script file (<code>[path.expand][path.expand]("$rsd")</code>).
+- The temporary directory provided by rbxmk (<code>[path.expand][path.expand]("$tmp")</code>).
 
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc
@@ -516,7 +516,7 @@ The following directories are marked as roots:
 [Instance.sym.RawAttrConfig]: types.md#user-content-instancesymrawattrconfig
 [Instance.sym.RawDesc]: types.md#user-content-instancesymrawdesc
 [Instance]: types.md#user-content-instance
-[os.expand]: libraries.md#user-content-osexpand
+[path.expand]: libraries.md#user-content-pathexpand
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
 [rbxmk.globalAttrConfig]: libraries.md#user-content-rbxmkglobalattrconfig

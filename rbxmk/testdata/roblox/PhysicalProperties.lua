@@ -1,4 +1,4 @@
-local desc = fs.read(os.expand("$sd/../dump.desc.json"))
+local desc = fs.read(path.expand("$sd/../dump.desc.json"))
 
 -- As property
 local pp = PhysicalProperties.new(1,2,3,4,5)

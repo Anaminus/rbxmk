@@ -1,4 +1,4 @@
-local desc = fs.read(os.expand("$sd/../../dump.desc.json"))
+local desc = fs.read(path.expand("$sd/../../dump.desc.json"))
 local instance = Instance.new("BoolValue")
 T.Pass(instance[sym.Desc] == nil                   , "initializes with nil")
 T.Pass(function() instance[sym.Desc] = desc end    , "can be set to RootDesc")

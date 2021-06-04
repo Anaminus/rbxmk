@@ -39,25 +39,26 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	3. [math.round][math.round]
 	4. [math.sign][math.sign]
 8. [os][os]
-	1. [os.clean][os.clean]
-	2. [os.expand][os.expand]
-	3. [os.getenv][os.getenv]
-	4. [os.join][os.join]
-	5. [os.split][os.split]
-9. [rbxassetid][rbxassetid]
+	1. [os.getenv][os.getenv]
+9. [path][path]
+	1. [path.clean][path.clean]
+	2. [path.expand][path.expand]
+	3. [path.join][path.join]
+	4. [path.split][path.split]
+10. [rbxassetid][rbxassetid]
 	1. [rbxassetid.read][rbxassetid.read]
 	2. [rbxassetid.write][rbxassetid.write]
-10. [string][string]
+11. [string][string]
 	1. [string.split][string.split]
-11. [sym][sym]
-12. [table][table]
+12. [sym][sym]
+13. [table][table]
 	1. [table.clear][table.clear]
 	2. [table.create][table.create]
 	3. [table.find][table.find]
 	4. [table.move][table.move]
 	5. [table.pack][table.pack]
 	6. [table.unpack][table.unpack]
-13. [types][types]
+14. [types][types]
 
 </td></tr></tbody>
 </table>
@@ -74,6 +75,7 @@ Library            | Description
 [(roblox)][roblox] | An environment emulating the Roblox Lua API.
 [math][math]       | Extensions to the standard math library.
 [os][os]           | Extensions to the standard os library.
+[path][path]       | File path manipulation.
 [string][string]   | Extensions to the standard string library.
 [table][table]     | Extensions to the standard table library.
 [sym][sym]         | Symbols for accessing instance metadata.
@@ -393,7 +395,7 @@ extension.
 
 If the format returns an [Instance][Instance], then the Name property will be
 set to the "fstem" component of *path* according to
-[os.split](libraries.md#user-content-ossplit).
+[path.split](libraries.md#user-content-pathsplit).
 
 ### fs.remove
 [fs.remove]: #user-content-fsremove
@@ -513,22 +515,39 @@ additional functions are included:
 
 Name                   | Description
 -----------------------|------------
-[os.clean][os.clean]   | Cleans up a file path.
-[os.expand][os.expand] | Expands predefined file path variables.
 [os.getenv][os.getenv] | Gets an environment variable.
-[os.join][os.join]     | Joins a number of file paths together.
-[os.split][os.split]   | Splits a file path into its components.
 
-### os.clean
-[os.clean]: #user-content-osclean
-<code>os.clean(path: [string](##)): [string](##)</code>
+### os.getenv
+[os.getenv]: #user-content-osgetenv
+<code>os.getenv(name: [string](##)?): [string](##)? \| {\[[string](##)\]: [string](##)}</code>
+
+The **getenv** function returns the value of the *name* environment variable, or
+nil if no such value is defined. If *name* is not specified, then a table of
+environment variable names mapped to values is returned.
+
+## path
+[path]: #user-content-path
+
+The **path** library provides functions that handle file paths. The following
+functions are included:
+
+Name                       | Description
+---------------------------|------------
+[path.clean][path.clean]   | Cleans up a file path.
+[path.expand][path.expand] | Expands predefined file path variables.
+[path.join][path.join]     | Joins a number of file paths together.
+[path.split][path.split]   | Splits a file path into its components.
+
+### path.clean
+[path.clean]: #user-content-pathclean
+<code>path.clean(path: [string](##)): [string](##)</code>
 
 The **clean** function returns the shortest path equivalent to *path*.
 Separators are replaced with the OS-specific path separator.
 
-### os.expand
-[os.expand]: #user-content-osexpand
-<code>os.expand(path: [string](##)): [string](##)</code>
+### path.expand
+[path.expand]: #user-content-pathexpand
+<code>path.expand(path: [string](##)): [string](##)</code>
 
 The **expand** function scans *path* for certain variables of the form `$var` or
 `${var}` an expands them. The following variables are expanded:
@@ -541,24 +560,16 @@ Variable                                             | Description
 `$working_directory`, `$working_dir`, `$wd`          | The current working directory.
 `$temp_directory`, `$temp_dir`, `$tmp`               | The directory for temporary files.
 
-### os.getenv
-[os.getenv]: #user-content-osgetenv
-<code>os.getenv(name: [string](##)?): [string](##)? \| {\[[string](##)\]: [string](##)}</code>
-
-The **getenv** function returns the value of the *name* environment variable, or
-nil if no such value is defined. If *name* is not specified, then a table of
-environment variable names mapped to values is returned.
-
-### os.join
-[os.join]: #user-content-osjoin
-<code>os.join(paths: ...[string](##)): [string](##)</code>
+### path.join
+[path.join]: #user-content-pathjoin
+<code>path.join(paths: ...[string](##)): [string](##)</code>
 
 The **join** function joins each *path* element into a single path, separating
 them using the operating system's path separator. This also cleans up the path.
 
-### os.split
-[os.split]: #user-content-ossplit
-<code>os.split(path: [string](##), components: ...[string](##)): ...[string](##)</code>
+### path.split
+[path.split]: #user-content-pathsplit
+<code>path.split(path: [string](##), components: ...[string](##)): ...[string](##)</code>
 
 The **split** function returns the components of a file path.
 

@@ -1,5 +1,5 @@
-local desc0 = fs.read(os.expand("$sd/enums.desc.json"))
-local desc1 = fs.read(os.expand("$sd/enums.desc.json"))
+local desc0 = fs.read(path.expand("$sd/enums.desc.json"))
+local desc1 = fs.read(path.expand("$sd/enums.desc.json"))
 
 local Enums0 = desc0:EnumTypes()
 local Enums1 = desc1:EnumTypes()

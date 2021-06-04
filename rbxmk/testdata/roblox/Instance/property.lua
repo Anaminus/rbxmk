@@ -1,4 +1,4 @@
-local desc = fs.read(os.expand("$sd/../../dump.desc.json"))
+local desc = fs.read(path.expand("$sd/../../dump.desc.json"))
 
 local b = Instance.new("BoolValue")
 local v = Instance.new("ObjectValue")
@@ -29,7 +29,7 @@ v.Value = nil
 T.Pass(function() return v.Value == nil end, "with desc, get nil again")
 
 rbxmk.globalDesc = desc
-local d = fs.read(os.expand("$sd/decal.rbxm"))
+local d = fs.read(path.expand("$sd/decal.rbxm"))
 T.Pass(d:Descend("Decal").Texture == "rbxasset://textures/SpawnLocation.png", "get coerced property")
 rbxmk.globalDesc = nil
 

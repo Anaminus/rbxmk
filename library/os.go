@@ -2,7 +2,6 @@ package library
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -21,28 +20,9 @@ var OS = rbxmk.Library{
 }
 
 func openOS(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 4)
-	lib.RawSetString("clean", s.WrapFunc(osClean))
-	lib.RawSetString("expand", s.WrapFunc(osExpand))
+	lib := s.L.CreateTable(0, 1)
 	lib.RawSetString("getenv", s.WrapFunc(osGetenv))
-	lib.RawSetString("join", s.WrapFunc(osJoin))
-	lib.RawSetString("split", s.WrapFunc(osSplit))
 	return lib
-}
-
-func osClean(s rbxmk.State) int {
-	path := s.CheckString(1)
-	filename := filepath.Clean(path)
-	s.L.Push(lua.LString(filename))
-	return 1
-}
-
-func osExpand(s rbxmk.State) int {
-	path := s.CheckString(1)
-	expanded := s.World.Expand(path)
-	s.L.Push(lua.LString(expanded))
-	return 1
-
 }
 
 func osGetenv(s rbxmk.State) int {
@@ -73,57 +53,10 @@ func osGetenv(s rbxmk.State) int {
 	}
 }
 
-func osJoin(s rbxmk.State) int {
-	j := make([]string, s.Count())
-	for i := 1; i <= s.Count(); i++ {
-		j[i-1] = s.CheckString(i)
-	}
-	filename := filepath.Join(j...)
-	s.L.Push(lua.LString(filename))
-	return 1
-}
-
-func osSplit(s rbxmk.State) int {
-	path := s.CheckString(1)
-	n := s.Count()
-	components := make([]string, n-1)
-	for i := 2; i <= n; i++ {
-		components[i-2] = s.CheckString(i)
-	}
-	components, err := s.World.Split(path, components...)
-	if err != nil {
-		return s.RaiseError("%s", err)
-	}
-	for _, comp := range components {
-		s.L.Push(lua.LString(comp))
-	}
-	return n - 1
-}
-
 func dumpOS(s rbxmk.State) dump.Library {
 	return dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"clean": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
-					},
-					Summary:     "Libraries/os:Fields/clean/Summary",
-					Description: "Libraries/os:Fields/clean/Description",
-				},
-				"expand": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
-					},
-					Summary:     "Libraries/os:Fields/expand/Summary",
-					Description: "Libraries/os:Fields/expand/Description",
-				},
 				"getenv": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
@@ -133,28 +66,6 @@ func dumpOS(s rbxmk.State) dump.Library {
 					},
 					Summary:     "Libraries/os:Fields/getenv/Summary",
 					Description: "Libraries/os:Fields/getenv/Description",
-				},
-				"join": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Prim("string")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
-					},
-					Summary:     "Libraries/os:Fields/join/Summary",
-					Description: "Libraries/os:Fields/join/Description",
-				},
-				"split": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-						{Name: "...", Type: dt.Prim("string")},
-					},
-					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Prim("string")},
-					},
-					CanError:    true,
-					Summary:     "Libraries/os:Fields/split/Summary",
-					Description: "Libraries/os:Fields/split/Description",
 				},
 			},
 			Summary:     "Libraries/os:Summary",

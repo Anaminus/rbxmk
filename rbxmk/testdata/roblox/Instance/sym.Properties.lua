@@ -1,10 +1,10 @@
-local desc = fs.read(os.expand("$sd/../../dump.desc.json"))
-local patch = fs.read(os.expand("$sd/../../dump.desc-patch.json"))
+local desc = fs.read(path.expand("$sd/../../dump.desc.json"))
+local patch = fs.read(path.expand("$sd/../../dump.desc-patch.json"))
 rbxmk.patchDesc(desc, patch)
 local Enum = desc:EnumTypes()
 
 -- Test XML without descriptors.
-local d = fs.read(os.expand("$sd/decal.rbxmx")):Descend("Decal")
+local d = fs.read(path.expand("$sd/decal.rbxmx")):Descend("Decal")
 local p = d[sym.Properties]
 
 T.Pass(typeof(p.AttributesSerialize) == "BinaryString", "xml AttributesSerialize type")
@@ -48,7 +48,7 @@ T.Pass(p.Texture == "rbxasset://textures/SpawnLocation.png", "xml desc Texture v
 T.Pass(p.Transparency == 0, "xml desc Transparency value")
 
 -- Test binary without descriptors.
-local d = fs.read(os.expand("$sd/decal.rbxm")):Descend("Decal")
+local d = fs.read(path.expand("$sd/decal.rbxm")):Descend("Decal")
 local p = d[sym.Properties]
 
 -- Binary encodes string-likes as string type.
