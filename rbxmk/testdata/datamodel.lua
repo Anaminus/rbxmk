@@ -1,5 +1,6 @@
 -- Test DataModel type.
-local game = DataModel.new()
+local game = Instance.new("DataModel")
+T.Fail(function() Instance.new("DataModel", game) end, "DataModel Parent must be nil")
 T.Pass(function() game[sym.Metadata] = {ExplicitAutoJoints = "true"} end                          , "DataModel can set metadata")
 T.Pass(game[sym.Metadata].ExplicitAutoJoints == "true"                                            , "DataModel can get metadata")
 T.Pass(function() game[sym.Metadata] = {}; return game[sym.Metadata].ExplicitAutoJoints == nil end, "DataModel can unset metadata")

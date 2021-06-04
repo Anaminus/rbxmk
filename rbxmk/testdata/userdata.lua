@@ -2,7 +2,7 @@ T.GC()
 local baseLen = T.UserDataCacheLen()
 
 -- Test cached userdata.
-local game = DataModel.new()
+local game = Instance.new("DataModel")
 local object0 = Instance.new("Object", game)
 T.Pass(T.UserDataCacheLen() == baseLen+2, "userdata cache length is 2")
 

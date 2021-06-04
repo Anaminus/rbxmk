@@ -364,14 +364,8 @@ Unlike a normal Instance, the [ClassName][Instance.ClassName] property of a
 DataModel cannot be modified. Properties on a DataModel are usually not
 serialized.
 
-A DataModel can be created with the [DataModel.new][DataModel.new] constructor.
-
-### DataModel.new
-[DataModel.new]: #user-content-datamodelnew
-<code>DataModel.new(desc: [RootDesc][RootDesc]?): [Instance][Instance]</code>
-
-The **DataModel.new** constructor returns a new Instance of the DataModel class.
-If *desc* is specified, then it sets the [sym.Desc][Instance.sym.Desc] member.
+A DataModel can be created with the [Instance.new][Instance.new] constructor
+with "DataModel" as the *className*.
 
 ### DataModel.GetService
 [DataModel.GetService]: #user-content-datamodelgetservice
@@ -962,7 +956,7 @@ An Instance can be created with the [Instance.new][Instance.new] constructor.
 
 ### Instance.new
 [Instance.new]: #user-content-instancenew
-<code>Instance.new(className: [string](##), parent: [Instance][Instance]?, desc: [RootDesc][RootDesc]?): [Instance][Instance]</code>
+<code>Instance.new(className: [string](##), parent: [Instance][Instance]?, desc: [RootDesc][RootDesc]?): [Instance][Instance] \| [DataModel][DataModel]</code>
 
 The **Instance.new** constructor returns a new Instance of the given class.
 *className* sets the [ClassName][Instance.ClassName] property of the instance.
@@ -971,6 +965,9 @@ If *parent* is specified, it sets the [Parent][Instance.Parent] property.
 If *desc* is specified, then it sets the [sym.Desc][Instance.sym.Desc] member.
 Additionally, new will throw an error if the class does not exist. If no
 descriptor is specified, then any class name will be accepted.
+
+If *className* is "DataModel", then a [DataModel][DataModel] value is returned.
+In this case, new will throw an error if *parent* is not nil.
 
 ### Instance.ClassName
 [Instance.ClassName]: #user-content-instanceclassname

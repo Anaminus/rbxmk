@@ -1103,6 +1103,10 @@ func Instance() rbxmk.Reflector {
 				Func: func(s rbxmk.State) int {
 					className := string(s.Pull(1, "string").(types.String))
 					parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
+					if className == "DataModel" && parent != nil {
+						return s.RaiseError("DataModel Parent must be nil")
+					}
+
 					var desc *rtypes.RootDesc
 					var blocked bool
 					if s.Count() >= 3 {
@@ -1132,7 +1136,12 @@ func Instance() rbxmk.Reflector {
 							}
 						}
 					}
-					inst := rtypes.NewInstance(className, parent)
+					var inst *rtypes.Instance
+					if className == "DataModel" {
+						inst = rtypes.NewDataModel()
+					} else {
+						inst = rtypes.NewInstance(className, parent)
+					}
 					inst.SetDesc(desc, blocked)
 					return s.Push(inst)
 				},
@@ -1145,7 +1154,7 @@ func Instance() rbxmk.Reflector {
 								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Instance")},
+								{Type: dt.Or{dt.Prim("Instance"), dt.Prim("DataModel")}},
 							},
 							CanError:    true,
 							Summary:     "Types/Instance:Constructors/new/Summary",
@@ -1154,30 +1163,6 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-		},
-		Environment: func(s rbxmk.State) {
-			t := s.L.CreateTable(0, 1)
-			t.RawSetString("new", s.WrapFunc(func(s rbxmk.State) int {
-				var desc *rtypes.RootDesc
-				var blocked bool
-				if s.Count() >= 3 {
-					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
-					case rtypes.NilType:
-					case types.Bool:
-						if v {
-							return s.RaiseError("descriptor cannot be true")
-						}
-						blocked = true
-					case *rtypes.RootDesc:
-						desc = v
-						return s.ReflectorError(3)
-					}
-				}
-				dataModel := rtypes.NewDataModel()
-				dataModel.SetDesc(desc, blocked)
-				return s.Push(dataModel)
-			}))
-			s.L.G.Global.RawSetString("DataModel", t)
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{

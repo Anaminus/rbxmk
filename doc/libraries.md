@@ -269,9 +269,6 @@ Each of these types has an implementation that matches that of Roblox. The
 [DevHub](https://developer.roblox.com/en-us/api-reference/data-types) has more
 information about the API of such types.
 
-Additionally, the [DataModel.new][DataModel] constructor creates a special
-Instance of the DataModel class, to be used to contain instances in a game tree.
-
 ## clipboard
 [clipboard]: #user-content-clipboard
 

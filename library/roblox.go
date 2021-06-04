@@ -116,20 +116,6 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 						Description: "Libraries/roblox/Types/DataModel:Methods/GetService/Description",
 					},
 				},
-				Constructors: dump.Constructors{
-					"new": dump.MultiFunction{
-						{
-							Parameters: dump.Parameters{
-								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
-							},
-							Returns: dump.Parameters{
-								{Type: dt.Prim("DataModel")},
-							},
-							Summary:     "Libraries/roblox/Types/DataModel:Constructors/new/Summary",
-							Description: "Libraries/roblox/Types/DataModel:Constructors/new/Description",
-						},
-					},
-				},
 				Summary:     "Libraries/roblox/Types/DataModel:Summary",
 				Description: "Libraries/roblox/Types/DataModel:Description",
 			},

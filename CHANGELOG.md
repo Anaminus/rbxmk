@@ -26,6 +26,7 @@ branch is the latest unreleased version.
 	- os.getenv is unchanged.
 - Move rbxmk.diffDesc function to RootDesc.Diff method.
 - Move rbxmk.patchDesc function to RootDesc.Patch method.
+- Remove DataModel.new in favor of Instance.new("DataModel").
 
 **Highlights:**
 - Add [path.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathclean) function to clean file paths.
@@ -48,6 +49,7 @@ branch is the latest unreleased version.
 - Fix incorrect use of CDATA sections in rbxlx/rbxmx formats.
 - Fix interactive command not having descriptor flags.
 - Fix Cookie.from returning incorrect values when no cookies are found.
+- Fix Instance.new handling DataModel incorrectly.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
