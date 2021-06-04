@@ -47,6 +47,38 @@ func Cookie() rbxmk.Reflector {
 			},
 		},
 		Constructors: rbxmk.Constructors{
+			"from": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					location := string(s.Pull(1, "string").(types.String))
+					cookies, err := rbxmk.CookiesFrom(location)
+					if err != nil {
+						return s.RaiseError("unknown location %q", location)
+					}
+					if len(cookies) == 0 {
+						s.Push(rtypes.Nil)
+					}
+					return s.Push(cookies)
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "location", Type: dt.Prim("string"),
+									Enums: dt.Enums{
+										`"studio"`,
+									},
+								},
+							},
+							Returns: dump.Parameters{
+								{Name: "cookies", Type: dt.Prim("Cookies")},
+							},
+							CanError:    true,
+							Summary:     "Types/Cookie:Constructors/from/Summary",
+							Description: "Types/Cookie:Constructors/from/Description",
+						},
+					}
+				},
+			},
 			"new": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
 					name := string(s.Pull(1, "string").(types.String))

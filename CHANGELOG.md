@@ -6,6 +6,7 @@ branch is the latest unreleased version.
 **Incompatibilities**
 - Move rbxmk.newAttrConfig to AttrConfig.new.
 - Move rbxmk.newCookie to Cookie.new.
+- Move rbxmk.cookiesFrom to Cookie.from.
 
 **Highlights:**
 - Add [os.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osclean) function to clean file paths.

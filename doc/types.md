@@ -303,7 +303,23 @@ For security reasons, the value of the cookie cannot be accessed.
 
 Cookie is immutable. A Cookie can be created with the [Cookie.new][Cookie.new]
 constructor. Additionally, Cookies can be fetched from known locations with the
-[rbxmk.cookiesFrom](libraries.md#user-content-rbxmkcookiesfrom) function.
+[Cookie.from][Cookie.from] function.
+
+### Cookie.from
+[Cookie.from]: #user-content-cookiefrom
+<code>Cookie.from(location: string): (cookies: [Cookies][Cookies]?)</code>
+
+The **from** constructor retrieves cookies from a known location. *location* is
+case-insensitive.
+
+The following locations are implemented:
+
+Location | Description
+---------|------------
+`studio` | Returns the cookies used for authentication when logging into Roblox Studio.
+
+Returns nil if no cookies could be retrieved from the location. Throws an error
+if an unknown location is given.
 
 ### Cookie.new
 [Cookie.new]: #user-content-cookienew

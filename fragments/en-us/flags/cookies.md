@@ -1,7 +1,7 @@
 # cookies-from
 Append cookies from a known location. See the documentation of
-[rbxmk.cookiesFrom](lib:rbxmk.cookiesFrom) for a list of locations. Can be given
-any number of times.
+[Cookie.from](type:Cookie.from) for a list of locations. Can be given any number
+of times.
 
 # cookies-file
 Append cookies from a file. The file is formatted as a number of

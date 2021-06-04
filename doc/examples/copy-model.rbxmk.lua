@@ -18,7 +18,7 @@ local options = {
 	Format = "rbxm",
 }
 if useStudioCookies then
-	options.Cookies = rbxmk.cookiesFrom("studio")
+	options.Cookies = Cookie.from("studio")
 end
 local asset = rbxassetid.read(options)
 clipboard.write(asset, "rbxm")

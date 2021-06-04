@@ -8,19 +8,18 @@ This document contains a reference to the libraries available to rbxmk scripts.
 1. [Base][base]
 2. [rbxmk][rbxmk]
 	1. [rbxmk.Enum][rbxmk.Enum]
-	2. [rbxmk.cookiesFrom][rbxmk.cookiesFrom]
-	3. [rbxmk.decodeFormat][rbxmk.decodeFormat]
-	4. [rbxmk.diffDesc][rbxmk.diffDesc]
-	5. [rbxmk.encodeFormat][rbxmk.encodeFormat]
-	6. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
-	7. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
-	8. [rbxmk.globalDesc][rbxmk.globalDesc]
-	9. [rbxmk.loadFile][rbxmk.loadFile]
-	10. [rbxmk.loadString][rbxmk.loadString]
-	11. [rbxmk.newDesc][rbxmk.newDesc]
-	12. [rbxmk.patchDesc][rbxmk.patchDesc]
-	13. [rbxmk.runFile][rbxmk.runFile]
-	14. [rbxmk.runString][rbxmk.runString]
+	2. [rbxmk.decodeFormat][rbxmk.decodeFormat]
+	3. [rbxmk.diffDesc][rbxmk.diffDesc]
+	4. [rbxmk.encodeFormat][rbxmk.encodeFormat]
+	5. [rbxmk.formatCanDecode][rbxmk.formatCanDecode]
+	6. [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
+	7. [rbxmk.globalDesc][rbxmk.globalDesc]
+	8. [rbxmk.loadFile][rbxmk.loadFile]
+	9. [rbxmk.loadString][rbxmk.loadString]
+	10. [rbxmk.newDesc][rbxmk.newDesc]
+	11. [rbxmk.patchDesc][rbxmk.patchDesc]
+	12. [rbxmk.runFile][rbxmk.runFile]
+	13. [rbxmk.runString][rbxmk.runString]
 3. [Roblox][roblox]
 4. [clipboard][clipboard]
 	1. [clipboard.read][clipboard.read]
@@ -125,7 +124,6 @@ The **rbxmk** library contains functions related to the rbxmk engine.
 Name                                             | Kind     | Description
 -------------------------------------------------|----------|------------
 [rbxmk.Enum][rbxmk.Enum]                         | Enums    | Collection of rbxmk-defined enums.
-[rbxmk.cookiesFrom][rbxmk.cookiesFrom]           | function | Retrieve cookies from a known location.
 [rbxmk.decodeFormat][rbxmk.decodeFormat]         | function | Deserialize data from bytes.
 [rbxmk.diffDesc][rbxmk.diffDesc]                 | function | Get the differences between two descriptors.
 [rbxmk.encodeFormat][rbxmk.encodeFormat]         | function | Serialize data into bytes.
@@ -144,22 +142,6 @@ Name                                             | Kind     | Description
 <code>rbxmk.Enum: [Enums](##)</code>
 
 The **Enum** field is a collection of Enum values defined by rbxmk.
-
-### rbxmk.cookiesFrom
-[rbxmk.cookiesFrom]: #user-content-rbxmkcookiesfrom
-<code>rbxmk.cookiesFrom(location: string): (cookies: [Cookies][Cookies]?)</code>
-
-The **cookiesFrom** function retrieves cookies from a known location. *location*
-is case-insensitive.
-
-The following locations are implemented:
-
-Location | Description
----------|------------
-`studio` | Returns the cookies used for authentication when logging into Roblox Studio.
-
-Returns nil if no cookies could be retrieved from the location. Throws an error
-if an unknown location is given.
 
 ### rbxmk.decodeFormat
 [rbxmk.decodeFormat]: #user-content-rbxmkdecodeformat
@@ -806,8 +788,6 @@ token           | number
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc
 [ClassDesc]: types.md#user-content-classdesc
-[Cookie]: types.md#user-content-cookie
-[Cookies]: types.md#user-content-cookies
 [DataModel.sym.Metadata]: types.md#user-content-datamodelsymmetadata
 [DataModel]: types.md#user-content-datamodel
 [DescAction]: types.md#user-content-descaction

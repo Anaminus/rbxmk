@@ -36,7 +36,7 @@ if not txnTypes[txnType] and txnType ~= "all" then
 	return
 end
 
-local cookies = rbxmk.cookiesFrom("studio")
+local cookies = Cookie.from("studio")
 
 local CurrentUser do
 	local userURL = "https://users.roblox.com/v1/users/authenticated"

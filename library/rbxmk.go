@@ -27,7 +27,6 @@ var RBXMK = rbxmk.Library{
 		reflect.AttrConfig,
 		reflect.CallbackDesc,
 		reflect.ClassDesc,
-		reflect.Cookies,
 		reflect.DescAction,
 		reflect.DescActions,
 		reflect.Enum,
@@ -50,8 +49,7 @@ var RBXMK = rbxmk.Library{
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 12)
-	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
+	lib := s.L.CreateTable(0, 11)
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
 	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
@@ -72,18 +70,6 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	s.L.SetMetatable(lib, mt)
 
 	return lib
-}
-
-func rbxmkCookiesFrom(s rbxmk.State) int {
-	location := string(s.Pull(1, "string").(types.String))
-	cookies, err := rbxmk.CookiesFrom(location)
-	if err != nil {
-		return s.RaiseError("unknown location %q", location)
-	}
-	if len(cookies) == 0 {
-		s.Push(rtypes.Nil)
-	}
-	return s.Push(cookies)
 }
 
 func rbxmkDecodeFormat(s rbxmk.State) int {
@@ -352,21 +338,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"cookiesFrom": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "location", Type: dt.Prim("string"),
-							Enums: dt.Enums{
-								`"studio"`,
-							},
-						},
-					},
-					Returns: dump.Parameters{
-						{Name: "cookies", Type: dt.Prim("Cookies")},
-					},
-					CanError:    true,
-					Summary:     "Libraries/rbxmk:Fields/cookiesFrom/Summary",
-					Description: "Libraries/rbxmk:Fields/cookiesFrom/Description",
-				},
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "format", Type: dt.Prim("string")},
