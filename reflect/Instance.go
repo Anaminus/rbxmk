@@ -410,7 +410,12 @@ func Instance() rbxmk.Reflector {
 						s.RaiseError("%s cannot be assigned to", "ClassName")
 						return
 					}
-					inst.ClassName = string(s.Pull(3, "string").(types.String))
+					className := string(s.Pull(3, "string").(types.String))
+					if className == "DataModel" {
+						s.RaiseError("cannot set ClassName to DataModel")
+						return
+					}
+					inst.ClassName = className
 				},
 				Dump: func() dump.Property {
 					return dump.Property{

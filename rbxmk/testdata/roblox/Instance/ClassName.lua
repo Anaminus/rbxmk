@@ -1,0 +1,11 @@
+local inst = Instance.new("Foo")
+T.Pass(inst.ClassName == "Foo", "Instance ClassName is Foo")
+T.Pass(function() inst.ClassName = "Bar" end, "Instance ClassName can be set to Bar")
+T.Pass(inst.ClassName == "Bar", "Instance ClassName was set to Bar")
+T.Fail(function() inst.ClassName = "DataModel" end, "Instance ClassName cannot be set to DataModel")
+T.Pass(inst.ClassName == "Bar", "Instance ClassName was not set to DataModel")
+
+local game = Instance.new("DataModel")
+T.Pass(game.ClassName == "DataModel", "DataModel ClassName is DataModel")
+T.Fail(function() game.ClassName = "Foo" end, "DataModel ClassName cannot be set")
+T.Pass(game.ClassName == "DataModel", "DataModel ClassName is still DataModel")

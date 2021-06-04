@@ -50,6 +50,7 @@ branch is the latest unreleased version.
 - Fix interactive command not having descriptor flags.
 - Fix Cookie.from returning incorrect values when no cookies are found.
 - Fix Instance.new handling DataModel incorrectly.
+- Fix Instance.ClassName being settable to "DataModel".
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
