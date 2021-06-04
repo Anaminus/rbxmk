@@ -14,5 +14,7 @@ func register(r func() rbxmk.Reflector) {
 
 // All returns a list of Reflectors defined in the package.
 func All() []func() rbxmk.Reflector {
-	return registry
+	a := make([]func() rbxmk.Reflector, len(registry))
+	copy(a, registry)
+	return a
 }

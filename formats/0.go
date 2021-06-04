@@ -19,7 +19,10 @@ func register(f func() rbxmk.Format) {
 
 // All returns a list of Formats defined in the package.
 func All() []func() rbxmk.Format {
-	return registry
+	a := make([]func() rbxmk.Format, len(registry))
+	copy(a, registry)
+	return a
+
 }
 
 // cannotEncode returns an error indicating that v cannot be encoded.

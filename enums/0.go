@@ -14,5 +14,8 @@ func register(r *rtypes.Enum) {
 
 // All returns a list of Reflectors defined in the package.
 func All() []*rtypes.Enum {
-	return registry
+	a := make([]*rtypes.Enum, len(registry))
+	copy(a, registry)
+	return a
+
 }
