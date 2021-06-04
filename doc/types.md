@@ -301,10 +301,15 @@ Member                     | Kind
 
 For security reasons, the value of the cookie cannot be accessed.
 
-Cookie is immutable. A Cookie can be created with the
-[rbxmk.newCookie](libraries.md#user-content-rbxmknewcookie) constructor.
-Additionally, Cookies can be fetched from known locations with the
+Cookie is immutable. A Cookie can be created with the [Cookie.new][Cookie.new]
+constructor. Additionally, Cookies can be fetched from known locations with the
 [rbxmk.cookiesFrom](libraries.md#user-content-rbxmkcookiesfrom) function.
+
+### Cookie.new
+[Cookie.new]: #user-content-cookienew
+<code>Cookie.new(name: [string](##), value: [string](##)): [Cookie][Cookie]</code>
+
+The **new** constructor creates a new cookie object.
 
 ### Cookie.Name
 [Cookie.Name]: #user-content-cookiename

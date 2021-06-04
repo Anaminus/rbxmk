@@ -5,6 +5,7 @@ branch is the latest unreleased version.
 ## imperative
 **Incompatibilities**
 - Move rbxmk.newAttrConfig to AttrConfig.new.
+- Move rbxmk.newCookie to Cookie.new.
 
 **Highlights:**
 - Add [os.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osclean) function to clean file paths.

@@ -1,0 +1,7 @@
+T.Fail(function() return Cookie.new() end                            , "expects a value for first argument")
+T.Fail(function() return Cookie.new(42) end                          , "expects a string for its first argument")
+T.Fail(function() return Cookie.new("Foo", 42) end                   , "expects a string for its second argument")
+T.Pass(Cookie.new("Foo", "Bar")                                      , "can pass string arguments")
+T.Pass(typeof(Cookie.new("Foo", "Bar")) == "Cookie"                  , "returns Cookie")
+T.Pass(Cookie.new("Foo", "Bar").Name == "Foo"                        , "passing string for first argument sets Name to string")
+T.Fail(function() return Cookie.new("Foo", "Bar").Value == "Bar" end , "does not have Value property")

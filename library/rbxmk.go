@@ -2,7 +2,6 @@ package library
 
 import (
 	"bytes"
-	"net/http"
 	"path/filepath"
 	"strings"
 
@@ -28,7 +27,6 @@ var RBXMK = rbxmk.Library{
 		reflect.AttrConfig,
 		reflect.CallbackDesc,
 		reflect.ClassDesc,
-		reflect.Cookie,
 		reflect.Cookies,
 		reflect.DescAction,
 		reflect.DescActions,
@@ -52,7 +50,7 @@ var RBXMK = rbxmk.Library{
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 13)
+	lib := s.L.CreateTable(0, 12)
 	lib.RawSetString("cookiesFrom", s.WrapFunc(rbxmkCookiesFrom))
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("diffDesc", s.WrapFunc(rbxmkDiffDesc))
@@ -60,7 +58,6 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
-	lib.RawSetString("newCookie", s.WrapFunc(rbxmkNewCookie))
 	lib.RawSetString("newDesc", s.WrapFunc(rbxmkNewDesc))
 	lib.RawSetString("patchDesc", s.WrapFunc(rbxmkPatchDesc))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
@@ -179,13 +176,6 @@ func rbxmkLoadString(s rbxmk.State) int {
 	}
 	s.L.Push(fn)
 	return 1
-}
-
-func rbxmkNewCookie(s rbxmk.State) int {
-	name := string(s.Pull(1, "string").(types.String))
-	value := string(s.Pull(2, "string").(types.String))
-	cookie := rtypes.Cookie{Cookie: &http.Cookie{Name: name, Value: value}}
-	return s.Push(cookie)
 }
 
 func rbxmkNewDesc(s rbxmk.State) int {
@@ -455,17 +445,6 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",
 					Description: "Libraries/rbxmk:Fields/loadString/Description",
-				},
-				"newCookie": dump.Function{
-					Parameters: dump.Parameters{
-						{Name: "name", Type: dt.Prim("string")},
-						{Name: "value", Type: dt.Prim("string")},
-					},
-					Returns: dump.Parameters{
-						{Type: dt.Prim("Cookie")},
-					},
-					Summary:     "Libraries/rbxmk:Fields/newCookie/Summary",
-					Description: "Libraries/rbxmk:Fields/newCookie/Description",
 				},
 				"newDesc": dump.Function{
 					Parameters: dump.Parameters{
