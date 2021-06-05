@@ -88,8 +88,12 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 		return u
 	}
 
+	mt := w.l.GetTypeMetatable(t)
+	if mt == lua.LNil {
+		panic("expected metatable for type " + t)
+	}
 	u := w.LuaState().NewUserData(v)
-	w.l.SetMetatable(u, w.l.GetTypeMetatable(t))
+	w.l.SetMetatable(u, mt)
 
 	if w.userdata == nil {
 		w.userdata = map[interface{}]*udptr{}
