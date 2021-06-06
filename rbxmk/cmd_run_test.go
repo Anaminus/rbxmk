@@ -62,6 +62,54 @@ func (d *dummyInfo) ModTime() time.Time { return d.time }
 func (d *dummyInfo) IsDir() bool        { return d.isdir }
 func (d *dummyInfo) Sys() interface{}   { return d }
 
+func deepeq(t *testing.T, s rbxmk.State, msg string, a, b lua.LValue) bool {
+	if b, ok := b.(*lua.LTable); ok {
+		if a, ok := a.(*lua.LTable); ok {
+			visited := map[lua.LValue]struct{}{}
+			b.ForEach(func(k, v lua.LValue) error {
+				switch k := k.(type) {
+				case lua.LNumber:
+					deepeq(t, s, msg+"["+k.String()+"]", a.RawGetInt(int(k)), v)
+				case lua.LString:
+					deepeq(t, s, msg+"."+k.String(), a.RawGetString(string(k)), v)
+				default:
+					deepeq(t, s, msg+"["+k.String()+"]", a.RawGet(k), v)
+				}
+				visited[k] = struct{}{}
+				return nil
+			})
+			a.ForEach(func(k, v lua.LValue) error {
+				if _, ok := visited[k]; ok {
+					return nil
+				}
+				switch k := k.(type) {
+				case lua.LNumber:
+					deepeq(t, s, msg+"["+k.String()+"]", v, b.RawGetInt(int(k)))
+				case lua.LString:
+					deepeq(t, s, msg+"."+k.String(), v, b.RawGetString(string(k)))
+				default:
+					deepeq(t, s, msg+"["+k.String()+"]", v, b.RawGet(k))
+				}
+				return nil
+			})
+			return true
+		}
+	}
+	if !s.L.Equal(a, b) {
+		if a.Type() != b.Type() {
+			t.Errorf("%s: expected type %s, got %s", msg, b.Type(), a.Type())
+			return false
+		}
+		if a.Type() == lua.LTString {
+			t.Errorf("%s: expected %q, got %q", msg, b.String(), a.String())
+			return false
+		}
+		t.Errorf("%s: expected %s, got %s", msg, b.String(), a.String())
+		return false
+	}
+	return true
+}
+
 func initMain(s rbxmk.State, t *testing.T) {
 	T := s.L.CreateTable(0, 2)
 
@@ -138,6 +186,15 @@ func initMain(s rbxmk.State, t *testing.T) {
 				return 0
 			}
 		}
+		return 0
+	}))
+
+	// Equal asserts whether two values are deeply equal.
+	T.RawSetString("Equal", s.L.NewFunction(func(l *lua.LState) int {
+		msg := s.CheckString(1)
+		a := s.CheckAny(2)
+		b := s.CheckAny(3)
+		deepeq(t, s, msg, a, b)
 		return 0
 	}))
 
