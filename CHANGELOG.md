@@ -51,6 +51,7 @@ branch is the latest unreleased version.
 - Fix Cookie.from returning incorrect values when no cookies are found.
 - Fix Instance.new handling DataModel incorrectly.
 - Fix Instance.ClassName being settable to "DataModel".
+- Fix typeof returning "userdata" for Symbol values.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

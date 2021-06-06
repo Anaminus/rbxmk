@@ -189,15 +189,6 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
 func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
-	if len(r.Metatable) == 0 &&
-		len(r.Properties) == 0 &&
-		len(r.Symbols) == 0 &&
-		len(r.Methods) == 0 &&
-		r.Flags&Exprim == 0 {
-		// No metatable.
-		return nil
-	}
-
 	if r.Flags&Exprim != 0 {
 		// Inject Value field, if possible.
 		if r.Properties == nil {
