@@ -62,18 +62,18 @@ func (d *dummyInfo) ModTime() time.Time { return d.time }
 func (d *dummyInfo) IsDir() bool        { return d.isdir }
 func (d *dummyInfo) Sys() interface{}   { return d }
 
-func deepeq(t *testing.T, s rbxmk.State, msg string, a, b lua.LValue) bool {
+func deepeq(s rbxmk.State, t *testing.T, msg string, a, b lua.LValue) bool {
 	if b, ok := b.(*lua.LTable); ok {
 		if a, ok := a.(*lua.LTable); ok {
 			visited := map[lua.LValue]struct{}{}
 			b.ForEach(func(k, v lua.LValue) error {
 				switch k := k.(type) {
 				case lua.LNumber:
-					deepeq(t, s, msg+"["+k.String()+"]", a.RawGetInt(int(k)), v)
+					deepeq(s, t, msg+"["+k.String()+"]", a.RawGetInt(int(k)), v)
 				case lua.LString:
-					deepeq(t, s, msg+"."+k.String(), a.RawGetString(string(k)), v)
+					deepeq(s, t, msg+"."+k.String(), a.RawGetString(string(k)), v)
 				default:
-					deepeq(t, s, msg+"["+k.String()+"]", a.RawGet(k), v)
+					deepeq(s, t, msg+"["+k.String()+"]", a.RawGet(k), v)
 				}
 				visited[k] = struct{}{}
 				return nil
@@ -84,11 +84,11 @@ func deepeq(t *testing.T, s rbxmk.State, msg string, a, b lua.LValue) bool {
 				}
 				switch k := k.(type) {
 				case lua.LNumber:
-					deepeq(t, s, msg+"["+k.String()+"]", v, b.RawGetInt(int(k)))
+					deepeq(s, t, msg+"["+k.String()+"]", v, b.RawGetInt(int(k)))
 				case lua.LString:
-					deepeq(t, s, msg+"."+k.String(), v, b.RawGetString(string(k)))
+					deepeq(s, t, msg+"."+k.String(), v, b.RawGetString(string(k)))
 				default:
-					deepeq(t, s, msg+"["+k.String()+"]", v, b.RawGet(k))
+					deepeq(s, t, msg+"["+k.String()+"]", v, b.RawGet(k))
 				}
 				return nil
 			})
@@ -97,17 +97,31 @@ func deepeq(t *testing.T, s rbxmk.State, msg string, a, b lua.LValue) bool {
 	}
 	if !s.L.Equal(a, b) {
 		if a.Type() != b.Type() {
-			t.Errorf("%s: expected type %s, got %s", msg, b.Type(), a.Type())
+			lineError(s, t, "expected type %s, got %s", msg, b.Type(), a.Type())
 			return false
 		}
 		if a.Type() == lua.LTString {
-			t.Errorf("%s: expected %q, got %q", msg, b.String(), a.String())
+			lineError(s, t, "expected %q, got %q", msg, b.String(), a.String())
 			return false
 		}
-		t.Errorf("%s: expected %s, got %s", msg, b.String(), a.String())
+		lineError(s, t, "expected %s, got %s", msg, b.String(), a.String())
 		return false
 	}
 	return true
+}
+
+func lineError(s rbxmk.State, t *testing.T, f, msg string, v ...interface{}) {
+	d, ok := s.L.GetStack(-1)
+	if ok {
+		s.L.GetInfo("l", d, lua.LNil)
+		if d.CurrentLine > 0 {
+			v = append([]interface{}{d.CurrentLine, msg}, v...)
+			t.Errorf("line %d: %s: "+f, v...)
+			return
+		}
+	}
+	v = append([]interface{}{msg}, v...)
+	t.Errorf("%s: "+f, v...)
 }
 
 func initMain(s rbxmk.State, t *testing.T) {
@@ -128,22 +142,22 @@ func initMain(s rbxmk.State, t *testing.T) {
 			n := s.Count()
 			s.L.Push(v)
 			if err := s.L.PCall(0, lua.MultRet, nil); err != nil {
-				t.Errorf("%s: %s", msg, err.Error())
+				lineError(s, t, "%s", msg, err.Error())
 				return 0
 			}
 			if s.Count() > n {
 				if !s.L.ToBool(n + 1) {
 					if m := s.L.ToString(n + 2); m != "" {
-						t.Errorf("%s: %s", msg, m)
+						lineError(s, t, "%s", msg, m)
 					} else {
-						t.Errorf(msg)
+						lineError(s, t, "", msg)
 					}
 					return 0
 				}
 			}
 		default:
 			if !lua.LVAsBool(v) {
-				t.Errorf(msg)
+				lineError(s, t, "", msg)
 				return 0
 			}
 		}
@@ -168,9 +182,9 @@ func initMain(s rbxmk.State, t *testing.T) {
 				if s.Count() > n {
 					if s.L.ToBool(n + 1) {
 						if m := s.L.ToString(n + 2); m != "" {
-							t.Errorf("%s: %s", msg, m)
+							lineError(s, t, "%s", msg, m)
 						} else {
-							t.Errorf(msg)
+							lineError(s, t, "", msg)
 						}
 					}
 					return 0
@@ -182,7 +196,7 @@ func initMain(s rbxmk.State, t *testing.T) {
 			}
 		default:
 			if lua.LVAsBool(v) {
-				t.Errorf(msg)
+				lineError(s, t, "", msg)
 				return 0
 			}
 		}
@@ -194,7 +208,7 @@ func initMain(s rbxmk.State, t *testing.T) {
 		msg := s.CheckString(1)
 		a := s.CheckAny(2)
 		b := s.CheckAny(3)
-		deepeq(t, s, msg, a, b)
+		deepeq(s, t, msg, a, b)
 		return 0
 	}))
 
