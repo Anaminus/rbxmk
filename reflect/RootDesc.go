@@ -21,21 +21,21 @@ func RootDesc() rbxmk.Reflector {
 		Methods: rbxmk.Methods{
 			"Class": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					name := string(s.Pull(2, "string").(types.String))
-					class, ok := desc.Classes[name]
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					desc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
 					}
-					return s.Push(rtypes.ClassDesc{Class: class})
+					return s.Push(rtypes.ClassDesc(*desc))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim("string")},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("ClassDesc")},
+							{Type: dt.Optional{T: dt.Prim("ClassDesc")}},
 						},
 						Summary:     "Types/RootDesc:Methods/Class/Summary",
 						Description: "Types/RootDesc:Methods/Class/Description",
@@ -44,92 +44,244 @@ func RootDesc() rbxmk.Reflector {
 			},
 			"Classes": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					classes := make(rtypes.Array, 0, len(desc.Classes))
-					for _, class := range desc.Classes {
-						classes = append(classes, rtypes.ClassDesc{Class: class})
+					root := v.(*rtypes.RootDesc)
+					classes := make(rtypes.Array, 0, len(root.Classes))
+					for _, class := range root.Classes {
+						classes = append(classes, types.String(class.Name))
 					}
 					sort.Slice(classes, func(i, j int) bool {
-						return classes[i].(rtypes.ClassDesc).Name < classes[j].(rtypes.ClassDesc).Name
+						return classes[i].(types.String) < classes[j].(types.String)
 					})
 					return s.Push(classes)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Array{T: dt.Prim("ClassDesc")}},
+							{Type: dt.Array{T: dt.Prim("string")}},
 						},
 						Summary:     "Types/RootDesc:Methods/Classes/Summary",
 						Description: "Types/RootDesc:Methods/Classes/Description",
 					}
 				},
 			},
-			"AddClass": {
+			"SetClass": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					class := s.Pull(2, "ClassDesc").(rtypes.ClassDesc)
-					if _, ok := desc.Classes[class.Name]; ok {
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					desc := s.PullOpt(3, "ClassDesc", rtypes.Nil)
+					switch desc := desc.(type) {
+					case rtypes.NilType:
+						if _, ok := root.Classes[class]; ok {
+							delete(root.Classes, class)
+							return s.Push(types.True)
+						}
 						return s.Push(types.False)
+					case rtypes.ClassDesc:
+						desc.Name = class
+						if root.Classes == nil {
+							root.Classes = map[string]*rbxdump.Class{}
+						}
+						root.Classes[class] = (*rbxdump.Class)(&desc)
+					default:
+						return s.ReflectorError(3)
 					}
-					if desc.Classes == nil {
-						desc.Classes = map[string]*rbxdump.Class{}
-					}
-					desc.Classes[class.Name] = class.Class
 					return s.Push(types.True)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("ClassDesc")},
+							{Name: "class", Type: dt.Prim("string")},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim("ClassDesc")}},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Types/RootDesc:Methods/AddClass/Summary",
-						Description: "Types/RootDesc:Methods/AddClass/Description",
+						Summary:     "Types/RootDesc:Methods/SetClass/Summary",
+						Description: "Types/RootDesc:Methods/SetClass/Description",
 					}
 				},
 			},
-			"RemoveClass": {
+			"ClassTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					name := string(s.Pull(2, "string").(types.String))
-					if _, ok := desc.Classes[name]; !ok {
-						return s.Push(types.False)
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					tag := string(s.Pull(3, "string").(types.String))
+					desc, ok := root.Classes[class]
+					if !ok {
+						return s.Push(rtypes.Nil)
 					}
-					delete(desc.Classes, name)
+					return s.Push(types.Bool(desc.GetTag(tag)))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "class", Type: dt.Prim("string")},
+							{Name: "tag", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Summary:     "Types/RootDesc:Methods/ClassTag/Summary",
+						Description: "Types/RootDesc:Methods/ClassTag/Description",
+					}
+				},
+			},
+			"Member": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					member := string(s.Pull(3, "string").(types.String))
+					classDesc, ok := root.Classes[class]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					memberDesc, ok := classDesc.Members[member]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(rtypes.MemberDesc{Member: memberDesc})
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "class", Type: dt.Prim("string")},
+							{Name: "member", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("MemberDesc")}},
+						},
+						Summary:     "Types/RootDesc:Methods/Member/Summary",
+						Description: "Types/RootDesc:Methods/Member/Description",
+					}
+				},
+			},
+			"Members": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					classDesc, ok := root.Classes[class]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					members := make(rtypes.Array, 0, len(classDesc.Members))
+					for member := range classDesc.Members {
+						members = append(members, types.String(member))
+					}
+					sort.Slice(members, func(i, j int) bool {
+						return members[i].(types.String) < members[j].(types.String)
+					})
+					return s.Push(members)
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
+						},
+						Summary:     "Types/RootDesc:Methods/Members/Summary",
+						Description: "Types/RootDesc:Methods/Members/Description",
+					}
+				},
+			},
+			"SetMember": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					member := string(s.Pull(3, "string").(types.String))
+					memberDesc := s.PullOpt(4, "MemberDesc", rtypes.Nil)
+					classDesc, ok := root.Classes[class]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					switch memberDesc := memberDesc.(type) {
+					case rtypes.NilType:
+						if _, ok := classDesc.Members[member]; ok {
+							delete(classDesc.Members, member)
+							return s.Push(types.True)
+						}
+						return s.Push(types.False)
+					case rtypes.MemberDesc:
+						switch m := memberDesc.Member.(type) {
+						case *rbxdump.Property:
+							m.Name = member
+						case *rbxdump.Function:
+							m.Name = member
+						case *rbxdump.Event:
+							m.Name = member
+						case *rbxdump.Callback:
+							m.Name = member
+						}
+						if classDesc.Members == nil {
+							classDesc.Members = map[string]rbxdump.Member{}
+						}
+						classDesc.Members[member] = memberDesc.Member
+					default:
+						return s.ReflectorError(4)
+					}
 					return s.Push(types.True)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim("string")},
+							{Name: "member", Type: dt.Prim("string")},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim("ClassDesc")}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
+							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/RemoveClass/Summary",
-						Description: "Types/RootDesc:Methods/RemoveClass/Description",
+						Summary:     "Types/RootDesc:Methods/SetMember/Summary",
+						Description: "Types/RootDesc:Methods/SetMember/Description",
+					}
+				},
+			},
+			"MemberTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					class := string(s.Pull(2, "string").(types.String))
+					member := string(s.Pull(3, "string").(types.String))
+					tag := string(s.Pull(4, "string").(types.String))
+					classDesc, ok := root.Classes[class]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					memberDesc, ok := classDesc.Members[member]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(types.Bool(memberDesc.GetTag(tag)))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "class", Type: dt.Prim("string")},
+							{Name: "member", Type: dt.Prim("string")},
+							{Name: "tag", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Summary:     "Types/RootDesc:Methods/MemberTag/Summary",
+						Description: "Types/RootDesc:Methods/MemberTag/Description",
 					}
 				},
 			},
 			"Enum": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					name := string(s.Pull(2, "string").(types.String))
-					enum, ok := desc.Enums[name]
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					desc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
 					}
-					return s.Push(rtypes.EnumDesc{Enum: enum})
+					return s.Push(rtypes.EnumDesc(*desc))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim("string")},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("EnumDesc")},
+							{Type: dt.Optional{T: dt.Prim("EnumDesc")}},
 						},
 						Summary:     "Types/RootDesc:Methods/Enum/Summary",
 						Description: "Types/RootDesc:Methods/Enum/Description",
@@ -138,80 +290,223 @@ func RootDesc() rbxmk.Reflector {
 			},
 			"Enums": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					enums := make(rtypes.Array, 0, len(desc.Enums))
-					for _, enum := range desc.Enums {
-						enums = append(enums, rtypes.EnumDesc{Enum: enum})
+					root := v.(*rtypes.RootDesc)
+					enums := make(rtypes.Array, 0, len(root.Enums))
+					for _, enum := range root.Enums {
+						enums = append(enums, types.String(enum.Name))
 					}
 					sort.Slice(enums, func(i, j int) bool {
-						return enums[i].(rtypes.EnumDesc).Name < enums[j].(rtypes.EnumDesc).Name
+						return enums[i].(types.String) < enums[j].(types.String)
 					})
 					return s.Push(enums)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Array{T: dt.Prim("EnumDesc")}},
+							{Type: dt.Array{T: dt.Prim("string")}},
 						},
 						Summary:     "Types/RootDesc:Methods/Enums/Summary",
 						Description: "Types/RootDesc:Methods/Enums/Description",
 					}
 				},
 			},
-			"AddEnum": {
+			"SetEnum": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					enum := s.Pull(2, "EnumDesc").(rtypes.EnumDesc)
-					if _, ok := desc.Enums[enum.Name]; ok {
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					desc := s.PullOpt(3, "EnumDesc", rtypes.Nil)
+					switch desc := desc.(type) {
+					case rtypes.NilType:
+						if _, ok := root.Enums[enum]; ok {
+							delete(root.Enums, enum)
+							return s.Push(types.True)
+						}
 						return s.Push(types.False)
+					case rtypes.EnumDesc:
+						desc.Name = enum
+						if root.Enums == nil {
+							root.Enums = map[string]*rbxdump.Enum{}
+						}
+						root.Enums[enum] = (*rbxdump.Enum)(&desc)
+					default:
+						return s.ReflectorError(3)
 					}
-					if desc.Enums == nil {
-						desc.Enums = map[string]*rbxdump.Enum{}
-					}
-					desc.Enums[enum.Name] = enum.Enum
 					return s.Push(types.True)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("EnumDesc")},
+							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim("EnumDesc")}},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Types/RootDesc:Methods/AddEnum/Summary",
-						Description: "Types/RootDesc:Methods/AddEnum/Description",
+						Summary:     "Types/RootDesc:Methods/SetEnum/Summary",
+						Description: "Types/RootDesc:Methods/SetEnum/Description",
 					}
 				},
 			},
-			"RemoveEnum": {
+			"EnumTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					name := string(s.Pull(2, "string").(types.String))
-					if _, ok := desc.Enums[name]; !ok {
-						return s.Push(types.False)
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					tag := string(s.Pull(3, "string").(types.String))
+					desc, ok := root.Enums[enum]
+					if !ok {
+						return s.Push(rtypes.Nil)
 					}
-					delete(desc.Enums, name)
+					return s.Push(types.Bool(desc.GetTag(tag)))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "tag", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Summary:     "Types/RootDesc:Methods/EnumTag/Summary",
+						Description: "Types/RootDesc:Methods/EnumTag/Description",
+					}
+				},
+			},
+			"EnumItem": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					item := string(s.Pull(3, "string").(types.String))
+					enumDesc, ok := root.Enums[enum]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					itemDesc, ok := enumDesc.Items[item]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(rtypes.EnumItemDesc(*itemDesc))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "item", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("EnumItemDesc")}},
+						},
+						Summary:     "Types/RootDesc:Methods/EnumItem/Summary",
+						Description: "Types/RootDesc:Methods/EnumItem/Description",
+					}
+				},
+			},
+			"EnumItems": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					enumDesc, ok := root.Enums[enum]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					items := make(rtypes.Array, 0, len(enumDesc.Items))
+					for item := range enumDesc.Items {
+						items = append(items, types.String(item))
+					}
+					sort.Slice(items, func(i, j int) bool {
+						return items[i].(types.String) < items[j].(types.String)
+					})
+					return s.Push(items)
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
+						},
+						Summary:     "Types/RootDesc:Methods/EnumItems/Summary",
+						Description: "Types/RootDesc:Methods/EnumItems/Description",
+					}
+				},
+			},
+			"SetEnumItem": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					item := string(s.Pull(3, "string").(types.String))
+					itemDesc := s.PullOpt(4, "EnumItemDesc", rtypes.Nil)
+					enumDesc, ok := root.Enums[enum]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					switch itemDesc := itemDesc.(type) {
+					case rtypes.NilType:
+						if _, ok := enumDesc.Items[item]; ok {
+							delete(enumDesc.Items, item)
+							return s.Push(types.True)
+						}
+						return s.Push(types.False)
+					case rtypes.EnumItemDesc:
+						itemDesc.Name = item
+						if enumDesc.Items == nil {
+							enumDesc.Items = map[string]*rbxdump.EnumItem{}
+						}
+						enumDesc.Items[item] = (*rbxdump.EnumItem)(&itemDesc)
+					default:
+						return s.ReflectorError(4)
+					}
 					return s.Push(types.True)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "item", Type: dt.Prim("string")},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim("EnumItemDesc")}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
+							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/RemoveEnum/Summary",
-						Description: "Types/RootDesc:Methods/RemoveEnum/Description",
+						Summary:     "Types/RootDesc:Methods/SetEnumItem/Summary",
+						Description: "Types/RootDesc:Methods/SetEnumItem/Description",
+					}
+				},
+			},
+			"EnumItemTag": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					enum := string(s.Pull(2, "string").(types.String))
+					item := string(s.Pull(3, "string").(types.String))
+					tag := string(s.Pull(4, "string").(types.String))
+					enumDesc, ok := root.Enums[enum]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					itemDesc, ok := enumDesc.Items[item]
+					if !ok {
+						return s.Push(rtypes.Nil)
+					}
+					return s.Push(types.Bool(itemDesc.GetTag(tag)))
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "item", Type: dt.Prim("string")},
+							{Name: "tag", Type: dt.Prim("string")},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Optional{T: dt.Prim("bool")}},
+						},
+						Summary:     "Types/RootDesc:Methods/EnumItemTag/Summary",
+						Description: "Types/RootDesc:Methods/EnumItemTag/Description",
 					}
 				},
 			},
 			"EnumTypes": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc)
-					desc.GenerateEnumTypes()
-					return s.Push(desc.EnumTypes)
+					root := v.(*rtypes.RootDesc)
+					root.GenerateEnumTypes()
+					return s.Push(root.EnumTypes)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -237,7 +532,8 @@ func RootDesc() rbxmk.Reflector {
 					actions := diff.Diff{Prev: prev, Next: next}.Diff()
 					descActions := make(rtypes.DescActions, len(actions))
 					for i, action := range actions {
-						descActions[i] = &rtypes.DescAction{Action: action}
+						descAction := rtypes.DescAction{Action: action}
+						descActions[i] = &descAction
 					}
 					return s.Push(descActions)
 				},
@@ -256,13 +552,13 @@ func RootDesc() rbxmk.Reflector {
 			},
 			"Patch": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					desc := v.(*rtypes.RootDesc).Root
+					root := v.(*rtypes.RootDesc).Root
 					descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
 					actions := make([]diff.Action, len(descActions))
 					for i, action := range descActions {
 						actions[i] = action.Action
 					}
-					diff.Patch{Root: desc}.Patch(actions)
+					diff.Patch{Root: root}.Patch(actions)
 					return 0
 				},
 				Dump: func() dump.Function {
@@ -305,10 +601,13 @@ func RootDesc() rbxmk.Reflector {
 		},
 		Types: []func() rbxmk.Reflector{
 			Array,
+			Bool,
 			ClassDesc,
 			DescActions,
 			EnumDesc,
+			EnumItemDesc,
 			Enums,
+			MemberDesc,
 			Nil,
 			String,
 		},

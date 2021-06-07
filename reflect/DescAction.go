@@ -1,8 +1,6 @@
 package reflect
 
 import (
-	"fmt"
-
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
@@ -61,7 +59,7 @@ func DescAction() rbxmk.Reflector {
 				Get: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
 					enum := s.MustEnum("DescActionElement")
-					value := int(action.Action.Element)
+					value := int(action.Element)
 					item := enum.Value(value)
 					if item == nil {
 						s.RaiseError("invalid value %d for %s", value, enum.Name())
@@ -77,7 +75,7 @@ func DescAction() rbxmk.Reflector {
 						s.RaiseError("invalid value %s for %s", value, enum.Name())
 						return
 					}
-					action.Action.Element = diff.Element(item.Value())
+					action.Element = diff.Element(item.Value())
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
@@ -90,11 +88,11 @@ func DescAction() rbxmk.Reflector {
 			"Primary": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					return s.Push(types.String(action.Action.Primary))
+					return s.Push(types.String(action.Primary))
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					action.Action.Primary = string(s.Pull(3, "string").(types.String))
+					action.Primary = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
@@ -107,11 +105,11 @@ func DescAction() rbxmk.Reflector {
 			"Secondary": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					return s.Push(types.String(action.Action.Secondary))
+					return s.Push(types.String(action.Secondary))
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					action.Action.Secondary = string(s.Pull(3, "string").(types.String))
+					action.Secondary = string(s.Pull(3, "string").(types.String))
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
@@ -131,11 +129,12 @@ func DescAction() rbxmk.Reflector {
 					if !ok {
 						return s.Push(rtypes.Nil)
 					}
-					value := pushDescActionField(fvalue)
+					value := pushDescField(s, fvalue)
 					if value == nil {
 						return s.Push(rtypes.Nil)
 					}
-					return s.Push(value)
+					s.L.Push(value)
+					return 1
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -153,16 +152,7 @@ func DescAction() rbxmk.Reflector {
 			"Fields": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					dict := make(rtypes.Dictionary, len(action.Fields))
-					for k, v := range action.Fields {
-						value := pushDescActionField(v)
-						if value == nil {
-							//TODO: Emit a warning or something.
-							continue
-						}
-						dict[k] = value
-					}
-					return s.Push(dict)
+					return s.Push(rtypes.DescFields(action.Fields))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -178,19 +168,19 @@ func DescAction() rbxmk.Reflector {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
 					name := string(s.Pull(2, "string").(types.String))
-					fvalue := s.Pull(3, "Variant")
-					value, err := pullDescActionField(name, fvalue)
+					fvalue := s.L.Get(3)
+					if fvalue == lua.LNil {
+						delete(action.Fields, name)
+						return 0
+					}
+					value, err := pullDescField(s, name, fvalue)
 					if err != nil {
 						return s.RaiseError(err.Error())
 					}
 					if action.Fields == nil {
 						action.Fields = rbxdump.Fields{}
 					}
-					if value == nil {
-						delete(action.Fields, name)
-					} else {
-						action.Fields[name] = value
-					}
+					action.Fields[name] = value
 					return 0
 				},
 				Dump: func() dump.Function {
@@ -207,18 +197,8 @@ func DescAction() rbxmk.Reflector {
 			"SetFields": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					values := s.Pull(2, "Dictionary").(rtypes.Dictionary)
-					fields := make(rbxdump.Fields, len(values))
-					for k, v := range values {
-						value, err := pullDescActionField(k, v)
-						if err != nil {
-							return s.RaiseError(err.Error())
-						}
-						if value != nil {
-							fields[k] = value
-						}
-					}
-					action.Fields = fields
+					fields := s.Pull(2, "DescFields").(rtypes.DescFields)
+					action.Fields = rbxdump.Fields(fields)
 					return 0
 				},
 				Dump: func() dump.Function {
@@ -249,7 +229,7 @@ func DescAction() rbxmk.Reflector {
 					if actionElement == nil {
 						return s.ArgError(2, "invalid value %s for %s", actionElement, elementEnum.Name())
 					}
-					v.Action.Element = diff.Element(actionElement.Value())
+					v.Element = diff.Element(actionElement.Value())
 
 					return s.Push(&v)
 				},
@@ -301,79 +281,5 @@ func DescAction() rbxmk.Reflector {
 			String,
 			TypeDesc,
 		},
-	}
-}
-
-func pushDescActionField(v interface{}) types.Value {
-	switch v := v.(type) {
-	case bool:
-		return types.Bool(v)
-	case int:
-		return types.Int(v)
-	case string:
-		return types.String(v)
-	case rbxdump.Tags:
-		a := make(rtypes.Array, len(v))
-		for i, v := range v {
-			a[i] = types.String(v)
-		}
-		return a
-	case rbxdump.Type:
-		return rtypes.TypeDesc{Embedded: v}
-	case []rbxdump.Parameter:
-		a := make(rtypes.Array, len(v))
-		for i, v := range v {
-			a[i] = rtypes.ParameterDesc{Parameter: v}
-		}
-		return a
-	case []string:
-		a := make(rtypes.Array, len(v))
-		for i, v := range v {
-			a[i] = types.String(v)
-		}
-		return a
-	default:
-		return nil
-	}
-}
-
-func pullDescActionField(k string, v types.Value) (interface{}, error) {
-	switch v := v.(type) {
-	case rtypes.NilType:
-		return nil, nil
-	case types.Bool:
-		return bool(v), nil
-	case types.Intlike:
-		return int(v.Intlike()), nil
-	case types.Stringlike:
-		return string(v.Stringlike()), nil
-	case rtypes.TypeDesc:
-		return v.Embedded, nil
-	case rtypes.Array:
-		switch k {
-		case "Parameters":
-			a := make([]rbxdump.Parameter, len(v))
-			for i, v := range v {
-				p, ok := v.(rtypes.ParameterDesc)
-				if !ok {
-					return nil, fmt.Errorf("Parameters[%d]: expected ParameterDesc, got %s", i+1, v.Type())
-				}
-				a[i] = p.Parameter
-			}
-			return a, nil
-		case "Tags":
-			a := make([]string, len(v))
-			for i, v := range v {
-				s, ok := v.(types.Stringlike)
-				if !ok {
-					return nil, fmt.Errorf("Tags[%d]: expected string-like, got %s", i+1, v.Type())
-				}
-				a[i] = s.Stringlike()
-			}
-			return a, nil
-		}
-		return nil, fmt.Errorf("unexpected type %s for field %s", v.Type(), k)
-	default:
-		return nil, fmt.Errorf("unexpected type %s", v.Type())
 	}
 }

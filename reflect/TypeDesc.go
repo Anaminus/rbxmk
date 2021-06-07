@@ -13,81 +13,35 @@ import (
 func init() { register(TypeDesc) }
 func TypeDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "TypeDesc",
-		PushTo:   rbxmk.PushTypeTo("TypeDesc"),
-		PullFrom: rbxmk.PullTypeFrom("TypeDesc"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "TypeDesc").(rtypes.TypeDesc)
-				op := s.Pull(2, "TypeDesc").(rtypes.TypeDesc)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
+		Name: "TypeDesc",
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+			typ, ok := v.(rtypes.TypeDesc)
+			if !ok {
+				return nil, rbxmk.TypeError{Want: "TypeDesc", Got: v.Type()}
+			}
+			table := s.L.CreateTable(0, 2)
+			s.PushToTable(table, lua.LString("Category"), types.String(typ.Embedded.Category))
+			s.PushToTable(table, lua.LString("Name"), types.String(typ.Embedded.Name))
+			return []lua.LValue{table}, nil
 		},
-		Properties: rbxmk.Properties{
-			"Category": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.TypeDesc)
-					return s.Push(types.String(desc.Embedded.Category))
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
+			table, ok := lvs[0].(*lua.LTable)
+			if !ok {
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+			}
+			typ := rtypes.TypeDesc{
+				Embedded: rbxdump.Type{
+					Category: string(s.PullFromTable(table, lua.LString("Category"), "string").(types.String)),
+					Name:     string(s.PullFromTable(table, lua.LString("Name"), "string").(types.String)),
 				},
-				Dump: func() dump.Property {
-					return dump.Property{
-						ValueType:   dt.Prim("string"),
-						ReadOnly:    true,
-						Summary:     "Types/TypeDesc:Properties/Category/Summary",
-						Description: "Types/TypeDesc:Properties/Category/Description",
-					}
-				},
-			},
-			"Name": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.TypeDesc)
-					return s.Push(types.String(desc.Embedded.Name))
-				},
-				Dump: func() dump.Property {
-					return dump.Property{
-						ValueType:   dt.Prim("string"),
-						ReadOnly:    true,
-						Summary:     "Types/TypeDesc:Properties/Name/Summary",
-						Description: "Types/TypeDesc:Properties/Name/Description",
-					}
-				},
-			},
-		},
-		Constructors: rbxmk.Constructors{
-			"new": rbxmk.Constructor{
-				Func: func(s rbxmk.State) int {
-					category := string(s.PullOpt(1, "string", types.String("")).(types.String))
-					name := string(s.PullOpt(2, "string", types.String("")).(types.String))
-					return s.Push(rtypes.TypeDesc{Embedded: rbxdump.Type{
-						Category: category,
-						Name:     name,
-					}})
-				},
-				Dump: func() dump.MultiFunction {
-					return dump.MultiFunction{
-						dump.Function{
-							Parameters: dump.Parameters{
-								{Name: "category", Type: dt.Optional{T: dt.Prim("string")}},
-								{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
-							},
-							Returns: dump.Parameters{
-								{Type: dt.Prim("TypeDesc")},
-							},
-							Summary:     "Types/TypeDesc:Constructors/new/Summary",
-							Description: "Types/TypeDesc:Constructors/new/Description",
-						},
-					}
-				},
-			},
+			}
+			return typ, nil
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators: &dump.Operators{
-					Eq: &dump.Cmpop{
-						Summary:     "Types/TypeDesc:Operators/Eq/Summary",
-						Description: "Types/TypeDesc:Operators/Eq/Description",
-					},
+				Underlying: dt.Struct{
+					"Category": dt.Prim("string"),
+					"Name":     dt.Prim("string"),
 				},
 				Summary:     "Types/TypeDesc:Summary",
 				Description: "Types/TypeDesc:Description",

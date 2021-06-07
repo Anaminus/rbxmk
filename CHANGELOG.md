@@ -7,17 +7,14 @@ branch is the latest unreleased version.
 - Move rbxmk.newAttrConfig to AttrConfig.new.
 - Move rbxmk.newCookie to Cookie.new.
 - Move rbxmk.cookiesFrom to Cookie.from.
-- Split rbxmk.newDesc into individual constructors.
-	- RootDesc.new.
-	- ClassDesc.new.
-	- PropertyDesc.new.
-	- FunctionDesc.new.
-	- EventDesc.new.
-	- CallbackDesc.new.
-	- ParameterDesc.new.
-	- TypeDesc.new.
-	- EnumDesc.new.
-	- EnumItemDesc.new.
+- Refactor descriptors.
+	- Element types are represented as dictionaries containing the fields of the
+	  element.
+	- Add RootDesc.new for creating new RootDesc types.
+	- Remove rbxmk.newDesc.
+	- All operations to get and set descriptor information are contained in
+	  RootDesc.
+	- The methods of RootDesc are updated to reflect this change.
 - Move os library functions to path library.
 	- Move os.clean to path.clean
 	- Move os.expand to path.expand

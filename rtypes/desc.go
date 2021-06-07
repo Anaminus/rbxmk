@@ -5,7 +5,6 @@ import (
 
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
-	"github.com/robloxapi/types"
 )
 
 // RootDesc wraps a rbxdump.Root to implement types.Value.
@@ -144,94 +143,53 @@ func (d *RootDesc) Of(inst *Instance) *RootDesc {
 }
 
 // ClassDesc wraps a rbxdump.Class to implement types.Value.
-type ClassDesc struct {
-	*rbxdump.Class
-}
+type ClassDesc rbxdump.Class
 
 // Type returns a string identifying the type of the value.
 func (ClassDesc) Type() string {
 	return "ClassDesc"
 }
 
-// String returns a string representation of the value.
-func (d ClassDesc) String() string {
-	return "ClassDesc"
+// MemberDesc wraps a rbxdump.Member to implement types.Value.
+type MemberDesc struct {
+	rbxdump.Member
+}
+
+// Type returns a string identifying the type of the value.
+func (MemberDesc) Type() string {
+	return "MemberDesc"
 }
 
 // PropertyDesc wraps a rbxdump.Property to implement types.Value.
-type PropertyDesc struct {
-	*rbxdump.Property
-}
+type PropertyDesc rbxdump.Property
 
 // Type returns a string identifying the type of the value.
 func (PropertyDesc) Type() string {
 	return "PropertyDesc"
 }
 
-// String returns a string representation of the value.
-func (d PropertyDesc) String() string {
-	return "PropertyDesc"
-}
-
 // FunctionDesc wraps a rbxdump.Function to implement types.Value.
-type FunctionDesc struct {
-	*rbxdump.Function
-}
+type FunctionDesc rbxdump.Function
 
 // Type returns a string identifying the type of the value.
 func (FunctionDesc) Type() string {
 	return "FunctionDesc"
 }
 
-// String returns a string representation of the value.
-func (d FunctionDesc) String() string {
-	return "FunctionDesc"
-}
-
 // EventDesc wraps a rbxdump.Event to implement types.Value.
-type EventDesc struct {
-	*rbxdump.Event
-}
+type EventDesc rbxdump.Event
 
 // Type returns a string identifying the type of the value.
 func (EventDesc) Type() string {
 	return "EventDesc"
 }
 
-// String returns a string representation of the value.
-func (d EventDesc) String() string {
-	return "EventDesc"
-}
-
 // CallbackDesc wraps a rbxdump.Callback to implement types.Value.
-type CallbackDesc struct {
-	*rbxdump.Callback
-}
+type CallbackDesc rbxdump.Callback
 
 // Type returns a string identifying the type of the value.
 func (CallbackDesc) Type() string {
 	return "CallbackDesc"
-}
-
-// String returns a string representation of the value.
-func (d CallbackDesc) String() string {
-	return "CallbackDesc"
-}
-
-// NewMemberDesc returns a rbxdump.Member wrapped in the corresponding member
-// descriptor.
-func NewMemberDesc(member rbxdump.Member) types.Value {
-	switch member := member.(type) {
-	case *rbxdump.Property:
-		return PropertyDesc{Property: member}
-	case *rbxdump.Function:
-		return FunctionDesc{Function: member}
-	case *rbxdump.Event:
-		return EventDesc{Event: member}
-	case *rbxdump.Callback:
-		return CallbackDesc{Callback: member}
-	}
-	return nil
 }
 
 // ParameterDesc wraps a rbxdump.Parameter to implement types.Value.
@@ -241,11 +199,6 @@ type ParameterDesc struct {
 
 // Type returns a string identifying the type of the value.
 func (ParameterDesc) Type() string {
-	return "ParameterDesc"
-}
-
-// String returns a string representation of the value.
-func (d ParameterDesc) String() string {
 	return "ParameterDesc"
 }
 
@@ -259,38 +212,19 @@ func (TypeDesc) Type() string {
 	return "TypeDesc"
 }
 
-// String returns a string representation of the value.
-func (d TypeDesc) String() string {
-	return "TypeDesc"
-}
-
 // EnumDesc wraps a rbxdump.Enum to implement types.Value.
-type EnumDesc struct {
-	*rbxdump.Enum
-}
+type EnumDesc rbxdump.Enum
 
 // Type returns a string identifying the type of the value.
 func (EnumDesc) Type() string {
 	return "EnumDesc"
 }
 
-// String returns a string representation of the value.
-func (d EnumDesc) String() string {
-	return "EnumDesc"
-}
-
 // EnumItemDesc wraps a rbxdump.EnumItem to implement types.Value.
-type EnumItemDesc struct {
-	*rbxdump.EnumItem
-}
+type EnumItemDesc rbxdump.EnumItem
 
 // Type returns a string identifying the type of the value.
 func (EnumItemDesc) Type() string {
-	return "EnumItemDesc"
-}
-
-// String returns a string representation of the value.
-func (d EnumItemDesc) String() string {
 	return "EnumItemDesc"
 }
 
@@ -308,11 +242,19 @@ type DescAction struct {
 }
 
 // Type returns a string identifying the type of the value.
-func (DescAction) Type() string {
+func (*DescAction) Type() string {
 	return "DescAction"
 }
 
 // String returns a string representation of the value.
-func (a DescAction) String() string {
+func (a *DescAction) String() string {
 	return a.Action.String()
+}
+
+// DescFields wraps a rbxdump.Fields to implement types.Value.
+type DescFields rbxdump.Fields
+
+// Type returns a string identifying the type of the value.
+func (DescFields) Type() string {
+	return "DescFields"
 }

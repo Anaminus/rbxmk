@@ -13,25 +13,27 @@ This document contains a reference to the types available to rbxmk scripts.
 6. [Cookies][Cookies]
 7. [DataModel][DataModel]
 8. [DescAction][DescAction]
-9. [EnumDesc][EnumDesc]
-10. [EnumItemDesc][EnumItemDesc]
-11. [EventDesc][EventDesc]
-12. [Faces][Faces]
-13. [FormatSelector][FormatSelector]
-14. [FunctionDesc][FunctionDesc]
-15. [HTTPHeaders][HTTPHeaders]
-16. [HTTPOptions][HTTPOptions]
-17. [HTTPRequest][HTTPRequest]
-18. [HTTPResponse][HTTPResponse]
-19. [Instance][Instance]
-20. [Intlike][Intlike]
-21. [Numberlike][Numberlike]
-22. [ParameterDesc][ParameterDesc]
-23. [PropertyDesc][PropertyDesc]
-24. [RBXAssetOptions][RBXAssetOptions]
-25. [RootDesc][RootDesc]
-26. [Stringlike][Stringlike]
-27. [TypeDesc][TypeDesc]
+9. [DescActions][DescActions]
+10. [EnumDesc][EnumDesc]
+11. [EnumItemDesc][EnumItemDesc]
+12. [EventDesc][EventDesc]
+13. [Faces][Faces]
+14. [FormatSelector][FormatSelector]
+15. [FunctionDesc][FunctionDesc]
+16. [HTTPHeaders][HTTPHeaders]
+17. [HTTPOptions][HTTPOptions]
+18. [HTTPRequest][HTTPRequest]
+19. [HTTPResponse][HTTPResponse]
+20. [Instance][Instance]
+21. [Intlike][Intlike]
+22. [MemberDesc][MemberDesc]
+23. [Numberlike][Numberlike]
+24. [ParameterDesc][ParameterDesc]
+25. [PropertyDesc][PropertyDesc]
+26. [RBXAssetOptions][RBXAssetOptions]
+27. [RootDesc][RootDesc]
+28. [Stringlike][Stringlike]
+29. [TypeDesc][TypeDesc]
 
 </td></tr></tbody>
 </table>
@@ -107,198 +109,32 @@ argument setting the corresponding component.
 
 ## CallbackDesc
 [CallbackDesc]: #user-content-callbackdesc
+<code>type CallbackDesc = {MemberType: [string](##), Name: [string](##), Parameters: {[ParameterDesc][ParameterDesc]}, ReturnType: [TypeDesc][TypeDesc], Security: [string](##), Tags: {[string](##)}}</code>
 
-The **CallbackDesc** type describes a callback member of a class. It has the
-following members:
+The **CallbackDesc** type is a table that describes a callback member of a
+class. It has the following fields:
 
-Member                                                   | Kind
----------------------------------------------------------|-----
-[CallbackDesc.Name][CallbackDesc.Name]                   | property
-[CallbackDesc.ReturnType][CallbackDesc.ReturnType]       | property
-[CallbackDesc.Security][CallbackDesc.Security]           | property
-[CallbackDesc.Parameters][CallbackDesc.Parameters]       | method
-[CallbackDesc.SetParameters][CallbackDesc.SetParameters] | method
-[CallbackDesc.Tag][CallbackDesc.Tag]                     | method
-[CallbackDesc.Tags][CallbackDesc.Tags]                   | method
-[CallbackDesc.SetTag][CallbackDesc.SetTag]               | method
-[CallbackDesc.UnsetTag][CallbackDesc.UnsetTag]           | method
-
-A CallbackDesc can be created with the [CallbackDesc.new][CallbackDesc.new]
-constructor.
-
-### CallbackDesc.new
-[CallbackDesc.new]: #user-content-callbackdescnew
-<code>CallbackDesc.new(): [CallbackDesc][CallbackDesc]</code>
-
-The **new** constructor creates a new CallbackDesc.
-
-### CallbackDesc.Name
-[CallbackDesc.Name]: #user-content-callbackdescname
-<code>CallbackDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the member.
-
-### CallbackDesc.ReturnType
-[CallbackDesc.ReturnType]: #user-content-callbackdescreturntype
-<code>CallbackDesc.ReturnType: [TypeDesc][TypeDesc]</code>
-
-The **ReturnType** property is the type returned by the callback.
-
-### CallbackDesc.Security
-[CallbackDesc.Security]: #user-content-callbackdescsecurity
-<code>CallbackDesc.Security: [string](##)</code>
-
-The **Security** property indicates the security content required to set the
-member.
-
-### CallbackDesc.Parameters
-[CallbackDesc.Parameters]: #user-content-callbackdescparameters
-<code>CallbackDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
-
-The **Parameters** method returns a list of parameters of the callback.
-
-### CallbackDesc.SetParameters
-[CallbackDesc.SetParameters]: #user-content-callbackdescsetparameters
-<code>CallbackDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
-
-The **SetParameters** method sets the parameters of the callback.
-
-### CallbackDesc.Tag
-[CallbackDesc.Tag]: #user-content-callbackdesctag
-<code>CallbackDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### CallbackDesc.Tags
-[CallbackDesc.Tags]: #user-content-callbackdesctags
-<code>CallbackDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### CallbackDesc.SetTag
-[CallbackDesc.SetTag]: #user-content-callbackdescsettag
-<code>CallbackDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### CallbackDesc.UnsetTag
-[CallbackDesc.UnsetTag]: #user-content-callbackdescunsettag
-<code>CallbackDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field      | Type                             | Description
+-----------|----------------------------------|------------
+MemberType | [string](##)                     | Indicates the type of member. Always "Callback".
+Name       | [string](##)                     | The name of the member.
+Parameters | {[ParameterDesc][ParameterDesc]} | The parameters of the callback.
+ReturnType | [TypeDesc][TypeDesc]             | The type of the value returned by the callback.
+Security   | [string](##)                     | The security context required to set the member.
+Tags       | {[string](##)}                   | The tags set for the member.
 
 ## ClassDesc
 [ClassDesc]: #user-content-classdesc
+<code>type ClassDesc = {MemoryCategory: [string](##), Name: [string](##), Superclass: [string](##), Tags: {[string](##)}}</code>
 
-The **ClassDesc** type describes a class. It has the following members:
+The **ClassDesc** type is a table that describes a class. It has the following fields:
 
-Member                                               | Kind
------------------------------------------------------|-----
-[ClassDesc.Name][ClassDesc.Name]                     | property
-[ClassDesc.Superclass][ClassDesc.Superclass]         | property
-[ClassDesc.MemoryCategory][ClassDesc.MemoryCategory] | property
-[ClassDesc.Member][ClassDesc.Member]                 | method
-[ClassDesc.Members][ClassDesc.Members]               | method
-[ClassDesc.AddMember][ClassDesc.AddMember]           | method
-[ClassDesc.RemoveMember][ClassDesc.RemoveMember]     | method
-[ClassDesc.Tag][ClassDesc.Tag]                       | method
-[ClassDesc.Tags][ClassDesc.Tags]                     | method
-[ClassDesc.SetTag][ClassDesc.SetTag]                 | method
-[ClassDesc.UnsetTag][ClassDesc.UnsetTag]             | method
-
-A ClassDesc can be created with the [ClassDesc.new][ClassDesc.new] constructor.
-
-### ClassDesc.new
-[ClassDesc.new]: #user-content-classdescnew
-<code>ClassDesc.new(): [ClassDesc][ClassDesc]</code>
-
-The **new** constructor creates a new ClassDesc.
-
-### ClassDesc.Name
-[ClassDesc.Name]: #user-content-classdescname
-<code>ClassDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the class.
-
-### ClassDesc.Superclass
-[ClassDesc.Superclass]: #user-content-classdescsuperclass
-<code>ClassDesc.Superclass: [string](##)</code>
-
-The **Superclass** property is the name of the class from which the current
-class inherits.
-
-### ClassDesc.MemoryCategory
-[ClassDesc.MemoryCategory]: #user-content-classdescmemorycategory
-<code>ClassDesc.MemoryCategory: [string](##)</code>
-
-The **MemoryCategory** property describes the category of the class.
-
-### ClassDesc.Member
-[ClassDesc.Member]: #user-content-classdescmember
-<code>ClassDesc:Member(name: [string](##)): [MemberDesc](##)</code>
-
-The **Member** method returns a member of the class corresponding to the given
-name, or nil of no such member exists.
-
-MemberDesc is any one of the [PropertyDesc][PropertyDesc],
-[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
-[CallbackDesc][CallbackDesc] types.
-
-### ClassDesc.Members
-[ClassDesc.Members]: #user-content-classdescmembers
-<code>ClassDesc:Members(): {[MemberDesc](##)}</code>
-
-The **Members** method returns a list of all the members of the class.
-
-MemberDesc is any one of the [PropertyDesc][PropertyDesc],
-[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
-[CallbackDesc][CallbackDesc] types.
-
-### ClassDesc.AddMember
-[ClassDesc.AddMember]: #user-content-classdescaddmember
-<code>ClassDesc:AddMember(member: [MemberDesc](##)): [bool](##)</code>
-
-The **AddMember** method adds a new member to the ClassDesc, returning whether
-the member was added successfully. The member will fail to be added if a member
-of the same name already exists.
-
-MemberDesc is any one of the [PropertyDesc][PropertyDesc],
-[FunctionDesc][FunctionDesc], [EventDesc][EventDesc], or
-[CallbackDesc][CallbackDesc] types.
-
-### ClassDesc.RemoveMember
-[ClassDesc.RemoveMember]: #user-content-classdescremovemember
-<code>ClassDesc:RemoveMember(name: [string](##)): [bool](##)</code>
-
-The **RemoveMember** method removes a member from the ClassDesc, returning
-whether the member was removed successfully. False will be returned if a member
-of the given name does not exist.
-
-### ClassDesc.Tag
-[ClassDesc.Tag]: #user-content-classdesctag
-<code>ClassDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### ClassDesc.Tags
-[ClassDesc.Tags]: #user-content-classdesctags
-<code>ClassDesc:Tags(): {[string](##)}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### ClassDesc.SetTag
-[ClassDesc.SetTag]: #user-content-classdescsettag
-<code>ClassDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### ClassDesc.UnsetTag
-[ClassDesc.UnsetTag]: #user-content-classdescunsettag
-<code>ClassDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field          | Type           | Description
+---------------|----------------|------------
+MemoryCategory | [string](##)   | The category of the class.
+Name           | [string](##)   | The name of the class.
+Superclass     | [string](##)   | The name of the class from which the current class inherits.
+Tags           | {[string](##)} | The tags set for the class.
 
 ## Cookie
 [Cookie]: #user-content-cookie
@@ -471,232 +307,51 @@ The **SetField** method sets the value of the *name* field to *value*.
 
 The **SetFields** method replaces all fields of the action with *fields*.
 
+## DescActions
+[DescActions]: #user-content-descactions
+
+The **DescActions** type is a list of [DescAction][DescAction] values.
+
 ## EnumDesc
 [EnumDesc]: #user-content-enumdesc
+<code>type EnumDesc = {Name: [string](##), Tags: {[string](##)}}</code>
 
-The **EnumDesc** type describes an enum. It has the following members:
+The **EnumDesc** type is a table that describes an enum. It has the following
+fields:
 
-Member                                     | Kind
--------------------------------------------|-----
-[EnumDesc.Name][EnumDesc.Name]             | property
-[EnumDesc.Item][EnumDesc.Item]             | method
-[EnumDesc.Items][EnumDesc.Items]           | method
-[EnumDesc.AddItem][EnumDesc.AddItem]       | method
-[EnumDesc.RemoveItem][EnumDesc.RemoveItem] | method
-[EnumDesc.Tag][EnumDesc.Tag]               | method
-[EnumDesc.Tags][EnumDesc.Tags]             | method
-[EnumDesc.SetTag][EnumDesc.SetTag]         | method
-[EnumDesc.UnsetTag][EnumDesc.UnsetTag]     | method
-
-An EnumDesc can be created with the [EnumDesc.new][EnumDesc.new] constructor.
-
-### EnumDesc.new
-[EnumDesc.new]: #user-content-enumdescnew
-<code>EnumDesc.new(): [EnumDesc][EnumDesc]</code>
-
-The **new** constructor creates a new EnumDesc.
-
-### EnumDesc.Name
-[EnumDesc.Name]: #user-content-enumdescname
-<code>EnumDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the enum.
-
-### EnumDesc.Item
-[EnumDesc.Item]: #user-content-enumdescitem
-<code>EnumDesc:Item(name: [string](##)): [EnumItemDesc][EnumItemDesc]</code>
-
-The **Item** method returns an item of the enum corresponding to given name, or
-nil of no such item exists.
-
-### EnumDesc.Items
-[EnumDesc.Items]: #user-content-enumdescitems
-<code>EnumDesc:Items(): {[EnumItemDesc][EnumItemDesc]}</code>
-
-The **Items** method returns a list of all the items of the enum.
-
-### EnumDesc.AddItem
-[EnumDesc.AddItem]: #user-content-enumdescadditem
-<code>EnumDesc:AddItem(item: [EnumItemDesc][EnumItemDesc]): [bool](##)</code>
-
-The **AddItem** method adds a new item to the EnumDesc, returning whether the
-item was added successfully. The item will fail to be added if an item of the
-same name already exists.
-
-### EnumDesc.RemoveItem
-[EnumDesc.RemoveItem]: #user-content-enumdescremoveitem
-<code>EnumDesc:RemoveItem(name: [string](##)): [bool](##)</code>
-
-The **RemoveItem** method removes an item from the EnumDesc, returning whether
-the item was removed successfully. False will be returned if an item of the
-given name does not exist.
-
-### EnumDesc.Tag
-[EnumDesc.Tag]: #user-content-enumdesctag
-<code>EnumDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### EnumDesc.Tags
-[EnumDesc.Tags]: #user-content-enumdesctags
-<code>EnumDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### EnumDesc.SetTag
-[EnumDesc.SetTag]: #user-content-enumdescsettag
-<code>EnumDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### EnumDesc.UnsetTag
-[EnumDesc.UnsetTag]: #user-content-enumdescunsettag
-<code>EnumDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field | Type           | Description
+------|----------------|------------
+Name  | [string](##)   | The name of the enum.
+Tags  | {[string](##)} | The tags set for the enum.
 
 ## EnumItemDesc
 [EnumItemDesc]: #user-content-enumitemdesc
+<code>type EnumItemDesc = {Index: [int](##), Name: [string](##), Tags: {[string](##)}, Value: [int](##)}</code>
 
-The **EnumItemDesc** type describes an enum item. It has the following members:
+The **EnumitemDesc** type is a table that describes an item of an enum. It has
+the following fields:
 
-Member                                         | Kind
------------------------------------------------|-----
-[EnumItemDesc.Name][EnumItemDesc.Name]         | property
-[EnumItemDesc.Value][EnumItemDesc.Value]       | property
-[EnumItemDesc.Index][EnumItemDesc.Index]       | property
-[EnumItemDesc.Tag][EnumItemDesc.Tag]           | method
-[EnumItemDesc.Tags][EnumItemDesc.Tags]         | method
-[EnumItemDesc.SetTag][EnumItemDesc.SetTag]     | method
-[EnumItemDesc.UnsetTag][EnumItemDesc.UnsetTag] | method
-
-An EnumItemDesc can be created with the [EnumItemDesc.new][EnumItemDesc.new]
-constructor.
-
-### EnumItemDesc.new
-[EnumItemDesc.new]: #user-content-enumitemdescnew
-<code>EnumItemDesc.new(): [EnumItemDesc][EnumItemDesc]</code>
-
-The **new** constructor creates a new EnumItemDesc.
-
-### EnumItemDesc.Name
-[EnumItemDesc.Name]: #user-content-enumitemdescname
-<code>EnumItemDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the enum item.
-
-### EnumItemDesc.Value
-[EnumItemDesc.Value]: #user-content-enumitemdescvalue
-<code>EnumItemDesc.Value: [int](##)</code>
-
-The **Value** property is the numeric value of the enum item.
-
-### EnumItemDesc.Index
-[EnumItemDesc.Index]: #user-content-enumitemdescindex
-<code>EnumItemDesc.Index: [int](##)</code>
-
-The **Index** property is an integer that hints the order of the enum item.
-
-### EnumItemDesc.Tag
-[EnumItemDesc.Tag]: #user-content-enumitemdesctag
-<code>EnumItemDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### EnumItemDesc.Tags
-[EnumItemDesc.Tags]: #user-content-enumitemdesctags
-<code>EnumItemDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### EnumItemDesc.SetTag
-[EnumItemDesc.SetTag]: #user-content-enumitemdescsettag
-<code>EnumItemDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### EnumItemDesc.UnsetTag
-[EnumItemDesc.UnsetTag]: #user-content-enumitemdescunsettag
-<code>EnumItemDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field      | Type           | Description
+-----------|----------------|------------
+Index      | [int](##)      | Hints the order of the item..
+Name       | [string](##)   | The name of the item.
+Tags       | {[string](##)} | The tags set for the item.
+Value      | [int](##)      | The numeric value of the item.
 
 ## EventDesc
 [EventDesc]: #user-content-eventdesc
+<code>type EventDesc = {MemberType: [string](##), Name: [string](##), Parameters: {[ParameterDesc][ParameterDesc]}, Security: [string](##), Tags: {[string](##)}}</code>
 
-The **EventDesc** type describes an event member of a class. It has the
-following members:
+The **EventDesc** type is a table that describes a event member of a
+class. It has the following fields:
 
-Member                                             | Kind
----------------------------------------------------|-----
-[EventDesc.Name][EventDesc.Name]                   | property
-[EventDesc.Security][EventDesc.Security]           | property
-[EventDesc.Parameters][EventDesc.Parameters]       | method
-[EventDesc.SetParameters][EventDesc.SetParameters] | method
-[EventDesc.Tag][EventDesc.Tag]                     | method
-[EventDesc.Tags][EventDesc.Tags]                   | method
-[EventDesc.SetTag][EventDesc.SetTag]               | method
-[EventDesc.UnsetTag][EventDesc.UnsetTag]           | method
-
-An EventDesc can be created with the [EventDesc.new][EventDesc.new] constructor.
-
-### EventDesc.new
-[EventDesc.new]: #user-content-eventdescnew
-<code>EventDesc.new(): [EventDesc][EventDesc]</code>
-
-The **new** constructor creates a new EventDesc.
-
-### EventDesc.Name
-[EventDesc.Name]: #user-content-eventdescname
-<code>EventDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the member.
-
-### EventDesc.Security
-[EventDesc.Security]: #user-content-eventdescsecurity
-<code>EventDesc.Security: [string](##)</code>
-
-The **Security** property indicates the security content required to index the
-member.
-
-### EventDesc.Parameters
-[EventDesc.Parameters]: #user-content-eventdescparameters
-<code>EventDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
-
-The **Parameters** method returns a list of parameters of the event.
-
-### EventDesc.SetParameters
-[EventDesc.SetParameters]: #user-content-eventdescsetparameters
-<code>EventDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
-
-The **SetParameters** method sets the parameters of the event.
-
-### EventDesc.Tag
-[EventDesc.Tag]: #user-content-eventdesctag
-<code>EventDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### EventDesc.Tags
-[EventDesc.Tags]: #user-content-eventdesctags
-<code>EventDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### EventDesc.SetTag
-[EventDesc.SetTag]: #user-content-eventdescsettag
-<code>EventDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### EventDesc.UnsetTag
-[EventDesc.UnsetTag]: #user-content-eventdescunsettag
-<code>EventDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field      | Type                             | Description
+-----------|----------------------------------|------------
+MemberType | [string](##)                     | Indicates the type of member. Always "Event".
+Name       | [string](##)                     | The name of the member.
+Parameters | {[ParameterDesc][ParameterDesc]} | The parameters of the event.
+Security   | [string](##)                     | The security context required to get the member.
+Tags       | {[string](##)}                   | The tags set for the member.
 
 ### Faces
 [Faces]: #user-content-faces
@@ -754,85 +409,17 @@ If a string, it is the name of the format to use, and specifies no options.
 ## FunctionDesc
 [FunctionDesc]: #user-content-functiondesc
 
-The **FunctionDesc** type describes a function member of a class. It has the
-following members:
+The **FunctionDesc** type is a table that describes a function member of a
+class. It has the following fields:
 
-Member                                                   | Kind
----------------------------------------------------------|-----
-[FunctionDesc.Name][FunctionDesc.Name]                   | property
-[FunctionDesc.ReturnType][FunctionDesc.ReturnType]       | property
-[FunctionDesc.Security][FunctionDesc.Security]           | property
-[FunctionDesc.Parameters][FunctionDesc.Parameters]       | method
-[FunctionDesc.SetParameters][FunctionDesc.SetParameters] | method
-[FunctionDesc.Tag][FunctionDesc.Tag]                     | method
-[FunctionDesc.Tags][FunctionDesc.Tags]                   | method
-[FunctionDesc.SetTag][FunctionDesc.SetTag]               | method
-[FunctionDesc.UnsetTag][FunctionDesc.UnsetTag]           | method
-
-A FunctionDesc can be created with the [FunctionDesc.new][FunctionDesc.new]
-constructor.
-
-### FunctionDesc.new
-[FunctionDesc.new]: #user-content-callbackdescnew
-<code>FunctionDesc.new(): [FunctionDesc][FunctionDesc]</code>
-
-The **new** constructor creates a new FunctionDesc.
-
-### FunctionDesc.Name
-[FunctionDesc.Name]: #user-content-functiondescname
-<code>FunctionDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the member.
-
-### FunctionDesc.ReturnType
-[FunctionDesc.ReturnType]: #user-content-functiondescreturntype
-<code>FunctionDesc.ReturnType: [TypeDesc][TypeDesc]</code>
-
-The **ReturnType** property is the type returned by the function.
-
-### FunctionDesc.Security
-[FunctionDesc.Security]: #user-content-functiondescsecurity
-<code>FunctionDesc.Security: [string](##)</code>
-
-The **Security** property indicates the security content required to index the
-member.
-
-### FunctionDesc.Parameters
-[FunctionDesc.Parameters]: #user-content-functiondescparameters
-<code>FunctionDesc:Parameters(): {[ParameterDesc][ParameterDesc]}</code>
-
-The **Parameters** method returns a list of parameters of the function.
-
-### FunctionDesc.SetParameters
-[FunctionDesc.SetParameters]: #user-content-functiondescsetparameters
-<code>FunctionDesc:SetParameters(params: {[ParameterDesc][ParameterDesc]})</code>
-
-The **SetParameters** method sets the parameters of the function.
-
-### FunctionDesc.Tag
-[FunctionDesc.Tag]: #user-content-functiondesctag
-<code>FunctionDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### FunctionDesc.Tags
-[FunctionDesc.Tags]: #user-content-functiondesctags
-<code>FunctionDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### FunctionDesc.SetTag
-[FunctionDesc.SetTag]: #user-content-functiondescsettag
-<code>FunctionDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### FunctionDesc.UnsetTag
-[FunctionDesc.UnsetTag]: #user-content-functiondescunsettag
-<code>FunctionDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field      | Type                             | Description
+-----------|----------------------------------|------------
+MemberType | [string](##)                     | Indicates the type of member. Always "Function".
+Name       | [string](##)                     | The name of the member.
+ReturnType | [TypeDesc][TypeDesc]             | The type of the value returned by the function.
+Security   | [string](##)                     | The security context required to set the member.
+Parameters | {[ParameterDesc][ParameterDesc]} | The parameters of the function.
+Tags       | {[string](##)}                   | The tags set for the member.
 
 ## HTTPHeaders
 [HTTPHeaders]: #user-content-httpheaders
@@ -1278,6 +865,12 @@ The following types are int-like:
 - int64
 - token
 
+## MemberDesc
+[MemberDesc]: #user-content-memberdesc
+<code>type MemberDesc = [PropertyDesc][PropertyDesc] \| [FunctionDesc][FunctionDesc] \| [EventDesc][EventDesc] \| [CallbackDesc][CallbackDesc]</code>
+
+The **MemberDesc** is one of any of the class member descriptor types.
+
 ## Numberlike
 [Numberlike]: #user-content-numberlike
 
@@ -1292,139 +885,34 @@ floating-point number. The following types are number-like:
 
 ## ParameterDesc
 [ParameterDesc]: #user-content-parameterdesc
+<code>type ParameterDesc = {Type: [TypeDesc][TypeDesc], Name: [string](##), Default: [string](##)?}</code>
 
 The **ParameterDesc** type describes a parameter of a function, event, or
 callback member. It has the following members:
 
-Member                                         | Kind
------------------------------------------------|-----
-[ParameterDesc.Type][ParameterDesc.Type]       | field
-[ParameterDesc.Name][ParameterDesc.Name]       | field
-[ParameterDesc.Default][ParameterDesc.Default] | field
-
-ParameterDesc is immutable. A new value with different fields can be created
-with the [ParameterDesc.new][ParameterDesc.new] constructor.
-
-### ParameterDesc.new
-[ParameterDesc.new]: #user-content-parameterdescnew
-<code>ParameterDesc.new(type: [TypeDesc][TypeDesc]?, name: [string](##)?, default: [string](##)?): [ParameterDesc][ParameterDesc]</code>
-
-The **new** constructor creates a new ParameterDesc. *type* sets the
-[Type][ParameterDesc.Type] property, if specified. *name* sets the
-[Name][ParameterDesc.Name] property, if specified. *default* sets the
-[Default][ParameterDesc.Default] property, if specified.
-
-### ParameterDesc.Type
-[ParameterDesc.Type]: #user-content-parameterdesctype
-<code>ParameterDesc.Type: [TypeDesc][TypeDesc]</code>
-
-The **Type** field is the type of the parameter.
-
-### ParameterDesc.Name
-[ParameterDesc.Name]: #user-content-parameterdescname
-<code>ParameterDesc.Name: [string](##)</code>
-
-The **Name** field is a name describing the parameter.
-
-### ParameterDesc.Default
-[ParameterDesc.Default]: #user-content-parameterdescdefault
-<code>ParameterDesc.Default: [string](##)?</code>
-
-The **Default** field is a string describing the default value of the parameter.
-May also be nil, indicating that the parameter has no default value.
+Field   | Type                 | Description
+--------|----------------------|------------
+Type    | [TypeDesc][TypeDesc] | The type of the parameter.
+Name    | [string](##)         | The name of the parameter.
+Default | [string](##)?        | Describes the default value of the parameter. If nil, then the parameter has no default value.
 
 ## PropertyDesc
 [PropertyDesc]: #user-content-propertydesc
+<code>type PropertyDesc = {CanLoad: [string](##), CanSave: [string](##), MemberType: [string](##), Name: [string](##), ReadSecurity: [string](##), Tags: {[string](##)}, ValueType: [TypeDesc][TypeDesc], WriteSecurity: [string](##)}</code>
 
-The **PropertyDesc** type describes a property member of a class. It has the
-following members:
+The **PropertyDesc** type is a table that describes a property member of a
+class. It has the following fields:
 
-Member                                                   | Kind
----------------------------------------------------------|-----
-[PropertyDesc.Name][PropertyDesc.Name]                   | property
-[PropertyDesc.ValueType][PropertyDesc.ValueType]         | property
-[PropertyDesc.ReadSecurity][PropertyDesc.ReadSecurity]   | property
-[PropertyDesc.WriteSecurity][PropertyDesc.WriteSecurity] | property
-[PropertyDesc.CanLoad][PropertyDesc.CanLoad]             | property
-[PropertyDesc.CanSave][PropertyDesc.CanSave]             | property
-[PropertyDesc.Tag][PropertyDesc.Tag]                     | method
-[PropertyDesc.Tags][PropertyDesc.Tags]                   | method
-[PropertyDesc.SetTag][PropertyDesc.SetTag]               | method
-[PropertyDesc.UnsetTag][PropertyDesc.UnsetTag]           | method
-
-A PropertyDesc can be created with the [PropertyDesc.new][PropertyDesc.new]
-constructor.
-
-### PropertyDesc.new
-[PropertyDesc.new]: #user-content-propertydescnew
-<code>PropertyDesc.new(): [PropertyDesc][PropertyDesc]</code>
-
-The **new** constructor creates a new PropertyDesc.
-
-### PropertyDesc.Name
-[PropertyDesc.Name]: #user-content-propertydescname
-<code>PropertyDesc.Name: [string](##)</code>
-
-The **Name** property is the name of the member.
-
-### PropertyDesc.ValueType
-[PropertyDesc.ValueType]: #user-content-propertydescvaluetype
-<code>PropertyDesc.ValueType: [TypeDesc][TypeDesc]</code>
-
-The **ValueType** property is the value type of the property.
-
-### PropertyDesc.ReadSecurity
-[PropertyDesc.ReadSecurity]: #user-content-propertydescreadsecurity
-<code>PropertyDesc.ReadSecurity: [string](##)</code>
-
-The **ReadSecurity** property indicates the security context required to get the
-property.
-
-### PropertyDesc.WriteSecurity
-[PropertyDesc.WriteSecurity]: #user-content-propertydescwritesecurity
-<code>PropertyDesc.WriteSecurity: [string](##)</code>
-
-The **WriteSecurity** property indicates the security context required to set
-the property.
-
-### PropertyDesc.CanLoad
-[PropertyDesc.CanLoad]: #user-content-propertydesccanload
-<code>PropertyDesc.CanLoad: [bool](##)</code>
-
-The **CanLoad** property indicates whether the property is deserialized when
-decoding from a file.
-
-### PropertyDesc.CanSave
-[PropertyDesc.CanSave]: #user-content-propertydesccansave
-<code>PropertyDesc.CanSave: [bool](##)</code>
-
-The **CanSave** property indicates whether the property is serialized when
-encoding to a file.
-
-### PropertyDesc.Tag
-[PropertyDesc.Tag]: #user-content-propertydesctag
-<code>PropertyDesc:Tag(name: [string](##)): [bool](##)</code>
-
-The **Tag** method returns whether a tag of the given name is set on the
-descriptor.
-
-### PropertyDesc.Tags
-[PropertyDesc.Tags]: #user-content-propertydesctags
-<code>PropertyDesc:Tags(): {string}</code>
-
-The **Tags** method returns a list of tags that are set on the descriptor.
-
-### PropertyDesc.SetTag
-[PropertyDesc.SetTag]: #user-content-propertydescsettag
-<code>PropertyDesc:SetTag(tags: ...[string](##))</code>
-
-The **SetTag** method sets the given tags on the descriptor.
-
-### PropertyDesc.UnsetTag
-[PropertyDesc.UnsetTag]: #user-content-propertydescunsettag
-<code>PropertyDesc:UnsetTag(tags: ...[string](##))</code>
-
-The **UnsetTag** method unsets the given tags on the descriptor.
+Field         | Type                 | Description
+--------------|----------------------|------------
+CanLoad       | [string](##)         | Whether the property is deserialized.
+CanSave       | [string](##)         | Whether the property is serialized.
+MemberType    | [string](##)         | Indicates the type of member. Always "Property".
+Name          | [string](##)         | The name of the member.
+ReadSecurity  | [string](##)         | The security context required to get the member.
+Tags          | {[string](##)}       | The tags set for the member.
+ValueType     | [TypeDesc][TypeDesc] | The type of the value of the property.
+WriteSecurity | [string](##)         | The security context required to set the member.
 
 ## RBXAssetOptions
 [RBXAssetOptions]: #user-content-rbxassetoptions
@@ -1433,12 +921,12 @@ The **UnsetTag** method unsets the given tags on the descriptor.
 The **RBXAssetOptions** type is a table that specifies the options of a request
 to an asset on the Roblox website. It has the following fields:
 
-Field          | Type                              | Description
----------------|-----------------------------------|------------
-AssetID        | [int64](##)                       | The ID of the asset to request.
-Cookies        | [Cookies][Cookies]?               | Optional cookies to send with requests, usually used for authentication.
-Format         | [FormatSelector][FormatSelector]  | The format used to encode or decode an asset.
-Body           | [any](##)?                        | The body of an asset, to be encoded by the specified format.
+Field          | Type                             | Description
+---------------|----------------------------------|------------
+AssetID        | [int64](##)                      | The ID of the asset to request.
+Cookies        | [Cookies][Cookies]?              | Optional cookies to send with requests, usually used for authentication.
+Format         | [FormatSelector][FormatSelector] | The format used to encode or decode an asset.
+Body           | [any](##)?                       | The body of an asset, to be encoded by the specified format.
 
 ## RootDesc
 [RootDesc]: #user-content-rootdesc
@@ -1449,13 +937,23 @@ Member                                       | Kind
 ---------------------------------------------|-----
 [RootDesc.Class][RootDesc.Class]             | method
 [RootDesc.Classes][RootDesc.Classes]         | method
-[RootDesc.AddClass][RootDesc.AddClass]       | method
-[RootDesc.RemoveClass][RootDesc.RemoveClass] | method
+[RootDesc.ClassTag][RootDesc.ClassTag]       | method
+[RootDesc.Diff][RootDesc.Diff]               | method
 [RootDesc.Enum][RootDesc.Enum]               | method
+[RootDesc.EnumItem][RootDesc.EnumItem]       | method
+[RootDesc.EnumItems][RootDesc.EnumItems]     | method
+[RootDesc.EnumItemTag][RootDesc.EnumItemTag] | method
 [RootDesc.Enums][RootDesc.Enums]             | method
-[RootDesc.AddEnum][RootDesc.AddEnum]         | method
-[RootDesc.RemoveEnum][RootDesc.RemoveEnum]   | method
+[RootDesc.EnumTag][RootDesc.EnumTag]         | method
 [RootDesc.EnumTypes][RootDesc.EnumTypes]     | method
+[RootDesc.Member][RootDesc.Member]           | method
+[RootDesc.Members][RootDesc.Members]         | method
+[RootDesc.MemberTag][RootDesc.MemberTag]     | method
+[RootDesc.Patch][RootDesc.Patch]             | method
+[RootDesc.SetClass][RootDesc.SetClass]       | method
+[RootDesc.SetEnum][RootDesc.SetEnum]         | method
+[RootDesc.SetEnumItem][RootDesc.SetEnumItem] | method
+[RootDesc.SetMember][RootDesc.SetMember]     | method
 
 A RootDesc can be created with the [RootDesc.new][RootDesc.new] constructor.
 
@@ -1467,61 +965,68 @@ The **new** constructor creates a new RootDesc.
 
 ### RootDesc.Class
 [RootDesc.Class]: #user-content-rootdescclass
-<code>RootDesc:Class(name: [string](##)): [ClassDesc][ClassDesc]</code>
+<code>RootDesc:Class(class: [string](##)): [ClassDesc][ClassDesc]?</code>
 
-The **Class** method returns the class of the API corresponding to the given
-name, or nil if no such class exists.
+The **Class** method returns the class of the API corresponding to the name
+*class*, or nil if the class does not exist.
 
 ### RootDesc.Classes
 [RootDesc.Classes]: #user-content-rootdescclasses
-<code>RootDesc:Classes(): {[ClassDesc][ClassDesc]}</code>
+<code>RootDesc:Classes(): {[string](##)}</code>
 
-The **Classes** method returns a list of all the classes of the API.
+The **Classes** method returns a list of names of all the classes of the API.
 
-### RootDesc.AddClass
-[RootDesc.AddClass]: #user-content-rootdescaddclass
-<code>RootDesc:AddClass(class: [ClassDesc][ClassDesc]): [bool](##)</code>
+### RootDesc.ClassTag
+[RootDesc.ClassTag]: #user-content-rootdescclasstag
+<code>RootDesc:ClassTag(class: [string](##), tag: [string](##)): [bool](##)?</code>
 
-The **AddClass** method adds a new class to the RootDesc, returning whether the
-class was added successfully. The class will fail to be added if a class of the
-same name already exists.
+Returns whether *tag* is set for the class corresponding to the name *class*.
+Returns nil if the class does not exist.
 
-### RootDesc.RemoveClass
-[RootDesc.RemoveClass]: #user-content-rootdescremoveclass
-<code>RootDesc:RemoveClass(name: [string](##)): [bool](##)</code>
+### RootDesc.Diff
+[RootDesc.Diff]: #user-content-rootdescdiff
+<code>RootDesc:Diff(next: [RootDesc][RootDesc]?): (diff: [DescActions][DescActions])</code>
 
-The **RemoveClass** method removes a class from the RootDesc, returning whether
-the class was removed successfully. False will be returned if a class of the
-given name does not exist.
+The **Diff** method compares the root descriptor with another and returns the
+differences between them. A nil value for *next* is treated the same as an empty
+descriptor. The result is a list of actions that describe how to transform the
+descriptor into *next*.
 
 ### RootDesc.Enum
 [RootDesc.Enum]: #user-content-rootdescenum
-<code>RootDesc:Enum(name: [string](##)): [EnumDesc][EnumDesc]</code>
 
-The **Enum** method returns an enum of the API corresponding to the given name,
-or nil if no such enum exists.
+The **Enum** method returns the enum of the API corresponding to the name
+*enum*, or nil if the enum does not exist.
+
+### RootDesc.EnumItem
+[RootDesc.EnumItem]: #user-content-rootdescenumitem
+
+The **EnumItem** method returns the enum item of the API corresponding to the
+enum name *enum* and item name *item*, or nil if the enum or item does not
+exist.
+
+### RootDesc.EnumItems
+[RootDesc.EnumItems]: #user-content-rootdescenumitems
+
+The **Classes** method returns a list of names of all the items of the enum
+corresponding to the name *enum*. Returns nil if the enum does not exist.
+
+### RootDesc.EnumItemTag
+[RootDesc.EnumItemTag]: #user-content-rootdescenumitemtag
+
+Returns whether *tag* is set for the enum item corresponding to the name *item*
+of the enum named *enum*. Returns nil if the enum or item does not exist.
 
 ### RootDesc.Enums
 [RootDesc.Enums]: #user-content-rootdescenums
-<code>RootDesc:Enums(): {[EnumDesc][EnumDesc]}</code>
 
-The **Enums** method returns a list of all the enums of the API.
+The **Enums** method returns a list of names of all the enums of the API.
 
-### RootDesc.AddEnum
-[RootDesc.AddEnum]: #user-content-rootdescaddenum
-<code>RootDesc:AddEnum(enum: [EnumDesc][EnumDesc]): [bool](##)</code>
+### RootDesc.EnumTag
+[RootDesc.EnumTag]: #user-content-rootdescenumtag
 
-The **AddEnum** method adds a new enum to the RootDesc, returning whether the
-enum was added successfully. The enum will fail to be added if an enum of the
-same name already exists.
-
-### RootDesc.RemoveEnum
-[RootDesc.RemoveEnum]: #user-content-rootdescremoveenum
-<code>RootDesc:RemoveEnum(name: [string](##)): [bool](##)</code>
-
-The **RemoveEnum** method removes an enum from the RootDesc, returning whether
-the enum was removed successfully. False will be returned if an enum of the
-given name does not exist.
+Returns whether *tag* is set for the enum corresponding to the name *enum*.
+Returns nil if the enum does not exist.
 
 ### RootDesc.EnumTypes
 [RootDesc.EnumTypes]: #user-content-rootdescenumtypes
@@ -1542,14 +1047,25 @@ Enum = rootDesc:EnumTypes()
 print(Enum.NormalId.Front)
 ```
 
-### RootDesc.Diff
-[RootDesc.Diff]: #user-content-rootdescdiff
-<code>RootDesc:Diff(next: [RootDesc][RootDesc]?): (diff: [DescActions][DescActions])</code>
+### RootDesc.Member
+[RootDesc.Member]: #user-content-rootdescmember
 
-The **Diff** method compares the root descriptor with another and returns the
-differences between them. A nil value for *next* is treated the same as an empty
-descriptor. The result is a list of actions that describe how to transform the
-descriptor into *next*.
+The **Member** method returns the class member of the API corresponding to the
+class name *enum* and member name *item*, or nil if the class or member does not
+exist.
+
+### RootDesc.Members
+[RootDesc.Members]: #user-content-rootdescmembers
+
+The **Members** method returns a list of names of all the members of the class
+corresponding to the name *class*. Returns nil if the class does not exist.
+
+### RootDesc.MemberTag
+[RootDesc.MemberTag]: #user-content-rootdescmembertag
+
+Returns whether *tag* is set for the class member corresponding to the name
+*member* of the class named *class*. Returns nil if the class or member does not
+exist.
 
 ### RootDesc.Patch
 [RootDesc.Patch]: #user-content-rootdescpatch
@@ -1558,6 +1074,51 @@ descriptor into *next*.
 The **Patch** method transforms the root descriptor according to a list of
 actions. Each action in the list is applied in order. Actions that are
 incompatible are ignored.
+
+### RootDesc.SetClass
+[RootDesc.SetClass]: #user-content-rootdescsetclass
+<code>RootDesc:SetClass(class: [string](##), desc: [ClassDesc][ClassDesc]?): [bool](##)</code>
+
+The **SetClass** method sets the fields of the class corresponding to the name
+*class*. If the class already exists, then only non-nil fields are set. Fields
+with the incorrect type are ignored. If *desc* is nil, then the class is
+removed.
+
+Returns false if *desc* is nil and no class exists. Returns true otherwise.
+
+### RootDesc.SetEnum
+[RootDesc.SetEnum]: #user-content-rootdescsetenum
+<code>RootDesc:SetEnum(enum: [string](##), desc: [EnumDesc][EnumDesc]?): [bool](##)</code>
+
+The **SetEnum** method sets the fields of the enum corresponding to the name
+*enum*. If the enum already exists, then only non-nil fields are set. Fields
+with the incorrect type are ignored. If *desc* is nil, then the enum is removed.
+
+Returns false if *desc* is nil and no enum exists. Returns true otherwise.
+
+### RootDesc.SetEnumItem
+[RootDesc.SetEnumItem]: #user-content-rootdescsetenumitem
+<code>RootDesc:SetEnumItem(enum: [string](##),item: [string](##), desc: [EnumItemDesc][EnumItemDesc]?): [bool](##)?</code>
+
+The **SetEnumItem** method sets the fields of the enum item corresponding to the
+name *item* of the enum named *enum*. If the item already exists, then only
+non-nil fields are set. Fields with the incorrect type are ignored. If *desc* is
+nil, then the enum is removed.
+
+Returns nil if the enum does not exist. Returns false if *desc* is nil and no
+item exists. Returns true otherwise.
+
+### RootDesc.SetMember
+[RootDesc.SetMember]: #user-content-rootdescsetmember
+<code>RootDesc:SetMember(class: [string](##), member: [string](##), desc: [MemberDesc][MemberDesc]?): [bool](##)?</code>
+
+The **SetMember** method sets the fields of the member corresponding to the name
+*member* of the class named *class*. If the member already exists, then only
+non-nil fields are set. Fields with the incorrect type are ignored. If *desc* is
+nil, then the member is removed.
+
+Returns nil if the class does not exist. Returns false if *desc* is nil and no
+member exists. Returns true otherwise.
 
 ## Stringlike
 [Stringlike]: #user-content-stringlike
@@ -1573,39 +1134,19 @@ The following types are string-like:
 
 ## TypeDesc
 [TypeDesc]: #user-content-typedesc
+<code>type TypeDesc = {Category: [string](##), Name: [string](##)}</code>
 
-The **TypeDesc** type describes a value type. It has the following members:
+The **TypeDesc** type is a table that describes a value type. It has the
+following fields:
 
-Member                                 | Kind
----------------------------------------|-----
-[TypeDesc.Category][TypeDesc.Category] | field
-[TypeDesc.Name][TypeDesc.Name]         | field
+Field      | Type         | Description
+-----------|--------------|------------
+Category   | [string](##) | The category of the type.
+Name       | [string](##) | The name of the type.
 
-TypeDesc is immutable. A new value with different fields can be created with the
-[TypeDesc.new][TypeDesc.new] constructor.
-
-### TypeDesc.new
-[TypeDesc.new]: #user-content-callbackdescnew
-<code>TypeDesc.new(category: [string](##), name: [string](##)): [TypeDesc][TypeDesc]</code>
-
-The **new** constructor creates a new TypeDesc. *category* sets the
-[Category][TypeDesc.Category] property, if specified. *name* sets the
-[Name][TypeDesc.Name] property, if specified.
-
-### TypeDesc.Category
-[TypeDesc.Category]: #user-content-typedesccategory
-<code>TypeDesc.Category: [string](##)</code>
-
-The **Category** field is the category of the type. Certain categories are
-treated specially:
+Certain categories are treated specially:
 
 - **Class**: Name is the name of a class. A value of the type is expected to be
   an Instance of the class.
 - **Enum**: Name is the name of an enum. A value of the type is expected to be
   an enum item of the enum.
-
-### TypeDesc.Name
-[TypeDesc.Name]: #user-content-typedescname
-<code>TypeDesc.Name: [string](##)</code>
-
-The **Name** field is the name of the type.

@@ -13,114 +13,60 @@ import (
 func init() { register(ParameterDesc) }
 func ParameterDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "ParameterDesc",
-		PushTo:   rbxmk.PushTypeTo("ParameterDesc"),
-		PullFrom: rbxmk.PullTypeFrom("ParameterDesc"),
-		Metatable: rbxmk.Metatable{
-			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "ParameterDesc").(rtypes.ParameterDesc)
-				op := s.Pull(2, "ParameterDesc").(rtypes.ParameterDesc)
-				s.L.Push(lua.LBool(v == op))
-				return 1
-			},
+		Name: "ParameterDesc",
+		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+			param, ok := v.(rtypes.ParameterDesc)
+			if !ok {
+				return nil, rbxmk.TypeError{Want: "ParameterDesc", Got: v.Type()}
+			}
+			var table *lua.LTable
+			if param.Optional {
+				table = s.L.CreateTable(0, 3)
+			} else {
+				table = s.L.CreateTable(0, 2)
+			}
+			s.PushToTable(table, lua.LString("Type"), rtypes.TypeDesc{Embedded: param.Parameter.Type})
+			s.PushToTable(table, lua.LString("Name"), types.String(param.Name))
+			if param.Optional {
+				s.PushToTable(table, lua.LString("Default"), types.String(param.Default))
+			}
+			return []lua.LValue{table}, nil
 		},
-		Properties: rbxmk.Properties{
-			"Type": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.ParameterDesc)
-					typ := desc.Parameter.Type
-					return s.Push(rtypes.TypeDesc{Embedded: typ})
+		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
+			table, ok := lvs[0].(*lua.LTable)
+			if !ok {
+				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+			}
+			param := rtypes.ParameterDesc{
+				Parameter: rbxdump.Parameter{
+					Type: s.PullFromTable(table, lua.LString("Type"), "TypeDesc").(rtypes.TypeDesc).Embedded,
+					Name: string(s.PullFromTable(table, lua.LString("Name"), "string").(types.String)),
 				},
-				Dump: func() dump.Property {
-					return dump.Property{
-						ValueType:   dt.Prim("TypeDesc"),
-						ReadOnly:    true,
-						Summary:     "Types/ParameterDesc:Properties/Type/Summary",
-						Description: "Types/ParameterDesc:Properties/Type/Description",
-					}
-				},
-			},
-			"Name": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.ParameterDesc)
-					return s.Push(types.String(desc.Name))
-				},
-				Dump: func() dump.Property {
-					return dump.Property{
-						ValueType:   dt.Prim("string"),
-						ReadOnly:    true,
-						Summary:     "Types/ParameterDesc:Properties/Name/Summary",
-						Description: "Types/ParameterDesc:Properties/Name/Description",
-					}
-				},
-			},
-			"Default": {
-				Get: func(s rbxmk.State, v types.Value) int {
-					desc := v.(rtypes.ParameterDesc)
-					if !desc.Optional {
-						return s.Push(rtypes.Nil)
-					}
-					return s.Push(types.String(desc.Default))
-				},
-				Dump: func() dump.Property {
-					return dump.Property{
-						ValueType:   dt.Optional{T: dt.Prim("string")},
-						ReadOnly:    true,
-						Summary:     "Types/ParameterDesc:Properties/Default/Summary",
-						Description: "Types/ParameterDesc:Properties/Default/Description",
-					}
-				},
-			},
-		},
-		Constructors: rbxmk.Constructors{
-			"new": rbxmk.Constructor{
-				Func: func(s rbxmk.State) int {
-					var param rbxdump.Parameter
-					param.Type = s.PullOpt(1, "TypeDesc", rtypes.TypeDesc{}).(rtypes.TypeDesc).Embedded
-					param.Name = string(s.PullOpt(2, "string", types.String("")).(types.String))
-					switch def := s.PullOpt(3, "string", rtypes.Nil).(type) {
-					case rtypes.NilType:
-						param.Optional = false
-					case types.String:
-						param.Optional = true
-						param.Default = string(def)
-					}
-					return s.Push(rtypes.ParameterDesc{Parameter: param})
-				},
-				Dump: func() dump.MultiFunction {
-					return dump.MultiFunction{
-						dump.Function{
-							Parameters: dump.Parameters{
-								{Name: "type", Type: dt.Optional{T: dt.Prim("TypeDesc")}},
-								{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
-								{Name: "default", Type: dt.Optional{T: dt.Prim("string")}},
-							},
-							Returns: dump.Parameters{
-								{Type: dt.Prim("ParameterDesc")},
-							},
-							Summary:     "Types/ParameterDesc:Constructors/new/Summary",
-							Description: "Types/ParameterDesc:Constructors/new/Description",
-						},
-					}
-				},
-			},
+			}
+			switch def := s.PullFromTableOpt(table, lua.LString("Default"), "string", rtypes.Nil).(type) {
+			case rtypes.NilType:
+			case types.String:
+				param.Optional = true
+				param.Default = string(def)
+			default:
+				s.ReflectorError(0)
+			}
+			return param, nil
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Operators: &dump.Operators{
-					Eq: &dump.Cmpop{
-						Summary:     "Types/ParameterDesc:Operators/Eq/Summary",
-						Description: "Types/ParameterDesc:Operators/Eq/Description",
-					},
+				Underlying: dt.Struct{
+					"Type":    dt.Prim("TypeDesc"),
+					"Name":    dt.Prim("string"),
+					"Default": dt.Optional{T: dt.Prim("string")},
 				},
 				Summary:     "Types/ParameterDesc:Summary",
 				Description: "Types/ParameterDesc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{
-			Nil,
-			String,
 			TypeDesc,
+			String,
 		},
 	}
 }

@@ -18,8 +18,7 @@ details on how rbxmk works.
 3. [Instances][instances]
 4. [Attributes][attributes]
 5. [Descriptors][descriptors]
-	1. [Descriptor types][descriptor-types]
-	2. [Diffing and Patching][diffing-and-patching]
+	1. [Diffing and Patching][diffing-and-patching]
 6. [Value inheritance][value-inheritance]
 	1. [Indexing][indexing]
 	2. [Raw member][raw-member]
@@ -341,26 +340,25 @@ When an instance has a descriptor, several behaviors are enforced:
   [DataModel.GetService](types.md#user-content-datamodelgetservice) must have
   the "Service" tag.
 
-## Descriptor types
-[descriptor-types]: #user-content-descriptor-types
-
-Descriptors are first-class values like any other, and can be modified on the
-fly. There are a number of descriptor types, each with their own fields.
+A RootDesc has methods to get and set information on the fly. Descriptors for a
+particular API element are represented by a dictionary that contains the fields
+of the element. The following types are related:
 
 Type                           | Description
 -------------------------------|------------
-[RootDesc][RootDesc]           | Describes an entire API.
+[CallbackDesc][CallbackDesc]   | Describes a callback class member.
 [ClassDesc][ClassDesc]         | Describes a class.
-[PropertyDesc][PropertyDesc]   | Describes a property member.
-[FunctionDesc][FunctionDesc]   | Describes a function member.
-[EventDesc][EventDesc]         | Describes an event member.
-[CallbackDesc][CallbackDesc]   | Describes a callback member.
-[ParameterDesc][ParameterDesc] | Describes a parameter of a function, event, or callback. Immutable.
-[TypeDesc][TypeDesc]           | Describes a type. Immutable.
 [EnumDesc][EnumDesc]           | Describes an enum.
 [EnumItemDesc][EnumItemDesc]   | Describes an enum item.
+[EventDesc][EventDesc]         | Describes an event class member.
+[FunctionDesc][FunctionDesc]   | Describes a function class member.
+[MemberDesc][MemberDesc]       | A sum of the defined member types.
+[ParameterDesc][ParameterDesc] | Describes a parameter of a function, event, or callback.
+[PropertyDesc][PropertyDesc]   | Describes a property class member.
+[RootDesc][RootDesc]           | Describes an entire API.
+[TypeDesc][TypeDesc]           | Describes the type of a value.
 
-## Diffing and Patching
+### Diffing and Patching
 [diffing-and-patching]: #user-content-diffing-and-patching
 
 Descriptors can be compared and patched with the
@@ -516,8 +514,9 @@ The following directories are marked as roots:
 [Instance.sym.RawAttrConfig]: types.md#user-content-instancesymrawattrconfig
 [Instance.sym.RawDesc]: types.md#user-content-instancesymrawdesc
 [Instance]: types.md#user-content-instance
-[path.expand]: libraries.md#user-content-pathexpand
+[MemberDesc]: types.md#user-content-memberdesc
 [ParameterDesc]: types.md#user-content-parameterdesc
+[path.expand]: libraries.md#user-content-pathexpand
 [PropertyDesc]: types.md#user-content-propertydesc
 [rbxmk.globalAttrConfig]: libraries.md#user-content-rbxmkglobalattrconfig
 [rbxmk.globalDesc]: libraries.md#user-content-rbxmkglobaldesc

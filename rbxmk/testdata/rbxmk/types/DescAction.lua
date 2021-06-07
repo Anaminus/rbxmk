@@ -1,6 +1,14 @@
 local root = RootDesc.new()
-root:AddClass(ClassDesc.new())
-root:AddEnum(EnumDesc.new())
+root:SetClass("Class", {
+	Name = "Class",
+	Superclass = "",
+	MemoryCategory = "",
+	Tags = {},
+})
+root:SetEnum("Enum", {
+	Name = "Enum",
+	Tags = {},
+})
 local diff = RootDesc.new():Diff(root)
 local desc = diff[1]
 local other = diff[2]
@@ -45,7 +53,7 @@ T.Pass(function() desc.Element = "EnumItem" end, "set Element to string EnumItem
 T.Pass(desc.Element == rbxmk.Enum.DescActionElement.EnumItem, "desc Element is EnumItem")
 
 -- Primary property tests
-T.Pass(desc.Primary == "", "desc Primary is empty")
+T.Pass(desc.Primary == "Class", "desc Primary is empty")
 T.Pass(function() desc.Primary = "Foo" end, "set Primary to Foo")
 T.Pass(desc.Primary == "Foo", "desc Primary is Foo")
 
@@ -74,26 +82,22 @@ T.Pass(function() desc:SetField("Foo", 42.2) end, "set field Foo to number")
 T.Pass(desc:Field("Foo") == 42, "Foo field is number")
 T.Pass(function() desc:SetField("Foo", "Bar") end, "set field Foo to string")
 T.Pass(desc:Field("Foo") == "Bar", "Foo field is string")
-T.Pass(function() desc:SetField("Foo", TypeDesc.new("Foo", "Bar")) end, "set field Foo to TypeDesc")
-T.Pass(desc:Field("Foo") == TypeDesc.new("Foo", "Bar"), "Foo field is TypeDesc")
+T.Pass(function() desc:SetField("Foo", {Category="Foo", Name="Bar"}) end, "set field Foo to TypeDesc")
+T.Pass(type(desc:Field("Foo")) == "table", "Foo field is table")
+T.Pass(desc:Field("Foo").Category == "Foo", "Foo field has Category")
+T.Pass(desc:Field("Foo").Name == "Bar", "Foo field has Category")
 local params = {
-	ParameterDesc.new(TypeDesc.new("AA", "BB"), "CC"),
-	ParameterDesc.new(TypeDesc.new("DD", "EE"), "FF", "GG"),
-	ParameterDesc.new(TypeDesc.new("HH", "II"), "JJ"),
+	{Type = {Category = "AA", Name = "BB"}, Name =  "CC"},
+	{Type = {Category = "DD", Name = "EE"}, Name =  "FF", Default = "GG"},
+	{Type = {Category = "HH", Name = "II"}, Name =  "JJ"},
 }
 T.Fail(function() desc:SetField("Foo", params) end, "cannot set field Foo to parameters")
 T.Pass(function() desc:SetField("Parameters", params) end, "set field Parameters to parameters")
-T.Pass(#desc:Field("Parameters") == 3, "Parameters field has 3 parameters")
-T.Pass(desc:Field("Parameters")[1] == params[1], "Parameters field[1] is param1")
-T.Pass(desc:Field("Parameters")[2] == params[2], "Parameters field[2] is param2")
-T.Pass(desc:Field("Parameters")[3] == params[3], "Parameters field[3] is param3")
+T.Equal("Parameters field", desc:Field("Parameters"), params)
 local tags = {"AAAA","BBBB","CCCC"}
 T.Fail(function() desc:SetField("Foo", tags) end, "cannot set field Foo to tags")
 T.Pass(function() desc:SetField("Tags", tags) end, "set field Tags to tags")
-T.Pass(#desc:Field("Tags") == 3, "Tags field has 3 tags")
-T.Pass(desc:Field("Tags")[1] == tags[1], "Tags field[1] is tag1")
-T.Pass(desc:Field("Tags")[2] == tags[2], "Tags field[2] is tag2")
-T.Pass(desc:Field("Tags")[3] == tags[3], "Tags field[3] is tag3")
+T.Equal("Tags field", desc:Field("Tags"), tags)
 params[4] = 42
 T.Fail(function() desc:SetField("Parameters", params) end, "cannot set field Parameters with non-parameter")
 tags[4] = 42
