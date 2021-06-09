@@ -751,14 +751,14 @@ func (w *World) WrapOperator(f func(State) int) *lua.LFunction {
 	})
 }
 
-// PushTo reflects v to lvs using registered type t.
-func (w *World) PushTo(t string, v types.Value) (lvs []lua.LValue, err error) {
-	rfl := w.reflectors[t]
+// PushTo reflects v to lvs.
+func (w *World) PushTo(v types.Value) (lvs []lua.LValue, err error) {
+	rfl := w.reflectors[v.Type()]
 	if rfl.Name == "" {
-		return nil, fmt.Errorf("unknown type %q", t)
+		return nil, fmt.Errorf("unknown type %q", v.Type())
 	}
 	if rfl.PushTo == nil {
-		return nil, fmt.Errorf("cannot cast type %q to Lua", t)
+		return nil, fmt.Errorf("cannot cast type %q to Lua", v.Type())
 	}
 	return rfl.PushTo(w.State(), v)
 }

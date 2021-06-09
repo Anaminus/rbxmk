@@ -88,12 +88,12 @@ func pushDescField(s rbxmk.State, v interface{}) lua.LValue {
 		}
 		return a
 	case rbxdump.Type:
-		lvs, _ := s.PushTo("TypeDesc", rtypes.TypeDesc{Embedded: v})
+		lvs, _ := s.PushTo(rtypes.TypeDesc{Embedded: v})
 		return lvs[0]
 	case []rbxdump.Parameter:
 		a := s.L.CreateTable(len(v), 0)
 		for _, v := range v {
-			lvs, _ := s.PushTo("ParameterDesc", rtypes.ParameterDesc{Parameter: v})
+			lvs, _ := s.PushTo(rtypes.ParameterDesc{Parameter: v})
 			a.Append(lvs[0])
 		}
 		return a
