@@ -12,14 +12,14 @@ func init() { register(Nil) }
 func Nil() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "nil",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LNil}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LNil, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			if lvs[0] == lua.LNil {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			if lv == lua.LNil {
 				return rtypes.Nil, nil
 			}
-			return nil, rbxmk.TypeError{Want: "nil", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "nil", Got: lv.Type().String()}
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{

@@ -16,7 +16,7 @@ func init() { register(DescFields) }
 func DescFields() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "DescFields",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			fields, ok := v.(rtypes.DescFields)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "DescFields", Got: v.Type()}
@@ -27,12 +27,12 @@ func DescFields() rbxmk.Reflector {
 					table.RawSetString(k, lv)
 				}
 			}
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			fields := rbxdump.Fields{}
 			err = table.ForEach(func(k, v lua.LValue) error {
@@ -88,13 +88,13 @@ func pushDescField(s rbxmk.State, v interface{}) lua.LValue {
 		}
 		return a
 	case rbxdump.Type:
-		lvs, _ := s.PushTo(rtypes.TypeDesc{Embedded: v})
-		return lvs[0]
+		lv, _ := s.PushTo(rtypes.TypeDesc{Embedded: v})
+		return lv
 	case []rbxdump.Parameter:
 		a := s.L.CreateTable(len(v), 0)
 		for _, v := range v {
-			lvs, _ := s.PushTo(rtypes.ParameterDesc{Parameter: v})
-			a.Append(lvs[0])
+			lv, _ := s.PushTo(rtypes.ParameterDesc{Parameter: v})
+			a.Append(lv)
 		}
 		return a
 	}

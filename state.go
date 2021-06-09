@@ -87,14 +87,12 @@ func (s State) TypeofArg(n int) string {
 // the results to s.L.
 func (s State) Push(v types.Value) int {
 	rfl := s.MustReflector(v.Type())
-	lvs, err := rfl.PushTo(s, v)
+	lv, err := rfl.PushTo(s, v)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
-	for _, lv := range lvs {
-		s.L.Push(lv)
-	}
-	return len(lvs)
+	s.L.Push(lv)
+	return 1
 }
 
 // Pull gets from s.L the values starting from n, and reflects a value from them
@@ -217,7 +215,7 @@ func (s State) PushTuple(values ...types.Value) int {
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
-		lvs[i] = lv[0]
+		lvs[i] = lv
 	}
 	for _, lv := range lvs {
 		s.L.Push(lv)
@@ -254,12 +252,12 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 		return
 	}
 	rfl := s.MustReflector(v.Type())
-	lvs, err := rfl.PushTo(s, v)
+	lv, err := rfl.PushTo(s, v)
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
 		return
 	}
-	table.RawSet(field, lvs[0])
+	table.RawSet(field, lv)
 }
 
 // PullFromTable gets a value from table[field], and reflects a value from it to
@@ -339,7 +337,7 @@ func (s State) PushArrayOf(t string, v rtypes.Array) int {
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
-		table.RawSetInt(i+1, lv[0])
+		table.RawSetInt(i+1, lv)
 	}
 	s.L.Push(table)
 	return 1
@@ -388,7 +386,7 @@ func (s State) PushDictionaryOf(n int, t string, v rtypes.Dictionary) int {
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
-		table.RawSetString(k, lv[0])
+		table.RawSetString(k, lv)
 	}
 	s.L.Push(table)
 	return 1

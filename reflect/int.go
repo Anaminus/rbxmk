@@ -12,11 +12,11 @@ func Int() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "int",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LNumber(v.(types.Int))}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LNumber(v.(types.Int)), nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch v := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Int(v), nil
 			case *lua.LUserData:
@@ -26,7 +26,7 @@ func Int() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "int", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "int", Got: lv.Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

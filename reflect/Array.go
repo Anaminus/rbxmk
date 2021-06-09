@@ -14,7 +14,7 @@ func init() { register(Array) }
 func Array() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Array",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -32,17 +32,17 @@ func Array() rbxmk.Reflector {
 				if err != nil {
 					return nil, err
 				}
-				table.RawSetInt(i+1, lv[0])
+				table.RawSetInt(i+1, lv)
 			}
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
-			table, ok := lvs[0].(*lua.LTable)
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			if s.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")

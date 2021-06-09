@@ -109,14 +109,14 @@ func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary)
 
 func reflectOne(s rbxmk.State, value types.Value) (lv lua.LValue, err error) {
 	rfl := s.MustReflector(value.Type())
-	lvs, err := rfl.PushTo(s, value)
+	lv, err = rfl.PushTo(s, value)
 	if err != nil {
 		return nil, err
 	}
-	if len(lvs) == 0 {
+	if lv == nil {
 		return lua.LNil, nil
 	}
-	return lvs[0], nil
+	return lv, nil
 }
 
 func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string) (lv lua.LValue, err error) {
@@ -324,28 +324,28 @@ func init() { register(Instance) }
 func Instance() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Instance",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			if inst, ok := v.(*rtypes.Instance); ok && inst == nil {
-				return append(lvs, lua.LNil), nil
+				return lua.LNil, nil
 			}
 			u := s.UserDataOf(v, "Instance")
-			return append(lvs, u), nil
+			return u, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch lv := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch lv := lv.(type) {
 			case *lua.LNilType:
 				return (*rtypes.Instance)(nil), nil
 			case *lua.LUserData:
 				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
-					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
+					return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 				}
 				v, ok := lv.Value().(types.Value)
 				if !ok {
-					return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
+					return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 				}
 				return v, nil
 			default:
-				return nil, rbxmk.TypeError{Want: "Instance", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 			}
 		},
 		Metatable: rbxmk.Metatable{

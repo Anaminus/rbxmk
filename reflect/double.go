@@ -11,11 +11,11 @@ func init() { register(Double) }
 func Double() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "double",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LNumber(v.(types.Double))}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LNumber(v.(types.Double)), nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch v := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Double(v), nil
 			case *lua.LUserData:
@@ -25,7 +25,7 @@ func Double() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "double", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "double", Got: lv.Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

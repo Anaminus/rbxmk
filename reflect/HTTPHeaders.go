@@ -15,7 +15,7 @@ func init() { register(HTTPHeaders) }
 func HTTPHeaders() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPHeaders",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			headers, ok := v.(rtypes.HTTPHeaders)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPHeaders", Got: v.Type()}
@@ -28,12 +28,12 @@ func HTTPHeaders() rbxmk.Reflector {
 				}
 				table.RawSetString(name, vs)
 			}
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			headers := make(rtypes.HTTPHeaders)
 			err = table.ForEach(func(k, lv lua.LValue) error {

@@ -15,12 +15,12 @@ func init() { register(FormatSelector) }
 func FormatSelector() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "FormatSelector",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			switch v := v.(type) {
 			case types.Stringlike:
 				table := s.L.CreateTable(0, 1)
 				table.RawSetString("Format", lua.LString(v.Stringlike()))
-				return []lua.LValue{table}, nil
+				return table, nil
 			case rtypes.FormatSelector:
 				if s.CycleGuard() {
 					defer s.CycleClear()
@@ -35,7 +35,7 @@ func FormatSelector() rbxmk.Reflector {
 				if len(format.Options) == 0 {
 					table := s.L.CreateTable(0, 1)
 					table.RawSetString("Format", lua.LString(format.Name))
-					return []lua.LValue{table}, nil
+					return table, nil
 				}
 				table := s.L.CreateTable(0, len(format.Options))
 				for field, typ := range format.Options {
@@ -49,16 +49,16 @@ func FormatSelector() rbxmk.Reflector {
 						if err != nil {
 							return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
 						}
-						table.RawSetString(field, v[0])
+						table.RawSetString(field, v)
 					}
 				}
-				return []lua.LValue{table}, nil
+				return table, nil
 			default:
 				return nil, rbxmk.TypeError{Want: "FormatSelector or string", Got: v.Type()}
 			}
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch v := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch v := lv.(type) {
 			case lua.LString:
 				format := s.Format(string(v))
 				if format.Name == "" {

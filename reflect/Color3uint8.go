@@ -15,8 +15,8 @@ func Color3uint8() rbxmk.Reflector {
 		Name:   "Color3uint8",
 		Flags:  rbxmk.Exprim,
 		PushTo: rbxmk.PushTypeTo("Color3uint8"),
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			if u, ok := lvs[0].(*lua.LUserData); ok {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			if u, ok := lv.(*lua.LUserData); ok {
 				switch u.Metatable {
 				case s.L.GetTypeMetatable("Color3"):
 					if v, ok := u.Value().(types.Color3); ok {
@@ -28,7 +28,7 @@ func Color3uint8() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "Color3uint8", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "Color3uint8", Got: lv.Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

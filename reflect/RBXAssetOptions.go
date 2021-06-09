@@ -15,7 +15,7 @@ func init() { register(RBXAssetOptions) }
 func RBXAssetOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "RBXAssetOptions",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.RBXAssetOptions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "RBXAssetOptions", Got: v.Type()}
@@ -28,12 +28,12 @@ func RBXAssetOptions() rbxmk.Reflector {
 			s.PushToTable(table, lua.LString("Format"), options.Format)
 			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
 			s.PushToTable(table, lua.LString("Body"), options.Body)
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			options := rtypes.RBXAssetOptions{
 				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),

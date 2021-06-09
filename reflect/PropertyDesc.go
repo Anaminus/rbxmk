@@ -14,7 +14,7 @@ func init() { register(PropertyDesc) }
 func PropertyDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "PropertyDesc",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.PropertyDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "PropertyDesc", Got: v.Type()}
@@ -24,8 +24,8 @@ func PropertyDesc() rbxmk.Reflector {
 			fields["MemberType"] = member.MemberType()
 			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(fields))
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			fields, err := s.MustReflector("DescFields").PullFrom(s, lvs...)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
 			if err != nil {
 				return nil, err
 			}

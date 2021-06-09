@@ -43,8 +43,8 @@ func openRBXMK(s rbxmk.State) *lua.LTable {
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
 
-	lvs, _ := s.MustReflector("Enums").PushTo(s, s.Enums())
-	lib.RawSetString("Enum", lvs[0])
+	lv, _ := s.MustReflector("Enums").PushTo(s, s.Enums())
+	lib.RawSetString("Enum", lv)
 
 	mt := s.L.CreateTable(0, 2)
 	mt.RawSetString("__index", s.WrapOperator(rbxmkOpIndex))

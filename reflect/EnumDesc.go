@@ -14,7 +14,7 @@ func init() { register(EnumDesc) }
 func EnumDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "EnumDesc",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.EnumDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "EnumDesc", Got: v.Type()}
@@ -22,8 +22,8 @@ func EnumDesc() rbxmk.Reflector {
 			enum := rbxdump.Enum(desc)
 			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(enum.Fields()))
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			fields, err := s.MustReflector("DescFields").PullFrom(s, lvs...)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
 			if err != nil {
 				return nil, err
 			}

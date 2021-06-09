@@ -13,7 +13,7 @@ func init() { register(HTTPResponse) }
 func HTTPResponse() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPResponse",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			resp, ok := v.(rtypes.HTTPResponse)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPResponse", Got: v.Type()}
@@ -25,12 +25,12 @@ func HTTPResponse() rbxmk.Reflector {
 			s.PushToTable(table, lua.LString("Headers"), resp.Headers)
 			s.PushToTable(table, lua.LString("Cookies"), resp.Cookies)
 			s.PushToTable(table, lua.LString("Body"), resp.Body)
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			resp := rtypes.HTTPResponse{
 				Success:       bool(s.PullFromTable(table, lua.LString("Success"), "bool").(types.Bool)),

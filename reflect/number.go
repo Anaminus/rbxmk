@@ -11,14 +11,14 @@ func init() { register(Number) }
 func Number() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "number",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LNumber(v.(types.Double))}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LNumber(v.(types.Double)), nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			if n, ok := lvs[0].(lua.LNumber); ok {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			if n, ok := lv.(lua.LNumber); ok {
 				return types.Double(n), nil
 			}
-			return nil, rbxmk.TypeError{Want: "number", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "number", Got: lv.Type().String()}
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{

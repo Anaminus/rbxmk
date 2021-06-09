@@ -49,7 +49,7 @@ func NumberSequence() rbxmk.Reflector {
 						if err != nil {
 							return s.RaiseError("%s", err)
 						}
-						table.RawSetInt(i, lv[0])
+						table.RawSetInt(i, lv)
 					}
 					s.L.Push(table)
 					return 1

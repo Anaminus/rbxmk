@@ -28,14 +28,14 @@ func PushVariantTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 		if err != nil {
 			return nil, err
 		}
-		return values[0], nil
+		return values, nil
 	case rtypes.Dictionary:
 		rfl := s.MustReflector("Dictionary")
 		values, err := rfl.PushTo(s, v)
 		if err != nil {
 			return nil, err
 		}
-		return values[0], nil
+		return values, nil
 	}
 	rfl := s.Reflector(v.Type())
 	if rfl.Name == "" {
@@ -48,7 +48,7 @@ func PushVariantTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return values[0], nil
+	return values, nil
 }
 
 func PullVariantFrom(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
@@ -103,18 +103,9 @@ func PullVariant(s rbxmk.State, n int) (v types.Value) {
 func init() { register(Variant) }
 func Variant() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "Variant",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			lv, err := PushVariantTo(s, v)
-			if err != nil {
-				return nil, err
-			}
-			return []lua.LValue{lv}, nil
-		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			v, err = PullVariantFrom(s, lvs[0])
-			return v, err
-		},
+		Name:     "Variant",
+		PushTo:   PushVariantTo,
+		PullFrom: PullVariantFrom,
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/Variant:Summary",

@@ -751,8 +751,8 @@ func (w *World) WrapOperator(f func(State) int) *lua.LFunction {
 	})
 }
 
-// PushTo reflects v to lvs.
-func (w *World) PushTo(v types.Value) (lvs []lua.LValue, err error) {
+// PushTo reflects v to lv.
+func (w *World) PushTo(v types.Value) (lv lua.LValue, err error) {
 	rfl := w.reflectors[v.Type()]
 	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", v.Type())
@@ -763,8 +763,8 @@ func (w *World) PushTo(v types.Value) (lvs []lua.LValue, err error) {
 	return rfl.PushTo(w.State(), v)
 }
 
-// PullFrom reflects lvs to v using registered type t.
-func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error) {
+// PullFrom reflects lv to v using registered type t.
+func (w *World) PullFrom(t string, lv lua.LValue) (v types.Value, err error) {
 	rfl := w.reflectors[t]
 	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", t)
@@ -772,7 +772,7 @@ func (w *World) PullFrom(t string, lvs ...lua.LValue) (v types.Value, err error)
 	if rfl.PullFrom == nil {
 		return nil, fmt.Errorf("cannot cast type %q from Lua", t)
 	}
-	return rfl.PullFrom(w.State(), lvs...)
+	return rfl.PullFrom(w.State(), lv)
 }
 
 // FileEntry describes a file, including the full path. An empty Path indicates
@@ -932,5 +932,5 @@ func (w *World) SetEnumGlobal() {
 	if err != nil {
 		return
 	}
-	state.L.SetGlobal("Enum", enums[0])
+	state.L.SetGlobal("Enum", enums)
 }

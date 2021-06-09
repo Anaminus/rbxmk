@@ -17,14 +17,13 @@ type Reflector struct {
 
 	Flags ReflectorFlags
 
-	// PushTo converts v to a number of Lua values. l must be used only for the
-	// conversion of values as needed. If err is nil, then lvs must have a
-	// length of 1 or greater.
-	PushTo func(s State, v types.Value) (lvs []lua.LValue, err error)
+	// PushTo converts v to a Lua value. l must be used only for the conversion
+	// of values as needed. If err is nil, then lv must not be nil.
+	PushTo func(s State, v types.Value) (lv lua.LValue, err error)
 
 	// PullFrom converts a Lua value to v. l must be used only for the
-	// conversion of values as needed. lvs must have a length of 1 or greater.
-	PullFrom func(s State, lvs ...lua.LValue) (v types.Value, err error)
+	// conversion of values as needed. lv must be non-nil.
+	PullFrom func(s State, lv lua.LValue) (v types.Value, err error)
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -190,37 +189,37 @@ type Constructor struct {
 // a type metatable registered as type t. Each push always produces a new
 // userdata. This results in better performance, but makes the value unsuitable
 // as a table key.
-func PushTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
-	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
+func PushTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err error) {
+	return func(s State, v types.Value) (lv lua.LValue, err error) {
 		u := s.L.NewUserData(v)
 		s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
-		return append(lvs, u), nil
+		return u, nil
 	}
 }
 
 // PushPtrTypeTo returns a Reflector.PushTo that converts v to a userdata set
 // with a type metatable registered as type t. The same value will push the same
 // userdata, making the value usable as a table key.
-func PushPtrTypeTo(t string) func(s State, v types.Value) (lvs []lua.LValue, err error) {
-	return func(s State, v types.Value) (lvs []lua.LValue, err error) {
+func PushPtrTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err error) {
+	return func(s State, v types.Value) (lv lua.LValue, err error) {
 		u := s.UserDataOf(v, t)
-		return append(lvs, u), nil
+		return u, nil
 	}
 }
 
 // PullTypeFrom returns a Reflector.PullFrom that converts v from a userdata set
 // with a type metatable registered as type t.
-func PullTypeFrom(t string) func(s State, lvs ...lua.LValue) (v types.Value, err error) {
-	return func(s State, lvs ...lua.LValue) (v types.Value, err error) {
-		u, ok := lvs[0].(*lua.LUserData)
+func PullTypeFrom(t string) func(s State, lv lua.LValue) (v types.Value, err error) {
+	return func(s State, lv lua.LValue) (v types.Value, err error) {
+		u, ok := lv.(*lua.LUserData)
 		if !ok {
-			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
+			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
 		if u.Metatable != s.L.GetTypeMetatable(t) {
-			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
+			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
 		if v, ok = u.Value().(types.Value); !ok {
-			return nil, TypeError{Want: t, Got: lvs[0].Type().String()}
+			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
 		return v, nil
 	}

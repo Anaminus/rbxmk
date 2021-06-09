@@ -13,7 +13,7 @@ func init() { register(DescActions) }
 func DescActions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "DescActions",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			actions, ok := v.(rtypes.DescActions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "DescActions", Got: v.Type()}
@@ -25,14 +25,14 @@ func DescActions() rbxmk.Reflector {
 				if err != nil {
 					return nil, err
 				}
-				table.RawSetInt(i+1, lv[0])
+				table.RawSetInt(i+1, lv)
 			}
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			actionRfl := s.MustReflector("DescAction")
 			n := table.Len()

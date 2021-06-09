@@ -12,11 +12,11 @@ func SharedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "SharedString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LString(v.(types.SharedString))}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LString(v.(types.SharedString)), nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch v := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch v := lv.(type) {
 			case lua.LString:
 				return types.SharedString(v), nil
 			case *lua.LUserData:
@@ -26,7 +26,7 @@ func SharedString() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "SharedString", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "SharedString", Got: lv.Type().String()}
 		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {

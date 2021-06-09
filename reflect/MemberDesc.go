@@ -16,7 +16,7 @@ func init() { register(MemberDesc) }
 func MemberDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "MemberDesc",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			member, ok := v.(rtypes.MemberDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "MemberDesc", Got: v.Type()}
@@ -37,10 +37,10 @@ func MemberDesc() rbxmk.Reflector {
 				panic("MemberDesc has unknown member type")
 			}
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			switch typ := s.PullFromTable(table, lua.LString("MemberType"), "string").(types.String); typ {
 			case "Property":

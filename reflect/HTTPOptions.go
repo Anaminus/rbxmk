@@ -13,7 +13,7 @@ func init() { register(HTTPOptions) }
 func HTTPOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPOptions",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
@@ -26,12 +26,12 @@ func HTTPOptions() rbxmk.Reflector {
 			s.PushToTable(table, lua.LString("Headers"), options.Headers)
 			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
 			s.PushToTable(table, lua.LString("Body"), options.Body)
-			return []lua.LValue{table}, nil
+			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			options := rtypes.HTTPOptions{
 				URL:            string(s.PullFromTable(table, lua.LString("URL"), "string").(types.String)),

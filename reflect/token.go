@@ -12,11 +12,11 @@ func Token() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "token",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
-			return []lua.LValue{lua.LNumber(v.(types.Token))}, nil
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+			return lua.LNumber(v.(types.Token)), nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			switch v := lvs[0].(type) {
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Token(v), nil
 			case *lua.LUserData:
@@ -26,7 +26,7 @@ func Token() rbxmk.Reflector {
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "token", Got: lvs[0].Type().String()}
+			return nil, rbxmk.TypeError{Want: "token", Got: lv.Type().String()}
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{

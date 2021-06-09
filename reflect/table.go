@@ -12,17 +12,17 @@ func init() { register(Table) }
 func Table() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "table",
-		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
+		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 			table, ok := v.(rtypes.Table)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "*lua.LTable", Got: v.Type()}
 			}
-			return []lua.LValue{table.LTable}, nil
+			return table.LTable, nil
 		},
-		PullFrom: func(s rbxmk.State, lvs ...lua.LValue) (v types.Value, err error) {
-			table, ok := lvs[0].(*lua.LTable)
+		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lvs[0].Type().String()}
+				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			return rtypes.Table{LTable: table}, nil
 		},
