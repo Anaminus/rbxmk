@@ -11,8 +11,7 @@ import (
 func init() { register(Tuple) }
 func Tuple() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "Tuple",
-		Count: -1,
+		Name: "Tuple",
 		PushTo: func(s rbxmk.State, v types.Value) (lvs []lua.LValue, err error) {
 			values := v.(rtypes.Tuple)
 			lvs = make([]lua.LValue, len(values))

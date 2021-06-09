@@ -101,23 +101,7 @@ func (s State) Push(v types.Value) int {
 // according to type t registered with s.World.
 func (s State) Pull(n int, t string) types.Value {
 	rfl := s.MustReflector(t)
-	var v types.Value
-	var err error
-	if rfl.Count < 0 {
-		lvs := make([]lua.LValue, 0, 4)
-		for i := n; i <= s.Count(); i++ {
-			lvs = append(lvs, s.L.Get(i))
-		}
-		v, err = rfl.PullFrom(s, lvs...)
-	} else if rfl.Count > 1 {
-		lvs := make([]lua.LValue, 0, 4)
-		for i := n; i <= rfl.Count; i++ {
-			lvs = append(lvs, s.CheckAny(i))
-		}
-		v, err = rfl.PullFrom(s, lvs...)
-	} else {
-		v, err = rfl.PullFrom(s, s.CheckAny(n))
-	}
+	v, err := rfl.PullFrom(s, s.CheckAny(n))
 	if err != nil {
 		s.ArgError(n, err.Error())
 		return nil
@@ -130,11 +114,6 @@ func (s State) Pull(n int, t string) types.Value {
 // instead.
 func (s State) PullOpt(n int, t string, d types.Value) types.Value {
 	rfl := s.MustReflector(t)
-	if rfl.Count < 0 {
-		panic("PullOpt cannot pull variable types")
-	} else if rfl.Count > 1 {
-		panic("PullOpt cannot pull multi-value types")
-	}
 	lv := s.L.Get(n)
 	if lv == lua.LNil {
 		return d
@@ -211,78 +190,18 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	return v
 }
 
-// PullAnyOfOpt gets from s.L the values starting from n, and reflects a value from
-// them according to any of the types in t registered with s.World. Returns the
-// first successful reflection among the types in t. If no types succeeded, then
-// nil is returned.
+// PullAnyOfOpt gets from s.L the values starting from n, and reflects a value
+// from them according to any of the types in t registered with s.World. Returns
+// the first successful reflection among the types in t. If no types succeeded,
+// then nil is returned.
 func (s State) PullAnyOfOpt(n int, t ...string) types.Value {
 	if n > s.Count() {
 		return nil
 	}
-	// Find the maximum count among the given types. 0 is treated the same as 1.
-	// <0 indicates an arbitrary number of values.
-	max := 1
-	ts := make([]Reflector, 0, 4)
+	lv := s.CheckAny(n)
 	for _, t := range t {
 		rfl := s.MustReflector(t)
-		ts = append(ts, rfl)
-		if rfl.Count > 1 {
-			max = rfl.Count
-		} else if rfl.Count < 0 {
-			max = -1
-			break
-		}
-	}
-	switch max {
-	case 1: // All types have 1 value.
-		lv := s.CheckAny(n)
-		for _, t := range ts {
-			if v, err := t.PullFrom(s, lv); err == nil {
-				return v
-			}
-		}
-	case -1: // At least one type has arbitrary values.
-		lvs := make([]lua.LValue, 0, 4)
-		for _, t := range ts {
-			lvs = lvs[:0]
-			var v types.Value
-			var err error
-			if t.Count < 0 {
-				// Append all values.
-				for i := n; i <= s.Count(); i++ {
-					lvs = append(lvs, s.L.Get(i))
-				}
-				v, err = t.PullFrom(s, lvs...)
-			} else if t.Count > 1 {
-				// Append up to type count.
-				for i := n; i <= t.Count; i++ {
-					lvs = append(lvs, s.CheckAny(i))
-				}
-				v, err = t.PullFrom(s, lvs...)
-			} else {
-				// Append single value.
-				v, err = t.PullFrom(s, s.CheckAny(n))
-			}
-			if err != nil {
-				continue
-			}
-			return v
-		}
-	default: // Constant maximum.
-		lvs := make([]lua.LValue, 0, 4)
-		for _, t := range ts {
-			lvs = lvs[:0]
-			n := t.Count
-			if n == 0 {
-				n = 1
-			}
-			for i := n; i <= t.Count; i++ {
-				lvs = append(lvs, s.CheckAny(i))
-			}
-			v, err := t.PullFrom(s, lvs...)
-			if err != nil {
-				continue
-			}
+		if v, err := rfl.PullFrom(s, lv); err == nil {
 			return v
 		}
 	}
@@ -335,11 +254,6 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 		return
 	}
 	rfl := s.MustReflector(v.Type())
-	if rfl.Count < 0 {
-		panic("PushToTable cannot push variable types")
-	} else if rfl.Count > 1 {
-		panic("PushToTable cannot push multi-value types")
-	}
 	lvs, err := rfl.PushTo(s, v)
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
@@ -352,11 +266,6 @@ func (s State) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) {
 // type t registered with s.World.
 func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) types.Value {
 	rfl := s.MustReflector(t)
-	if rfl.Count < 0 {
-		panic("PullFromTable cannot push variable types")
-	} else if rfl.Count > 1 {
-		panic("PullFromTable cannot push multi-value types")
-	}
 	v, err := rfl.PullFrom(s, table.RawGet(field))
 	if err != nil {
 		s.RaiseError("field %s: %s", field, err.Error())
@@ -370,11 +279,6 @@ func (s State) PullFromTable(table *lua.LTable, field lua.LValue, t string) type
 // instead.
 func (s State) PullFromTableOpt(table *lua.LTable, field lua.LValue, t string, d types.Value) types.Value {
 	rfl := s.MustReflector(t)
-	if rfl.Count < 0 {
-		panic("PullFromTableOpt cannot pull variable types")
-	} else if rfl.Count > 1 {
-		panic("PullFromTableOpt cannot pull multi-value types")
-	}
 	lv := table.RawGet(field)
 	if lv == lua.LNil {
 		return d
@@ -393,11 +297,6 @@ func (s State) PullAnyFromTable(table *lua.LTable, field lua.LValue, t ...string
 	lv := table.RawGet(field)
 	for _, t := range t {
 		rfl := s.MustReflector(t)
-		if rfl.Count < 0 {
-			panic("PullAnyFromTable cannot pull variable types")
-		} else if rfl.Count > 1 {
-			panic("PullAnyFromTable cannot pull multi-value types")
-		}
 		if v, err := rfl.PullFrom(s, lv); err == nil {
 			return v
 		}
@@ -416,11 +315,6 @@ func (s State) PullAnyFromTableOpt(table *lua.LTable, field lua.LValue, d types.
 	}
 	for _, t := range t {
 		rfl := s.MustReflector(t)
-		if rfl.Count < 0 {
-			panic("PullAnyFromTableOpt cannot pull variable types")
-		} else if rfl.Count > 1 {
-			panic("PullAnyFromTableOpt cannot pull multi-value types")
-		}
 		if v, err := rfl.PullFrom(s, lv); err == nil {
 			return v
 		}

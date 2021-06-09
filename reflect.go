@@ -17,11 +17,6 @@ type Reflector struct {
 
 	Flags ReflectorFlags
 
-	// Count indicates the number of Lua values that the type can reflect to and
-	// from. A Count of 0 is the same as 1. Less than 0 indicates a variable
-	// amount.
-	Count int
-
 	// PushTo converts v to a number of Lua values. l must be used only for the
 	// conversion of values as needed. If err is nil, then lvs must have a
 	// length of 1 or greater.
@@ -86,18 +81,6 @@ const (
 	_      ReflectorFlags = (1 << iota) / 2
 	Exprim                // Whether the type is an explicit primitive.
 )
-
-// ValueCount returns the normalized number of Lua values that the type reflects
-// between. Less than 0 means the amount is variable.
-func (r Reflector) ValueCount() int {
-	switch {
-	case r.Count == 0, r.Count == 1:
-		return 1
-	case r.Count < 0:
-		return -1
-	}
-	return r.Count
-}
 
 // DumpAll returns a full description of the API of the reflector's type by
 // merging the result of Dump, Members, and Constructors.
