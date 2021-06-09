@@ -289,6 +289,44 @@ func (s State) PullAnyOfOpt(n int, t ...string) types.Value {
 	return nil
 }
 
+// PushTuple pushes each value.
+func (s State) PushTuple(values ...types.Value) int {
+	lvs := make([]lua.LValue, len(values))
+	for i, value := range values {
+		rfl := s.MustReflector(value.Type())
+		lv, err := rfl.PushTo(s, value)
+		if err != nil {
+			return s.RaiseError("%s", err)
+		}
+		lvs[i] = lv[0]
+	}
+	for _, lv := range lvs {
+		s.L.Push(lv)
+	}
+	return len(lvs)
+}
+
+// PullTuple pulls each value starting from n as a Variant.
+func (s State) PullTuple(n int) rtypes.Tuple {
+	c := s.Count()
+	length := c - n + 1
+	if length <= 0 {
+		return nil
+	}
+	rfl := s.MustReflector("Variant")
+	vs := make(rtypes.Tuple, length)
+	for i := n; i <= c; i++ {
+		lv := s.L.Get(i)
+		v, err := rfl.PullFrom(s, lv)
+		if err != nil {
+			s.ArgError(i, err.Error())
+			return nil
+		}
+		vs[i-n] = v
+	}
+	return vs
+}
+
 // PushToTable reflects v according to its type as registered with s.World, then
 // sets the result to table[field]. The type must be single-value. Does nothing
 // if v is nil.
