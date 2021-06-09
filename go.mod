@@ -11,7 +11,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/peterh/liner v1.2.1
 	github.com/robloxapi/rbxattr v0.1.1
-	github.com/robloxapi/rbxdump v0.3.2
+	github.com/robloxapi/rbxdump v0.4.1
 	github.com/robloxapi/rbxfile v0.3.2
 	github.com/robloxapi/types v0.2.0
 	github.com/yuin/goldmark v1.3.3

@@ -4,6 +4,7 @@ T.Equal("OnServerInvoke", desc:Member("RemoteFunction","OnServerInvoke"), {
 	Name = "OnServerInvoke",
 	ReturnType = {Category="Group", Name="Tuple"},
 	Security = "None",
+	ThreadSafety = "Unsafe",
 	Parameters = {
 		{Type={Category="Class",Name="Instance"}, Name="player"},
 		{Type={Category="Group",Name="Tuple"}, Name="arguments"},

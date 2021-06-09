@@ -4,6 +4,7 @@ T.Equal("FindFirstChild", desc:Member("Instance","FindFirstChild"), {
 	Name = "FindFirstChild",
 	ReturnType = {Category="Class", Name="Instance"},
 	Security = "None",
+	ThreadSafety = "ReadOnly",
 	Parameters = {
 		{Type={Category="Primitive",Name="string"}, Name="name"},
 		{Type={Category="Primitive",Name="bool"}, Name="recursive", Default="false"},

@@ -52,7 +52,7 @@ T.Pass(function() return desc:ClassTag("ClassC","Foo") == true end, "set class t
 -- Members
 local memberA = {MemberType="Property",Name = "MemberA"}
 local memberB = {MemberType="Function",Name = "MemberB"}
-local memberC = {MemberType="Event",Name = "MemberC",Tags={"Foo","Bar"},Security="",Parameters={}}
+local memberC = {MemberType="Event",Name = "MemberC",Tags={"Foo","Bar"},Security="",ThreadSafety="",Parameters={}}
 local memberD = {MemberType="Callback",Name = "MemberD"}
 T.Fail(function() desc:Members() end, "Members with no values")
 T.Fail(function() desc:Members(42) end, "Members with non-string")

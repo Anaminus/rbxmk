@@ -8,6 +8,7 @@ T.Equal("Archivable", desc:Member("Instance","Archivable"), {
 	WriteSecurity = "None",
 	CanLoad = false,
 	CanSave = false,
+	ThreadSafety = "ReadOnly",
 	Tags = {},
 })
 T.Equal("ClassName", desc:Member("Instance","ClassName"), {
@@ -19,5 +20,6 @@ T.Equal("ClassName", desc:Member("Instance","ClassName"), {
 	WriteSecurity = "None",
 	CanLoad = false,
 	CanSave = false,
+	ThreadSafety = "ReadOnly",
 	Tags = {"ReadOnly", "NotReplicated"},
 })

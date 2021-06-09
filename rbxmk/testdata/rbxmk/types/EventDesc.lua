@@ -3,6 +3,7 @@ T.Equal("AncestryChanged", desc:Member("Instance","AncestryChanged"), {
 	MemberType = "Event",
 	Name = "AncestryChanged",
 	Security = "None",
+	ThreadSafety = "Unsafe",
 	Parameters = {
 		{Type={Category="Class",Name="Instance"}, Name="child"},
 		{Type={Category="Class",Name="Instance"}, Name="parent"},
