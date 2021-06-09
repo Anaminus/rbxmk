@@ -93,7 +93,7 @@ func Color3() rbxmk.Reflector {
 			"ToHSV": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					hue, sat, val := v.(types.Color3).ToHSV()
-					return s.Push(rtypes.Tuple{types.Float(hue), types.Float(sat), types.Float(val)})
+					return s.PushTuple(types.Float(hue), types.Float(sat), types.Float(val))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{

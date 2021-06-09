@@ -5,7 +5,6 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -370,7 +369,7 @@ func CFrame() rbxmk.Reflector {
 			"GetComponents": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					cf := v.(types.CFrame)
-					return s.Push(rtypes.Tuple{
+					return s.PushTuple(
 						types.Float(cf.Position.X),
 						types.Float(cf.Position.Y),
 						types.Float(cf.Position.Z),
@@ -383,7 +382,7 @@ func CFrame() rbxmk.Reflector {
 						types.Float(cf.Rotation[6]),
 						types.Float(cf.Rotation[7]),
 						types.Float(cf.Rotation[8]),
-					})
+					)
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -409,7 +408,7 @@ func CFrame() rbxmk.Reflector {
 			"ToEulerAnglesXYZ": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Angles()
-					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
+					return s.PushTuple(types.Float(x), types.Float(y), types.Float(z))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -426,7 +425,7 @@ func CFrame() rbxmk.Reflector {
 			"ToEulerAnglesYXZ": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Orientation()
-					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
+					return s.PushTuple(types.Float(x), types.Float(y), types.Float(z))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -443,7 +442,7 @@ func CFrame() rbxmk.Reflector {
 			"ToOrientation": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					x, y, z := v.(types.CFrame).Orientation()
-					return s.Push(rtypes.Tuple{types.Float(x), types.Float(y), types.Float(z)})
+					return s.PushTuple(types.Float(x), types.Float(y), types.Float(z))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
@@ -460,7 +459,7 @@ func CFrame() rbxmk.Reflector {
 			"ToAxisAngle": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					axis, rotation := v.(types.CFrame).AxisAngle()
-					return s.Push(rtypes.Tuple{axis, types.Float(rotation)})
+					return s.PushTuple(axis, types.Float(rotation))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
