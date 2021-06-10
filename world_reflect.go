@@ -2,6 +2,7 @@ package rbxmk
 
 import (
 	"fmt"
+	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -33,6 +34,19 @@ func (w *World) PullOpt(lv lua.LValue, d types.Value, t string) (v types.Value, 
 		return d, nil
 	}
 	return w.Pull(lv, t)
+}
+
+// listTypes returns each type listed in a natural sentence.
+func listTypes(types []string) string {
+	switch len(types) {
+	case 0:
+		return ""
+	case 1:
+		return types[0]
+	case 2:
+		return types[0] + " or " + types[1]
+	}
+	return strings.Join(types[:len(types)-2], ", ") + ", or " + types[len(types)-1]
 }
 
 // PullAnyOf reflects lv to the first successful type from t. Returns an error

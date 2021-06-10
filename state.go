@@ -2,7 +2,6 @@ package rbxmk
 
 import (
 	"fmt"
-	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -148,19 +147,6 @@ func (s State) PullEncodedFormat(n int, f Format) types.Value {
 		return s.PullAnyOf(n, f.EncodeTypes...)
 	}
 	return s.Pull(n, "Variant")
-}
-
-// listTypes returns each type listed in a natural sentence.
-func listTypes(types []string) string {
-	switch len(types) {
-	case 0:
-		return ""
-	case 1:
-		return types[0]
-	case 2:
-		return types[0] + " or " + types[1]
-	}
-	return strings.Join(types[:len(types)-2], ", ") + ", or " + types[len(types)-1]
 }
 
 // ReflectorError raises an error indicating that a reflector pushed or pulled
