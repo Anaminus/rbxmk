@@ -20,8 +20,8 @@ func TypeDesc() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "TypeDesc", Got: v.Type()}
 			}
 			table := s.L.CreateTable(0, 2)
-			s.PushToTable(table, lua.LString("Category"), types.String(typ.Embedded.Category))
-			s.PushToTable(table, lua.LString("Name"), types.String(typ.Embedded.Name))
+			s.PushToDictionary(table, "Category", types.String(typ.Embedded.Category))
+			s.PushToDictionary(table, "Name", types.String(typ.Embedded.Name))
 			return table, nil
 		},
 		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
@@ -31,8 +31,8 @@ func TypeDesc() rbxmk.Reflector {
 			}
 			typ := rtypes.TypeDesc{
 				Embedded: rbxdump.Type{
-					Category: string(s.PullFromTable(table, lua.LString("Category"), "string").(types.String)),
-					Name:     string(s.PullFromTable(table, lua.LString("Name"), "string").(types.String)),
+					Category: string(s.PullFromDictionary(table, "Category", "string").(types.String)),
+					Name:     string(s.PullFromDictionary(table, "Name", "string").(types.String)),
 				},
 			}
 			return typ, nil

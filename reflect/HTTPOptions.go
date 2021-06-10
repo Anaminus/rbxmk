@@ -19,13 +19,13 @@ func HTTPOptions() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
 			}
 			table := s.L.CreateTable(0, 7)
-			s.PushToTable(table, lua.LString("URL"), types.String(options.URL))
-			s.PushToTable(table, lua.LString("Method"), types.String(options.Method))
-			s.PushToTable(table, lua.LString("RequestFormat"), options.RequestFormat)
-			s.PushToTable(table, lua.LString("ResponseFormat"), options.ResponseFormat)
-			s.PushToTable(table, lua.LString("Headers"), options.Headers)
-			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
-			s.PushToTable(table, lua.LString("Body"), options.Body)
+			s.PushToDictionary(table, "URL", types.String(options.URL))
+			s.PushToDictionary(table, "Method", types.String(options.Method))
+			s.PushToDictionary(table, "RequestFormat", options.RequestFormat)
+			s.PushToDictionary(table, "ResponseFormat", options.ResponseFormat)
+			s.PushToDictionary(table, "Headers", options.Headers)
+			s.PushToDictionary(table, "Cookies", options.Cookies)
+			s.PushToDictionary(table, "Body", options.Body)
 			return table, nil
 		},
 		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
@@ -34,17 +34,17 @@ func HTTPOptions() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			options := rtypes.HTTPOptions{
-				URL:            string(s.PullFromTable(table, lua.LString("URL"), "string").(types.String)),
-				Method:         string(s.PullFromTableOpt(table, lua.LString("Method"), types.String("GET"), "string").(types.String)),
-				ResponseFormat: s.PullFromTableOpt(table, lua.LString("ResponseFormat"), rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector),
-				Headers:        s.PullFromTableOpt(table, lua.LString("Headers"), rtypes.HTTPHeaders(nil), "HTTPHeaders").(rtypes.HTTPHeaders),
-				Cookies:        s.PullFromTableOpt(table, lua.LString("Cookies"), rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
+				URL:            string(s.PullFromDictionary(table, "URL", "string").(types.String)),
+				Method:         string(s.PullFromDictionaryOpt(table, "Method", types.String("GET"), "string").(types.String)),
+				ResponseFormat: s.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector),
+				Headers:        s.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders").(rtypes.HTTPHeaders),
+				Cookies:        s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
 			}
-			options.RequestFormat = s.PullFromTableOpt(table, lua.LString("RequestFormat"), rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
+			options.RequestFormat = s.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
 			if format := s.Format(options.RequestFormat.Format); format.Name != "" {
-				options.Body = s.PullAnyFromTableOpt(table, lua.LString("Body"), nil, format.EncodeTypes...)
+				options.Body = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
 			} else {
-				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), nil, "Variant")
+				options.Body = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
 			}
 			return options, nil
 		},

@@ -42,7 +42,7 @@ func MemberDesc() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			switch typ := s.PullFromTable(table, lua.LString("MemberType"), "string").(types.String); typ {
+			switch typ := s.PullFromDictionary(table, "MemberType", "string").(types.String); typ {
 			case "Property":
 				value, err := s.MustReflector("PropertyDesc").PullFrom(s, table)
 				if err != nil {

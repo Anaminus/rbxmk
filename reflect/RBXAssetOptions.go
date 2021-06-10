@@ -24,10 +24,10 @@ func RBXAssetOptions() rbxmk.Reflector {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
 			}
 			table := s.L.CreateTable(0, 4)
-			s.PushToTable(table, lua.LString("AssetID"), types.Int64(options.AssetID))
-			s.PushToTable(table, lua.LString("Format"), options.Format)
-			s.PushToTable(table, lua.LString("Cookies"), options.Cookies)
-			s.PushToTable(table, lua.LString("Body"), options.Body)
+			s.PushToDictionary(table, "AssetID", types.Int64(options.AssetID))
+			s.PushToDictionary(table, "Format", options.Format)
+			s.PushToDictionary(table, "Cookies", options.Cookies)
+			s.PushToDictionary(table, "Body", options.Body)
 			return table, nil
 		},
 		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
@@ -36,14 +36,14 @@ func RBXAssetOptions() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
 			options := rtypes.RBXAssetOptions{
-				AssetID: int64(s.PullFromTable(table, lua.LString("AssetID"), "int64").(types.Int64)),
-				Cookies: s.PullFromTableOpt(table, lua.LString("Cookies"), rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
+				AssetID: int64(s.PullFromDictionary(table, "AssetID", "int64").(types.Int64)),
+				Cookies: s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
 			}
-			options.Format = s.PullFromTable(table, lua.LString("Format"), "FormatSelector").(rtypes.FormatSelector)
+			options.Format = s.PullFromDictionary(table, "Format", "FormatSelector").(rtypes.FormatSelector)
 			if format := s.Format(options.Format.Format); format.Name != "" {
-				options.Body = s.PullAnyFromTableOpt(table, lua.LString("Body"), nil, format.EncodeTypes...)
+				options.Body = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
 			} else {
-				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), nil, "Variant")
+				options.Body = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)

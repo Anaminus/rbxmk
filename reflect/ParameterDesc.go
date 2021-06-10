@@ -25,10 +25,10 @@ func ParameterDesc() rbxmk.Reflector {
 			} else {
 				table = s.L.CreateTable(0, 2)
 			}
-			s.PushToTable(table, lua.LString("Type"), rtypes.TypeDesc{Embedded: param.Parameter.Type})
-			s.PushToTable(table, lua.LString("Name"), types.String(param.Name))
+			s.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type})
+			s.PushToDictionary(table, "Name", types.String(param.Name))
 			if param.Optional {
-				s.PushToTable(table, lua.LString("Default"), types.String(param.Default))
+				s.PushToDictionary(table, "Default", types.String(param.Default))
 			}
 			return table, nil
 		},
@@ -39,11 +39,11 @@ func ParameterDesc() rbxmk.Reflector {
 			}
 			param := rtypes.ParameterDesc{
 				Parameter: rbxdump.Parameter{
-					Type: s.PullFromTable(table, lua.LString("Type"), "TypeDesc").(rtypes.TypeDesc).Embedded,
-					Name: string(s.PullFromTable(table, lua.LString("Name"), "string").(types.String)),
+					Type: s.PullFromDictionary(table, "Type", "TypeDesc").(rtypes.TypeDesc).Embedded,
+					Name: string(s.PullFromDictionary(table, "Name", "string").(types.String)),
 				},
 			}
-			switch def := s.PullFromTableOpt(table, lua.LString("Default"), rtypes.Nil, "string").(type) {
+			switch def := s.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string").(type) {
 			case rtypes.NilType:
 			case types.String:
 				param.Optional = true

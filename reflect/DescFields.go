@@ -121,13 +121,13 @@ func pullDescField(s rbxmk.State, k string, v lua.LValue) (interface{}, error) {
 		case "Parameters":
 			a := make([]rbxdump.Parameter, v.Len())
 			for i := 1; i <= len(a); i++ {
-				a[i-1] = s.PullFromTable(v, lua.LNumber(i), "ParameterDesc").(rtypes.ParameterDesc).Parameter
+				a[i-1] = s.PullFromArray(v, i, "ParameterDesc").(rtypes.ParameterDesc).Parameter
 			}
 			return a, nil
 		case "Tags":
 			a := make(rbxdump.Tags, v.Len())
 			for i := 1; i <= len(a); i++ {
-				a[i-1] = string(s.PullFromTable(v, lua.LNumber(i), "string").(types.String))
+				a[i-1] = string(s.PullFromArray(v, i, "string").(types.String))
 			}
 			return a, nil
 		}
