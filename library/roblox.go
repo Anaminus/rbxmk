@@ -70,7 +70,7 @@ func openRoblox(s rbxmk.State) *lua.LTable {
 
 func robloxTypeof(s rbxmk.State) int {
 	v := s.CheckAny(1)
-	t := s.Typeof(v)
+	t := s.World.Typeof(v)
 	s.L.Push(lua.LString(t))
 	return 1
 }

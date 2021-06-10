@@ -77,9 +77,9 @@ func (s State) Count() int {
 	return s.L.GetTop()
 }
 
-// TypeOfArg returns the result of World.Typeof with the given argument.
-func (s State) TypeofArg(n int) string {
-	return s.Typeof(s.L.Get(n))
+// TypeOf returns the result of World.Typeof with the given argument.
+func (s State) Typeof(n int) string {
+	return s.World.Typeof(s.L.Get(n))
 }
 
 // Push reflects v according to its type as registered with s.World, then pushes
@@ -169,7 +169,7 @@ func (s State) PullAnyOf(n int, t ...string) types.Value {
 	}
 	v := s.PullAnyOfOpt(n, t...)
 	if v == nil {
-		s.TypeError(n, listTypes(t), s.TypeofArg(n))
+		s.TypeError(n, listTypes(t), s.Typeof(n))
 	}
 	return v
 }
@@ -285,7 +285,7 @@ func (s State) PullAnyFromTable(table *lua.LTable, field lua.LValue, t ...string
 			return v
 		}
 	}
-	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.Typeof(lv))
+	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.World.Typeof(lv))
 	return nil
 }
 
@@ -303,7 +303,7 @@ func (s State) PullAnyFromTableOpt(table *lua.LTable, field lua.LValue, d types.
 			return v
 		}
 	}
-	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.Typeof(lv))
+	s.RaiseError("field %s: %s expected, got %s", field, listTypes(t), s.World.Typeof(lv))
 	return nil
 }
 

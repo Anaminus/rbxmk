@@ -305,7 +305,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				if customIndex != nil {
 					return customIndex(s)
 				}
-				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.Typeof(2))
 			}
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
@@ -345,7 +345,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				if customNewindex != nil {
 					return customNewindex(s)
 				}
-				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+				return s.RaiseError("string or symbol expected for member index of %s, got %s", r.Name, s.Typeof(2))
 			}
 		}))
 	case len(r.Properties)+len(r.Methods) > 0:
@@ -377,7 +377,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if customIndex != nil {
 				return customIndex(s)
 			}
-			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.TypeofArg(2))
+			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.Typeof(2))
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
@@ -403,7 +403,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if customNewindex != nil {
 				return customNewindex(s)
 			}
-			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.TypeofArg(2))
+			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.Typeof(2))
 		}))
 	case len(r.Symbols) > 0:
 		// Indexed only by symbol.
@@ -424,7 +424,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if customIndex != nil {
 				return customIndex(s)
 			}
-			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.Typeof(2))
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
 			v, err := r.PullFrom(s, s.CheckAny(1))
@@ -447,7 +447,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if customNewindex != nil {
 				return customNewindex(s)
 			}
-			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.TypeofArg(2))
+			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.Typeof(2))
 		}))
 	default:
 		// Not indexed.
@@ -455,13 +455,13 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if customIndex != nil {
 				return customIndex(s)
 			}
-			return s.RaiseError("attempt to index %s with %q", r.Name, s.TypeofArg(2))
+			return s.RaiseError("attempt to index %s with %q", r.Name, s.Typeof(2))
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
 			if customNewindex != nil {
 				return customNewindex(s)
 			}
-			return s.RaiseError("attempt to index %s with %q", r.Name, s.TypeofArg(2))
+			return s.RaiseError("attempt to index %s with %q", r.Name, s.Typeof(2))
 		}))
 	}
 
