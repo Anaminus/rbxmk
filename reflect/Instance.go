@@ -866,7 +866,7 @@ func Instance() rbxmk.Reflector {
 			"FindFirstChild": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					name := string(s.Pull(2, "string").(types.String))
-					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					recurse := bool(s.PullOpt(3, types.False, "bool").(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChild(name, recurse); child != nil {
 						return s.Push(child)
 					}
@@ -889,7 +889,7 @@ func Instance() rbxmk.Reflector {
 			"FindFirstChildOfClass": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
-					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					recurse := bool(s.PullOpt(3, types.False, "bool").(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildOfClass(className, recurse); child != nil {
 						return s.Push(child)
 					}
@@ -912,7 +912,7 @@ func Instance() rbxmk.Reflector {
 			"FindFirstChildWhichIsA": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, "string").(types.String))
-					recurse := bool(s.PullOpt(3, "bool", types.False).(types.Bool))
+					recurse := bool(s.PullOpt(3, types.False, "bool").(types.Bool))
 					if child := v.(*rtypes.Instance).FindFirstChildWhichIsA(className, recurse); child != nil {
 						return s.Push(child)
 					}
@@ -1107,7 +1107,7 @@ func Instance() rbxmk.Reflector {
 			"new": {
 				Func: func(s rbxmk.State) int {
 					className := string(s.Pull(1, "string").(types.String))
-					parent, _ := s.PullOpt(2, "Instance", nil).(*rtypes.Instance)
+					parent, _ := s.PullOpt(2, nil, "Instance").(*rtypes.Instance)
 					if className == "DataModel" && parent != nil {
 						return s.RaiseError("DataModel Parent must be nil")
 					}

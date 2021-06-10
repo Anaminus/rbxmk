@@ -37,7 +37,7 @@ func AttrConfig() rbxmk.Reflector {
 			"new": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
 					var v rtypes.AttrConfig
-					v.Property = string(s.PullOpt(1, "string", types.String("")).(types.String))
+					v.Property = string(s.PullOpt(1, types.String(""), "string").(types.String))
 					return s.Push(&v)
 				},
 				Dump: func() dump.MultiFunction {

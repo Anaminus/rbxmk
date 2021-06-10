@@ -274,7 +274,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
-			switch index := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, nil, "string", "Symbol").(type) {
 			case types.String:
 				if method, ok := r.Methods[string(index)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
@@ -313,7 +313,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			switch index := s.PullAnyOfOpt(2, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, nil, "string", "Symbol").(type) {
 			case types.String:
 				if _, ok := r.Methods[string(index)]; ok {
 					return s.RaiseError("%s of %s cannot be assigned to", index, r.Name)
@@ -412,7 +412,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
-			if symbol, ok := s.PullOpt(2, "Symbol", nil).(rtypes.Symbol); ok {
+			if symbol, ok := s.PullOpt(2, nil, "Symbol").(rtypes.Symbol); ok {
 				if property, ok := r.Symbols[symbol]; ok {
 					return property.Get(s, v)
 				}
@@ -431,7 +431,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			if symbol, ok := s.PullOpt(2, "Symbol", nil).(rtypes.Symbol); ok {
+			if symbol, ok := s.PullOpt(2, nil, "Symbol").(rtypes.Symbol); ok {
 				if property, ok := r.Symbols[symbol]; ok {
 					if property.Set == nil {
 						return s.RaiseError("symbol %s of %s cannot be assigned to", symbol.Name, r.Name)

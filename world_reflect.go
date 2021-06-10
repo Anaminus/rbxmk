@@ -79,7 +79,8 @@ func (w *World) PullAnyOf(lv lua.LValue, t ...string) (v types.Value, err error)
 			return v, nil
 		}
 	}
-	return nil, fmt.Errorf("%s expected, got %s", listTypes(t), w.Typeof(lv))
+
+	return nil, TypeError{Want: listTypes(t), Got: w.Typeof(lv)}
 }
 
 // PullAnyOfOpt reflects lv to the first successful type from t. Returns d if
@@ -151,8 +152,8 @@ func (w *World) PullArrayOf(lv lua.LValue, t string) (v rtypes.Array, err error)
 	return array, nil
 }
 
-// PushArrayOf reflect v to lv, ensuring that each field is reflected according
-// to t.
+// PushDictionaryOf reflect v to lv, ensuring that each field is reflected
+// according to t.
 func (w *World) PushDictionaryOf(v rtypes.Dictionary, t string) (lv *lua.LTable, err error) {
 	s := w.State()
 	if s.CycleGuard() {

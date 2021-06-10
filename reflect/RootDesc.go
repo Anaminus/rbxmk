@@ -68,7 +68,7 @@ func RootDesc() rbxmk.Reflector {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.RootDesc)
 					class := string(s.Pull(2, "string").(types.String))
-					desc := s.PullOpt(3, "ClassDesc", rtypes.Nil)
+					desc := s.PullOpt(3, rtypes.Nil, "ClassDesc")
 					switch desc := desc.(type) {
 					case rtypes.NilType:
 						if _, ok := root.Classes[class]; ok {
@@ -187,7 +187,7 @@ func RootDesc() rbxmk.Reflector {
 					root := v.(*rtypes.RootDesc)
 					class := string(s.Pull(2, "string").(types.String))
 					member := string(s.Pull(3, "string").(types.String))
-					memberDesc := s.PullOpt(4, "MemberDesc", rtypes.Nil)
+					memberDesc := s.PullOpt(4, rtypes.Nil, "MemberDesc")
 					classDesc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -314,7 +314,7 @@ func RootDesc() rbxmk.Reflector {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.RootDesc)
 					enum := string(s.Pull(2, "string").(types.String))
-					desc := s.PullOpt(3, "EnumDesc", rtypes.Nil)
+					desc := s.PullOpt(3, rtypes.Nil, "EnumDesc")
 					switch desc := desc.(type) {
 					case rtypes.NilType:
 						if _, ok := root.Enums[enum]; ok {
@@ -433,7 +433,7 @@ func RootDesc() rbxmk.Reflector {
 					root := v.(*rtypes.RootDesc)
 					enum := string(s.Pull(2, "string").(types.String))
 					item := string(s.Pull(3, "string").(types.String))
-					itemDesc := s.PullOpt(4, "EnumItemDesc", rtypes.Nil)
+					itemDesc := s.PullOpt(4, rtypes.Nil, "EnumItemDesc")
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)

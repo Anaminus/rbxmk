@@ -760,7 +760,7 @@ func CFrame() rbxmk.Reflector {
 					return s.Push(types.NewCFrameFromLookAt(
 						s.Pull(1, "Vector3").(types.Vector3),
 						s.Pull(2, "Vector3").(types.Vector3),
-						s.PullOpt(3, "Vector3", types.Vector3{X: 0, Y: 1, Z: 0}).(types.Vector3),
+						s.PullOpt(3, types.Vector3{X: 0, Y: 1, Z: 0}, "Vector3").(types.Vector3),
 					))
 				},
 				Dump: func() dump.MultiFunction {

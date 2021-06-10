@@ -62,7 +62,7 @@ func fsDir(s rbxmk.State) int {
 
 func fsMkdir(s rbxmk.State) int {
 	path := string(s.Pull(1, "string").(types.String))
-	all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+	all := bool(s.PullOpt(2, types.Bool(false), "bool").(types.Bool))
 	ok, err := FSSource{World: s.World}.MkDir(path, all)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -77,7 +77,7 @@ func fsMkdir(s rbxmk.State) int {
 
 func fsRead(s rbxmk.State) int {
 	filename := string(s.Pull(1, "string").(types.String))
-	selector := s.PullOpt(2, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	selector := s.PullOpt(2, rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
 	v, err := FSSource{World: s.World}.Read(filename, selector)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -87,7 +87,7 @@ func fsRead(s rbxmk.State) int {
 
 func fsRemove(s rbxmk.State) int {
 	path := string(s.Pull(1, "string").(types.String))
-	all := bool(s.PullOpt(2, "bool", types.Bool(false)).(types.Bool))
+	all := bool(s.PullOpt(2, types.Bool(false), "bool").(types.Bool))
 	ok, err := FSSource{World: s.World}.Remove(path, all)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -136,7 +136,7 @@ func fsStat(s rbxmk.State) int {
 
 func fsWrite(s rbxmk.State) int {
 	filename := string(s.Pull(1, "string").(types.String))
-	selector := s.PullOpt(3, "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+	selector := s.PullOpt(3, rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
 	if selector.Format == "" {
 		selector.Format = s.Ext(filename)
 	}

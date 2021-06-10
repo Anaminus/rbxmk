@@ -204,14 +204,14 @@ func rbxmkOpIndex(s rbxmk.State) int {
 func rbxmkOpNewindex(s rbxmk.State) int {
 	switch field := s.Pull(2, "string").(types.String); field {
 	case "globalDesc":
-		desc, _ := s.PullOpt(3, "RootDesc", nil).(*rtypes.RootDesc)
+		desc, _ := s.PullOpt(3, nil, "RootDesc").(*rtypes.RootDesc)
 		if desc == nil {
 			s.Desc = nil
 		}
 		s.Desc = desc
 		return 0
 	case "globalAttrConfig":
-		attrcfg, _ := s.PullOpt(3, "AttrConfig", nil).(*rtypes.AttrConfig)
+		attrcfg, _ := s.PullOpt(3, nil, "AttrConfig").(*rtypes.AttrConfig)
 		if attrcfg == nil {
 			s.AttrConfig = nil
 		}
