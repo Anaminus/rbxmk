@@ -88,12 +88,12 @@ func pushDescField(s rbxmk.State, v interface{}) lua.LValue {
 		}
 		return a
 	case rbxdump.Type:
-		lv, _ := s.PushTo(rtypes.TypeDesc{Embedded: v})
+		lv, _ := s.World.Push(rtypes.TypeDesc{Embedded: v})
 		return lv
 	case []rbxdump.Parameter:
 		a := s.L.CreateTable(len(v), 0)
 		for _, v := range v {
-			lv, _ := s.PushTo(rtypes.ParameterDesc{Parameter: v})
+			lv, _ := s.World.Push(rtypes.ParameterDesc{Parameter: v})
 			a.Append(lv)
 		}
 		return a
@@ -111,7 +111,7 @@ func pullDescField(s rbxmk.State, k string, v lua.LValue) (interface{}, error) {
 		return string(v), nil
 	case *lua.LTable:
 		if v.RawGetString("Category") != lua.LNil && v.RawGetString("Name") != lua.LNil {
-			t, err := s.PullFrom("TypeDesc", v)
+			t, err := s.World.Pull(v, "TypeDesc")
 			if err != nil {
 				return nil, fmt.Errorf("field %q: %w", k, err)
 			}
