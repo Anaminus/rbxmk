@@ -35,16 +35,16 @@ func HTTPOptions() rbxmk.Reflector {
 			}
 			options := rtypes.HTTPOptions{
 				URL:            string(s.PullFromTable(table, lua.LString("URL"), "string").(types.String)),
-				Method:         string(s.PullFromTableOpt(table, lua.LString("Method"), "string", types.String("GET")).(types.String)),
-				ResponseFormat: s.PullFromTableOpt(table, lua.LString("ResponseFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector),
-				Headers:        s.PullFromTableOpt(table, lua.LString("Headers"), "HTTPHeaders", rtypes.HTTPHeaders(nil)).(rtypes.HTTPHeaders),
-				Cookies:        s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
+				Method:         string(s.PullFromTableOpt(table, lua.LString("Method"), types.String("GET"), "string").(types.String)),
+				ResponseFormat: s.PullFromTableOpt(table, lua.LString("ResponseFormat"), rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector),
+				Headers:        s.PullFromTableOpt(table, lua.LString("Headers"), rtypes.HTTPHeaders(nil), "HTTPHeaders").(rtypes.HTTPHeaders),
+				Cookies:        s.PullFromTableOpt(table, lua.LString("Cookies"), rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
 			}
-			options.RequestFormat = s.PullFromTableOpt(table, lua.LString("RequestFormat"), "FormatSelector", rtypes.FormatSelector{}).(rtypes.FormatSelector)
+			options.RequestFormat = s.PullFromTableOpt(table, lua.LString("RequestFormat"), rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
 			if format := s.Format(options.RequestFormat.Format); format.Name != "" {
 				options.Body = s.PullAnyFromTableOpt(table, lua.LString("Body"), nil, format.EncodeTypes...)
 			} else {
-				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil)
+				options.Body = s.PullFromTableOpt(table, lua.LString("Body"), nil, "Variant")
 			}
 			return options, nil
 		},

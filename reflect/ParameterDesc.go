@@ -43,7 +43,7 @@ func ParameterDesc() rbxmk.Reflector {
 					Name: string(s.PullFromTable(table, lua.LString("Name"), "string").(types.String)),
 				},
 			}
-			switch def := s.PullFromTableOpt(table, lua.LString("Default"), "string", rtypes.Nil).(type) {
+			switch def := s.PullFromTableOpt(table, lua.LString("Default"), rtypes.Nil, "string").(type) {
 			case rtypes.NilType:
 			case types.String:
 				param.Optional = true

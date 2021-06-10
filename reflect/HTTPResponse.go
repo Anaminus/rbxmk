@@ -36,9 +36,9 @@ func HTTPResponse() rbxmk.Reflector {
 				Success:       bool(s.PullFromTable(table, lua.LString("Success"), "bool").(types.Bool)),
 				StatusCode:    int(s.PullFromTable(table, lua.LString("StatusCode"), "int").(types.Int)),
 				StatusMessage: string(s.PullFromTable(table, lua.LString("StatusMessage"), "string").(types.String)),
-				Headers:       s.PullFromTableOpt(table, lua.LString("Headers"), "HTTPHeaders", rtypes.HTTPHeaders(nil)).(rtypes.HTTPHeaders),
-				Cookies:       s.PullFromTableOpt(table, lua.LString("Cookies"), "Cookies", rtypes.Cookies(nil)).(rtypes.Cookies),
-				Body:          s.PullFromTableOpt(table, lua.LString("Body"), "Variant", nil),
+				Headers:       s.PullFromTableOpt(table, lua.LString("Headers"), rtypes.HTTPHeaders(nil), "HTTPHeaders").(rtypes.HTTPHeaders),
+				Cookies:       s.PullFromTableOpt(table, lua.LString("Cookies"), rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
+				Body:          s.PullFromTableOpt(table, lua.LString("Body"), nil, "Variant"),
 			}
 			return resp, nil
 		},
