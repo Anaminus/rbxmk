@@ -38,7 +38,7 @@ func (w *World) Push(v types.Value) (lv lua.LValue, err error) {
 
 // Pull reflects lv to v using registered type t.
 func (w *World) Pull(lv lua.LValue, t string) (v types.Value, err error) {
-	pull, err := w.PullerOf(v.Type())
+	pull, err := w.PullerOf(t)
 	if err != nil {
 		return nil, err
 	}
