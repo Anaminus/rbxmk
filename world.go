@@ -523,6 +523,34 @@ func (w *World) MustReflector(name string) Reflector {
 	return rfl
 }
 
+// PusherOf returns the PushTo field for the Reflector registered as name.
+// Returns an error if the name is not registered, or if the reflector does not
+// define PushTo.
+func (w *World) PusherOf(name string) (p Pusher, err error) {
+	rfl, ok := w.reflectors[name]
+	if !ok {
+		return nil, fmt.Errorf("unknown type %q", name)
+	}
+	if rfl.PushTo == nil {
+		return nil, fmt.Errorf("cannot cast type %s to Lua", name)
+	}
+	return rfl.PushTo, nil
+}
+
+// PullerOf returns the PullFrom field for the Reflector registered as name.
+// Returns an error if the name is not registered, or if the reflector does not
+// define PullFrom.
+func (w *World) PullerOf(name string) (p Puller, err error) {
+	rfl, ok := w.reflectors[name]
+	if !ok {
+		return nil, fmt.Errorf("unknown type %q", name)
+	}
+	if rfl.PullFrom == nil {
+		return nil, fmt.Errorf("cannot cast type %s from Lua", name)
+	}
+	return rfl.PullFrom, nil
+}
+
 // Reflectors returns a list of reflectors that have all of the given flags set.
 func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 	ts := []Reflector{}

@@ -7,6 +7,13 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// Pusher converts a types.Value to a Lua value. If err is nil, then lv must not
+// be nil.
+type Pusher func(s State, v types.Value) (lv lua.LValue, err error)
+
+// Puller converts a Lua value to to a types.Value. lv must be non-nil.
+type Puller func(s State, lv lua.LValue) (v types.Value, err error)
+
 // Reflector defines reflection behavior for a type. It defines how to convert a
 // types.Value between a Lua value, and behaviors when the type is a userdata.
 // It also defines functions for constructing values of the type. A Reflector
@@ -19,11 +26,11 @@ type Reflector struct {
 
 	// PushTo converts v to a Lua value. l must be used only for the conversion
 	// of values as needed. If err is nil, then lv must not be nil.
-	PushTo func(s State, v types.Value) (lv lua.LValue, err error)
+	PushTo Pusher
 
 	// PullFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lv must be non-nil.
-	PullFrom func(s State, lv lua.LValue) (v types.Value, err error)
+	PullFrom Puller
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
