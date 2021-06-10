@@ -129,7 +129,7 @@ func DescAction() rbxmk.Reflector {
 					if !ok {
 						return s.Push(rtypes.Nil)
 					}
-					value := pushDescField(s, fvalue)
+					value := pushDescField(s.Context(), fvalue)
 					if value == nil {
 						return s.Push(rtypes.Nil)
 					}
@@ -173,7 +173,7 @@ func DescAction() rbxmk.Reflector {
 						delete(action.Fields, name)
 						return 0
 					}
-					value, err := pullDescField(s, name, fvalue)
+					value, err := pullDescField(s.Context(), name, fvalue)
 					if err != nil {
 						return s.RaiseError(err.Error())
 					}

@@ -45,7 +45,7 @@ func ColorSequence() rbxmk.Reflector {
 					keypointRfl := s.MustReflector("ColorSequenceKeypoint")
 					table := s.L.CreateTable(len(u), 0)
 					for i, v := range u {
-						lv, err := keypointRfl.PushTo(s, v)
+						lv, err := keypointRfl.PushTo(s.Context(), v)
 						if err != nil {
 							return s.RaiseError("%s", err)
 						}
@@ -84,7 +84,7 @@ func ColorSequence() rbxmk.Reflector {
 							v = make(types.ColorSequence, n)
 							keypointRfl := s.MustReflector("ColorSequenceKeypoint")
 							for i := 1; i <= n; i++ {
-								k, err := keypointRfl.PullFrom(s, c.RawGetInt(i))
+								k, err := keypointRfl.PullFrom(s.Context(), c.RawGetInt(i))
 								if err != nil {
 									return s.RaiseError("%s", err)
 								}

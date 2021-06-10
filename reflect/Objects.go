@@ -13,7 +13,7 @@ func init() { register(Objects) }
 func Objects() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Objects",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "Objects", Got: v.Type()}
@@ -29,7 +29,7 @@ func Objects() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}

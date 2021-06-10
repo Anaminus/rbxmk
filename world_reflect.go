@@ -33,7 +33,7 @@ func (w *World) Push(v types.Value) (lv lua.LValue, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return push(w.State(), v)
+	return push(w.Context(), v)
 }
 
 // Pull reflects lv to v using registered type t.
@@ -42,7 +42,7 @@ func (w *World) Pull(lv lua.LValue, t string) (v types.Value, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return pull(w.State(), lv)
+	return pull(w.Context(), lv)
 }
 
 // PullOpt reflects lv to v using registered type t. If lv is nil, then d is
@@ -75,7 +75,7 @@ func (w *World) PullAnyOf(lv lua.LValue, t ...string) (v types.Value, err error)
 		if err != nil {
 			return nil, err
 		}
-		if v, err := pull(w.State(), lv); err == nil {
+		if v, err := pull(w.Context(), lv); err == nil {
 			return v, nil
 		}
 	}
@@ -91,7 +91,7 @@ func (w *World) PullAnyOfOpt(lv lua.LValue, d types.Value, t ...string) (v types
 		if err != nil {
 			return d
 		}
-		if v, err := pull(w.State(), lv); err == nil {
+		if v, err := pull(w.Context(), lv); err == nil {
 			return v
 		}
 	}
@@ -101,7 +101,7 @@ func (w *World) PullAnyOfOpt(lv lua.LValue, d types.Value, t ...string) (v types
 // PushArrayOf reflect v to lv, ensuring that each element is reflected
 // according to t.
 func (w *World) PushArrayOf(v rtypes.Array, t string) (lv *lua.LTable, err error) {
-	s := w.State()
+	s := w.Context()
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}
@@ -112,7 +112,7 @@ func (w *World) PushArrayOf(v rtypes.Array, t string) (lv *lua.LTable, err error
 	if err != nil {
 		return nil, err
 	}
-	table := s.L.CreateTable(len(v), 0)
+	table := w.l.CreateTable(len(v), 0)
 	for _, v := range v {
 		lv, err := push(s, v)
 		if err != nil {
@@ -130,7 +130,7 @@ func (w *World) PullArrayOf(lv lua.LValue, t string) (v rtypes.Array, err error)
 	if err != nil {
 		return nil, err
 	}
-	s := w.State()
+	s := w.Context()
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}
@@ -155,7 +155,7 @@ func (w *World) PullArrayOf(lv lua.LValue, t string) (v rtypes.Array, err error)
 // PushDictionaryOf reflect v to lv, ensuring that each field is reflected
 // according to t.
 func (w *World) PushDictionaryOf(v rtypes.Dictionary, t string) (lv *lua.LTable, err error) {
-	s := w.State()
+	s := w.Context()
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}
@@ -166,7 +166,7 @@ func (w *World) PushDictionaryOf(v rtypes.Dictionary, t string) (lv *lua.LTable,
 	if err != nil {
 		return nil, err
 	}
-	table := s.L.CreateTable(0, len(v))
+	table := w.l.CreateTable(0, len(v))
 	for k, v := range v {
 		lv, err := push(s, v)
 		if err != nil {
@@ -184,7 +184,7 @@ func (w *World) PullDictionaryOf(lv lua.LValue, t string) (v rtypes.Dictionary, 
 	if err != nil {
 		return nil, err
 	}
-	s := w.State()
+	s := w.Context()
 	if s.CycleGuard() {
 		defer s.CycleClear()
 	}

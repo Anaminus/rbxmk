@@ -13,7 +13,7 @@ func init() { register(HTTPOptions) }
 func HTTPOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPOptions",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
@@ -28,7 +28,7 @@ func HTTPOptions() rbxmk.Reflector {
 			s.PushToDictionary(table, "Body", options.Body)
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}

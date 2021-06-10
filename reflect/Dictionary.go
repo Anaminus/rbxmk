@@ -14,7 +14,7 @@ func init() { register(Dictionary) }
 func Dictionary() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Dictionary",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}
@@ -36,7 +36,7 @@ func Dictionary() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if s.CycleGuard() {
 				defer s.CycleClear()
 			}

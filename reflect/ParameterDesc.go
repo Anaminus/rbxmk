@@ -14,7 +14,7 @@ func init() { register(ParameterDesc) }
 func ParameterDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "ParameterDesc",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			param, ok := v.(rtypes.ParameterDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "ParameterDesc", Got: v.Type()}
@@ -32,7 +32,7 @@ func ParameterDesc() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}

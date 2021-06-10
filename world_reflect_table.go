@@ -18,7 +18,7 @@ func (w *World) PushToTable(table *lua.LTable, field lua.LValue, v types.Value) 
 	if err != nil {
 		return err
 	}
-	lv, err := push(w.State(), v)
+	lv, err := push(w.Context(), v)
 	if err != nil {
 		return fmt.Errorf("field %s: %w", field, err)
 	}
@@ -33,7 +33,7 @@ func (w *World) PullFromTable(table *lua.LTable, field lua.LValue, t string) (v 
 	if err != nil {
 		return nil, err
 	}
-	if v, err = pull(w.State(), table.RawGet(field)); err != nil {
+	if v, err = pull(w.Context(), table.RawGet(field)); err != nil {
 		return nil, fmt.Errorf("field %s: %w", field, err)
 	}
 	return v, nil
@@ -51,7 +51,7 @@ func (w *World) PullFromTableOpt(table *lua.LTable, field lua.LValue, d types.Va
 	if lv == lua.LNil {
 		return d, nil
 	}
-	if v, err = pull(w.State(), lv); err != nil {
+	if v, err = pull(w.Context(), lv); err != nil {
 		return nil, fmt.Errorf("field %s: %w", field, err)
 	}
 	return v, nil
@@ -66,7 +66,7 @@ func (w *World) PullAnyFromTable(table *lua.LTable, field lua.LValue, t ...strin
 		if err != nil {
 			return nil, err
 		}
-		if v, err := pull(w.State(), lv); err == nil {
+		if v, err := pull(w.Context(), lv); err == nil {
 			return v, nil
 		}
 	}
@@ -86,7 +86,7 @@ func (w *World) PullAnyFromTableOpt(table *lua.LTable, field lua.LValue, d types
 		if err != nil {
 			return nil, err
 		}
-		if v, err := pull(w.State(), lv); err == nil {
+		if v, err := pull(w.Context(), lv); err == nil {
 			return v, nil
 		}
 	}

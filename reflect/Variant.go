@@ -10,7 +10,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func PushVariantTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+func PushVariantTo(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return lua.LNil, nil
@@ -51,7 +51,7 @@ func PushVariantTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	return values, nil
 }
 
-func PullVariantFrom(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+func PullVariantFrom(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return rtypes.Nil, nil
@@ -92,7 +92,7 @@ func PullVariantFrom(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
 // PullVariant gets from the Lua state the value at n, and reflects a value from
 // it according to the Variant type.
 func PullVariant(s rbxmk.State, n int) (v types.Value) {
-	v, err := PullVariantFrom(s, s.CheckAny(n))
+	v, err := PullVariantFrom(s.Context(), s.CheckAny(n))
 	if err != nil {
 		s.ArgError(n, err.Error())
 		return nil

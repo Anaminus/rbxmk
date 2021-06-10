@@ -270,7 +270,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	case len(r.Properties)+len(r.Methods) > 0 && len(r.Symbols) > 0:
 		// Indexed by both string and symbol.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
@@ -278,7 +278,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			case types.String:
 				if method, ok := r.Methods[string(index)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
-						v, err := r.PullFrom(s, s.CheckAny(1))
+						v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
 						}
@@ -309,7 +309,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			}
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
@@ -351,14 +351,14 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	case len(r.Properties)+len(r.Methods) > 0:
 		// Indexed only by string.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
 			if name, ok := s.L.Get(2).(lua.LString); ok {
 				if method, ok := r.Methods[string(name)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
-						v, err := r.PullFrom(s, s.CheckAny(1))
+						v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 						if err != nil {
 							return s.ArgError(1, err.Error())
 						}
@@ -380,7 +380,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			return s.RaiseError("string expected for member name of %s, got %s", r.Name, s.Typeof(2))
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
@@ -408,7 +408,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	case len(r.Symbols) > 0:
 		// Indexed only by symbol.
 		mt.RawSetString("__index", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
@@ -427,7 +427,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			return s.RaiseError("symbol expected for member index of %s, got %s", r.Name, s.Typeof(2))
 		}))
 		mt.RawSetString("__newindex", w.WrapOperator(func(s State) int {
-			v, err := r.PullFrom(s, s.CheckAny(1))
+			v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
@@ -740,6 +740,11 @@ func (w *World) State() State {
 	return State{World: w, L: w.l}
 }
 
+// Context returns a Context derived from the World.
+func (w *World) Context() Context {
+	return Context{State: State{World: w, L: w.l}}
+}
+
 // WrapFunc wraps a function that receives a State into a Lua function.
 func (w *World) WrapFunc(f func(State) int) *lua.LFunction {
 	return w.l.NewFunction(func(l *lua.LState) int {
@@ -914,7 +919,7 @@ func (w *World) SetEnumGlobal() {
 	}
 	w.Desc.GenerateEnumTypes()
 	state := w.State()
-	enums, err := rfl.PushTo(state, w.Desc.EnumTypes)
+	enums, err := rfl.PushTo(state.Context(), w.Desc.EnumTypes)
 	if err != nil {
 		return
 	}

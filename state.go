@@ -20,7 +20,7 @@ const (
 	OperatorFrame
 )
 
-// State contains references to an environment surrounding a value.
+// State facilitates the reflection of values to a particular Lua state.
 type State struct {
 	*World
 
@@ -28,48 +28,11 @@ type State struct {
 
 	// FrameType provides a hint to how errors should be produced.
 	FrameType FrameType
-
-	// cycle is used to mark a table as having been traversed. This is non-nil
-	// only for types that can contain other types.
-	cycle map[interface{}]struct{}
 }
 
-// CycleGuard begins a guard against reference cycles when reflecting with the
-// state. Returns false if a guard was already set up for the state. If true is
-// returned, the guard must be cleared via CycleClear. For example:
-//
-//     if s.CycleGuard() {
-//         defer s.CycleClear()
-//     }
-//
-func (s *State) CycleGuard() bool {
-	if s.cycle == nil {
-		s.cycle = make(map[interface{}]struct{}, 4)
-		return true
-	}
-	return false
-}
-
-// CycleClear clears the cycle guard on the state. Panics if the state has no
-// guard.
-func (s *State) CycleClear() {
-	if s.cycle == nil {
-		panic("state has no cycle guard")
-	}
-	s.cycle = nil
-}
-
-// CycleMark marks t as visited, and returns whether t was already visited.
-// Panics if the state has no guard.
-func (s State) CycleMark(t interface{}) bool {
-	if s.cycle == nil {
-		panic("attempt to mark reference without cycle guard")
-	}
-	_, ok := s.cycle[t]
-	if !ok {
-		s.cycle[t] = struct{}{}
-	}
-	return ok
+// Context returns a Context derived from the State.
+func (s State) Context() Context {
+	return Context{State: s}
 }
 
 // Count returns the number of arguments in the stack frame.
@@ -89,7 +52,7 @@ func (s State) PushTuple(values ...types.Value) int {
 	lvs := make([]lua.LValue, len(values))
 	for i, value := range values {
 		rfl := s.MustReflector(value.Type())
-		lv, err := rfl.PushTo(s, value)
+		lv, err := rfl.PushTo(s.Context(), value)
 		if err != nil {
 			return s.RaiseError("%s", err)
 		}
@@ -112,7 +75,7 @@ func (s State) PullTuple(n int) rtypes.Tuple {
 	vs := make(rtypes.Tuple, length)
 	for i := n; i <= c; i++ {
 		lv := s.L.Get(i)
-		v, err := rfl.PullFrom(s, lv)
+		v, err := rfl.PullFrom(s.Context(), lv)
 		if err != nil {
 			s.ArgError(i, err.Error())
 			return nil

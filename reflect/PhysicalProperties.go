@@ -13,7 +13,7 @@ func init() { register(PhysicalProperties) }
 func PhysicalProperties() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "PhysicalProperties",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
 				return lua.LNil, nil
 			}
@@ -21,7 +21,7 @@ func PhysicalProperties() rbxmk.Reflector {
 			s.L.SetMetatable(u, s.L.GetTypeMetatable("PhysicalProperties"))
 			return u, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch lv := lv.(type) {
 			case *lua.LNilType:
 				return types.PhysicalProperties{}, nil

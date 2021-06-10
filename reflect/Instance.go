@@ -26,7 +26,7 @@ func pushPropertyTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
 	if rfl.Flags&rbxmk.Exprim == 0 {
-		return PushVariantTo(s, v)
+		return PushVariantTo(s.Context(), v)
 	}
 	u := s.UserDataOf(v, rfl.Name)
 	return u, nil
@@ -109,7 +109,7 @@ func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary)
 
 func reflectOne(s rbxmk.State, value types.Value) (lv lua.LValue, err error) {
 	rfl := s.MustReflector(value.Type())
-	lv, err = rfl.PushTo(s, value)
+	lv, err = rfl.PushTo(s.Context(), value)
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +177,7 @@ func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, na
 			}
 		}
 		// Push without converting exprims.
-		return PushVariantTo(s, value)
+		return PushVariantTo(s.Context(), value)
 	}
 	if value == nil {
 		// Fallback to nil.
@@ -324,14 +324,14 @@ func init() { register(Instance) }
 func Instance() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Instance",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if inst, ok := v.(*rtypes.Instance); ok && inst == nil {
 				return lua.LNil, nil
 			}
 			u := s.UserDataOf(v, "Instance")
 			return u, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch lv := lv.(type) {
 			case *lua.LNilType:
 				return (*rtypes.Instance)(nil), nil

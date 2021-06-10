@@ -12,10 +12,10 @@ func BinaryString() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "BinaryString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.BinaryString)), nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LString:
 				return types.BinaryString(v), nil

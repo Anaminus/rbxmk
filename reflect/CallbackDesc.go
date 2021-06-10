@@ -14,7 +14,7 @@ func init() { register(CallbackDesc) }
 func CallbackDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "CallbackDesc",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.CallbackDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "CallbackDesc", Got: v.Type()}
@@ -24,7 +24,7 @@ func CallbackDesc() rbxmk.Reflector {
 			fields["MemberType"] = member.MemberType()
 			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(fields))
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
 			if err != nil {
 				return nil, err

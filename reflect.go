@@ -9,10 +9,10 @@ import (
 
 // Pusher converts a types.Value to a Lua value. If err is nil, then lv must not
 // be nil.
-type Pusher func(s State, v types.Value) (lv lua.LValue, err error)
+type Pusher func(s Context, v types.Value) (lv lua.LValue, err error)
 
 // Puller converts a Lua value to to a types.Value. lv must be non-nil.
-type Puller func(s State, lv lua.LValue) (v types.Value, err error)
+type Puller func(s Context, lv lua.LValue) (v types.Value, err error)
 
 // Reflector defines reflection behavior for a type. It defines how to convert a
 // types.Value between a Lua value, and behaviors when the type is a userdata.
@@ -196,8 +196,8 @@ type Constructor struct {
 // a type metatable registered as type t. Each push always produces a new
 // userdata. This results in better performance, but makes the value unsuitable
 // as a table key.
-func PushTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err error) {
-	return func(s State, v types.Value) (lv lua.LValue, err error) {
+func PushTypeTo(t string) Pusher {
+	return func(s Context, v types.Value) (lv lua.LValue, err error) {
 		u := s.L.NewUserData(v)
 		s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
 		return u, nil
@@ -207,8 +207,8 @@ func PushTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err error
 // PushPtrTypeTo returns a Reflector.PushTo that converts v to a userdata set
 // with a type metatable registered as type t. The same value will push the same
 // userdata, making the value usable as a table key.
-func PushPtrTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err error) {
-	return func(s State, v types.Value) (lv lua.LValue, err error) {
+func PushPtrTypeTo(t string) Pusher {
+	return func(s Context, v types.Value) (lv lua.LValue, err error) {
 		u := s.UserDataOf(v, t)
 		return u, nil
 	}
@@ -216,8 +216,8 @@ func PushPtrTypeTo(t string) func(s State, v types.Value) (lv lua.LValue, err er
 
 // PullTypeFrom returns a Reflector.PullFrom that converts v from a userdata set
 // with a type metatable registered as type t.
-func PullTypeFrom(t string) func(s State, lv lua.LValue) (v types.Value, err error) {
-	return func(s State, lv lua.LValue) (v types.Value, err error) {
+func PullTypeFrom(t string) Puller {
+	return func(s Context, lv lua.LValue) (v types.Value, err error) {
 		u, ok := lv.(*lua.LUserData)
 		if !ok {
 			return nil, TypeError{Want: t, Got: lv.Type().String()}

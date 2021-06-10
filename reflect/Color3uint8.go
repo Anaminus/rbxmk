@@ -15,7 +15,7 @@ func Color3uint8() rbxmk.Reflector {
 		Name:   "Color3uint8",
 		Flags:  rbxmk.Exprim,
 		PushTo: rbxmk.PushTypeTo("Color3uint8"),
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
 				switch u.Metatable {
 				case s.L.GetTypeMetatable("Color3"):

@@ -15,7 +15,7 @@ func init() { register(RBXAssetOptions) }
 func RBXAssetOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "RBXAssetOptions",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.RBXAssetOptions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "RBXAssetOptions", Got: v.Type()}
@@ -30,7 +30,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 			s.PushToDictionary(table, "Body", options.Body)
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}

@@ -11,10 +11,10 @@ func init() { register(Tuple) }
 func Tuple() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Tuple",
-		PushTo: func(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			panic("incorrect use of Tuple reflection (use State.PushTuple)")
 		},
-		PullFrom: func(s rbxmk.State, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			panic("incorrect use of Tuple reflection (use State.PullTuple)")
 		},
 		Dump: func() dump.TypeDef {
