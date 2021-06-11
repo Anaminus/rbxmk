@@ -11,8 +11,12 @@ import (
 // be nil.
 type Pusher func(s Context, v types.Value) (lv lua.LValue, err error)
 
-// Puller converts a Lua value to to a types.Value. lv must be non-nil.
+// Puller converts a Lua value to a types.Value. lv must be non-nil.
 type Puller func(s Context, lv lua.LValue) (v types.Value, err error)
+
+// Setter sets known type v to p. p must be a pointer to a known type. Returns
+// an error if v cannot be set to p.
+type Setter func(p interface{}, v types.Value) (err error)
 
 // Reflector defines reflection behavior for a type. It defines how to convert a
 // types.Value between a Lua value, and behaviors when the type is a userdata.
@@ -31,6 +35,11 @@ type Reflector struct {
 	// PullFrom converts a Lua value to v. l must be used only for the
 	// conversion of values as needed. lv must be non-nil.
 	PullFrom Puller
+
+	// SetTo sets reflector type v to the value pointed to by p. p must be a
+	// pointer to a value that v can be set to. Returns an error if p is not a
+	// known type.
+	SetTo Setter
 
 	// Metatable defines the metamethods of a custom type. If Metatable is
 	// non-nil, then a metatable is constructed and registered as a type
@@ -192,10 +201,10 @@ type Constructor struct {
 	Dump func() dump.MultiFunction
 }
 
-// PushTypeTo returns a Reflector.PushTo that converts v to a userdata set with
-// a type metatable registered as type t. Each push always produces a new
-// userdata. This results in better performance, but makes the value unsuitable
-// as a table key.
+// PushTypeTo returns a Pusher that converts v to a userdata set with a type
+// metatable registered as type t. Each push always produces a new userdata.
+// This results in better performance, but makes the value unsuitable as a table
+// key.
 func PushTypeTo(t string) Pusher {
 	return func(s Context, v types.Value) (lv lua.LValue, err error) {
 		u := s.NewUserData(v)
@@ -204,9 +213,9 @@ func PushTypeTo(t string) Pusher {
 	}
 }
 
-// PushPtrTypeTo returns a Reflector.PushTo that converts v to a userdata set
-// with a type metatable registered as type t. The same value will push the same
-// userdata, making the value usable as a table key.
+// PushPtrTypeTo returns a Pusher that converts v to a userdata set with a type
+// metatable registered as type t. The same value will push the same userdata,
+// making the value usable as a table key.
 func PushPtrTypeTo(t string) Pusher {
 	return func(s Context, v types.Value) (lv lua.LValue, err error) {
 		u := s.UserDataOf(v, t)
@@ -214,8 +223,8 @@ func PushPtrTypeTo(t string) Pusher {
 	}
 }
 
-// PullTypeFrom returns a Reflector.PullFrom that converts v from a userdata set
-// with a type metatable registered as type t.
+// PullTypeFrom returns a Puller that converts v from a userdata set with a type
+// metatable registered as type t.
 func PullTypeFrom(t string) Puller {
 	return func(s Context, lv lua.LValue) (v types.Value, err error) {
 		u, ok := lv.(*lua.LUserData)

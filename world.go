@@ -551,6 +551,20 @@ func (w *World) PullerOf(name string) (p Puller, err error) {
 	return rfl.PullFrom, nil
 }
 
+// SetterOf returns the SetTo field for the Reflector registered as name.
+// Returns an error if the name is not registered, or if the reflector does not
+// define SetTo.
+func (w *World) SetterOf(name string) (s Setter, err error) {
+	rfl, ok := w.reflectors[name]
+	if !ok {
+		return nil, fmt.Errorf("unknown type %q", name)
+	}
+	if rfl.SetTo == nil {
+		return nil, fmt.Errorf("cannot set type %s", name)
+	}
+	return rfl.SetTo, nil
+}
+
 // Reflectors returns a list of reflectors that have all of the given flags set.
 func (w *World) Reflectors(flags ReflectorFlags) []Reflector {
 	ts := []Reflector{}
