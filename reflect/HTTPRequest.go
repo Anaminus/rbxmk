@@ -13,6 +13,15 @@ func HTTPRequest() rbxmk.Reflector {
 		Name:     "HTTPRequest",
 		PushTo:   rbxmk.PushPtrTypeTo("HTTPRequest"),
 		PullFrom: rbxmk.PullTypeFrom("HTTPRequest"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rbxmk.HTTPRequest:
+				*p = v.(*rbxmk.HTTPRequest)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Methods: rbxmk.Methods{
 			"Resolve": {
 				Func: func(s rbxmk.State, v types.Value) int {

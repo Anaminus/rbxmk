@@ -15,6 +15,15 @@ func Enums() rbxmk.Reflector {
 		Name:     "Enums",
 		PushTo:   rbxmk.PushPtrTypeTo("Enums"),
 		PullFrom: rbxmk.PullTypeFrom("Enums"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rtypes.Enums:
+				*p = v.(*rtypes.Enums)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Enums").(*rtypes.Enums)

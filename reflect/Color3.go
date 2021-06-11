@@ -15,6 +15,15 @@ func Color3() rbxmk.Reflector {
 		Name:     "Color3",
 		PushTo:   rbxmk.PushTypeTo("Color3"),
 		PullFrom: rbxmk.PullTypeFrom("Color3"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Color3:
+				*p = v.(types.Color3)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Color3").(types.Color3)

@@ -17,6 +17,15 @@ func Cookie() rbxmk.Reflector {
 		Name:     "Cookie",
 		PushTo:   rbxmk.PushTypeTo("Cookie"),
 		PullFrom: rbxmk.PullTypeFrom("Cookie"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Cookie:
+				*p = v.(rtypes.Cookie)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Cookie").(rtypes.Cookie)

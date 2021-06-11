@@ -30,6 +30,15 @@ func Color3uint8() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "Color3uint8", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Color3uint8:
+				*p = v.(rtypes.Color3uint8)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case rtypes.Color3uint8:

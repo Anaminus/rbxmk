@@ -14,6 +14,15 @@ func Vector3int16() rbxmk.Reflector {
 		Name:     "Vector3int16",
 		PushTo:   rbxmk.PushTypeTo("Vector3int16"),
 		PullFrom: rbxmk.PullTypeFrom("Vector3int16"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Vector3int16:
+				*p = v.(types.Vector3int16)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Vector3int16").(types.Vector3int16)

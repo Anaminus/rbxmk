@@ -14,6 +14,15 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 		Name:     "NumberSequenceKeypoint",
 		PushTo:   rbxmk.PushTypeTo("NumberSequenceKeypoint"),
 		PullFrom: rbxmk.PullTypeFrom("NumberSequenceKeypoint"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.NumberSequenceKeypoint:
+				*p = v.(types.NumberSequenceKeypoint)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "NumberSequenceKeypoint").(types.NumberSequenceKeypoint)

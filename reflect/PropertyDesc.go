@@ -33,6 +33,15 @@ func PropertyDesc() rbxmk.Reflector {
 			member.SetFields(rbxdump.Fields(fields.(rtypes.DescFields)))
 			return rtypes.PropertyDesc(member), nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.PropertyDesc:
+				*p = v.(rtypes.PropertyDesc)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{

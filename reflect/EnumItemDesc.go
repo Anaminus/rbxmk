@@ -31,6 +31,15 @@ func EnumItemDesc() rbxmk.Reflector {
 			item.SetFields(rbxdump.Fields(fields.(rtypes.DescFields)))
 			return rtypes.EnumItemDesc(item), nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.EnumItemDesc:
+				*p = v.(rtypes.EnumItemDesc)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{

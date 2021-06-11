@@ -38,6 +38,15 @@ func PhysicalProperties() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "PhysicalProperties", Got: lv.Type().String()}
 			}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.PhysicalProperties:
+				*p = v.(types.PhysicalProperties)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case rtypes.NilType:

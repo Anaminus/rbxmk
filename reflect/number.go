@@ -20,6 +20,15 @@ func Number() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "number", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Double:
+				*p = v.(types.Double)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/number:Summary",

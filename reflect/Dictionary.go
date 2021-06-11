@@ -62,6 +62,15 @@ func Dictionary() rbxmk.Reflector {
 			}
 			return dict, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Dictionary:
+				*p = v.(rtypes.Dictionary)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/Dictionary:Summary",

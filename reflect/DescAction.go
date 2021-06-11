@@ -17,6 +17,15 @@ func DescAction() rbxmk.Reflector {
 		Name:     "DescAction",
 		PushTo:   rbxmk.PushPtrTypeTo("DescAction"),
 		PullFrom: rbxmk.PullTypeFrom("DescAction"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rtypes.DescAction:
+				*p = v.(*rtypes.DescAction)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "DescAction").(*rtypes.DescAction)

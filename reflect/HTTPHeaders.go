@@ -53,6 +53,15 @@ func HTTPHeaders() rbxmk.Reflector {
 			}
 			return headers, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.HTTPHeaders:
+				*p = v.(rtypes.HTTPHeaders)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Map{K: dt.Prim("string"), V: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}},

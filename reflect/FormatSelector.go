@@ -103,6 +103,15 @@ func FormatSelector() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "string or table", Got: v.Type().String()}
 			}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.FormatSelector:
+				*p = v.(rtypes.FormatSelector)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Or{dt.Prim("string"), dt.Struct{"Format": dt.Prim("string"), "...": dt.Prim("any")}},

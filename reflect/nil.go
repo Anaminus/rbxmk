@@ -21,6 +21,15 @@ func Nil() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "nil", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.NilType:
+				*p = v.(rtypes.NilType)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/nil:Summary",

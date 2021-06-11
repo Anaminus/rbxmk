@@ -14,6 +14,15 @@ func CFrame() rbxmk.Reflector {
 		Name:     "CFrame",
 		PushTo:   rbxmk.PushTypeTo("CFrame"),
 		PullFrom: rbxmk.PullTypeFrom("CFrame"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.CFrame:
+				*p = v.(types.CFrame)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "CFrame").(types.CFrame)

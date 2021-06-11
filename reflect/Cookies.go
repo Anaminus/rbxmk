@@ -46,6 +46,15 @@ func Cookies() rbxmk.Reflector {
 			}
 			return cookies, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Cookies:
+				*p = v.(rtypes.Cookies)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Array{T: dt.Prim("Cookie")},

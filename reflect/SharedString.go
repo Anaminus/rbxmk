@@ -28,6 +28,15 @@ func SharedString() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "SharedString", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.SharedString:
+				*p = v.(types.SharedString)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case types.SharedString:

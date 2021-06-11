@@ -14,6 +14,15 @@ func Ray() rbxmk.Reflector {
 		Name:     "Ray",
 		PushTo:   rbxmk.PushTypeTo("Ray"),
 		PullFrom: rbxmk.PullTypeFrom("Ray"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Ray:
+				*p = v.(types.Ray)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Ray").(types.Ray)

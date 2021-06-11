@@ -63,6 +63,15 @@ func Faces() rbxmk.Reflector {
 		Name:     "Faces",
 		PushTo:   rbxmk.PushTypeTo("Faces"),
 		PullFrom: rbxmk.PullTypeFrom("Faces"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Faces:
+				*p = v.(types.Faces)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Faces").(types.Faces)

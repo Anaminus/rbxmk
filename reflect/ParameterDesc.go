@@ -71,6 +71,15 @@ func ParameterDesc() rbxmk.Reflector {
 			}
 			return param, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.ParameterDesc:
+				*p = v.(rtypes.ParameterDesc)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{

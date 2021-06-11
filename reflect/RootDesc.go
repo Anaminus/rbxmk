@@ -18,6 +18,15 @@ func RootDesc() rbxmk.Reflector {
 		Name:     "RootDesc",
 		PushTo:   rbxmk.PushPtrTypeTo("RootDesc"),
 		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rtypes.RootDesc:
+				*p = v.(*rtypes.RootDesc)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Methods: rbxmk.Methods{
 			"Class": {
 				Func: func(s rbxmk.State, v types.Value) int {

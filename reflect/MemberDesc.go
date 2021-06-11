@@ -79,6 +79,15 @@ func MemberDesc() rbxmk.Reflector {
 				return nil, fmt.Errorf("unexpected value %q for field MemberType", typ)
 			}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.MemberDesc:
+				*p = v.(rtypes.MemberDesc)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Or{

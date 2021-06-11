@@ -52,6 +52,15 @@ func DescFields() rbxmk.Reflector {
 			}
 			return rtypes.DescFields(fields), nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.DescFields:
+				*p = v.(rtypes.DescFields)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Dictionary{V: dt.Prim("any")},

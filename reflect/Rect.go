@@ -14,6 +14,15 @@ func Rect() rbxmk.Reflector {
 		Name:     "Rect",
 		PushTo:   rbxmk.PushTypeTo("Rect"),
 		PullFrom: rbxmk.PullTypeFrom("Rect"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Rect:
+				*p = v.(types.Rect)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Rect").(types.Rect)

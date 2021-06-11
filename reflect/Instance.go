@@ -348,6 +348,15 @@ func Instance() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 			}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rtypes.Instance:
+				*p = v.(*rtypes.Instance)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Instance").(*rtypes.Instance)

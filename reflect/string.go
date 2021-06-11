@@ -20,6 +20,15 @@ func String() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "string", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.String:
+				*p = v.(types.String)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case types.String:

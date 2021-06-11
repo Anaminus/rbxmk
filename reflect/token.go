@@ -28,6 +28,15 @@ func Token() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "token", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Token:
+				*p = v.(types.Token)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/token:Summary",

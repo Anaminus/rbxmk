@@ -14,6 +14,15 @@ func Region3() rbxmk.Reflector {
 		Name:     "Region3",
 		PushTo:   rbxmk.PushTypeTo("Region3"),
 		PullFrom: rbxmk.PullTypeFrom("Region3"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Region3:
+				*p = v.(types.Region3)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Region3").(types.Region3)

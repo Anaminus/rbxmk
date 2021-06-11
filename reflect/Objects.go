@@ -46,6 +46,15 @@ func Objects() rbxmk.Reflector {
 			}
 			return objects, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Objects:
+				*p = v.(rtypes.Objects)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Array{T: dt.Prim("Instance")},

@@ -28,6 +28,15 @@ func BinaryString() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "BinaryString", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.BinaryString:
+				*p = v.(types.BinaryString)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case types.BinaryString:

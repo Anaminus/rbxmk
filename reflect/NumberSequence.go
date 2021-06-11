@@ -15,6 +15,15 @@ func NumberSequence() rbxmk.Reflector {
 		Name:     "NumberSequence",
 		PushTo:   rbxmk.PushTypeTo("NumberSequence"),
 		PullFrom: rbxmk.PullTypeFrom("NumberSequence"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.NumberSequence:
+				*p = v.(types.NumberSequence)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "NumberSequence").(types.NumberSequence)

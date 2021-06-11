@@ -14,6 +14,15 @@ func UDim2() rbxmk.Reflector {
 		Name:     "UDim2",
 		PushTo:   rbxmk.PushTypeTo("UDim2"),
 		PullFrom: rbxmk.PullTypeFrom("UDim2"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.UDim2:
+				*p = v.(types.UDim2)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "UDim2").(types.UDim2)

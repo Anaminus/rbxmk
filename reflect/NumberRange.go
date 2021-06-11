@@ -14,6 +14,15 @@ func NumberRange() rbxmk.Reflector {
 		Name:     "NumberRange",
 		PushTo:   rbxmk.PushTypeTo("NumberRange"),
 		PullFrom: rbxmk.PullTypeFrom("NumberRange"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.NumberRange:
+				*p = v.(types.NumberRange)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "NumberRange").(types.NumberRange)

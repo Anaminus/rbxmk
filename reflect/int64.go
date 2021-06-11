@@ -28,6 +28,15 @@ func Int64() rbxmk.Reflector {
 			}
 			return nil, rbxmk.TypeError{Want: "int64", Got: lv.Type().String()}
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Int64:
+				*p = v.(types.Int64)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		ConvertFrom: func(v types.Value) types.Value {
 			switch v := v.(type) {
 			case types.Int64:

@@ -57,6 +57,15 @@ func Array() rbxmk.Reflector {
 			}
 			return array, nil
 		},
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *rtypes.Array:
+				*p = v.(rtypes.Array)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Summary:     "Types/Array:Summary",

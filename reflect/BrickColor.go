@@ -16,6 +16,15 @@ func BrickColor() rbxmk.Reflector {
 		Name:     "BrickColor",
 		PushTo:   rbxmk.PushTypeTo("BrickColor"),
 		PullFrom: rbxmk.PullTypeFrom("BrickColor"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.BrickColor:
+				*p = v.(types.BrickColor)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "BrickColor").(types.BrickColor)

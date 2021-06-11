@@ -14,6 +14,15 @@ func Region3int16() rbxmk.Reflector {
 		Name:     "Region3int16",
 		PushTo:   rbxmk.PushTypeTo("Region3int16"),
 		PullFrom: rbxmk.PullTypeFrom("Region3int16"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case *types.Region3int16:
+				*p = v.(types.Region3int16)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
 				v := s.Pull(1, "Region3int16").(types.Region3int16)

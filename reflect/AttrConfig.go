@@ -14,6 +14,15 @@ func AttrConfig() rbxmk.Reflector {
 		Name:     "AttrConfig",
 		PushTo:   rbxmk.PushPtrTypeTo("AttrConfig"),
 		PullFrom: rbxmk.PullTypeFrom("AttrConfig"),
+		SetTo: func(p interface{}, v types.Value) error {
+			switch p := p.(type) {
+			case **rtypes.AttrConfig:
+				*p = v.(*rtypes.AttrConfig)
+			default:
+				return setPtrErr(p, v)
+			}
+			return nil
+		},
 		Properties: rbxmk.Properties{
 			"Property": {
 				Get: func(s rbxmk.State, v types.Value) int {
