@@ -101,7 +101,7 @@ func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
 	return nil
 }
 
-func pullDescField(s rbxmk.Context, k string, v lua.LValue) (interface{}, error) {
+func pullDescField(s rbxmk.Context, k string, v lua.LValue) (f interface{}, err error) {
 	switch v := v.(type) {
 	case lua.LBool:
 		return bool(v), nil
@@ -121,13 +121,21 @@ func pullDescField(s rbxmk.Context, k string, v lua.LValue) (interface{}, error)
 		case "Parameters":
 			a := make([]rbxdump.Parameter, v.Len())
 			for i := 1; i <= len(a); i++ {
-				a[i-1] = s.PullFromArray(v, i, "ParameterDesc").(rtypes.ParameterDesc).Parameter
+				p, err := s.PullFromArray(v, i, "ParameterDesc")
+				if err != nil {
+					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
+				}
+				a[i-1] = p.(rtypes.ParameterDesc).Parameter
 			}
 			return a, nil
 		case "Tags":
 			a := make(rbxdump.Tags, v.Len())
 			for i := 1; i <= len(a); i++ {
-				a[i-1] = string(s.PullFromArray(v, i, "string").(types.String))
+				tag, err := s.PullFromArray(v, i, "string")
+				if err != nil {
+					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
+				}
+				a[i-1] = string(tag.(types.String))
 			}
 			return a, nil
 		}

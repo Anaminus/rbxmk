@@ -19,13 +19,27 @@ func HTTPOptions() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
 			}
 			table := s.L.CreateTable(0, 7)
-			s.PushToDictionary(table, "URL", types.String(options.URL))
-			s.PushToDictionary(table, "Method", types.String(options.Method))
-			s.PushToDictionary(table, "RequestFormat", options.RequestFormat)
-			s.PushToDictionary(table, "ResponseFormat", options.ResponseFormat)
-			s.PushToDictionary(table, "Headers", options.Headers)
-			s.PushToDictionary(table, "Cookies", options.Cookies)
-			s.PushToDictionary(table, "Body", options.Body)
+			if err := s.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Method", types.String(options.Method)); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "RequestFormat", options.RequestFormat); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "ResponseFormat", options.ResponseFormat); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Headers", options.Headers); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Cookies", options.Cookies); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Body", options.Body); err != nil {
+				return nil, err
+			}
 			return table, nil
 		},
 		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
@@ -33,18 +47,45 @@ func HTTPOptions() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			options := rtypes.HTTPOptions{
-				URL:            string(s.PullFromDictionary(table, "URL", "string").(types.String)),
-				Method:         string(s.PullFromDictionaryOpt(table, "Method", types.String("GET"), "string").(types.String)),
-				ResponseFormat: s.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector),
-				Headers:        s.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders").(rtypes.HTTPHeaders),
-				Cookies:        s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies").(rtypes.Cookies),
+			url, err := s.PullFromDictionary(table, "URL", "string")
+			if err != nil {
+				return nil, err
 			}
-			options.RequestFormat = s.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
+			method, err := s.PullFromDictionaryOpt(table, "Method", types.String("GET"), "string")
+			if err != nil {
+				return nil, err
+			}
+			responseFormat, err := s.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, "FormatSelector")
+			if err != nil {
+				return nil, err
+			}
+			headers, err := s.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders")
+			if err != nil {
+				return nil, err
+			}
+			cookies, err := s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies")
+			if err != nil {
+				return nil, err
+			}
+			options := rtypes.HTTPOptions{
+				URL:            string(url.(types.String)),
+				Method:         string(method.(types.String)),
+				ResponseFormat: responseFormat.(rtypes.FormatSelector),
+				Headers:        headers.(rtypes.HTTPHeaders),
+				Cookies:        cookies.(rtypes.Cookies),
+			}
+			requestFormat, err := s.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, "FormatSelector")
+			if err != nil {
+				return nil, err
+			}
+			options.RequestFormat = requestFormat.(rtypes.FormatSelector)
 			if format := s.Format(options.RequestFormat.Format); format.Name != "" {
-				options.Body = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
+				options.Body, err = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
 			} else {
-				options.Body = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
+				options.Body, err = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
+			}
+			if err != nil {
+				return nil, err
 			}
 			return options, nil
 		},

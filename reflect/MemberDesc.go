@@ -42,7 +42,11 @@ func MemberDesc() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			switch typ := s.PullFromDictionary(table, "MemberType", "string").(types.String); typ {
+			typ, err := s.PullFromDictionary(table, "MemberType", "string")
+			if err != nil {
+				return nil, err
+			}
+			switch typ.(types.String) {
 			case "Property":
 				value, err := s.MustReflector("PropertyDesc").PullFrom(s, table)
 				if err != nil {

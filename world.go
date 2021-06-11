@@ -742,7 +742,7 @@ func (w *World) State() State {
 
 // Context returns a Context derived from the World.
 func (w *World) Context() Context {
-	return Context{State: State{World: w, L: w.l}}
+	return Context{World: w, L: w.l}
 }
 
 // WrapFunc wraps a function that receives a State into a Lua function.

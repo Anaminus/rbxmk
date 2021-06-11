@@ -25,10 +25,16 @@ func ParameterDesc() rbxmk.Reflector {
 			} else {
 				table = s.L.CreateTable(0, 2)
 			}
-			s.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type})
-			s.PushToDictionary(table, "Name", types.String(param.Name))
+			if err := s.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type}); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Name", types.String(param.Name)); err != nil {
+				return nil, err
+			}
 			if param.Optional {
-				s.PushToDictionary(table, "Default", types.String(param.Default))
+				if err := s.PushToDictionary(table, "Default", types.String(param.Default)); err != nil {
+					return nil, err
+				}
 			}
 			return table, nil
 		},
@@ -37,13 +43,25 @@ func ParameterDesc() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
+			typ, err := s.PullFromDictionary(table, "Type", "TypeDesc")
+			if err != nil {
+				return nil, err
+			}
+			name, err := s.PullFromDictionary(table, "Name", "string")
+			if err != nil {
+				return nil, err
+			}
 			param := rtypes.ParameterDesc{
 				Parameter: rbxdump.Parameter{
-					Type: s.PullFromDictionary(table, "Type", "TypeDesc").(rtypes.TypeDesc).Embedded,
-					Name: string(s.PullFromDictionary(table, "Name", "string").(types.String)),
+					Type: typ.(rtypes.TypeDesc).Embedded,
+					Name: string(name.(types.String)),
 				},
 			}
-			switch def := s.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string").(type) {
+			def, err := s.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string")
+			if err != nil {
+				return nil, err
+			}
+			switch def := def.(type) {
 			case rtypes.NilType:
 			case types.String:
 				param.Optional = true

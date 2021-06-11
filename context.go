@@ -1,12 +1,21 @@
 package rbxmk
 
+import lua "github.com/anaminus/gopher-lua"
+
 // Context provides a context for reflecting values.
 type Context struct {
-	State
+	*World
+
+	L *lua.LState
 
 	// cycle is used to mark a table as having been traversed. This is non-nil
 	// only for types that can contain other types.
 	cycle map[interface{}]struct{}
+}
+
+// Context returns a Context derived from the World.
+func (s Context) Context() Context {
+	return Context{World: s.World, L: s.L}
 }
 
 // CycleGuard begins a guard against reference cycles when reflecting with the
@@ -51,5 +60,5 @@ func (s Context) CycleMark(t interface{}) bool {
 // an unexpected type. Under normal circumstances, this error should be
 // unreachable.
 func (s Context) ReflectorError(n int) int {
-	return s.ArgError(n, "unreachable error: reflector mismatch")
+	panic("unreachable error: reflector mismatch")
 }

@@ -30,11 +30,6 @@ type State struct {
 	FrameType FrameType
 }
 
-// Context returns a Context derived from the State.
-func (s State) Context() Context {
-	return Context{State: s}
-}
-
 // Count returns the number of arguments in the stack frame.
 func (s State) Count() int {
 	return s.L.GetTop()

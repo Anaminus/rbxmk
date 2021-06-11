@@ -20,8 +20,12 @@ func TypeDesc() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "TypeDesc", Got: v.Type()}
 			}
 			table := s.L.CreateTable(0, 2)
-			s.PushToDictionary(table, "Category", types.String(typ.Embedded.Category))
-			s.PushToDictionary(table, "Name", types.String(typ.Embedded.Name))
+			if err := s.PushToDictionary(table, "Category", types.String(typ.Embedded.Category)); err != nil {
+				return nil, err
+			}
+			if err := s.PushToDictionary(table, "Name", types.String(typ.Embedded.Name)); err != nil {
+				return nil, err
+			}
 			return table, nil
 		},
 		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
@@ -29,10 +33,18 @@ func TypeDesc() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
+			category, err := s.PullFromDictionary(table, "Category", "string")
+			if err != nil {
+				return nil, err
+			}
+			name, err := s.PullFromDictionary(table, "Name", "string")
+			if err != nil {
+				return nil, err
+			}
 			typ := rtypes.TypeDesc{
 				Embedded: rbxdump.Type{
-					Category: string(s.PullFromDictionary(table, "Category", "string").(types.String)),
-					Name:     string(s.PullFromDictionary(table, "Name", "string").(types.String)),
+					Category: string(category.(types.String)),
+					Name:     string(name.(types.String)),
 				},
 			}
 			return typ, nil
