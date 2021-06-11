@@ -19,7 +19,7 @@ func DescActions() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "DescActions", Got: v.Type()}
 			}
 			actionRfl := s.MustReflector("DescAction")
-			table := s.L.CreateTable(len(actions), 0)
+			table := s.CreateTable(len(actions), 0)
 			for i, v := range actions {
 				lv, err := actionRfl.PushTo(s, v)
 				if err != nil {

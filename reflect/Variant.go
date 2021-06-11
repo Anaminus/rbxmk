@@ -72,7 +72,7 @@ func PullVariantFrom(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) 
 		v, err := dictRfl.PullFrom(s, lv)
 		return v, err
 	case *lua.LUserData:
-		name, ok := s.L.GetMetaField(lv, "__type").(lua.LString)
+		name, ok := s.GetMetaField(lv, "__type").(lua.LString)
 		if !ok {
 			return nil, fmt.Errorf("unable to cast %s to Variant", lv.Type().String())
 		}

@@ -26,7 +26,7 @@ func Array() rbxmk.Reflector {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
 			}
 			variantRfl := s.MustReflector("Variant")
-			table := s.L.CreateTable(len(array), 0)
+			table := s.CreateTable(len(array), 0)
 			for i, v := range array {
 				lv, err := variantRfl.PushTo(s, v)
 				if err != nil {

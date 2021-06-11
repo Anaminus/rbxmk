@@ -26,7 +26,7 @@ func Dictionary() rbxmk.Reflector {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
 			}
 			variantRfl := s.MustReflector("Variant")
-			table := s.L.CreateTable(0, len(dict))
+			table := s.CreateTable(0, len(dict))
 			for k, v := range dict {
 				lv, err := variantRfl.PushTo(s, v)
 				if err != nil {

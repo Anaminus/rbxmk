@@ -198,8 +198,8 @@ type Constructor struct {
 // as a table key.
 func PushTypeTo(t string) Pusher {
 	return func(s Context, v types.Value) (lv lua.LValue, err error) {
-		u := s.L.NewUserData(v)
-		s.L.SetMetatable(u, s.L.GetTypeMetatable(t))
+		u := s.NewUserData(v)
+		s.SetMetatable(u, s.GetTypeMetatable(t))
 		return u, nil
 	}
 }
@@ -222,7 +222,7 @@ func PullTypeFrom(t string) Puller {
 		if !ok {
 			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
-		if u.Metatable != s.L.GetTypeMetatable(t) {
+		if u.Metatable != s.GetTypeMetatable(t) {
 			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
 		if v, ok = u.Value().(types.Value); !ok {

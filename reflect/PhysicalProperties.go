@@ -17,8 +17,8 @@ func PhysicalProperties() rbxmk.Reflector {
 			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
 				return lua.LNil, nil
 			}
-			u := s.L.NewUserData(v)
-			s.L.SetMetatable(u, s.L.GetTypeMetatable("PhysicalProperties"))
+			u := s.NewUserData(v)
+			s.SetMetatable(u, s.GetTypeMetatable("PhysicalProperties"))
 			return u, nil
 		},
 		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
@@ -26,7 +26,7 @@ func PhysicalProperties() rbxmk.Reflector {
 			case *lua.LNilType:
 				return types.PhysicalProperties{}, nil
 			case *lua.LUserData:
-				if lv.Metatable != s.L.GetTypeMetatable("PhysicalProperties") {
+				if lv.Metatable != s.GetTypeMetatable("PhysicalProperties") {
 					return nil, rbxmk.TypeError{Want: "PhysicalProperties", Got: lv.Type().String()}
 				}
 				v, ok := lv.Value().(types.Value)

@@ -20,7 +20,7 @@ func BinaryString() rbxmk.Reflector {
 			case lua.LString:
 				return types.BinaryString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.L.GetTypeMetatable("BinaryString") {
+				if v.Metatable == s.GetTypeMetatable("BinaryString") {
 					if v, ok := v.Value().(types.BinaryString); ok {
 						return v, nil
 					}

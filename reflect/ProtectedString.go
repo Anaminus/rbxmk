@@ -20,7 +20,7 @@ func ProtectedString() rbxmk.Reflector {
 			case lua.LString:
 				return types.ProtectedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.L.GetTypeMetatable("ProtectedString") {
+				if v.Metatable == s.GetTypeMetatable("ProtectedString") {
 					if v, ok := v.Value().(types.ProtectedString); ok {
 						return v, nil
 					}

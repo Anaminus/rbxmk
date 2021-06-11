@@ -6,7 +6,7 @@ import lua "github.com/anaminus/gopher-lua"
 type Context struct {
 	*World
 
-	L *lua.LState
+	l *lua.LState
 
 	// cycle is used to mark a table as having been traversed. This is non-nil
 	// only for types that can contain other types.
@@ -15,7 +15,7 @@ type Context struct {
 
 // Context returns a Context derived from the World.
 func (s Context) Context() Context {
-	return Context{World: s.World, L: s.L}
+	return Context{World: s.World, l: s.l}
 }
 
 // CycleGuard begins a guard against reference cycles when reflecting with the
@@ -54,6 +54,34 @@ func (s Context) CycleMark(t interface{}) bool {
 		s.cycle[t] = struct{}{}
 	}
 	return ok
+}
+
+// CreateTable returns a new table according to the context's LState.
+func (s Context) CreateTable(acap, hcap int) *lua.LTable {
+	return s.l.CreateTable(acap, hcap)
+}
+
+// NewUserData returns a new userdata according to the context's LState.
+func (s Context) NewUserData(value interface{}) *lua.LUserData {
+	return s.l.NewUserData(value)
+}
+
+// GetMetaField gets the value of the event field from the metatable of obj.
+// Returns LNil if obj has no metatable, or the metatable has no such field.
+func (s Context) GetMetaField(obj lua.LValue, event string) lua.LValue {
+	return s.l.GetMetaField(obj, event)
+}
+
+// GetTypeMetatable returns the typ metatable registered with the context's
+// LState.
+func (s Context) GetTypeMetatable(typ string) lua.LValue {
+	return s.l.GetTypeMetatable(typ)
+}
+
+// SetMetatable sets the metatable of obj to mt according to the context's
+// LState.
+func (s Context) SetMetatable(obj, mt lua.LValue) {
+	s.l.SetMetatable(obj, mt)
 }
 
 // ReflectorError raises an error indicating that a reflector pushed or pulled

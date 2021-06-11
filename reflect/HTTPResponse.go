@@ -18,7 +18,7 @@ func HTTPResponse() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPResponse", Got: v.Type()}
 			}
-			table := s.L.CreateTable(0, 5)
+			table := s.CreateTable(0, 5)
 			if err := s.PushToDictionary(table, "Success", types.Bool(resp.Success)); err != nil {
 				return nil, err
 			}

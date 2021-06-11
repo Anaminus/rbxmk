@@ -20,9 +20,9 @@ func HTTPHeaders() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPHeaders", Got: v.Type()}
 			}
-			table := s.L.CreateTable(0, len(headers))
+			table := s.CreateTable(0, len(headers))
 			for name, values := range headers {
-				vs := s.L.CreateTable(len(values), 0)
+				vs := s.CreateTable(len(values), 0)
 				for _, value := range values {
 					vs.Append(lua.LString(value))
 				}

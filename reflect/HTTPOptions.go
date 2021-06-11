@@ -18,7 +18,7 @@ func HTTPOptions() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
 			}
-			table := s.L.CreateTable(0, 7)
+			table := s.CreateTable(0, 7)
 			if err := s.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
 				return nil, err
 			}

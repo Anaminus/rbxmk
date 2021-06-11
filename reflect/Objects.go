@@ -19,7 +19,7 @@ func Objects() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "Objects", Got: v.Type()}
 			}
 			instRfl := s.MustReflector("Instance")
-			table := s.L.CreateTable(len(objects), 0)
+			table := s.CreateTable(len(objects), 0)
 			for i, v := range objects {
 				lv, err := instRfl.PushTo(s, v)
 				if err != nil {

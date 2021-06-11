@@ -336,7 +336,7 @@ func Instance() rbxmk.Reflector {
 			case *lua.LNilType:
 				return (*rtypes.Instance)(nil), nil
 			case *lua.LUserData:
-				if lv.Metatable != s.L.GetTypeMetatable("Instance") {
+				if lv.Metatable != s.GetTypeMetatable("Instance") {
 					return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 				}
 				v, ok := lv.Value().(types.Value)

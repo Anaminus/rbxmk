@@ -19,7 +19,7 @@ func TypeDesc() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "TypeDesc", Got: v.Type()}
 			}
-			table := s.L.CreateTable(0, 2)
+			table := s.CreateTable(0, 2)
 			if err := s.PushToDictionary(table, "Category", types.String(typ.Embedded.Category)); err != nil {
 				return nil, err
 			}

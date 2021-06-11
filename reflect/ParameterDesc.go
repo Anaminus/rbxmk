@@ -21,9 +21,9 @@ func ParameterDesc() rbxmk.Reflector {
 			}
 			var table *lua.LTable
 			if param.Optional {
-				table = s.L.CreateTable(0, 3)
+				table = s.CreateTable(0, 3)
 			} else {
-				table = s.L.CreateTable(0, 2)
+				table = s.CreateTable(0, 2)
 			}
 			if err := s.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type}); err != nil {
 				return nil, err

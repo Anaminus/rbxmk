@@ -19,7 +19,7 @@ func Double() rbxmk.Reflector {
 			case lua.LNumber:
 				return types.Double(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.L.GetTypeMetatable("double") {
+				if v.Metatable == s.GetTypeMetatable("double") {
 					if v, ok := v.Value().(types.Double); ok {
 						return v, nil
 					}

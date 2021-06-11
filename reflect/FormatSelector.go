@@ -18,7 +18,7 @@ func FormatSelector() rbxmk.Reflector {
 		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			switch v := v.(type) {
 			case types.Stringlike:
-				table := s.L.CreateTable(0, 1)
+				table := s.CreateTable(0, 1)
 				table.RawSetString("Format", lua.LString(v.Stringlike()))
 				return table, nil
 			case rtypes.FormatSelector:
@@ -33,11 +33,11 @@ func FormatSelector() rbxmk.Reflector {
 					return nil, fmt.Errorf("unknown format")
 				}
 				if len(format.Options) == 0 {
-					table := s.L.CreateTable(0, 1)
+					table := s.CreateTable(0, 1)
 					table.RawSetString("Format", lua.LString(format.Name))
 					return table, nil
 				}
-				table := s.L.CreateTable(0, len(format.Options))
+				table := s.CreateTable(0, len(format.Options))
 				for field, typ := range format.Options {
 					rfl := s.Reflector(typ)
 					if rfl.Name == "" {

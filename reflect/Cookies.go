@@ -19,7 +19,7 @@ func Cookies() rbxmk.Reflector {
 				return nil, rbxmk.TypeError{Want: "Cookies", Got: v.Type()}
 			}
 			cookieRfl := s.MustReflector("Cookie")
-			table := s.L.CreateTable(len(cookies), 0)
+			table := s.CreateTable(len(cookies), 0)
 			for i, v := range cookies {
 				lv, err := cookieRfl.PushTo(s, v)
 				if err != nil {

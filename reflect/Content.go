@@ -20,7 +20,7 @@ func Content() rbxmk.Reflector {
 			case lua.LString:
 				return types.Content(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.L.GetTypeMetatable("Content") {
+				if v.Metatable == s.GetTypeMetatable("Content") {
 					if v, ok := v.Value().(types.Content); ok {
 						return v, nil
 					}

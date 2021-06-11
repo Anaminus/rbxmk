@@ -21,7 +21,7 @@ func DescFields() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "DescFields", Got: v.Type()}
 			}
-			table := s.L.CreateTable(0, len(fields))
+			table := s.CreateTable(0, len(fields))
 			for k, v := range fields {
 				if lv := pushDescField(s, v); lv != nil {
 					table.RawSetString(k, lv)
@@ -76,13 +76,13 @@ func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
 	case string:
 		return lua.LString(v)
 	case rbxdump.Tags:
-		a := s.L.CreateTable(len(v), 0)
+		a := s.CreateTable(len(v), 0)
 		for _, v := range v {
 			a.Append(lua.LString(v))
 		}
 		return a
 	case []string:
-		a := s.L.CreateTable(len(v), 0)
+		a := s.CreateTable(len(v), 0)
 		for _, v := range v {
 			a.Append(lua.LString(v))
 		}
@@ -91,7 +91,7 @@ func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
 		lv, _ := s.World.Push(rtypes.TypeDesc{Embedded: v})
 		return lv
 	case []rbxdump.Parameter:
-		a := s.L.CreateTable(len(v), 0)
+		a := s.CreateTable(len(v), 0)
 		for _, v := range v {
 			lv, _ := s.World.Push(rtypes.ParameterDesc{Parameter: v})
 			a.Append(lv)

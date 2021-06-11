@@ -23,7 +23,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
 			}
-			table := s.L.CreateTable(0, 4)
+			table := s.CreateTable(0, 4)
 			if err := s.PushToDictionary(table, "AssetID", types.Int64(options.AssetID)); err != nil {
 				return nil, err
 			}
