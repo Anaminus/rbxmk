@@ -39,6 +39,9 @@ func (s State) Count() int {
 // an unexpected type. Under normal circumstances, this error should be
 // unreachable.
 func (s State) ReflectorError(n int) int {
+	if n <= 0 {
+		return s.RaiseError("unreachable error: reflector mismatch")
+	}
 	return s.ArgError(n, "unreachable error: reflector mismatch")
 }
 

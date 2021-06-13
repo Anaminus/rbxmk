@@ -67,7 +67,7 @@ func ParameterDesc() rbxmk.Reflector {
 				param.Optional = true
 				param.Default = string(def)
 			default:
-				s.ReflectorError(0)
+				s.ReflectorError()
 			}
 			return param, nil
 		},

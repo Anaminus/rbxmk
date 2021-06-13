@@ -84,9 +84,8 @@ func (s Context) SetMetatable(obj, mt lua.LValue) {
 	s.l.SetMetatable(obj, mt)
 }
 
-// ReflectorError raises an error indicating that a reflector pushed or pulled
-// an unexpected type. Under normal circumstances, this error should be
-// unreachable.
-func (s Context) ReflectorError(n int) int {
+// ReflectorError panics, indicating that a reflector pushed or pulled an
+// unexpected type. Under normal circumstances, this should be unreachable.
+func (s Context) ReflectorError() {
 	panic("unreachable error: reflector mismatch")
 }
