@@ -241,7 +241,7 @@ func TestScripts(t *testing.T) {
 	program.Register(snek.Def{
 		Name: "run",
 		New: func() snek.Command {
-			return &RunCommand{Init: func(s rbxmk.State) { initMain(s, t) }}
+			return &RunCommand{Init: func(c *RunCommand, s rbxmk.State) { initMain(s, t) }}
 		},
 	})
 

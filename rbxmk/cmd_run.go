@@ -45,7 +45,7 @@ func (s *repeatedString) Set(v string) error {
 type RunCommand struct {
 	WorldFlags
 	DescFlags
-	Init func(rbxmk.State)
+	Init func(c *RunCommand, s rbxmk.State)
 }
 
 func (c *RunCommand) SetFlags(flags snek.FlagSet) {
@@ -79,7 +79,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	}
 	injectSSLKeyLogFile(world, opt.Stderr)
 	if c.Init != nil {
-		c.Init(world.State())
+		c.Init(c, world.State())
 	}
 
 	// Initialize global descriptor.
