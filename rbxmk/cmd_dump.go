@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
@@ -24,7 +25,14 @@ func init() {
 			// Populate description with dump formats.
 			var buf strings.Builder
 			dumpfmts.WriteTo(&buf)
-			def.Description = fmt.Sprintf(def.Description, buf.String())
+			def.Description = os.Expand(def.Description, func(v string) string {
+				switch strings.ToLower(v) {
+				case "formats":
+					return buf.String()
+				default:
+					return ""
+				}
+			})
 			return def
 		},
 	})
