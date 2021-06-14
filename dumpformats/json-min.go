@@ -9,8 +9,7 @@ import (
 func init() { register(JSONMin) }
 
 var JSONMin = Format{
-	Name:        "json-min",
-	Description: `Minified JSON format.`,
+	Name: "json-min",
 	Func: func(w io.Writer, root dump.Root) error {
 		return dumpJSON(w, root, "")
 	},

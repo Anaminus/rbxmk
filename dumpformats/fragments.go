@@ -12,8 +12,7 @@ import (
 func init() { register(Fragments) }
 
 var Fragments = Format{
-	Name:        "fragments",
-	Description: `List of document fragment paths.`,
+	Name: "fragments",
 	Func: func(w io.Writer, root dump.Root) error {
 		buf := bufio.NewWriter(w)
 		p := "libraries"

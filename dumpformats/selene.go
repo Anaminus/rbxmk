@@ -12,8 +12,7 @@ import (
 func init() { register(Selene) }
 
 var Selene = Format{
-	Name:        "selene",
-	Description: `Selene TOML format.`,
+	Name: "selene",
 	Func: func(w io.Writer, root dump.Root) error {
 		buf := bufio.NewWriter(w)
 		buf.WriteString("[selene]\n")

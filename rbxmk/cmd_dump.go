@@ -16,6 +16,9 @@ import (
 
 func init() {
 	dumpfmts := dumpformats.All()
+	for i, format := range dumpfmts {
+		dumpfmts[i].Description = Doc("DumpFormats/" + format.Name + ":Summary")
+	}
 	Program.Register(snek.Def{
 		Name: "dump",
 		New: func() snek.Command {

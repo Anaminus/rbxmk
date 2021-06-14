@@ -11,8 +11,7 @@ import (
 func init() { register(JSON) }
 
 var JSON = Format{
-	Name:        "json",
-	Description: `General JSON format.`,
+	Name: "json",
 	Func: func(w io.Writer, root dump.Root) error {
 		return dumpJSON(w, root, "\t")
 	},
