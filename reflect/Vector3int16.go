@@ -180,14 +180,14 @@ func Vector3int16() rbxmk.Reflector {
 						{
 							Operand:     dt.Prim("Vector3int16"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "Types/Vector3int16:Operators/Mul/Summary",
-							Description: "Types/Vector3int16:Operators/Mul/Description",
+							Summary:     "Types/Vector3int16:Operators/Mul/Vector3int16/Summary",
+							Description: "Types/Vector3int16:Operators/Mul/Vector3int16/Description",
 						},
 						{
 							Operand:     dt.Prim("number"),
 							Result:      dt.Prim("Vector3int16"),
-							Summary:     "Types/Vector3int16:Operators/Mul/Summary",
-							Description: "Types/Vector3int16:Operators/Mul/Description",
+							Summary:     "Types/Vector3int16:Operators/Mul/Number/Summary",
+							Description: "Types/Vector3int16:Operators/Mul/Number/Description",
 						},
 					},
 					Div: []dump.Binop{
