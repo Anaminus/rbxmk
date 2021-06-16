@@ -322,28 +322,16 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Description: "Libraries/base:Fields/select/Count/Description",
 					},
 				},
-				"tonumber": dump.MultiFunction{
-					{
-						Parameters: dump.Parameters{
-							{Name: "x", Type: dt.Optional{T: dt.Prim("any")}},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("number")},
-						},
-						Summary:     "Libraries/base:Fields/tonumber/Base 10/Summary",
-						Description: "Libraries/base:Fields/tonumber/Base 10/Description",
+				"tonumber": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "x", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "base", Type: dt.Optional{T: dt.Prim("int")}, Default: `10`},
 					},
-					{
-						Parameters: dump.Parameters{
-							{Name: "x", Type: dt.Prim("string")},
-							{Name: "base", Type: dt.Prim("int")},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim("number")},
-						},
-						Summary:     "Libraries/base:Fields/tonumber/Any base/Summary",
-						Description: "Libraries/base:Fields/tonumber/Any base/Description",
+					Returns: dump.Parameters{
+						{Type: dt.Optional{T: dt.Prim("number")}},
 					},
+					Summary:     "Libraries/base:Fields/tonumber/Summary",
+					Description: "Libraries/base:Fields/tonumber/Description",
 				},
 				"tostring": dump.Function{
 					Parameters: dump.Parameters{
