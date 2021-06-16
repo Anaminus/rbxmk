@@ -1008,7 +1008,7 @@ exist.
 ### RootDesc.EnumItems
 [RootDesc.EnumItems]: #user-content-rootdescenumitems
 
-The **Classes** method returns a list of names of all the items of the enum
+The **EnumItems** method returns a list of names of all the items of the enum
 corresponding to the name *enum*. Returns nil if the enum does not exist.
 
 ### RootDesc.EnumItemTag
