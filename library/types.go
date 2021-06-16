@@ -46,27 +46,20 @@ func dumpTypes(s rbxmk.State) dump.Library {
 		},
 	}
 	for _, t := range exprims {
-		lib.Struct.Fields[t.Name] = dump.Property{
-			ValueType:   dt.Prim("exprim"),
-			ReadOnly:    true,
+		typ := dt.Prim(t.Name)
+		if t.Dump != nil {
+			if d := t.Dump(); d.Underlying != nil {
+				if prim, ok := d.Underlying.(dt.Prim); ok {
+					typ = prim
+				}
+			}
+		}
+		lib.Struct.Fields[t.Name] = dump.Function{
+			Parameters:  []dt.Parameter{{Name: "value", Type: typ}},
+			Returns:     []dt.Parameter{{Type: dt.Prim(t.Name)}},
 			Summary:     "Libraries/types:Fields/" + t.Name + "/Summary",
 			Description: "Libraries/types:Fields/" + t.Name + "/Description",
 		}
 	}
-	lib.Types = dump.TypeDefs{
-		"exprim": {
-			Properties: dump.Properties{
-				"Value": dump.Property{
-					ValueType:   dt.Prim("any"),
-					ReadOnly:    true,
-					Summary:     "Libraries/types/Types/exprim:Properties/Value/Summary",
-					Description: "Libraries/types/Types/exprim:Properties/Value/Description",
-				},
-			},
-			Summary:     "Libraries/types/Types/exprim:Summary",
-			Description: "Libraries/types/Types/exprim:Description",
-		},
-	}
-
 	return lib
 }
