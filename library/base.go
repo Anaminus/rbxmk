@@ -225,6 +225,10 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
 						{Name: "message", Type: dt.Optional{T: dt.Prim("string")}, Default: `"assertion failed!"`},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
 					CanError:    true,
 					Summary:     "Libraries/base:Fields/assert/Summary",
