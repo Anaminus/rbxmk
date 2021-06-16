@@ -226,6 +226,11 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
+				"Enum": dump.Property{
+					ValueType:   dt.Prim("Enums"),
+					Summary:     "Libraries/rbxmk:Fields/Enum/Summary",
+					Description: "Libraries/rbxmk:Fields/Enum/Description",
+				},
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "format", Type: dt.Prim("string")},
