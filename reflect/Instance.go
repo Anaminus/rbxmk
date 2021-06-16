@@ -492,8 +492,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("string"),
-						Summary:     "Types/Instance:Symbols/Parent/Summary",
-						Description: "Types/Instance:Symbols/Parent/Description",
+						Summary:     "Types/Instance:Symbols/Reference/Summary",
+						Description: "Types/Instance:Symbols/Reference/Description",
 					}
 				},
 			},
@@ -509,8 +509,8 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType:   dt.Prim("bool"),
-						Summary:     "Types/Instance:Symbols/Parent/Summary",
-						Description: "Types/Instance:Symbols/Parent/Description",
+						Summary:     "Types/Instance:Symbols/IsService/Summary",
+						Description: "Types/Instance:Symbols/IsService/Description",
 					}
 				},
 			},
