@@ -143,6 +143,8 @@ type TypeDef struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the type.
 	Description string `json:",omitempty"`
+	// Requires is a list of names of types that the type depends on.
+	Requires []string
 }
 
 // Properties maps a name to a Property.

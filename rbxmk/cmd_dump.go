@@ -45,6 +45,17 @@ type DumpCommand struct {
 	Formats dumpformats.Formats
 }
 
+func dumpTypes(dst dump.TypeDefs, src []func() rbxmk.Reflector) {
+	for _, t := range src {
+		r := t()
+		if _, ok := dst[r.Name]; ok {
+			continue
+		}
+		dst[r.Name] = r.DumpAll()
+		dumpTypes(dst, r.Types)
+	}
+}
+
 func (c *DumpCommand) Run(opt snek.Options) error {
 	// Parse flags.
 	if err := opt.ParseFlags(); err != nil {
@@ -67,7 +78,7 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 		SkipOpenLibs: true,
 	}))
 	state := world.State()
-	var root dump.Root
+	root := dump.Root{Types: dump.TypeDefs{}}
 	for _, f := range formats.All() {
 		world.RegisterFormat(f())
 	}
@@ -88,13 +99,7 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 			lib.ImportedAs = l.ImportedAs
 		}
 		if l.Types != nil {
-			for _, t := range l.Types {
-				if root.Types == nil {
-					root.Types = dump.TypeDefs{}
-				}
-				r := t()
-				root.Types[r.Name] = r.DumpAll()
-			}
+			dumpTypes(root.Types, l.Types)
 		}
 		root.Libraries = append(root.Libraries, lib)
 	}

@@ -149,6 +149,9 @@ func (r Reflector) DumpAll() dump.TypeDef {
 			def.Constructors[name] = funcs
 		}
 	}
+	for _, r := range r.Types {
+		def.Requires = append(def.Requires, r().Name)
+	}
 	return def
 }
 
