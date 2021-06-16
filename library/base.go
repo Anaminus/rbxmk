@@ -368,12 +368,14 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"xpcall": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "f", Type: dt.Prim("function")},
-						{Name: "msgh", Type: dt.Prim("function")},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "msgh", Type: dt.Function{
+							Parameters: []dt.Parameter{{Name: "err", Type: dt.Prim("any")}},
+							Returns:    []dt.Parameter{{Type: dt.Prim("any")}},
+						}},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim("boolean")},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "err", Type: dt.Optional{T: dt.Prim("any")}},
 					},
 					Summary:     "Libraries/base:Fields/xpcall/Summary",
 					Description: "Libraries/base:Fields/xpcall/Description",
