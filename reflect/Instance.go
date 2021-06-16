@@ -1183,7 +1183,7 @@ func Instance() rbxmk.Reflector {
 				Operators: &dump.Operators{
 					Index: &dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "member", Type: dt.Prim("string")},
+							{Name: "property", Type: dt.Prim("string")},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("any")}},
@@ -1194,7 +1194,7 @@ func Instance() rbxmk.Reflector {
 					},
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "member", Type: dt.Prim("string")},
+							{Name: "property", Type: dt.Prim("string")},
 							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
 						},
 						CanError:    true,
