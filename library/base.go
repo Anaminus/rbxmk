@@ -390,12 +390,13 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"setmetatable": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Prim("any")},
+						{Name: "v", Type: dt.Prim("table")},
 						{Name: "metatable", Type: dt.Optional{T: dt.Prim("table")}},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim("table")},
 					},
+					CanError:    true,
 					Summary:     "Libraries/base:Fields/setmetatable/Summary",
 					Description: "Libraries/base:Fields/setmetatable/Description",
 				},
