@@ -811,36 +811,21 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Summary:     "Libraries/base/Fields/string:Fields/char/Summary",
 							Description: "Libraries/base/Fields/string:Fields/char/Description",
 						},
-						"find": dump.MultiFunction{
-							{
-								Parameters: dump.Parameters{
-									{Name: "s", Type: dt.Prim("string")},
-									{Name: "pattern", Type: dt.Prim("string")},
-									{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
-								},
-								Returns: dump.Parameters{
-									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
-									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
-								},
-								CanError:    true,
-								Summary:     "Libraries/base/Fields/string:Fields/find/1/Summary",
-								Description: "Libraries/base/Fields/string:Fields/find/1/Description",
+						"find": dump.Function{
+							Parameters: dump.Parameters{
+								{Name: "s", Type: dt.Prim("string")},
+								{Name: "pattern", Type: dt.Prim("string")},
+								{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
+								{Name: "plain", Type: dt.Optional{T: dt.Prim("bool")}, Default: `false`},
 							},
-							{
-								Parameters: dump.Parameters{
-									{Name: "s", Type: dt.Prim("string")},
-									{Name: "pattern", Type: dt.Prim("string")},
-									{Name: "init", Type: dt.Prim("int")},
-									{Name: "plain", Type: dt.Optional{T: dt.Prim("boolean")}, Default: `false`},
-								},
-								Returns: dump.Parameters{
-									{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
-									{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
-								},
-								CanError:    true,
-								Summary:     "Libraries/base/Fields/string:Fields/find/2/Summary",
-								Description: "Libraries/base/Fields/string:Fields/find/2/Description",
+							Returns: dump.Parameters{
+								{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},
+								{Name: "end", Type: dt.Optional{T: dt.Prim("number")}},
+								{Name: "...", Type: dt.Optional{T: dt.Prim("string")}},
 							},
+							CanError:    true,
+							Summary:     "Libraries/base/Fields/string:Fields/find/Summary",
+							Description: "Libraries/base/Fields/string:Fields/find/Description",
 						},
 						"format": dump.Function{
 							Parameters: dump.Parameters{
