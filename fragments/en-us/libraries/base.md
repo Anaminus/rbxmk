@@ -18,7 +18,7 @@ The global environment.
 The **\_G** field holds the global environment (`_G._G == _G`). Setting \_G to a
 different value does not affect the content of the environment.
 
-## \_Version
+## \_VERSION
 ### Summary
 The current version of Lua.
 
