@@ -987,16 +987,16 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "index", Type: dt.Prim("int")},
 									{Name: "value", Type: dt.Prim("any")},
 								},
-								Summary:     "Libraries/base/Fields/table:Fields/insert/1/Summary",
-								Description: "Libraries/base/Fields/table:Fields/insert/1/Description",
+								Summary:     "Libraries/base/Fields/table:Fields/insert/Insert/Summary",
+								Description: "Libraries/base/Fields/table:Fields/insert/Insert/Description",
 							},
 							{
 								Parameters: dump.Parameters{
 									{Name: "t", Type: dt.Prim("table")},
 									{Name: "value", Type: dt.Prim("any")},
 								},
-								Summary:     "Libraries/base/Fields/table:Fields/insert/2/Summary",
-								Description: "Libraries/base/Fields/table:Fields/insert/2/Description",
+								Summary:     "Libraries/base/Fields/table:Fields/insert/Append/Summary",
+								Description: "Libraries/base/Fields/table:Fields/insert/Append/Description",
 							},
 						},
 						"maxn": dump.Function{
