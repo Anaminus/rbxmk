@@ -807,6 +807,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Returns: dump.Parameters{
 								{Type: dt.Prim("string")},
 							},
+							CanError:    true,
 							Summary:     "Libraries/base/Fields/string:Fields/char/Summary",
 							Description: "Libraries/base/Fields/string:Fields/char/Description",
 						},
