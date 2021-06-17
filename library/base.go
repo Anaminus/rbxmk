@@ -726,7 +726,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									{Name: "time", Type: dt.Optional{T: dt.Prim("number")}},
 								},
 								Returns: dump.Parameters{
-									{Type: dt.Optional{T: dt.Struct{
+									{Type: dt.Struct{
 										"year":  dt.Prim("int"),
 										"month": dt.Prim("int"),
 										"day":   dt.Prim("int"),
@@ -736,7 +736,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 										"wday":  dt.Optional{T: dt.Prim("int")},
 										"yday":  dt.Optional{T: dt.Prim("int")},
 										"isdst": dt.Optional{T: dt.Prim("boolean")},
-									}}},
+									}},
 								},
 								Summary:     "Libraries/base/Fields/os:Fields/date/Tabular/Summary",
 								Description: "Libraries/base/Fields/os:Fields/date/Tabular/Description",
