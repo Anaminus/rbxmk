@@ -73,7 +73,7 @@ func Region3() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "region", Type: dt.Prim("float")},
+							{Name: "resolution", Type: dt.Prim("float")},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Region3")},
