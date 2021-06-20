@@ -97,7 +97,7 @@ func NumberSequence() rbxmk.Reflector {
 								if err != nil {
 									return s.RaiseError("%s", err)
 								}
-								v[i] = k.(types.NumberSequenceKeypoint)
+								v[i-1] = k.(types.NumberSequenceKeypoint)
 							}
 							const epsilon = 1e-4
 							if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {

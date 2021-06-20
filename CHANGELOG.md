@@ -53,6 +53,7 @@ branch is the latest unreleased version.
 - Fix incorrect behavior when select is called with index 0.
 - Fix Envelope field being printed as Time field when ColorSequenceKeypoint or
   NumberSequenceKeypoint is converted to a string.
+- Fix bounds error when calling ColorSequence.new or NumberSequence.new.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
