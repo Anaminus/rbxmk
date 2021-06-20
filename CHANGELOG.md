@@ -51,6 +51,8 @@ branch is the latest unreleased version.
 - Fix Instance.ClassName being settable to "DataModel".
 - Fix typeof returning "userdata" for Symbol values.
 - Fix incorrect behavior when select is called with index 0.
+- Fix Envelope field being printed as Time field when ColorSequenceKeypoint or
+  NumberSequenceKeypoint is converted to a string.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

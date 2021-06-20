@@ -24,8 +24,8 @@ github.com/robloxapi/rbxdump v0.4.1 h1:gGz5h/v6DlHn6F+368oqUzfBpSvPt87nTAjMEfHwM
 github.com/robloxapi/rbxdump v0.4.1/go.mod h1:8imPIe5ZmLAhvmNKLu2E2S0QStvvXtt/0m5pxUGdGM0=
 github.com/robloxapi/rbxfile v0.3.2 h1:GHpAMBHKNcRBvjnTnjBdIkrGtTBvZGJJFjT6jLVgI2A=
 github.com/robloxapi/rbxfile v0.3.2/go.mod h1:5e5xjosJt56bvRGW8v9bz9/kmPYuHb0P6ggsdA50YD8=
-github.com/robloxapi/types v0.2.0 h1:9PWtKXNkg7tGhSQ1sEymO2x/f11XYkXyKvdOo01MYo4=
-github.com/robloxapi/types v0.2.0/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
+github.com/robloxapi/types v0.2.1 h1:sFO/G8kSRLi8wklOTWxYBLjuneVOVpCeBJnfU2g0JD0=
+github.com/robloxapi/types v0.2.1/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
 github.com/yuin/goldmark v1.3.3 h1:37BdQwPx8VOSic8eDSWee6QL9mRpZRm9VJp/QugNrW0=
 github.com/yuin/goldmark v1.3.3/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a h1:kr2P4QFmQr29mSLA43kwrOcgcReGTfbE9N577tCTuBc=
