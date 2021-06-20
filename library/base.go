@@ -307,6 +307,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 						},
+						CanError:    true,
 						Summary:     "Libraries/base:Fields/select/Index/Summary",
 						Description: "Libraries/base:Fields/select/Index/Description",
 					},
@@ -318,6 +319,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("int")},
 						},
+						CanError:    true,
 						Summary:     "Libraries/base:Fields/select/Count/Summary",
 						Description: "Libraries/base:Fields/select/Count/Description",
 					},
@@ -372,10 +374,11 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Parameters: []dt.Parameter{{Name: "err", Type: dt.Prim("any")}},
 							Returns:    []dt.Parameter{{Type: dt.Prim("any")}},
 						}},
+						{Name: "...", Type: dt.Prim("any")},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim("boolean")},
-						{Name: "err", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
 					},
 					Summary:     "Libraries/base:Fields/xpcall/Summary",
 					Description: "Libraries/base:Fields/xpcall/Description",

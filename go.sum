@@ -1,8 +1,8 @@
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/anaminus/drill v0.3.1 h1:+2HUMvczHaMEgVSzlO7hNSmC9wP959UyGY0HEENOe+s=
 github.com/anaminus/drill v0.3.1/go.mod h1:jxMylfFNPudYVoo9Ulqca5oRndWVVotKcGiRefHcFxo=
-github.com/anaminus/gopher-lua v0.4.0 h1:YPSw9DuYr/tr0Pk71w9S5Minmtjoel8lK148srnux80=
-github.com/anaminus/gopher-lua v0.4.0/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
+github.com/anaminus/gopher-lua v0.4.1 h1:jGNZDm/sORN5FSovtznZ3u+qzV5fhvNo9Zh91+1G+7c=
+github.com/anaminus/gopher-lua v0.4.1/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
 github.com/anaminus/parse v0.2.0 h1:a8IEzp/INmUHVfZp4zaeggLvgqIjHrBFrBhkM/qdKUM=
 github.com/anaminus/parse v0.2.0/go.mod h1:5EP2T2CqY4EDBxl2S/qhFSSb2VjW+iIqG+8Scy3mZN8=
 github.com/anaminus/snek v0.3.0 h1:e4BkEI7C/Mv4a1679RpK8hlZ90knsVeL7+FkdNDWLjo=

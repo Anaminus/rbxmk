@@ -35,6 +35,7 @@ branch is the latest unreleased version.
 - Implement members for the DescAction type.
 - Add DescAction.new constructor.
 - Add Enum field to rbxmk library to contain enums defined by rbxmk.
+- xpcall can receive extra arguments that are passed to the called function.
 
 **Fixes:**
 - Fix missing properties from sym.Properties when instance has a descriptor.
@@ -49,6 +50,7 @@ branch is the latest unreleased version.
 - Fix Instance.new handling DataModel incorrectly.
 - Fix Instance.ClassName being settable to "DataModel".
 - Fix typeof returning "userdata" for Symbol values.
+- Fix incorrect behavior when select is called with index 0.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

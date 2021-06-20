@@ -135,6 +135,9 @@ select(3, "A", "B", "C") --> "C"
 select(4, "A", "B", "C") -->
 ```
 
+If *index* is less than 0, then indexing starts from the end of the arguments.
+An error is thrown if *index* is 0.
+
 ### Count
 #### Summary
 Returns the number of arguments.
@@ -204,4 +207,5 @@ Calls a function in protected mode with an error handler.
 The **xpcall** function is like pcall, except that it allows a custom error
 handler to be specified. *msgh* is the error handler, and is called within the
 erroring stack frame. *msgh* receives the current error message, and returns the
-new error message to be returned by xpcall.
+new error message to be returned by xpcall. The remaining arguments to xpcall
+are passed to *f*.
