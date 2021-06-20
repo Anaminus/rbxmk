@@ -75,6 +75,9 @@ func NumberRange() rbxmk.Reflector {
 					case 2:
 						v.Min = float32(s.Pull(1, "float").(types.Float))
 						v.Max = float32(s.Pull(2, "float").(types.Float))
+						if v.Min > v.Max {
+							return s.RaiseError("invalid range")
+						}
 					default:
 						return s.RaiseError("expected 1 or 2 arguments")
 					}

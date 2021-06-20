@@ -55,6 +55,7 @@ branch is the latest unreleased version.
   NumberSequenceKeypoint is converted to a string.
 - Fix bounds error when calling ColorSequence.new or NumberSequence.new.
 - Fix ColorSequence.new and NumberSequence.new not verifying order of keypoints.
+- Fix NumberRange.new not verifying interval.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
