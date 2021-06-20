@@ -99,6 +99,11 @@ func ColorSequence() rbxmk.Reflector {
 								}
 								v[i-1] = k.(types.ColorSequenceKeypoint)
 							}
+							for i := 1; i < len(v); i++ {
+								if v[i].Time < v[i-1].Time {
+									return s.RaiseError("all ColorSequenceKeypoints must be ordered by time")
+								}
+							}
 							const epsilon = 1e-4
 							if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
 								return s.RaiseError("ColorSequence time must end at 1.0")

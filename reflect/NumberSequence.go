@@ -99,6 +99,11 @@ func NumberSequence() rbxmk.Reflector {
 								}
 								v[i-1] = k.(types.NumberSequenceKeypoint)
 							}
+							for i := 1; i < len(v); i++ {
+								if v[i].Time < v[i-1].Time {
+									return s.RaiseError("all NumberSequenceKeypoints must be ordered by time")
+								}
+							}
 							const epsilon = 1e-4
 							if t := v[len(v)-1].Time; t < 1-epsilon || t > 1+epsilon {
 								return s.RaiseError("NumberSequence time must end at 1.0")
