@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -95,6 +96,12 @@ func JSON() rbxmk.Format {
 			}
 			j.SetEscapeHTML(false)
 			return j.Encode(encodeJSON(v))
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/json:Summary",
+				Description: "Formats/json:Description",
+			}
 		},
 	}
 }

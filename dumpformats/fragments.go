@@ -15,15 +15,15 @@ var Fragments = Format{
 	Name: "fragments",
 	Func: func(w io.Writer, root dump.Root) error {
 		buf := bufio.NewWriter(w)
-		p := "libraries"
 		for _, library := range root.Libraries {
-			p := path.Join(p, library.Name)
+			p := path.Join("libraries", library.Name)
 			fragWrite(buf, path.Join(p, "Summary"), library.Struct.Summary)
 			fragWrite(buf, path.Join(p, "Description"), library.Struct.Description)
 			fragWriteFields(buf, path.Join(p, "Fields"), library.Struct.Fields)
 			fragWriteTypes(buf, path.Join(p, "Types"), library.Types)
 		}
-		fragWriteTypes(buf, p, root.Types)
+		fragWriteTypes(buf, "types", root.Types)
+		fragWriteFormats(buf, "formats", root.Formats)
 		for _, frag := range root.Fragments {
 			fragWrite(buf, "fragments", frag)
 		}
@@ -43,6 +43,14 @@ func fragWrite(buf *bufio.Writer, p string, path string) {
 		buf.WriteString(path)
 	}
 	buf.WriteString("\n")
+}
+
+func fragWriteFormats(buf *bufio.Writer, p string, formats dump.Formats) {
+	sortFormats(formats, func(formatName string, format dump.Format) {
+		p := path.Join(p, formatName)
+		fragWrite(buf, path.Join(p, "Summary"), format.Summary)
+		fragWrite(buf, path.Join(p, "Description"), format.Description)
+	})
 }
 
 func fragWriteFields(buf *bufio.Writer, p string, fields dump.Fields) {

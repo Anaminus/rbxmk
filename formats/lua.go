@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -41,6 +42,12 @@ func ModuleScriptLua() rbxmk.Format {
 			return decodeScript(r, "ModuleScript")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/modulescript.lua:Summary",
+				Description: "Formats/modulescript.lua:Description",
+			}
+		},
 	}
 }
 
@@ -54,6 +61,12 @@ func ScriptLua() rbxmk.Format {
 			return decodeScript(r, "Script")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/script.lua:Summary",
+				Description: "Formats/script.lua:Description",
+			}
+		},
 	}
 }
 
@@ -67,6 +80,12 @@ func LocalScriptLua() rbxmk.Format {
 			return decodeScript(r, "LocalScript")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/localscript.lua:Summary",
+				Description: "Formats/localscript.lua:Description",
+			}
+		},
 	}
 }
 
@@ -80,6 +99,12 @@ func Lua() rbxmk.Format {
 			return decodeScript(r, "ModuleScript")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/lua:Summary",
+				Description: "Formats/lua:Description",
+			}
+		},
 	}
 }
 
@@ -93,6 +118,12 @@ func ServerLua() rbxmk.Format {
 			return decodeScript(r, "Script")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/server.lua:Summary",
+				Description: "Formats/server.lua:Description",
+			}
+		},
 	}
 }
 
@@ -106,5 +137,11 @@ func ClientLua() rbxmk.Format {
 			return decodeScript(r, "LocalScript")
 		},
 		Encode: encodeScript,
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/client.lua:Summary",
+				Description: "Formats/client.lua:Description",
+			}
+		},
 	}
 }

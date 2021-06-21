@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	rbxdumpjson "github.com/robloxapi/rbxdump/json"
 	"github.com/robloxapi/types"
@@ -32,6 +33,12 @@ func Desc() rbxmk.Format {
 			}
 			return nil
 		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/desc.json:Summary",
+				Description: "Formats/desc.json:Description",
+			}
+		},
 	}
 }
 
@@ -58,6 +65,12 @@ func DescPatch() rbxmk.Format {
 			j.SetIndent("", "\t")
 			j.SetEscapeHTML(false)
 			return j.Encode(actions)
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/desc-patch.json:Summary",
+				Description: "Formats/desc-patch.json:Description",
+			}
 		},
 	}
 }

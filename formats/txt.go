@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -30,6 +31,12 @@ func Text() rbxmk.Format {
 			}
 			_, err := w.Write([]byte(b))
 			return err
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/txt:Summary",
+				Description: "Formats/txt:Description",
+			}
 		},
 	}
 }

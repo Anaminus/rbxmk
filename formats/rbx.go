@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxfile"
@@ -50,6 +51,12 @@ func RBXL() rbxmk.Format {
 			}
 			return e.rbx(v)
 		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/rbxl:Summary",
+				Description: "Formats/rbxl:Description",
+			}
+		},
 	}
 }
 
@@ -89,6 +96,12 @@ func RBXM() rbxmk.Format {
 				mode:   mode,
 			}
 			return e.rbx(v)
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/rbxm:Summary",
+				Description: "Formats/rbxm:Description",
+			}
 		},
 	}
 }
@@ -130,6 +143,12 @@ func RBXLX() rbxmk.Format {
 			}
 			return e.rbx(v)
 		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/rbxlx:Summary",
+				Description: "Formats/rbxlx:Description",
+			}
+		},
 	}
 }
 
@@ -169,6 +188,12 @@ func RBXMX() rbxmk.Format {
 				mode:   mode,
 			}
 			return e.rbx(v)
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/rbxmx:Summary",
+				Description: "Formats/rbxmx:Description",
+			}
 		},
 	}
 }

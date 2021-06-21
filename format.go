@@ -3,6 +3,7 @@ package rbxmk
 import (
 	"io"
 
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/robloxapi/types"
 )
 
@@ -37,6 +38,9 @@ type Format struct {
 	// Decode receives a sequence of bytes read from r, and decodes it into a
 	// value of a single type.
 	Decode func(g Global, opt FormatOptions, r io.Reader) (types.Value, error)
+
+	// Dump returns a description of the format.
+	Dump func() dump.Format
 }
 
 // FormatOptions contains options to be passed to a Format.

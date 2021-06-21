@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -293,6 +294,12 @@ func CSV() rbxmk.Format {
 			}
 			return nil
 		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/csv:Summary",
+				Description: "Formats/csv:Description",
+			}
+		},
 	}
 }
 
@@ -320,6 +327,12 @@ func L10nCSV() rbxmk.Format {
 				return fmt.Errorf("encode CSV: %w", err)
 			}
 			return nil
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/l10n.csv:Summary",
+				Description: "Formats/l10n.csv:Description",
+			}
 		},
 	}
 }

@@ -78,9 +78,14 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 		SkipOpenLibs: true,
 	}))
 	state := world.State()
-	root := dump.Root{Types: dump.TypeDefs{}}
+	root := dump.Root{
+		Formats: dump.Formats{},
+		Types:   dump.TypeDefs{},
+	}
 	for _, f := range formats.All() {
-		world.RegisterFormat(f())
+		format := f()
+		world.RegisterFormat(format)
+		root.Formats[format.Name] = format.Dump()
 	}
 	libraries := library.All()
 	libraries = append(libraries, ProgramLibrary)

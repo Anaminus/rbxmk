@@ -97,6 +97,20 @@ func isName(s string) bool {
 	return true
 }
 
+func sortFormats(m dump.Formats, cb func(k string, v dump.Format)) {
+	if len(m) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		cb(key, m[key])
+	}
+}
+
 func sortTypeDefs(m dump.TypeDefs, cb func(k string, v dump.TypeDef)) {
 	if len(m) == 0 {
 		return

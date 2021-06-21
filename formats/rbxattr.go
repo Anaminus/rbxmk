@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxattr"
 	"github.com/robloxapi/types"
@@ -203,6 +204,12 @@ func RBXAttr() rbxmk.Format {
 				return fmt.Errorf("encode attributes: %w", err)
 			}
 			return nil
+		},
+		Dump: func() dump.Format {
+			return dump.Format{
+				Summary:     "Formats/rbxattr:Summary",
+				Description: "Formats/rbxattr:Description",
+			}
 		},
 	}
 }

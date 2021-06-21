@@ -24,6 +24,8 @@ type Root struct {
 	Libraries Libraries
 	// Types contains types defined by the API.
 	Types TypeDefs `json:",omitempty"`
+	// Formats contains formats registered by a world.
+	Formats Formats
 	// Fragments contains fragment references requested by the program.
 	Fragments []string
 	// Description is a fragment reference pointing to a general description of
@@ -45,6 +47,19 @@ type Library struct {
 	Struct Struct `json:",omitempty"`
 	// Types contains types defined by the library.
 	Types TypeDefs `json:",omitempty"`
+}
+
+// Formats maps a name to a format.
+type Formats map[string]Format
+
+// Format describes a format.
+type Format struct {
+	// Summary is a fragment reference pointing to a short summary of the
+	// format.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the format.
+	Description string `json:",omitempty"`
 }
 
 // Fields maps a name to a value.
