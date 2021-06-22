@@ -141,15 +141,31 @@ func parseFragPath(s, suffix string, filesep rune) []string {
 	return items
 }
 
-const filesep = ':'
-const suffix = ".md"
+// ResolveFragment returns the content of the fragment referred to by fragpath.
+func ResolveFragment(fragpath string) string {
+	docMut.Lock()
+	defer docMut.Unlock()
+	return resolveFragment(fragpath)
+}
 
+// Doc returns the content of the fragment referred to by fragpath. The given
+// path is marked to be returned by DocFragments.
+//
+// Doc should only be used to capture additional fragment references.
+// ResolveFragment can be used to resolve a reference without marking it.
 func Doc(fragpath string) string {
 	docMut.Lock()
 	defer docMut.Unlock()
+	docSeen[fragpath] = struct{}{}
+	return resolveFragment(fragpath)
+}
+
+const filesep = ':'
+const suffix = ".md"
+
+func resolveFragment(fragpath string) string {
 	var n drill.Node = docfs
 	var path string
-	docSeen[fragpath] = struct{}{}
 	names := parseFragPath(fragpath, suffix, filesep)
 	for _, name := range names {
 		if name == "" {
