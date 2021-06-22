@@ -133,10 +133,10 @@ func parseFragPath(s, suffix string, filesep rune) []string {
 	}
 	i := strings.IndexRune(s, filesep)
 	if i < 0 {
-		return strings.Split(strings.ToLower(s)+".md", "/")
+		return strings.Split(strings.ToLower(s)+suffix, "/")
 	}
 	items := make([]string, 0, strings.Count(s, "/")+1)
-	items = append(items, strings.Split(strings.ToLower(s[:i])+".md", "/")...)
+	items = append(items, strings.Split(strings.ToLower(s[:i])+suffix, "/")...)
 	items = append(items, strings.Split(s[i+1:], "/")...)
 	return items
 }
