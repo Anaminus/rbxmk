@@ -83,10 +83,10 @@ func DocFragments() []string {
 
 // docString extracts and formats the fragment from the given node. Panics if
 // the node was not found.
-func docString(fragpath string, node drill.Node) string {
+func docString(fragref string, node drill.Node) string {
 	if node == nil {
-		docFailed[fragpath] = struct{}{}
-		return "{" + Language + ":" + fragpath + "}"
+		docFailed[fragref] = struct{}{}
+		return "{" + Language + ":" + fragref + "}"
 	}
 	return strings.TrimSpace(node.Fragment())
 }
@@ -111,9 +111,9 @@ func UnresolvedFragments() {
 	panic(s.String())
 }
 
-// parseFragPath receives a fragment path and converts it to a file path.
+// parseFragRef receives a fragment reference and converts it to a file path.
 //
-// A fragment path is like a regular file path, except that filesep is the
+// A fragment reference is like a regular file path, except that filesep is the
 // separator that descends into a file. After the first occurrence of filesep,
 // the preceding element is appended with the given suffix, and then descending
 // continues.
@@ -126,8 +126,8 @@ func UnresolvedFragments() {
 //
 //     libraries, roblox, types, Region3.md, Properties, CFrame, Description
 //
-// The file portion of the fragment path is converted to lowercase.
-func parseFragPath(s, suffix string, filesep rune) []string {
+// The file portion of the fragment reference is converted to lowercase.
+func parseFragRef(s, suffix string, filesep rune) []string {
 	if s == "" {
 		return []string{}
 	}
@@ -141,35 +141,35 @@ func parseFragPath(s, suffix string, filesep rune) []string {
 	return items
 }
 
-// ResolveFragment returns the content of the fragment referred to by fragpath.
-func ResolveFragment(fragpath string) string {
+// ResolveFragment returns the content of the fragment referred to by fragref.
+func ResolveFragment(fragref string) string {
 	docMut.Lock()
 	defer docMut.Unlock()
-	return resolveFragment(fragpath)
+	return resolveFragment(fragref)
 }
 
-// Doc returns the content of the fragment referred to by fragpath. The given
+// Doc returns the content of the fragment referred to by fragref. The given
 // path is marked to be returned by DocFragments.
 //
 // Doc should only be used to capture additional fragment references.
 // ResolveFragment can be used to resolve a reference without marking it.
-func Doc(fragpath string) string {
+func Doc(fragref string) string {
 	docMut.Lock()
 	defer docMut.Unlock()
-	docSeen[fragpath] = struct{}{}
-	return resolveFragment(fragpath)
+	docSeen[fragref] = struct{}{}
+	return resolveFragment(fragref)
 }
 
 const filesep = ':'
 const suffix = ".md"
 
-func resolveFragment(fragpath string) string {
+func resolveFragment(fragref string) string {
 	var n drill.Node = docfs
 	var path string
-	names := parseFragPath(fragpath, suffix, filesep)
+	names := parseFragRef(fragref, suffix, filesep)
 	for _, name := range names {
 		if name == "" {
-			return docString(fragpath, nil)
+			return docString(fragref, nil)
 		}
 		path += "/" + name
 		if node, ok := docCache[path]; ok {
@@ -179,12 +179,12 @@ func resolveFragment(fragpath string) string {
 			case drill.UnorderedBranch:
 				n = v.UnorderedChild(name)
 			default:
-				return docString(fragpath, nil)
+				return docString(fragref, nil)
 			}
 			if node, ok := n.(*markdown.Node); ok {
 				docCache[path] = node
 			}
 		}
 	}
-	return docString(fragpath, n)
+	return docString(fragref, n)
 }
