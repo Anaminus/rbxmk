@@ -30,6 +30,7 @@ type World struct {
 	l          *lua.LState
 	fileStack  []FileEntry
 	rootdir    string
+	libraries  map[string]Library
 	reflectors map[string]Reflector
 	formats    map[string]Format
 	enums      *rtypes.Enums
@@ -144,8 +145,20 @@ type Library struct {
 // the ImportedAs field as the name. If the name is already present and is a
 // table, then the table of lib is merged into it, preferring the values of lib.
 // If the name is an empty string, then lib is merged into the global table
-// itself. An error is returned if the merged value is not a table.
+// itself.
+//
+// The library is registered with the world under the Name of the library. An
+// error is returned if the merged value is not a table, or if the name was
+// already registered.
 func (w *World) Open(lib Library) error {
+	if _, ok := w.libraries[lib.Name]; ok {
+		return fmt.Errorf("library %q already registered", lib.Name)
+	}
+	if w.libraries == nil {
+		w.libraries = map[string]Library{}
+	}
+	w.libraries[lib.Name] = lib
+
 	if lib.Types != nil {
 		for _, r := range lib.Types {
 			w.RegisterReflector(r())
@@ -153,6 +166,18 @@ func (w *World) Open(lib Library) error {
 	}
 	src := lib.Open(w.State())
 	return w.MergeTables(w.l.G.Global, src, lib.ImportedAs)
+}
+
+// Libraries returns a list of registered libraries.
+func (w *World) Libraries() []Library {
+	libraries := []Library{}
+	for _, library := range w.libraries {
+		libraries = append(libraries, library)
+	}
+	sort.Slice(libraries, func(i, j int) bool {
+		return libraries[i].Name < libraries[j].Name
+	})
+	return libraries
 }
 
 // MargeTables merges src into dst according to name. If name is empty, then
