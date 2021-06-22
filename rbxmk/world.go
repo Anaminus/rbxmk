@@ -135,6 +135,47 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 	return world, nil
 }
 
+func dumpTypes(dst dump.TypeDefs, src []func() rbxmk.Reflector) {
+	for _, t := range src {
+		r := t()
+		if _, ok := dst[r.Name]; ok {
+			continue
+		}
+		dst[r.Name] = r.DumpAll()
+		dumpTypes(dst, r.Types)
+	}
+}
+
+func DumpWorld(world *rbxmk.World) dump.Root {
+	state := world.State()
+	root := dump.Root{
+		Formats: dump.Formats{},
+		Types:   dump.TypeDefs{},
+	}
+	for _, format := range world.Formats() {
+		root.Formats[format.Name] = format.Dump()
+	}
+	for _, l := range world.Libraries() {
+		if l.Dump == nil {
+			continue
+		}
+		lib := l.Dump(state)
+		if lib.Name == "" {
+			lib.Name = l.Name
+		}
+		if lib.ImportedAs == "" {
+			lib.ImportedAs = l.ImportedAs
+		}
+		if l.Types != nil {
+			dumpTypes(root.Types, l.Types)
+		}
+		root.Libraries = append(root.Libraries, lib)
+	}
+	root.Fragments = DocFragments()
+	root.Description = "Libraries"
+	return root
+}
+
 var ProgramLibrary = rbxmk.Library{
 	Name:       "program",
 	ImportedAs: "",

@@ -5,12 +5,7 @@ import (
 	"os"
 	"strings"
 
-	lua "github.com/anaminus/gopher-lua"
-	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dumpformats"
-	"github.com/anaminus/rbxmk/formats"
-	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/snek"
 )
 
@@ -45,17 +40,6 @@ type DumpCommand struct {
 	Formats dumpformats.Formats
 }
 
-func dumpTypes(dst dump.TypeDefs, src []func() rbxmk.Reflector) {
-	for _, t := range src {
-		r := t()
-		if _, ok := dst[r.Name]; ok {
-			continue
-		}
-		dst[r.Name] = r.DumpAll()
-		dumpTypes(dst, r.Types)
-	}
-}
-
 func (c *DumpCommand) Run(opt snek.Options) error {
 	// Parse flags.
 	if err := opt.ParseFlags(); err != nil {
@@ -74,42 +58,14 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 	}
 
 	// Populate dump.
-	world := rbxmk.NewWorld(lua.NewState(lua.Options{
-		SkipOpenLibs: true,
-	}))
-	state := world.State()
-	root := dump.Root{
-		Formats: dump.Formats{},
-		Types:   dump.TypeDefs{},
+	world, err := InitWorld(WorldOpt{
+		WorldFlags:   WorldFlags{Debug: false},
+		ExcludeRoots: true,
+	})
+	if err != nil {
+		return err
 	}
-	for _, f := range formats.All() {
-		format := f()
-		world.RegisterFormat(format)
-		root.Formats[format.Name] = format.Dump()
-	}
-	libraries := library.All()
-	libraries = append(libraries, ProgramLibrary)
-	for _, l := range libraries {
-		if err := world.Open(l); err != nil {
-			return err
-		}
-		if l.Dump == nil {
-			continue
-		}
-		lib := l.Dump(state)
-		if lib.Name == "" {
-			lib.Name = l.Name
-		}
-		if lib.ImportedAs == "" {
-			lib.ImportedAs = l.ImportedAs
-		}
-		if l.Types != nil {
-			dumpTypes(root.Types, l.Types)
-		}
-		root.Libraries = append(root.Libraries, lib)
-	}
-	root.Fragments = DocFragments()
-	root.Description = "Libraries"
+	root := DumpWorld(world)
 
 	// Dump format.
 	return format.Func(opt.Stdout, root)
