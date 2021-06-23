@@ -81,16 +81,6 @@ func DocFragments() []string {
 	return frags
 }
 
-// docString extracts and formats the fragment from the given node. Panics if
-// the node was not found.
-func docString(fragref string, node drill.Node) string {
-	if node == nil {
-		docFailed[fragref] = struct{}{}
-		return "{" + Language + ":" + fragref + "}"
-	}
-	return strings.TrimSpace(node.Fragment())
-}
-
 // UnresolvedFragments writes to stderr a list of fragment references that
 // failed to resolve. Panics if any references failed.
 func UnresolvedFragments() {
@@ -127,25 +117,27 @@ func UnresolvedFragments() {
 //     libraries, roblox, types, Region3.md, Properties, CFrame, Description
 //
 // The file portion of the fragment reference is converted to lowercase.
-func parseFragRef(s, suffix string, filesep rune) []string {
+//
+// If no separator was found in the reference, then the final element will have
+// suffix appended unless dir is true.
+//
+// infile returns whether the reference drilled into a file.
+func parseFragRef(s, suffix string, filesep rune, dir bool) (items []string, infile bool) {
 	if s == "" {
-		return []string{}
+		return []string{}, false
 	}
 	i := strings.IndexRune(s, filesep)
 	if i < 0 {
-		return strings.Split(strings.ToLower(s)+suffix, "/")
+		if dir {
+			return strings.Split(strings.ToLower(s), "/"), false
+		} else {
+			return strings.Split(strings.ToLower(s)+suffix, "/"), false
+		}
 	}
-	items := make([]string, 0, strings.Count(s, "/")+1)
+	items = make([]string, 0, strings.Count(s, "/")+1)
 	items = append(items, strings.Split(strings.ToLower(s[:i])+suffix, "/")...)
 	items = append(items, strings.Split(s[i+1:], "/")...)
-	return items
-}
-
-// ResolveFragment returns the content of the fragment referred to by fragref.
-func ResolveFragment(fragref string) string {
-	docMut.Lock()
-	defer docMut.Unlock()
-	return resolveFragment(fragref)
+	return items, true
 }
 
 // Doc returns the content of the fragment referred to by fragref. The given
@@ -157,19 +149,89 @@ func Doc(fragref string) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	docSeen[fragref] = struct{}{}
-	return resolveFragment(fragref)
+	node, _ := resolveFragmentNode(fragref, false)
+	if node == nil {
+		docFailed[fragref] = struct{}{}
+		return "{" + Language + ":" + fragref + "}"
+	}
+	return strings.TrimSpace(node.Fragment())
 }
 
-const filesep = ':'
-const suffix = ".md"
+// ResolveFragment returns the content of the fragment referred to by fragref.
+func ResolveFragment(fragref string) string {
+	docMut.Lock()
+	defer docMut.Unlock()
+	node, _ := resolveFragmentNode(fragref, false)
+	if node == nil {
+		return ""
+	}
+	return strings.TrimSpace(node.Fragment())
+}
 
-func resolveFragment(fragref string) string {
-	var n drill.Node = docfs
+const FragSep = ':'
+const FragSuffix = ".md"
+
+func ListFragments(fragref string) []string {
+	frags := map[string]struct{}{}
+	if fragref == "" {
+		node, _ := resolveFragmentNode("", false)
+		switch node := node.(type) {
+		case drill.UnorderedBranch:
+			children := node.UnorderedChildren()
+			for name := range children {
+				if name != "" {
+					name = strings.TrimSuffix(name, FragSuffix)
+					frags[name] = struct{}{}
+				}
+			}
+		}
+	} else {
+		node, infile := resolveFragmentNode(fragref, false)
+		switch node := node.(type) {
+		case drill.UnorderedBranch:
+			children := node.UnorderedChildren()
+			for name := range children {
+				if name != "" {
+					if infile {
+						name = strings.TrimSuffix(name, FragSuffix)
+						frags["/"+name] = struct{}{}
+					} else {
+						frags[string(FragSep)+name] = struct{}{}
+					}
+				}
+			}
+		}
+		if node == nil || !infile {
+			node, infile := resolveFragmentNode(fragref, true)
+			switch node := node.(type) {
+			case drill.UnorderedBranch:
+				children := node.UnorderedChildren()
+				for name := range children {
+					if name != "" {
+						if !infile {
+							name = strings.TrimSuffix(name, FragSuffix)
+						}
+						frags["/"+name] = struct{}{}
+					}
+				}
+			}
+		}
+	}
+	list := make([]string, 0, len(frags))
+	for frag := range frags {
+		list = append(list, frag)
+	}
+	sort.Strings(list)
+	return list
+}
+
+func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
+	n = docfs
 	var path string
-	names := parseFragRef(fragref, suffix, filesep)
+	names, infile := parseFragRef(fragref, FragSuffix, FragSep, dir)
 	for _, name := range names {
 		if name == "" {
-			return docString(fragref, nil)
+			return nil, false
 		}
 		path += "/" + name
 		if node, ok := docCache[path]; ok {
@@ -179,12 +241,12 @@ func resolveFragment(fragref string) string {
 			case drill.UnorderedBranch:
 				n = v.UnorderedChild(name)
 			default:
-				return docString(fragref, nil)
+				return nil, false
 			}
 			if node, ok := n.(*markdown.Node); ok {
 				docCache[path] = node
 			}
 		}
 	}
-	return docString(fragref, n)
+	return n, infile
 }
