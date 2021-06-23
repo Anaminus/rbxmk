@@ -36,6 +36,7 @@ var Fragments = Format{
 // was found. ref is the fragment reference, and path describes the location of
 // the reference within root.
 func ListFragments(root dump.Root, write func(path, ref string)) {
+	write("libraries", "Libraries")
 	for _, library := range root.Libraries {
 		p := path.Join("libraries", library.Name)
 		write(path.Join(p, "Summary"), library.Struct.Summary)
@@ -43,8 +44,11 @@ func ListFragments(root dump.Root, write func(path, ref string)) {
 		fragWriteFields(write, path.Join(p, "Fields"), library.Struct.Fields)
 		fragWriteTypes(write, path.Join(p, "Types"), library.Types)
 	}
+	write("types", "Types")
 	fragWriteTypes(write, "types", root.Types)
+	write("formats", "Formats")
 	fragWriteFormats(write, "formats", root.Formats)
+	write("fragments", "Fragments")
 	for _, frag := range root.Fragments {
 		write("fragments", frag)
 	}
