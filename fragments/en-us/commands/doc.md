@@ -2,7 +2,7 @@
 Display documentation.
 
 # Arguments
-	[ MODE ] QUERY
+	[ MODE [ QUERY ] ]
 
 # Description
 The **doc** command displays documentation for a given topic.
@@ -24,17 +24,16 @@ at a time.
 
 Mode | Name   | Description
 -----|--------|------------
-Raw  | (none) | Displays the content of queried topic.
+Frag | `frag` | Displays the content of queried topic.
 List | `list` | Lists the sub-topics and sub-sections of a queried topic.
 
-## Raw mode
-With no mode specified (that is, one argument), the doc command receives a
-fragment reference, and displays the content of that topic.
+## Frag mode
+Frag mode receives a fragment reference, and displays the content of that topic.
 
-	rbxmk doc types/Instance:Methods/FindFirstChild
+	rbxmk doc frag types/Instance:Methods/FindFirstChild
 
 If the topic has no content, but has sub-topics, then these sub-topics are
-listed instead (see List mode). If no topic is specified, then all top-level
+listed instead (see List mode). If no query is specified, then all top-level
 topics are listed.
 
 ## List mode
@@ -42,7 +41,7 @@ List mode returns a list of sub-topics and sub-sections for the given reference.
 
 	rbxmk doc list libraries/base
 
-If "." is given as a query, this will return a list of top-level topics.
+If no query is specified, then all top-level topics are listed.
 
 The top-level sections of a topic will be prefixed with ":". Sub-topics and
 sub-sections of sections will be prefixed with "/". That is, the whole name of a
