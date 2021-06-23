@@ -2,7 +2,7 @@
 Display documentation.
 
 # Arguments
-	[ MODE QUERY ]
+	[ MODE ] QUERY
 
 # Description
 The **doc** command displays documentation for a given topic.
@@ -22,20 +22,25 @@ is case-sensitive.
 The doc command has several modes for querying topics. Only one mode can be used
 at a time.
 
-Mode    | Flag     | Description
---------|----------|------------
-Default | (none)   | Displays the content of queried topic.
-List    | `--list` | Lists the sub-topics and sub-sections of a queried topic.
+Mode | Name   | Description
+-----|--------|------------
+Raw  | (none) | Displays the content of queried topic.
+List | `list` | Lists the sub-topics and sub-sections of a queried topic.
 
+## Raw mode
+With no mode specified (that is, one argument), the doc command receives a
+fragment reference, and displays the content of that topic.
 
-With no query flags, the doc command receives a fragment reference, and displays
-the content of that topic. If the topic has no content, but has sub-topics, then
-these sub-topics are listed instead (see the `--list` flag). If no topic is
-specified, then all top-level topics are listed.
+	rbxmk doc types/Instance:Methods/FindFirstChild
 
-# Flags
-## list
-Returns a list of sub-topics and sub-sections for the given reference.
+If the topic has no content, but has sub-topics, then these sub-topics are
+listed instead (see List mode). If no topic is specified, then all top-level
+topics are listed.
+
+## List mode
+List mode returns a list of sub-topics and sub-sections for the given reference.
+
+	rbxmk doc list libraries/base
 
 If "." is given as a query, this will return a list of top-level topics.
 
