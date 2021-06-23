@@ -2,7 +2,7 @@
 Values related to the running program.
 
 # Description
-The **program** librari is loaded directly into the global environment. It
+The **program** library is loaded directly into the global environment. It
 contains values related to the compiled executable.
 
 # Fields
