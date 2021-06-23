@@ -16,6 +16,9 @@ to the left of the separator.
 For example, the query "libraries/base:Fields/print/Description" will display
 the description of the print function, which is within the base library topic.
 
+The topic portion of a reference is case-insensitive, while the section portion
+is case-sensitive.
+
 The doc command has several modes for querying topics. Only one mode can be used
 at a time.
 
