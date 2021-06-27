@@ -168,6 +168,12 @@ func (w *World) Open(lib Library) error {
 	return w.MergeTables(w.l.G.Global, src, lib.ImportedAs)
 }
 
+// Library returns the Library registered with the given name. If the name is
+// not registered, then Library.Name will be an empty string.
+func (w *World) Library(name string) Library {
+	return w.libraries[name]
+}
+
 // Libraries returns a list of registered libraries.
 func (w *World) Libraries() []Library {
 	libraries := []Library{}
