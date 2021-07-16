@@ -120,7 +120,7 @@ func (w *World) PullAnyFromArray(table *lua.LTable, index int, t ...string) (v t
 // PullAnyFromArrayOpt is like PullAnyFromTableOpt, but receives an int as the
 // index of the table.
 func (w *World) PullAnyFromArrayOpt(table *lua.LTable, index int, d types.Value, t ...string) (v types.Value, err error) {
-	return w.PullAnyFromTableOpt(table, lua.LNumber(index), v)
+	return w.PullAnyFromTableOpt(table, lua.LNumber(index), v, t...)
 }
 
 // PushToDictionary is like PushToTable, but receives a string as the key of the
@@ -150,5 +150,5 @@ func (w *World) PullAnyFromDictionary(table *lua.LTable, key string, t ...string
 // PullAnyFromDictionaryOpt is like PullAnyFromTableOpt, but receives a string
 // as the key of the table.
 func (w *World) PullAnyFromDictionaryOpt(table *lua.LTable, key string, d types.Value, t ...string) (v types.Value, err error) {
-	return w.PullAnyFromTableOpt(table, lua.LString(key), v)
+	return w.PullAnyFromTableOpt(table, lua.LString(key), v, t...)
 }
