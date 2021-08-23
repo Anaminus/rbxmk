@@ -60,11 +60,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 				return nil, err
 			}
 			options.Format = format.(rtypes.FormatSelector)
-			if format := s.Format(options.Format.Format); format.Name != "" {
-				options.Body, err = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
-			} else {
-				options.Body, err = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
-			}
+			options.Body, err = s.PullEncodedFromDict(table, "Body", options.Format)
 			if err != nil {
 				return nil, err
 			}

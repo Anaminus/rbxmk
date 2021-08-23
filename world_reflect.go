@@ -234,3 +234,12 @@ func (w *World) PullEncodedFormat(lv lua.LValue, f Format) (v types.Value, err e
 	}
 	return w.PullAnyOf(lv, f.EncodeTypes...)
 }
+
+// PullEncodedFromDict is like PullEncoded, but the value is pulled from a
+// Dictionary.
+func (w *World) PullEncodedFromDict(table *lua.LTable, field string, format rtypes.FormatSelector) (v types.Value, err error) {
+	if format := w.Format(format.Format); format.Name != "" {
+		return w.PullAnyFromDictionaryOpt(table, field, nil, format.EncodeTypes...)
+	}
+	return w.PullFromDictionaryOpt(table, field, nil, "Variant")
+}

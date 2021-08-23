@@ -79,11 +79,7 @@ func HTTPOptions() rbxmk.Reflector {
 				return nil, err
 			}
 			options.RequestFormat = requestFormat.(rtypes.FormatSelector)
-			if format := s.Format(options.RequestFormat.Format); format.Name != "" {
-				options.Body, err = s.PullAnyFromDictionaryOpt(table, "Body", nil, format.EncodeTypes...)
-			} else {
-				options.Body, err = s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
-			}
+			options.Body, err = s.PullEncodedFromDict(table, "Body", options.RequestFormat)
 			if err != nil {
 				return nil, err
 			}
