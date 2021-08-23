@@ -77,6 +77,10 @@ func (w *World) UserDataOf(v types.Value, t string) *lua.LUserData {
 	// instead. By eliminating the strong reference to the userdata, a finalizer
 	// can be used to remove the association when the userdata has no more
 	// references.
+	//
+	// This method is safe for the register-based calling convention, since the
+	// produced userdata is never a function argument while it is converted
+	// between an unsafe pointer.
 
 	w.udmut.Lock()
 	defer w.udmut.Unlock()
