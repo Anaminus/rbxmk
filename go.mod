@@ -1,6 +1,6 @@
 module github.com/anaminus/rbxmk
 
-go 1.16
+go 1.17
 
 require (
 	github.com/anaminus/drill v0.3.1
@@ -17,4 +17,10 @@ require (
 	github.com/yuin/goldmark v1.3.3
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
 	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
+)
+
+require (
+	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
+	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 )

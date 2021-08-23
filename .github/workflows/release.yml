@@ -8,7 +8,7 @@ on:
 env:
   PROJECT   : 'rbxmk'   # Name of project/executable.
   PROGRAM   : './rbxmk' # Location of program.
-  GOVERSION : 1.16      # Version of Go to compile with.
+  GOVERSION : 1.17      # Version of Go to compile with.
   DIST      : './dist'  # Scratch directory for building executables.
 
 jobs:
