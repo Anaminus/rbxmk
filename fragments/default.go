@@ -1,4 +1,4 @@
-// +build !lang_no_default
+//go:build !lang_no_default
 
 package fragments
 

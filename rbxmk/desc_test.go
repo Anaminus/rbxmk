@@ -1,4 +1,4 @@
-//+build !no_desc_test
+//go:build !no_desc_test
 
 package main
 

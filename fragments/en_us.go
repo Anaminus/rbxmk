@@ -1,4 +1,4 @@
-// +build lang_en_us
+//go:build lang_en_us
 
 package fragments
 
