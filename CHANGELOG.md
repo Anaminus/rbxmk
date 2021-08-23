@@ -3,61 +3,69 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
+
+The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
+
+[doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
+[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.8.0...imperative
+
+## v0.8.0
 **Incompatibilities**
-- Remove DataModel.new in favor of [Instance.new("DataModel")](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancenew).
-- Move [os library](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-os) functions to [path library](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-path).
-	- Move os.clean to [path.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathclean)
-	- Move os.expand to [path.expand](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathexpand)
-	- Move os.join to [path.join](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathjoin)
-	- Move os.split to [path.split](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathsplit)
-	- [os.getenv](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-osgetenv) is unchanged.
+- Remove DataModel.new in favor of [Instance.new("DataModel")](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-instancenew).
+- Move [os library](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-os) functions to [path library](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-path).
+	- Move os.clean to [path.clean](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-pathclean)
+	- Move os.expand to [path.expand](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-pathexpand)
+	- Move os.join to [path.join](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-pathjoin)
+	- Move os.split to [path.split](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-pathsplit)
+	- [os.getenv](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-osgetenv) is unchanged.
 - Refactor descriptors.
 	- Element types are represented as dictionaries containing the fields of the element.
-	- Add [RootDesc.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdescnew) for creating new [RootDesc](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdesc) types.
+	- Add [RootDesc.new](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdescnew) for creating new [RootDesc](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdesc) types.
 	- Remove rbxmk.newDesc.
-	- All operations to get and set descriptor information are contained in [RootDesc](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdesc).
-	- The methods of [RootDesc](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdesc) are updated to reflect this change.
-- Move rbxmk.diffDesc function to [RootDesc.Diff](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdescdiff) method.
-- Move rbxmk.patchDesc function to [RootDesc.Patch](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdescpatch) method.
-- Move rbxmk.newCookie to [Cookie.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-cookienew).
-- Move rbxmk.cookiesFrom to [Cookie.from](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-cookiefrom).
-- Move rbxmk.newAttrConfig to [AttrConfig.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-attrconfignew).
+	- All operations to get and set descriptor information are contained in [RootDesc](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdesc).
+	- The methods of [RootDesc](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdesc) are updated to reflect this change.
+- Move rbxmk.diffDesc function to [RootDesc.Diff](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdescdiff) method.
+- Move rbxmk.patchDesc function to [RootDesc.Patch](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-rootdescpatch) method.
+- Move rbxmk.newCookie to [Cookie.new](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-cookienew).
+- Move rbxmk.cookiesFrom to [Cookie.from](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-cookiefrom).
+- Move rbxmk.newAttrConfig to [AttrConfig.new](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-attrconfignew).
 
 **Highlights:**
-- Improve handling of values in the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
-- Add "Desc" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set a descriptor used when encoding or decoding.
-- Add "DescMode" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl) to set how deviations from the descriptor are handled.
+- Improve handling of values in the [rbx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxl).
+- Add "Desc" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxl) to set a descriptor used when encoding or decoding.
+- Add "DescMode" option to the [rbx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxl) to set how deviations from the descriptor are handled.
 - Including `--desc-*` flags causes the "Enum" global variable to be set to the enums generated from the resulting descriptor.
-- Implement members for the [DescAction](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-descaction) type.
-- Add [DescAction.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-descactionnew) constructor.
+- Implement members for the [DescAction](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-descaction) type.
+- Add [DescAction.new](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-descactionnew) constructor.
 - xpcall can receive extra arguments that are passed to the called function.
-- Add [path.clean](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-pathclean) function to clean file paths.
-- Add [Enum](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-rbxmkenum) field to rbxmk library to contain enums defined by rbxmk. Note that there are currently no such enums.
+- Add [path.clean](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-pathclean) function to clean file paths.
+- Add [Enum](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-rbxmkenum) field to rbxmk library to contain enums defined by rbxmk. Note that there are currently no such enums.
 
 **Fixes:**
-- Fix missing properties from [sym.Properties](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesymproperties) when instance has a descriptor.
+- Fix missing properties from [sym.Properties](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-instancesymproperties) when instance has a descriptor.
 - Fix unexpected conversion failures when getting certain property types while an instance has descriptor.
-- Fix type conversion error when encoding [`desc-patch.json` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-desc-patchjson).
-- Fix type conversion error when encoding Objects with [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
-- Fix encoding of SharedStrings in [rbxlx/rbxmx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxlx).
-- Fix incorrect use of CDATA sections in [rbxlx/rbxmx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxlx).
-- Fix [interactive command](https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-interactive-command) not having descriptor flags.
-- Fix [Cookie.from](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-cookiefrom) returning incorrect values when no cookies are found.
-- Fix [Instance.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancenew) handling [DataModel](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-datamodel) incorrectly.
-- Fix [Instance.ClassName](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instanceclassname) being settable to "DataModel".
-- Fix [typeof](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-roblox) returning "userdata" for [Symbol](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-sym) values.
+- Fix type conversion error when encoding [`desc-patch.json` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-desc-patchjson).
+- Fix type conversion error when encoding Objects with [rbx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxl).
+- Fix encoding of SharedStrings in [rbxlx/rbxmx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxlx).
+- Fix incorrect use of CDATA sections in [rbxlx/rbxmx formats](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-rbxlx).
+- Fix [interactive command](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/README.md#user-content-interactive-command) not having descriptor flags.
+- Fix [Cookie.from](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-cookiefrom) returning incorrect values when no cookies are found.
+- Fix [Instance.new](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-instancenew) handling [DataModel](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-datamodel) incorrectly.
+- Fix [Instance.ClassName](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/types.md#user-content-instanceclassname) being settable to "DataModel".
+- Fix [typeof](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-roblox) returning "userdata" for [Symbol](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/libraries.md#user-content-sym) values.
 - Fix incorrect behavior when select is called with index 0.
 - Fix Envelope field being printed as Time field when ColorSequenceKeypoint or NumberSequenceKeypoint is converted to a string.
 - Fix bounds error when calling ColorSequence.new or NumberSequence.new.
 - Fix ColorSequence.new and NumberSequence.new not verifying order of keypoints.
 - Fix NumberRange.new not verifying interval.
 
-See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
+See a [comparison with the previous version][cmp-v0.8.0] for a thorough list of changes.
 
-The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
+The [Documentation page][doc-v0.8.0] provides a complete reference for this version of rbxmk.
 
-[doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
-[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.7.2...imperative
+[doc-v0.8.0]: https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/README.md#user-content-rbxmk-reference
+[cmp-v0.8.0]: https://github.com/Anaminus/rbxmk/compare/v0.7.2...v0.8.0
 
 ## v0.7.2
 **Fixes:**
