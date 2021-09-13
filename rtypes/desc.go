@@ -31,7 +31,7 @@ func (d *RootDesc) ClassIsA(class, superclass string) bool {
 	}
 	classDesc := d.Classes[class]
 	for classDesc != nil {
-		if classDesc.Superclass == superclass {
+		if classDesc.Name == superclass {
 			return true
 		}
 		classDesc = d.Classes[classDesc.Superclass]
