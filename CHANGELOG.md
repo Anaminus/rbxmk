@@ -3,8 +3,9 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
-**Fixes*:*
+**Fixes**:
 - Fix descriptor IsA checks failing when superclass matches current class.
+- Fix encoding of PhysicalProperties type in rbxl format.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

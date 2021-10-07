@@ -30,10 +30,13 @@ func RBXL() rbxmk.Format {
 				return nil, err
 			}
 			d := rbxDecoder{
-				method: rbxl.DeserializePlace,
-				r:      r,
-				desc:   desc,
-				mode:   mode,
+				method: func(r io.Reader) (root *rbxfile.Root, err error) {
+					root, _, err = rbxl.Decoder{Mode: rbxl.Place}.Decode(r)
+					return root, err
+				},
+				r:    r,
+				desc: desc,
+				mode: mode,
 			}
 			return d.rbx()
 		},
@@ -44,10 +47,13 @@ func RBXL() rbxmk.Format {
 				return err
 			}
 			e := rbxEncoder{
-				method: rbxl.SerializePlace,
-				w:      w,
-				desc:   desc,
-				mode:   mode,
+				method: func(w io.Writer, root *rbxfile.Root) (err error) {
+					_, err = rbxl.Encoder{Mode: rbxl.Place}.Encode(w, root)
+					return err
+				},
+				w:    w,
+				desc: desc,
+				mode: mode,
 			}
 			return e.rbx(v)
 		},
@@ -76,10 +82,13 @@ func RBXM() rbxmk.Format {
 				return nil, err
 			}
 			d := rbxDecoder{
-				method: rbxl.DeserializeModel,
-				r:      r,
-				desc:   desc,
-				mode:   mode,
+				method: func(r io.Reader) (root *rbxfile.Root, err error) {
+					root, _, err = rbxl.Decoder{Mode: rbxl.Model}.Decode(r)
+					return root, err
+				},
+				r:    r,
+				desc: desc,
+				mode: mode,
 			}
 			return d.rbx()
 		},
@@ -90,10 +99,13 @@ func RBXM() rbxmk.Format {
 				return err
 			}
 			e := rbxEncoder{
-				method: rbxl.SerializeModel,
-				w:      w,
-				desc:   desc,
-				mode:   mode,
+				method: func(w io.Writer, root *rbxfile.Root) (err error) {
+					_, err = rbxl.Encoder{Mode: rbxl.Model}.Encode(w, root)
+					return err
+				},
+				w:    w,
+				desc: desc,
+				mode: mode,
 			}
 			return e.rbx(v)
 		},
@@ -122,10 +134,13 @@ func RBXLX() rbxmk.Format {
 				return nil, err
 			}
 			d := rbxDecoder{
-				method: rbxlx.Deserialize,
-				r:      r,
-				desc:   desc,
-				mode:   mode,
+				method: func(r io.Reader) (root *rbxfile.Root, err error) {
+					root, _, err = rbxlx.Decoder{}.Decode(r)
+					return root, err
+				},
+				r:    r,
+				desc: desc,
+				mode: mode,
 			}
 			return d.rbx()
 		},
@@ -136,10 +151,13 @@ func RBXLX() rbxmk.Format {
 				return err
 			}
 			e := rbxEncoder{
-				method: rbxlx.Serialize,
-				w:      w,
-				desc:   desc,
-				mode:   mode,
+				method: func(w io.Writer, root *rbxfile.Root) (err error) {
+					_, err = rbxlx.Encoder{}.Encode(w, root)
+					return err
+				},
+				w:    w,
+				desc: desc,
+				mode: mode,
 			}
 			return e.rbx(v)
 		},
@@ -168,10 +186,13 @@ func RBXMX() rbxmk.Format {
 				return nil, err
 			}
 			d := rbxDecoder{
-				method: rbxlx.Deserialize,
-				r:      r,
-				desc:   desc,
-				mode:   mode,
+				method: func(r io.Reader) (root *rbxfile.Root, err error) {
+					root, _, err = rbxlx.Decoder{}.Decode(r)
+					return root, err
+				},
+				r:    r,
+				desc: desc,
+				mode: mode,
 			}
 			return d.rbx()
 		},
@@ -182,10 +203,13 @@ func RBXMX() rbxmk.Format {
 				return err
 			}
 			e := rbxEncoder{
-				method: rbxlx.Serialize,
-				w:      w,
-				desc:   desc,
-				mode:   mode,
+				method: func(w io.Writer, root *rbxfile.Root) (err error) {
+					_, err = rbxlx.Encoder{}.Encode(w, root)
+					return err
+				},
+				w:    w,
+				desc: desc,
+				mode: mode,
 			}
 			return e.rbx(v)
 		},
