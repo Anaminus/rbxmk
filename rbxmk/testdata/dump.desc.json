@@ -3222,6 +3222,365 @@
 		{
 			"Members": [
 				{
+					"Category": "Appearance",
+					"MemberType": "Property",
+					"Name": "LevelOfDetail",
+					"Security": {
+						"Read": "PluginSecurity",
+						"Write": "PluginSecurity"
+					},
+					"Serialization": {
+						"CanLoad": true,
+						"CanSave": true
+					},
+					"ThreadSafety": "ReadSafe",
+					"ValueType": {
+						"Category": "Enum",
+						"Name": "ModelLevelOfDetail"
+					}
+				},
+				{
+					"Category": "Data",
+					"MemberType": "Property",
+					"Name": "PrimaryPart",
+					"Security": {
+						"Read": "None",
+						"Write": "None"
+					},
+					"Serialization": {
+						"CanLoad": true,
+						"CanSave": true
+					},
+					"ThreadSafety": "ReadSafe",
+					"ValueType": {
+						"Category": "Class",
+						"Name": "BasePart"
+					}
+				},
+				{
+					"Category": "Pivot",
+					"MemberType": "Property",
+					"Name": "World Pivot Orientation",
+					"Security": {
+						"Read": "None",
+						"Write": "None"
+					},
+					"Serialization": {
+						"CanLoad": false,
+						"CanSave": false
+					},
+					"Tags": [
+						"NotReplicated",
+						"NotScriptable"
+					],
+					"ThreadSafety": "ReadSafe",
+					"ValueType": {
+						"Category": "DataType",
+						"Name": "Vector3"
+					}
+				},
+				{
+					"Category": "Pivot",
+					"MemberType": "Property",
+					"Name": "World Pivot Position",
+					"Security": {
+						"Read": "None",
+						"Write": "None"
+					},
+					"Serialization": {
+						"CanLoad": false,
+						"CanSave": false
+					},
+					"Tags": [
+						"NotReplicated",
+						"NotScriptable"
+					],
+					"ThreadSafety": "ReadSafe",
+					"ValueType": {
+						"Category": "DataType",
+						"Name": "Vector3"
+					}
+				},
+				{
+					"Category": "Pivot",
+					"MemberType": "Property",
+					"Name": "WorldPivot",
+					"Security": {
+						"Read": "None",
+						"Write": "None"
+					},
+					"Serialization": {
+						"CanLoad": false,
+						"CanSave": false
+					},
+					"Tags": [
+						"NotReplicated"
+					],
+					"ThreadSafety": "ReadSafe",
+					"ValueType": {
+						"Category": "DataType",
+						"Name": "CFrame"
+					}
+				},
+				{
+					"MemberType": "Function",
+					"Name": "BreakJoints",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "GetBoundingBox",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Group",
+						"Name": "Tuple"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "GetExtentsSize",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "DataType",
+						"Name": "Vector3"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "GetModelCFrame",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "DataType",
+						"Name": "CFrame"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "GetModelSize",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "DataType",
+						"Name": "Vector3"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "GetPrimaryPartCFrame",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "DataType",
+						"Name": "CFrame"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "MakeJoints",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "MoveTo",
+					"Parameters": [
+						{
+							"Name": "position",
+							"Type": {
+								"Category": "DataType",
+								"Name": "Vector3"
+							}
+						}
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "ResetOrientationToIdentity",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "SetIdentityOrientation",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "SetPrimaryPartCFrame",
+					"Parameters": [
+						{
+							"Name": "cframe",
+							"Type": {
+								"Category": "DataType",
+								"Name": "CFrame"
+							}
+						}
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "TranslateBy",
+					"Parameters": [
+						{
+							"Name": "delta",
+							"Type": {
+								"Category": "DataType",
+								"Name": "Vector3"
+							}
+						}
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "breakJoints",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "makeJoints",
+					"Parameters": [
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "move",
+					"Parameters": [
+						{
+							"Name": "location",
+							"Type": {
+								"Category": "DataType",
+								"Name": "Vector3"
+							}
+						}
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				},
+				{
+					"MemberType": "Function",
+					"Name": "moveTo",
+					"Parameters": [
+						{
+							"Name": "location",
+							"Type": {
+								"Category": "DataType",
+								"Name": "Vector3"
+							}
+						}
+					],
+					"ReturnType": {
+						"Category": "Primitive",
+						"Name": "void"
+					},
+					"Security": "None",
+					"Tags": [
+						"Deprecated"
+					],
+					"ThreadSafety": "Unsafe"
+				}
+			],
+			"MemoryCategory": "PhysicsParts",
+			"Name": "Model",
+			"Superclass": "PVInstance"
+		},
+		{
+			"Members": [
+				{
 					"MemberType": "Function",
 					"Name": "CreateButton",
 					"Parameters": [

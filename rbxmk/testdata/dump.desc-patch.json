@@ -40,5 +40,26 @@
 			},
 			"WriteSecurity": "None"
 		}
+	},
+	{
+		"Type": 1,
+		"Element": "Property",
+		"Primary": "Model",
+		"Secondary": "WorldPivotData",
+		"Fields": {
+			"CanLoad": true,
+			"CanSave": true,
+			"Category": "Data",
+			"Name": "WorldPivotData",
+			"ReadSecurity": "None",
+			"Tags": [
+				"NotScriptable"
+			],
+			"ValueType": {
+				"Category": "DataType",
+				"Name": "CFrame?"
+			},
+			"WriteSecurity": "None"
+		}
 	}
 ]

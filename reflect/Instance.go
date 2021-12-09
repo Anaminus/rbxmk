@@ -166,14 +166,28 @@ func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, na
 			}
 			return reflectOne(s, item)
 		default:
-			rfl := s.Reflector(propDesc.ValueType.Name)
+			pt := propDesc.ValueType.Name
+			opt := strings.HasSuffix(pt, "?")
+			if opt {
+				pt = strings.TrimSuffix(pt, "?")
+				switch v := value.(type) {
+				case rtypes.Optional:
+					switch inner := v.Value().(type) {
+					case nil:
+						return reflectOne(s, rtypes.Nil)
+					case types.PropValue:
+						value = inner
+					}
+				}
+			}
+			rfl := s.Reflector(pt)
 			if rfl.Name != "" && rfl.ConvertFrom != nil {
 				if v := rfl.ConvertFrom(value); v != nil {
 					return reflectOne(s, v)
 				}
 			}
-			if a, b := value.Type(), propDesc.ValueType.Name; a != b {
-				return nil, fmt.Errorf("stored value type %s does not match property type %s", a, b)
+			if vt := value.Type(); vt != pt {
+				return nil, fmt.Errorf("stored value type %s does not match property type %s", vt, pt)
 			}
 		}
 		// Push without converting exprims.
@@ -270,7 +284,33 @@ func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc,
 				return nil, fmt.Errorf("invalid value for enum %s", enum.Name())
 			}
 		default:
-			if pt, vt := propDesc.ValueType.Name, value.Type(); vt != pt {
+			pt := propDesc.ValueType.Name
+			vt := value.Type()
+			opt := strings.HasSuffix(pt, "?")
+			if opt {
+				pt = strings.TrimSuffix(pt, "?")
+				switch v := value.(type) {
+				case rtypes.NilType:
+					// Convert nil to None of property type.
+					return rtypes.None(pt), nil
+				case rtypes.Optional:
+					inner := v.Value()
+					if inner == nil {
+						// Returning rtypes.None(pt) here would have the effect
+						// of converting None of any type to None of property
+						// type.
+
+						// Attempt to convert value as-is. Set opt to false to
+						// prevent reboxing.
+						opt = false
+					} else {
+						value = inner
+					}
+					vt = v.ValueType()
+				}
+				// value, pt, and vt are unboxed; can be inspected as usual.
+			}
+			if vt != pt {
 				// Attempt to convert value type to property type.
 				rfl := s.Reflector(pt)
 				if rfl.Name == "" || rfl.ConvertFrom == nil {
@@ -279,6 +319,10 @@ func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc,
 				if value = rfl.ConvertFrom(value); value == nil {
 					return nil, fmt.Errorf("%s expected, got %s", pt, vt)
 				}
+			}
+			if opt {
+				// Rebox value into optional.
+				value = rtypes.Some(value)
 			}
 		}
 	}
@@ -1212,6 +1256,7 @@ func Instance() rbxmk.Reflector {
 			Dictionary,
 			Nil,
 			Objects,
+			Optional,
 			RootDesc,
 			String,
 			Symbol,

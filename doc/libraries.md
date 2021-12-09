@@ -57,6 +57,8 @@ This document contains a reference to the libraries available to rbxmk scripts.
 	5. [table.pack][table.pack]
 	6. [table.unpack][table.unpack]
 14. [types][types]
+	1. [types.none][types.none]
+	2. [types.some][types.some]
 
 </td></tr></tbody>
 </table>
@@ -731,6 +733,32 @@ int             | number
 ProtectedString | string
 SharedString    | string
 token           | number
+
+The library contains several additional functions:
+
+### types.none
+[types.none]: #user-content-typesnone
+<code>types.none(type: [string](##)): [Optional](##)</code>
+
+The **none** function returns an empty Optional exprim of the given type.
+
+```lua
+model.WorldPivotData = types.none("CFrame") -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> nil
+```
+
+### types.some
+[types.some]: #user-content-typessome
+<code>types.some(value: [any](##)): [Optional](##)</code>
+
+The **some** function returns an Optional exprim with the type of *value*, that
+encapsulates *value*.
+
+```lua
+local value = CFrame.new(1,2,3)
+model.WorldPivotData = types.some(value) -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> CFrame
+```
 
 [AttrConfig]: types.md#user-content-attrconfig
 [CallbackDesc]: types.md#user-content-callbackdesc

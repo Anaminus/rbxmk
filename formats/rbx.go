@@ -3,6 +3,7 @@ package formats
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
@@ -419,8 +420,29 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 	} else {
 		typ = descTypeFromFileValue(r)
 	}
+	if strings.HasSuffix(typ.Name, "?") {
+		typ.Name = strings.TrimSuffix(typ.Name, "?")
+		if o, ok := r.(rbxfile.ValueOptional); ok {
+			// Unbox value. Nil is handled by converting to the zero for the
+			// type.
+			r = o.Value()
+		}
+		// Otherwise, pretend value is optional, and try to convert as-is.
+		defer func() {
+			if err != nil || t == nil {
+				return
+			}
+			// Rebox value based on result of unboxing r.
+			if r == nil {
+				t = rtypes.None(t.Type())
+			} else {
+				t = rtypes.Some(t)
+			}
+		}()
+	}
 	switch {
 	case typ == rbxdump.Type{}:
+		// Zero designated as unknown type.
 		switch d.mode {
 		case modeNonStrict:
 			return nil, nil
@@ -432,6 +454,9 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Category == "Class":
 		switch r := r.(type) {
+		case nil:
+			//TODO: Decide how to resolve Optional Reference (if at all).
+			return nil, nil
 		case rbxfile.ValueReference:
 			// Having non-empty Name implies a descriptor.
 			if typ.Name != "" {
@@ -471,6 +496,8 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 	case typ.Category == "Enum":
 		if typ.Name != "" {
 			switch r := r.(type) {
+			case nil:
+				t, err = types.Token(0), nil
 			case rbxfile.ValueInt:
 				t, err = d.enumItemValue(typ.Name, int(r))
 			case rbxfile.ValueFloat:
@@ -536,6 +563,8 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "bool":
 		switch r := r.(type) {
+		case nil:
+			return types.False, nil
 		case rbxfile.ValueBool:
 			return types.Bool(r), nil
 		}
@@ -553,11 +582,15 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "UDim":
 		switch r := r.(type) {
+		case nil:
+			return types.UDim{}, nil
 		case rbxfile.ValueUDim:
 			return types.UDim(r), nil
 		}
 	case typ.Name == "UDim2":
 		switch r := r.(type) {
+		case nil:
+			return types.UDim2{}, nil
 		case rbxfile.ValueUDim2:
 			return types.UDim2{
 				X: types.UDim(r.X),
@@ -566,6 +599,8 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "Ray":
 		switch r := r.(type) {
+		case nil:
+			return types.Ray{}, nil
 		case rbxfile.ValueRay:
 			return types.Ray{
 				Origin:    types.Vector3(r.Origin),
@@ -574,11 +609,15 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "Faces":
 		switch r := r.(type) {
+		case nil:
+			return types.Faces{}, nil
 		case rbxfile.ValueFaces:
 			return types.Faces(r), nil
 		}
 	case typ.Name == "Axes":
 		switch r := r.(type) {
+		case nil:
+			return types.Axes{}, nil
 		case rbxfile.ValueAxes:
 			return types.Axes(r), nil
 		}
@@ -588,21 +627,30 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "Color3":
 		switch r := r.(type) {
+		case nil:
+			return types.Color3{}, nil
 		case rbxfile.ValueColor3:
 			return types.Color3(r), nil
 		}
 	case typ.Name == "Vector2":
 		switch r := r.(type) {
+		case nil:
+			return types.Vector2{}, nil
 		case rbxfile.ValueVector2:
 			return types.Vector2(r), nil
 		}
 	case typ.Name == "Vector3":
 		switch r := r.(type) {
+		case nil:
+			return types.Vector3{}, nil
 		case rbxfile.ValueVector3:
 			return types.Vector3(r), nil
 		}
-	case typ.Name == "CFrame":
+	case typ.Name == "CFrame",
+		typ.Name == "CoordinateFrame":
 		switch r := r.(type) {
+		case nil:
+			return types.CFrame{}, nil
 		case rbxfile.ValueCFrame:
 			return types.CFrame{
 				Position: types.Vector3(r.Position),
@@ -611,16 +659,22 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "Vector3int16":
 		switch r := r.(type) {
+		case nil:
+			return types.Vector3int16{}, nil
 		case rbxfile.ValueVector3int16:
 			return types.Vector3int16(r), nil
 		}
 	case typ.Name == "Vector2int16":
 		switch r := r.(type) {
+		case nil:
+			return types.Vector2int16{}, nil
 		case rbxfile.ValueVector2int16:
 			return types.Vector2int16(r), nil
 		}
 	case typ.Name == "NumberSequence":
 		switch r := r.(type) {
+		case nil:
+			return types.NumberSequence{}, nil
 		case rbxfile.ValueNumberSequence:
 			t := make(types.NumberSequence, len(r))
 			for i, k := range r {
@@ -630,6 +684,8 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "ColorSequence":
 		switch r := r.(type) {
+		case nil:
+			return types.ColorSequence{}, nil
 		case rbxfile.ValueColorSequence:
 			t := make(types.ColorSequence, len(r))
 			for i, k := range r {
@@ -643,11 +699,15 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "NumberRange":
 		switch r := r.(type) {
+		case nil:
+			return types.NumberRange{}, nil
 		case rbxfile.ValueNumberRange:
 			return types.NumberRange(r), nil
 		}
 	case typ.Name == "Rect":
 		switch r := r.(type) {
+		case nil:
+			return types.Rect{}, nil
 		case rbxfile.ValueRect:
 			return types.Rect{
 				Min: types.Vector2(r.Min),
@@ -656,11 +716,15 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		}
 	case typ.Name == "PhysicalProperties":
 		switch r := r.(type) {
+		case nil:
+			return types.PhysicalProperties{}, nil
 		case rbxfile.ValuePhysicalProperties:
 			return types.PhysicalProperties(r), nil
 		}
 	case typ.Name == "Color3uint8":
 		switch r := r.(type) {
+		case nil:
+			return rtypes.Color3uint8{}, nil
 		case rbxfile.ValueColor3uint8:
 			return rtypes.Color3uint8{
 				R: float32(r.R) / 255,
@@ -695,7 +759,7 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 // descTypeFromFileValue returns a descriptor type derived from the given
 // rbxfile value. Returns the zero type if the value type is not known.
 func descTypeFromFileValue(r rbxfile.Value) rbxdump.Type {
-	switch r.(type) {
+	switch r := r.(type) {
 	case rbxfile.ValueString:
 		return rbxdump.Type{Name: "string"}
 	case rbxfile.ValueBinaryString:
@@ -756,14 +820,22 @@ func descTypeFromFileValue(r rbxfile.Value) rbxdump.Type {
 		return rbxdump.Type{Name: "int64"}
 	case rbxfile.ValueSharedString:
 		return rbxdump.Type{Name: "SharedString"}
-	default:
-		return rbxdump.Type{}
+	case rbxfile.ValueOptional:
+		v := rbxfile.NewValue(r.ValueType())
+		typ := descTypeFromFileValue(v)
+		if typ != (rbxdump.Type{}) {
+			typ.Name += "?"
+		}
+		return typ
 	}
+	return rbxdump.Type{}
 }
 
 // string converts common string types to a string.
 func (d *rbxDecoder) string(r rbxfile.Value) (t string, ok bool) {
 	switch r := r.(type) {
+	case nil:
+		return "", true
 	case rbxfile.ValueString:
 		return string(r), true
 	case rbxfile.ValueBinaryString:
@@ -782,6 +854,8 @@ func (d *rbxDecoder) string(r rbxfile.Value) (t string, ok bool) {
 // int converts common numeric types to an int.
 func (d *rbxDecoder) int(r rbxfile.Value) (t int64, ok bool) {
 	switch r := r.(type) {
+	case nil:
+		return 0, true
 	case rbxfile.ValueInt:
 		return int64(r), true
 	case rbxfile.ValueFloat:
@@ -802,6 +876,8 @@ func (d *rbxDecoder) int(r rbxfile.Value) (t int64, ok bool) {
 // float converts common numeric types to a float.
 func (d *rbxDecoder) float(r rbxfile.Value) (t float64, ok bool) {
 	switch r := r.(type) {
+	case nil:
+		return 0, true
 	case rbxfile.ValueInt:
 		return float64(r), true
 	case rbxfile.ValueFloat:
@@ -1043,15 +1119,45 @@ func (e *rbxEncoder) value(inst *rbxfile.Instance, prop string, t types.PropValu
 // convertType converts a value according to descType, acquired from a
 // descriptor. If descType is nil, then the type is determined by the value
 // instead.
-func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.PropValue, descType *rbxdump.Type) (rqq rbxfile.Value, err error) {
+func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.PropValue, descType *rbxdump.Type) (r rbxfile.Value, err error) {
 	var typ rbxdump.Type
 	if descType != nil {
 		typ = *descType
 	} else {
-		typ = descTypeFromValue(t)
+		vt := t.Type()
+		if o, ok := t.(rtypes.Optional); ok {
+			vt = o.ValueType() + "?"
+		}
+		typ = descTypeFromValue(vt)
+	}
+	if strings.HasSuffix(typ.Name, "?") {
+		typ.Name = strings.TrimSuffix(typ.Name, "?")
+		if o, ok := t.(rtypes.Optional); ok {
+			// Unbox value. Nil is handled by converting to the zero for the
+			// type.
+			switch v := o.Value().(type) {
+			case nil:
+				t = nil
+			case types.PropValue:
+				t = v
+			}
+		}
+		// Otherwise, pretend value is optional, and try to convert as-is.
+		defer func() {
+			if err != nil || r == nil {
+				return
+			}
+			// Rebox value based on result of unboxing t.
+			if t == nil {
+				r = rbxfile.None(r.Type())
+			} else {
+				r = rbxfile.Some(r)
+			}
+		}()
 	}
 	switch {
 	case typ == rbxdump.Type{}:
+		// Zero designated as unknown type.
 		switch e.mode {
 		case modeNonStrict:
 			return nil, nil
@@ -1063,6 +1169,9 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Category == "Class":
 		switch t := t.(type) {
+		case nil:
+			//TODO: Decide how to resolve Optional Instance (if at all).
+			return nil, nil
 		case *rtypes.Instance:
 			// Having non-empty Name implies a descriptor.
 			if typ.Name != "" {
@@ -1102,28 +1211,30 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 	case typ.Category == "Enum":
 		if typ.Name != "" {
 			switch t := t.(type) {
+			case nil:
+				r, err = rbxfile.ValueToken(0), nil
 			case types.Int:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.Float:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.Double:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.BrickColor:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.Token:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.Int64:
-				rqq, err = e.enumItemValue(typ.Name, int(t))
+				r, err = e.enumItemValue(typ.Name, int(t))
 			case types.String:
-				rqq, err = e.enumItemName(typ.Name, string(t))
+				r, err = e.enumItemName(typ.Name, string(t))
 			case types.BinaryString:
-				rqq, err = e.enumItemName(typ.Name, string(t))
+				r, err = e.enumItemName(typ.Name, string(t))
 			case types.ProtectedString:
-				rqq, err = e.enumItemName(typ.Name, string(t))
+				r, err = e.enumItemName(typ.Name, string(t))
 			case types.Content:
-				rqq, err = e.enumItemName(typ.Name, string(t))
+				r, err = e.enumItemName(typ.Name, string(t))
 			case types.SharedString:
-				rqq, err = e.enumItemName(typ.Name, string(t))
+				r, err = e.enumItemName(typ.Name, string(t))
 			default:
 				switch e.mode {
 				case modeNonStrict:
@@ -1144,7 +1255,7 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 					return e.convertType(inst, prop, t, nil)
 				}
 			}
-			return rqq, nil
+			return r, nil
 		}
 		if t, ok := e.int(t); ok {
 			return rbxfile.ValueToken(t), nil
@@ -1167,6 +1278,8 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "bool":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueBool(false), nil
 		case types.Bool:
 			return rbxfile.ValueBool(t), nil
 		}
@@ -1184,11 +1297,15 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "UDim":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueUDim{}, nil
 		case types.UDim:
 			return rbxfile.ValueUDim(t), nil
 		}
 	case typ.Name == "UDim2":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueUDim2{}, nil
 		case types.UDim2:
 			return rbxfile.ValueUDim2{
 				X: rbxfile.ValueUDim(t.X),
@@ -1197,6 +1314,8 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "Ray":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueRay{}, nil
 		case types.Ray:
 			return rbxfile.ValueRay{
 				Origin:    rbxfile.ValueVector3(t.Origin),
@@ -1205,11 +1324,15 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "Faces":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueFaces{}, nil
 		case types.Faces:
 			return rbxfile.ValueFaces(t), nil
 		}
 	case typ.Name == "Axes":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueAxes{}, nil
 		case types.Axes:
 			return rbxfile.ValueAxes(t), nil
 		}
@@ -1219,21 +1342,30 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "Color3":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueColor3{}, nil
 		case types.Color3:
 			return rbxfile.ValueColor3(t), nil
 		}
 	case typ.Name == "Vector2":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueVector2{}, nil
 		case types.Vector2:
 			return rbxfile.ValueVector2(t), nil
 		}
 	case typ.Name == "Vector3":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueVector3{}, nil
 		case types.Vector3:
 			return rbxfile.ValueVector3(t), nil
 		}
 	case typ.Name == "CFrame":
 		switch t := t.(type) {
+		case nil:
+			//TODO: Return identity?
+			return rbxfile.ValueCFrame{}, nil
 		case types.CFrame:
 			return rbxfile.ValueCFrame{
 				Position: rbxfile.ValueVector3(t.Position),
@@ -1242,16 +1374,22 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "Vector3int16":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueVector3int16{}, nil
 		case types.Vector3int16:
 			return rbxfile.ValueVector3int16(t), nil
 		}
 	case typ.Name == "Vector2int16":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueVector2int16{}, nil
 		case types.Vector2int16:
 			return rbxfile.ValueVector2int16(t), nil
 		}
 	case typ.Name == "NumberSequence":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueNumberSequence{}, nil
 		case types.NumberSequence:
 			r := make(rbxfile.ValueNumberSequence, len(t))
 			for i, k := range t {
@@ -1261,6 +1399,8 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "ColorSequence":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueColorSequence{}, nil
 		case types.ColorSequence:
 			r := make(rbxfile.ValueColorSequence, len(t))
 			for i, k := range t {
@@ -1274,11 +1414,15 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "NumberRange":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueNumberRange{}, nil
 		case types.NumberRange:
 			return rbxfile.ValueNumberRange(t), nil
 		}
 	case typ.Name == "Rect":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueRect{}, nil
 		case types.Rect:
 			return rbxfile.ValueRect{
 				Min: rbxfile.ValueVector2(t.Min),
@@ -1287,11 +1431,15 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		}
 	case typ.Name == "PhysicalProperties":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValuePhysicalProperties{}, nil
 		case types.PhysicalProperties:
 			return rbxfile.ValuePhysicalProperties(t), nil
 		}
 	case typ.Name == "Color3uint8":
 		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueColor3uint8{}, nil
 		case rtypes.Color3uint8:
 			return rbxfile.ValueColor3uint8{
 				R: uint8(t.R * 255),
@@ -1325,76 +1473,85 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 
 // descTypeFromValue returns a descriptor type derived from the given value.
 // Returns the zero type if the value type is not known.
-func descTypeFromValue(t types.PropValue) rbxdump.Type {
-	switch t.(type) {
-	case types.String:
+func descTypeFromValue(t string) rbxdump.Type {
+	switch t {
+	case "string":
 		return rbxdump.Type{Name: "string"}
-	case types.BinaryString:
+	case "BinaryString":
 		return rbxdump.Type{Name: "BinaryString"}
-	case types.ProtectedString:
+	case "ProtectedString":
 		return rbxdump.Type{Name: "ProtectedString"}
-	case types.Content:
+	case "Content":
 		return rbxdump.Type{Name: "Content"}
-	case types.Bool:
+	case "bool":
 		return rbxdump.Type{Name: "bool"}
-	case types.Int:
+	case "int":
 		return rbxdump.Type{Name: "int"}
-	case types.Float:
+	case "float":
 		return rbxdump.Type{Name: "float"}
-	case types.Double:
+	case "double":
 		return rbxdump.Type{Name: "double"}
-	case types.UDim:
+	case "UDim":
 		return rbxdump.Type{Name: "UDim"}
-	case types.UDim2:
+	case "UDim2":
 		return rbxdump.Type{Name: "UDim2"}
-	case types.Ray:
+	case "Ray":
 		return rbxdump.Type{Name: "Ray"}
-	case types.Faces:
+	case "Faces":
 		return rbxdump.Type{Name: "Faces"}
-	case types.Axes:
+	case "Axes":
 		return rbxdump.Type{Name: "Axes"}
-	case types.BrickColor:
+	case "BrickColor":
 		return rbxdump.Type{Name: "BrickColor"}
-	case types.Color3:
+	case "Color3":
 		return rbxdump.Type{Name: "Color3"}
-	case types.Vector2:
+	case "Vector2":
 		return rbxdump.Type{Name: "Vector2"}
-	case types.Vector3:
+	case "Vector3":
 		return rbxdump.Type{Name: "Vector3"}
-	case types.CFrame:
+	case "CFrame":
 		return rbxdump.Type{Name: "CFrame"}
-	case types.Token:
+	case "token":
 		return rbxdump.Type{Category: "Enum"}
-	case *rtypes.Instance:
+	case "Instance":
 		return rbxdump.Type{Category: "Class"}
-	case types.Vector3int16:
+	case "Vector3int16":
 		return rbxdump.Type{Name: "Vector3int16"}
-	case types.Vector2int16:
+	case "Vector2int16":
 		return rbxdump.Type{Name: "Vector2int16"}
-	case types.NumberSequence:
+	case "NumberSequence":
 		return rbxdump.Type{Name: "NumberSequence"}
-	case types.ColorSequence:
+	case "ColorSequence":
 		return rbxdump.Type{Name: "ColorSequence"}
-	case types.NumberRange:
+	case "NumberRange":
 		return rbxdump.Type{Name: "NumberRange"}
-	case types.Rect:
+	case "Rect":
 		return rbxdump.Type{Name: "Rect"}
-	case types.PhysicalProperties:
+	case "PhysicalProperties":
 		return rbxdump.Type{Name: "PhysicalProperties"}
-	case rtypes.Color3uint8:
+	case "Color3uint8":
 		return rbxdump.Type{Name: "Color3uint8"}
-	case types.Int64:
+	case "int64":
 		return rbxdump.Type{Name: "int64"}
-	case types.SharedString:
+	case "SharedString":
 		return rbxdump.Type{Name: "SharedString"}
 	default:
-		return rbxdump.Type{}
+		if strings.HasSuffix(t, "?") {
+			typ := descTypeFromValue(strings.TrimSuffix(t, "?"))
+			if typ != (rbxdump.Type{}) {
+				typ.Name += "?"
+			}
+			return typ
+		}
 	}
+	return rbxdump.Type{}
 }
 
 // string converts common string types to a string.
 func (e *rbxEncoder) string(t types.PropValue) (r string, ok bool) {
 	switch t := t.(type) {
+	case nil:
+		return "", true
 	case types.String:
 		return string(t), true
 	case types.BinaryString:
@@ -1413,6 +1570,8 @@ func (e *rbxEncoder) string(t types.PropValue) (r string, ok bool) {
 // int converts common numeric types to an int.
 func (e *rbxEncoder) int(t types.PropValue) (r int64, ok bool) {
 	switch t := t.(type) {
+	case nil:
+		return 0, true
 	case types.Int:
 		return int64(t), true
 	case types.Float:
@@ -1433,6 +1592,8 @@ func (e *rbxEncoder) int(t types.PropValue) (r int64, ok bool) {
 // float converts common numeric types to a float.
 func (e *rbxEncoder) float(t types.PropValue) (r float64, ok bool) {
 	switch t := t.(type) {
+	case nil:
+		return 0, true
 	case types.Int:
 		return float64(t), true
 	case types.Float:
