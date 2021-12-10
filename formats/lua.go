@@ -209,7 +209,7 @@ func LocalScriptLuau() rbxmk.Format {
 func init() { register(Luau) }
 func Luau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "lua",
+		Name:       "luau",
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
