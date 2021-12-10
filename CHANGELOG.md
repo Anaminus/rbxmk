@@ -3,6 +3,15 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+**Highlights:**
+- When a descriptor is set while encoding or decoding an instance, the service status is determined by the Service tag from instance's class descriptor instead of the instance's IsService field.
+	- This improves conversion from XML Roblox formats to binary Roblox formats.
+- Add support for Optional types.
+	- If a descriptor is set, optional properties are handled transparently by accepting either nil (for None), or a value of the optional's type (for Some).
+	- Add [types.none](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typesnone) to create an empty Optional exprim.
+	- Add [types.some](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typessome) to create an Optional exprim that contains a value.
+	- Currently, this only affects the "Model.WorldPivotData" property, which is an optional CFrame.
+
 **Fixes**:
 - Fix descriptor IsA checks failing when superclass matches current class.
 - Fix encoding of PhysicalProperties type in rbxl format.
