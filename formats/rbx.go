@@ -347,17 +347,24 @@ func (d *rbxDecoder) instance(r *rbxfile.Instance) (t *rtypes.Instance, err erro
 	if t, ok := d.refs[r]; ok {
 		return t, nil
 	}
-	if d.desc != nil && d.desc.Class(r.ClassName) == nil {
-		switch d.mode {
-		case modeNonStrict:
-			return nil, nil
-		case modeStrict:
-			return nil, fmt.Errorf("decode instance: unknown class %q", r.ClassName)
-		case modePreserve:
+	var classDesc *rbxdump.Class
+	if d.desc != nil {
+		if classDesc = d.desc.Class(r.ClassName); classDesc == nil {
+			switch d.mode {
+			case modeNonStrict:
+				return nil, nil
+			case modeStrict:
+				return nil, fmt.Errorf("decode instance: unknown class %q", r.ClassName)
+			case modePreserve:
+			}
 		}
 	}
 	t = rtypes.NewInstance(r.ClassName, nil)
-	t.IsService = r.IsService
+	if classDesc == nil {
+		t.IsService = r.IsService
+	} else {
+		t.IsService = classDesc.GetTag("Service")
+	}
 	t.Reference = r.Reference
 	d.refs[r] = t
 	for prop, value := range r.Properties {
@@ -1053,17 +1060,24 @@ func (e *rbxEncoder) instance(t *rtypes.Instance) (r *rbxfile.Instance, err erro
 	if r, ok := e.refs[t]; ok {
 		return r, nil
 	}
-	if e.desc != nil && e.desc.Class(t.ClassName) == nil {
-		switch e.mode {
-		case modeNonStrict:
-			return nil, nil
-		case modeStrict:
-			return nil, fmt.Errorf("encode instance: unknown class %q", t.ClassName)
-		case modePreserve:
+	var classDesc *rbxdump.Class
+	if e.desc != nil {
+		if classDesc = e.desc.Class(t.ClassName); classDesc == nil {
+			switch e.mode {
+			case modeNonStrict:
+				return nil, nil
+			case modeStrict:
+				return nil, fmt.Errorf("encode instance: unknown class %q", t.ClassName)
+			case modePreserve:
+			}
 		}
 	}
 	r = rbxfile.NewInstance(t.ClassName)
-	r.IsService = t.IsService
+	if classDesc == nil {
+		r.IsService = t.IsService
+	} else {
+		r.IsService = classDesc.GetTag("Service")
+	}
 	r.Reference = t.Reference
 	e.refs[t] = r
 	for prop, value := range t.Properties() {
