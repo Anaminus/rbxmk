@@ -17,12 +17,18 @@ This document contains a reference to the formats available to rbxmk scripts.
 10. [modulescript.lua][modulescript.lua]
 11. [script.lua][script.lua]
 12. [server.lua][server.lua]
-13. [rbxattr][rbxattr]
-14. [rbxl][rbxl]
-15. [rbxlx][rbxlx]
-16. [rbxm][rbxm]
-17. [rbxmx][rbxmx]
-18. [txt][txt]
+13. [luau][luau]
+14. [client.luau][client.luau]
+15. [localscript.luau][localscript.luau]
+16. [modulescript.luau][modulescript.luau]
+17. [script.luau][script.luau]
+18. [server.luau][server.luau]
+19. [rbxattr][rbxattr]
+20. [rbxl][rbxl]
+21. [rbxlx][rbxlx]
+22. [rbxm][rbxm]
+23. [rbxmx][rbxmx]
+24. [txt][txt]
 
 </td></tr></tbody>
 </table>
@@ -268,6 +274,80 @@ This format has no options.
 [server.lua]: #user-content-serverlua
 
 The **server.lua** format is an alias for [script.lua][script.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A Script with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## luau
+[luau]: #user-content-luau
+
+The **luau** format is an alias for [modulescript.lua][modulescript.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A ModuleScript with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## client.luau
+[client.luau]: #user-content-clientluau
+
+The **client.luau** format is an alias for [localscript.lua][localscript.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A LocalScript with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## localscript.luau
+[localscript.luau]: #user-content-localscriptluau
+
+The **localscript.luau** format is an alias for
+[localscript.lua][localscript.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A LocalScript with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## modulescript.luau
+[modulescript.luau]: #user-content-modulescriptluau
+
+The **modulescript.luau** format is an alias for
+[modulescript.lua][modulescript.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A ModuleScript with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## script.luau
+[script.luau]: #user-content-scriptluau
+
+The **script.luau** format is an alias for [script.lua][script.lua].
+
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A Script with a Source property.
+Encode    | Stringable           | Any string-like value.
+
+This format has no options.
+
+## server.luau
+[server.luau]: #user-content-serverluau
+
+The **server.luau** format is an alias for [script.lua][script.lua].
 
 Direction | Type                 | Description
 ----------|----------------------|------------

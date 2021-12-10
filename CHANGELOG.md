@@ -4,6 +4,13 @@ branch is the latest unreleased version.
 
 ## imperative
 **Highlights:**
+- Add support for `.luau` extension.
+	- Add [`luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-luau).
+	- Add [`client.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-clientluau).
+	- Add [`localscript.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-localscriptluau).
+	- Add [`modulescript.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-modulescriptluau).
+	- Add [`script.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-scriptluau).
+	- Add [`server.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.8.0/doc/formats.md#user-content-serverluau).
 - When a descriptor is set while encoding or decoding an instance, the service status is determined by the Service tag from instance's class descriptor instead of the instance's IsService field.
 	- This improves conversion from XML Roblox formats to binary Roblox formats.
 - Add support for Optional types.
