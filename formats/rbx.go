@@ -21,6 +21,10 @@ func RBXL() rbxmk.Format {
 		Name:        "rbxl",
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio"},
+		Options: map[string][]string{
+			"Desc":     {"RootDesc", "bool"},
+			"DescMode": {"string"},
+		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -73,6 +77,10 @@ func RBXM() rbxmk.Format {
 		Name:        "rbxm",
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio"},
+		Options: map[string][]string{
+			"Desc":     {"RootDesc", "bool"},
+			"DescMode": {"string"},
+		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -125,6 +133,10 @@ func RBXLX() rbxmk.Format {
 		Name:        "rbxlx",
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		Options: map[string][]string{
+			"Desc":     {"RootDesc", "bool"},
+			"DescMode": {"string"},
+		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
@@ -177,6 +189,10 @@ func RBXMX() rbxmk.Format {
 		Name:        "rbxmx",
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
+		Options: map[string][]string{
+			"Desc":     {"RootDesc", "bool"},
+			"DescMode": {"string"},
+		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},

@@ -22,6 +22,7 @@ branch is the latest unreleased version.
 **Fixes**:
 - Fix descriptor IsA checks failing when superclass matches current class.
 - Fix encoding of PhysicalProperties type in rbxl format.
+- Fix options not working for the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
