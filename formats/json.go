@@ -70,8 +70,8 @@ func JSON() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "json",
 		MediaTypes: []string{"application/json", "text/plain"},
-		Options: map[string]string{
-			"Indent": "string",
+		Options: map[string][]string{
+			"Indent": {"string"},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {

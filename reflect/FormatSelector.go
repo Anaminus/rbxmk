@@ -38,18 +38,23 @@ func FormatSelector() rbxmk.Reflector {
 					return table, nil
 				}
 				table := s.CreateTable(0, len(format.Options))
-				for field, typ := range format.Options {
-					rfl := s.Reflector(typ)
-					if rfl.Name == "" {
-						return nil, fmt.Errorf("unknown type %q for option %s of format %s", typ, field, format.Name)
-					}
+				for field, fieldTypes := range format.Options {
 					value, ok := v.Options[field]
 					if ok {
-						v, err := rfl.PushTo(s, value)
-						if err != nil {
-							return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
+						for _, fieldType := range fieldTypes {
+							if v.Type() == fieldType {
+								rfl := s.Reflector(fieldType)
+								if rfl.Name == "" {
+									return nil, fmt.Errorf("unknown type %q for option %s of format %s", fieldType, field, format.Name)
+								}
+								v, err := rfl.PushTo(s, value)
+								if err != nil {
+									return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
+								}
+								table.RawSetString(field, v)
+							}
 						}
-						table.RawSetString(field, v)
+						return nil, fmt.Errorf("expected type %s for option %s of format %s, got %s", s.ListTypes(fieldTypes), field, format.Name, value.Type())
 					}
 				}
 				return table, nil
@@ -87,16 +92,14 @@ func FormatSelector() rbxmk.Reflector {
 					Format:  format.Name,
 					Options: make(rtypes.Dictionary),
 				}
-				for field, typ := range format.Options {
-					rfl := s.Reflector(typ)
-					if rfl.Name == "" {
-						return nil, fmt.Errorf("unknown type %q for option %s of format %s", typ, field, format.Name)
-					}
-					v, err := rfl.PullFrom(s, v.RawGetString(field))
+				for field, fieldTypes := range format.Options {
+					v, err := s.PullAnyFromDictionaryOpt(v, field, nil, fieldTypes...)
 					if err != nil {
 						return nil, fmt.Errorf("field %s for format %s: %w", field, format.Name, err)
 					}
-					sel.Options[field] = v
+					if v != nil {
+						sel.Options[field] = v
+					}
 				}
 				return sel, nil
 			default:

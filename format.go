@@ -23,10 +23,10 @@ type Format struct {
 	// to be used by sources as needed.
 	MediaTypes []string
 
-	// Options maps a field name to a value type. A FormatOptions received by
-	// Encode or Decode will have only these fields. The value of a field, if it
-	// exists, will be of the specified type.
-	Options map[string]string
+	// Options maps a field name to a number of value types. A FormatOptions
+	// received by Encode or Decode will have only these fields. The value of a
+	// field, if it exists, will be one of the specified type.
+	Options map[string][]string
 
 	// CanDecode returns whether the format decodes into the given type.
 	CanDecode func(g Global, opt FormatOptions, typeName string) bool
