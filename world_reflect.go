@@ -54,8 +54,8 @@ func (w *World) PullOpt(lv lua.LValue, d types.Value, t string) (v types.Value, 
 	return w.Pull(lv, t)
 }
 
-// listTypes returns each type listed in a natural sentence.
-func listTypes(types []string) string {
+// ListTypes returns each type listed in a natural sentence.
+func (w *World) ListTypes(types []string) string {
 	switch len(types) {
 	case 0:
 		return ""
@@ -80,7 +80,7 @@ func (w *World) PullAnyOf(lv lua.LValue, t ...string) (v types.Value, err error)
 		}
 	}
 
-	return nil, TypeError{Want: listTypes(t), Got: w.Typeof(lv)}
+	return nil, TypeError{Want: w.ListTypes(t), Got: w.Typeof(lv)}
 }
 
 // PullAnyOfOpt reflects lv to the first successful type from t. Returns d if

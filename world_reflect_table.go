@@ -70,7 +70,7 @@ func (w *World) PullAnyFromTable(table *lua.LTable, field lua.LValue, t ...strin
 			return v, nil
 		}
 	}
-	return nil, fmt.Errorf("field %s: %s expected, got %s", field, listTypes(t), w.Typeof(lv))
+	return nil, fmt.Errorf("field %s: %s expected, got %s", field, w.ListTypes(t), w.Typeof(lv))
 }
 
 // PullAnyFromTableOpt gets a value from table[field], and reflects a value from
@@ -90,7 +90,7 @@ func (w *World) PullAnyFromTableOpt(table *lua.LTable, field lua.LValue, d types
 			return v, nil
 		}
 	}
-	return nil, fmt.Errorf("field %s: %s expected, got %s", field, listTypes(t), w.Typeof(lv))
+	return nil, fmt.Errorf("field %s: %s expected, got %s", field, w.ListTypes(t), w.Typeof(lv))
 }
 
 // PushToArray is like PushToTable, but receives an int as the index of the

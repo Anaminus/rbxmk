@@ -51,7 +51,7 @@ func (s State) PullOpt(n int, d types.Value, t string) (v types.Value) {
 func (s State) PullAnyOf(n int, t ...string) (v types.Value) {
 	v, err := s.World.PullAnyOf(s.CheckAny(n), t...)
 	if err != nil {
-		s.TypeError(n, listTypes(t), s.Typeof(n))
+		s.TypeError(n, s.ListTypes(t), s.Typeof(n))
 		return nil
 	}
 	return v
