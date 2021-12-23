@@ -4664,6 +4664,23 @@
 		{
 			"Items": [
 				{
+					"Name": "Automatic",
+					"Value": 0
+				},
+				{
+					"Name": "StreamingMesh",
+					"Value": 1
+				},
+				{
+					"Name": "Disabled",
+					"Value": 2
+				}
+			],
+			"Name": "ModelLevelOfDetail"
+		},
+		{
+			"Items": [
+				{
 					"Name": "Top",
 					"Value": 1
 				},
