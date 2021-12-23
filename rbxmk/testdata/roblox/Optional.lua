@@ -35,5 +35,10 @@ T.Pass(function() model.WorldPivotData = types.some(CFrame.new(1,2,3)) end, "wit
 T.Pass(typeof(model.WorldPivotData) == "CFrame", "with desc, value of some CFrame is CFrame")
 T.Pass(model.WorldPivotData == CFrame.new(1,2,3), "with desc, CFrame is expected value")
 
+rbxmk.globalDesc = nil
+T.Pass(typeof(model.WorldPivotData) == "Optional", "check that CFrame sets some CFrame")
+T.Pass(model.WorldPivotData.Value == CFrame.new(1,2,3), "check that some CFrame value is correct")
+rbxmk.globalDesc = desc
+
 T.Fail(function() model.WorldPivotData = types.some("Foobar") end, "with desc, set to some string")
 T.Pass(typeof(model.WorldPivotData) == "CFrame", "did not set some string")
