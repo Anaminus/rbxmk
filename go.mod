@@ -12,7 +12,7 @@ require (
 	github.com/peterh/liner v1.2.1
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.4.1
-	github.com/robloxapi/rbxfile v0.4.2
+	github.com/robloxapi/rbxfile v0.4.3
 	github.com/robloxapi/types v0.2.1
 	github.com/yuin/goldmark v1.3.3
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
