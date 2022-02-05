@@ -23,7 +23,8 @@ branch is the latest unreleased version.
 - Fix descriptor IsA checks failing when superclass matches current class.
 - Fix encoding of PhysicalProperties type in rbxl format.
 - Fix options not working for the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
-- Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
+- Fix [SetAttribute](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
+- Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattributes) pulling wrong argument for dictionary.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 

@@ -1145,7 +1145,7 @@ func Instance() rbxmk.Reflector {
 			},
 			"SetAttributes": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					dict := s.Pull(3, "Dictionary").(rtypes.Dictionary)
+					dict := s.Pull(2, "Dictionary").(rtypes.Dictionary)
 					setAttributes(s, v.(*rtypes.Instance), dict)
 					return 0
 				},
