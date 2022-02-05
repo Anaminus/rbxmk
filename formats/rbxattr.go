@@ -139,6 +139,8 @@ func encodeAttributeValue(t types.Value) (a rbxattr.Value, err error) {
 	case types.Numberlike:
 		a := rbxattr.ValueDouble(t.Numberlike())
 		return &a, nil
+	case rtypes.NilType:
+		return nil, nil
 	default:
 		return nil, cannotEncode(t)
 	}

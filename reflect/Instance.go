@@ -1124,7 +1124,11 @@ func Instance() rbxmk.Reflector {
 					attribute := string(s.Pull(2, "string").(types.String))
 					value := s.Pull(3, "Variant")
 					dict := getAttributes(s, inst)
-					dict[attribute] = value
+					if value == nil {
+						delete(dict, attribute)
+					} else {
+						dict[attribute] = value
+					}
 					setAttributes(s, inst, dict)
 					return 0
 				},
