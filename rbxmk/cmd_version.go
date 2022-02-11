@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/anaminus/snek"
+	"github.com/anaminus/cobra"
 )
 
 func init() {
-	Program.Register(snek.Def{
-		Name: "version",
-		New:  func() snek.Command { return VersionCommand{} },
-	})
+	var c VersionCommand
+	var cmd = &cobra.Command{
+		Use: "version",
+		Run: c.Run,
+	}
+	Program.AddCommand(cmd)
 }
 
 func VersionString() string {
@@ -26,10 +26,6 @@ func VersionString() string {
 
 type VersionCommand struct{}
 
-func (VersionCommand) Run(opt snek.Options) error {
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
-	fmt.Fprintln(opt.Stdout, VersionString())
-	return nil
+func (VersionCommand) Run(cmd *cobra.Command, args []string) {
+	cmd.Println(VersionString())
 }

@@ -2,20 +2,24 @@ package main
 
 import (
 	"errors"
-	"fmt"
 
+	"github.com/anaminus/cobra"
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/gopher-lua/parse"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/snek"
 	"github.com/peterh/liner"
 )
 
 func init() {
-	Program.Register(snek.Def{
-		Name: "i",
-		New:  func() snek.Command { return &InteractiveCommand{} },
-	})
+	var c InteractiveCommand
+	var cmd = &cobra.Command{
+		Use: "i",
+		//TODO: "interactive" Alias.
+		RunE: c.Run,
+	}
+	c.SetFlags(cmd.PersistentFlags())
+	Program.AddCommand(cmd)
 }
 
 type InteractiveCommand struct {
@@ -24,17 +28,12 @@ type InteractiveCommand struct {
 	Init func(rbxmk.State)
 }
 
-func (c *InteractiveCommand) SetFlags(flags snek.FlagSet) {
+func (c *InteractiveCommand) SetFlags(flags *pflag.FlagSet) {
 	c.WorldFlags.SetFlags(flags)
 	c.DescFlags.SetFlags(flags)
 }
 
-func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
-	// Parse flags.
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
-
+func (c *InteractiveCommand) Run(cmd *cobra.Command, args []string) (err error) {
 	// Initialize world.
 	world, err := InitWorld(WorldOpt{
 		WorldFlags: c.WorldFlags,
@@ -42,7 +41,7 @@ func (c *InteractiveCommand) Run(opt snek.Options) (err error) {
 	if err != nil {
 		return err
 	}
-	injectSSLKeyLogFile(world, opt.Stderr)
+	injectSSLKeyLogFile(world, cmd.ErrOrStderr())
 	state := world.LuaState()
 	exit := make(chan struct{})
 	state.GetGlobal("os").(*lua.LTable).RawSetString("exit", world.WrapFunc(func(s rbxmk.State) int {
@@ -82,7 +81,7 @@ repl:
 			continue
 		}
 		if err := world.DoString(chunk, "stdin", 0); err != nil {
-			fmt.Fprintln(opt.Stderr, err)
+			cmd.PrintErrln(err)
 			continue
 		}
 		if err == expr {
@@ -94,7 +93,7 @@ repl:
 				s[i-1] = state.ToStringMeta(state.Get(i))
 			}
 			state.Pop(n)
-			fmt.Println(s...)
+			cmd.Println(s...)
 		}
 		// Check if os.exit was called.
 		select {

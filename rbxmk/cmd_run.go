@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
+	"github.com/anaminus/cobra"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
-	"github.com/anaminus/snek"
 )
 
 // shortenPath transforms the given path so that it is relative to the working
@@ -23,23 +25,21 @@ func shortenPath(filename string) string {
 	return filename
 }
 
+func initRunCommand(c *RunCommand) *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:  "run",
+		RunE: c.Run,
+	}
+	c.SetFlags(cmd.PersistentFlags())
+	cmd.FParseErrWhitelist.UnknownFlags = true
+	cmd.Flags().KeepUnknownFlags = true
+	return cmd
+}
+
 func init() {
-	Program.Register(snek.Def{
-		Name: "run",
-		New:  func() snek.Command { return &RunCommand{} },
-	})
-}
-
-// repeatedString is a string flag that can be specified multiple times.
-type repeatedString []string
-
-func (s repeatedString) String() string {
-	return strings.Join(s, ",")
-}
-
-func (s *repeatedString) Set(v string) error {
-	*s = append(*s, v)
-	return nil
+	var c RunCommand
+	cmd := initRunCommand(&c)
+	Program.AddCommand(cmd)
 }
 
 type RunCommand struct {
@@ -48,7 +48,7 @@ type RunCommand struct {
 	Init func(c *RunCommand, s rbxmk.State)
 }
 
-func (c *RunCommand) SetFlags(flags snek.FlagSet) {
+func (c *RunCommand) SetFlags(flags *pflag.FlagSet) {
 	c.WorldFlags.SetFlags(flags)
 	c.DescFlags.SetFlags(flags)
 }
@@ -56,15 +56,9 @@ func (c *RunCommand) SetFlags(flags snek.FlagSet) {
 // Run is the entrypoint to the command for running scripts. init runs after the
 // World envrionment is fully initialized and arguments have been pushed, and
 // before the script runs.
-func (c *RunCommand) Run(opt snek.Options) error {
-	// Parse flags.
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
-	args := opt.Args()
+func (c *RunCommand) Run(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		opt.WriteUsageOf(opt.Stderr, opt.Def)
-		return nil
+		return cmd.Usage()
 	}
 	file := args[0]
 	args = args[1:]
@@ -77,7 +71,7 @@ func (c *RunCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
-	injectSSLKeyLogFile(world, opt.Stderr)
+	injectSSLKeyLogFile(world, cmd.ErrOrStderr())
 	if c.Init != nil {
 		c.Init(c, world.State())
 	}
@@ -91,10 +85,19 @@ func (c *RunCommand) Run(opt snek.Options) error {
 
 	// Run stdin as script.
 	if file == "-" {
-		if opt.Stdin == nil {
+		stdin := cmd.InOrStdin()
+		if stdin == nil {
 			return fmt.Errorf("no file handle")
 		}
-		return world.DoFileHandle(opt.Stdin, "", len(args))
+		if f, ok := stdin.(fs.File); ok {
+			return world.DoFileHandle(f, "", len(args))
+		} else {
+			b, err := io.ReadAll(stdin)
+			if err != nil {
+				return fmt.Errorf("read stdin: %w", err)
+			}
+			return world.DoString(string(b), "", len(args))
+		}
 	}
 
 	// Run file as script.

@@ -5,17 +5,21 @@ import (
 	"io"
 	"os"
 
+	"github.com/anaminus/cobra"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/snek"
 )
 
 func init() {
-	Program.Register(snek.Def{
-		Name: "download-asset",
-		New:  func() snek.Command { return &DownloadAssetCommand{} },
-	})
+	var c DownloadAssetCommand
+	var cmd = &cobra.Command{
+		Use:  "download-asset",
+		RunE: c.Run,
+	}
+	c.SetFlags(cmd.PersistentFlags())
+	Program.AddCommand(cmd)
 }
 
 type DownloadAssetCommand struct {
@@ -25,18 +29,14 @@ type DownloadAssetCommand struct {
 	FileFormat  string
 }
 
-func (c *DownloadAssetCommand) SetFlags(flags snek.FlagSet) {
+func (c *DownloadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
 	flags.Int64Var(&c.ID, "id", 0, Doc("Commands/download-asset:Flags/id"))
 	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("Commands/download-asset:Flags/format"))
 	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/download-asset:Flags/file-format"))
 }
 
-func (c *DownloadAssetCommand) Run(opt snek.Options) error {
-	// Parse flags.
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
+func (c *DownloadAssetCommand) Run(cmd *cobra.Command, args []string) error {
 	if c.ID <= 0 {
 		return fmt.Errorf("must specify valid asset ID with -id flag")
 	}
@@ -52,7 +52,7 @@ func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
-	injectSSLKeyLogFile(world, opt.Stderr)
+	injectSSLKeyLogFile(world, cmd.ErrOrStderr())
 
 	// Check formats.
 	assetFormat := world.Format(c.AssetFormat)
@@ -84,22 +84,24 @@ func (c *DownloadAssetCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return fmt.Errorf("download asset: %w", err)
 	}
-	var file io.WriteCloser
-	if filename := opt.Arg(0); filename == "" {
-		file = opt.Stdout
+	var file io.Writer
+	if filename := args[0]; filename == "" {
+		file = cmd.OutOrStdout()
 	} else {
 		f, err := os.Create(filename)
 		if err != nil {
 			return fmt.Errorf("create file: %w", err)
 		}
+		defer func() {
+			if e := f.Close(); e != nil {
+				err = fmt.Errorf("close file: %w", e)
+			}
+		}()
 		file = f
 	}
 	err = fileFormat.Encode(world.Global, rtypes.FormatSelector{Format: fileFormat.Name}, file, body)
 	if err != nil {
 		return fmt.Errorf("encode file: %w", err)
-	}
-	if err := file.Close(); err != nil {
-		return fmt.Errorf("close file: %w", err)
 	}
 	return nil
 }

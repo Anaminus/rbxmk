@@ -3,34 +3,32 @@ package main
 import (
 	"fmt"
 
-	"github.com/anaminus/snek"
+	"github.com/anaminus/cobra"
 )
 
 func init() {
-	Program.Register(snek.Def{
-		Name: "doc",
-		New:  func() snek.Command { return &DocCommand{} },
-	})
+	var c DocCommand
+	var cmd = &cobra.Command{
+		Use:  "doc",
+		RunE: c.Run,
+	}
+	Program.AddCommand(cmd)
 }
 
 type DocCommand struct{}
 
-func (c *DocCommand) Run(opt snek.Options) error {
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
-
-	switch len(opt.Args()) {
+func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
+	switch len(args) {
 	case 0:
-		opt.WriteUsageOf(opt.Stderr, opt.Def)
+		cmd.Usage()
 		topics := ListFragments("")
-		fmt.Fprintln(opt.Stderr, "\nThe following top-level topics are available:")
+		cmd.PrintErrln("\nThe following top-level topics are available:")
 		for _, topic := range topics {
-			fmt.Fprintf(opt.Stderr, "\t%s\n", topic)
+			cmd.PrintErrf("\t%s\n", topic)
 		}
 	case 1, 2:
-		mode := opt.Arg(0)
-		ref := opt.Arg(1)
+		mode := args[0]
+		ref := args[1]
 		switch mode {
 		case "frag":
 			content := ResolveFragment(ref)
@@ -39,19 +37,19 @@ func (c *DocCommand) Run(opt snek.Options) error {
 				if len(topics) == 0 {
 					return fmt.Errorf("no content for topic %q", ref)
 				}
-				fmt.Fprintln(opt.Stderr, "The following sub-topics are available:")
+				cmd.PrintErrln("The following sub-topics are available:")
 				for _, topic := range topics {
-					fmt.Fprintf(opt.Stderr, "\t%s\n", topic)
+					cmd.PrintErrf("\t%s\n", topic)
 				}
 			} else {
-				fmt.Fprintln(opt.Stdout, content)
+				cmd.Println(content)
 			}
 		case "list":
 			topics := ListFragments(ref)
-			fmt.Fprintln(opt.Stderr, "Topics:")
+			cmd.PrintErrln("Topics:")
 			for _, topic := range topics {
-				fmt.Fprint(opt.Stderr, "\t")
-				fmt.Fprintln(opt.Stdout, topic)
+				cmd.PrintErr("\t")
+				cmd.Println(topic)
 			}
 		default:
 			return fmt.Errorf("unknown mode %q (expected frag or list)", mode)

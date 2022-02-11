@@ -5,10 +5,10 @@ import (
 	"io"
 	"os"
 
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/snek"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxdump/diff"
 )
@@ -112,14 +112,14 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err err
 	return &rtypes.RootDesc{Root: prev}, nil
 }
 
-func (d *DescFlags) SetFlags(flags snek.FlagSet) {
+func (d *DescFlags) SetFlags(flags *pflag.FlagSet) {
 	flags.BoolVar(&d.Latest, "desc-latest", false, Doc("Flags/desc:desc-latest"))
-	flags.Func("desc-file", Doc("Flags/desc:desc-file"), func(v string) error {
+	flags.Var(funcFlag(func(v string) error {
 		d.Files = append(d.Files, v)
 		return nil
-	})
-	flags.Func("desc-patch", Doc("Flags/desc:desc-patch"), func(v string) error {
+	}), "desc-file", Doc("Flags/desc:desc-file"))
+	flags.Var(funcFlag(func(v string) error {
 		d.Patches = append(d.Patches, v)
 		return nil
-	})
+	}), "desc-patch", Doc("Flags/desc:desc-patch"))
 }

@@ -3,10 +3,11 @@ module github.com/anaminus/rbxmk
 go 1.17
 
 require (
+	github.com/anaminus/cobra v1.4.0-z
 	github.com/anaminus/drill v0.3.1
 	github.com/anaminus/gopher-lua v0.4.1
 	github.com/anaminus/parse v0.3.0
-	github.com/anaminus/snek v0.3.0
+	github.com/anaminus/pflag v1.0.6-z
 	github.com/bbrks/wrap/v2 v2.5.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/peterh/liner v1.2.1
@@ -21,6 +22,7 @@ require (
 
 require (
 	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 )

@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
+	"github.com/anaminus/cobra"
 	"github.com/anaminus/rbxmk/dumpformats"
-	"github.com/anaminus/snek"
 )
 
 func init() {
@@ -14,16 +15,19 @@ func init() {
 	for i, format := range dumpfmts {
 		dumpfmts[i].Description = Doc("DumpFormats/" + format.Name + ":Summary")
 	}
-	Program.Register(snek.Def{
-		Name: "dump",
-		New: func() snek.Command {
-			return &DumpCommand{Formats: dumpfmts}
-		},
-		Init: func(def snek.Def) snek.Def {
+	var c DumpCommand
+	c.Formats = dumpfmts
+	var cmd = &cobra.Command{
+		Use:  "dump",
+		RunE: c.Run,
+	}
+	var o sync.Once
+	cobra.OnInitialize(func() {
+		o.Do(func() {
 			// Populate description with dump formats.
 			var buf strings.Builder
 			dumpfmts.WriteTo(&buf)
-			def.Description = os.Expand(def.Description, func(v string) string {
+			cmd.Long = os.Expand(cmd.Long, func(v string) string {
 				switch strings.ToLower(v) {
 				case "formats":
 					return buf.String()
@@ -31,25 +35,19 @@ func init() {
 					return ""
 				}
 			})
-			return def
-		},
+		})
 	})
+
+	Program.AddCommand(cmd)
 }
 
 type DumpCommand struct {
 	Formats dumpformats.Formats
 }
 
-func (c *DumpCommand) Run(opt snek.Options) error {
-	// Parse flags.
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
-
-	args := opt.Args()
+func (c *DumpCommand) Run(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		opt.WriteUsageOf(opt.Stderr, opt.Def)
-		return nil
+		return cmd.Usage()
 	}
 
 	format, ok := c.Formats.Get(args[0])
@@ -68,5 +66,5 @@ func (c *DumpCommand) Run(opt snek.Options) error {
 	root := DumpWorld(world)
 
 	// Dump format.
-	return format.Func(opt.Stdout, root)
+	return format.Func(cmd.OutOrStdout(), root)
 }

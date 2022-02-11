@@ -1,15 +1,30 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
 
-	"github.com/anaminus/snek"
+	"github.com/anaminus/cobra"
 )
 
-var Program = snek.NewProgram("rbxmk", os.Args).Usage(Doc("Commands"))
+var Program = &cobra.Command{
+	Use:   "rbxmk",
+	Short: "rbxmk is a tool for managing Roblox projects.",
+	// Long:  Doc("Commands"),
+}
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Kill)
+	defer stop()
+
+	Program.SetIn(os.Stdin)
+	Program.SetOut(os.Stdout)
+	Program.SetErr(os.Stderr)
+
 	DocumentCommands()
 	UnresolvedFragments()
-	Program.Main()
+	if err := Program.ExecuteContext(ctx); err != nil {
+		Program.PrintErrln(err)
+	}
 }

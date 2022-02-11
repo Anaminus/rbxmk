@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/anaminus/cobra"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/reflect"
-	"github.com/anaminus/snek"
 )
 
 type nopFile struct{}
@@ -30,34 +30,34 @@ func (nopFileInfo) Sys() interface{}   { return nil }
 
 // TestLatestDesc fetches the latest Roblox API dump and decodes it.
 func TestLatestDesc(t *testing.T) {
-	program := snek.NewProgram("", scriptArguments[:])
-	program.Register(snek.Def{
-		Name: "run",
-		New: func() snek.Command {
-			return &RunCommand{
-				DescFlags: DescFlags{Latest: true},
-				Init: func(c *RunCommand, s rbxmk.State) {
-					c.DescFlags.Latest = true
-					desc, err := c.Resolve(s.Client)
-					if err != nil {
-						t.Errorf("fetch latest descriptor: %s", err.Error())
-						return
-					}
-					t.Log("Classes", len(desc.Classes))
-					t.Log("Enums", len(desc.Enums))
-					if _, err := reflect.RootDesc().PushTo(s.Context(), desc); err != nil {
-						t.Errorf("reflect latest descriptor: %s", err.Error())
-					}
-				},
+	program := &cobra.Command{}
+	program.SetArgs([]string{"run", "-"})
+	program.SetIn(nopFile{})
+
+	c := RunCommand{
+		DescFlags: DescFlags{Latest: true},
+		Init: func(c *RunCommand, s rbxmk.State) {
+			c.DescFlags.Latest = true
+			desc, err := c.Resolve(s.Client)
+			if err != nil {
+				t.Errorf("fetch latest descriptor: %s", err.Error())
+				return
+			}
+			t.Log("Classes", len(desc.Classes))
+			t.Log("Enums", len(desc.Enums))
+			if _, err := reflect.RootDesc().PushTo(s.Context(), desc); err != nil {
+				t.Errorf("reflect latest descriptor: %s", err.Error())
 			}
 		},
-	})
-	err := program.RunWithInput("run", snek.Input{
-		Program:   "rbxmk_test",
-		Arguments: []string{"-"},
-		Stdin:     nopFile{},
-	})
-	if err != nil {
+	}
+	cmd := &cobra.Command{
+		Use:  "run",
+		RunE: c.Run,
+	}
+	c.SetFlags(cmd.PersistentFlags())
+	program.AddCommand(cmd)
+
+	if err := program.Execute(); err != nil {
 		t.Error(err)
 	}
 }

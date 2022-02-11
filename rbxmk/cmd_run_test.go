@@ -10,20 +10,19 @@ import (
 	"testing"
 	"time"
 
+	"github.com/anaminus/cobra"
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/snek"
 	"github.com/robloxapi/types"
 )
 
 const testdata = "testdata"
 
 // Replace scriptArguments[x] with test script.
-const replaceIndex = 3
+const replaceIndex = 2
 
 var scriptArguments = [...]string{
-	"rbxmk_test",
 	"run",
 	"--debug",
 	"-",
@@ -237,14 +236,6 @@ func initMain(s rbxmk.State, t *testing.T) {
 // line starts with a comment that contains "fail", then the script is expected
 // to throw an error. All scripts receive the arguments from scriptArguments.
 func TestScripts(t *testing.T) {
-	program := snek.NewProgram("", scriptArguments[:])
-	program.Register(snek.Def{
-		Name: "run",
-		New: func() snek.Command {
-			return &RunCommand{Init: func(c *RunCommand, s rbxmk.State) { initMain(s, t) }}
-		},
-	})
-
 	var files []string
 	wd, _ := os.Getwd()
 	for _, arg := range os.Args[2:] {
@@ -273,16 +264,23 @@ func TestScripts(t *testing.T) {
 			t.Fatalf("error walking testdata: %s", err)
 		}
 	}
+
 	for _, file := range files {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
+			program := &cobra.Command{}
+
+			c := RunCommand{
+				Init: func(c *RunCommand, s rbxmk.State) { initMain(s, t) },
+			}
+			cmd := initRunCommand(&c)
+			program.AddCommand(cmd)
+
 			args := make([]string, len(scriptArguments))
 			copy(args, scriptArguments[:])
 			args[replaceIndex] = file
-			err := program.RunWithInput("run", snek.Input{
-				Program:   args[0],
-				Arguments: args[2:],
-			})
-			if err != nil {
+			program.SetArgs(args)
+
+			if err := program.Execute(); err != nil {
 				t.Errorf("script %s: %s", file, err)
 			}
 		})

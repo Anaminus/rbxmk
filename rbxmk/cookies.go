@@ -4,21 +4,21 @@ import (
 	"os"
 	"strings"
 
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/snek"
 )
 
-func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
-	flags.Func("cookies-from", Doc("Flags/cookies:cookies-from"), func(v string) error {
+func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
+	flags.Var(funcFlag(func(v string) error {
 		cookies, err := rbxmk.CookiesFrom(v)
 		if err != nil {
 			return err
 		}
 		*c = append(*c, cookies...)
 		return nil
-	})
-	flags.Func("cookies-file", Doc("Flags/cookies:cookies-file"), func(v string) error {
+	}), "cookies-from", Doc("Flags/cookies:cookies-from"))
+	flags.Var(funcFlag(func(v string) error {
 		f, err := os.Open(v)
 		if err != nil {
 			return err
@@ -30,8 +30,8 @@ func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	})
-	flags.Func("cookie-var", Doc("Flags/cookies:cookie-var"), func(v string) error {
+	}), "cookies-file", Doc("Flags/cookies:cookies-file"))
+	flags.Var(funcFlag(func(v string) error {
 		content := os.Getenv(v)
 		cookies, err := rbxmk.DecodeCookies(strings.NewReader(content))
 		if err != nil {
@@ -39,5 +39,5 @@ func SetCookieFlags(c *rtypes.Cookies, flags snek.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	})
+	}), "cookie-var", Doc("Flags/cookies:cookie-var"))
 }

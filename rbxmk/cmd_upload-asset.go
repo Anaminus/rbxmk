@@ -5,17 +5,21 @@ import (
 	"io"
 	"os"
 
+	"github.com/anaminus/cobra"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/rtypes"
-	"github.com/anaminus/snek"
 )
 
 func init() {
-	Program.Register(snek.Def{
-		Name: "upload-asset",
-		New:  func() snek.Command { return &UploadAssetCommand{} },
-	})
+	var c UploadAssetCommand
+	var cmd = &cobra.Command{
+		Use:  "upload-asset",
+		RunE: c.Run,
+	}
+	c.SetFlags(cmd.PersistentFlags())
+	Program.AddCommand(cmd)
 }
 
 type UploadAssetCommand struct {
@@ -25,18 +29,14 @@ type UploadAssetCommand struct {
 	FileFormat  string
 }
 
-func (c *UploadAssetCommand) SetFlags(flags snek.FlagSet) {
+func (c *UploadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
 	flags.Int64Var(&c.ID, "id", 0, Doc("Commands/upload-asset:Flags/id"))
 	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("Commands/upload-asset:Flags/format"))
 	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/upload-asset:Flags/file-format"))
 }
 
-func (c *UploadAssetCommand) Run(opt snek.Options) error {
-	// Parse flags.
-	if err := opt.ParseFlags(); err != nil {
-		return err
-	}
+func (c *UploadAssetCommand) Run(cmd *cobra.Command, args []string) error {
 	if c.ID < 0 {
 		return fmt.Errorf("must specify valid asset ID with -id flag")
 	}
@@ -52,7 +52,7 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 	if err != nil {
 		return err
 	}
-	injectSSLKeyLogFile(world, opt.Stderr)
+	injectSSLKeyLogFile(world, cmd.ErrOrStderr())
 
 	// Check formats.
 	assetFormat := world.Format(c.AssetFormat)
@@ -76,25 +76,27 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 	}
 
 	// Upload asset.
-	var file io.ReadCloser
-	switch filename := opt.Arg(0); filename {
+	var file io.Reader
+	switch filename := args[0]; filename {
 	case "":
 		return fmt.Errorf("must specify path of file to upload")
 	case "-":
-		file = opt.Stdin
+		file = cmd.InOrStdin()
 	default:
 		f, err := os.Open(filename)
 		if err != nil {
 			return fmt.Errorf("open file: %w", err)
 		}
+		defer func() {
+			if e := f.Close(); e != nil {
+				err = fmt.Errorf("close file: %w", e)
+			}
+		}()
 		file = f
 	}
 	body, err := fileFormat.Decode(world.Global, rtypes.FormatSelector{Format: fileFormat.Name}, file)
 	if err != nil {
 		return fmt.Errorf("read file: %w", err)
-	}
-	if err := file.Close(); err != nil {
-		return fmt.Errorf("close file: %w", err)
 	}
 
 	options := rtypes.RBXAssetOptions{
@@ -113,7 +115,7 @@ func (c *UploadAssetCommand) Run(opt snek.Options) error {
 		return fmt.Errorf("upload asset: %w", err)
 	}
 	if id >= 0 {
-		fmt.Fprintln(opt.Stdout, id)
+		cmd.Println(id)
 	}
 	return nil
 }

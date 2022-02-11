@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	lua "github.com/anaminus/gopher-lua"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/enums"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
-	"github.com/anaminus/snek"
 )
 
 // ParseLuaValue parses a string into a Lua value. Numbers, bools, and nil are
@@ -41,9 +41,9 @@ type WorldFlags struct {
 	Libraries     []string
 }
 
-func (f *WorldFlags) SetFlags(flags snek.FlagSet) {
-	flags.Var((*repeatedString)(&f.IncludedRoots), "include-root", Doc("Flags/world:include-root"))
-	flags.Var((*repeatedString)(&f.Libraries), "libraries", Doc("Flags/world:libraries"))
+func (f *WorldFlags) SetFlags(flags *pflag.FlagSet) {
+	flags.StringArrayVar(&f.IncludedRoots, "include-root", nil, Doc("Flags/world:include-root"))
+	flags.StringArrayVar(&f.Libraries, "libraries", nil, Doc("Flags/world:libraries"))
 	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, Doc("Flags/world:allow-insecure-paths"))
 	flags.BoolVar(&f.Debug, "debug", false, Doc("Flags/world:debug"))
 }
