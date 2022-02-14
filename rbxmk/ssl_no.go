@@ -8,4 +8,5 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
+// Do not enable for production builds! See ssl.go.
 func injectSSLKeyLogFile(world *rbxmk.World, werr io.Writer) {}
