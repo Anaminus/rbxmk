@@ -69,7 +69,6 @@ T.Pass(typeof(none.WorldPivotData.Value) == "nil", "read binary, nome type is ni
 local model = Instance.new("Model")
 model.WorldPivotData = types.some(CFrame.new(1,2,3))
 model = rbxmk.decodeFormat("rbxm", rbxmk.encodeFormat("rbxm", model)):GetChildren()[1]
-fs.write(path.expand("$sd/test.rbxl"), rbxmk.encodeFormat("rbxm", model), "bin")
 T.Pass(typeof(model.WorldPivotData) == "Optional", "write binary some, value is optional")
 T.Pass(typeof(model.WorldPivotData.Value) == "CFrame", "write binary some, type is CFrame")
 T.Pass(model.WorldPivotData.Value == CFrame.new(1,2,3), "write binary some, CFrame has value")
