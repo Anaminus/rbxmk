@@ -44,7 +44,7 @@ jobs:
           GOOS: ${{matrix.os}}
           GOARCH: ${{matrix.arch}}
           OUTPUT: ${{matrix.output}}
-        run: go build -v -trimpath -o $OUTPUT ${{env.PROGRAM}}
+        run: go build -v -trimpath -tags="release" -o $OUTPUT ${{env.PROGRAM}}
 
       - name: Create archive
         id: archive

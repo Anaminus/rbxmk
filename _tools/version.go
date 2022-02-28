@@ -41,7 +41,9 @@ const (
 )
 
 // Content of version.go file.
-const versiongoContent = `package main
+const versiongoContent = `//go:build release
+
+package main
 
 const Version = "%d.%d.%d"
 `
