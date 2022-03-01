@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"sort"
 	"strings"
 	"sync"
+	"text/template"
 
 	"github.com/anaminus/drill"
 	"github.com/anaminus/drill/filesys"
@@ -140,12 +142,46 @@ func parseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 	return items, true
 }
 
+type FuncMap = template.FuncMap
+
+var docTmplFuncs = FuncMap{
+	// List of top-level fragment topics.
+	"Topics": func() string {
+		return "\n\t" + strings.Join(ListFragments(""), "\n\t")
+	},
+}
+
+func executeDocTmpl(fragref, tmplText string, data interface{}, funcs FuncMap) string {
+	t := template.New("root")
+	t.Funcs(docTmplFuncs)
+	t.Funcs(funcs)
+	t, err := t.Parse(tmplText)
+	if err != nil {
+		panic(fmt.Errorf("parse %q: %w", fragref, err))
+	}
+	var buf bytes.Buffer
+	err = t.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Errorf("execute %q: %w", fragref, err))
+	}
+	return strings.TrimSpace(buf.String())
+}
+
 // Doc returns the content of the fragment referred to by fragref. The given
-// path is marked to be returned by DocFragments.
+// path is marked to be returned by DocFragments. If no content was found, then
+// a string indicating an unresolved reference is returned.
 //
 // Doc should only be used to capture additional fragment references.
 // ResolveFragment can be used to resolve a reference without marking it.
+//
+// The content of the fragment executed as a template with docTmplFuncs included
+// as functions.
 func Doc(fragref string) string {
+	return DocWith(fragref, nil, nil)
+}
+
+// DocWith is like Doc, but includes data with the executed template.
+func DocWith(fragref string, data interface{}, funcs FuncMap) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	docSeen[fragref] = struct{}{}
@@ -154,18 +190,30 @@ func Doc(fragref string) string {
 		docFailed[fragref] = struct{}{}
 		return "{" + Language + ":" + fragref + "}"
 	}
-	return strings.TrimSpace(node.Fragment())
+	tmplText := strings.TrimSpace(node.Fragment())
+	return executeDocTmpl(fragref, tmplText, data, funcs)
 }
 
 // ResolveFragment returns the content of the fragment referred to by fragref.
+// Returns an empty string if no content was found.
+//
+// The content of the fragment executed as a template with docTmplFuncs included
+// as functions.
 func ResolveFragment(fragref string) string {
+	return ResolveFragmentWith(fragref, nil, nil)
+}
+
+// ResolveFragmentWith is like ResolveFragment, but includes data and funcs
+// with the executed template.
+func ResolveFragmentWith(fragref string, data interface{}, funcs FuncMap) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	node, _ := resolveFragmentNode(fragref, false)
 	if node == nil {
 		return ""
 	}
-	return strings.TrimSpace(node.Fragment())
+	tmplText := strings.TrimSpace(node.Fragment())
+	return executeDocTmpl(fragref, tmplText, data, funcs)
 }
 
 const FragSep = ':'
@@ -225,6 +273,8 @@ func ListFragments(fragref string) []string {
 	return list
 }
 
+// resolveFragmentNode resolves a fragment reference into a drill Node by
+// walking through the components of the reference.
 func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 	n = docfs
 	var path string
@@ -249,4 +299,18 @@ func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 		}
 	}
 	return n, infile
+}
+
+// ErrorFrag returns an error according to the fragment section of the given
+// name. The result is passed to fmt.Errorf with args.
+func ErrorFrag(name string, args ...interface{}) error {
+	format := ResolveFragment("Errors:" + name)
+	return fmt.Errorf(strings.TrimSpace(format), args...)
+}
+
+// FormatFrag returns a formatted string according to the fragment of the given
+// reference. The result is passed to fmt.Sprintf with args.
+func FormatFrag(fragref string, args ...interface{}) string {
+	format := ResolveFragment(fragref)
+	return fmt.Sprintf(strings.TrimSpace(format), args...)
 }
