@@ -3,7 +3,7 @@ module github.com/anaminus/rbxmk
 go 1.17
 
 require (
-	github.com/anaminus/cobra v1.4.0-z
+	github.com/anaminus/cobra v1.4.1-z
 	github.com/anaminus/drill v0.3.1
 	github.com/anaminus/gopher-lua v0.4.1
 	github.com/anaminus/parse v0.3.0

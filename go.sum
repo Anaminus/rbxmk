@@ -1,5 +1,5 @@
-github.com/anaminus/cobra v1.4.0-z h1:z5JBOZTRyrTImbXCjtiaEFSlue5yMXMG4N7OrVVl9io=
-github.com/anaminus/cobra v1.4.0-z/go.mod h1:QL0hRcJECXKdHjECv0HWdhFv1u8pj8pTi0VwizrRKlM=
+github.com/anaminus/cobra v1.4.1-z h1:bSV340FPx68drzkrm3ZP++rh3gOy+2FLU8UChEISZ70=
+github.com/anaminus/cobra v1.4.1-z/go.mod h1:QL0hRcJECXKdHjECv0HWdhFv1u8pj8pTi0VwizrRKlM=
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/anaminus/drill v0.3.1 h1:+2HUMvczHaMEgVSzlO7hNSmC9wP959UyGY0HEENOe+s=
 github.com/anaminus/drill v0.3.1/go.mod h1:jxMylfFNPudYVoo9Ulqca5oRndWVVotKcGiRefHcFxo=
