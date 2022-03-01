@@ -9,9 +9,11 @@ import (
 )
 
 var Program = &cobra.Command{
-	Use:   "rbxmk",
-	Short: "rbxmk is a tool for managing Roblox projects.",
-	// Long:  Doc("Commands"),
+	Use:           "rbxmk",
+	Short:         Doc("Commands:Summary"),
+	Long:          Doc("Commands:Summary"),
+	SilenceUsage:  false,
+	SilenceErrors: true,
 }
 
 func main() {
