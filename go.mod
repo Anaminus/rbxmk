@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/anaminus/cobra v1.4.1-z
-	github.com/anaminus/drill v0.3.1
+	github.com/anaminus/drill v0.3.2
 	github.com/anaminus/gopher-lua v0.4.1
 	github.com/anaminus/parse v0.3.0
 	github.com/anaminus/pflag v1.0.6-z
@@ -15,7 +15,7 @@ require (
 	github.com/robloxapi/rbxdump v0.4.1
 	github.com/robloxapi/rbxfile v0.4.4
 	github.com/robloxapi/types v0.2.1
-	github.com/yuin/goldmark v1.3.3
+	github.com/yuin/goldmark v1.4.7
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
 	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
 )
