@@ -28,6 +28,9 @@ branch is the latest unreleased version.
 - Fix [SetAttribute](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
 - Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattributes) pulling wrong argument for dictionary.
 
+**Internal:**
+- Switch to [cobra](https://cobra.dev/) for handling CLI.
+
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
