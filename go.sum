@@ -31,8 +31,8 @@ github.com/robloxapi/rbxattr v0.1.1 h1:L9PwMXRD7uGT/CIz511IHKY3HXGNOgQjONoml3VWT
 github.com/robloxapi/rbxattr v0.1.1/go.mod h1:2MGyMj13Jdzd6f13sraJ0duhoKtE89H84XfLHGOhrC8=
 github.com/robloxapi/rbxdump v0.4.1 h1:gGz5h/v6DlHn6F+368oqUzfBpSvPt87nTAjMEfHwME4=
 github.com/robloxapi/rbxdump v0.4.1/go.mod h1:8imPIe5ZmLAhvmNKLu2E2S0QStvvXtt/0m5pxUGdGM0=
-github.com/robloxapi/rbxfile v0.4.3 h1:3H2oN4HaDU5VsQPIXPvc91/uF9WCA6k6L9LV6s44eek=
-github.com/robloxapi/rbxfile v0.4.3/go.mod h1:5e5xjosJt56bvRGW8v9bz9/kmPYuHb0P6ggsdA50YD8=
+github.com/robloxapi/rbxfile v0.4.4 h1:OcCxCRn8uFMyOeaCZCcEJ+c/Ou09oKG8JptM8He/CjM=
+github.com/robloxapi/rbxfile v0.4.4/go.mod h1:5e5xjosJt56bvRGW8v9bz9/kmPYuHb0P6ggsdA50YD8=
 github.com/robloxapi/types v0.2.1 h1:sFO/G8kSRLi8wklOTWxYBLjuneVOVpCeBJnfU2g0JD0=
 github.com/robloxapi/types v0.2.1/go.mod h1:y516slLilB6p3yiA68IpThUmgZhJiZgOOa4aYOJValM=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
