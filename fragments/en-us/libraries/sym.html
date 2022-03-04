@@ -1,0 +1,162 @@
+<section data-name="Summary">
+
+<p>Symbols for accessing instance metadata.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>sym</b> library contains <b>Symbol</b> values. A symbol is a unique
+identifier that can be used to access certain metadata fields of an
+[Instance][Instance].</p>
+
+<p>An instance can be indexed with a symbol to get a metadata value in the same
+way it can be indexed with a string to get a property value:</p>
+
+<pre><code class="language-lua">local instance = Instance.new("Workspace")
+instance[sym.IsService] = true
+print(instance[sym.IsService]) --&gt; true
+</code></pre>
+
+<p>The following symbols are defined:</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="AttrConfig">
+
+<section data-name="Summary">
+
+<p>Gets the inherited [AttrConfig][AttrConfig] of an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>AttrConfig</b> symbol gets the inherited [AttrConfig][AttrConfig] of
+an instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="Desc">
+
+<section data-name="Summary">
+
+<p>Gets the inherited [descriptor][RootDesc] of an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Desc</b> symbol gets the inherited [descriptor][RootDesc] of an
+instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="IsService">
+
+<section data-name="Summary">
+
+<p>Determines whether an instance is a service.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>IsService</b> symbol determines whether an instance is a service.</p>
+
+</section>
+
+</section>
+
+<section data-name="Metadata">
+
+<section data-name="Summary">
+
+<p>Gets the metadata of a [DataModel][DataModel].</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Metadata</b> symbol gets the metadata of a [DataModel][DataModel].</p>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="Summary">
+
+<p>Gets the properties of an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Properties</b> symbol gets the properties of an instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="RawAttrConfig">
+
+<section data-name="Summary">
+
+<p>Accesses the direct [AttrConfig][AttrConfig] of an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RawAttrConfig</b> symbol accesses the direct [AttrConfig][AttrConfig]
+of an instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="RawDesc">
+
+<section data-name="Summary">
+
+<p>Accesses the direct [descriptor][RootDesc] of an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RawDesc</b> symbol accesses the direct [descriptor][RootDesc] of an
+instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="Reference">
+
+<section data-name="Summary">
+
+<p>Determines the value used to identify the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Reference</b> symbol determines the value used to identify the
+instance.</p>
+
+</section>
+
+</section>
+
+</section>

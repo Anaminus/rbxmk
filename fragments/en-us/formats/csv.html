@@ -1,0 +1,57 @@
+<section data-name="Summary">
+
+<p>Encodes comma-separated values.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>csv</b> format decodes comma-separated values into a two-dimensional
+array.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>Array</td>
+<td>An array of arrays of strings.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Array</td>
+<td>An array of arrays of strings.</td>
+</tr>
+</tbody>
+</table>
+
+<p>CSV data decodes into a two-dimensional array of strings. For example,</p>
+
+<pre><code>A,B,C
+D,E,F
+G,H,I
+</code></pre>
+
+<p>decodes into</p>
+
+<pre><code>{
+	{"A", "B", "C"),
+	{"D", "E", "F"),
+	{"G", "H", "I"),
+}
+</code></pre>
+
+<p>When encoding, each field must be string-like, but cannot be an Instance.</p>
+
+<p>When decoding, each record must have the same number of fields. When
+encoding, records do not need to have the same number of fields.</p>
+
+<p>This format has no options.</p>
+
+</section>

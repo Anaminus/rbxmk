@@ -1,0 +1,222 @@
+<section data-name="Summary">
+
+<p>An interface to the rbxmk engine, and the rbxmk environment.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rbxmk</b> library contains functions related to the rbxmk engine.</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="Enum">
+
+<section data-name="Summary">
+
+<p>Collection of rbxmk-defined enums.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Enum</b> field is a collection of Enum values defined by rbxmk. The
+following enums are defined:</p>
+
+<p>$ENUMS</p>
+
+</section>
+
+</section>
+
+<section data-name="decodeFormat">
+
+<section data-name="Summary">
+
+<p>Deserialize data from bytes.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>decodeFormat</b> function decodes <i>bytes</i> into a value according
+to <i>format</i>. The exact details of each format are described in the <a
+href="formats.md">Formats</a> documents.</p>
+
+<p>decodeFormat will throw an error if the format does not exist, or the format
+has no decoder defined.</p>
+
+</section>
+
+</section>
+
+<section data-name="encodeFormat">
+
+<section data-name="Summary">
+
+<p>Serialize data into bytes.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>encodeFormat</b> function encodes <i>value</i> into a sequence of
+bytes according to <i>format</i>. The exact details of each format are described
+in the <a href="formats.md">Formats</a> document.</p>
+
+<p>encodeFormat will throw an error if the format does not exist, or the format
+has no encoder defined.</p>
+
+</section>
+
+</section>
+
+<section data-name="formatCanDecode">
+
+<section data-name="Summary">
+
+<p>Check whether a format decodes into a type.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>formatCanDecode</b> function returns whether <i>format</i> decodes
+into <i>type</i>.</p>
+
+<p>formatCanDecode will throw an error if the format does not exist, or the
+format does not define types it decodes into.</p>
+
+</section>
+
+</section>
+
+<section data-name="globalAttrConfig">
+
+<section data-name="Summary">
+
+<p>Get or set the global AttrConfig.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>globalAttrConfig</b> field gets or sets the global AttrConfig. Most
+items that utilize an AttrConfig will fallback to the global AttrConfig when
+possible.</p>
+
+<p>See the <a href="README.md#user-content-value-inheritance">Value
+inheritance</a> section for details on how this field is inherited by
+[Instances][Instance].</p>
+
+</section>
+
+</section>
+
+<section data-name="globalDesc">
+
+<section data-name="Summary">
+
+<p>Get or set the global descriptor.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>globalDesc</b> field gets or sets the global root descriptor. Most
+items that utilize a root descriptor will fallback to the global descriptor when
+possible.</p>
+
+<p>See the <a href="README.md#user-content-value-inheritance">Value
+inheritance</a> section for details on how this field is inherited by
+[Instances][Instance].</p>
+
+</section>
+
+</section>
+
+<section data-name="loadFile">
+
+<section data-name="Summary">
+
+<p>Load the content of a file as a function.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>loadFile</b> function loads the content of a file as a Lua function.
+<i>path</i> is the path to the file.</p>
+
+<p>The function runs in the context of the calling script.</p>
+
+</section>
+
+</section>
+
+<section data-name="loadString">
+
+<section data-name="Summary">
+
+<p>Load a string as a function.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>loadString</b> function loads the a string as a Lua function.
+<i>source</i> is the string to load.</p>
+
+<p>The function runs in the context of the calling script.</p>
+
+</section>
+
+</section>
+
+<section data-name="runFile">
+
+<section data-name="Summary">
+
+<p>Run a file as a Lua chunk.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>runFile</b> function runs the content of a file as a Lua script.
+<i>path</i> is the path to the file. <i>args</i> are passed into the script as
+arguments. Returns the values returned by the script.</p>
+
+<p>The script runs in the context of the referred file. Files cannot be run
+recursively; if a file is already running as a script, then runFile will throw
+an error.</p>
+
+</section>
+
+</section>
+
+<section data-name="runString">
+
+<section data-name="Summary">
+
+<p>Run a string as a Lua chunk.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>runString</b> function runs a string as a Lua script. <i>source</i> is
+the string to run. <i>args</i> are passed into the script as arguments. Returns
+the values returned by the script.</p>
+
+<p>The script runs in the context of the calling script.</p>
+
+</section>
+
+</section>
+
+</section>

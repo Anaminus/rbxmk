@@ -1,0 +1,133 @@
+<section data-name="Summary">
+
+<p>Provides functions for manipulating tables.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>table</b> library provides functions for manipulating tables.</p>
+
+<p>Most functions assume that the table is an array, where "length" refers to
+the result of the <code>#</code> operator.</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="concat">
+
+<section data-name="Summary">
+
+<p>Concatenates each element as a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>concat</b> function concatenates each element within the table from
+<i>i</i> to <i>j</i>. Each element must be a string or a number. <i>sep</i> is
+concatenated between each element. An empty string is returned if <i>i</i> is
+greater than <i>j</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="insert">
+
+<section data-name="Insert">
+
+<section data-name="Summary">
+
+<p>Inserts an element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>insert</b> function inserts <i>value</i> into <i>t</i> at
+<i>index</i>. Each element after <i>index</i> is shifted upward to make
+room.</p>
+
+</section>
+
+</section>
+
+<section data-name="Append">
+
+<section data-name="Summary">
+
+<p>Appends an element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>insert</b> function appends <i>value</i> to the end of <i>t</i>, such
+that the index is the length <i>t</i> plus one.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="maxn">
+
+<section data-name="Summary">
+
+<p>Returns the largest positive numerical index.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>maxn</b> function returns the largest positive numerical index in
+<i>t</i>, or 0 if none can be found.</p>
+
+</section>
+
+</section>
+
+<section data-name="remove">
+
+<section data-name="Summary">
+
+<p>Removes an element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>remove</b> function removes the element at <i>index</i> from <i>t</i>.
+Each element after <i>index</i> is shifted downward to close the gap. Returns
+the removed element.</p>
+
+</section>
+
+</section>
+
+<section data-name="sort">
+
+<section data-name="Summary">
+
+<p>Sorts elements.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>sort</b> function sorts the elements in <i>t</i> in-place from index 1
+to the length of <i>t</i>. If <i>comp</i> is specified, then it must return true
+when <i>a</i> is less than <i>b</i>. If <i>comp</i> is unspecified, then the
+<code>&lt;</code> operator is used instead.</p>
+
+<p>The sorting algorithm is not stable. Elements considered equal may have their
+relative positions changed.</p>
+
+</section>
+
+</section>
+
+</section>

@@ -1,0 +1,43 @@
+<section data-name="Summary">
+
+<p>Describes a type.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>TypeDesc</b> type is a table that describes a value type. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Category</td>
+<td><a href="##">string</a></td>
+<td>The category of the type.</td>
+</tr>
+<tr>
+<td>Name</td>
+<td><a href="##">string</a></td>
+<td>The name of the type.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Certain categories are treated specially:</p>
+
+<ul>
+<li><b>Class</b>: Name is the name of a class. A value of the type is expected
+to be an Instance of the class.</li>
+<li><b>Enum</b>: Name is the name of an enum. A value of the type is expected to
+be an enum item of the enum.</li>
+</ul>
+
+</section>

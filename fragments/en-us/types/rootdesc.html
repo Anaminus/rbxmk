@@ -1,0 +1,401 @@
+<section data-name="Summary">
+
+<p>Describes an API.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RootDesc</b> type describes an entire API. It has the following
+members:</p>
+
+<p>$MEMBERS</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="new">
+
+<section data-name="Summary">
+
+<p>Creates a RootDesc.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor creates a new RootDesc.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Methods">
+
+<section data-name="Class">
+
+<section data-name="Summary">
+
+<p>Gets data about a class.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Class</b> method returns the class of the API corresponding to the
+name <i>class</i>, or nil if the class does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="ClassTag">
+
+<section data-name="Summary">
+
+<p>Gets whether a tag is set for a class.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns whether <i>tag</i> is set for the class corresponding to the name
+<i>class</i>. Returns nil if the class does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="Classes">
+
+<section data-name="Summary">
+
+<p>Gets a list of class names.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Classes</b> method returns a list of names of all the classes of the
+API.</p>
+
+</section>
+
+</section>
+
+<section data-name="Diff">
+
+<section data-name="Summary">
+
+<p>Gets the difference between two descriptors.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Diff</b> method compares the root descriptor with another and returns
+the differences between them. A nil value for <i>next</i> is treated the same as
+an empty descriptor. The result is a list of actions that describe how to
+transform the descriptor into <i>next</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="Enum">
+
+<section data-name="Summary">
+
+<p>Gets data about an enum.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Enum</b> method returns the enum of the API corresponding to the name
+<i>enum</i>, or nil if the enum does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="EnumItem">
+
+<section data-name="Summary">
+
+<p>Gets data about an enum item.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>EnumItem</b> method returns the enum item of the API corresponding to
+the enum name <i>enum</i> and item name <i>item</i>, or nil if the enum or item
+does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="EnumItemTag">
+
+<section data-name="Summary">
+
+<p>Gets whether a tag is set for an enum item.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns whether <i>tag</i> is set for the enum item corresponding to the name
+<i>item</i> of the enum named <i>enum</i>. Returns nil if the enum or item does
+not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="EnumItems">
+
+<section data-name="Summary">
+
+<p>Gets a list of item names of an enum.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Classes</b> method returns a list of names of all the items of the
+enum corresponding to the name <i>enum</i>. Returns nil if the enum does not
+exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="EnumTag">
+
+<section data-name="Summary">
+
+<p>Gets whether a tag is set for an enum.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns whether <i>tag</i> is set for the enum corresponding to the name
+<i>enum</i>. Returns nil if the enum does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="EnumTypes">
+
+<section data-name="Summary">
+
+<p>Gets enum values generated from the descriptor.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>EnumTypes</b> method returns a set of enum values generated from the
+current state of the RootDesc. These enums are associated with the RootDesc, and
+may be used by certain properties, so it is important to generate them before
+operating on such properties. Additionally, EnumTypes should be called after
+modifying enum and enum item descriptors, to regenerate the enum values.</p>
+
+<p>The API of the resulting enums matches that of Roblox's Enums type. A common
+pattern is to assign the result of EnumTypes to the "Enum" variable so that it
+matches Roblox's API:</p>
+
+<pre><code class="language-lua">Enum = rootDesc:EnumTypes()
+print(Enum.NormalId.Front)
+</code></pre>
+
+</section>
+
+</section>
+
+<section data-name="Enums">
+
+<section data-name="Summary">
+
+<p>Gets a list of enum names.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Enums</b> method returns a list of names of all the enums of the
+API.</p>
+
+</section>
+
+</section>
+
+<section data-name="Member">
+
+<section data-name="Summary">
+
+<p>Gets data about a class member.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Member</b> method returns the class member of the API corresponding to
+the class name <i>enum</i> and member name <i>item</i>, or nil if the class or
+member does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="MemberTag">
+
+<section data-name="Summary">
+
+<p>Gets whether a tag is set for a class member.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns whether <i>tag</i> is set for the class member corresponding to the
+name <i>member</i> of the class named <i>class</i>. Returns nil if the class or
+member does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="Members">
+
+<section data-name="Summary">
+
+<p>Gets a list of member names of a class.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns whether <i>tag</i> is set for the class member corresponding to the
+name <i>member</i> of the class named <i>class</i>. Returns nil if the class or
+member does not exist.</p>
+
+</section>
+
+</section>
+
+<section data-name="Patch">
+
+<section data-name="Summary">
+
+<p>Transforms the descriptor.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Patch</b> method transforms the root descriptor according to a list of
+actions. Each action in the list is applied in order. Actions that are
+incompatible are ignored.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetClass">
+
+<section data-name="Summary">
+
+<p>Sets data about a class.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetClass</b> method sets the fields of the class corresponding to the
+name <i>class</i>. If the class already exists, then only non-nil fields are
+set. Fields with the incorrect type are ignored. If <i>desc</i> is nil, then the
+class is removed.</p>
+
+<p>Returns false if <i>desc</i> is nil and no class exists. Returns true
+otherwise.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetEnum">
+
+<section data-name="Summary">
+
+<p>Sets data about an enum.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetEnum</b> method sets the fields of the enum corresponding to the
+name <i>enum</i>. If the enum already exists, then only non-nil fields are set.
+Fields with the incorrect type are ignored. If <i>desc</i> is nil, then the enum
+is removed.</p>
+
+<p>Returns false if <i>desc</i> is nil and no enum exists. Returns true
+otherwise.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetEnumItem">
+
+<section data-name="Summary">
+
+<p>Sets data about an enum item.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetEnumItem</b> method sets the fields of the enum item corresponding
+to the name <i>item</i> of the enum named <i>enum</i>. If the item already
+exists, then only non-nil fields are set. Fields with the incorrect type are
+ignored. If <i>desc</i> is nil, then the enum is removed.</p>
+
+<p>Returns nil if the enum does not exist. Returns false if <i>desc</i> is nil
+and no item exists. Returns true otherwise.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetMember">
+
+<section data-name="Summary">
+
+<p>Sets data about a class member.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetMember</b> method sets the fields of the member corresponding to
+the name <i>member</i> of the class named <i>class</i>. If the member already
+exists, then only non-nil fields are set. Fields with the incorrect type are
+ignored. If <i>desc</i> is nil, then the member is removed.</p>
+
+<p>Returns nil if the class does not exist. Returns false if <i>desc</i> is nil
+and no member exists. Returns true otherwise.</p>
+
+</section>
+
+</section>
+
+</section>

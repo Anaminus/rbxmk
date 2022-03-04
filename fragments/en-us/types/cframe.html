@@ -1,0 +1,759 @@
+<section data-name="Summary">
+
+<p>A position and rotation.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>CFrame</b> type is a matrix representing a combined position and
+orientation.</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="Angles">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame composed from angles.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Angles</b> constructor returns a CFrame located at the origin,
+oriented according to the angles (<i>rx</i>, <i>ry</i>, <i>rz</i>), in radians.
+Rotations are ordered Z, Y, X.</p>
+
+</section>
+
+</section>
+
+<section data-name="fromAxisAngle">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame composed from an axis and angle.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fromAxisAngle</b> constructor returns a CFrame located at the origin,
+rotated <i>rotation</i> radians around <i>axis</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="fromEulerAnglesXYZ">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame composed from Euler angles.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fromEulerAnglesXYZ</b> constructor returns a CFrame located at the
+origin, oriented according to the angles (<i>rx</i>, <i>ry</i>, <i>rz</i>), in
+radians. Rotations are ordered Z, Y, X.</p>
+
+</section>
+
+</section>
+
+<section data-name="fromEulerAnglesYXZ">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame composed from Euler angles ordered Y, X, Z.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fromEulerAnglesYXZ</b> constructor returns a CFrame located at the
+origin, oriented according to the angles (<i>rx</i>, <i>ry</i>, <i>rz</i>), in
+radians. Rotations are ordered Y, X, Z.</p>
+
+</section>
+
+</section>
+
+<section data-name="fromMatrix">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame from a matrix.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fromMatrix</b> constructor returns a CFrame located at
+<i>position</i>, rotated according to the following rotation matrix:</p>
+
+<pre><code>[vx.X, vy.X, vz.X]
+[vx.Y, vy.Y, vz.Y]
+[vx.Z, vy.Z, vz.Z]
+</code></pre>
+
+<p>If <i>vz</i> is the zero vector, then <i>vz</i> is calculated as the unit of
+the cross product of vx and vy.</p>
+
+</section>
+
+</section>
+
+<section data-name="fromOrientation">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame composed from orientations.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fromOrientation</b> constructor returns a CFrame located at the
+origin, oriented according to the angles (<i>rx</i>, <i>ry</i>, <i>rz</i>), in
+radians. Rotations are ordered Y, X, Z.</p>
+
+</section>
+
+</section>
+
+<section data-name="lookAt">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame that points towards a location.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>lookAt</b> constructor returns a CFrame located at <i>position</i>,
+facing towards <i>lookAt</i>, with the local upward direction determined by
+<i>up</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="new">
+
+<section data-name="Identity">
+
+<section data-name="Summary">
+
+<p>Returns the default CFrame.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame with the default orientation
+located at the origin.</p>
+
+</section>
+
+</section>
+
+<section data-name="Position">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame with a position.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame with the default orientation
+located at <i>position</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="LookAt">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame pointing towards a location while tilted upward.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame located at <i>position</i>,
+facing towards <i>lookAt</i>. The local upward direction is (0, 1, 0).</p>
+
+</section>
+
+</section>
+
+<section data-name="Position components">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame with a position from coordinates.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame located at (<i>x</i>, <i>y</i>,
+<i>z</i>), with the default orientation.</p>
+
+</section>
+
+</section>
+
+<section data-name="Quaternion">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame from a quaternion.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame located at (<i>x</i>, <i>y</i>,
+<i>z</i>), oriented according to the quaternion (<i>qx</i>, <i>qy</i>,
+<i>qz</i>, <i>qw</i>).</p>
+
+</section>
+
+</section>
+
+<section data-name="Components">
+
+<section data-name="Summary">
+
+<p>Returns a CFrame from raw components.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a CFrame located at (<i>x</i>, <i>y</i>,
+<i>z</i>), oriented according to the following rotation matrix:</p>
+
+<pre><code>[r00, r01, r02]
+[r10, r11, r12]
+[r20, r21, r22]
+</code></pre>
+
+</section>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="LookVector">
+
+<section data-name="Summary">
+
+<p>The forward direction.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>LookVector</b> field returns the forward-direction, or the negation of
+the third column of the rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="P">
+
+<section data-name="Summary">
+
+<p>The position of the CFrame.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>P</b> field returns the position of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="Position">
+
+<section data-name="Summary">
+
+<p>The position of the CFrame.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Position</b> field returns the position of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="RightVector">
+
+<section data-name="Summary">
+
+<p>The right direction.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RightVector</b> field returns the right-direction, or first column of
+the rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="UpVector">
+
+<section data-name="Summary">
+
+<p>The up direction.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>UpVector</b> field returns the up-direction, or second column of the
+rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="X">
+
+<section data-name="Summary">
+
+<p>The X component of the Position.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>X</b> field returns the X component of the Position.</p>
+
+</section>
+
+</section>
+
+<section data-name="XVector">
+
+<section data-name="Summary">
+
+<p>The first row of the rotation matrix.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>XVector</b> field returns the first row of the rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="Y">
+
+<section data-name="Summary">
+
+<p>The Y component of the Position.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Y</b> field returns the Y component of the Position.</p>
+
+</section>
+
+</section>
+
+<section data-name="YVector">
+
+<section data-name="Summary">
+
+<p>The second row of the rotation matrix.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>YVector</b> field returns the second row of the rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="Z">
+
+<section data-name="Summary">
+
+<p>The Z component of the Position.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Z</b> field returns the Z component of the Position.</p>
+
+</section>
+
+</section>
+
+<section data-name="ZVector">
+
+<section data-name="Summary">
+
+<p>The third row of the rotation matrix.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ZVector</b> field returns the third row of the rotation matrix.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Methods">
+
+<section data-name="GetComponents">
+
+<section data-name="Summary">
+
+<p>Returns the raw components.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetComponents</b> method returns the components of the CFrame's
+position and rotation matrix.</p>
+
+</section>
+
+</section>
+
+<section data-name="Inverse">
+
+<section data-name="Summary">
+
+<p>Returns the inverse CFrame.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Inverse</b> method returns the inverse of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="Lerp">
+
+<section data-name="Summary">
+
+<p>Linearly interpolates between two CFrames.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Lerp</b> method returns a CFrame linearly interpolated from the CFrame
+to <i>goal</i> according to <i>alpha</i>, which has an interval of [0, 1].</p>
+
+</section>
+
+</section>
+
+<section data-name="PointToObjectSpace">
+
+<section data-name="Summary">
+
+<p>Transforms a Vector3 to local space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>PointToObjectSpace</b> method returns a Vector3 transformed from world
+to local space of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="PointToWorldSpace">
+
+<section data-name="Summary">
+
+<p>Transforms a Vector3 to world space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>PointToWorldSpace</b> method returns a Vector3 transformed from local
+to world space of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToAxisAngle">
+
+<section data-name="Summary">
+
+<p>Returns the orientation as an axis and angle.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToAxisAngle</b> method returns the orientation of the CFrame as an
+angle, in radians, rotated around an axis.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToEulerAnglesXYZ">
+
+<section data-name="Summary">
+
+<p>Returns the orientation as Euler angles.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToEulerAnglesXYZ</b> method returns the approximate angles of the
+CFrame's orientation, in radians, if ordered Z, Y, X.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToEulerAnglesYXZ">
+
+<section data-name="Summary">
+
+<p>Returns the orientation as Euler angles order Y, X, Z.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToEulerAnglesYXZ</b> method returns the approximate angles of the
+CFrame's orientation, in radians, if ordered Y, X, Z.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToObjectSpace">
+
+<section data-name="Summary">
+
+<p>Transforms to local space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToObjectSpace</b> method returns the CFrame transformed from world to
+local space of <i>cf</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToOrientation">
+
+<section data-name="Summary">
+
+<p>Returns the orientation.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToOrientation</b> method returns the approximate angles of the
+CFrame's orientation, in radians, if ordered Y, X, Z.</p>
+
+</section>
+
+</section>
+
+<section data-name="ToWorldSpace">
+
+<section data-name="Summary">
+
+<p>Transforms to world space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ToWorldSpace</b> method returns the CFrame transformed from local to
+world space of <i>cf</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="VectorToObjectSpace">
+
+<section data-name="Summary">
+
+<p>Returns a Vector3 rotated to local space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>VectorToObjectSpace</b> method returns a Vector3 rotated from world to
+local space of the CFrame.</p>
+
+</section>
+
+</section>
+
+<section data-name="VectorToWorldSpace">
+
+<section data-name="Summary">
+
+<p>Returns a Vector3 rotated to world space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>VectorToWorldSpace</b> method returns a Vector3 rotated from local to
+world space of the CFrame.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Operators">
+
+<section data-name="Add">
+
+<section data-name="Summary">
+
+<p>Translates by adding.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>add</b> operator returns the CFrame translated in world space by the
+operand.</p>
+
+</section>
+
+</section>
+
+<section data-name="Sub">
+
+<section data-name="Summary">
+
+<p>Translates by subtracting.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>sub</b> operator returns the CFrame translated in world space by the
+negation of the operand.</p>
+
+</section>
+
+</section>
+
+<section data-name="Mul">
+
+<section data-name="CFrame">
+
+<section data-name="Summary">
+
+<p>Composes two CFrames.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>mul</b> operator returns the composition of two CFrames.</p>
+
+</section>
+
+</section>
+
+<section data-name="Vector3">
+
+<section data-name="Summary">
+
+<p>Transforms to world space.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>mul</b> operator returns the operand transformed from local to world
+space of the CFrame.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Eq">
+
+<section data-name="Summary">
+
+<p>Returns whether two CFrame values are equal.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>equal</b> operator returns true if both operands are CFrame, and each
+corresponding component is equal.</p>
+
+</section>
+
+</section>
+
+</section>

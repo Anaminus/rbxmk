@@ -1,0 +1,185 @@
+<section data-name="Summary">
+
+<p>An action that transforms a descriptor.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>DescAction</b> type describes a single action that transforms a
+descriptor. It has the following members:</p>
+
+<p>$MEMBERS</p>
+
+<p>A DescAction can be created with the [DescAction.new][DescAction.new]
+constructor. It is also returned from the [RootDesc.Diff][RootDesc.Diff] method
+and the <a href="formats.md#user-content-desc-patchjson">desc-patch.json</a>
+format.</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="new">
+
+<section data-name="Summary">
+
+<p>Creates a new DescAction.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a new DescAction initialized with a type
+and an element.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="Element">
+
+<section data-name="Summary">
+
+<p>The type of element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Element</b> property is the type of element to which the action
+applies.</p>
+
+</section>
+
+</section>
+
+<section data-name="Primary">
+
+<section data-name="Summary">
+
+<p>The name of the primary element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Primary</b> property is the name of the primary element. For example,
+the class name or enum name.</p>
+
+</section>
+
+</section>
+
+<section data-name="Secondary">
+
+<section data-name="Summary">
+
+<p>The name of the secondary element.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Secondary</b> property is the name of the secondary element. For
+example, the name of a class member or enum item. An empty string indicates that
+the action applies to the primary element.</p>
+
+</section>
+
+</section>
+
+<section data-name="Type">
+
+<section data-name="Summary">
+
+<p>The type of transformation.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Type</b> property is the type of transformation performed by the
+action.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Methods">
+
+<section data-name="Field">
+
+<section data-name="Summary">
+
+<p>Gets a field.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Field</b> method returns the value of the <i>name</i> field, or nil if
+the action has no such field.</p>
+
+</section>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="Summary">
+
+<p>Gets all fields.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Fields</b> method returns a collection of field names mapped to
+values.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetField">
+
+<section data-name="Summary">
+
+<p>Sets a field.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetField</b> method sets the value of the <i>name</i> field to
+<i>value</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetFields">
+
+<section data-name="Summary">
+
+<p>Sets all fields.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetFields</b> method replaces all fields of the action with
+<i>fields</i>.</p>
+
+</section>
+
+</section>
+
+</section>

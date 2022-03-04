@@ -1,0 +1,703 @@
+<section data-name="Summary">
+
+<p>Represents the content of a Roblox instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Instance</b> type represents the content of a Roblox instance. It
+provides a similar API to that of Roblox. In addition to getting and setting
+properties, instances have the following members defined:</p>
+
+<p>$MEMBERS</p>
+
+<p>See the <a href="README.md#user-content-instances">Instances section</a> for
+details on the implementation of Instances.</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="new">
+
+<section data-name="Summary">
+
+<p>Creates a new Instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor returns a new Instance of the given class.
+<i>className</i> sets the [ClassName][Instance.ClassName] property of the
+instance. If <i>parent</i> is specified, it sets the [Parent][Instance.Parent]
+property.</p>
+
+<p>If <i>desc</i> is specified, then it sets the [sym.Desc][Instance.sym.Desc]
+member. Additionally, new will throw an error if the class does not exist. If no
+descriptor is specified, then any class name will be accepted.</p>
+
+<p>If <i>className</i> is "DataModel", then a [DataModel][DataModel] value is
+returned. In this case, new will throw an error if <i>parent</i> is not nil.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="ClassName">
+
+<section data-name="Summary">
+
+<p>The class of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ClassName</b> property gets or sets the class of the instance.</p>
+
+<p>Unlike in Roblox, ClassName can be modified.</p>
+
+</section>
+
+</section>
+
+<section data-name="Name">
+
+<section data-name="Summary">
+
+<p>A name identifying the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Name</b> property gets or sets a name identifying the instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="Parent">
+
+<section data-name="Summary">
+
+<p>The parent instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Parent</b> property gets or sets the parent of the instance, which may
+be nil.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Symbols">
+
+<section data-name="AttrConfig">
+
+<section data-name="Summary">
+
+<p>The AttrConfig used by the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>AttrConfig</b> symbol is the [AttrConfig][AttrConfig] being used by
+the instance. AttrConfig is inherited, the behavior of which is described in the
+<a href="README.md#user-content-value-inheritance">Value inheritance</a>
+section.</p>
+
+</section>
+
+</section>
+
+<section data-name="Desc">
+
+<section data-name="Summary">
+
+<p>The descriptor used by the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Desc</b> symbol is the descriptor being used by the instance. Desc is
+inherited, the behavior of which is described in the <a
+href="README.md#user-content-value-inheritance">Value inheritance</a>
+section.</p>
+
+</section>
+
+</section>
+
+<section data-name="IsService">
+
+<section data-name="Summary">
+
+<p>Whether the instance is a service.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>IsService</b> symbol indicates whether the instance is a service, such
+as Workspace or Lighting. This is used by some formats to determine how to
+encode and decode the instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="Summary">
+
+<p>All properties of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Properties</b> symbol gets or sets all properties of the instance.
+Each entry in the table is a property name mapped to the value of the
+property.</p>
+
+<p>When getting, properties that would produce an error are ignored.</p>
+
+<p>When setting, properties in the instance that are not in the table are
+removed. If any property could not be set, then an error is thrown, and no
+properties are set or removed.</p>
+
+</section>
+
+</section>
+
+<section data-name="RawAttrConfig">
+
+<section data-name="Summary">
+
+<p>The direct AttrConfig of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RawAttrConfig</b> symbol is the raw member corresponding to to
+[sym.AttrConfig][Instance.sym.AttrConfig]. It is similar to AttrConfig, except
+that it considers only the direct value of the current instance. The exact
+behavior of RawAttrConfig is described in the <a
+href="README.md#user-content-value-inheritance">Value inheritance</a>
+section.</p>
+
+</section>
+
+</section>
+
+<section data-name="RawDesc">
+
+<section data-name="Summary">
+
+<p>The direct descriptor of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>RawDesc</b> symbol is the raw member corresponding to to
+[sym.Desc][Instance.sym.Desc]. It is similar to Desc, except that it considers
+only the direct value of the current instance. The exact behavior of RawDesc is
+described in the <a href="README.md#user-content-value-inheritance">Value
+inheritance</a> section.</p>
+
+</section>
+
+</section>
+
+<section data-name="Reference">
+
+<section data-name="Summary">
+
+<p>A reference to the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Reference</b> symbol is a string used to refer to the instance from
+within a [DataModel][DataModel]. Certain formats use this to encode a reference
+to an instance. For example, the RBXMX format will generate random UUIDs for its
+references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").</p>
+
+<p>A reference should not be expected to persist when being encoded or decoded.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Methods">
+
+<section data-name="ClearAllChildren">
+
+<section data-name="Summary">
+
+<p>Remove each child of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ClearAllChildren</b> method sets the [Parent][Instance.Parent] of each
+child of the instance to nil.</p>
+
+<p>Unlike in Roblox, ClearAllChildren does not affect descendants.</p>
+
+</section>
+
+</section>
+
+<section data-name="Clone">
+
+<section data-name="Summary">
+
+<p>Creates a copy of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Clone</b> method returns a copy of the instance.</p>
+
+<p>Unlike in Roblox, Clone does not ignore an instance if its Archivable
+property is set to false.</p>
+
+</section>
+
+</section>
+
+<section data-name="Descend">
+
+<section data-name="Summary">
+
+<p>Gets a descendant by name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Descend</b> method returns a descendant of the instance by recursively
+searching for each name in succession according to
+[FindFirstChild][Instance.FindFirstChild]. Returns nil if a child could not be
+found. Throws an error if no arguments are given.</p>
+
+<p>Descend provides a safe alternative to indexing the children of an instance,
+which is not implemented by rbxmk.</p>
+
+<pre><code class="language-lua">local face = game:Descend("Workspace", "Noob", "Head", "face")</code></pre>
+
+</section>
+
+</section>
+
+<section data-name="Destroy">
+
+<section data-name="Summary">
+
+<p>Removes an instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Destroy</b> method sets the [Parent][Instance.Parent] of the instance
+to nil.</p>
+
+<p>Unlike in Roblox, the Parent of the instance remains unlocked. Destroy also
+does not affect descendants.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstAncestor">
+
+<section data-name="Summary">
+
+<p>Gets an ancestor by name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstAncestor</b> method returns the first ancestor whose
+[Name][Instance.Name] equals <i>name</i>, or nil if no such instance was
+found.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstAncestorOfClass">
+
+<section data-name="Summary">
+
+<p>Gets an ancestor by class name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstAncestorOfClass</b> method returns the first ancestor of the
+instance whose [ClassName][Instance.ClassName] equals <i>className</i>, or nil
+if no such instance was found.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstAncestorWhichIsA">
+
+<section data-name="Summary">
+
+<p>Gets an ancestor by inherited class name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstAncestorWhichIsA</b> method returns the first ancestor of the
+instance whose [ClassName][Instance.ClassName] inherits <i>className</i>
+according to the instance's descriptor, or nil if no such instance was found. If
+the instance has no descriptor, then the ClassName is compared directly.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstChild">
+
+<section data-name="Summary">
+
+<p>Gets a child by name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstChild</b> method returns the first child of the instance
+whose [Name][Instance.Name] equals <i>name</i>, or nil if no such instance was
+found. If <i>recurse</i> is true, then descendants are also searched,
+top-down.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstChildOfClass">
+
+<section data-name="Summary">
+
+<p>Gets a child by class name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstChildOfClass</b> method returns the first child of the
+instance whose [ClassName][Instance.ClassName] equals <i>className</i>, or nil
+if no such instance was found. If <i>recurse</i> is true, then descendants are
+also searched, top-down.</p>
+
+</section>
+
+</section>
+
+<section data-name="FindFirstChildWhichIsA">
+
+<section data-name="Summary">
+
+<p>Gets a child by inherited class name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>FindFirstChildWhichIsA</b> method returns the first child of the
+instance whose [ClassName][Instance.ClassName] inherits <i>className</i>, or nil
+if no such instance was found. If the instance has no descriptor, then the
+ClassName is compared directly. If <i>recurse</i> is true, then descendants are
+also searched, top-down.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetAttribute">
+
+<section data-name="Summary">
+
+<p>Gets an attribute.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetAttribute</b> method returns the value of <i>attribute</i>, or nil
+if the attribute is not found.</p>
+
+<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
+to select the property to decode from, which is expected to be string-like. An
+error is thrown if the data could not be decoded.</p>
+
+<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
+list of possible attribute value types.</p>
+
+<p>The <a href="README.md#user-content-attributes">Attributes</a> section
+provides a more general description of attributes.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetAttributes">
+
+<section data-name="Summary">
+
+<p>Gets all attributes.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetAttributes</b> method returns a dictionary of attribute names
+mapped to values.</p>
+
+<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
+to select the property to decode from, which is expected to be string-like. An
+error is thrown if the data could not be decoded.</p>
+
+<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
+list of possible attribute value types.</p>
+
+<p>The <a href="README.md#user-content-attributes">Attributes</a> section
+provides a more general description of attributes.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetChildren">
+
+<section data-name="Summary">
+
+<p>Gets the children.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetChildren</b> method returns a list of children of the instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetDescendants">
+
+<section data-name="Summary">
+
+<p>Gets all descendants.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetDescendants</b> method returns a list of descendants of the
+instance.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetFullName">
+
+<section data-name="Summary">
+
+<p>Gets a name according to the ancestors of the instance.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>GetFullName</b> method returns the concatenation of the
+[Name][Instance.Name] of each ancestor of the instance and the instance itself,
+separated by <code>.</code> characters. If an ancestor is a
+[DataModel][DataModel], it is not included.</p>
+
+</section>
+
+</section>
+
+<section data-name="IsA">
+
+<section data-name="Summary">
+
+<p>Gets whether the class inherits from a given class name.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>IsA</b> method returns whether the [ClassName][Instance.ClassName]
+inherits from <i>className</i>, according to the instance's descriptor. If the
+instance has no descriptor, then IsA returns whether ClassName equals
+<i>className</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="IsAncestorOf">
+
+<section data-name="Summary">
+
+<p>Gets whether the instance is an ancestor.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>IsAncestorOf</b> method returns whether the instance of an ancestor of
+<i>descendant</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="IsDescendantOf">
+
+<section data-name="Summary">
+
+<p>Gets whether the instance is an descendant.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>IsDescendantOf</b> method returns whether the instance of a descendant
+of <i>ancestor</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetAttribute">
+
+<section data-name="Summary">
+
+<p>Sets an attribute.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetAttribute</b> method sets <i>attribute</i> to <i>value</i>. If
+<i>value</i> is nil, then the attribute is removed.</p>
+
+<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
+to select the property to decode from, which is expected to be string-like. This
+function decodes the serialized attributes, sets the given value, then
+re-encodes the attributes. An error is thrown if the data could not be decoded
+or encoded.</p>
+
+<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
+list of possible attribute value types.</p>
+
+<p>The <a href="README.md#user-content-attributes">Attributes</a> section
+provides a more general description of attributes.</p>
+
+</section>
+
+</section>
+
+<section data-name="SetAttributes">
+
+<section data-name="Summary">
+
+<p>Sets all attributes.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>SetAttributes</b> method replaces all attributes with the content of
+<i>attributes</i>, which contains attribute names mapped to values.</p>
+
+<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
+to select the property to encode to. An error is thrown if the data could not be
+encoded.</p>
+
+<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
+list of possible attribute value types.</p>
+
+<p>The <a href="README.md#user-content-attributes">Attributes</a> section
+provides a more general description of attributes.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Operators">
+
+<section data-name="Index">
+
+<section data-name="Summary">
+
+<p>Gets a property.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>index</b> operator gets the value of a property of the instance. If
+the instance has a descriptor, then the the properties are enforced by the
+descriptor. Otherwise, any property can be any type of value.</p>
+
+</section>
+
+</section>
+
+<section data-name="Newindex">
+
+<section data-name="Summary">
+
+<p>Sets a property.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>newindex</b> operator sets the value of a property of the instance. If
+the instance has a descriptor, then the the properties are enforced by the
+descriptor. Otherwise, any property can be set to any value.</p>
+
+</section>
+
+</section>
+
+</section>

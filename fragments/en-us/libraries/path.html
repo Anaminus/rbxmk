@@ -1,0 +1,163 @@
+<section data-name="Summary">
+
+<p>Handles file paths.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>path</b> library provides functions that handle file paths. The
+following functions are included:</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="clean">
+
+<section data-name="Summary">
+
+<p>Cleans up a file path.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>clean</b> function returns the shortest path equivalent to
+<i>path</i>. Separators are replaced with the OS-specific path separator.</p>
+
+</section>
+
+</section>
+
+<section data-name="expand">
+
+<section data-name="Summary">
+
+<p>Expands predefined file path variables.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>expand</b> function scans <i>path</i> for certain variables of the
+form <code>$var</code> or <code>${var}</code> an expands them. The following
+variables are expanded:</p>
+
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$script_name</code>, <code>$sn</code></td>
+<td>The base name of the currently running script. Empty for stdin.</td>
+</tr>
+<tr>
+<td><code>$script_directory</code>, <code>$script_dir</code>, <code>$sd</code></td>
+<td>The directory of the currently running script. Empty for stdin.</td>
+</tr>
+<tr>
+<td><code>$root_script_directory</code>, <code>$root_script_dir</code>, <code>$rsd</code></td>
+<td>The directory of the first running script. Empty for stdin.</td>
+</tr>
+<tr>
+<td><code>$working_directory</code>, <code>$working_dir</code>, <code>$wd</code></td>
+<td>The current working directory.</td>
+</tr>
+<tr>
+<td><code>$temp_directory</code>, <code>$temp_dir</code>, <code>$tmp</code></td>
+<td>The directory for temporary files.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>
+
+<section data-name="join">
+
+<section data-name="Summary">
+
+<p>Joins a number of file paths together.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>join</b> function joins each <i>path</i> element into a single path,
+separating them using the operating system's path separator. This also cleans up
+the path.</p>
+
+</section>
+
+</section>
+
+<section data-name="split">
+
+<section data-name="Summary">
+
+<p>Splits a file path into its components.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>split</b> function returns the components of a file path.</p>
+
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th><code>project/scripts/main.script.lua</code></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base</code></td>
+<td><code>main.script.lua</code></td>
+<td>The file name; the last element of the path.</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td><code>project/scripts</code></td>
+<td>The directory; all but the last element of the path.</td>
+</tr>
+<tr>
+<td><code>ext</code></td>
+<td><code>.lua</code></td>
+<td>The extension; the suffix starting at the last dot of the last element of the path.</td>
+</tr>
+<tr>
+<td><code>fext</code></td>
+<td><code>.script.lua</code></td>
+<td>The format extension, as determined by registered formats.</td>
+</tr>
+<tr>
+<td><code>fstem</code></td>
+<td><code>main</code></td>
+<td>The base without the format extension.</td>
+</tr>
+<tr>
+<td><code>stem</code></td>
+<td><code>main.script</code></td>
+<td>The base without the extension.</td>
+</tr>
+</tbody>
+</table>
+
+<p>A format extension depends on the available formats. See <a
+href="formats.md">Formats</a> for more information.</p>
+
+</section>
+
+</section>
+
+</section>

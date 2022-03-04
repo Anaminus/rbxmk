@@ -11,11 +11,9 @@ import (
 
 	"github.com/anaminus/drill"
 	"github.com/anaminus/drill/filesys"
-	"github.com/anaminus/drill/filesys/markdown"
 	"github.com/anaminus/rbxmk/fragments"
+	"github.com/anaminus/rbxmk/rbxmk/htmldrill"
 	"github.com/anaminus/rbxmk/rbxmk/term"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
 	terminal "golang.org/x/term"
 )
 
@@ -47,12 +45,8 @@ func initDocs() drill.Node {
 		panicLanguage()
 	}
 	f, err := filesys.NewFS(lang, filesys.Handlers{
-		{Pattern: "*.md", Func: markdown.NewHandler(
-			goldmark.WithRenderer(term.Renderer{Width: termWidth, TabSize: 4}),
-			goldmark.WithExtensions(
-				extension.Table,
-				extension.Footnote,
-			),
+		{Pattern: "*.html", Func: htmldrill.NewHandler(
+			htmldrill.WithRenderer(term.Renderer{Width: termWidth, TabSize: 4}.Render),
 		)},
 	})
 	if err != nil {
@@ -67,7 +61,7 @@ func initDocs() drill.Node {
 
 var docfs = initDocs()
 var docMut sync.RWMutex
-var docCache = map[string]*markdown.Node{}
+var docCache = map[string]*htmldrill.Node{}
 var docFailed = map[string]struct{}{}
 var docSeen = map[string]struct{}{}
 
@@ -217,7 +211,7 @@ func ResolveFragmentWith(fragref string, data interface{}, funcs FuncMap) string
 }
 
 const FragSep = ':'
-const FragSuffix = ".md"
+const FragSuffix = ".html"
 
 func ListFragments(fragref string) []string {
 	frags := map[string]struct{}{}
@@ -293,7 +287,7 @@ func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 			default:
 				return nil, false
 			}
-			if node, ok := n.(*markdown.Node); ok {
+			if node, ok := n.(*htmldrill.Node); ok {
 				docCache[path] = node
 			}
 		}

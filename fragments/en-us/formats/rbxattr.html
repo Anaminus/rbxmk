@@ -1,0 +1,59 @@
+<section data-name="Summary">
+
+<p>Encodes instance attributes.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rbxattr</b> format is defined for serializing instance attributes,
+encoding
+a Dictionary of attribute values.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>Dictionary</td>
+<td>A dictionary of attribute names mapped to values.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Dictionary</td>
+<td>A dictionary of attribute names mapped to values.</td>
+</tr>
+</tbody>
+</table>
+
+<p>The following value types are encoded and decoded:</p>
+
+<ul>
+<li>string</li>
+<li>bool</li>
+<li>float</li>
+<li>double</li>
+<li>UDim</li>
+<li>UDim2</li>
+<li>BrickColor</li>
+<li>Color3</li>
+<li>Vector2</li>
+<li>Vector3</li>
+<li>NumberSequence</li>
+<li>ColorSequence</li>
+<li>NumberRange</li>
+<li>Rect</li>
+</ul>
+
+<p>Additionally, any Stringable value is encoded as a string, and any Numberable
+value is encoded as a double.</p>
+
+<p>This format has no options.</p>
+
+</section>

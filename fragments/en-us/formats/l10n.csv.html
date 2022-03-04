@@ -1,0 +1,63 @@
+<section data-name="Summary">
+
+<p>Encodes localization data.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>l10n.csv</b> format decodes comma-separated localization data into a
+LocalizationTable instance, where the data is assigned to the Contents
+property.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>[Instance][Instance]</td>
+<td>A LocalizationTable with a Contents property.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Stringable</td>
+<td>Any string-like value.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Decoded data is a string in JSON format with the following structure:</p>
+
+<pre><code>[
+	{
+		"key":      "string",
+		"context":  "string",
+		"examples": "string",
+		"source":   "string",
+		"values": {
+			"locale": "string",
+			...
+		},
+	},
+	...
+]
+</code></pre>
+
+<p>Well-formed data has certain constraints, which are described in the
+<a
+href="https://developer.roblox.com/en-us/api-reference/class/LocalizationTable">LocalizationTable
+page</a>
+of the DevHub. rbxmk applies these same constraints when encoding and decoding.
+To avoid data loss, they are applied more strictly. Rather than discarding data,
+any conflict that arises will throw an error that describes the conflict in
+detail.</p>
+
+<p>This format has no options.</p>
+
+</section>

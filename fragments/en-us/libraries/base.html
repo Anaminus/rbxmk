@@ -1,0 +1,386 @@
+<section data-name="Summary">
+
+<p>The Lua 5.1 standard library, abridged.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>base</b> library is loaded directly into the global environment. It
+contains the following items from the <a
+href="https://www.lua.org/manual/5.1/manual.html#5">Lua 5.1 standard
+library</a>:</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="_G">
+
+<section data-name="Summary">
+
+<p>The global environment.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>_G</b> field holds the global environment (<code>_G._G == _G</code>).
+Setting _G to a different value does not affect the content of the
+environment.</p>
+
+</section>
+
+</section>
+
+<section data-name="_VERSION">
+
+<section data-name="Summary">
+
+<p>The current version of Lua.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>_VERSION</b> field is the current version of the Lua interpreter. The
+current value is "Lua 5.1".</p>
+
+</section>
+
+</section>
+
+<section data-name="assert">
+
+<section data-name="Summary">
+
+<p>Tests a condition.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>assert</b> function throws an error if <i>v</i> evaluates to false.
+Otherwise, each argument (including <i>v</i> and <i>message</i>) is returned.
+<i>message</i> is used as the error if the assertion fails.</p>
+
+</section>
+
+</section>
+
+<section data-name="error">
+
+<section data-name="Summary">
+
+<p>Throws an error.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>error</b> function throws an error by terminating the last protected
+function that was called, using <i>message</i> as the error.</p>
+
+<p><i>level</i> specifies the stack level from which error position information
+will be acquired. A <i>level</i> of 0 causes no position information to be
+included.</p>
+
+</section>
+
+</section>
+
+<section data-name="getmetatable">
+
+<section data-name="Summary">
+
+<p>Gets the metatable of a value.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>getmetatable</b> function gets the metatable of <i>v</i>. Returns nil
+if <i>v</i> does not have a metatable. Otherwise, if the metatable has the field
+"__metatable", then its value is returned. Otherwise, the metatable itself is
+returned.</p>
+
+</section>
+
+</section>
+
+<section data-name="ipairs">
+
+<section data-name="Summary">
+
+<p>Returns an iterator over an array.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>ipairs</b> function iterates over the sequential integers keys of
+<i>t</i>. The values returned are suitable to be used directly with a generic
+for loop:</p>
+
+<pre><code class="language-lua">for index, value in ipairs(t) do ... end</code></pre>
+
+</section>
+
+</section>
+
+<section data-name="next">
+
+<section data-name="Summary">
+
+<p>Gets the next field in a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>next</b> function allows all fields of a table to be traversed.
+<i>t</i> is the table, and <i>index</i> is the index in the table. next returns
+the next index and its associated value.</p>
+
+<p>If <i>index</i> is nil, then the first index and its value are returned. When
+called with the last index, nil is returned.</p>
+
+<p>The order in which fields are returned is undefined. This order is not
+changed after modifying existing fields, removing fields, or making no changes.
+How this order changes, when a value is assigned to a non-extant field, is
+undefined.</p>
+
+</section>
+
+</section>
+
+<section data-name="pairs">
+
+<section data-name="Summary">
+
+<p>Returns an iterator over a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>pairs</b> function iterates over all fields of <i>t</i>. The values
+returned are suitable to be used directly with a generic for loop:</p>
+
+<pre><code class="language-lua">for key, value in pairs(t) do ... end</code></pre>
+
+<p>Specifically, <i>next</i> is the next function, <i>t</i> is the received
+<i>t</i>, and <i>start</i> is nil.</p>
+
+</section>
+
+</section>
+
+<section data-name="pcall">
+
+<section data-name="Summary">
+
+<p>Calls a function in protected mode.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>pcall</b> function calls <i>f</i> in protected mode. Any error thrown
+within <i>f</i> is caught and returned, instead of propagated. The remaining
+arguments are passed to <i>f</i>.</p>
+
+<p><i>ok</i> will be true if the call succeeded without errors. In this case,
+the remaining values are those returned by <i>f</i>. If <i>ok</i> is false, then
+the next value is the error value.</p>
+
+</section>
+
+</section>
+
+<section data-name="print">
+
+<section data-name="Summary">
+
+<p>Prints values to standard output.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>print</b> function receives each argument, converts them to strings,
+and writes them to standard output.</p>
+
+</section>
+
+</section>
+
+<section data-name="select">
+
+<section data-name="Index">
+
+<section data-name="Summary">
+
+<p>Returns arguments after a given index.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>select</b> function returns all arguments after the argument indicated
+by <i>index</i>.</p>
+
+<pre><code class="language-lua">select(1, "A", "B", "C") --&gt; "A", "B", "C"
+select(2, "A", "B", "C") --&gt; "B", "C"
+select(3, "A", "B", "C") --&gt; "C"
+select(4, "A", "B", "C") --&gt;
+</code></pre>
+
+<p>If <i>index</i> is less than 0, then indexing starts from the end of the
+arguments. An error is thrown if <i>index</i> is 0.</p>
+
+</section>
+
+</section>
+
+<section data-name="Count">
+
+<section data-name="Summary">
+
+<p>Returns the number of arguments.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>select</b> function with a <i>count</i> of "#", returns the number of
+additional arguments passed.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="setmetatable">
+
+<section data-name="Summary">
+
+<p>Sets the metatable of a value.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>setmetatable</b> function sets the metatable of <i>v</i> to
+<i>metatable</i>. If <i>metatable</i> is nil, then the metatable is removed. An
+error is thrown if the current metatable has a "__metatable" field.</p>
+
+</section>
+
+</section>
+
+<section data-name="tonumber">
+
+<section data-name="Summary">
+
+<p>Converts a value to a number.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>tonumber</b> function attempts to convert <i>x</i> into a number.
+Returns a number if <i>x</i> is a number or a string that can be parsed as a
+number. Returns nil otherwise.</p>
+
+<p><i>base</i> specifies the base to interpret the numeral. It may be any
+integer between 2 and 36, inclusive. In bases above 10, the letters A to Z
+(case-insensitive) represent 10 to 35, respectively. In base 10, the number can
+have a decimal part, as well as an optional exponent part. In other bases, only
+unsigned integers are accepted.</p>
+
+</section>
+
+</section>
+
+<section data-name="tostring">
+
+<section data-name="Summary">
+
+<p>Converts a value to a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>tostring</b> function converts <i>v</i> into a string in a reasonable
+format. If <i>v</i> has a metatable with the "__tostring" field, then this field
+is called with <i>v</i> as its argument, and its result is returned.</p>
+
+</section>
+
+</section>
+
+<section data-name="type">
+
+<section data-name="Summary">
+
+<p>Returns the Lua type of a value.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>type</b> function returns the Lua type of <i>v</i> as a string.
+Possible values are "nil", "boolean", "number", "string", "table", "function,
+"thread", and "userdata".</p>
+
+<p>To get the internal type of userdata values, use the typeof function from the
+roblox library.</p>
+
+</section>
+
+</section>
+
+<section data-name="unpack">
+
+<section data-name="Summary">
+
+<p>Returns the elements in an array.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>unpack</b> function returns each element in <i>list</i> from <i>i</i>
+up to and including <i>j</i>. By default, <i>i</i> is 1, and <i>j</i> is the
+length of <i>list</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="xpcall">
+
+<section data-name="Summary">
+
+<p>Calls a function in protected mode with an error handler.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>xpcall</b> function is like pcall, except that it allows a custom
+error handler to be specified. <i>msgh</i> is the error handler, and is called
+within the erroring stack frame. <i>msgh</i> receives the current error message,
+and returns the new error message to be returned by xpcall. The remaining
+arguments to xpcall are passed to <i>f</i>.</p>
+
+</section>
+
+</section>
+
+</section>

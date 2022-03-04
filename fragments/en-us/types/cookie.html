@@ -1,0 +1,119 @@
+<section data-name="Summary">
+
+<p>An HTTP cookie.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Cookie</b> type contains information about an HTTP cookie. It has the
+following members:</p>
+
+<p>$MEMBERS</p>
+
+<p>For security reasons, the value of the cookie cannot be accessed.</p>
+
+<p>Cookie is immutable. A Cookie can be created with the
+[Cookie.new][Cookie.new] constructor. Additionally, Cookies can be fetched from
+known locations with the [Cookie.from][Cookie.from] function.</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="from">
+
+<section data-name="Summary">
+
+<p>Gets cookies from a known location.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>from</b> constructor retrieves cookies from a known location.
+<i>location</i> is case-insensitive.</p>
+
+<p>The following locations are implemented:</p>
+
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>studio</code></td>
+<td>Returns the cookies used for authentication when logging into Roblox
+Studio.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Returns nil if no cookies could be retrieved from the location. Throws an
+error if an unknown location is given.</p>
+
+</section>
+
+</section>
+
+<section data-name="new">
+
+<section data-name="Summary">
+
+<p>Creates a new cookie.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>new</b> constructor creates a new cookie object.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Properties">
+
+<section data-name="Name">
+
+<section data-name="Summary">
+
+<p>The name of the cookie.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Name</b> field is the name of the cookie.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="Operators">
+
+<section data-name="Eq">
+
+<section data-name="Summary">
+
+<p>Returns whether two Cookie values are equal.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>equal</b> operator returns true if both operands are Cookie values,
+and their Name properties are equal, and their internal values are equal.</p>
+
+</section>
+
+</section>
+
+</section>

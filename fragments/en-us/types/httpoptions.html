@@ -1,0 +1,65 @@
+<section data-name="Summary">
+
+<p>Specifies how an HTTP request is made.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>HTTPOptions</b> type is a table that specifies how an HTTP request is
+made. It has the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td><a href="##">string</a></td>
+<td>The URL to make to request to.</td>
+</tr>
+<tr>
+<td>Method</td>
+<td><a href="##">string</a>?</td>
+<td>The HTTP method. Defaults to GET.</td>
+</tr>
+<tr>
+<td>RequestFormat</td>
+<td>[FormatSelector][FormatSelector]?</td>
+<td>The format used to encode the request body.</td>
+</tr>
+<tr>
+<td>ResponseFormat</td>
+<td>[FormatSelector][FormatSelector]?</td>
+<td>The format used to decode the response body.</td>
+</tr>
+<tr>
+<td>Headers</td>
+<td>[HTTPHeaders][HTTPHeaders]?</td>
+<td>The HTTP headers to include with the request.</td>
+</tr>
+<tr>
+<td>Cookies</td>
+<td>[Cookies][Cookies]?</td>
+<td>Cookies to append to the Cookie header.</td>
+</tr>
+<tr>
+<td>Body</td>
+<td><a href="##">any</a>?</td>
+<td>The body of the request, to be encoded by the specified format.</td>
+</tr>
+</tbody>
+</table>
+
+<p>If RequestFormat is unspecified, then no request body is sent. If
+ResponseFormat is unspecified, then no response body is returned.</p>
+
+<p>Use of the Cookies field ensures that cookies sent with the request are
+well-formed, and is preferred over setting the Cookie header directly.</p>
+
+</section>

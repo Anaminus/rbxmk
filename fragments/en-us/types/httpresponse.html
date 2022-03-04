@@ -1,0 +1,54 @@
+<section data-name="Summary">
+
+<p>Contains the response of an HTTP request.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>HTTPResponse</b> type is a table that contains the response of a
+request. It has the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Success</td>
+<td><a href="##">bool</a></td>
+<td>Whether the request succeeded. True if StatusCode between 200 and 299.</td>
+</tr>
+<tr>
+<td>StatusCode</td>
+<td><a href="##">int</a></td>
+<td>The HTTP status code of the response.</td>
+</tr>
+<tr>
+<td>StatusMessage</td>
+<td><a href="##">string</a></td>
+<td>A readable message corresponding to the StatusCode.</td>
+</tr>
+<tr>
+<td>Headers</td>
+<td>[HTTPHeaders][HTTPHeaders]</td>
+<td>A set of response headers.</td>
+</tr>
+<tr>
+<td>Cookies</td>
+<td>[Cookies][Cookies]</td>
+<td>Cookies parsed from the Set-Cookie header.</td>
+</tr>
+<tr>
+<td>Body</td>
+<td><a href="##">any</a>?</td>
+<td>The decoded body of the response.</td>
+</tr>
+</tbody>
+</table>
+
+</section>

@@ -1,0 +1,132 @@
+<section data-name="Summary">
+
+<p>Extensions to the standard table library.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>table</b> library is an extension to the standard library that
+includes the same additions to <a
+href="https://developer.roblox.com/en-us/api-reference/lua-docs/table">Roblox's
+table library</a>:</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="clear">
+
+<section data-name="Summary">
+
+<p>Removes all entries from a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>clear</b> function removes all the entries from <i>t</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="create">
+
+<section data-name="Summary">
+
+<p>Creates a new table with a preallocated capacity.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>create</b> function returns a table with the array part allocated with
+a capacity of <i>cap</i>. Each entry in the array is optionally filled with
+<i>value</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="find">
+
+<section data-name="Summary">
+
+<p>Find the index of a value in a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>find</b> function returns the index in <i>t</i> of the first
+occurrence of <i>value</i>, or nil if <i>value</i> was not found. Starts at
+index <i>init</i>, or 1 if unspecified.</p>
+
+</section>
+
+</section>
+
+<section data-name="move">
+
+<section data-name="Summary">
+
+<p>Copies the entries in a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>move</b> function copies elements from <i>a1</i> to <i>a2</i>,
+performing the equivalent to the multiple assignment</p>
+
+<pre><code>a2[t], ... = a1[f], ..., a1[e]</code></pre>
+
+<p>The default for <i>a2</i> is <i>a1</i>. The destination range can overlap the
+source range. Returns <i>a2</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="pack">
+
+<section data-name="Summary">
+
+<p>Packs arguments into a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>pack</b> function returns a table with each argument stored at keys 1,
+2, etc. Also sets field "n" to the number of arguments. Note that the resulting
+table may not be a sequence.</p>
+
+</section>
+
+</section>
+
+<section data-name="unpack">
+
+<section data-name="Summary">
+
+<p>Unpacks a table into arguments.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Returns the elements from <i>list</i>, equivalent to</p>
+
+<pre><code>list[i], list[i+1], ..., list[j]</code></pre>
+
+<p>By default, <i>i</i> is 1 and <i>j</i> is the length of <i>list</i>.</p>
+
+</section>
+
+</section>
+
+</section>

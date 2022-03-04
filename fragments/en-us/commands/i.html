@@ -1,0 +1,128 @@
+<section data-name="Summary">
+
+<p>Enter interactive mode.</p>
+
+</section>
+
+<section data-name="Arguments">
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>i</b> command enters interactive mode. Each prompt executes a chunk of
+Lua code.</p>
+
+<p>If a prompt begins with <code>=</code>, then the comma-separated list of
+expressions that follow are evaluated and printed to standard output.</p>
+
+<p>The environment contains the <b>os.exit</b> function. When called,
+interactive mode is terminated, and the program exits.</p>
+
+<p>Within supported terminals, the following shortcuts are available:</p>
+
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+A</code>, <code>Home</code></td>
+<td>Move cursor to beginning of line.</td>
+</tr>
+<tr>
+<td><code>Ctrl+E</code>, <code>End</code></td>
+<td>Move cursor to end of line</td>
+</tr>
+<tr>
+<td><code>Ctrl+B</code>, <code>Left</code></td>
+<td>Move cursor one character left.</td>
+</tr>
+<tr>
+<td><code>Ctrl+F</code>, <code>Right</code></td>
+<td>Move cursor one character right.</td>
+</tr>
+<tr>
+<td><code>Ctrl+Left</code>, <code>Alt+B</code></td>
+<td>Move cursor to previous word.</td>
+</tr>
+<tr>
+<td><code>Ctrl+Right</code>, <code>Alt+F</code></td>
+<td>Move cursor to next word</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code>, <code>Del</code></td>
+<td>If line is not empty, delete character under cursor.</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code></td>
+<td>If line is empty, end of file.</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>Reset input (create new empty prompt).</td>
+</tr>
+<tr>
+<td><code>Ctrl+L</code></td>
+<td>Clear screen (line is unmodified).</td>
+</tr>
+<tr>
+<td><code>Ctrl+T</code></td>
+<td>Transpose previous character with current character.</td>
+</tr>
+<tr>
+<td><code>Ctrl+H</code>, <code>BackSpace</code></td>
+<td>Delete character before cursor.</td>
+</tr>
+<tr>
+<td><code>Ctrl+W</code>, <code>Alt+BackSpace</code></td>
+<td>Delete word leading up to cursor.</td>
+</tr>
+<tr>
+<td><code>Alt+D</code></td>
+<td>Delete word following cursor.</td>
+</tr>
+<tr>
+<td><code>Ctrl+K</code></td>
+<td>Delete from cursor to end of line.</td>
+</tr>
+<tr>
+<td><code>Ctrl+U</code></td>
+<td>Delete from start of line to cursor.</td>
+</tr>
+<tr>
+<td><code>Ctrl+P</code>, <code>Up</code></td>
+<td>Previous match from history.</td>
+</tr>
+<tr>
+<td><code>Ctrl+N</code>, <code>Down</code></td>
+<td>Next match from history.</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>Reverse Search history (<code>Ctrl+S</code> forward, <code>Ctrl+G</code>
+cancel).</td>
+</tr>
+<tr>
+<td><code>Ctrl+Y</code></td>
+<td>Paste from Yank buffer (<code>Alt+Y</code> to paste next yank instead).</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td>Next completion.</td>
+</tr>
+<tr>
+<td><code>Shift+Tab</code></td>
+<td>(after <code>Tab</code>) Previous completion.</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>--desc-*</code> flags set the <code>rbxmk.globalDesc</code> field.
+They also set the <code>Enum</code> global variable to the enums generated from
+the descriptor.</p>
+
+</section>

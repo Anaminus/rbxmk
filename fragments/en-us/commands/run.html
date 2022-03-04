@@ -1,0 +1,39 @@
+<section data-name="Summary">
+
+<p>Execute a script.</p>
+
+</section>
+
+<section data-name="Arguments">
+
+<pre><code>[ FLAGS ] FILE [ VALUE... ]</code></pre>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>run</b> command receives a file to be executed as a Lua script.</p>
+
+<pre><code class="language-bash">rbxmk run script.lua</code></pre>
+
+<p>If <code>-</code> is given, then the script will be read from standard input
+instead.</p>
+
+<pre><code class="language-bash">echo 'print("hello world!")' | rbxmk run -</code></pre>
+
+<p>The remaining arguments are Lua values to be passed to the file. Numbers,
+bools, and nil are parsed into their respective types in Lua, and any other
+value is interpreted as a string.</p>
+
+<pre><code class="language-bash">rbxmk run script.lua true 3.14159 hello!</code></pre>
+
+<p>Within the script, these arguments can be received from the <code>...</code>
+operator.</p>
+
+<pre><code class="language-lua">local arg1, arg2, arg3 = ...</code></pre>
+
+<p>The <code>--desc-*</code> flags set the <code>rbxmk.globalDesc</code> field.
+They also set the <code>Enum</code> global variable to the enums generated from
+the descriptor.</p>
+
+</section>

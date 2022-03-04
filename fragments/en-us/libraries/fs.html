@@ -1,0 +1,221 @@
+<section data-name="Summary">
+
+<p>An interface to the file system.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>fs</b> library provides an interface to the file system.</p>
+
+<p>$FIELDS</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="dir">
+
+<section data-name="Summary">
+
+<p>Gets a list of files in a directory.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>dir</b> function returns a list of files in the given directory. Each
+file is a table with the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>The base name of the file.</td>
+</tr>
+<tr>
+<td>IsDir</td>
+<td>boolean</td>
+<td>Whether the file is a directory.</td>
+</tr>
+</tbody>
+</table>
+
+<p>dir returns nil if the directory does not exist. An error is thrown if a
+problem otherwise occurred while reading the directory.</p>
+
+</section>
+
+</section>
+
+<section data-name="mkdir">
+
+<section data-name="Summary">
+
+<p>Makes a new directory.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>mkdir</b> function creates a directory at <i>path</i>. If <i>all</i>
+is true, then mkdir will create each parent directory as needed. <i>all</i>
+defaults to false.</p>
+
+<p>Returns true if all the directories were created successfully. Returns false
+if all of the directories already exist. Throws an error if a problem otherwise
+occurred while creating a directory.</p>
+
+</section>
+
+</section>
+
+<section data-name="read">
+
+<section data-name="Summary">
+
+<p>Reads data from a file in a certain format.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>read</b> function reads the content of the file at <i>path</i>, and
+decodes it into <i>value</i> according to the <a href="formats.md">format</a>
+matching the file extension of <i>path</i>. If <i>format</i> is given, then it
+will be used instead of the file extension.</p>
+
+<p>If the format returns an [Instance][Instance], then the Name property will be
+set to the "fstem" component of <i>path</i> according to <a
+href="libraries.md#user-content-pathsplit">path.split</a>.</p>
+
+</section>
+
+</section>
+
+<section data-name="remove">
+
+<section data-name="Summary">
+
+<p>Removes a file or directory.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>remove</b> function removes the file or directory at <i>path</i>. If
+<i>all</i> is true, then removing a directory will also recursively remove all
+of its children. <i>all</i> defaults to false.</p>
+
+<p>Returns true if every file is removed successfully. Returns false if the file
+or directory does not exist. Throws an error if a problem occurred while
+removing a file.</p>
+
+</section>
+
+</section>
+
+<section data-name="rename">
+
+<section data-name="Summary">
+
+<p>Moves a file or directory.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rename</b> functions moves the file or directory at path <i>old</i> to
+path <i>new</i>. If <i>new</i> exists and is not a directory, it is
+replaced.</p>
+
+<p>Returns true if the file was moved successfully. Returns false if the file or
+directory does not exist. Throws an error if a problem otherwise occurred while
+moving the file.</p>
+
+</section>
+
+</section>
+
+<section data-name="stat">
+
+<section data-name="Summary">
+
+<p>Gets metadata about a file.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>stat</b> function gets metadata of the given file. Returns a table
+with the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>The base name of the file.</td>
+</tr>
+<tr>
+<td>IsDir</td>
+<td>boolean</td>
+<td>Whether the file is a directory.</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>number</td>
+<td>The size of the file, in bytes.</td>
+</tr>
+<tr>
+<td>ModTime</td>
+<td>number</td>
+<td>The modification time of the file, in Unix time.</td>
+</tr>
+</tbody>
+</table>
+
+<p>stats returns nil if the file does not exist. An error will be thrown if a
+problem otherwise occurred while getting the metadata.</p>
+
+<p>stat does not follow symbolic links.</p>
+
+</section>
+
+</section>
+
+<section data-name="write">
+
+<section data-name="Summary">
+
+<p>Writes data to a file in a certain format.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>write</b> function encodes <i>value</i> according to the <a
+href="formats.md">format</a> matching the file extension of <i>path</i>, and
+writes the result to the file at <i>path</i>. If <i>format</i> is given, then it
+will be used instead of the file extension.</p>
+
+</section>
+
+</section>
+
+</section>

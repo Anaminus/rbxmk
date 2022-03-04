@@ -1,0 +1,897 @@
+<section data-name="Summary">
+
+<p>General JSON format.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>json</b> dump format describes the API of the Lua environment in JSON
+format.</p>
+
+<p>The top-level value is a JSON object. The <b>Version</b> field is a number
+that signals the structure of the JSON format, and will be present in all
+versions of the format.</p>
+
+</section>
+
+<section data-name="Version 0">
+
+<p>The following top-level fields are specified:</p>
+
+<table>
+<thead>
+<tr>
+<th>Fields</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Libraries</td>
+<td>array</td>
+<td>A list of libraries available in the Lua environment. Each element is a
+Library object.</td>
+</tr>
+<tr>
+<td>Types</td>
+<td>object?</td>
+<td>A collection of globally defined data types. Maps a type name to a TypeDef
+object.</td>
+</tr>
+<tr>
+<td>Fragments</td>
+<td>array</td>
+<td>A list of additional fragment references. Each element is a string.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a description of the Lua API overall.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="Library">
+
+<p>A <b>Library</b> is an object that describes a library. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>The name of the library.</td>
+</tr>
+<tr>
+<td>ImportedAs</td>
+<td>string</td>
+<td>The name the library is imported under. If empty, then the library is merged
+into the global environment.</td>
+</tr>
+<tr>
+<td>Struct</td>
+<td>object?</td>
+<td>A Struct object that describes the contents of the library.</td>
+</tr>
+<tr>
+<td>Types</td>
+<td>object?</td>
+<td>A collection of data types defined by the library. Maps a type name to a
+TypeDef object.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Struct">
+
+<p>A <b>Struct</b> is an object that describes a table-like value that has a
+number of constant fields. It has the following fields.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fields</td>
+<td>object</td>
+<td>The fields of the structure. Maps a field name to a Field object.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the structure.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the structure.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Field">
+
+<p>A <b>Field</b> is an object that describes the field of a Struct. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kind</td>
+<td>string</td>
+<td>Determines the type of the Value field.</td>
+</tr>
+<tr>
+<td>Value</td>
+<td>...</td>
+<td>Describes the field.</td>
+</tr>
+</tbody>
+</table>
+
+<p>The following values are possible for the Kind field:</p>
+
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Value type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function</td>
+<td>object</td>
+<td>Describes a function. Value is a Function object.</td>
+</tr>
+<tr>
+<td>MultiFunction</td>
+<td>array</td>
+<td>Describes a function with multiple signatures. Each element is a Function
+object.</td>
+</tr>
+<tr>
+<td>Property</td>
+<td>object</td>
+<td>Describes a property. Value is a Property object.</td>
+</tr>
+<tr>
+<td>Struct</td>
+<td>object</td>
+<td>Describes a struct. Value is a Struct object.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Property">
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ValueType</td>
+<td>object</td>
+<td>A Type object that describes the value type of the property.</td>
+</tr>
+<tr>
+<td>ReadOnly</td>
+<td>bool?</td>
+<td>Whether the property can be written.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the property.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the property.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Function">
+
+<p>A <b>Function</b> is an object that describes a function. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td>array</td>
+<td>Describes the values received by the function. Each element is a Parameter
+object.</td>
+</tr>
+<tr>
+<td>Returns</td>
+<td>array</td>
+<td>Describes the values returned by the function. Each element is a Parameter
+object.</td>
+</tr>
+<tr>
+<td>CanError</td>
+<td>bool?</td>
+<td>Whether the function may throw an error, excluding type errors from received
+arguments.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the function.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the function.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="TypeDef">
+
+<p>A <b>TypeDef</b> object describes the definition of a type. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Underlying</td>
+<td>object?</td>
+<td>A Type object that describes the underlying type, if any.</td>
+</tr>
+<tr>
+<td>Operators</td>
+<td>object?</td>
+<td>An Operators object that describes the operators defined on the type.</td>
+</tr>
+<tr>
+<td>Properties</td>
+<td>object?</td>
+<td>Describes the properties defined on the type. Maps a property name to a
+Property object.</td>
+</tr>
+<tr>
+<td>Symbols</td>
+<td>object?</td>
+<td>Describes the symbols defined on the type. Maps a symbol name to a Property
+object.</td>
+</tr>
+<tr>
+<td>Methods</td>
+<td>object?</td>
+<td>Describes the methods defined on the type. Maps a method name to a Function
+object.</td>
+</tr>
+<tr>
+<td>Constructors</td>
+<td>object?</td>
+<td>Describes constructor functions that create the type. Maps a constructor
+name to an array of Function objects.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string</td>
+<td>A fragment reference pointing to a short summary of the type.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string</td>
+<td>A fragment reference pointing to a detailed description of the type.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Parameter">
+
+<p>A <b>Parameter</b> object describes the parameter of a function.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string?</td>
+<td>The name of the parameter.</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A Type object that describes the type of the parameter.</td>
+</tr>
+<tr>
+<td>Default</td>
+<td>string?</td>
+<td>The default value if the type is optional. Always omitted for return
+values.</td>
+</tr>
+<tr>
+<td>Enums</td>
+<td>array?</td>
+<td>Literal values that can be passed to the parameter. Each element is a
+string.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Type">
+
+<p>A <b>Type</b> object describes the type of a value. It has the following
+fields.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sig</td>
+<td>string</td>
+<td>A string-representation of the type, in Luau type definition format.</td>
+</tr>
+<tr>
+<td>Kind</td>
+<td>string</td>
+<td>Indicates the remaining fields.</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>Additional fields indicated by the Kind field.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="primitive">
+
+<p>The <b>primitive</b> kind describes a primitive value. It has the following
+additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>string</td>
+<td>The name of the type.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="function">
+
+<p>The <b>function</b> kind describes the signature of a function. It has the
+following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td>array</td>
+<td>The values received by the function. Each element is a Parameter
+object.</td>
+</tr>
+<tr>
+<td>Returns</td>
+<td>array</td>
+<td>The values returned by the function. Each element is a Parameter
+object.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="array">
+
+<p>The <b>array</b> kind describes an array of elements, each with a single
+type. It has the following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A Type object indicating each element of the array.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="or">
+
+<p>The <b>or</b> kind describes a union of two or more types. It has the
+following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Types</td>
+<td>array</td>
+<td>An array of Type objects.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="optional">
+
+<p>The <b>optional</b> kind describes a type that can also be nil. It has the
+following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A Type object indicating the underlying type.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="group">
+
+<p>The <b>group</b> kind groups the underlying type. It has the following
+additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A Type object indicating the underlying type.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="struct">
+
+<p>The <b>struct</b> kind describes a table with a number of named fields. It
+has the following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fields</td>
+<td>object</td>
+<td>The fields of the struct. Maps a field name to a Type object.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="map">
+
+<p>The <b>map</b> kind describes a table where each element maps a key to a
+value. It has the following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key</td>
+<td>object</td>
+<td>A Type object indicating the type of each key.</td>
+</tr>
+<tr>
+<td>Value</td>
+<td>object</td>
+<td>A Type object indicating the type of each value.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="dictionary">
+
+<p>The <b>dictionary</b> kind describes a table where each element maps a string
+to a value. It has the following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value</td>
+<td>object</td>
+<td>A Type object indicating the type of each value.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="table">
+
+<p>The <b>table</b> kind describes a table with both a map part and a struct
+part. It has the following additional fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key</td>
+<td>object</td>
+<td>A Type object indicating the type of each key.</td>
+</tr>
+<tr>
+<td>Value</td>
+<td>object</td>
+<td>A Type object indicating the type of each value.</td>
+</tr>
+<tr>
+<td>Fields</td>
+<td>object</td>
+<td>The fields of the table. Maps a field name to a Type object.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="functions">
+
+<p>The <b>functions</b> kind describes a function with multiple signatures. It
+has no additional fields.</p>
+
+</section>
+
+</section>
+
+<section data-name="Operators">
+
+<p>An <b>Operators</b> object describes the operators of a type. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __add
+operator.</td>
+</tr>
+<tr>
+<td>Sub</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __sub
+operator.</td>
+</tr>
+<tr>
+<td>Mul</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __mul
+operator.</td>
+</tr>
+<tr>
+<td>Div</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __div
+operator.</td>
+</tr>
+<tr>
+<td>Mod</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __mod
+operator.</td>
+</tr>
+<tr>
+<td>Pow</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __pow
+operator.</td>
+</tr>
+<tr>
+<td>Concat</td>
+<td>array</td>
+<td>An array of Binop objects that describes signatures for the __concat
+operator.</td>
+</tr>
+<tr>
+<td>Eq</td>
+<td>object?</td>
+<td>A Cmpop object that describes the signature for the __eq operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Le</td>
+<td>object?</td>
+<td>A Cmpop object that describes the signature for the __le operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Lt</td>
+<td>object?</td>
+<td>A Cmpop object that describes the signature for the __lt operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Len</td>
+<td>object?</td>
+<td>A Unop object that describes the signature for the __len operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Unm</td>
+<td>object?</td>
+<td>A Unop object that describes the signature for the __unm operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Call</td>
+<td>object?</td>
+<td>A Function object that describes the signature for the __call operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Index</td>
+<td>object?</td>
+<td>A Function object that describes the signature for the __index operator, if
+defined.</td>
+</tr>
+<tr>
+<td>Newindex</td>
+<td>object?</td>
+<td>A Function object that describes the signature for the __newindex operator,
+if defined.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Binop">
+
+<p>A <b>Binop</b> object describes a binary operator. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operand</td>
+<td>object</td>
+<td>The type of the right operand.</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>object</td>
+<td>The type of the result of the operation.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Cmpop">
+
+<p>A <b>Cmpop</b> object describes a comparison operator. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Unop">
+
+<p>A <b>Unop</b> object describes a unary operator.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Result</td>
+<td>object</td>
+<td>The type of the result of the operation.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>

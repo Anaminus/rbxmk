@@ -1,0 +1,278 @@
+<section data-name="Summary">
+
+<p>Provides functions for string manipulation.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>string</b> library provides functions for string manipulation.</p>
+
+<p>All strings have a metatable with the __index field set to this library. This
+allows functions to be called as methods on strings:</p>
+
+<pre><code class="language-lua">s:byte(...)
+-- Equivalent to:
+string.byte(s, ...)
+</code></pre>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="byte">
+
+<section data-name="Summary">
+
+<p>Gets the bytes of a string subset.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>byte</b> function returns the numerical byte codes of characters
+within <i>s</i> between <i>i</i> and <i>j</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="char">
+
+<section data-name="Summary">
+
+<p>Converts bytes to a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>char</b> function converts each given numeric byte code to a
+character, then returns the concatenation of each character.</p>
+
+</section>
+
+</section>
+
+<section data-name="find">
+
+<section data-name="Summary">
+
+<p>Finds the indices of a pattern.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>find</b> function searches for the first match of <i>pattern</i> in
+<i>s</i>. If found, then find returns the indices of <i>s</i> where the match
+starts and ends. If <i>pattern</i> contains captures, they are also returned
+after <i>start</i> and <i>end</i>. If no match is found, then nil is
+returned.</p>
+
+<p><i>init</i> specifies where the search begins. If <i>plain</i> is true, then
+pattern matching is disabled, and <i>pattern</i> is searched for as a simple
+substring.</p>
+
+</section>
+
+</section>
+
+<section data-name="format">
+
+<section data-name="Summary">
+
+<p>Formats values as a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>format</b> function formats each remaining argument according to
+<i>format</i>, and returns the result.</p>
+
+<p><i>format</i> follows the same rules for printing as <a
+href="https://golang.org/pkg/fmt/#hdr-Printing">Go's fmt package</a>, of which
+Lua's string.format is mostly a subset.</p>
+
+</section>
+
+</section>
+
+<section data-name="gmatch">
+
+<section data-name="Summary">
+
+<p>Iterates over the captures of a pattern.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>gmatch</b> function returns an iterator function. Each time this
+function is called, it returns the next captures from <i>pattern</i> for
+<i>s</i>. If <i>pattern</i> contains no captures, then the entire match is
+returned.</p>
+
+</section>
+
+</section>
+
+<section data-name="gsub">
+
+<section data-name="Summary">
+
+<p>Replaces patterns.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>gsub</b> function returns <i>s</i> for which each occurrence of
+<i>pattern</i> is replaced according to <i>repl</i>. If <i>n</i> is specified,
+then only the first <i>n</i> occurrences are replaced.</p>
+
+<p>If <i>repl</i> is a string, then it is used for replacement. A sequence
+within <i>repl</i> of the form <code>%n</code>, where <code>n</code> is between
+1 and 9, stands for the value of the <code>n</code>-th captured substring. The
+sequence <code>%0</code> stands for the entire match, and <code>%%</code> stands
+for a literal <code>%</code> character.</p>
+
+<p>If <i>repl</i> is a table, then it is queried for each match, using the first
+capture as the key. If <i>pattern</i> has no captures, then the entire match is
+used as the key. The value is used for replacement.</p>
+
+<p>If <i>repl</i> is a function, then it is called each time a match occurs.
+Each capture is passed as an argument, or the entire match if no captures are
+specified.</p>
+
+<p>If a replacement value is a string or number, then it is used as the
+replacement by converting to a string. If it is false or nil, then the match is
+not replaced.</p>
+
+</section>
+
+</section>
+
+<section data-name="len">
+
+<section data-name="Summary">
+
+<p>Returns the length of a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>len</b> function returns the byte length of the string, equivalent to
+the <code>#</code> operator.</p>
+
+</section>
+
+</section>
+
+<section data-name="lower">
+
+<section data-name="Summary">
+
+<p>Converts uppercase letters to lowercase.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>lower</b> function returns <i>s</i> with all uppercase letters
+converted to lowercase, and any other character left unchanged.</p>
+
+</section>
+
+</section>
+
+<section data-name="match">
+
+<section data-name="Summary">
+
+<p>Returns the captures from a pattern.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>match</b> function searches for the first match of <i>pattern</i> in
+<i>s</i>. If found, then each capture within <i>pattern</i> is returned.
+Otherwise, nil is returned. If <i>pattern</i> has no captures, then the whole
+match is returned instead. <i>init</i> specifies where to start the search.</p>
+
+</section>
+
+</section>
+
+<section data-name="rep">
+
+<section data-name="Summary">
+
+<p>Repeats a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rep</b> function returns the concatenation of <i>n</i> copies of
+<i>s</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="reverse">
+
+<section data-name="Summary">
+
+<p>Reverses a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>reverse</b> function returns <i>s</i> with bytes in reversed
+order.</p>
+
+</section>
+
+</section>
+
+<section data-name="sub">
+
+<section data-name="Summary">
+
+<p>Returns a subset of a string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>sub</b> function returns the substring of <i>s</i> starting from
+<i>i</i> up to and including <i>j</i>.</p>
+
+</section>
+
+</section>
+
+<section data-name="upper">
+
+<section data-name="Summary">
+
+<p>Converts lowercase letters to uppercase.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>upper</b> function returns <i>s</i> with all lowercase letters
+converted to uppercase, and any other character left unchanged.</p>
+
+</section>
+
+</section>
+
+</section>

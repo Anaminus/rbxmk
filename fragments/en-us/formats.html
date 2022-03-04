@@ -1,0 +1,69 @@
+<section data-name="Description">
+
+<p>This document contains a reference to the formats available to rbxmk
+scripts.</p>
+
+<p>$TOC</p>
+
+<p>A <b>format</b> is capable of encoding a value to raw bytes, or decoding raw
+bytes into a value. A format can be accessed at a low level through the <a
+href="libraries.md#user-content-rbxmkencodeformat">rbxmk.encodeFormat</a> and <a
+href="libraries.md#user-content-rbxmkdecodeformat">rbxmk.decodeFormat</a>
+functions.</p>
+
+<p>The name of a format corresponds to the extension of a file name. For
+example, the <code>lua</code> format corresponds to the <code>.lua</code> file
+extension. When determining a format from a file extension, format names are
+greedy; if a file extension is <code>.server.lua</code>, this will select the
+<code>server.lua</code> format before the <code>lua</code> format. For
+convenience, in places where a format name is received, the name may have an
+optional leading <code>.</code> character.</p>
+
+<p>APIs that require a format receive a [FormatSelector][FormatSelector]. A
+selector is usually a string, which specifies the name of the format to use. A
+selector can also be a table, where the "Format" field specifies the name, and a
+number of additional options can be specified. If a format has any such options,
+this document will describe them.</p>
+
+<p>A format can decode into a number of certain types, and encode a number of
+certain types. A format may also have no definition for either decoding or
+encoding at all.</p>
+
+<p>A format that can encode a <b>Stringable</b> type accepts any type that can
+be converted to a string. Additionally, an [Instance][Instance] will be accepted
+as a Stringable when it has a particular [ClassName][Instance.ClassName], with a
+selected property that has a [Stringlike][Stringlike] value. In this case, the
+property is encoded.</p>
+
+<table>
+<thead>
+<tr>
+<th>ClassName</th>
+<th>Property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LocalizationTable</td>
+<td>Contents</td>
+</tr>
+<tr>
+<td>LocalScript</td>
+<td>Source</td>
+</tr>
+<tr>
+<td>ModuleScript</td>
+<td>Source</td>
+</tr>
+<tr>
+<td>Script</td>
+<td>Source</td>
+</tr>
+</tbody>
+</table>
+
+<p>A format that can encode a <b>Numberable</b> type accepts any type that can
+be converted to a floating-point number. An <b>Intable</b> is similar,
+converting to an integer instead.</p>
+
+</section>

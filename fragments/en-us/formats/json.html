@@ -1,0 +1,108 @@
+<section data-name="Summary">
+
+<p>Encodes JSON data.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>json</b> format is defined for encoding general data in JSON
+format.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>nil</td>
+<td>A JSON null.</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>boolean</td>
+<td>A JSON boolean.</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>number</td>
+<td>The nearest representation of a JSON number.</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>string</td>
+<td>A JSON string.</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>Array</td>
+<td>An JSON array.</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>Dictionary</td>
+<td>A JSON object.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>nil</td>
+<td>A Lua nil.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>boolean</td>
+<td>A Lua boolean.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>number</td>
+<td>A Lua number.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>string</td>
+<td>A Lua string.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Array</td>
+<td>An array-like table, having a non-zero length.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Dictionary</td>
+<td>A dictionary-like table, having a length of zero.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Other value types are encoded as null.</p>
+
+<p>This format has the following options:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Indent</td>
+<td>string</td>
+<td><code>"\t"</code></td>
+<td>Determines the indentation of encoded content. If an empty string, then the
+content is minified.</td>
+</tr>
+</tbody>
+</table>
+
+</section>

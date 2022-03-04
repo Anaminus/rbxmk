@@ -1,0 +1,78 @@
+<section data-name="Summary">
+
+<p>Encodes binary place data.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rbxl</b> format encodes Instances in the Roblox binary place
+format.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>[DataModel][DataModel]</td>
+<td>A DataModel instance.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>[DataModel][DataModel]</td>
+<td>A DataModel instance.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>[Instance][Instance]</td>
+<td>A single instance, interpreted as a child to a DataModel.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Objects</td>
+<td>A list of Instances, interpreted as children to a DataModel.</td>
+</tr>
+</tbody>
+</table>
+
+<p>This format has the following options:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desc</td>
+<td>[RootDesc][RootDesc] | bool | nil</td>
+<td><code>nil</code></td>
+<td>Sets the descriptor to be used when encoding or decoding. If
+<code>false</code>, then no descriptor is used. Otherwise, the descriptor of the
+root instance is used <b>with all descendants</b>, falling back to
+[globalDesc][rbxmk.globalDesc].</td>
+</tr>
+<tr>
+<td>DescMode</td>
+<td>string</td>
+<td><code>"NonStrict"</code></td>
+<td>Determines how deviations from the descriptor are handled.
+<code>"NonStrict"</code> causes deviations to be ignored. <code>"Strict"</code>
+causes an error to be thrown for the first deviation. <code>"Preserve"</code>
+tries to retain as much information as possible, usually by behaving as if no
+descriptor is set.</td>
+</tr>
+</tbody>
+</table>
+
+</section>

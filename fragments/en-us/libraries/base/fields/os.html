@@ -1,0 +1,181 @@
+<section data-name="Summary">
+
+<p>Functions related to the operating system.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>os</b> library contains functions related to the operating system.</p>
+
+</section>
+
+<section data-name="Fields">
+
+<section data-name="clock">
+
+<section data-name="Summary">
+
+<p>Returns the CPU time.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>clock</b> function returns, approximately, the seconds of CPU time
+used by the program.</p>
+
+</section>
+
+</section>
+
+<section data-name="date">
+
+<section data-name="Current">
+
+<section data-name="Summary">
+
+<p>Returns the current time.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>date</b> function returns a string-representation of the current
+time.</p>
+
+</section>
+
+</section>
+
+<section data-name="Tabular">
+
+<section data-name="Summary">
+
+<p>Returns the time as a table.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>date</b> function returns the time as a table with a number of fields
+for each component:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>year</td>
+<td>4 digits</td>
+</tr>
+<tr>
+<td>month</td>
+<td>1 - 12</td>
+</tr>
+<tr>
+<td>day</td>
+<td>1 - 31</td>
+</tr>
+<tr>
+<td>hour</td>
+<td>0 - 23</td>
+</tr>
+<tr>
+<td>min</td>
+<td>0 - 59</td>
+</tr>
+<tr>
+<td>sec</td>
+<td>0 - 61</td>
+</tr>
+<tr>
+<td>wday</td>
+<td>Day of the week, 1 - 7 starting on Sunday.</td>
+</tr>
+<tr>
+<td>yday</td>
+<td>Day of the year, 1 - 366.</td>
+</tr>
+<tr>
+<td>isdst</td>
+<td>Whether Daylight Saving Time is active.</td>
+</tr>
+</tbody>
+</table>
+
+<p>If <i>time</i> is specified, then it specifies the time to be formatted.
+Otherwise, the current time is used. See os.time for a description of this
+value.</p>
+
+</section>
+
+</section>
+
+<section data-name="Formatted">
+
+<section data-name="Summary">
+
+<p>Returns the time as a formatted string.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>date</b> function returns the formatted according to <i>format</i>,
+which has the same rules as the C function strftime.</p>
+
+<p>If <i>time</i> is specified, then it specifies the time to be formatted.
+Otherwise, the current time is used. See os.time for a description of this
+value.</p>
+
+</section>
+
+</section>
+
+</section>
+
+<section data-name="difftime">
+
+<section data-name="Summary">
+
+<p>Returns the difference between two times.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>difftime</b> function returns the number of seconds between <i>t2</i>
+and <i>t1</i>. On most systems, this value is exactly equal to <code>t2 -
+t1</code>.</p>
+
+</section>
+
+</section>
+
+<section data-name="time">
+
+<section data-name="Summary">
+
+<p>Returns a numeric time.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>time</b> function returns a numeric time corresponding to the fields
+of <i>t</i>. If <i>t</i> is unspecified, then the current time is returned.</p>
+
+<p>On most systems, the returned value is the relative to the UNIX epoch. On
+others, the meaning is unspecified, and may only be passed to os.date and
+os.difftime.</p>
+
+</section>
+
+</section>
+
+</section>

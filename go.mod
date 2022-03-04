@@ -3,21 +3,21 @@ module github.com/anaminus/rbxmk
 go 1.17
 
 require (
+	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/anaminus/cobra v1.4.1-z
 	github.com/anaminus/drill v0.3.2
 	github.com/anaminus/gopher-lua v0.4.1
 	github.com/anaminus/parse v0.3.0
 	github.com/anaminus/pflag v1.0.6-z
-	github.com/bbrks/wrap/v2 v2.5.0
-	github.com/olekukonko/tablewriter v0.0.5
+	github.com/andybalholm/cascadia v1.3.1
 	github.com/peterh/liner v1.2.1
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.4.1
 	github.com/robloxapi/rbxfile v0.4.4
 	github.com/robloxapi/types v0.2.1
-	github.com/yuin/goldmark v1.4.7
-	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
-	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
+	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 )
 
 require (
