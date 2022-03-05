@@ -82,7 +82,11 @@ type Node struct {
 // NewNode returns a Node that wraps the given goquery.Document and optional
 // renderer.
 func NewNode(doc *goquery.Document, renderer Renderer) *Node {
-	return &Node{document: doc, selection: doc.FindMatcher(bodyMatcher).First()}
+	return &Node{
+		document:  doc,
+		selection: doc.FindMatcher(bodyMatcher).First(),
+		renderer:  renderer,
+	}
 }
 
 // derive returns a Node that wraps selection instead of the selection from n.
