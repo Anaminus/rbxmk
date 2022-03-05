@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"runtime"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
@@ -62,15 +63,6 @@ type writer struct {
 
 	// Size of tab character.
 	tabSize int
-
-	// If false, remove newlines that are inserted just after the edge of the
-	// width. This prevents wrapping terminals from incorrectly producing an
-	// extra gap. This removes the newline entirely, so it is assumed that the
-	// wrapping will separate the previous word will be separated from the next
-	// word.
-	//
-	// The gap fix is applied only if width is greater than 0.
-	noGapFix bool
 }
 
 func (w *writer) Flush() error {
@@ -125,7 +117,12 @@ func (w *writer) Flush() error {
 			}
 			paragraphs[j] = p
 		}
-		if !w.noGapFix {
+		if runtime.GOOS == "windows" {
+			// Remove newlines that are inserted just after the edge of the
+			// width. This prevents the terminal from incorrectly producing an
+			// extra gap when wrapping. This removes the newline entirely, so it
+			// is assumed that the wrapping will separate the previous word from
+			// the next word.
 			for i, p := range paragraphs {
 				for h, i := 0, 0; i < len(p); i++ {
 					if p[i] != '\n' {
