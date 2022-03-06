@@ -161,6 +161,13 @@ func executeDocTmpl(fragref, tmplText string, data interface{}, funcs FuncMap) s
 	return strings.TrimSpace(buf.String())
 }
 
+type FragOptions struct {
+	// Data included with the executed template.
+	TmplData interface{}
+	// Functions included with the executed template.
+	TmplFuncs FuncMap
+}
+
 // Doc returns the content of the fragment referred to by fragref. The given
 // path is marked to be returned by DocFragments. If no content was found, then
 // a string indicating an unresolved reference is returned.
@@ -171,11 +178,11 @@ func executeDocTmpl(fragref, tmplText string, data interface{}, funcs FuncMap) s
 // The content of the fragment executed as a template with docTmplFuncs included
 // as functions.
 func Doc(fragref string) string {
-	return DocWith(fragref, nil, nil)
+	return DocWith(fragref, FragOptions{})
 }
 
-// DocWith is like Doc, but includes data with the executed template.
-func DocWith(fragref string, data interface{}, funcs FuncMap) string {
+// DocWith is like Doc, but with configurable options.
+func DocWith(fragref string, opt FragOptions) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	docSeen[fragref] = struct{}{}
@@ -185,7 +192,7 @@ func DocWith(fragref string, data interface{}, funcs FuncMap) string {
 		return "{" + Language + ":" + fragref + "}"
 	}
 	tmplText := strings.TrimSpace(node.Fragment())
-	return executeDocTmpl(fragref, tmplText, data, funcs)
+	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
 }
 
 // ResolveFragment returns the content of the fragment referred to by fragref.
@@ -194,12 +201,11 @@ func DocWith(fragref string, data interface{}, funcs FuncMap) string {
 // The content of the fragment executed as a template with docTmplFuncs included
 // as functions.
 func ResolveFragment(fragref string) string {
-	return ResolveFragmentWith(fragref, nil, nil)
+	return ResolveFragmentWith(fragref, FragOptions{})
 }
 
-// ResolveFragmentWith is like ResolveFragment, but includes data and funcs
-// with the executed template.
-func ResolveFragmentWith(fragref string, data interface{}, funcs FuncMap) string {
+// ResolveFragmentWith is like ResolveFragment, but with configurable options.
+func ResolveFragmentWith(fragref string, opt FragOptions) string {
 	docMut.Lock()
 	defer docMut.Unlock()
 	node, _ := resolveFragmentNode(fragref, false)
@@ -207,7 +213,7 @@ func ResolveFragmentWith(fragref string, data interface{}, funcs FuncMap) string
 		return ""
 	}
 	tmplText := strings.TrimSpace(node.Fragment())
-	return executeDocTmpl(fragref, tmplText, data, funcs)
+	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
 }
 
 const FragSep = ':'

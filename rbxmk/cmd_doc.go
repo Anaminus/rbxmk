@@ -52,9 +52,11 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		cmd.Println(FormatFrag("Messages/doc:NoTopicContent", ref))
 		return nil
 	}
-	cmd.Println(ResolveFragmentWith("Messages/doc:SubTopics", nil, FuncMap{
-		"SubTopics": func() string {
-			return "\n\t" + strings.Join(topics, "\n\t")
+	cmd.Println(ResolveFragmentWith("Messages/doc:SubTopics", FragOptions{
+		TmplFuncs: FuncMap{
+			"SubTopics": func() string {
+				return "\n\t" + strings.Join(topics, "\n\t")
+			},
 		},
 	}))
 	return nil
