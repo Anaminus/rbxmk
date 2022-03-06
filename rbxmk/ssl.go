@@ -1,4 +1,4 @@
-//go:build sslkeylog
+//go:build sslkeylog && !release
 
 package main
 
