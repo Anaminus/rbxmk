@@ -66,7 +66,7 @@ The [examples](doc/examples) directory contains examples of rbxmk scripts.
 [download-asset]: doc/examples/download-asset.rbxmk.lua
 
 ## Installation
-rbxmk can also be installed manually.
+In addition to prebuilt releases, rbxmk can be installed manually.
 
 1. [Install Go](https://golang.org/doc/install)
 2. [Install Git](http://git-scm.com/downloads)
@@ -92,40 +92,7 @@ cd rbxmk/rbxmk
 go install
 ```
 
-To aid with debugging, the program version is built as "imperative" by default,
-indicating the default branch.
-
-```bash
-go install
-rbxmk version
-# imperative
-```
-
-To build a release version, the "release" tag must be included:
-
-```bash
-go install -tags "release"
-rbxmk version
-# 0.5.1
-```
-
-Extra version information can be included by passing the `-X` flag to the
-linker:
-
-```bash
-go install -ldflags="-X $VARIABLE=$VALUE"
-```
-
-- The `main.Prerelease` variable appends a prerelease version.
-- The `main.Build` variable appends build metadata.
-
-For example:
-```bash
-# Set prelease as "rc.1". Include current date and commit hash in build info.
-go install -tags "release" -ldflags="-X main.Prerelease=rc.1 -X main.Build=$(echo $(git log -1 --format=%cI | date --utc +%Y%m%d)-$(git rev-parse --short HEAD))"
-rbxmk version
-# 0.5.1-rc.1+20210312-2070bf8
-```
+More information is available in the [INSTALL](INSTALL.md) document.
 
 An effort is made to ensure that the latest commit will at least compile.
 However, it is not guaranteed that everything will be in a production-ready
