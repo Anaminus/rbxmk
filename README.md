@@ -38,6 +38,9 @@ data loss. Be sure to [report][issues] issues as you encounter them!*
 [issues]: https://github.com/Anaminus/rbxmk/issues
 
 ## Usage
+rbxmk is a command-line tool, and so requires a [command-line interface][CLI] to
+use.
+
 rbxmk primarily uses [Lua][lua] scripts to produce and retrieve data, transform
 it, and send it off to a variety of sources. The main subcommand is `run`, which
 executes a script:
@@ -50,6 +53,8 @@ rbxmk run hello-world.lua
 
 The [Documentation page](doc/README.md) provides a complete reference on how
 rbxmk is used, as well as the API of the Lua environment provided by rbxmk.
+
+[CLI]: https://en.wikipedia.org/wiki/Command-line_interface
 
 ### Examples
 The [examples](doc/examples) directory contains examples of rbxmk scripts.
