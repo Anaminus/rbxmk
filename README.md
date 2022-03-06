@@ -104,6 +104,10 @@ rbxmk version
 # e.g. 0.5.1-rc.1+20210312-2070bf8
 ```
 
+An effort is made to ensure that the latest commit will at least compile.
+However, it is not guaranteed that everything will be in a production-ready
+state.
+
 ## License
 The source code for rbxmk is available under the [MIT license][mit].
 
