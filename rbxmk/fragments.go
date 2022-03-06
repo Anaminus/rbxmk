@@ -166,6 +166,8 @@ type FragOptions struct {
 	TmplData interface{}
 	// Functions included with the executed template.
 	TmplFuncs FuncMap
+	// Renderer used if a node is htmldrill.Node.
+	Renderer htmldrill.Renderer
 }
 
 // Doc returns the content of the fragment referred to by fragref. The given
@@ -191,6 +193,11 @@ func DocWith(fragref string, opt FragOptions) string {
 		docFailed[fragref] = struct{}{}
 		return "{" + Language + ":" + fragref + "}"
 	}
+	if opt.Renderer != nil {
+		if n, ok := node.(*htmldrill.Node); ok {
+			node = n.WithRenderer(opt.Renderer)
+		}
+	}
 	tmplText := strings.TrimSpace(node.Fragment())
 	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
 }
@@ -211,6 +218,11 @@ func ResolveFragmentWith(fragref string, opt FragOptions) string {
 	node, _ := resolveFragmentNode(fragref, false)
 	if node == nil {
 		return ""
+	}
+	if opt.Renderer != nil {
+		if n, ok := node.(*htmldrill.Node); ok {
+			node = n.WithRenderer(opt.Renderer)
+		}
 	}
 	tmplText := strings.TrimSpace(node.Fragment())
 	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
