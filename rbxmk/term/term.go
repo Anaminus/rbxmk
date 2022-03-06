@@ -93,6 +93,7 @@ func (w *writer) Flush() error {
 		}
 		i++
 	}
+	paragraphs = append(paragraphs, []rune(string(b)))
 	if w.width > 0 {
 		for j, p := range paragraphs {
 			for i := 0; i < len(p); {
