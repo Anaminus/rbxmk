@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"runtime"
+	"strings"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
@@ -159,6 +160,7 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 		width:   r.Width,
 		tabSize: r.TabSize,
 	}
+	var state walkState
 	for _, node := range s.Nodes {
 		if node.Type == html.TextNode {
 			continue
@@ -174,7 +176,7 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 			case html.ElementNode:
 				h := handlers[elementMatcher{node.Data, entering}]
 				if h != nil {
-					return h(buf, node)
+					return h(buf, node, &state)
 				}
 			case html.CommentNode:
 			case html.DoctypeNode:
@@ -194,14 +196,27 @@ type elementMatcher struct {
 	entering bool
 }
 
-type nodeHandlers map[elementMatcher]func(w *writer, node *html.Node) error
+type walkState struct {
+	depth int
+}
+
+type nodeHandlers map[elementMatcher]func(w *writer, node *html.Node, s *walkState) error
 
 func isElement(node *html.Node, tag string) bool {
 	return node.Type == html.ElementNode && node.Data == tag
 }
 
+func sectionName(node *html.Node) string {
+	for _, attr := range node.Attr {
+		if attr.Key == "data-name" {
+			return attr.Val
+		}
+	}
+	return ""
+}
+
 var handlers = nodeHandlers{
-	{"code", true}: func(w *writer, node *html.Node) error {
+	{"code", true}: func(w *writer, node *html.Node, s *walkState) error {
 		if isElement(node.Parent, "pre") { // May have syntax: `class="language-*"`
 			// Block
 			w.WriteString(node.FirstChild.Data)
@@ -211,7 +226,7 @@ var handlers = nodeHandlers{
 			return w.WriteByte('`')
 		}
 	},
-	{"code", false}: func(w *writer, node *html.Node) error {
+	{"code", false}: func(w *writer, node *html.Node, s *walkState) error {
 		if isElement(node.Parent, "pre") {
 			// Block
 		} else {
@@ -220,14 +235,35 @@ var handlers = nodeHandlers{
 		}
 		return nil
 	},
-	{"section", true}: func(w *writer, node *html.Node) error {
+	{"section", true}: func(w *writer, node *html.Node, s *walkState) error {
+		if s.depth > 0 {
+			if name := sectionName(node); name != "" {
+				w.WriteString(strings.Repeat("#", s.depth))
+				w.WriteString(" ")
+				w.WriteString(name)
+				w.WriteString("\n\n")
+			}
+		}
+		s.depth++
 		return skipText
 	},
-	{"p", true}: func(w *writer, node *html.Node) error {
+	{"section", false}: func(w *writer, node *html.Node, s *walkState) error {
+		s.depth--
+		return nil
+	},
+	{"body", true}: func(w *writer, node *html.Node, s *walkState) error {
+		s.depth++
+		return nil
+	},
+	{"body", false}: func(w *writer, node *html.Node, s *walkState) error {
+		s.depth--
+		return nil
+	},
+	{"p", true}: func(w *writer, node *html.Node, s *walkState) error {
 		_, err := w.WriteString("\n\n")
 		return err
 	},
-	{"p", false}: func(w *writer, node *html.Node) error {
+	{"p", false}: func(w *writer, node *html.Node, s *walkState) error {
 		_, err := w.WriteString("\n\n")
 		return err
 	},
