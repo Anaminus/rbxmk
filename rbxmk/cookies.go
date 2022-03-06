@@ -17,7 +17,7 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookies-from", Doc("Flags/cookies:cookies-from"))
+	}), "cookies-from", DocFlag("Flags/cookies:cookies-from"))
 	flags.Var(funcFlag(func(v string) error {
 		f, err := os.Open(v)
 		if err != nil {
@@ -30,7 +30,7 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookies-file", Doc("Flags/cookies:cookies-file"))
+	}), "cookies-file", DocFlag("Flags/cookies:cookies-file"))
 	flags.Var(funcFlag(func(v string) error {
 		content := os.Getenv(v)
 		cookies, err := rbxmk.DecodeCookies(strings.NewReader(content))
@@ -39,5 +39,5 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookie-var", Doc("Flags/cookies:cookie-var"))
+	}), "cookie-var", DocFlag("Flags/cookies:cookie-var"))
 }

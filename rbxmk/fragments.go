@@ -202,6 +202,12 @@ func DocWith(fragref string, opt FragOptions) string {
 	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
 }
 
+// DocFlag returns the content for a flag by configuring the renderer with 0
+// width, so that it can be properly formatted by the usage template.
+func DocFlag(fragref string) string {
+	return DocWith(fragref, FragOptions{Renderer: term.Renderer{Width: 0, TabSize: 4}.Render})
+}
+
 // ResolveFragment returns the content of the fragment referred to by fragref.
 // Returns an empty string if no content was found.
 //

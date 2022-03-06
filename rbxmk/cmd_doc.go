@@ -24,7 +24,7 @@ type DocCommand struct {
 }
 
 func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
-	flags.BoolVarP(&c.List, "list", "l", false, Doc("Commands/doc:Flags/list"))
+	flags.BoolVarP(&c.List, "list", "l", false, DocFlag("Commands/doc:Flags/list"))
 }
 
 func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {

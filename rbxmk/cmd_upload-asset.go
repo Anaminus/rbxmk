@@ -31,9 +31,9 @@ type UploadAssetCommand struct {
 
 func (c *UploadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
-	flags.Int64Var(&c.ID, "id", 0, Doc("Commands/upload-asset:Flags/id"))
-	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("Commands/upload-asset:Flags/format"))
-	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/upload-asset:Flags/file-format"))
+	flags.Int64Var(&c.ID, "id", 0, DocFlag("Commands/upload-asset:Flags/id"))
+	flags.StringVar(&c.AssetFormat, "format", "bin", DocFlag("Commands/upload-asset:Flags/format"))
+	flags.StringVar(&c.FileFormat, "file-format", "", DocFlag("Commands/upload-asset:Flags/file-format"))
 }
 
 func (c *UploadAssetCommand) Run(cmd *cobra.Command, args []string) error {

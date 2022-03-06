@@ -6,6 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/anaminus/cobra"
+	terminal "golang.org/x/term"
 )
 
 const usageTemplate = `Usage:{{if .Runnable}}
@@ -22,10 +23,10 @@ Available Commands:{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "he
   {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
 
 Flags:
-{{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
+{{width | .LocalFlags.FlagUsagesWrapped | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
 
 Global Flags:
-{{.InheritedFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasHelpSubCommands}}
+{{width | .InheritedFlags.FlagUsagesWrapped | trimTrailingWhitespaces}}{{end}}{{if .HasHelpSubCommands}}
 
 Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
   {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
@@ -42,6 +43,10 @@ var Program = &cobra.Command{
 }
 
 func init() {
+	cobra.AddTemplateFunc("width", func() int {
+		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
+		return width
+	})
 	Program.SetUsageTemplate(usageTemplate)
 }
 

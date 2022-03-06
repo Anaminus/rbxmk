@@ -81,7 +81,7 @@ type VersionCommand struct {
 }
 
 func (c *VersionCommand) SetFlags(flags *pflag.FlagSet) {
-	flags.BoolVarP(&c.Verbose, "verbose", "v", false, Doc("Commands/version:Flags/verbose"))
+	flags.BoolVarP(&c.Verbose, "verbose", "v", false, DocFlag("Commands/version:Flags/verbose"))
 }
 
 func (c *VersionCommand) Run(cmd *cobra.Command, args []string) {

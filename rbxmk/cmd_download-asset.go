@@ -31,9 +31,9 @@ type DownloadAssetCommand struct {
 
 func (c *DownloadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
-	flags.Int64Var(&c.ID, "id", 0, Doc("Commands/download-asset:Flags/id"))
-	flags.StringVar(&c.AssetFormat, "format", "bin", Doc("Commands/download-asset:Flags/format"))
-	flags.StringVar(&c.FileFormat, "file-format", "", Doc("Commands/download-asset:Flags/file-format"))
+	flags.Int64Var(&c.ID, "id", 0, DocFlag("Commands/download-asset:Flags/id"))
+	flags.StringVar(&c.AssetFormat, "format", "bin", DocFlag("Commands/download-asset:Flags/format"))
+	flags.StringVar(&c.FileFormat, "file-format", "", DocFlag("Commands/download-asset:Flags/file-format"))
 }
 
 func (c *DownloadAssetCommand) Run(cmd *cobra.Command, args []string) error {

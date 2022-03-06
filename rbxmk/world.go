@@ -42,10 +42,10 @@ type WorldFlags struct {
 }
 
 func (f *WorldFlags) SetFlags(flags *pflag.FlagSet) {
-	flags.StringArrayVar(&f.IncludedRoots, "include-root", nil, Doc("Flags/world:include-root"))
-	flags.StringArrayVar(&f.Libraries, "libraries", nil, Doc("Flags/world:libraries"))
-	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, Doc("Flags/world:allow-insecure-paths"))
-	flags.BoolVar(&f.Debug, "debug", false, Doc("Flags/world:debug"))
+	flags.StringArrayVar(&f.IncludedRoots, "include-root", nil, DocFlag("Flags/world:include-root"))
+	flags.StringArrayVar(&f.Libraries, "libraries", nil, DocFlag("Flags/world:libraries"))
+	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, DocFlag("Flags/world:allow-insecure-paths"))
+	flags.BoolVar(&f.Debug, "debug", false, DocFlag("Flags/world:debug"))
 }
 
 // WorldOpt are options to InitWorld.
