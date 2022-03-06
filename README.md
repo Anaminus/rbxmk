@@ -87,6 +87,23 @@ cd rbxmk/rbxmk
 go install
 ```
 
+To aid with debugging, the program version is built as "imperative" by default,
+indicating the default branch.
+
+```bash
+go install
+rbxmk version
+# imperative
+```
+
+To build a release version, the "release" tag must be included:
+
+```bash
+go install -tags "release"
+rbxmk version
+# 0.5.1
+```
+
 Extra version information can be included by passing the `-X` flag to the
 linker:
 
@@ -99,9 +116,10 @@ go install -ldflags="-X $VARIABLE=$VALUE"
 
 For example:
 ```bash
-go install -ldflags="-X main.Prerelease=rc.1 -X main.Build=$(echo $(git log -1 --format=%cI | date --utc +%Y%m%d)-$(git rev-parse --short HEAD))"
+# Set prelease as "rc.1". Include current date and commit hash in build info.
+go install -tags "release" -ldflags="-X main.Prerelease=rc.1 -X main.Build=$(echo $(git log -1 --format=%cI | date --utc +%Y%m%d)-$(git rev-parse --short HEAD))"
 rbxmk version
-# e.g. 0.5.1-rc.1+20210312-2070bf8
+# 0.5.1-rc.1+20210312-2070bf8
 ```
 
 An effort is made to ensure that the latest commit will at least compile.
