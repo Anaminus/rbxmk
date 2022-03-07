@@ -16,3 +16,6 @@ local desc = fs.read("dump.desc.json")
 local patch = fs.read("dump.desc-patch.json")
 desc:Patch(patch)
 ```
+
+The [patch.lua](patch.lua) script can be used to overwrite an existing
+descriptor file to include a patch.
