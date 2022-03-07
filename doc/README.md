@@ -383,6 +383,12 @@ the member, allowing it to be used as normal.
 More generally, patching allows any version of an API dump to be used, while
 maintaining a separate, constant set of additional API elements.
 
+The [dump.desc-patch.json][dumpPatch] file can be used to patch Roblox's API
+dump to include missing items. This aids in proper conversion of binary formats
+to XML formats.
+
+[dumpPatch]: examples/dump-patch
+
 ## Value inheritance
 [value-inheritance]: #user-content-value-inheritance
 
