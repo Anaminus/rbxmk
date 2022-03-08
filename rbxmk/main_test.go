@@ -12,5 +12,5 @@ func TestFragments(t *testing.T) {
 		}
 	}()
 	DocumentCommands()
-	docState.UnresolvedFragments()
+	UnresolvedFragments()
 }

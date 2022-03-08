@@ -171,7 +171,7 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		}
 		root.Libraries = append(root.Libraries, lib)
 	}
-	root.Fragments = docState.DocFragments()
+	root.Fragments = DocFragments()
 	root.Description = "Libraries"
 	return root
 }

@@ -12,13 +12,10 @@ import (
 var Frag = NewFragments(initFragRoot())
 var docState = NewDocState(Frag)
 
-func Doc(fragref string) string {
-	return docState.Doc(fragref)
-}
-
-func DocFlag(fragref string) string {
-	return docState.DocFlag(fragref)
-}
+func Doc(fragref string) string     { return docState.Doc(fragref) }
+func DocFlag(fragref string) string { return docState.DocFlag(fragref) }
+func DocFragments() []string        { return docState.DocFragments() }
+func UnresolvedFragments()          { docState.UnresolvedFragments() }
 
 var Program = &cobra.Command{
 	Use:           "rbxmk",
@@ -45,7 +42,7 @@ func main() {
 	Program.SetErr(os.Stderr)
 
 	DocumentCommands()
-	docState.UnresolvedFragments()
+	UnresolvedFragments()
 	if err := Program.ExecuteContext(ctx); err != nil {
 		Program.PrintErrln(err)
 	}
