@@ -9,6 +9,17 @@ import (
 	terminal "golang.org/x/term"
 )
 
+var Frag = NewFragments(initFragRoot())
+var docState = NewDocState(Frag)
+
+func Doc(fragref string) string {
+	return docState.Doc(fragref)
+}
+
+func DocFlag(fragref string) string {
+	return docState.DocFlag(fragref)
+}
+
 const usageTemplate = `Usage:{{if .Runnable}}
   {{.UseLine}}{{end}}{{if .HasAvailableSubCommands}}
   {{.CommandPath}} [command]{{end}}{{if gt (len .Aliases) 0}}
@@ -59,7 +70,7 @@ func main() {
 	Program.SetErr(os.Stderr)
 
 	DocumentCommands()
-	UnresolvedFragments()
+	docState.UnresolvedFragments()
 	if err := Program.ExecuteContext(ctx); err != nil {
 		Program.PrintErrln(err)
 	}

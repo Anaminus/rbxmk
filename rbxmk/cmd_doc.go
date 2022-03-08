@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"text/template"
 
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
@@ -33,27 +34,27 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		ref = args[0]
 	}
 	if c.List {
-		topics := ListFragments(ref)
+		topics := Frag.List(ref)
 		for _, topic := range topics {
 			cmd.Println(topic)
 		}
 		return nil
 	} else if ref == "" {
-		fmt.Println(ResolveFragment("Messages/doc:Topics"))
+		fmt.Println(Frag.Resolve("Messages/doc:Topics"))
 		return nil
 	}
-	content := ResolveFragment(ref)
+	content := Frag.Resolve(ref)
 	if content != "" {
 		cmd.Println(content)
 		return nil
 	}
-	topics := ListFragments(ref)
+	topics := Frag.List(ref)
 	if len(topics) == 0 {
-		cmd.Println(FormatFrag("Messages/doc:NoTopicContent", ref))
+		cmd.Println(Frag.Format("Messages/doc:NoTopicContent", ref))
 		return nil
 	}
-	cmd.Println(ResolveFragmentWith("Messages/doc:SubTopics", FragOptions{
-		TmplFuncs: FuncMap{
+	cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
+		TmplFuncs: template.FuncMap{
 			"SubTopics": func() string {
 				return "\n\t" + strings.Join(topics, "\n\t")
 			},

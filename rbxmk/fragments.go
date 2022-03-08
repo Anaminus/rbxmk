@@ -55,7 +55,9 @@ func panicLanguage() {
 	panic(fmt.Sprintf("unsupported language %q", Language))
 }
 
-func initFrags() drill.Node {
+// initFragRoot initializes the top-level drill node, starting from the root of
+// the embedded fragment file system.
+func initFragRoot() drill.Node {
 	lang, ok := fragments.Languages[Language]
 	if !ok {
 		panicLanguage()
@@ -73,11 +75,7 @@ func initFrags() drill.Node {
 	return node
 }
 
-var fragfs = initFrags()
-var fragMut sync.RWMutex
-var fragCache = map[string]*htmldrill.Node{}
-
-// parseFragRef receives a fragment reference and converts it to a file path.
+// ParseFragRef receives a fragment reference and converts it to a file path.
 //
 // A fragment reference is like a regular file path, except that filesep is the
 // separator that descends into a file. After the first occurrence of filesep,
@@ -98,7 +96,7 @@ var fragCache = map[string]*htmldrill.Node{}
 // suffix appended unless dir is true.
 //
 // infile returns whether the reference drilled into a file.
-func parseFragRef(s, suffix string, filesep rune, dir bool) (items []string, infile bool) {
+func ParseFragRef(s, suffix string, filesep rune, dir bool) (items []string, infile bool) {
 	if s == "" {
 		return []string{}, false
 	}
@@ -116,28 +114,29 @@ func parseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 	return items, true
 }
 
+// Renderer renders a finalized HTML fragment.
 type Renderer = func(w io.Writer, s *goquery.Selection) error
 
-type FuncMap = template.FuncMap
-
-var fragTmplFuncs = FuncMap{
+// Global template functions.
+var fragTmplFuncs = template.FuncMap{
 	// List of top-level fragment topics.
 	"Topics": func() string {
-		return "\n\t" + strings.Join(ListFragments(""), "\n\t")
+		return "\n\t" + strings.Join(Frag.List(""), "\n\t")
 	},
 }
 
+// FragOptions configure ExecuteFragTmpl.
 type FragOptions struct {
 	// Data included with the executed template.
 	TmplData interface{}
 	// Functions included with the executed template.
-	TmplFuncs FuncMap
+	TmplFuncs template.FuncMap
 	// Renderer used if a node is htmldrill.Node.
 	Renderer Renderer
 }
 
-// ExecuteFragTmpl renders converts the result of node, in template format, to a
-// final rendering.
+// ExecuteFragTmpl converts the result of node, in template format, to a final
+// rendering.
 func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	// Parse template.
 	tmplText := strings.TrimSpace(node.Fragment())
@@ -176,65 +175,89 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	return strings.TrimSpace(buf.String())
 }
 
-// ResolveFragmentWith is like ResolveFragment, but with configurable options.
-func ResolveFragmentWith(fragref string, opt FragOptions) string {
-	fragMut.Lock()
-	defer fragMut.Unlock()
-	node, _ := resolveFragmentNode(fragref, false)
+// Fragments provides methods for resolving fragments.
+type Fragments struct {
+	mut   sync.RWMutex
+	root  drill.Node
+	cache map[string]*htmldrill.Node
+
+	// Sep is the separator used for fragment references to separate path
+	// content from section content. Defaults to ':'.
+	Sep rune
+
+	// Suffix is the Suffix applied to the base file portion of fragment
+	// references. Defaults to ".html".
+	Suffix string
+}
+
+// NewFragments returns a new Fragments initialized with root.
+func NewFragments(root drill.Node) *Fragments {
+	return &Fragments{
+		root:   root,
+		cache:  map[string]*htmldrill.Node{},
+		Sep:    ':',
+		Suffix: ".html",
+	}
+}
+
+// Resolve returns the content of the fragment referred to by fragref.
+// Returns an empty string if no content was found.
+func (f *Fragments) Resolve(fragref string) string {
+	return f.ResolveWith(fragref, FragOptions{})
+}
+
+// ResolveWith is like Resolve, but with configurable options.
+func (f *Fragments) ResolveWith(fragref string, opt FragOptions) string {
+	f.mut.Lock()
+	defer f.mut.Unlock()
+	node, _ := f.resolveNode(fragref, false)
 	if node == nil {
 		return ""
 	}
 	return ExecuteFragTmpl(fragref, node, opt)
 }
 
-// ResolveFragment returns the content of the fragment referred to by fragref.
-// Returns an empty string if no content was found.
-func ResolveFragment(fragref string) string {
-	return ResolveFragmentWith(fragref, FragOptions{})
-}
-
-const FragSep = ':'
-const FragSuffix = ".html"
-
-func ListFragments(fragref string) []string {
+// List returns a list of child fragment references available under the fragment
+// referred to by fragref.
+func (f *Fragments) List(fragref string) []string {
 	frags := map[string]struct{}{}
 	if fragref == "" {
-		node, _ := resolveFragmentNode("", false)
+		node, _ := f.resolveNode("", false)
 		switch node := node.(type) {
 		case drill.UnorderedBranch:
 			children := node.UnorderedChildren()
 			for name := range children {
 				if name != "" {
-					name = strings.TrimSuffix(name, FragSuffix)
+					name = strings.TrimSuffix(name, f.Suffix)
 					frags[name] = struct{}{}
 				}
 			}
 		}
 	} else {
-		node, infile := resolveFragmentNode(fragref, false)
+		node, infile := f.resolveNode(fragref, false)
 		switch node := node.(type) {
 		case drill.UnorderedBranch:
 			children := node.UnorderedChildren()
 			for name := range children {
 				if name != "" {
 					if infile {
-						name = strings.TrimSuffix(name, FragSuffix)
+						name = strings.TrimSuffix(name, f.Suffix)
 						frags["/"+name] = struct{}{}
 					} else {
-						frags[string(FragSep)+name] = struct{}{}
+						frags[string(f.Sep)+name] = struct{}{}
 					}
 				}
 			}
 		}
 		if node == nil || !infile {
-			node, infile := resolveFragmentNode(fragref, true)
+			node, infile := f.resolveNode(fragref, true)
 			switch node := node.(type) {
 			case drill.UnorderedBranch:
 				children := node.UnorderedChildren()
 				for name := range children {
 					if name != "" {
 						if !infile {
-							name = strings.TrimSuffix(name, FragSuffix)
+							name = strings.TrimSuffix(name, f.Suffix)
 						}
 						frags["/"+name] = struct{}{}
 					}
@@ -250,18 +273,22 @@ func ListFragments(fragref string) []string {
 	return list
 }
 
-// resolveFragmentNode resolves a fragment reference into a drill Node by
-// walking through the components of the reference.
-func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
-	n = fragfs
+// resolveNode resolves a fragment reference into a drill Node by walking
+// through the components of the reference. If found, returns the node, and
+// whether the node has drilled into a file.
+//
+// If fragref does not contain a separator, then the last element is assumed to
+// be a directory if dir is true, and a file otherwise.
+func (f *Fragments) resolveNode(fragref string, dir bool) (n drill.Node, infile bool) {
+	n = f.root
 	var path string
-	names, infile := parseFragRef(fragref, FragSuffix, FragSep, dir)
+	names, infile := ParseFragRef(fragref, f.Suffix, f.Sep, dir)
 	for _, name := range names {
 		if name == "" {
 			return nil, false
 		}
 		path += "/" + name
-		if node, ok := fragCache[path]; ok {
+		if node, ok := f.cache[path]; ok {
 			n = node
 		} else {
 			switch v := n.(type) {
@@ -271,36 +298,50 @@ func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 				return nil, false
 			}
 			if node, ok := n.(*htmldrill.Node); ok {
-				fragCache[path] = node
+				f.cache[path] = node
 			}
 		}
 	}
 	return n, infile
 }
 
-// ErrorFrag returns an error according to the fragment section of the given
+// Error returns an error according to the fragment section of the given
 // name. The result is passed to fmt.Errorf with args.
-func ErrorFrag(name string, args ...interface{}) error {
-	format := ResolveFragment("Errors:" + name)
+func (f *Fragments) Error(name string, args ...interface{}) error {
+	format := f.Resolve("Errors:" + name)
 	return fmt.Errorf(strings.TrimSpace(format), args...)
 }
 
-// FormatFrag returns a formatted string according to the fragment of the given
+// Format returns a formatted string according to the fragment of the given
 // reference. The result is passed to fmt.Sprintf with args.
-func FormatFrag(fragref string, args ...interface{}) string {
-	format := ResolveFragment(fragref)
+func (f *Fragments) Format(fragref string, args ...interface{}) string {
+	format := f.Resolve(fragref)
 	return fmt.Sprintf(strings.TrimSpace(format), args...)
 }
 
-var docFailed = map[string]struct{}{}
-var docSeen = map[string]struct{}{}
+// DocState contains the state of fragments used to resolve documentation for
+// commands.
+type DocState struct {
+	fragState *Fragments
+	failed    map[string]struct{}
+	seen      map[string]struct{}
+}
+
+// NewDocState returns a DocState initialized with a FragState.
+func NewDocState(f *Fragments) *DocState {
+	return &DocState{
+		fragState: f,
+		failed:    map[string]struct{}{},
+		seen:      map[string]struct{}{},
+	}
+}
 
 // DocFragments returns a list of requested fragments.
-func DocFragments() []string {
-	fragMut.RLock()
-	defer fragMut.RUnlock()
-	frags := make([]string, 0, len(docSeen))
-	for frag := range docSeen {
+func (d *DocState) DocFragments() []string {
+	d.fragState.mut.RLock()
+	defer d.fragState.mut.RUnlock()
+	frags := make([]string, 0, len(d.seen))
+	for frag := range d.seen {
 		frags = append(frags, frag)
 	}
 	sort.Strings(frags)
@@ -309,12 +350,12 @@ func DocFragments() []string {
 
 // UnresolvedFragments writes to stderr a list of fragment references that
 // failed to resolve. Panics if any references failed.
-func UnresolvedFragments() {
-	if len(docFailed) == 0 {
+func (d *DocState) UnresolvedFragments() {
+	if len(d.failed) == 0 {
 		return
 	}
-	refs := make([]string, 0, len(docFailed))
-	for ref := range docFailed {
+	refs := make([]string, 0, len(d.failed))
+	for ref := range d.failed {
 		refs = append(refs, ref)
 	}
 	sort.Strings(refs)
@@ -328,13 +369,13 @@ func UnresolvedFragments() {
 }
 
 // DocWith is like Doc, but with configurable options.
-func DocWith(fragref string, opt FragOptions) string {
-	fragMut.Lock()
-	defer fragMut.Unlock()
-	docSeen[fragref] = struct{}{}
-	node, _ := resolveFragmentNode(fragref, false)
+func (d *DocState) DocWith(fragref string, opt FragOptions) string {
+	d.fragState.mut.Lock()
+	defer d.fragState.mut.Unlock()
+	d.seen[fragref] = struct{}{}
+	node, _ := d.fragState.resolveNode(fragref, false)
 	if node == nil {
-		docFailed[fragref] = struct{}{}
+		d.failed[fragref] = struct{}{}
 		return "{" + Language + ":" + fragref + "}"
 	}
 	return ExecuteFragTmpl(fragref, node, opt)
@@ -347,17 +388,17 @@ func DocWith(fragref string, opt FragOptions) string {
 // Doc should be used only to process descriptions for command-line elements.
 // Descriptions are rendered in a format suitable for the terminal.
 // ResolveFragment can be used to resolve a reference without marking it.
-func Doc(fragref string) string {
+func (d *DocState) Doc(fragref string) string {
 	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
-	return DocWith(fragref, FragOptions{
+	return d.DocWith(fragref, FragOptions{
 		Renderer: term.Renderer{Width: termWidth, TabSize: 4}.Render,
 	})
 }
 
 // DocFlag returns the content for a flag by configuring the renderer with 0
 // width, so that it can be properly formatted by the usage template.
-func DocFlag(fragref string) string {
-	return DocWith(fragref, FragOptions{
+func (d *DocState) DocFlag(fragref string) string {
+	return d.DocWith(fragref, FragOptions{
 		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
 	})
 }
