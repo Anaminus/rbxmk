@@ -3,19 +3,36 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"sort"
 	"strings"
 	"sync"
 	"text/template"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/drill"
 	"github.com/anaminus/drill/filesys"
 	"github.com/anaminus/rbxmk/fragments"
 	"github.com/anaminus/rbxmk/rbxmk/htmldrill"
 	"github.com/anaminus/rbxmk/rbxmk/term"
+	"golang.org/x/net/html"
 	terminal "golang.org/x/term"
 )
+
+// Fragments are formatted as HTML templates. They are parsed and rendered as
+// regular HTML by the drill, but this is lossless enough that that template
+// directives survive the process.
+//
+// More technically, a particular fragment file is a concatenation of a number
+// of independently evaluated template fragments. That is, the data in one
+// section does not necessarily correspond to the data in another section.
+//
+// The resulting render is a HTML template, ready for evaluation. Data produced
+// by the execution are expected to be formatted in HTML.
+//
+// The final result of the template is regular HTML. This result is passed to a
+// configured renderer that converts it to a finalized format.
 
 // Language determines the language of documentation text.
 var Language = "en-us"
@@ -39,15 +56,12 @@ func panicLanguage() {
 }
 
 func initDocs() drill.Node {
-	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 	lang, ok := fragments.Languages[Language]
 	if !ok {
 		panicLanguage()
 	}
 	f, err := filesys.NewFS(lang, filesys.Handlers{
-		{Pattern: "*.html", Func: htmldrill.NewHandler(
-			htmldrill.WithRenderer(term.Renderer{Width: termWidth, TabSize: 4}.Render),
-		)},
+		{Pattern: "*.html", Func: htmldrill.NewHandler()},
 	})
 	if err != nil {
 		panic(err)
@@ -136,6 +150,8 @@ func parseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 	return items, true
 }
 
+type Renderer = func(w io.Writer, s *goquery.Selection) error
+
 type FuncMap = template.FuncMap
 
 var docTmplFuncs = FuncMap{
@@ -145,42 +161,53 @@ var docTmplFuncs = FuncMap{
 	},
 }
 
-func executeDocTmpl(fragref, tmplText string, data interface{}, funcs FuncMap) string {
-	t := template.New("root")
-	t.Funcs(docTmplFuncs)
-	t.Funcs(funcs)
-	t, err := t.Parse(tmplText)
-	if err != nil {
-		panic(fmt.Errorf("parse %q: %w", fragref, err))
-	}
-	var buf bytes.Buffer
-	err = t.Execute(&buf, data)
-	if err != nil {
-		panic(fmt.Errorf("execute %q: %w", fragref, err))
-	}
-	return strings.TrimSpace(buf.String())
-}
-
 type FragOptions struct {
 	// Data included with the executed template.
 	TmplData interface{}
 	// Functions included with the executed template.
 	TmplFuncs FuncMap
 	// Renderer used if a node is htmldrill.Node.
-	Renderer htmldrill.Renderer
+	Renderer Renderer
 }
 
-// Doc returns the content of the fragment referred to by fragref. The given
-// path is marked to be returned by DocFragments. If no content was found, then
-// a string indicating an unresolved reference is returned.
-//
-// Doc should only be used to capture additional fragment references.
-// ResolveFragment can be used to resolve a reference without marking it.
-//
-// The content of the fragment executed as a template with docTmplFuncs included
-// as functions.
-func Doc(fragref string) string {
-	return DocWith(fragref, FragOptions{})
+// ExecuteFragTmpl renders converts the result of node, in template format, to a
+// final rendering.
+func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
+	// Parse template.
+	tmplText := strings.TrimSpace(node.Fragment())
+	t := template.New("root")
+	t.Funcs(docTmplFuncs)
+	t.Funcs(opt.TmplFuncs)
+	t, err := t.Parse(tmplText)
+	if err != nil {
+		panic(fmt.Errorf("parse template %q: %w", fragref, err))
+	}
+
+	// Execute template.
+	var buf bytes.Buffer
+	err = t.Execute(&buf, opt.TmplData)
+	if err != nil {
+		panic(fmt.Errorf("execute template %q: %w", fragref, err))
+	}
+
+	// If no renderer, return directly as HTML.
+	if opt.Renderer == nil {
+		return strings.TrimSpace(buf.String())
+	}
+
+	// Parse HTML.
+	root, err := html.Parse(&buf)
+	if err != nil {
+		panic(fmt.Errorf("parse HTML %q: %w", fragref, err))
+	}
+	doc := goquery.NewDocumentFromNode(root)
+
+	// Render HTML.
+	buf.Reset()
+	if err := opt.Renderer(&buf, doc.Selection); err != nil {
+		panic(fmt.Errorf("render HTML %q: %w", fragref, err))
+	}
+	return strings.TrimSpace(buf.String())
 }
 
 // DocWith is like Doc, but with configurable options.
@@ -193,28 +220,29 @@ func DocWith(fragref string, opt FragOptions) string {
 		docFailed[fragref] = struct{}{}
 		return "{" + Language + ":" + fragref + "}"
 	}
-	if opt.Renderer != nil {
-		if n, ok := node.(*htmldrill.Node); ok {
-			node = n.WithRenderer(opt.Renderer)
-		}
-	}
-	tmplText := strings.TrimSpace(node.Fragment())
-	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
+	return ExecuteFragTmpl(fragref, node, opt)
+}
+
+// Doc returns the content of the fragment referred to by fragref. The given
+// path is marked to be returned by DocFragments. If no content was found, then
+// a string indicating an unresolved reference is returned.
+//
+// Doc should be used only to process descriptions for command-line elements.
+// Descriptions are rendered in a format suitable for the terminal.
+// ResolveFragment can be used to resolve a reference without marking it.
+func Doc(fragref string) string {
+	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
+	return DocWith(fragref, FragOptions{
+		Renderer: term.Renderer{Width: termWidth, TabSize: 4}.Render,
+	})
 }
 
 // DocFlag returns the content for a flag by configuring the renderer with 0
 // width, so that it can be properly formatted by the usage template.
 func DocFlag(fragref string) string {
-	return DocWith(fragref, FragOptions{Renderer: term.Renderer{Width: 0, TabSize: 4}.Render})
-}
-
-// ResolveFragment returns the content of the fragment referred to by fragref.
-// Returns an empty string if no content was found.
-//
-// The content of the fragment executed as a template with docTmplFuncs included
-// as functions.
-func ResolveFragment(fragref string) string {
-	return ResolveFragmentWith(fragref, FragOptions{})
+	return DocWith(fragref, FragOptions{
+		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
+	})
 }
 
 // ResolveFragmentWith is like ResolveFragment, but with configurable options.
@@ -225,13 +253,13 @@ func ResolveFragmentWith(fragref string, opt FragOptions) string {
 	if node == nil {
 		return ""
 	}
-	if opt.Renderer != nil {
-		if n, ok := node.(*htmldrill.Node); ok {
-			node = n.WithRenderer(opt.Renderer)
-		}
-	}
-	tmplText := strings.TrimSpace(node.Fragment())
-	return executeDocTmpl(fragref, tmplText, opt.TmplData, opt.TmplFuncs)
+	return ExecuteFragTmpl(fragref, node, opt)
+}
+
+// ResolveFragment returns the content of the fragment referred to by fragref.
+// Returns an empty string if no content was found.
+func ResolveFragment(fragref string) string {
+	return ResolveFragmentWith(fragref, FragOptions{})
 }
 
 const FragSep = ':'
