@@ -55,7 +55,7 @@ func panicLanguage() {
 	panic(fmt.Sprintf("unsupported language %q", Language))
 }
 
-func initDocs() drill.Node {
+func initFrags() drill.Node {
 	lang, ok := fragments.Languages[Language]
 	if !ok {
 		panicLanguage()
@@ -73,43 +73,9 @@ func initDocs() drill.Node {
 	return node
 }
 
-var docfs = initDocs()
-var docMut sync.RWMutex
-var docCache = map[string]*htmldrill.Node{}
-var docFailed = map[string]struct{}{}
-var docSeen = map[string]struct{}{}
-
-// DocFragments returns a list of requested fragments.
-func DocFragments() []string {
-	docMut.RLock()
-	defer docMut.RUnlock()
-	frags := make([]string, 0, len(docSeen))
-	for frag := range docSeen {
-		frags = append(frags, frag)
-	}
-	sort.Strings(frags)
-	return frags
-}
-
-// UnresolvedFragments writes to stderr a list of fragment references that
-// failed to resolve. Panics if any references failed.
-func UnresolvedFragments() {
-	if len(docFailed) == 0 {
-		return
-	}
-	refs := make([]string, 0, len(docFailed))
-	for ref := range docFailed {
-		refs = append(refs, ref)
-	}
-	sort.Strings(refs)
-	var s strings.Builder
-	fmt.Fprintf(&s, "unresolved fragments for %q:\n", Language)
-	for _, ref := range refs {
-		fmt.Fprintf(&s, "\t%s\n", ref)
-	}
-	fmt.Fprintf(&s, "\nversion: %s", VersionString())
-	panic(s.String())
-}
+var fragfs = initFrags()
+var fragMut sync.RWMutex
+var fragCache = map[string]*htmldrill.Node{}
 
 // parseFragRef receives a fragment reference and converts it to a file path.
 //
@@ -154,7 +120,7 @@ type Renderer = func(w io.Writer, s *goquery.Selection) error
 
 type FuncMap = template.FuncMap
 
-var docTmplFuncs = FuncMap{
+var fragTmplFuncs = FuncMap{
 	// List of top-level fragment topics.
 	"Topics": func() string {
 		return "\n\t" + strings.Join(ListFragments(""), "\n\t")
@@ -176,7 +142,7 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	// Parse template.
 	tmplText := strings.TrimSpace(node.Fragment())
 	t := template.New("root")
-	t.Funcs(docTmplFuncs)
+	t.Funcs(fragTmplFuncs)
 	t.Funcs(opt.TmplFuncs)
 	t, err := t.Parse(tmplText)
 	if err != nil {
@@ -210,45 +176,10 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	return strings.TrimSpace(buf.String())
 }
 
-// DocWith is like Doc, but with configurable options.
-func DocWith(fragref string, opt FragOptions) string {
-	docMut.Lock()
-	defer docMut.Unlock()
-	docSeen[fragref] = struct{}{}
-	node, _ := resolveFragmentNode(fragref, false)
-	if node == nil {
-		docFailed[fragref] = struct{}{}
-		return "{" + Language + ":" + fragref + "}"
-	}
-	return ExecuteFragTmpl(fragref, node, opt)
-}
-
-// Doc returns the content of the fragment referred to by fragref. The given
-// path is marked to be returned by DocFragments. If no content was found, then
-// a string indicating an unresolved reference is returned.
-//
-// Doc should be used only to process descriptions for command-line elements.
-// Descriptions are rendered in a format suitable for the terminal.
-// ResolveFragment can be used to resolve a reference without marking it.
-func Doc(fragref string) string {
-	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
-	return DocWith(fragref, FragOptions{
-		Renderer: term.Renderer{Width: termWidth, TabSize: 4}.Render,
-	})
-}
-
-// DocFlag returns the content for a flag by configuring the renderer with 0
-// width, so that it can be properly formatted by the usage template.
-func DocFlag(fragref string) string {
-	return DocWith(fragref, FragOptions{
-		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
-	})
-}
-
 // ResolveFragmentWith is like ResolveFragment, but with configurable options.
 func ResolveFragmentWith(fragref string, opt FragOptions) string {
-	docMut.Lock()
-	defer docMut.Unlock()
+	fragMut.Lock()
+	defer fragMut.Unlock()
 	node, _ := resolveFragmentNode(fragref, false)
 	if node == nil {
 		return ""
@@ -322,7 +253,7 @@ func ListFragments(fragref string) []string {
 // resolveFragmentNode resolves a fragment reference into a drill Node by
 // walking through the components of the reference.
 func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
-	n = docfs
+	n = fragfs
 	var path string
 	names, infile := parseFragRef(fragref, FragSuffix, FragSep, dir)
 	for _, name := range names {
@@ -330,7 +261,7 @@ func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 			return nil, false
 		}
 		path += "/" + name
-		if node, ok := docCache[path]; ok {
+		if node, ok := fragCache[path]; ok {
 			n = node
 		} else {
 			switch v := n.(type) {
@@ -340,7 +271,7 @@ func resolveFragmentNode(fragref string, dir bool) (n drill.Node, infile bool) {
 				return nil, false
 			}
 			if node, ok := n.(*htmldrill.Node); ok {
-				docCache[path] = node
+				fragCache[path] = node
 			}
 		}
 	}
@@ -359,4 +290,74 @@ func ErrorFrag(name string, args ...interface{}) error {
 func FormatFrag(fragref string, args ...interface{}) string {
 	format := ResolveFragment(fragref)
 	return fmt.Sprintf(strings.TrimSpace(format), args...)
+}
+
+var docFailed = map[string]struct{}{}
+var docSeen = map[string]struct{}{}
+
+// DocFragments returns a list of requested fragments.
+func DocFragments() []string {
+	fragMut.RLock()
+	defer fragMut.RUnlock()
+	frags := make([]string, 0, len(docSeen))
+	for frag := range docSeen {
+		frags = append(frags, frag)
+	}
+	sort.Strings(frags)
+	return frags
+}
+
+// UnresolvedFragments writes to stderr a list of fragment references that
+// failed to resolve. Panics if any references failed.
+func UnresolvedFragments() {
+	if len(docFailed) == 0 {
+		return
+	}
+	refs := make([]string, 0, len(docFailed))
+	for ref := range docFailed {
+		refs = append(refs, ref)
+	}
+	sort.Strings(refs)
+	var s strings.Builder
+	fmt.Fprintf(&s, "unresolved fragments for %q:\n", Language)
+	for _, ref := range refs {
+		fmt.Fprintf(&s, "\t%s\n", ref)
+	}
+	fmt.Fprintf(&s, "\nversion: %s", VersionString())
+	panic(s.String())
+}
+
+// DocWith is like Doc, but with configurable options.
+func DocWith(fragref string, opt FragOptions) string {
+	fragMut.Lock()
+	defer fragMut.Unlock()
+	docSeen[fragref] = struct{}{}
+	node, _ := resolveFragmentNode(fragref, false)
+	if node == nil {
+		docFailed[fragref] = struct{}{}
+		return "{" + Language + ":" + fragref + "}"
+	}
+	return ExecuteFragTmpl(fragref, node, opt)
+}
+
+// Doc returns the content of the fragment referred to by fragref. The given
+// path is marked to be returned by DocFragments. If no content was found, then
+// a string indicating an unresolved reference is returned.
+//
+// Doc should be used only to process descriptions for command-line elements.
+// Descriptions are rendered in a format suitable for the terminal.
+// ResolveFragment can be used to resolve a reference without marking it.
+func Doc(fragref string) string {
+	termWidth, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
+	return DocWith(fragref, FragOptions{
+		Renderer: term.Renderer{Width: termWidth, TabSize: 4}.Render,
+	})
+}
+
+// DocFlag returns the content for a flag by configuring the renderer with 0
+// width, so that it can be properly formatted by the usage template.
+func DocFlag(fragref string) string {
+	return DocWith(fragref, FragOptions{
+		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
+	})
 }
