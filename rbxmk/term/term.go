@@ -10,6 +10,7 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/andybalholm/cascadia"
 	"golang.org/x/net/html"
 )
 
@@ -154,6 +155,8 @@ func (w *writer) Flush() error {
 	return nil
 }
 
+var sectionCounter = cascadia.MustCompile("body > section")
+
 func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 	buf := &writer{
 		w:       w,
@@ -164,6 +167,12 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 	for _, node := range s.Nodes {
 		if node.Type == html.TextNode {
 			continue
+		}
+		// If the body contains more than one section, increase the depth to
+		// force the section names to be rendered.
+		isRoot := s.FindMatcher(sectionCounter).Length() > 1
+		if isRoot {
+			state.depth++
 		}
 		err := walk(node, func(node *html.Node, entering bool) error {
 			switch node.Type {
@@ -186,6 +195,9 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 		})
 		if err != nil && err != stop {
 			return err
+		}
+		if isRoot {
+			state.depth--
 		}
 	}
 	return buf.Flush()
@@ -248,14 +260,6 @@ var handlers = nodeHandlers{
 		return skipText
 	},
 	{"section", false}: func(w *writer, node *html.Node, s *walkState) error {
-		s.depth--
-		return nil
-	},
-	{"body", true}: func(w *writer, node *html.Node, s *walkState) error {
-		s.depth++
-		return nil
-	},
-	{"body", false}: func(w *writer, node *html.Node, s *walkState) error {
 		s.depth--
 		return nil
 	},
