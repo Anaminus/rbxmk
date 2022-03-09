@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"text/template"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
+	"github.com/anaminus/rbxmk/rbxmk/term"
+	terminal "golang.org/x/term"
 )
 
 func init() {
@@ -21,11 +25,15 @@ func init() {
 }
 
 type DocCommand struct {
-	List bool
+	List   bool
+	Format string
+	Width  int
 }
 
 func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
 	flags.BoolVarP(&c.List, "list", "l", false, DocFlag("Commands/doc:Flags/list"))
+	flags.StringVarP(&c.Format, "format", "f", "terminal", DocFlag("Commands/doc:Flags/format"))
+	flags.IntVarP(&c.Width, "width", "w", 0, DocFlag("Commands/doc:Flags/width"))
 }
 
 func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
@@ -43,7 +51,21 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		fmt.Println(Frag.Resolve("Messages/doc:Topics"))
 		return nil
 	}
-	content := Frag.Resolve(ref)
+	var content string
+	switch c.Format {
+	case "", "html":
+		content = Frag.ResolveWith(ref, FragOptions{
+			Renderer: goquery.Render,
+		})
+	case "terminal":
+		width := c.Width
+		if width == 0 {
+			width, _, _ = terminal.GetSize(int(os.Stdout.Fd()))
+		}
+		content = Frag.ResolveWith(ref, FragOptions{
+			Renderer: term.Renderer{Width: width, TabSize: 4}.Render,
+		})
+	}
 	if content != "" {
 		cmd.Println(content)
 		return nil

@@ -39,6 +39,13 @@ all top-level topics are listed.</p>
 
 <section data-name="Flags">
 
+<section data-name="format">
+
+<p>Sets the output format of the produced fragment. Available formats are
+"terminal", "html".</p>
+
+</section>
+
 <section data-name="list">
 
 <p>Returns a list of sub-topics and sub-sections for the given reference. If no
@@ -48,6 +55,15 @@ reference is specified, then all top-level topics are listed.</p>
 sub-sections of sections will be prefixed with "/". That is, the whole name of a
 listed item, including the prefix, can be appended to the current reference to
 query that item.</p>
+
+</section>
+
+<section data-name="width">
+
+<p>When possible, render formatted fragments with the given width, wrapping text
+around. If less than 0, then no wrapping is applied. If 0, then the width is
+based on the current context (for example, the "terminal" format renders with
+the current width of the terminal).</p>
 
 </section>
 
