@@ -165,7 +165,7 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 		width:   r.Width,
 		tabSize: r.TabSize,
 	}
-	if buf.width < 0 {
+	if buf.width == 0 {
 		buf.width, _, _ = terminal.GetSize(int(os.Stdout.Fd()))
 	}
 	var state walkState
