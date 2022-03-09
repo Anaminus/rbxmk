@@ -78,7 +78,7 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 	cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
 		TmplFuncs: template.FuncMap{
 			"SubTopics": func() string {
-				return "\n\t" + strings.Join(topics, "\n\t")
+				return "<ul>\n\t<li>" + strings.Join(topics, "</li>\n\t<li>") + "</li>\n</ul>"
 			},
 		},
 	}))
