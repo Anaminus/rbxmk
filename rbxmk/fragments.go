@@ -308,14 +308,18 @@ func (f *Fragments) resolveNode(fragref string, dir bool) (n drill.Node, infile 
 // Error returns an error according to the fragment section of the given
 // name. The result is passed to fmt.Errorf with args.
 func (f *Fragments) Error(name string, args ...interface{}) error {
-	format := f.Resolve("Errors:" + name)
+	format := f.ResolveWith("Errors:"+name, FragOptions{
+		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
+	})
 	return fmt.Errorf(strings.TrimSpace(format), args...)
 }
 
 // Format returns a formatted string according to the fragment of the given
 // reference. The result is passed to fmt.Sprintf with args.
 func (f *Fragments) Format(fragref string, args ...interface{}) string {
-	format := f.Resolve(fragref)
+	format := f.ResolveWith(fragref, FragOptions{
+		Renderer: term.Renderer{Width: 0, TabSize: 4}.Render,
+	})
 	return fmt.Sprintf(strings.TrimSpace(format), args...)
 }
 
