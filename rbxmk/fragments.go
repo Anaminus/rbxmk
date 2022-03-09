@@ -119,8 +119,8 @@ type Renderer = func(w io.Writer, s *goquery.Selection) error
 // Global template functions.
 var fragTmplFuncs = template.FuncMap{
 	// List of top-level fragment topics.
-	"Topics": func() string {
-		return "\n\t" + strings.Join(Frag.List(""), "\n\t")
+	"ListFragments": func(ref string) []string {
+		return Frag.List(ref)
 	},
 }
 

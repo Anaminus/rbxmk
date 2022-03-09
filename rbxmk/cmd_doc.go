@@ -1,10 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-	"text/template"
-
 	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
@@ -46,20 +42,18 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		}
 		return nil
 	} else if ref == "" {
-		fmt.Println(Frag.Resolve("Messages/doc:Topics"))
-		return nil
+		ref = "Messages/doc:Topics"
 	}
-	var content string
+	var renderer Renderer = goquery.Render
 	switch c.Format {
 	case "", "html":
-		content = Frag.ResolveWith(ref, FragOptions{
-			Renderer: goquery.Render,
-		})
+		renderer = goquery.Render
 	case "terminal":
-		content = Frag.ResolveWith(ref, FragOptions{
-			Renderer: term.Renderer{Width: c.Width, TabSize: 4}.Render,
-		})
+		renderer = term.Renderer{Width: c.Width}.Render
 	}
+	content := Frag.ResolveWith(ref, FragOptions{
+		Renderer: renderer,
+	})
 	if content != "" {
 		cmd.Println(content)
 		return nil
@@ -70,11 +64,8 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 	cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
-		TmplFuncs: template.FuncMap{
-			"SubTopics": func() string {
-				return "<ul>\n\t<li>" + strings.Join(topics, "</li>\n\t<li>") + "</li>\n</ul>"
-			},
-		},
+		Renderer: term.Renderer{}.Render,
+		TmplData: ref,
 	}))
 	return nil
 }
