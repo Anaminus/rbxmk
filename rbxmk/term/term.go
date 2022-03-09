@@ -5,12 +5,14 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"os"
 	"runtime"
 	"strings"
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/andybalholm/cascadia"
+	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/net/html"
 )
 
@@ -162,6 +164,9 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 		w:       w,
 		width:   r.Width,
 		tabSize: r.TabSize,
+	}
+	if buf.width < 0 {
+		buf.width, _, _ = terminal.GetSize(int(os.Stdout.Fd()))
 	}
 	var state walkState
 	for _, node := range s.Nodes {
