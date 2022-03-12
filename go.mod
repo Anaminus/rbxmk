@@ -15,6 +15,7 @@ require (
 	github.com/robloxapi/rbxdump v0.4.1
 	github.com/robloxapi/rbxfile v0.4.4
 	github.com/robloxapi/types v0.2.1
+	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
@@ -24,5 +25,4 @@ require (
 	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 )
