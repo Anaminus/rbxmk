@@ -422,9 +422,6 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 	isRoot := s.Is("body")
 	state := walkState{renderer: r}
 	for _, node := range s.Nodes {
-		if node.Type == html.TextNode {
-			continue
-		}
 		if isRoot {
 			// If an entire document is received, increase the depth to force
 			// the top-level section names to be rendered.

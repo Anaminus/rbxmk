@@ -10,6 +10,12 @@ import (
 )
 
 var Frag = NewFragments(initFragRoot())
+
+// FragContent renders in HTML without the outer section or body.
+func FragContent(fragref string) string {
+	return Frag.ResolveWith(fragref, FragOptions{Inner: true})
+}
+
 var docState = NewDocState(Frag)
 
 func Doc(fragref string) string     { return docState.Doc(fragref) }
@@ -26,10 +32,10 @@ var Program = &cobra.Command{
 }
 
 func init() {
-	fragTmplFuncs["frag"] = Frag.Resolve
+	fragTmplFuncs["frag"] = FragContent
 	fragTmplFuncs["fraglist"] = Frag.List
 
-	cobra.AddTemplateFunc("frag", Frag.Resolve)
+	cobra.AddTemplateFunc("frag", FragContent)
 	cobra.AddTemplateFunc("width", func() int {
 		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 		return width

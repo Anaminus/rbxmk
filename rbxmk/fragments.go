@@ -113,7 +113,10 @@ func ParseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 	return items, true
 }
 
-// Renderer renders a finalized HTML fragment.
+// Renderer renders a finalized HTML fragment. A body element indicates the root
+// of the document, while a section indicates a subsection. Unlike
+// htmldrill.Renderer, s may also contain arbitrary elements, indicating
+// unwrapped content.
 type Renderer = func(w io.Writer, s *goquery.Selection) error
 
 // Global template functions.
@@ -125,8 +128,10 @@ type FragOptions struct {
 	TmplData interface{}
 	// Functions included with the executed template.
 	TmplFuncs template.FuncMap
-	// Renderer used if a node is htmldrill.Node.
+	// Renderer used to render the final content.
 	Renderer Renderer
+	// If true, remove outer-most section or body before rendering.
+	Inner bool
 }
 
 // ExecuteFragTmpl converts the result of node, in template format, to a final
@@ -155,11 +160,6 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 		panic(fmt.Errorf("execute template %q: %w", fragref, err))
 	}
 
-	// If no renderer, return directly as HTML.
-	if opt.Renderer == nil {
-		return strings.TrimSpace(buf.String())
-	}
-
 	// Parse HTML.
 	root, err := html.Parse(&buf)
 	if err != nil {
@@ -178,9 +178,25 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 		sel = sel.Find("body > section").First()
 	}
 
+	// Select inner content.
+	if opt.Inner {
+		sel = sel.Contents()
+	}
+
 	// Render HTML.
 	buf.Reset()
-	if err := opt.Renderer(&buf, sel); err != nil {
+	renderer := opt.Renderer
+	if renderer == nil {
+		renderer = func(w io.Writer, s *goquery.Selection) error {
+			for _, n := range s.Nodes {
+				if err := html.Render(w, n); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}
+	if err := renderer(&buf, sel); err != nil {
 		panic(fmt.Errorf("render HTML %q: %w", fragref, err))
 	}
 	return strings.TrimSpace(buf.String())
