@@ -124,7 +124,14 @@ func (n *Node) uchildren() *goquery.Selection {
 func (n *Node) Fragment() string {
 	renderer := n.renderer
 	if renderer == nil {
-		renderer = goquery.Render
+		renderer = func(w io.Writer, s *goquery.Selection) error {
+			for _, n := range s.Nodes {
+				if err := html.Render(w, n); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
 	}
 	var buf bytes.Buffer
 	if err := renderer(&buf, n.selection); err != nil {
