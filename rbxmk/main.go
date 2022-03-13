@@ -32,9 +32,24 @@ var Program = &cobra.Command{
 	SilenceErrors: true,
 }
 
+// Template function that expands environment variables. Each argument is an
+// alternating key and value. The last value is the string to expand.
+func expand(p ...string) string {
+	if len(p) == 0 {
+		return ""
+	}
+	s, p := p[len(p)-1], p[:len(p)-1]
+	m := make(map[string]string, len(p)/2)
+	for i := 1; i < len(p); i += 2 {
+		m[p[i-1]] = p[i]
+	}
+	return os.Expand(s, func(s string) string { return m[s] })
+}
+
 func init() {
 	fragTmplFuncs["frag"] = FragContent
 	fragTmplFuncs["fraglist"] = Frag.List
+	fragTmplFuncs["expand"] = os.Expand
 
 	cobra.AddTemplateFunc("frag", func(fragref string) string {
 		return Frag.ResolveWith(fragref, FragOptions{
@@ -42,6 +57,7 @@ func init() {
 			Inner:    true,
 		})
 	})
+	cobra.AddTemplateFunc("expand", expand)
 	cobra.AddTemplateFunc("width", func() int {
 		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 		return width
