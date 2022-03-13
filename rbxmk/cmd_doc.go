@@ -27,7 +27,7 @@ type DocCommand struct {
 func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
 	flags.BoolVarP(&c.List, "list", "l", false, DocFlag("Commands/doc:Flags/list"))
 	flags.StringVarP(&c.Format, "format", "f", "terminal", DocFlag("Commands/doc:Flags/format"))
-	flags.IntVarP(&c.Width, "width", "w", -1, DocFlag("Commands/doc:Flags/width"))
+	flags.IntVarP(&c.Width, "width", "w", 0, DocFlag("Commands/doc:Flags/width"))
 }
 
 func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
