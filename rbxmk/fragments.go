@@ -117,12 +117,7 @@ func ParseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 type Renderer = func(w io.Writer, s *goquery.Selection) error
 
 // Global template functions.
-var fragTmplFuncs = template.FuncMap{
-	// List of top-level fragment topics.
-	"ListFragments": func(ref string) []string {
-		return Frag.List(ref)
-	},
-}
+var fragTmplFuncs = template.FuncMap{}
 
 // FragOptions configure ExecuteFragTmpl.
 type FragOptions struct {

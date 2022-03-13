@@ -26,6 +26,11 @@ var Program = &cobra.Command{
 }
 
 func init() {
+	// List of top-level fragment topics.
+	fragTmplFuncs["ListFragments"] = func(ref string) []string {
+		return Frag.List(ref)
+	}
+
 	cobra.AddTemplateFunc("width", func() int {
 		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 		return width
