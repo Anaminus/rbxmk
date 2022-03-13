@@ -32,6 +32,8 @@ type Renderer struct {
 	// ForOutput indicates whether content is to be renderered for output,
 	// rather than for display in the current terminal.
 	ForOutput bool
+	// UnorderedListFormat is the text used for unordered list markers.
+	UnorderedListFormat string
 }
 
 var (
@@ -417,7 +419,7 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 			}
 		}
 	}
-	var state walkState
+	state := walkState{renderer: r}
 	for _, node := range s.Nodes {
 		if node.Type == html.TextNode {
 			continue
@@ -475,7 +477,8 @@ type elementMatcher struct {
 }
 
 type walkState struct {
-	depth int
+	renderer Renderer
+	depth    int
 }
 
 type nodeHandlers map[elementMatcher]func(w *writer, node *html.Node, s *walkState) error
@@ -554,6 +557,10 @@ var handlers = nodeHandlers{
 		return nil
 	},
 	{"ul", true}: func(w *writer, node *html.Node, s *walkState) error {
+		prefix := s.renderer.UnorderedListFormat
+		if prefix == "" {
+			prefix = " - "
+		}
 		w.List(" - ", 0, 0, "")
 		return nil
 	},
