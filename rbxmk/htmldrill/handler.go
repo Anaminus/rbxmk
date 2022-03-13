@@ -15,10 +15,11 @@ import (
 	"golang.org/x/net/html"
 )
 
-// Renderer renders a selection, writing the result to w.
+// Renderer renders a selection, writing the result to w. s will contain either
+// a body or section element.
 type Renderer func(w io.Writer, s *goquery.Selection) error
 
-// config holds options
+// config holds options for the handler.
 type config struct {
 	parseOptions []html.ParseOption
 	renderer     Renderer
@@ -74,7 +75,8 @@ var bodyMatcher = goquery.SingleMatcher(cascadia.MustCompile("body"))
 var sectionMatcher = cascadia.MustCompile(sectionName)
 var usectionMatcher = cascadia.MustCompile(sectionName + "[" + sectionAttr + "]")
 
-// Node implements drill.Node.
+// Node implements drill.Node. A Node represents either a single section
+// element, or the body of a document.
 type Node struct {
 	document  *goquery.Document
 	selection *goquery.Selection

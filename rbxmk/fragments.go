@@ -132,6 +132,12 @@ type FragOptions struct {
 // ExecuteFragTmpl converts the result of node, in template format, to a final
 // rendering.
 func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
+	// True if node is the root of the file.
+	var isRoot bool
+	if n, ok := node.(*htmldrill.Node); ok {
+		isRoot = n.Selection().Is("body")
+	}
+
 	// Parse template.
 	tmplText := strings.TrimSpace(node.Fragment())
 	t := template.New("root")
@@ -159,11 +165,22 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	if err != nil {
 		panic(fmt.Errorf("parse HTML %q: %w", fragref, err))
 	}
-	doc := goquery.NewDocumentFromNode(root)
+	sel := goquery.NewDocumentFromNode(root).Selection
+
+	// Normalize root selection for rendering. A body element indicates the root
+	// of the document, while a section indicates a subsection.
+	//
+	// Because the HTML parser normalizes subsections to be wrapped in a body,
+	// use isRoot to get the original root type.
+	if isRoot {
+		sel = sel.Find("body")
+	} else {
+		sel = sel.Find("body > section").First()
+	}
 
 	// Render HTML.
 	buf.Reset()
-	if err := opt.Renderer(&buf, doc.Selection); err != nil {
+	if err := opt.Renderer(&buf, sel); err != nil {
 		panic(fmt.Errorf("render HTML %q: %w", fragref, err))
 	}
 	return strings.TrimSpace(buf.String())

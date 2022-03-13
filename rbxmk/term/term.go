@@ -419,15 +419,15 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 			}
 		}
 	}
+	isRoot := s.Is("body")
 	state := walkState{renderer: r}
 	for _, node := range s.Nodes {
 		if node.Type == html.TextNode {
 			continue
 		}
-		// If the body contains more than one section, increase the depth to
-		// force the section names to be rendered.
-		isRoot := s.FindMatcher(sectionCounter).Length() > 1
 		if isRoot {
+			// If an entire document is received, increase the depth to force
+			// the top-level section names to be rendered.
 			state.depth++
 		}
 		err := walk(node, func(node *html.Node, entering bool) error {
