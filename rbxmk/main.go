@@ -26,8 +26,10 @@ var Program = &cobra.Command{
 }
 
 func init() {
+	fragTmplFuncs["frag"] = Frag.Resolve
 	fragTmplFuncs["fraglist"] = Frag.List
 
+	cobra.AddTemplateFunc("frag", Frag.Resolve)
 	cobra.AddTemplateFunc("width", func() int {
 		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 		return width
