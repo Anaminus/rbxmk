@@ -21,12 +21,17 @@ import (
 // suitable for the terminal.
 type Renderer struct {
 	// Width sets the assumed width of the terminal, which aids in wrapping
-	// text. If == 0, then the width is treated as 80. If < 0, then the width is
-	// treated as unbounded.
+	// text. If < 0, then the width is unbounded.
+	//
+	// If == 0, then the width is determined by the current terminal, or, if
+	// ForOutput is true, then the width is 80.
 	Width int
 	// TabSize indicates the number of characters that the terminal uses to
 	// render a tab. If <= 0, then tabs are assumed to have a size of 8.
 	TabSize int
+	// ForOutput indicates whether content is to be renderered for output,
+	// rather than for display in the current terminal.
+	ForOutput bool
 }
 
 var (
@@ -399,12 +404,16 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 		buf.tabWidth = 8
 	}
 	if buf.width == 0 {
-		buf.width, _, _ = terminal.GetSize(int(os.Stdout.Fd()))
-		if runtime.GOOS == "windows" && buf.width > 1 {
-			// If a newline occurs on the edge, cmd.exe will incorrectly wrap it
-			// around, producing a gap. Reducing the width by one ensures this
-			// gap wont appear.
-			buf.width--
+		if r.ForOutput {
+			buf.width = 80
+		} else {
+			buf.width, _, _ = terminal.GetSize(int(os.Stdout.Fd()))
+			if runtime.GOOS == "windows" && buf.width > 1 {
+				// If a newline occurs on the edge, cmd.exe will incorrectly
+				// wrap it around, producing a gap. Reducing the width by one
+				// ensures this gap wont appear.
+				buf.width--
+			}
 		}
 	}
 	var state walkState
