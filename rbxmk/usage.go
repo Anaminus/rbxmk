@@ -1,26 +1,26 @@
 package main
 
-const usageTemplate = `Usage:{{if .Runnable}}
+const usageTemplate = `{{frag "usage:Usage"}}{{if .Runnable}}
   {{.UseLine}}{{end}}{{if .HasAvailableSubCommands}}
-  {{.CommandPath}} [command]{{end}}{{if gt (len .Aliases) 0}}
+  {{.CommandPath}} {{frag "usage:Arguments"}}{{end}}{{if gt (len .Aliases) 0}}
 
-Aliases:
+{{frag "usage:Aliases"}}
   {{.NameAndAliases}}{{end}}{{if .HasExample}}
 
-Examples:
+{{frag "usage:Examples"}}
 {{.Example}}{{end}}{{if .HasAvailableSubCommands}}
 
-Available Commands:{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "help"))}}
+{{frag "usage:Commands"}}{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "help"))}}
   {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
 
-Flags:
+{{frag "usage:Flags"}}
 {{width | .LocalFlags.FlagUsagesWrapped | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
 
-Global Flags:
+{{frag "usage:GlobalFlags"}}
 {{width | .InheritedFlags.FlagUsagesWrapped | trimTrailingWhitespaces}}{{end}}{{if .HasHelpSubCommands}}
 
-Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
+{{frag "usage:HelpTopics"}}{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
   {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
 
-Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
+{{frag "usage:MoreHelp" | expand "COMMAND" (print .CommandPath " " (frag "usage:Arguments") " --help") }}{{end}}
 `
