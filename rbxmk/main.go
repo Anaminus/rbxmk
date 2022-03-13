@@ -35,7 +35,12 @@ func init() {
 	fragTmplFuncs["frag"] = FragContent
 	fragTmplFuncs["fraglist"] = Frag.List
 
-	cobra.AddTemplateFunc("frag", FragContent)
+	cobra.AddTemplateFunc("frag", func(fragref string) string {
+		return Frag.ResolveWith(fragref, FragOptions{
+			Renderer: term.Renderer{Width: -1}.Render,
+			Inner:    true,
+		})
+	})
 	cobra.AddTemplateFunc("width", func() int {
 		width, _, _ := terminal.GetSize(int(os.Stdout.Fd()))
 		return width
