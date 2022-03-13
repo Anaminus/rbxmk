@@ -171,8 +171,9 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 
 // Fragments provides methods for resolving fragments.
 type Fragments struct {
+	root drill.Node
+
 	mut   sync.RWMutex
-	root  drill.Node
 	cache map[string]*htmldrill.Node
 
 	// Sep is the separator used for fragment references to separate path
@@ -202,8 +203,6 @@ func (f *Fragments) Resolve(fragref string) string {
 
 // ResolveWith is like Resolve, but with configurable options.
 func (f *Fragments) ResolveWith(fragref string, opt FragOptions) string {
-	f.mut.Lock()
-	defer f.mut.Unlock()
 	node, _ := f.resolveNode(fragref, false)
 	if node == nil {
 		return ""
@@ -282,7 +281,10 @@ func (f *Fragments) resolveNode(fragref string, dir bool) (n drill.Node, infile 
 			return nil, false
 		}
 		path += "/" + name
-		if node, ok := f.cache[path]; ok {
+		f.mut.RLock()
+		node, ok := f.cache[path]
+		f.mut.RUnlock()
+		if ok {
 			n = node
 		} else {
 			switch v := n.(type) {
@@ -292,7 +294,9 @@ func (f *Fragments) resolveNode(fragref string, dir bool) (n drill.Node, infile 
 				return nil, false
 			}
 			if node, ok := n.(*htmldrill.Node); ok {
+				f.mut.Lock()
 				f.cache[path] = node
+				f.mut.Unlock()
 			}
 		}
 	}
@@ -321,8 +325,10 @@ func (f *Fragments) Format(fragref string, args ...interface{}) string {
 // commands.
 type DocState struct {
 	fragState *Fragments
-	failed    map[string]struct{}
-	seen      map[string]struct{}
+
+	mut    sync.RWMutex
+	failed map[string]struct{}
+	seen   map[string]struct{}
 }
 
 // NewDocState returns a DocState initialized with a FragState.
@@ -336,8 +342,8 @@ func NewDocState(f *Fragments) *DocState {
 
 // DocFragments returns a list of requested fragments.
 func (d *DocState) DocFragments() []string {
-	d.fragState.mut.RLock()
-	defer d.fragState.mut.RUnlock()
+	d.mut.RLock()
+	defer d.mut.RUnlock()
 	frags := make([]string, 0, len(d.seen))
 	for frag := range d.seen {
 		frags = append(frags, frag)
@@ -368,8 +374,8 @@ func (d *DocState) UnresolvedFragments() {
 
 // DocWith is like Doc, but with configurable options.
 func (d *DocState) DocWith(fragref string, opt FragOptions) string {
-	d.fragState.mut.Lock()
-	defer d.fragState.mut.Unlock()
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	d.seen[fragref] = struct{}{}
 	node, _ := d.fragState.resolveNode(fragref, false)
 	if node == nil {
