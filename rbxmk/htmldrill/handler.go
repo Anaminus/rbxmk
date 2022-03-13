@@ -91,8 +91,8 @@ func NewNode(doc *goquery.Document, renderer Renderer) *Node {
 	}
 }
 
-// derive returns a Node that wraps selection instead of the selection from n.
-func (n *Node) derive(selection *goquery.Selection) *Node {
+// Derive returns a Node that wraps selection instead of the selection from n.
+func (n *Node) Derive(selection *goquery.Selection) *Node {
 	d := *n
 	d.selection = selection
 	return &d
@@ -170,7 +170,7 @@ func (n *Node) orderedChild(i int) *Node {
 	if i = drill.Index(i, children.Length()); i < 0 {
 		return nil
 	}
-	return n.derive(children.Eq(i))
+	return n.Derive(children.Eq(i))
 }
 
 // OrderedChild returns a Node that wraps the ordered child section element at
@@ -187,7 +187,7 @@ func (n *Node) OrderedChild(i int) drill.Node {
 func (n *Node) OrderedChildren() []drill.Node {
 	var sections []drill.Node
 	n.ochildren().Each(func(i int, s *goquery.Selection) {
-		sections = append(sections, n.derive(s))
+		sections = append(sections, n.Derive(s))
 	})
 	return sections
 }
@@ -204,7 +204,7 @@ func (n *Node) unorderedChild(name string) *Node {
 	if selection == nil {
 		return nil
 	}
-	return n.derive(selection)
+	return n.Derive(selection)
 }
 
 // UnorderedChild returns a Node that wraps the unordered child section element
@@ -224,7 +224,7 @@ func (n *Node) UnorderedChildren() map[string]drill.Node {
 	sections := make(map[string]drill.Node, children.Length())
 	children.Each(func(i int, s *goquery.Selection) {
 		if value, ok := s.Attr(sectionAttr); ok {
-			sections[value] = n.derive(s)
+			sections[value] = n.Derive(s)
 		}
 	})
 	return sections
