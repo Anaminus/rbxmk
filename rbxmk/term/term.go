@@ -381,12 +381,13 @@ var sectionCounter = cascadia.MustCompile("body > section")
 // Elements that have margins inserted before and after. Value indicates the
 // maximum allowed margin size after the block.
 var block = map[string]int{
-	"p":     2,
-	"ol":    2,
-	"ul":    2,
-	"pre":   2,
-	"table": 2,
-	"li":    1,
+	"p":       2,
+	"ol":      2,
+	"ul":      2,
+	"pre":     2,
+	"table":   2,
+	"section": 2,
+	"li":      1,
 }
 
 func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
@@ -543,7 +544,6 @@ var handlers = nodeHandlers{
 				w.WriteString(strings.Repeat("#", s.depth))
 				w.WriteString(" ")
 				w.WriteString(name)
-				w.WriteString("\n\n")
 			}
 		}
 		s.depth++
