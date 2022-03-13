@@ -12,11 +12,13 @@
 <section data-name="SubTopics">
 
 <p>The following sub-topics are available:</p>
+{{- if . }}
 <ul>
 {{- range (fraglist .)}}
 	<li>{{.}}</li>
 {{- end}}
 </ul>
+{{- end}}
 
 </section>
 
