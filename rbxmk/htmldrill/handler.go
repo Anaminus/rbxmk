@@ -59,6 +59,7 @@ func NewHandler(opts ...Option) filesys.HandlerFunc {
 			return nil
 		}
 		doc := goquery.NewDocumentFromNode(root)
+		StripComments(doc.Selection)
 		FixTemplateDirectives(doc.Selection)
 		return NewNode(doc, cfg.renderer)
 	}
