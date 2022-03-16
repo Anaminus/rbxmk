@@ -60,19 +60,20 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		Renderer:         renderer,
 		TrailingNewlines: 1,
 	})
-	if content != "" {
-		cmd.Println(content)
-		return nil
-	}
-	topics := Frag.List(ref)
-	if len(topics) == 0 {
+	count := Frag.Count(ref)
+	if content == "" && count == 0 {
 		cmd.Println(Frag.Format("Messages/doc:NoTopicContent", ref))
 		return nil
 	}
-	cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
-		Renderer:         term.Renderer{}.Render,
-		TmplData:         ref,
-		TrailingNewlines: 1,
-	}))
+	if content != "" {
+		cmd.Println(content)
+	}
+	if count > 0 {
+		cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
+			Renderer:         term.Renderer{}.Render,
+			TmplData:         ref,
+			TrailingNewlines: 1,
+		}))
+	}
 	return nil
 }

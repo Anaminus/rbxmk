@@ -267,6 +267,38 @@ func (f *Fragments) ResolveWith(fragref string, opt FragOptions) string {
 	return ExecuteFragTmpl(fragref, node, opt)
 }
 
+// Length returns the number of child fragment references available under the
+// fragment referred to by fragref.
+func (f *Fragments) Count(fragref string) int {
+	if fragref == "" {
+		node, _ := f.resolveNode("", false)
+		switch node := node.(type) {
+		case drill.OrderedBranch:
+			return node.Len()
+		case drill.UnorderedBranch:
+			return len(node.UnorderedChildren())
+		}
+	} else {
+		node, infile := f.resolveNode(fragref, false)
+		switch node := node.(type) {
+		case drill.OrderedBranch:
+			return node.Len()
+		case drill.UnorderedBranch:
+			return len(node.UnorderedChildren())
+		}
+		if node == nil || !infile {
+			node, _ := f.resolveNode(fragref, true)
+			switch node := node.(type) {
+			case drill.OrderedBranch:
+				return node.Len()
+			case drill.UnorderedBranch:
+				return len(node.UnorderedChildren())
+			}
+		}
+	}
+	return 0
+}
+
 // List returns a list of child fragment references available under the fragment
 // referred to by fragref.
 func (f *Fragments) List(fragref string) []string {
