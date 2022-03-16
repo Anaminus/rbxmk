@@ -69,7 +69,8 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		cmd.Println(content)
 	}
 	if count > 0 {
-		cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
+		//TODO: Skip unless --format is terminal and --export is false?
+		cmd.PrintErrln(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
 			Renderer:         term.Renderer{}.Render,
 			TmplData:         ref,
 			TrailingNewlines: 1,
