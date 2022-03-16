@@ -13,7 +13,7 @@ func init() { register(Fragments) }
 
 var Fragments = Format{
 	Name: "fragments",
-	Func: func(w io.Writer, root dump.Root) error {
+	Func: func(w io.Writer, root dump.Root, opts Options) error {
 		buf := bufio.NewWriter(w)
 		ListFragments(root, func(path, ref string) {
 			switch ref {

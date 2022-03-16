@@ -12,8 +12,12 @@ func init() { register(JSON) }
 
 var JSON = Format{
 	Name: "json",
-	Func: func(w io.Writer, root dump.Root) error {
-		return dumpJSON(w, root, "\t")
+	Options: Options{
+		"indent": "\t",
+	},
+	Func: func(w io.Writer, root dump.Root, opts Options) error {
+		indent := opts["indent"].(*string)
+		return dumpJSON(w, root, *indent)
 	},
 }
 

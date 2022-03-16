@@ -13,7 +13,7 @@ func init() { register(Selene) }
 
 var Selene = Format{
 	Name: "selene",
-	Func: func(w io.Writer, root dump.Root) error {
+	Func: func(w io.Writer, root dump.Root, opts Options) error {
 		buf := bufio.NewWriter(w)
 		buf.WriteString("[selene]\n")
 		buf.WriteString("name = \"rbxmk\"\n")

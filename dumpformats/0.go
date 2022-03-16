@@ -1,7 +1,6 @@
 package dumpformats
 
 import (
-	"fmt"
 	"io"
 	"sort"
 
@@ -29,11 +28,13 @@ func All() Formats {
 	return formats
 }
 
+type Options map[string]interface{}
+
 // Format specifies how to format an API dump.
 type Format struct {
-	Name        string
-	Func        func(io.Writer, dump.Root) error
-	Description string
+	Name    string
+	Func    func(io.Writer, dump.Root, Options) error
+	Options Options
 }
 
 // Formats is a list of Format values.
@@ -59,27 +60,6 @@ func (f Formats) Get(name string) (format Format, ok bool) {
 		}
 	}
 	return format, false
-}
-
-// WriteTo writes to w the name and description of each format.
-func (f Formats) WriteTo(w io.Writer) (n int64, err error) {
-	if w == nil {
-		return 0, nil
-	}
-	nameWidth := 0
-	for _, format := range f {
-		if len(format.Name) > nameWidth {
-			nameWidth = len(format.Name)
-		}
-	}
-	for _, format := range f {
-		nn, err := fmt.Fprintf(w, "\t%-*s    %s\n", nameWidth, format.Name, format.Description)
-		n += int64(nn)
-		if err != nil {
-			return n, err
-		}
-	}
-	return n, nil
 }
 
 func isName(s string) bool {

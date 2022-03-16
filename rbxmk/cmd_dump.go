@@ -1,70 +1,51 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strings"
-	"sync"
-
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/rbxmk/dumpformats"
 )
 
 func init() {
-	dumpfmts := dumpformats.All()
-	for i, format := range dumpfmts {
-		dumpfmts[i].Description = Doc("DumpFormats/" + format.Name + ":Summary")
-	}
-	var c DumpCommand
-	c.Formats = dumpfmts
-	var cmd = &cobra.Command{
+	var Dump = &cobra.Command{
 		Use:  "dump",
-		RunE: c.Run,
+		Args: cobra.NoArgs,
 	}
-	var o sync.Once
-	cobra.OnInitialize(func() {
-		o.Do(func() {
-			// Populate description with dump formats.
-			var buf strings.Builder
-			dumpfmts.WriteTo(&buf)
-			cmd.Long = os.Expand(cmd.Long, func(v string) string {
-				switch strings.ToLower(v) {
-				case "formats":
-					return buf.String()
-				default:
-					return ""
+
+	for _, format := range dumpformats.All() {
+		name := format.Name
+		dump := format.Func
+		opts := dumpformats.Options{}
+		cmd := &cobra.Command{
+			Use:   name,
+			Short: Doc("Commands/dump/" + name + ":Summary"),
+			Long:  Doc("Commands/dump/" + name + ":Description"),
+			Args:  cobra.NoArgs,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				// Populate dump.
+				world, err := InitWorld(WorldOpt{
+					WorldFlags:   WorldFlags{Debug: false},
+					ExcludeRoots: true,
+				})
+				if err != nil {
+					return err
 				}
-			})
-		})
-	})
+				root := DumpWorld(world)
 
-	Program.AddCommand(cmd)
-}
-
-type DumpCommand struct {
-	Formats dumpformats.Formats
-}
-
-func (c *DumpCommand) Run(cmd *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		return cmd.Usage()
+				// Dump format.
+				return dump(cmd.OutOrStdout(), root, opts)
+			},
+		}
+		flags := cmd.PersistentFlags()
+		for flag, value := range format.Options {
+			usage := Doc("Commands/dump/" + name + ":Flags/" + flag)
+			switch value := value.(type) {
+			case string:
+				opts[flag] = flags.String(flag, value, usage)
+			default:
+				panic("unimplemented dump format option type")
+			}
+		}
+		Dump.AddCommand(cmd)
 	}
-
-	format, ok := c.Formats.Get(args[0])
-	if !ok {
-		return fmt.Errorf("unknown format %q", args[0])
-	}
-
-	// Populate dump.
-	world, err := InitWorld(WorldOpt{
-		WorldFlags:   WorldFlags{Debug: false},
-		ExcludeRoots: true,
-	})
-	if err != nil {
-		return err
-	}
-	root := DumpWorld(world)
-
-	// Dump format.
-	return format.Func(cmd.OutOrStdout(), root)
+	Program.AddCommand(Dump)
 }
