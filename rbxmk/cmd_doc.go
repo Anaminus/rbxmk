@@ -1,6 +1,9 @@
 package main
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
@@ -23,6 +26,7 @@ type DocCommand struct {
 	Format    string
 	Width     int
 	ForExport bool
+	Recursive bool
 }
 
 func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
@@ -30,6 +34,7 @@ func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
 	flags.StringVarP(&c.Format, "format", "f", "terminal", DocFlag("Commands/doc:Flags/format"))
 	flags.IntVarP(&c.Width, "width", "w", 0, DocFlag("Commands/doc:Flags/width"))
 	flags.BoolVarP(&c.ForExport, "export", "", false, DocFlag("Commands/doc:Flags/export"))
+	flags.BoolVarP(&c.Recursive, "recursive", "r", false, DocFlag("Commands/doc:Flags/recursive"))
 }
 
 func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
@@ -37,10 +42,26 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 	if len(args) > 0 {
 		ref = args[0]
 	}
-	if c.List {
-		topics := Frag.List(ref)
+	if c.List || c.Recursive {
+		var topics []string
+		if c.Recursive {
+			list := Frag.List(ref)
+			for i, sub := range list {
+				list[i] = ref + sub
+			}
+			for r := ""; len(list) > 0; {
+				r, list = list[len(list)-1], list[:len(list)-1]
+				topics = append(topics, r)
+				for _, sub := range Frag.List(r) {
+					list = append(list, r+sub)
+				}
+			}
+			sort.Strings(topics)
+		} else {
+			topics = Frag.List(ref)
+		}
 		for _, topic := range topics {
-			cmd.Println(topic)
+			cmd.Println(strings.TrimPrefix(topic, ref))
 		}
 		return nil
 	} else if ref == "" {
