@@ -549,7 +549,7 @@ var handlers = nodeHandlers{
 			}
 		}
 		s.depth++
-		return skipText
+		return nil
 	},
 	{"section", false}: func(w *writer, node *html.Node, s *walkState) error {
 		s.depth--
