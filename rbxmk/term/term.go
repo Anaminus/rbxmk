@@ -541,9 +541,11 @@ var handlers = nodeHandlers{
 	{"section", true}: func(w *writer, node *html.Node, s *walkState) error {
 		if s.depth > 0 {
 			if name := sectionName(node); name != "" {
+				w.Block(2)
 				w.WriteString(strings.Repeat("#", s.depth))
 				w.WriteString(" ")
 				w.WriteString(name)
+				w.Flush()
 			}
 		}
 		s.depth++
