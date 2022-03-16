@@ -113,13 +113,13 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err err
 }
 
 func (d *DescFlags) SetFlags(flags *pflag.FlagSet) {
-	flags.BoolVar(&d.Latest, "desc-latest", false, DocFlag("Flags/desc:desc-latest"))
+	flags.BoolVar(&d.Latest, "desc-latest", false, DocFlag("Flags/desc:Flags/desc-latest"))
 	flags.Var(funcFlag(func(v string) error {
 		d.Files = append(d.Files, v)
 		return nil
-	}), "desc-file", DocFlag("Flags/desc:desc-file"))
+	}), "desc-file", DocFlag("Flags/desc:Flags/desc-file"))
 	flags.Var(funcFlag(func(v string) error {
 		d.Patches = append(d.Patches, v)
 		return nil
-	}), "desc-patch", DocFlag("Flags/desc:desc-patch"))
+	}), "desc-patch", DocFlag("Flags/desc:Flags/desc-patch"))
 }
