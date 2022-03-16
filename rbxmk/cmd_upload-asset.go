@@ -16,6 +16,7 @@ func init() {
 	var c UploadAssetCommand
 	var cmd = &cobra.Command{
 		Use:  "upload-asset",
+		Args: cobra.ExactArgs(1),
 		RunE: c.Run,
 	}
 	c.SetFlags(cmd.PersistentFlags())
