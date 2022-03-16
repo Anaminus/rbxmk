@@ -132,6 +132,29 @@ type FragOptions struct {
 	Renderer Renderer
 	// If true, remove outer-most section or body before rendering.
 	Inner bool
+	// Allow up to this many trailing newlines.
+	TrailingNewlines uint
+}
+
+// Normalize spacing of rendered content.
+func normalizeSpacing(buf *bytes.Buffer, opt FragOptions) {
+	b := buf.Bytes()
+	// If content is only spacing, normalize to empty.
+	if len(bytes.TrimSpace(b)) == 0 {
+		buf.Truncate(0)
+		return
+	}
+	// Allow only up to a certain number of trailing newlines.
+	for i := 0; len(b)-i > 0; i++ {
+		if b[len(b)-i-1] != '\n' {
+			n := int(opt.TrailingNewlines)
+			if n > i {
+				n = i
+			}
+			buf.Truncate(len(b) - i + n)
+			break
+		}
+	}
 }
 
 // ExecuteFragTmpl converts the result of node, in template format, to a final
@@ -144,7 +167,7 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	}
 
 	// Parse template.
-	tmplText := strings.TrimSpace(node.Fragment())
+	tmplText := node.Fragment()
 	t := template.New("root")
 	t.Funcs(fragTmplFuncs)
 	t.Funcs(opt.TmplFuncs)
@@ -199,7 +222,8 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	if err := renderer(&buf, sel); err != nil {
 		panic(fmt.Errorf("render HTML %q: %w", fragref, err))
 	}
-	return strings.TrimSpace(buf.String())
+	normalizeSpacing(&buf, opt)
+	return buf.String()
 }
 
 // Fragments provides methods for resolving fragments.

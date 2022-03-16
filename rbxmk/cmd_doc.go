@@ -57,7 +57,8 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		}.Render
 	}
 	content := Frag.ResolveWith(ref, FragOptions{
-		Renderer: renderer,
+		Renderer:         renderer,
+		TrailingNewlines: 1,
 	})
 	if content != "" {
 		cmd.Println(content)
@@ -69,8 +70,9 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 	cmd.Println(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
-		Renderer: term.Renderer{}.Render,
-		TmplData: ref,
+		Renderer:         term.Renderer{}.Render,
+		TmplData:         ref,
+		TrailingNewlines: 1,
 	}))
 	return nil
 }
