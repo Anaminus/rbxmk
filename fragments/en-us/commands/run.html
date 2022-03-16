@@ -27,6 +27,15 @@ value is interpreted as a string.</p>
 
 <pre><code class="language-bash">rbxmk run script.lua true 3.14159 hello!</code></pre>
 
+<p>Including a bare `--` will cause the run command to stop interpreting flags,
+enabling them to be passed to the script. Note that such flags will be passed as
+regular strings.</p>
+
+<pre><code class="language-bash">
+rbxmk run script.lua -- --help
+# Passes "--help" string.
+</code></pre>
+
 <p>Within the script, these arguments can be received from the <code>...</code>
 operator.</p>
 
