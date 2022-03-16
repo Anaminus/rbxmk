@@ -66,7 +66,7 @@ func DetailedInfoString() string {
 	fmt.Fprintf(&s, "go compiler: %s\n", runtime.Compiler)
 	fmt.Fprintf(&s, "go target: %s/%s\n", runtime.GOOS, runtime.GOARCH)
 	if info, ok := debug.ReadBuildInfo(); ok {
-		fmt.Fprintf(&s, "package: %s\n", info.Path)
+		fmt.Fprintf(&s, "path: %s\n", info.Path)
 		fmt.Fprintf(&s, "modules:\n")
 		writeModuleString(&s, info.Main, "mod")
 		for _, dep := range info.Deps {
