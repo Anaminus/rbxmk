@@ -14,9 +14,9 @@ import (
 func init() {
 	var c InteractiveCommand
 	var cmd = &cobra.Command{
-		Use: "i",
-		//TODO: "interactive" Alias.
-		RunE: c.Run,
+		Use:     "interactive",
+		Aliases: []string{"i"},
+		RunE:    c.Run,
 	}
 	c.SetFlags(cmd.PersistentFlags())
 	Program.AddCommand(cmd)
