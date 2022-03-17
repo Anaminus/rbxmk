@@ -12,15 +12,15 @@ func Float() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "float",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Float)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Float(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("float") {
+				if v.Metatable == c.GetTypeMetatable("float") {
 					if v, ok := v.Value().(types.Float); ok {
 						return v, nil
 					}

@@ -14,16 +14,16 @@ func init() { register(ClassDesc) }
 func ClassDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "ClassDesc",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.ClassDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "ClassDesc", Got: v.Type()}
 			}
 			class := rbxdump.Class(desc)
-			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(class.Fields()))
+			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(class.Fields()))
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}

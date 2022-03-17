@@ -12,15 +12,15 @@ func Token() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "token",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Token)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Token(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("token") {
+				if v.Metatable == c.GetTypeMetatable("token") {
 					if v, ok := v.Value().(types.Token); ok {
 						return v, nil
 					}

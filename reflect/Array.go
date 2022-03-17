@@ -14,21 +14,21 @@ func init() { register(Array) }
 func Array() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Array",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
-			if s.CycleGuard() {
-				defer s.CycleClear()
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+			if c.CycleGuard() {
+				defer c.CycleClear()
 			}
 			array, ok := v.(rtypes.Array)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "Array", Got: v.Type()}
 			}
-			if s.CycleMark(&array) {
+			if c.CycleMark(&array) {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
 			}
-			variantRfl := s.MustReflector("Variant")
-			table := s.CreateTable(len(array), 0)
+			variantRfl := c.MustReflector("Variant")
+			table := c.CreateTable(len(array), 0)
 			for i, v := range array {
-				lv, err := variantRfl.PushTo(s, v)
+				lv, err := variantRfl.PushTo(c, v)
 				if err != nil {
 					return nil, err
 				}
@@ -36,22 +36,22 @@ func Array() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			if s.CycleGuard() {
-				defer s.CycleClear()
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+			if c.CycleGuard() {
+				defer c.CycleClear()
 			}
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			if s.CycleMark(table) {
+			if c.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
-			variantRfl := s.MustReflector("Variant")
+			variantRfl := c.MustReflector("Variant")
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {
-				if array[i-1], err = variantRfl.PullFrom(s, table.RawGetInt(i)); err != nil {
+				if array[i-1], err = variantRfl.PullFrom(c, table.RawGetInt(i)); err != nil {
 					return nil, err
 				}
 			}

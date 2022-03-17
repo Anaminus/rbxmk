@@ -12,15 +12,15 @@ func ProtectedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "ProtectedString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.ProtectedString)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LString:
 				return types.ProtectedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("ProtectedString") {
+				if v.Metatable == c.GetTypeMetatable("ProtectedString") {
 					if v, ok := v.Value().(types.ProtectedString); ok {
 						return v, nil
 					}

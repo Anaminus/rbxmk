@@ -14,40 +14,40 @@ func init() { register(ParameterDesc) }
 func ParameterDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "ParameterDesc",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			param, ok := v.(rtypes.ParameterDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "ParameterDesc", Got: v.Type()}
 			}
 			var table *lua.LTable
 			if param.Optional {
-				table = s.CreateTable(0, 3)
+				table = c.CreateTable(0, 3)
 			} else {
-				table = s.CreateTable(0, 2)
+				table = c.CreateTable(0, 2)
 			}
-			if err := s.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type}); err != nil {
+			if err := c.PushToDictionary(table, "Type", rtypes.TypeDesc{Embedded: param.Parameter.Type}); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Name", types.String(param.Name)); err != nil {
+			if err := c.PushToDictionary(table, "Name", types.String(param.Name)); err != nil {
 				return nil, err
 			}
 			if param.Optional {
-				if err := s.PushToDictionary(table, "Default", types.String(param.Default)); err != nil {
+				if err := c.PushToDictionary(table, "Default", types.String(param.Default)); err != nil {
 					return nil, err
 				}
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			typ, err := s.PullFromDictionary(table, "Type", "TypeDesc")
+			typ, err := c.PullFromDictionary(table, "Type", "TypeDesc")
 			if err != nil {
 				return nil, err
 			}
-			name, err := s.PullFromDictionary(table, "Name", "string")
+			name, err := c.PullFromDictionary(table, "Name", "string")
 			if err != nil {
 				return nil, err
 			}
@@ -57,7 +57,7 @@ func ParameterDesc() rbxmk.Reflector {
 					Name: string(name.(types.String)),
 				},
 			}
-			def, err := s.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string")
+			def, err := c.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string")
 			if err != nil {
 				return nil, err
 			}
@@ -67,7 +67,7 @@ func ParameterDesc() rbxmk.Reflector {
 				param.Optional = true
 				param.Default = string(def)
 			default:
-				s.ReflectorError()
+				c.ReflectorError()
 			}
 			return param, nil
 		},

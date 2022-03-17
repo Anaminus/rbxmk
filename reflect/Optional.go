@@ -15,15 +15,15 @@ func Optional() rbxmk.Reflector {
 		Name:   "Optional",
 		Flags:  rbxmk.Exprim,
 		PushTo: rbxmk.PushTypeTo("Optional"),
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
-				if u.Metatable == s.GetTypeMetatable("Optional") {
+				if u.Metatable == c.GetTypeMetatable("Optional") {
 					if v, ok := u.Value().(rtypes.Optional); ok {
 						return v, nil
 					}
 				}
 			}
-			if v, err = PullVariantFrom(s, lv); err != nil {
+			if v, err = PullVariantFrom(c, lv); err != nil {
 				//TODO: Better error?
 				return nil, err
 			}

@@ -12,10 +12,10 @@ func init() { register(Nil) }
 func Nil() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "nil",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNil, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if lv == lua.LNil {
 				return rtypes.Nil, nil
 			}

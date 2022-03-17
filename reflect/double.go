@@ -11,15 +11,15 @@ func init() { register(Double) }
 func Double() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "double",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Double)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Double(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("double") {
+				if v.Metatable == c.GetTypeMetatable("double") {
 					if v, ok := v.Value().(types.Double); ok {
 						return v, nil
 					}

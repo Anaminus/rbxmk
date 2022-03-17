@@ -368,19 +368,19 @@ func init() { register(Instance) }
 func Instance() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "Instance",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if inst, ok := v.(*rtypes.Instance); ok && inst == nil {
 				return lua.LNil, nil
 			}
-			u := s.UserDataOf(v, "Instance")
+			u := c.UserDataOf(v, "Instance")
 			return u, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch lv := lv.(type) {
 			case *lua.LNilType:
 				return (*rtypes.Instance)(nil), nil
 			case *lua.LUserData:
-				if lv.Metatable != s.GetTypeMetatable("Instance") {
+				if lv.Metatable != c.GetTypeMetatable("Instance") {
 					return nil, rbxmk.TypeError{Want: "Instance", Got: lv.Type().String()}
 				}
 				v, ok := lv.Value().(types.Value)

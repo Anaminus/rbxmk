@@ -10,7 +10,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func PushVariantTo(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return lua.LNil, nil
@@ -23,35 +23,35 @@ func PushVariantTo(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 	case types.Stringlike:
 		return lua.LString(v.Stringlike()), nil
 	case rtypes.Array:
-		rfl := s.MustReflector("Array")
-		values, err := rfl.PushTo(s, v)
+		rfl := c.MustReflector("Array")
+		values, err := rfl.PushTo(c, v)
 		if err != nil {
 			return nil, err
 		}
 		return values, nil
 	case rtypes.Dictionary:
-		rfl := s.MustReflector("Dictionary")
-		values, err := rfl.PushTo(s, v)
+		rfl := c.MustReflector("Dictionary")
+		values, err := rfl.PushTo(c, v)
 		if err != nil {
 			return nil, err
 		}
 		return values, nil
 	}
-	rfl := s.Reflector(v.Type())
+	rfl := c.Reflector(v.Type())
 	if rfl.Name == "" {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
 	if rfl.PushTo == nil {
-		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
+		return nil, fmt.Errorf("unable to cast %c to Variant", rfl.Name)
 	}
-	values, err := rfl.PushTo(s, v)
+	values, err := rfl.PushTo(c, v)
 	if err != nil {
 		return nil, err
 	}
 	return values, nil
 }
 
-func PullVariantFrom(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+func PullVariantFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return rtypes.Nil, nil
@@ -63,27 +63,27 @@ func PullVariantFrom(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) 
 		return types.String(lv), nil
 	case *lua.LTable:
 		if lv.Len() > 0 {
-			arrayRfl := s.MustReflector("Array")
-			if v, err = arrayRfl.PullFrom(s, lv); err == nil {
+			arrayRfl := c.MustReflector("Array")
+			if v, err = arrayRfl.PullFrom(c, lv); err == nil {
 				return v, nil
 			}
 		}
-		dictRfl := s.MustReflector("Dictionary")
-		v, err := dictRfl.PullFrom(s, lv)
+		dictRfl := c.MustReflector("Dictionary")
+		v, err := dictRfl.PullFrom(c, lv)
 		return v, err
 	case *lua.LUserData:
-		name, ok := s.GetMetaField(lv, "__type").(lua.LString)
+		name, ok := c.GetMetaField(lv, "__type").(lua.LString)
 		if !ok {
 			return nil, fmt.Errorf("unable to cast %s to Variant", lv.Type().String())
 		}
-		rfl := s.Reflector(string(name))
+		rfl := c.Reflector(string(name))
 		if rfl.Name == "" {
 			return nil, fmt.Errorf("unknown type %q", string(name))
 		}
 		if rfl.PullFrom == nil {
 			return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 		}
-		v, err := rfl.PullFrom(s, lv)
+		v, err := rfl.PullFrom(c, lv)
 		return v, err
 	}
 	return nil, fmt.Errorf("unable to cast %s to Variant", lv.Type().String())

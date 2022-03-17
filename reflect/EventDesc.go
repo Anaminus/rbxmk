@@ -14,7 +14,7 @@ func init() { register(EventDesc) }
 func EventDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "EventDesc",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.EventDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "EventDesc", Got: v.Type()}
@@ -22,10 +22,10 @@ func EventDesc() rbxmk.Reflector {
 			member := rbxdump.Event(desc)
 			fields := member.Fields()
 			fields["MemberType"] = member.MemberType()
-			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(fields))
+			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(fields))
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}

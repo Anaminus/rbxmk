@@ -9,10 +9,10 @@ import (
 
 // Pusher converts a types.Value to a Lua value. If err is nil, then lv must not
 // be nil.
-type Pusher func(s Context, v types.Value) (lv lua.LValue, err error)
+type Pusher func(c Context, v types.Value) (lv lua.LValue, err error)
 
 // Puller converts a Lua value to a types.Value. lv must be non-nil.
-type Puller func(s Context, lv lua.LValue) (v types.Value, err error)
+type Puller func(c Context, lv lua.LValue) (v types.Value, err error)
 
 // Setter sets known type v to p. p must be a pointer to a known type. Returns
 // an error if v cannot be set to p.
@@ -209,9 +209,9 @@ type Constructor struct {
 // This results in better performance, but makes the value unsuitable as a table
 // key.
 func PushTypeTo(t string) Pusher {
-	return func(s Context, v types.Value) (lv lua.LValue, err error) {
-		u := s.NewUserData(v)
-		s.SetMetatable(u, s.GetTypeMetatable(t))
+	return func(c Context, v types.Value) (lv lua.LValue, err error) {
+		u := c.NewUserData(v)
+		c.SetMetatable(u, c.GetTypeMetatable(t))
 		return u, nil
 	}
 }
@@ -220,8 +220,8 @@ func PushTypeTo(t string) Pusher {
 // metatable registered as type t. The same value will push the same userdata,
 // making the value usable as a table key.
 func PushPtrTypeTo(t string) Pusher {
-	return func(s Context, v types.Value) (lv lua.LValue, err error) {
-		u := s.UserDataOf(v, t)
+	return func(c Context, v types.Value) (lv lua.LValue, err error) {
+		u := c.UserDataOf(v, t)
 		return u, nil
 	}
 }
@@ -229,12 +229,12 @@ func PushPtrTypeTo(t string) Pusher {
 // PullTypeFrom returns a Puller that converts v from a userdata set with a type
 // metatable registered as type t.
 func PullTypeFrom(t string) Puller {
-	return func(s Context, lv lua.LValue) (v types.Value, err error) {
+	return func(c Context, lv lua.LValue) (v types.Value, err error) {
 		u, ok := lv.(*lua.LUserData)
 		if !ok {
 			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
-		if u.Metatable != s.GetTypeMetatable(t) {
+		if u.Metatable != c.GetTypeMetatable(t) {
 			return nil, TypeError{Want: t, Got: lv.Type().String()}
 		}
 		if v, ok = u.Value().(types.Value); !ok {

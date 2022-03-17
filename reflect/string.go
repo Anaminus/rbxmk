@@ -11,10 +11,10 @@ func init() { register(String) }
 func String() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "string",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.String)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if n, ok := lv.(lua.LString); ok {
 				return types.String(n), nil
 			}

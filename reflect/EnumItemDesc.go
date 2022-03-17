@@ -14,16 +14,16 @@ func init() { register(EnumItemDesc) }
 func EnumItemDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "EnumItemDesc",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.EnumItemDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "EnumItemDesc", Got: v.Type()}
 			}
 			item := rbxdump.EnumItem(desc)
-			return s.MustReflector("DescFields").PushTo(s, rtypes.DescFields(item.Fields()))
+			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(item.Fields()))
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := s.MustReflector("DescFields").PullFrom(s, lv)
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}

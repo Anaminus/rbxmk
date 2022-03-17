@@ -12,15 +12,15 @@ func SharedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "SharedString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.SharedString)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LString:
 				return types.SharedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("SharedString") {
+				if v.Metatable == c.GetTypeMetatable("SharedString") {
 					if v, ok := v.Value().(types.SharedString); ok {
 						return v, nil
 					}

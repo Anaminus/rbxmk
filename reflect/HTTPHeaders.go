@@ -15,14 +15,14 @@ func init() { register(HTTPHeaders) }
 func HTTPHeaders() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPHeaders",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			headers, ok := v.(rtypes.HTTPHeaders)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPHeaders", Got: v.Type()}
 			}
-			table := s.CreateTable(0, len(headers))
+			table := c.CreateTable(0, len(headers))
 			for name, values := range headers {
-				vs := s.CreateTable(len(values), 0)
+				vs := c.CreateTable(len(values), 0)
 				for _, value := range values {
 					vs.Append(lua.LString(value))
 				}
@@ -30,7 +30,7 @@ func HTTPHeaders() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}

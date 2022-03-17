@@ -16,20 +16,20 @@ func init() { register(DescFields) }
 func DescFields() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "DescFields",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			fields, ok := v.(rtypes.DescFields)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "DescFields", Got: v.Type()}
 			}
-			table := s.CreateTable(0, len(fields))
+			table := c.CreateTable(0, len(fields))
 			for k, v := range fields {
-				if lv := pushDescField(s, v); lv != nil {
+				if lv := pushDescField(c, v); lv != nil {
 					table.RawSetString(k, lv)
 				}
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
@@ -41,7 +41,7 @@ func DescFields() rbxmk.Reflector {
 					return nil
 				}
 				name := string(key)
-				fields[name], err = pullDescField(s, name, v)
+				fields[name], err = pullDescField(c, name, v)
 				if err != nil {
 					return err
 				}
@@ -76,7 +76,7 @@ func DescFields() rbxmk.Reflector {
 	}
 }
 
-func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
+func pushDescField(c rbxmk.Context, v interface{}) lua.LValue {
 	switch v := v.(type) {
 	case bool:
 		return lua.LBool(v)
@@ -85,24 +85,24 @@ func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
 	case string:
 		return lua.LString(v)
 	case rbxdump.Tags:
-		a := s.CreateTable(len(v), 0)
+		a := c.CreateTable(len(v), 0)
 		for _, v := range v {
 			a.Append(lua.LString(v))
 		}
 		return a
 	case []string:
-		a := s.CreateTable(len(v), 0)
+		a := c.CreateTable(len(v), 0)
 		for _, v := range v {
 			a.Append(lua.LString(v))
 		}
 		return a
 	case rbxdump.Type:
-		lv, _ := s.World.Push(rtypes.TypeDesc{Embedded: v})
+		lv, _ := c.World.Push(rtypes.TypeDesc{Embedded: v})
 		return lv
 	case []rbxdump.Parameter:
-		a := s.CreateTable(len(v), 0)
+		a := c.CreateTable(len(v), 0)
 		for _, v := range v {
-			lv, _ := s.World.Push(rtypes.ParameterDesc{Parameter: v})
+			lv, _ := c.World.Push(rtypes.ParameterDesc{Parameter: v})
 			a.Append(lv)
 		}
 		return a
@@ -110,7 +110,7 @@ func pushDescField(s rbxmk.Context, v interface{}) lua.LValue {
 	return nil
 }
 
-func pullDescField(s rbxmk.Context, k string, v lua.LValue) (f interface{}, err error) {
+func pullDescField(c rbxmk.Context, k string, v lua.LValue) (f interface{}, err error) {
 	switch v := v.(type) {
 	case lua.LBool:
 		return bool(v), nil
@@ -120,7 +120,7 @@ func pullDescField(s rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		return string(v), nil
 	case *lua.LTable:
 		if v.RawGetString("Category") != lua.LNil && v.RawGetString("Name") != lua.LNil {
-			t, err := s.World.Pull(v, "TypeDesc")
+			t, err := c.World.Pull(v, "TypeDesc")
 			if err != nil {
 				return nil, fmt.Errorf("field %q: %w", k, err)
 			}
@@ -130,7 +130,7 @@ func pullDescField(s rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		case "Parameters":
 			a := make([]rbxdump.Parameter, v.Len())
 			for i := 1; i <= len(a); i++ {
-				p, err := s.PullFromArray(v, i, "ParameterDesc")
+				p, err := c.PullFromArray(v, i, "ParameterDesc")
 				if err != nil {
 					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
 				}
@@ -140,7 +140,7 @@ func pullDescField(s rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		case "Tags":
 			a := make(rbxdump.Tags, v.Len())
 			for i := 1; i <= len(a); i++ {
-				tag, err := s.PullFromArray(v, i, "string")
+				tag, err := c.PullFromArray(v, i, "string")
 				if err != nil {
 					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
 				}

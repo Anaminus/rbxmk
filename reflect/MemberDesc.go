@@ -16,7 +16,7 @@ func init() { register(MemberDesc) }
 func MemberDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "MemberDesc",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			member, ok := v.(rtypes.MemberDesc)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "MemberDesc", Got: v.Type()}
@@ -26,50 +26,50 @@ func MemberDesc() rbxmk.Reflector {
 			}
 			switch member := member.Member.(type) {
 			case *rbxdump.Property:
-				return s.MustReflector("PropertyDesc").PushTo(s, rtypes.PropertyDesc(*member))
+				return c.MustReflector("PropertyDesc").PushTo(c, rtypes.PropertyDesc(*member))
 			case *rbxdump.Function:
-				return s.MustReflector("FunctionDesc").PushTo(s, rtypes.FunctionDesc(*member))
+				return c.MustReflector("FunctionDesc").PushTo(c, rtypes.FunctionDesc(*member))
 			case *rbxdump.Event:
-				return s.MustReflector("EventDesc").PushTo(s, rtypes.EventDesc(*member))
+				return c.MustReflector("EventDesc").PushTo(c, rtypes.EventDesc(*member))
 			case *rbxdump.Callback:
-				return s.MustReflector("CallbackDesc").PushTo(s, rtypes.CallbackDesc(*member))
+				return c.MustReflector("CallbackDesc").PushTo(c, rtypes.CallbackDesc(*member))
 			default:
 				panic("MemberDesc has unknown member type")
 			}
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			typ, err := s.PullFromDictionary(table, "MemberType", "string")
+			typ, err := c.PullFromDictionary(table, "MemberType", "string")
 			if err != nil {
 				return nil, err
 			}
 			switch typ.(types.String) {
 			case "Property":
-				value, err := s.MustReflector("PropertyDesc").PullFrom(s, table)
+				value, err := c.MustReflector("PropertyDesc").PullFrom(c, table)
 				if err != nil {
 					return nil, err
 				}
 				desc := rbxdump.Property(value.(rtypes.PropertyDesc))
 				return rtypes.MemberDesc{Member: &desc}, nil
 			case "Function":
-				value, err := s.MustReflector("FunctionDesc").PullFrom(s, table)
+				value, err := c.MustReflector("FunctionDesc").PullFrom(c, table)
 				if err != nil {
 					return nil, err
 				}
 				desc := rbxdump.Function(value.(rtypes.FunctionDesc))
 				return rtypes.MemberDesc{Member: &desc}, nil
 			case "Event":
-				value, err := s.MustReflector("EventDesc").PullFrom(s, table)
+				value, err := c.MustReflector("EventDesc").PullFrom(c, table)
 				if err != nil {
 					return nil, err
 				}
 				desc := rbxdump.Event(value.(rtypes.EventDesc))
 				return rtypes.MemberDesc{Member: &desc}, nil
 			case "Callback":
-				value, err := s.MustReflector("CallbackDesc").PullFrom(s, table)
+				value, err := c.MustReflector("CallbackDesc").PullFrom(c, table)
 				if err != nil {
 					return nil, err
 				}

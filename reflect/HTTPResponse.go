@@ -13,58 +13,58 @@ func init() { register(HTTPResponse) }
 func HTTPResponse() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPResponse",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			resp, ok := v.(rtypes.HTTPResponse)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPResponse", Got: v.Type()}
 			}
-			table := s.CreateTable(0, 5)
-			if err := s.PushToDictionary(table, "Success", types.Bool(resp.Success)); err != nil {
+			table := c.CreateTable(0, 5)
+			if err := c.PushToDictionary(table, "Success", types.Bool(resp.Success)); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "StatusCode", types.Int(resp.StatusCode)); err != nil {
+			if err := c.PushToDictionary(table, "StatusCode", types.Int(resp.StatusCode)); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "StatusMessage", types.String(resp.StatusMessage)); err != nil {
+			if err := c.PushToDictionary(table, "StatusMessage", types.String(resp.StatusMessage)); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Headers", resp.Headers); err != nil {
+			if err := c.PushToDictionary(table, "Headers", resp.Headers); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Cookies", resp.Cookies); err != nil {
+			if err := c.PushToDictionary(table, "Cookies", resp.Cookies); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Body", resp.Body); err != nil {
+			if err := c.PushToDictionary(table, "Body", resp.Body); err != nil {
 				return nil, err
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			success, err := s.PullFromDictionary(table, "Success", "bool")
+			success, err := c.PullFromDictionary(table, "Success", "bool")
 			if err != nil {
 				return nil, err
 			}
-			statusCode, err := s.PullFromDictionary(table, "StatusCode", "int")
+			statusCode, err := c.PullFromDictionary(table, "StatusCode", "int")
 			if err != nil {
 				return nil, err
 			}
-			statusMessage, err := s.PullFromDictionary(table, "StatusMessage", "string")
+			statusMessage, err := c.PullFromDictionary(table, "StatusMessage", "string")
 			if err != nil {
 				return nil, err
 			}
-			headers, err := s.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders")
+			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders")
 			if err != nil {
 				return nil, err
 			}
-			cookies, err := s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies")
+			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies")
 			if err != nil {
 				return nil, err
 			}
-			body, err := s.PullFromDictionaryOpt(table, "Body", nil, "Variant")
+			body, err := c.PullFromDictionaryOpt(table, "Body", nil, "Variant")
 			if err != nil {
 				return nil, err
 			}

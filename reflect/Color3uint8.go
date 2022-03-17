@@ -15,14 +15,14 @@ func Color3uint8() rbxmk.Reflector {
 		Name:   "Color3uint8",
 		Flags:  rbxmk.Exprim,
 		PushTo: rbxmk.PushTypeTo("Color3uint8"),
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
 				switch u.Metatable {
-				case s.GetTypeMetatable("Color3"):
+				case c.GetTypeMetatable("Color3"):
 					if v, ok := u.Value().(types.Color3); ok {
 						return rtypes.Color3uint8(v), nil
 					}
-				case s.GetTypeMetatable("Color3uint8"):
+				case c.GetTypeMetatable("Color3uint8"):
 					if v, ok := u.Value().(rtypes.Color3uint8); ok {
 						return v, nil
 					}

@@ -14,21 +14,21 @@ type Context struct {
 }
 
 // Context returns a Context derived from the World.
-func (s Context) Context() Context {
-	return Context{World: s.World, l: s.l}
+func (c Context) Context() Context {
+	return Context{World: c.World, l: c.l}
 }
 
 // CycleGuard begins a guard against reference cycles when reflecting with the
 // state. Returns false if a guard was already set up for the state. If true is
 // returned, the guard must be cleared via CycleClear. For example:
 //
-//     if s.CycleGuard() {
-//         defer s.CycleClear()
+//     if c.CycleGuard() {
+//         defer c.CycleClear()
 //     }
 //
-func (s *Context) CycleGuard() bool {
-	if s.cycle == nil {
-		s.cycle = make(map[interface{}]struct{}, 4)
+func (c *Context) CycleGuard() bool {
+	if c.cycle == nil {
+		c.cycle = make(map[interface{}]struct{}, 4)
 		return true
 	}
 	return false
@@ -36,56 +36,56 @@ func (s *Context) CycleGuard() bool {
 
 // CycleClear clears the cycle guard on the state. Panics if the state has no
 // guard.
-func (s *Context) CycleClear() {
-	if s.cycle == nil {
+func (c *Context) CycleClear() {
+	if c.cycle == nil {
 		panic("state has no cycle guard")
 	}
-	s.cycle = nil
+	c.cycle = nil
 }
 
 // CycleMark marks t as visited, and returns whether t was already visited.
 // Panics if the state has no guard.
-func (s Context) CycleMark(t interface{}) bool {
-	if s.cycle == nil {
+func (c Context) CycleMark(t interface{}) bool {
+	if c.cycle == nil {
 		panic("attempt to mark reference without cycle guard")
 	}
-	_, ok := s.cycle[t]
+	_, ok := c.cycle[t]
 	if !ok {
-		s.cycle[t] = struct{}{}
+		c.cycle[t] = struct{}{}
 	}
 	return ok
 }
 
 // CreateTable returns a new table according to the context's LState.
-func (s Context) CreateTable(acap, hcap int) *lua.LTable {
-	return s.l.CreateTable(acap, hcap)
+func (c Context) CreateTable(acap, hcap int) *lua.LTable {
+	return c.l.CreateTable(acap, hcap)
 }
 
 // NewUserData returns a new userdata according to the context's LState.
-func (s Context) NewUserData(value interface{}) *lua.LUserData {
-	return s.l.NewUserData(value)
+func (c Context) NewUserData(value interface{}) *lua.LUserData {
+	return c.l.NewUserData(value)
 }
 
 // GetMetaField gets the value of the event field from the metatable of obj.
 // Returns LNil if obj has no metatable, or the metatable has no such field.
-func (s Context) GetMetaField(obj lua.LValue, event string) lua.LValue {
-	return s.l.GetMetaField(obj, event)
+func (c Context) GetMetaField(obj lua.LValue, event string) lua.LValue {
+	return c.l.GetMetaField(obj, event)
 }
 
 // GetTypeMetatable returns the typ metatable registered with the context's
 // LState.
-func (s Context) GetTypeMetatable(typ string) lua.LValue {
-	return s.l.GetTypeMetatable(typ)
+func (c Context) GetTypeMetatable(typ string) lua.LValue {
+	return c.l.GetTypeMetatable(typ)
 }
 
 // SetMetatable sets the metatable of obj to mt according to the context's
 // LState.
-func (s Context) SetMetatable(obj, mt lua.LValue) {
-	s.l.SetMetatable(obj, mt)
+func (c Context) SetMetatable(obj, mt lua.LValue) {
+	c.l.SetMetatable(obj, mt)
 }
 
 // ReflectorError panics, indicating that a reflector pushed or pulled an
 // unexpected type. Under normal circumstances, this should be unreachable.
-func (s Context) ReflectorError() {
+func (c Context) ReflectorError() {
 	panic("unreachable error: reflector mismatch")
 }

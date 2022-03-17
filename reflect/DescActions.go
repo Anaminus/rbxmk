@@ -13,15 +13,15 @@ func init() { register(DescActions) }
 func DescActions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "DescActions",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			actions, ok := v.(rtypes.DescActions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "DescActions", Got: v.Type()}
 			}
-			actionRfl := s.MustReflector("DescAction")
-			table := s.CreateTable(len(actions), 0)
+			actionRfl := c.MustReflector("DescAction")
+			table := c.CreateTable(len(actions), 0)
 			for i, v := range actions {
-				lv, err := actionRfl.PushTo(s, v)
+				lv, err := actionRfl.PushTo(c, v)
 				if err != nil {
 					return nil, err
 				}
@@ -29,16 +29,16 @@ func DescActions() rbxmk.Reflector {
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			actionRfl := s.MustReflector("DescAction")
+			actionRfl := c.MustReflector("DescAction")
 			n := table.Len()
 			actions := make(rtypes.DescActions, n)
 			for i := 1; i <= n; i++ {
-				v, err := actionRfl.PullFrom(s, table.RawGetInt(i))
+				v, err := actionRfl.PullFrom(c, table.RawGetInt(i))
 				if err != nil {
 					return nil, err
 				}

@@ -13,57 +13,57 @@ func init() { register(HTTPOptions) }
 func HTTPOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name: "HTTPOptions",
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "HTTPOptions", Got: v.Type()}
 			}
-			table := s.CreateTable(0, 7)
-			if err := s.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
+			table := c.CreateTable(0, 7)
+			if err := c.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Method", types.String(options.Method)); err != nil {
+			if err := c.PushToDictionary(table, "Method", types.String(options.Method)); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "RequestFormat", options.RequestFormat); err != nil {
+			if err := c.PushToDictionary(table, "RequestFormat", options.RequestFormat); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "ResponseFormat", options.ResponseFormat); err != nil {
+			if err := c.PushToDictionary(table, "ResponseFormat", options.ResponseFormat); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Headers", options.Headers); err != nil {
+			if err := c.PushToDictionary(table, "Headers", options.Headers); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Cookies", options.Cookies); err != nil {
+			if err := c.PushToDictionary(table, "Cookies", options.Cookies); err != nil {
 				return nil, err
 			}
-			if err := s.PushToDictionary(table, "Body", options.Body); err != nil {
+			if err := c.PushToDictionary(table, "Body", options.Body); err != nil {
 				return nil, err
 			}
 			return table, nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
 				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
 			}
-			url, err := s.PullFromDictionary(table, "URL", "string")
+			url, err := c.PullFromDictionary(table, "URL", "string")
 			if err != nil {
 				return nil, err
 			}
-			method, err := s.PullFromDictionaryOpt(table, "Method", types.String("GET"), "string")
+			method, err := c.PullFromDictionaryOpt(table, "Method", types.String("GET"), "string")
 			if err != nil {
 				return nil, err
 			}
-			responseFormat, err := s.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, "FormatSelector")
+			responseFormat, err := c.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, "FormatSelector")
 			if err != nil {
 				return nil, err
 			}
-			headers, err := s.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders")
+			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), "HTTPHeaders")
 			if err != nil {
 				return nil, err
 			}
-			cookies, err := s.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies")
+			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), "Cookies")
 			if err != nil {
 				return nil, err
 			}
@@ -74,12 +74,12 @@ func HTTPOptions() rbxmk.Reflector {
 				Headers:        headers.(rtypes.HTTPHeaders),
 				Cookies:        cookies.(rtypes.Cookies),
 			}
-			requestFormat, err := s.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, "FormatSelector")
+			requestFormat, err := c.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, "FormatSelector")
 			if err != nil {
 				return nil, err
 			}
 			options.RequestFormat = requestFormat.(rtypes.FormatSelector)
-			options.Body, err = s.PullEncodedFromDict(table, "Body", options.RequestFormat)
+			options.Body, err = c.PullEncodedFromDict(table, "Body", options.RequestFormat)
 			if err != nil {
 				return nil, err
 			}

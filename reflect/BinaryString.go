@@ -12,15 +12,15 @@ func BinaryString() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "BinaryString",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.BinaryString)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LString:
 				return types.BinaryString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("BinaryString") {
+				if v.Metatable == c.GetTypeMetatable("BinaryString") {
 					if v, ok := v.Value().(types.BinaryString); ok {
 						return v, nil
 					}

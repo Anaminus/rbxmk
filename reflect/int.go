@@ -12,15 +12,15 @@ func Int() rbxmk.Reflector {
 	return rbxmk.Reflector{
 		Name:  "int",
 		Flags: rbxmk.Exprim,
-		PushTo: func(s rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Int)), nil
 		},
-		PullFrom: func(s rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			switch v := lv.(type) {
 			case lua.LNumber:
 				return types.Int(v), nil
 			case *lua.LUserData:
-				if v.Metatable == s.GetTypeMetatable("int") {
+				if v.Metatable == c.GetTypeMetatable("int") {
 					if v, ok := v.Value().(types.Int); ok {
 						return v, nil
 					}
