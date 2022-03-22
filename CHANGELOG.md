@@ -27,6 +27,7 @@ branch is the latest unreleased version.
 - Fix options not working for the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 - Fix [SetAttribute](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
 - Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattributes) pulling wrong argument for dictionary.
+- Fix nondeterministic order of encoded SharedStrings in [rbxl format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
 
 **Internal:**
 - Switch to [cobra](https://cobra.dev/) for handling CLI.
