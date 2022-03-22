@@ -140,7 +140,7 @@ func UDim2() rbxmk.Reflector {
 						v.Y.Scale = float32(s.Pull(3, "float").(types.Float))
 						v.Y.Offset = int32(s.Pull(4, "int").(types.Int))
 					default:
-						return s.RaiseError("expected 0 or 3 arguments")
+						return s.RaiseError("expected 2 or 4 arguments")
 					}
 					return s.Push(v)
 				},
