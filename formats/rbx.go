@@ -763,6 +763,17 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 		if t, ok := d.string(r); ok {
 			return types.SharedString(t), nil
 		}
+	case typ.Name == "UniqueId":
+		switch r := r.(type) {
+		case nil:
+			return rtypes.UniqueId{}, nil
+		case rbxfile.ValueUniqueId:
+			return rtypes.UniqueId{
+				Random: types.Int64(r.Random),
+				Time:   r.Time,
+				Index:  r.Index,
+			}, nil
+		}
 	}
 	switch d.mode {
 	case modeNonStrict:
@@ -850,6 +861,8 @@ func descTypeFromFileValue(r rbxfile.Value) rbxdump.Type {
 			typ.Name += "?"
 		}
 		return typ
+	case rbxfile.ValueUniqueId:
+		return rbxdump.Type{Name: "UniqueId"}
 	}
 	return rbxdump.Type{}
 }
@@ -1485,6 +1498,17 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 		if t, ok := e.string(t); ok {
 			return rbxfile.ValueSharedString(t), nil
 		}
+	case typ.Name == "UniqueId":
+		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueUniqueId{}, nil
+		case rtypes.UniqueId:
+			return rbxfile.ValueUniqueId{
+				Random: int64(t.Random),
+				Time:   t.Time,
+				Index:  t.Index,
+			}, nil
+		}
 	}
 	switch e.mode {
 	case modeNonStrict:
@@ -1565,6 +1589,8 @@ func descTypeFromValue(t string) rbxdump.Type {
 		return rbxdump.Type{Name: "int64"}
 	case "SharedString":
 		return rbxdump.Type{Name: "SharedString"}
+	case "UniqueId":
+		return rbxdump.Type{Name: "UniqueId"}
 	default:
 		if strings.HasSuffix(t, "?") {
 			typ := descTypeFromValue(strings.TrimSuffix(t, "?"))

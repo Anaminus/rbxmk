@@ -18,6 +18,7 @@ branch is the latest unreleased version.
 	- Add [types.none](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typesnone) to create an empty Optional exprim.
 	- Add [types.some](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typessome) to create an Optional exprim that contains a value.
 	- Currently, this only affects the "Model.WorldPivotData" property, which is an optional CFrame.
+- Add support for [UniqueId](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-uniqueid) type.
 - Improve interface of the doc command.
 	- Frag mode is the default. List mode is enabled with the `--list` flag.
 

@@ -54,6 +54,7 @@ var Roblox = rbxmk.Library{
 		reflect.Tuple,
 		reflect.UDim,
 		reflect.UDim2,
+		reflect.UniqueId,
 		reflect.Variant,
 		reflect.Vector2,
 		reflect.Vector2int16,

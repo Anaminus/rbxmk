@@ -34,6 +34,7 @@ This document contains a reference to the types available to rbxmk scripts.
 27. [RootDesc][RootDesc]
 28. [Stringlike][Stringlike]
 29. [TypeDesc][TypeDesc]
+30. [UniqueId][UniqueId]
 
 </td></tr></tbody>
 </table>
@@ -1150,3 +1151,48 @@ Certain categories are treated specially:
   an Instance of the class.
 - **Enum**: Name is the name of an enum. A value of the type is expected to be
   an enum item of the enum.
+
+## UniqueId
+[UniqueId]: #user-content-uniqueid
+
+The **UniqueId** type represents the value of a unique identifier. It has the
+following members:
+
+Member                             | Kind
+-----------------------------------|-----
+[UniqueId.Index][UniqueId.Index]   | property
+[UniqueId.Random][UniqueId.Random] | property
+[UniqueId.Time][UniqueId.Time]     | property
+
+A UniqueId can be created with the [UniqueId.new][UniqueId.new] constructor.
+
+### UniqueId.new
+[UniqueId.new]: #user-content-uniqueidnew
+<code>UniqueId.new(random: [int64](##)?, index: [int64](##)?, index: [int64](##)?): [UniqueId][UniqueId]</code>
+
+The **new** constructor returns a new UniqueId composed of the components from
+the given arguments. If no arguments are specified, then the value is generated
+from an internal source. The method to generate the value is similar to Roblox's
+implementation.
+
+### UniqueId.Index
+[UniqueId.Index]: #user-content-uniqueidindex
+<code>UniqueId.Index: [int64](##)</code>
+
+The **Index** property represents the sequential portion of the unique
+identifier. This value is generated such that it is almost certain to be unique,
+but is also predictable.
+
+### UniqueId.Random
+[UniqueId.Random]: #user-content-uniqueidrandom
+<code>UniqueId.Random: [int64](##)</code>
+
+The **Random** property represents the random portion of the unique identifier.
+This value is generated from a pseudo-random source.
+
+### UniqueId.Time
+[UniqueId.Time]: #user-content-uniqueidtime
+<code>UniqueId.Time: [int64](##)</code>
+
+The **Time** property represents the time portion of the unique identifier. This
+value generated based on the time.
