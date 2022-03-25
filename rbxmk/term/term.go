@@ -603,11 +603,132 @@ var defaultHandlers = nodeHandlers{
 		return nil
 	},
 	{"table", true}: func(w *writer, node *html.Node, s *walkState) error {
-		w.w.Write([]byte("<TODO:table>"))
+		renderTable(w, node, s)
 		return skipChildren
 	},
 	{"table", false}: func(w *writer, node *html.Node, s *walkState) error {
-		w.w.Write([]byte("</TODO:table>"))
 		return nil
 	},
+}
+
+var rowMatcher = cascadia.MustCompile("tr")
+var colMatcher = cascadia.MustCompile("td,th")
+
+func longestLine(b []byte, n int) int {
+	lines := bytes.Split(b, []byte{'\n'})
+	for _, line := range lines {
+		if len(line) > n {
+			n = len(line)
+		}
+	}
+	return n
+}
+
+// Crudely renders a table.
+func renderTable(w *writer, node *html.Node, s *walkState) {
+	q := goquery.NewDocumentFromNode(node)
+	var columnWidths []int
+	var table [][][][]byte
+
+	// Render each cell unwrapped. Record actual width.
+	q.FindMatcher(rowMatcher).Each(func(j int, row *goquery.Selection) {
+		trow := [][][]byte{}
+		row.FindMatcher(colMatcher).Each(func(i int, col *goquery.Selection) {
+			trow = append(trow, [][]byte{})
+			r := s.renderer
+			r.Width = 0
+			var buf bytes.Buffer
+			r.Render(&buf, col)
+			for len(columnWidths) <= i {
+				columnWidths = append(columnWidths, 0)
+			}
+			columnWidths[i] = longestLine(buf.Bytes(), columnWidths[i])
+		})
+		table = append(table, trow)
+	})
+
+	if len(columnWidths) == 0 {
+		return
+	}
+
+	const (
+		rowStart  = "| "
+		rowMiddle = " | "
+		rowEnd    = " |"
+	)
+	padding := len(rowStart) +
+		(len(columnWidths)-1)*len(rowMiddle) +
+		len(rowEnd)
+
+	// Scale each width proportionally to current width.
+	total := 0
+	for _, w := range columnWidths {
+		total += w
+	}
+	width := w.width - padding
+	if total > width && len(columnWidths) > 1 {
+		// Only scale a column if it is significantly larger than others.
+		big := make([]bool, len(columnWidths))
+		for i, n := range columnWidths {
+			// Compare the proportion of the current column with the average
+			// proportion of the rest of the table.
+			p := float64(n) / float64(width)
+			big[i] = p > (1-p)/float64(len(columnWidths)-1)
+		}
+		for i, n := range columnWidths {
+			if !big[i] {
+				// Don't scale down "small" columns. Instead, reduce remaining
+				// width available to "big" columns.
+				width -= n
+			}
+		}
+		for i, n := range columnWidths {
+			if big[i] {
+				// Scale down big columns to fit available width.
+				columnWidths[i] = n * width / total
+			}
+		}
+	}
+
+	// Rerender each cell with column width.
+	q.FindMatcher(rowMatcher).Each(func(j int, row *goquery.Selection) {
+		row.FindMatcher(colMatcher).Each(func(i int, col *goquery.Selection) {
+			r := s.renderer
+			r.Width = columnWidths[i]
+			var buf bytes.Buffer
+			r.Render(&buf, col)
+			b := bytes.TrimSpace(buf.Bytes())
+			table[j][i] = bytes.Split(b, []byte{'\n'})
+		})
+	})
+
+	// Walk each cell of each line of each row.
+	for r, row := range table {
+		maxlines := 0
+		for _, col := range row {
+			if len(col) > maxlines {
+				maxlines = len(col)
+			}
+		}
+		for l := 0; l < maxlines; l++ {
+			if r > 0 || l > 0 {
+				w.w.Write([]byte{'\n'})
+			}
+			w.w.Write([]byte(rowStart))
+			for c, col := range row {
+				if c > 0 {
+					w.w.Write([]byte(rowMiddle))
+				}
+				var line []byte
+				if l < len(col) {
+					line = col[l]
+				}
+				w.w.Write(line)
+				if len(line) < columnWidths[c] {
+					w.w.Write(bytes.Repeat([]byte{' '}, columnWidths[c]-len(line)))
+				}
+			}
+			w.w.Write([]byte(rowEnd))
+		}
+	}
 }
