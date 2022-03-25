@@ -72,10 +72,9 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 	case "", "html":
 		renderer = goquery.Render
 	case "terminal":
-		renderer = term.Renderer{
-			Width:     c.Width,
-			ForOutput: c.ForExport,
-		}.Render
+		r := term.NewRenderer(c.Width)
+		r.ForOutput = c.ForExport
+		renderer = r.Render
 	}
 	content := Frag.ResolveWith(ref, FragOptions{
 		Renderer:         renderer,
@@ -92,7 +91,7 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 	if count > 0 {
 		//TODO: Skip unless --format is terminal and --export is false?
 		cmd.PrintErrln(Frag.ResolveWith("Messages/doc:SubTopics", FragOptions{
-			Renderer:         term.Renderer{}.Render,
+			Renderer:         term.NewRenderer(0).Render,
 			TmplData:         ref,
 			TrailingNewlines: 1,
 		}))

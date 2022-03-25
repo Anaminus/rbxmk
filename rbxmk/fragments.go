@@ -396,7 +396,7 @@ func (f *Fragments) resolveNode(fragref string, dir bool) (n drill.Node, infile 
 // name. The result is passed to fmt.Errorf with args.
 func (f *Fragments) Error(name string, args ...interface{}) error {
 	format := f.ResolveWith("Errors:"+name, FragOptions{
-		Renderer: term.Renderer{Width: -1}.Render,
+		Renderer: term.NewRenderer(-1).Render,
 	})
 	return fmt.Errorf(strings.TrimSpace(format), args...)
 }
@@ -405,7 +405,7 @@ func (f *Fragments) Error(name string, args ...interface{}) error {
 // reference. The result is passed to fmt.Sprintf with args.
 func (f *Fragments) Format(fragref string, args ...interface{}) string {
 	format := f.ResolveWith(fragref, FragOptions{
-		Renderer: term.Renderer{Width: -1}.Render,
+		Renderer: term.NewRenderer(-1).Render,
 	})
 	return fmt.Sprintf(strings.TrimSpace(format), args...)
 }
@@ -483,7 +483,7 @@ func (d *DocState) DocWith(fragref string, opt FragOptions) string {
 // ResolveFragment can be used to resolve a reference without marking it.
 func (d *DocState) Doc(fragref string) string {
 	return d.DocWith(fragref, FragOptions{
-		Renderer: term.Renderer{}.Render,
+		Renderer: term.NewRenderer(0).Render,
 	})
 }
 
@@ -491,6 +491,6 @@ func (d *DocState) Doc(fragref string) string {
 // width, so that it can be properly formatted by the usage template.
 func (d *DocState) DocFlag(fragref string) string {
 	return d.DocWith(fragref, FragOptions{
-		Renderer: term.Renderer{Width: -1}.Render,
+		Renderer: term.NewRenderer(-1).Render,
 	})
 }

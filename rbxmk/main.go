@@ -53,7 +53,7 @@ func init() {
 
 	cobra.AddTemplateFunc("frag", func(fragref string) string {
 		return Frag.ResolveWith(fragref, FragOptions{
-			Renderer: term.Renderer{Width: -1}.Render,
+			Renderer: term.NewRenderer(-1).Render,
 			Inner:    true,
 		})
 	})

@@ -34,6 +34,15 @@ type Renderer struct {
 	ForOutput bool
 	// UnorderedListFormat is the text used for unordered list markers.
 	UnorderedListFormat string
+
+	handlers nodeHandlers
+}
+
+func NewRenderer(width int) Renderer {
+	return Renderer{
+		Width:    width,
+		handlers: defaultHandlers,
+	}
 }
 
 var (
@@ -393,6 +402,9 @@ var block = map[string]int{
 }
 
 func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
+	if r.handlers == nil {
+		panic("uninitialized Renderer")
+	}
 	buf := &writer{
 		w:            w,
 		width:        r.Width,
@@ -421,6 +433,7 @@ func (r Renderer) Render(w io.Writer, s *goquery.Selection) error {
 	}
 	isRoot := s.Is("body")
 	state := walkState{renderer: r}
+	handlers := r.handlers
 	for _, node := range s.Nodes {
 		if isRoot {
 			// If an entire document is received, increase the depth to force
@@ -493,7 +506,7 @@ func sectionName(node *html.Node) string {
 	return ""
 }
 
-var handlers = nodeHandlers{
+var defaultHandlers = nodeHandlers{
 	{"code", true}: func(w *writer, node *html.Node, s *walkState) error {
 		if isElement(node.Parent, "pre") { // May have syntax: `class="language-*"`
 			// Block
