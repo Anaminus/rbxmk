@@ -670,10 +670,8 @@ func renderTable(w *writer, node *html.Node, s *walkState) {
 		// Only scale a column if it is significantly larger than others.
 		big := make([]bool, len(columnWidths))
 		for i, n := range columnWidths {
-			// Compare the proportion of the current column with the average
-			// proportion of the rest of the table.
-			p := float64(n) / float64(width)
-			big[i] = p > (1-p)/float64(len(columnWidths)-1)
+			// Compare the current column with the average of the other columns.
+			big[i] = n > (width-n)/(len(columnWidths)-1)
 		}
 		for i, n := range columnWidths {
 			if !big[i] {
