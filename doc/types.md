@@ -939,6 +939,7 @@ Member                                       | Kind
 [RootDesc.Class][RootDesc.Class]             | method
 [RootDesc.Classes][RootDesc.Classes]         | method
 [RootDesc.ClassTag][RootDesc.ClassTag]       | method
+[RootDesc.Copy][RootDesc.Copy]               | method
 [RootDesc.Diff][RootDesc.Diff]               | method
 [RootDesc.Enum][RootDesc.Enum]               | method
 [RootDesc.EnumItem][RootDesc.EnumItem]       | method
@@ -983,6 +984,12 @@ The **Classes** method returns a list of names of all the classes of the API.
 
 Returns whether *tag* is set for the class corresponding to the name *class*.
 Returns nil if the class does not exist.
+
+### RootDesc.Copy
+[RootDesc.Copy]: #user-content-rootdesccopy
+<code>RootDesc:Copy(): [RootDesc][RootDesc]</code>
+
+The **Copy** method returns a deep copy of the RootDesc.
 
 ### RootDesc.Diff
 [RootDesc.Diff]: #user-content-rootdescdiff

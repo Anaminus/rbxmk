@@ -28,6 +28,21 @@ func RootDesc() rbxmk.Reflector {
 			return nil
 		},
 		Methods: rbxmk.Methods{
+			"Copy": {
+				Func: func(s rbxmk.State, v types.Value) int {
+					root := v.(*rtypes.RootDesc)
+					return s.Push(root.Copy())
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Returns: dump.Parameters{
+							{Type: dt.Prim("RootDesc")},
+						},
+						Summary:     "Types/RootDesc:Methods/Copy/Summary",
+						Description: "Types/RootDesc:Methods/Copy/Description",
+					}
+				},
+			},
 			"Class": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.RootDesc)

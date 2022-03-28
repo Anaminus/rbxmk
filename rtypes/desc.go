@@ -23,6 +23,14 @@ func (d *RootDesc) String() string {
 	return "RootDesc"
 }
 
+func (d *RootDesc) Copy() *RootDesc {
+	c := &RootDesc{Root: d.Root.Copy()}
+	if d.EnumTypes != nil {
+		c.GenerateEnumTypes()
+	}
+	return c
+}
+
 // ClassIsA returns whether class is a subclass of superclass. Returns false if
 // d is nil, or if class or superclass are not valid classes.
 func (d *RootDesc) ClassIsA(class, superclass string) bool {

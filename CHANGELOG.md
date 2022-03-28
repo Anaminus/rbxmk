@@ -21,6 +21,7 @@ branch is the latest unreleased version.
 - Add support for [UniqueId](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-uniqueid) type.
 - Improve interface of the doc command.
 	- Frag mode is the default. List mode is enabled with the `--list` flag.
+- Add [RootDesc.Copy](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdesccopy) method.
 
 **Fixes**:
 - Fix descriptor IsA checks failing when superclass matches current class.
