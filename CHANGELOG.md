@@ -33,10 +33,8 @@ branch is the latest unreleased version.
 
 **Internal:**
 - Switch to [cobra](https://cobra.dev/) for handling CLI.
-	- When the program is executed from a GUI, a message is displayed indicating
-	  that it is a command-line tool.
-	- Adds `completion` command for generating autocompletion scripts for
-	  various shells.
+	- When the program is executed from a GUI, a message is displayed indicating that it is a command-line tool.
+	- Adds `completion` command for generating autocompletion scripts for various shells.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
