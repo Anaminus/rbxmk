@@ -10,7 +10,7 @@ on:
 
 env:
   PROGRAM   : './rbxmk' # Location of program.
-  GOVERSION : 1.17      # Version of Go to compile with.
+  GOVERSION : 1.18      # Version of Go to compile with.
 
 jobs:
 
