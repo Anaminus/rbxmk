@@ -3,45 +3,53 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
+
+The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
+
+[doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
+[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.9.1...imperative
+
+## v0.9.1
 **Highlights:**
 - Add support for `.luau` extension.
-	- Add [`luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-luau).
-	- Add [`client.luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-clientluau).
-	- Add [`localscript.luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-localscriptluau).
-	- Add [`modulescript.luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-modulescriptluau).
-	- Add [`script.luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-scriptluau).
-	- Add [`server.luau` format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-serverluau).
+	- Add [`luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-luau).
+	- Add [`client.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-clientluau).
+	- Add [`localscript.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-localscriptluau).
+	- Add [`modulescript.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-modulescriptluau).
+	- Add [`script.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-scriptluau).
+	- Add [`server.luau` format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-serverluau).
 - When a descriptor is set while encoding or decoding an instance, the service status is determined by the Service tag from instance's class descriptor instead of the instance's IsService field.
 	- This improves conversion from XML Roblox formats to binary Roblox formats.
 - Add support for Optional types.
 	- If a descriptor is set, optional properties are handled transparently by accepting either nil (for None), or a value of the optional's type (for Some).
-	- Add [types.none](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typesnone) to create an empty Optional exprim.
-	- Add [types.some](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-typessome) to create an Optional exprim that contains a value.
+	- Add [types.none](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/libraries.md#user-content-typesnone) to create an empty Optional exprim.
+	- Add [types.some](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/libraries.md#user-content-typessome) to create an Optional exprim that contains a value.
 	- Currently, this only affects the "Model.WorldPivotData" property, which is an optional CFrame.
-- Add support for [UniqueId](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-uniqueid) type.
+- Add support for [UniqueId](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/types.md#user-content-uniqueid) type.
 - Improve interface of the doc command.
 	- Frag mode is the default. List mode is enabled with the `--list` flag.
-- Add [RootDesc.Copy](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-rootdesccopy) method.
+- Add [RootDesc.Copy](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/types.md#user-content-rootdesccopy) method.
 
 **Fixes**:
 - Fix descriptor IsA checks failing when superclass matches current class.
 - Fix encoding of PhysicalProperties type in rbxl format.
-- Fix options not working for the [rbx formats](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
-- Fix [SetAttribute](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
-- Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-instancesetattributes) pulling wrong argument for dictionary.
-- Fix nondeterministic order of encoded SharedStrings in [rbxl format](https://github.com/Anaminus/rbxmk/blob/imperative/doc/formats.md#user-content-rbxl).
+- Fix options not working for the [rbx formats](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-rbxl).
+- Fix [SetAttribute](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/types.md#user-content-instancesetattribute) throwing an error when setting an attribute to nil.
+- Fix [SetAttributes](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/types.md#user-content-instancesetattributes) pulling wrong argument for dictionary.
+- Fix nondeterministic order of encoded SharedStrings in [rbxl format](https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/formats.md#user-content-rbxl).
 
 **Internal:**
 - Switch to [cobra](https://cobra.dev/) for handling CLI.
 	- When the program is executed from a GUI, a message is displayed indicating that it is a command-line tool.
 	- Adds `completion` command for generating autocompletion scripts for various shells.
 
-See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
+See a [comparison with the previous version][cmp-v0.9.1] for a thorough list of changes.
 
-The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
+The [Documentation page][doc-v0.9.1] provides a complete reference for this version of rbxmk.
 
-[doc-imperative]: https://github.com/Anaminus/rbxmk/blob/imperative/doc/README.md#user-content-rbxmk-reference
-[cmp-imperative]: https://github.com/Anaminus/rbxmk/compare/v0.8.0...imperative
+[doc-v0.9.1]: https://github.com/Anaminus/rbxmk/blob/v0.9.1/doc/README.md#user-content-rbxmk-reference
+[cmp-v0.9.1]: https://github.com/Anaminus/rbxmk/compare/v0.8.0...v0.9.1
 
 ## v0.9.0
 Botched release. See v0.9.1.
