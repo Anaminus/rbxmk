@@ -10,6 +10,8 @@ require (
 	github.com/anaminus/parse v0.3.0
 	github.com/anaminus/pflag v1.0.6-z
 	github.com/andybalholm/cascadia v1.3.1
+	github.com/inconshreveable/mousetrap v1.0.0
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/peterh/liner v1.2.1
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.4.1
@@ -23,6 +25,5 @@ require (
 
 require (
 	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 )

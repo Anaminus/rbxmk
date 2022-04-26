@@ -59,6 +59,18 @@ rbxmk version
 # 0.5.1
 ```
 
+### interactive_commands
+Including the `interactive_commands` tag will enable **interactive command
+mode**. If the executable is run from Windows Explorer, the program runs in a
+mode that allows commands to be used interactively. If not included, a message
+is displayed instead.
+
+This feature is locked behind a tag because Cobra commands are currently not
+designed to be run more than once. Progress on this issue can be tracked at
+[github.com/spf13/cobra#1419][1419].
+
+[1419]: https://github.com/spf13/cobra/issues/1419
+
 ### no_desc_test
 Testing of the `--desc-latest` flag involves downloading an external file, which
 can slow down testing. This can be disabled by including the `no_desc_test` tag.

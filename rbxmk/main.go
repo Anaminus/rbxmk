@@ -65,8 +65,10 @@ func init() {
 	Program.SetUsageTemplate(usageTemplate)
 }
 
+var ProgramContext, ProgramExit = context.WithCancel(context.Background())
+
 func main() {
-	ctx, stop := signal.NotifyContext(context.Background(), os.Kill)
+	ctx, stop := signal.NotifyContext(ProgramContext, os.Kill)
 	defer stop()
 
 	Program.SetIn(os.Stdin)
@@ -75,7 +77,8 @@ func main() {
 
 	DocumentCommands()
 	UnresolvedFragments()
-	if err := Program.ExecuteContext(ctx); err != nil {
+
+	if err := Starter()(ctx); err != nil {
 		Program.PrintErrln(err)
 	}
 }
