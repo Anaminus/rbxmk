@@ -7,7 +7,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
-	"github.com/anaminus/rbxmk/rbxmk/term"
+	"github.com/anaminus/rbxmk/rbxmk/render/term"
 )
 
 func init() {

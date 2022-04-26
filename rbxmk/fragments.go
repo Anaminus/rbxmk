@@ -15,7 +15,7 @@ import (
 	"github.com/anaminus/drill/filesys"
 	"github.com/anaminus/rbxmk/fragments"
 	"github.com/anaminus/rbxmk/rbxmk/htmldrill"
-	"github.com/anaminus/rbxmk/rbxmk/term"
+	"github.com/anaminus/rbxmk/rbxmk/render/term"
 	"golang.org/x/net/html"
 )
 

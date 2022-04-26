@@ -6,7 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/anaminus/cobra"
-	"github.com/anaminus/rbxmk/rbxmk/term"
+	"github.com/anaminus/rbxmk/rbxmk/render/term"
 	terminal "golang.org/x/term"
 )
 
