@@ -6,17 +6,19 @@
 
 <section data-name="Description">
 
-<p>The <b>DataModel</b> type is a special case of an [Instance][Instance]. In
-addition to the members of Instance, DataModel has the following members:</p>
+<p>The <b>DataModel</b> type is a special case of an <a
+href="type:Instance">Instance</a>. In addition to the members of Instance,
+DataModel has the following members:</p>
 
 <p>$MEMBERS</p>
 
-<p>Unlike a normal Instance, the [ClassName][Instance.ClassName] property of a
-DataModel cannot be modified. Properties on a DataModel are usually not
-serialized.</p>
+<p>Unlike a normal Instance, the <a href="type:Instance.ClassName">ClassName</a>
+property of a DataModel cannot be modified. Properties on a DataModel are
+usually not serialized.</p>
 
-<p>A DataModel can be created with the [Instance.new][Instance.new] constructor
-with "DataModel" as the <i>className</i>.</p>
+<p>A DataModel can be created with the <a
+href="api:Instance.new">Instance.new</a> constructor with "DataModel" as the
+<i>className</i>.</p>
 
 </section>
 
@@ -55,11 +57,11 @@ ExplicitAutoJoints).</p>
 <section data-name="Description">
 
 <p>The <b>GetService</b> method returns the first child of the DataModel whose
-[ClassName][Instance.ClassName] equals <i>className</i>. If no such child
-exists, then a new instance of <i>className</i> is created. The
-[Name][Instance.Name] of the instance is set to <i>className</i>,
-[sym.IsService][Instance.sym.IsService] is set to true, and
-[Parent][Instance.Parent] is set to the DataModel.</p>
+<a href="type:Instance.ClassName">ClassName</a> equals <i>className</i>. If no
+such child exists, then a new instance of <i>className</i> is created. The <a
+href="type:Instance.Name">Name</a> of the instance is set to <i>className</i>,
+<a href="type:Instance[sym.IsService]">sym.IsService</a> is set to true, and <a
+href="type:Instance.Parent">Parent</a> is set to the DataModel.</p>
 
 <p>If the DataModel has a descriptor, then GetService will throw an error if the
 created class's descriptor does not have the "Service" tag set.</p>

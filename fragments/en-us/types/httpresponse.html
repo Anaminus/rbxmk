@@ -20,32 +20,32 @@ request. It has the following fields:</p>
 <tbody>
 <tr>
 <td>Success</td>
-<td><a href="##">bool</a></td>
+<td><a href="type:bool">bool</a></td>
 <td>Whether the request succeeded. True if StatusCode between 200 and 299.</td>
 </tr>
 <tr>
 <td>StatusCode</td>
-<td><a href="##">int</a></td>
+<td><a href="type:int">int</a></td>
 <td>The HTTP status code of the response.</td>
 </tr>
 <tr>
 <td>StatusMessage</td>
-<td><a href="##">string</a></td>
+<td><a href="type:string">string</a></td>
 <td>A readable message corresponding to the StatusCode.</td>
 </tr>
 <tr>
 <td>Headers</td>
-<td>[HTTPHeaders][HTTPHeaders]</td>
+<td><a href="type:HTTPHeaders">HTTPHeaders</a></td>
 <td>A set of response headers.</td>
 </tr>
 <tr>
 <td>Cookies</td>
-<td>[Cookies][Cookies]</td>
+<td><a href="type:Cookies">Cookies</a></td>
 <td>Cookies parsed from the Set-Cookie header.</td>
 </tr>
 <tr>
 <td>Body</td>
-<td><a href="##">any</a>?</td>
+<td>any?</td>
 <td>The decoded body of the response.</td>
 </tr>
 </tbody>

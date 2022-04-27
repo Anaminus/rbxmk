@@ -89,13 +89,13 @@ occurred while creating a directory.</p>
 <section data-name="Description">
 
 <p>The <b>read</b> function reads the content of the file at <i>path</i>, and
-decodes it into <i>value</i> according to the <a href="formats.md">format</a>
+decodes it into <i>value</i> according to the <a href="frag:formats">format</a>
 matching the file extension of <i>path</i>. If <i>format</i> is given, then it
 will be used instead of the file extension.</p>
 
-<p>If the format returns an [Instance][Instance], then the Name property will be
+<p>If the format returns an <a href="type:Instance">Instance</a>, then the Name property will be
 set to the "fstem" component of <i>path</i> according to <a
-href="libraries.md#user-content-pathsplit">path.split</a>.</p>
+href="api:path.split">path.split</a>.</p>
 
 </section>
 
@@ -210,7 +210,7 @@ problem otherwise occurred while getting the metadata.</p>
 <section data-name="Description">
 
 <p>The <b>write</b> function encodes <i>value</i> according to the <a
-href="formats.md">format</a> matching the file extension of <i>path</i>, and
+href="frag:formats">format</a> matching the file extension of <i>path</i>, and
 writes the result to the file at <i>path</i>. If <i>format</i> is given, then it
 will be used instead of the file extension.</p>
 

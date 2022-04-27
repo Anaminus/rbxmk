@@ -30,16 +30,18 @@ details on the implementation of Instances.</p>
 <section data-name="Description">
 
 <p>The <b>new</b> constructor returns a new Instance of the given class.
-<i>className</i> sets the [ClassName][Instance.ClassName] property of the
-instance. If <i>parent</i> is specified, it sets the [Parent][Instance.Parent]
-property.</p>
+<i>className</i> sets the <a href="type:Instance.ClassName">ClassName</a>
+property of the instance. If <i>parent</i> is specified, it sets the <a
+href="type:Instance.Parent">Parent</a> property.</p>
 
-<p>If <i>desc</i> is specified, then it sets the [sym.Desc][Instance.sym.Desc]
+<p>If <i>desc</i> is specified, then it sets the <a
+href="type:Instance[sym.Desc]">sym.Desc</a>
 member. Additionally, new will throw an error if the class does not exist. If no
 descriptor is specified, then any class name will be accepted.</p>
 
-<p>If <i>className</i> is "DataModel", then a [DataModel][DataModel] value is
-returned. In this case, new will throw an error if <i>parent</i> is not nil.</p>
+<p>If <i>className</i> is "DataModel", then a <a
+href="type:DataModel">DataModel</a> value is returned. In this case, new will
+throw an error if <i>parent</i> is not nil.</p>
 
 </section>
 
@@ -114,10 +116,10 @@ be nil.</p>
 
 <section data-name="Description">
 
-<p>The <b>AttrConfig</b> symbol is the [AttrConfig][AttrConfig] being used by
-the instance. AttrConfig is inherited, the behavior of which is described in the
-<a href="README.md#user-content-value-inheritance">Value inheritance</a>
-section.</p>
+<p>The <b>AttrConfig</b> symbol is the <a href="type:AttrConfig">AttrConfig</a>
+being used by the instance. AttrConfig is inherited, the behavior of which is
+described in the <a href="README.md#user-content-value-inheritance">Value
+inheritance</a> section.</p>
 
 </section>
 
@@ -194,10 +196,10 @@ properties are set or removed.</p>
 
 <section data-name="Description">
 
-<p>The <b>RawAttrConfig</b> symbol is the raw member corresponding to to
-[sym.AttrConfig][Instance.sym.AttrConfig]. It is similar to AttrConfig, except
-that it considers only the direct value of the current instance. The exact
-behavior of RawAttrConfig is described in the <a
+<p>The <b>RawAttrConfig</b> symbol is the raw member corresponding to to <a
+href="type:Instance[sym.AttrConfig]">sym.AttrConfig</a>. It is similar to
+AttrConfig, except that it considers only the direct value of the current
+instance. The exact behavior of RawAttrConfig is described in the <a
 href="README.md#user-content-value-inheritance">Value inheritance</a>
 section.</p>
 
@@ -215,11 +217,12 @@ section.</p>
 
 <section data-name="Description">
 
-<p>The <b>RawDesc</b> symbol is the raw member corresponding to to
-[sym.Desc][Instance.sym.Desc]. It is similar to Desc, except that it considers
-only the direct value of the current instance. The exact behavior of RawDesc is
-described in the <a href="README.md#user-content-value-inheritance">Value
-inheritance</a> section.</p>
+<p>The <b>RawDesc</b> symbol is the raw member corresponding to to <a
+href="type:Instance[sym.Desc]">sym.Desc</a>. It is similar to Desc, except that
+it considers only the direct value of the current instance. The exact behavior
+of RawDesc is described in the <a
+href="README.md#user-content-value-inheritance">Value inheritance</a>
+section.</p>
 
 </section>
 
@@ -236,11 +239,13 @@ inheritance</a> section.</p>
 <section data-name="Description">
 
 <p>The <b>Reference</b> symbol is a string used to refer to the instance from
-within a [DataModel][DataModel]. Certain formats use this to encode a reference
-to an instance. For example, the RBXMX format will generate random UUIDs for its
-references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").</p>
+within a <a href="type:DataModel">DataModel</a>. Certain formats use this to
+encode a reference to an instance. For example, the RBXMX format will generate
+random UUIDs for its references (e.g.
+"RBX8B658F72923F487FAE2F7437482EF16D").</p>
 
-<p>A reference should not be expected to persist when being encoded or decoded.</p>
+<p>A reference should not be expected to persist when being encoded or
+decoded.</p>
 
 </section>
 
@@ -260,8 +265,8 @@ references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").</p>
 
 <section data-name="Description">
 
-<p>The <b>ClearAllChildren</b> method sets the [Parent][Instance.Parent] of each
-child of the instance to nil.</p>
+<p>The <b>ClearAllChildren</b> method sets the <a
+href="type:Instance.Parent">Parent</a> of each child of the instance to nil.</p>
 
 <p>Unlike in Roblox, ClearAllChildren does not affect descendants.</p>
 
@@ -299,9 +304,9 @@ property is set to false.</p>
 <section data-name="Description">
 
 <p>The <b>Descend</b> method returns a descendant of the instance by recursively
-searching for each name in succession according to
-[FindFirstChild][Instance.FindFirstChild]. Returns nil if a child could not be
-found. Throws an error if no arguments are given.</p>
+searching for each name in succession according to <a
+href="type:Instance.FindFirstChild">FindFirstChild</a>. Returns nil if a child
+could not be found. Throws an error if no arguments are given.</p>
 
 <p>Descend provides a safe alternative to indexing the children of an instance,
 which is not implemented by rbxmk.</p>
@@ -322,8 +327,8 @@ which is not implemented by rbxmk.</p>
 
 <section data-name="Description">
 
-<p>The <b>Destroy</b> method sets the [Parent][Instance.Parent] of the instance
-to nil.</p>
+<p>The <b>Destroy</b> method sets the <a href="type:Instance.Parent">Parent</a>
+of the instance to nil.</p>
 
 <p>Unlike in Roblox, the Parent of the instance remains unlocked. Destroy also
 does not affect descendants.</p>
@@ -342,9 +347,9 @@ does not affect descendants.</p>
 
 <section data-name="Description">
 
-<p>The <b>FindFirstAncestor</b> method returns the first ancestor whose
-[Name][Instance.Name] equals <i>name</i>, or nil if no such instance was
-found.</p>
+<p>The <b>FindFirstAncestor</b> method returns the first ancestor whose <a
+href="type:Instance.Name">Name</a> equals <i>name</i>, or nil if no such
+instance was found.</p>
 
 </section>
 
@@ -361,8 +366,8 @@ found.</p>
 <section data-name="Description">
 
 <p>The <b>FindFirstAncestorOfClass</b> method returns the first ancestor of the
-instance whose [ClassName][Instance.ClassName] equals <i>className</i>, or nil
-if no such instance was found.</p>
+instance whose <a href="type:Instance.ClassName">ClassName</a> equals
+<i>className</i>, or nil if no such instance was found.</p>
 
 </section>
 
@@ -379,9 +384,10 @@ if no such instance was found.</p>
 <section data-name="Description">
 
 <p>The <b>FindFirstAncestorWhichIsA</b> method returns the first ancestor of the
-instance whose [ClassName][Instance.ClassName] inherits <i>className</i>
-according to the instance's descriptor, or nil if no such instance was found. If
-the instance has no descriptor, then the ClassName is compared directly.</p>
+instance whose <a href="type:Instance.ClassName">ClassName</a> inherits
+<i>className</i> according to the instance's descriptor, or nil if no such
+instance was found. If the instance has no descriptor, then the ClassName is
+compared directly.</p>
 
 </section>
 
@@ -398,9 +404,9 @@ the instance has no descriptor, then the ClassName is compared directly.</p>
 <section data-name="Description">
 
 <p>The <b>FindFirstChild</b> method returns the first child of the instance
-whose [Name][Instance.Name] equals <i>name</i>, or nil if no such instance was
-found. If <i>recurse</i> is true, then descendants are also searched,
-top-down.</p>
+whose <a href="type:Instance.Name">Name</a> equals <i>name</i>, or nil if no
+such instance was found. If <i>recurse</i> is true, then descendants are also
+searched, top-down.</p>
 
 </section>
 
@@ -417,9 +423,9 @@ top-down.</p>
 <section data-name="Description">
 
 <p>The <b>FindFirstChildOfClass</b> method returns the first child of the
-instance whose [ClassName][Instance.ClassName] equals <i>className</i>, or nil
-if no such instance was found. If <i>recurse</i> is true, then descendants are
-also searched, top-down.</p>
+instance whose <a href="type:Instance.ClassName">ClassName</a> equals
+<i>className</i>, or nil if no such instance was found. If <i>recurse</i> is
+true, then descendants are also searched, top-down.</p>
 
 </section>
 
@@ -436,10 +442,10 @@ also searched, top-down.</p>
 <section data-name="Description">
 
 <p>The <b>FindFirstChildWhichIsA</b> method returns the first child of the
-instance whose [ClassName][Instance.ClassName] inherits <i>className</i>, or nil
-if no such instance was found. If the instance has no descriptor, then the
-ClassName is compared directly. If <i>recurse</i> is true, then descendants are
-also searched, top-down.</p>
+instance whose <a href="type:Instance.ClassName">ClassName</a> inherits
+<i>className</i>, or nil if no such instance was found. If the instance has no
+descriptor, then the ClassName is compared directly. If <i>recurse</i> is true,
+then descendants are also searched, top-down.</p>
 
 </section>
 
@@ -458,12 +464,13 @@ also searched, top-down.</p>
 <p>The <b>GetAttribute</b> method returns the value of <i>attribute</i>, or nil
 if the attribute is not found.</p>
 
-<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
-to select the property to decode from, which is expected to be string-like. An
-error is thrown if the data could not be decoded.</p>
+<p>This function uses the instance's <a
+href="type:Instance[sym.AttrConfig]">sym.AttrConfig</a> to select the property
+to decode from, which is expected to be string-like. An error is thrown if the
+data could not be decoded.</p>
 
-<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
-list of possible attribute value types.</p>
+<p>See the <a href="format:rbxattr">rbxattr format</a> for a list of possible
+attribute value types.</p>
 
 <p>The <a href="README.md#user-content-attributes">Attributes</a> section
 provides a more general description of attributes.</p>
@@ -485,12 +492,13 @@ provides a more general description of attributes.</p>
 <p>The <b>GetAttributes</b> method returns a dictionary of attribute names
 mapped to values.</p>
 
-<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
-to select the property to decode from, which is expected to be string-like. An
-error is thrown if the data could not be decoded.</p>
+<p>This function uses the instance's <a
+href="type:Instance[sym.AttrConfig]">sym.AttrConfig</a> to select the property
+to decode from, which is expected to be string-like. An error is thrown if the
+data could not be decoded.</p>
 
-<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
-list of possible attribute value types.</p>
+<p>See the <a href="format:rbxattr">rbxattr format</a> for a list of possible
+attribute value types.</p>
 
 <p>The <a href="README.md#user-content-attributes">Attributes</a> section
 provides a more general description of attributes.</p>
@@ -542,10 +550,10 @@ instance.</p>
 
 <section data-name="Description">
 
-<p>The <b>GetFullName</b> method returns the concatenation of the
-[Name][Instance.Name] of each ancestor of the instance and the instance itself,
-separated by <code>.</code> characters. If an ancestor is a
-[DataModel][DataModel], it is not included.</p>
+<p>The <b>GetFullName</b> method returns the concatenation of the <a
+href="type:Instance.Name">Name</a> of each ancestor of the instance and the
+instance itself, separated by <code>.</code> characters. If an ancestor is a <a
+href="type:DataModel">DataModel</a>, it is not included.</p>
 
 </section>
 
@@ -561,10 +569,10 @@ separated by <code>.</code> characters. If an ancestor is a
 
 <section data-name="Description">
 
-<p>The <b>IsA</b> method returns whether the [ClassName][Instance.ClassName]
-inherits from <i>className</i>, according to the instance's descriptor. If the
-instance has no descriptor, then IsA returns whether ClassName equals
-<i>className</i>.</p>
+<p>The <b>IsA</b> method returns whether the <a
+href="type:Instance.ClassName">ClassName</a> inherits from <i>className</i>,
+according to the instance's descriptor. If the instance has no descriptor, then
+IsA returns whether ClassName equals <i>className</i>.</p>
 
 </section>
 
@@ -617,14 +625,14 @@ of <i>ancestor</i>.</p>
 <p>The <b>SetAttribute</b> method sets <i>attribute</i> to <i>value</i>. If
 <i>value</i> is nil, then the attribute is removed.</p>
 
-<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
-to select the property to decode from, which is expected to be string-like. This
-function decodes the serialized attributes, sets the given value, then
-re-encodes the attributes. An error is thrown if the data could not be decoded
-or encoded.</p>
+<p>This function uses the instance's <a
+href="type:Instance[sym.AttrConfig]">sym.AttrConfig</a> to select the property
+to decode from, which is expected to be string-like. This function decodes the
+serialized attributes, sets the given value, then re-encodes the attributes. An
+error is thrown if the data could not be decoded or encoded.</p>
 
-<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
-list of possible attribute value types.</p>
+<p>See the <a href="format:rbxattr">rbxattr format</a> for a list of possible
+attribute value types.</p>
 
 <p>The <a href="README.md#user-content-attributes">Attributes</a> section
 provides a more general description of attributes.</p>
@@ -646,12 +654,12 @@ provides a more general description of attributes.</p>
 <p>The <b>SetAttributes</b> method replaces all attributes with the content of
 <i>attributes</i>, which contains attribute names mapped to values.</p>
 
-<p>This function uses the instance's [sym.AttrConfig][Instance.sym.AttrConfig]
-to select the property to encode to. An error is thrown if the data could not be
-encoded.</p>
+<p>This function uses the instance's <a
+href="type:Instance[sym.AttrConfig]">sym.AttrConfig</a> to select the property
+to encode to. An error is thrown if the data could not be encoded.</p>
 
-<p>See the <a href="formats.md#user-content-rbxattr">rbxattr format</a> for a
-list of possible attribute value types.</p>
+<p>See the <a href="format:rbxattr">rbxattr format</a> for a list of possible
+attribute value types.</p>
 
 <p>The <a href="README.md#user-content-attributes">Attributes</a> section
 provides a more general description of attributes.</p>
