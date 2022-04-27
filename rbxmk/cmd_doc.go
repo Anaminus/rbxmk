@@ -7,6 +7,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
+	"github.com/anaminus/rbxmk/rbxmk/render/html"
 	"github.com/anaminus/rbxmk/rbxmk/render/term"
 )
 
@@ -70,7 +71,7 @@ func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {
 	var renderer Renderer = goquery.Render
 	switch c.Format {
 	case "", "html":
-		renderer = goquery.Render
+		renderer = html.NewRenderer().Render
 	case "terminal":
 		r := term.NewRenderer(c.Width)
 		r.ForOutput = c.ForExport
