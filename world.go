@@ -148,6 +148,19 @@ type Library struct {
 	Types []func() Reflector
 }
 
+// Libraries is a list of Library values that can be sorted by Priority, then
+// Name.
+type Libraries []Library
+
+func (l Libraries) Len() int      { return len(l) }
+func (l Libraries) Swap(i, j int) { l[i], l[j] = l[j], l[i] }
+func (l Libraries) Less(i, j int) bool {
+	if l[i].Priority == l[j].Priority {
+		return l[i].Name < l[j].Name
+	}
+	return l[i].Priority < l[j].Priority
+}
+
 // Open opens lib, then merges the result into the world's global table using
 // the ImportedAs field as the name. If the name is already present and is a
 // table, then the table of lib is merged into it, preferring the values of lib.

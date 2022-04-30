@@ -13,7 +13,6 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/enums"
 	"github.com/anaminus/rbxmk/formats"
-	"github.com/anaminus/rbxmk/library"
 )
 
 // ParseLuaValue parses a string into a Lua value. Numbers, bools, and nil are
@@ -55,7 +54,7 @@ type WorldOpt struct {
 	ExcludeRoots     bool
 	ExcludeFormats   bool
 	ExcludeEnums     bool
-	IncludeLibraries library.Libraries
+	IncludeLibraries rbxmk.Libraries
 	ExcludeProgram   bool
 	Args             []string
 }
@@ -86,7 +85,7 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 	if !opt.ExcludeEnums {
 		world.RegisterEnums(enums.All()...)
 	}
-	var libraries library.Libraries
+	var libraries rbxmk.Libraries
 	if !opt.ExcludeProgram {
 		libraries = append(libraries, ProgramLibrary)
 	}
