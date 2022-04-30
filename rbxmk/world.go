@@ -89,9 +89,7 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 	if !opt.ExcludeProgram {
 		libraries = append(libraries, ProgramLibrary)
 	}
-	if len(opt.IncludeLibraries) > 0 {
-		libraries = append(libraries, opt.IncludeLibraries...)
-	}
+	libraries = append(libraries, opt.IncludeLibraries...)
 	sort.Sort(libraries)
 	included := make(map[string]bool, len(libraries))
 	for _, lib := range libraries {
