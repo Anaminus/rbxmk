@@ -195,14 +195,12 @@ func (w *World) Library(name string) Library {
 }
 
 // Libraries returns a list of registered libraries.
-func (w *World) Libraries() []Library {
-	libraries := []Library{}
+func (w *World) Libraries() Libraries {
+	libraries := make(Libraries, len(w.libraries))
 	for _, library := range w.libraries {
 		libraries = append(libraries, library)
 	}
-	sort.Slice(libraries, func(i, j int) bool {
-		return libraries[i].Name < libraries[j].Name
-	})
+	sort.Sort(libraries)
 	return libraries
 }
 
