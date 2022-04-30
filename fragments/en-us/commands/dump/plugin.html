@@ -1,0 +1,57 @@
+<section data-name="Summary">
+
+<p>Run a dump format plugin.</p>
+
+</section>
+
+<section data-name="Arguments">
+
+<pre><code>FILE</code></pre>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>plugin</b> command enables the generation of a custom dump format. The
+command receives a file to be executed as a Lua script.</p>
+
+<pre><code class="language-bash">rbxmk dump plugin script.lua</code></pre>
+
+<p>If <code>-</code> is given as the file, then the script will be read from
+standard input instead.</p>
+
+<pre><code class="language-bash">echo 'print("hello world!")' | rbxmk dump plugin -</code></pre>
+
+<p>The script receives as arguments a table and a function.</p>
+
+<pre><code class="language-lua">local dump, write = ...</code></pre>
+
+<p>The table contains a complete description of the rbxmk Lua environment. The
+structure of the table matches the structure of the <code>json</code> dump
+format.</p>
+
+<p>The function is used to build the output. It receives any number of values,
+converts them to strings, and concatenates them directly to the result.</p>
+
+<pre><code class="language-lua">
+-- List all libraries.
+local dump, write = ...
+for _, library in ipairs(dump.Libraries) do
+	write(library.Name, "\n")
+end
+</code></pre>
+
+<p>After the script finishes, the result is written to standard output.</p>
+
+<p>Unlike the run command, the script runs in a limited environment that
+includes only the following libraries:</p>
+
+<ul>
+	<li>base</li>
+	<li>program</li>
+	<li>math</li>
+	<li>string</li>
+	<li>table</li>
+</ul>
+
+</section>
