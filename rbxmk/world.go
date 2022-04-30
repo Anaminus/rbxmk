@@ -166,6 +166,7 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		if lib.ImportedAs == "" {
 			lib.ImportedAs = l.ImportedAs
 		}
+		lib.Priority = l.Priority
 		if l.Types != nil {
 			dumpTypes(root.Types, l.Types)
 		}

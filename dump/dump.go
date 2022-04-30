@@ -43,6 +43,8 @@ type Library struct {
 	// ImportedAs is the name that the library is imported as. Empty indicates
 	// that the contents of the library are merged into the global environment.
 	ImportedAs string
+	// Priority determines the order in which the library is loaded.
+	Priority int
 	// Struct contains the items of the library.
 	Struct Struct `json:",omitempty"`
 	// Types contains types defined by the library.
