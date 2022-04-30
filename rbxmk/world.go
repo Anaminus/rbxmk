@@ -77,14 +77,6 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 			world.FS.AddRoot(root)
 		}
 	}
-	if !opt.ExcludeFormats {
-		for _, f := range formats.All() {
-			world.RegisterFormat(f())
-		}
-	}
-	if !opt.ExcludeEnums {
-		world.RegisterEnums(enums.All()...)
-	}
 	var libraries rbxmk.Libraries
 	if !opt.ExcludeProgram {
 		libraries = append(libraries, ProgramLibrary)
@@ -119,7 +111,31 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 			}
 		}
 	}
+	// Load negative-priority libraries before formats.
 	for _, lib := range libraries {
+		if lib.Priority >= 0 {
+			break
+		}
+		if !included[lib.Name] {
+			continue
+		}
+		if err := world.Open(lib); err != nil {
+			return nil, err
+		}
+	}
+	if !opt.ExcludeFormats {
+		for _, f := range formats.All() {
+			world.RegisterFormat(f())
+		}
+	}
+	if !opt.ExcludeEnums {
+		world.RegisterEnums(enums.All()...)
+	}
+	for _, lib := range libraries {
+		if lib.Priority < 0 {
+			// Already loaded negative-priority libraries.
+			continue
+		}
 		if !included[lib.Name] {
 			continue
 		}
