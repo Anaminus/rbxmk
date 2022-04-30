@@ -7,6 +7,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
 	"github.com/robloxapi/rbxfile"
@@ -14,6 +15,47 @@ import (
 	"github.com/robloxapi/rbxfile/rbxlx"
 	"github.com/robloxapi/types"
 )
+
+func rbxTypes() []func() rbxmk.Reflector {
+	return []func() rbxmk.Reflector{
+		reflect.Axes,
+		reflect.BinaryString,
+		reflect.Bool,
+		reflect.BrickColor,
+		reflect.CFrame,
+		reflect.Color3,
+		reflect.Color3uint8,
+		reflect.ColorSequence,
+		reflect.ColorSequenceKeypoint,
+		reflect.Content,
+		reflect.Double,
+		reflect.Faces,
+		reflect.Float,
+		reflect.Instance,
+		reflect.Int,
+		reflect.Int64,
+		reflect.NumberRange,
+		reflect.NumberSequence,
+		reflect.NumberSequenceKeypoint,
+		reflect.Objects,
+		reflect.Optional,
+		reflect.PhysicalProperties,
+		reflect.ProtectedString,
+		reflect.Ray,
+		reflect.Rect,
+		reflect.RootDesc,
+		reflect.SharedString,
+		reflect.String,
+		reflect.Token,
+		reflect.UDim,
+		reflect.UDim2,
+		reflect.UniqueId,
+		reflect.Vector2,
+		reflect.Vector2int16,
+		reflect.Vector3,
+		reflect.Vector3int16,
+	}
+}
 
 func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
@@ -68,6 +110,7 @@ func RBXL() rbxmk.Format {
 				Description: "Formats/rbxl:Description",
 			}
 		},
+		Types: rbxTypes(),
 	}
 }
 
@@ -124,6 +167,7 @@ func RBXM() rbxmk.Format {
 				Description: "Formats/rbxm:Description",
 			}
 		},
+		Types: rbxTypes(),
 	}
 }
 
@@ -180,6 +224,7 @@ func RBXLX() rbxmk.Format {
 				Description: "Formats/rbxlx:Description",
 			}
 		},
+		Types: rbxTypes(),
 	}
 }
 
@@ -236,6 +281,7 @@ func RBXMX() rbxmk.Format {
 				Description: "Formats/rbxmx:Description",
 			}
 		},
+		Types: rbxTypes(),
 	}
 }
 

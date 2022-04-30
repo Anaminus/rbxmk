@@ -5,6 +5,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -37,6 +38,9 @@ func Text() rbxmk.Format {
 				Summary:     "Formats/txt:Summary",
 				Description: "Formats/txt:Description",
 			}
+		},
+		Types: []func() rbxmk.Reflector{
+			reflect.String,
 		},
 	}
 }

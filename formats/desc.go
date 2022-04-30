@@ -6,6 +6,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	rbxdumpjson "github.com/robloxapi/rbxdump/json"
 	"github.com/robloxapi/types"
@@ -39,6 +40,9 @@ func Desc() rbxmk.Format {
 				Description: "Formats/desc.json:Description",
 			}
 		},
+		Types: []func() rbxmk.Reflector{
+			reflect.RootDesc,
+		},
 	}
 }
 
@@ -71,6 +75,9 @@ func DescPatch() rbxmk.Format {
 				Summary:     "Formats/desc-patch.json:Summary",
 				Description: "Formats/desc-patch.json:Description",
 			}
+		},
+		Types: []func() rbxmk.Reflector{
+			reflect.DescActions,
 		},
 	}
 }

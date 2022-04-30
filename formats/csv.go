@@ -11,6 +11,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -300,6 +301,11 @@ func CSV() rbxmk.Format {
 				Description: "Formats/csv:Description",
 			}
 		},
+		Types: []func() rbxmk.Reflector{
+			reflect.Array,
+			reflect.Dictionary,
+			reflect.String,
+		},
 	}
 }
 
@@ -333,6 +339,10 @@ func L10nCSV() rbxmk.Format {
 				Summary:     "Formats/l10n.csv:Summary",
 				Description: "Formats/l10n.csv:Description",
 			}
+		},
+		Types: []func() rbxmk.Reflector{
+			reflect.Instance,
+			reflect.String,
 		},
 	}
 }

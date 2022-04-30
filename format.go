@@ -41,6 +41,10 @@ type Format struct {
 
 	// Dump returns a description of the format.
 	Dump func() dump.Format
+
+	// Types returns a list of type reflectors expected by the format. Before
+	// registering the format, each reflector is registered.
+	Types []func() Reflector
 }
 
 // FormatOptions contains options to be passed to a Format.

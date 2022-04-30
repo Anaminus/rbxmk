@@ -7,6 +7,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxattr"
 	"github.com/robloxapi/types"
@@ -212,6 +213,26 @@ func RBXAttr() rbxmk.Format {
 				Summary:     "Formats/rbxattr:Summary",
 				Description: "Formats/rbxattr:Description",
 			}
+		},
+		Types: []func() rbxmk.Reflector{
+			reflect.Bool,
+			reflect.BrickColor,
+			reflect.Color3,
+			reflect.ColorSequence,
+			reflect.ColorSequenceKeypoint,
+			reflect.Dictionary,
+			reflect.Double,
+			reflect.Float,
+			reflect.Nil,
+			reflect.NumberRange,
+			reflect.NumberSequence,
+			reflect.NumberSequenceKeypoint,
+			reflect.Rect,
+			reflect.String,
+			reflect.UDim,
+			reflect.UDim2,
+			reflect.Vector2,
+			reflect.Vector3,
 		},
 	}
 }

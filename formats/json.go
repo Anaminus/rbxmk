@@ -6,6 +6,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -102,6 +103,14 @@ func JSON() rbxmk.Format {
 				Summary:     "Formats/json:Summary",
 				Description: "Formats/json:Description",
 			}
+		},
+		Types: []func() rbxmk.Reflector{
+			reflect.Array,
+			reflect.Bool,
+			reflect.Dictionary,
+			reflect.Double,
+			reflect.Nil,
+			reflect.String,
 		},
 	}
 }

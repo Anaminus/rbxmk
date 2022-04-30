@@ -640,6 +640,11 @@ func (w *World) RegisterFormat(f Format) {
 	if _, ok := f.Options["Format"]; ok {
 		panic("format " + f.Name + " specifies reserved \"Format\" option")
 	}
+	if f.Types != nil {
+		for _, r := range f.Types {
+			w.RegisterReflector(r())
+		}
+	}
 	if w.formats == nil {
 		w.formats = map[string]Format{}
 	}

@@ -5,9 +5,17 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
+
+func luaTypes() []func() rbxmk.Reflector {
+	return []func() rbxmk.Reflector{
+		reflect.Instance,
+		reflect.ProtectedString,
+	}
+}
 
 func decodeScript(r io.Reader, className string) (v types.Value, err error) {
 	script := rtypes.NewInstance(className, nil)
@@ -48,6 +56,7 @@ func ModuleScriptLua() rbxmk.Format {
 				Description: "Formats/modulescript.lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -67,6 +76,7 @@ func ScriptLua() rbxmk.Format {
 				Description: "Formats/script.lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -86,6 +96,7 @@ func LocalScriptLua() rbxmk.Format {
 				Description: "Formats/localscript.lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -105,6 +116,7 @@ func Lua() rbxmk.Format {
 				Description: "Formats/lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -124,6 +136,7 @@ func ServerLua() rbxmk.Format {
 				Description: "Formats/server.lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -143,6 +156,7 @@ func ClientLua() rbxmk.Format {
 				Description: "Formats/client.lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -165,6 +179,7 @@ func ModuleScriptLuau() rbxmk.Format {
 				Description: "Formats/modulescript.luau:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -184,6 +199,7 @@ func ScriptLuau() rbxmk.Format {
 				Description: "Formats/script.luau:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -203,6 +219,7 @@ func LocalScriptLuau() rbxmk.Format {
 				Description: "Formats/localscript.luau:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -222,6 +239,7 @@ func Luau() rbxmk.Format {
 				Description: "Formats/lua:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -241,6 +259,7 @@ func ServerLuau() rbxmk.Format {
 				Description: "Formats/server.luau:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
 
@@ -260,5 +279,6 @@ func ClientLuau() rbxmk.Format {
 				Description: "Formats/client.luau:Description",
 			}
 		},
+		Types: luaTypes(),
 	}
 }
