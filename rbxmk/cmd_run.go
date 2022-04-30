@@ -10,6 +10,7 @@ import (
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/library"
 )
 
 // shortenPath transforms the given path so that it is relative to the working
@@ -65,8 +66,9 @@ func (c *RunCommand) Run(cmd *cobra.Command, args []string) error {
 
 	// Initialize world.
 	world, err := InitWorld(WorldOpt{
-		WorldFlags: c.WorldFlags,
-		Args:       args,
+		WorldFlags:       c.WorldFlags,
+		IncludeLibraries: library.All(),
+		Args:             args,
 	})
 	if err != nil {
 		return err

@@ -43,11 +43,10 @@ func (c *DownloadAssetCommand) Run(cmd *cobra.Command, args []string) error {
 
 	// Initialize world.
 	world, err := InitWorld(WorldOpt{
-		WorldFlags:       WorldFlags{Debug: false},
-		ExcludeRoots:     true,
-		ExcludeEnums:     true,
-		ExcludeLibraries: true,
-		ExcludeProgram:   true,
+		WorldFlags:     WorldFlags{Debug: false},
+		ExcludeRoots:   true,
+		ExcludeEnums:   true,
+		ExcludeProgram: true,
 	})
 	if err != nil {
 		return err

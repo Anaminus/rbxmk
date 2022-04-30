@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/gopher-lua/parse"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/library"
 	"github.com/peterh/liner"
 )
 
@@ -36,7 +37,8 @@ func (c *InteractiveCommand) SetFlags(flags *pflag.FlagSet) {
 func (c *InteractiveCommand) Run(cmd *cobra.Command, args []string) (err error) {
 	// Initialize world.
 	world, err := InitWorld(WorldOpt{
-		WorldFlags: c.WorldFlags,
+		WorldFlags:       c.WorldFlags,
+		IncludeLibraries: library.All(),
 	})
 	if err != nil {
 		return err

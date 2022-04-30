@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/rbxmk/dumpformats"
+	"github.com/anaminus/rbxmk/library"
 )
 
 func init() {
@@ -23,8 +24,9 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				// Populate dump.
 				world, err := InitWorld(WorldOpt{
-					WorldFlags:   WorldFlags{Debug: false},
-					ExcludeRoots: true,
+					WorldFlags:       WorldFlags{Debug: false},
+					IncludeLibraries: library.All(),
+					ExcludeRoots:     true,
 				})
 				if err != nil {
 					return err

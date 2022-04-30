@@ -55,7 +55,7 @@ type WorldOpt struct {
 	ExcludeRoots     bool
 	ExcludeFormats   bool
 	ExcludeEnums     bool
-	ExcludeLibraries bool
+	IncludeLibraries library.Libraries
 	ExcludeProgram   bool
 	Args             []string
 }
@@ -86,47 +86,48 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 	if !opt.ExcludeEnums {
 		world.RegisterEnums(enums.All()...)
 	}
-	if !opt.ExcludeLibraries {
-		libraries := library.All()
-		if !opt.ExcludeProgram {
-			libraries = append(libraries, ProgramLibrary)
-			sort.Sort(libraries)
-		}
-		included := map[string]bool{}
-		for _, lib := range libraries {
-			included[lib.Name] = true
-		}
-		for _, list := range opt.Libraries {
-			for _, name := range strings.Split(list, ",") {
-				name = strings.TrimSpace(name)
-				if name == "" {
-					continue
-				}
-				include := true
-				switch name[0] {
-				case '-':
-					include = false
-					name = name[1:]
-				case '+':
-					include = true
-					name = name[1:]
-				}
-				if name == "*" {
-					for lib := range included {
-						included[lib] = include
-					}
-				} else if _, ok := included[name]; ok {
-					included[name] = include
-				}
-			}
-		}
-		for _, lib := range libraries {
-			if !included[lib.Name] {
+	var libraries library.Libraries
+	if !opt.ExcludeProgram {
+		libraries = append(libraries, ProgramLibrary)
+	}
+	if len(opt.IncludeLibraries) > 0 {
+		libraries = append(libraries, opt.IncludeLibraries...)
+	}
+	sort.Sort(libraries)
+	included := make(map[string]bool, len(libraries))
+	for _, lib := range libraries {
+		included[lib.Name] = true
+	}
+	for _, list := range opt.Libraries {
+		for _, name := range strings.Split(list, ",") {
+			name = strings.TrimSpace(name)
+			if name == "" {
 				continue
 			}
-			if err := world.Open(lib); err != nil {
-				return nil, err
+			include := true
+			switch name[0] {
+			case '-':
+				include = false
+				name = name[1:]
+			case '+':
+				include = true
+				name = name[1:]
 			}
+			if name == "*" {
+				for lib := range included {
+					included[lib] = include
+				}
+			} else if _, ok := included[name]; ok {
+				included[name] = include
+			}
+		}
+	}
+	for _, lib := range libraries {
+		if !included[lib.Name] {
+			continue
+		}
+		if err := world.Open(lib); err != nil {
+			return nil, err
 		}
 	}
 	for _, arg := range opt.Args {
