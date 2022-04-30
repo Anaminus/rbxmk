@@ -6,8 +6,19 @@ import (
 	"github.com/anaminus/rbxmk"
 )
 
+type Libraries []rbxmk.Library
+
+func (l Libraries) Len() int      { return len(l) }
+func (l Libraries) Swap(i, j int) { l[i], l[j] = l[j], l[i] }
+func (l Libraries) Less(i, j int) bool {
+	if l[i].Priority == l[j].Priority {
+		return l[i].Name < l[j].Name
+	}
+	return l[i].Priority < l[j].Priority
+}
+
 // registry contains registered Libraries.
-var registry []rbxmk.Library
+var registry Libraries
 
 // register registers a Library to be returned by All.
 func register(library rbxmk.Library) {
@@ -16,14 +27,9 @@ func register(library rbxmk.Library) {
 
 // All returns a list of Libraries defined in the package, ordered by ascending
 // priority.
-func All() []rbxmk.Library {
-	libs := make([]rbxmk.Library, len(registry))
+func All() Libraries {
+	libs := make(Libraries, len(registry))
 	copy(libs, registry)
-	sort.SliceStable(libs, func(i, j int) bool {
-		if libs[i].Priority == libs[j].Priority {
-			return libs[i].Name < libs[j].Name
-		}
-		return libs[i].Priority < libs[j].Priority
-	})
+	sort.Sort(libs)
 	return libs
 }
