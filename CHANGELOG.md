@@ -3,6 +3,13 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+**Highlights:**
+- Add `plugin` dump format, which enables custom dump formats.
+	- Runs a Lua script in a limited environment.
+	- Receives a table that describes the Lua environment, and a function to
+	  write output.
+- Add "Priority" field to libraries in dump format.
+
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.
