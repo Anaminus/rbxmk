@@ -7,11 +7,12 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 )
 
-func init() { register(Table, 10) }
+func init() { register(Table) }
 
 var Table = rbxmk.Library{
 	Name:       "table",
 	ImportedAs: "table",
+	Priority:   10,
 	Open:       openTable,
 	Dump:       dumpTable,
 }

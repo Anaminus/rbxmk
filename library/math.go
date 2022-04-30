@@ -9,11 +9,12 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 )
 
-func init() { register(Math, 10) }
+func init() { register(Math) }
 
 var Math = rbxmk.Library{
 	Name:       "math",
 	ImportedAs: "math",
+	Priority:   10,
 	Open:       openMath,
 	Dump:       dumpMath,
 }

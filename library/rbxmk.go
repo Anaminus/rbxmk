@@ -14,11 +14,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(RBXMK, 0) }
+func init() { register(RBXMK) }
 
 var RBXMK = rbxmk.Library{
 	Name:       "rbxmk",
 	ImportedAs: "rbxmk",
+	Priority:   0,
 	Open:       openRBXMK,
 	Dump:       dumpRBXMK,
 	Types: []func() rbxmk.Reflector{

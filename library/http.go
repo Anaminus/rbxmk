@@ -9,11 +9,12 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-func init() { register(HTTP, 10) }
+func init() { register(HTTP) }
 
 var HTTP = rbxmk.Library{
 	Name:       "http",
 	ImportedAs: "http",
+	Priority:   10,
 	Open:       openHTTP,
 	Dump:       dumpHTTP,
 	Types: []func() rbxmk.Reflector{

@@ -10,11 +10,12 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 )
 
-func init() { register(OS, 10) }
+func init() { register(OS) }
 
 var OS = rbxmk.Library{
 	Name:       "os",
 	ImportedAs: "os",
+	Priority:   10,
 	Open:       openOS,
 	Dump:       dumpOS,
 }

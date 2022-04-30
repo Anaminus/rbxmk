@@ -16,11 +16,12 @@ func setUserdata(s rbxmk.State, t string) int {
 	return 1
 }
 
-func init() { register(Types, 10) }
+func init() { register(Types) }
 
 var Types = rbxmk.Library{
 	Name:       "types",
 	ImportedAs: "types",
+	Priority:   10,
 	Open:       openTypes,
 	Dump:       dumpTypes,
 }

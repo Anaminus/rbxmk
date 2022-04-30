@@ -9,11 +9,12 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 )
 
-func init() { register(Path, 10) }
+func init() { register(Path) }
 
 var Path = rbxmk.Library{
 	Name:       "path",
 	ImportedAs: "path",
+	Priority:   10,
 	Open:       openPath,
 	Dump:       dumpPath,
 }

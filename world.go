@@ -136,6 +136,9 @@ type Library struct {
 	// ImportedAs is the name that the library is imported as. Empty indicates
 	// that the contents of the library are merged into the global environment.
 	ImportedAs string
+	// Priority indicates the order in which the library is loaded in relation
+	// to other libraries.
+	Priority int
 	// Open returns a table with the contents of the library.
 	Open func(s State) *lua.LTable
 	// Dump returns a description of the library's API.

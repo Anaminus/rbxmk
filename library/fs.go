@@ -15,11 +15,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(FS, 10) }
+func init() { register(FS) }
 
 var FS = rbxmk.Library{
 	Name:       "fs",
 	ImportedAs: "fs",
+	Priority:   10,
 	Open:       openFS,
 	Dump:       dumpFS,
 	Types: []func() rbxmk.Reflector{

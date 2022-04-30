@@ -8,11 +8,12 @@ import (
 	"github.com/anaminus/rbxmk/reflect"
 )
 
-func init() { register(Roblox, 1) }
+func init() { register(Roblox) }
 
 var Roblox = rbxmk.Library{
 	Name:       "roblox",
 	ImportedAs: "",
+	Priority:   1,
 	Open:       openRoblox,
 	Dump:       dumpRoblox,
 	Types: []func() rbxmk.Reflector{

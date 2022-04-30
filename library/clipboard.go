@@ -14,11 +14,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(Clipboard, 10) }
+func init() { register(Clipboard) }
 
 var Clipboard = rbxmk.Library{
 	Name:       "clipboard",
 	ImportedAs: "clipboard",
+	Priority:   10,
 	Open:       openClipboard,
 	Dump:       dumpClipboard,
 	Types: []func() rbxmk.Reflector{

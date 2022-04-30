@@ -9,11 +9,12 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-func init() { register(Sym, 10) }
+func init() { register(Sym) }
 
 var Sym = rbxmk.Library{
 	Name:       "sym",
 	ImportedAs: "sym",
+	Priority:   10,
 	Open:       openSym,
 	Dump:       dumpSym,
 	Types: []func() rbxmk.Reflector{
