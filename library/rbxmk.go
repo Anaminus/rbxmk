@@ -19,7 +19,7 @@ func init() { register(RBXMK) }
 var RBXMK = rbxmk.Library{
 	Name:       "rbxmk",
 	ImportedAs: "rbxmk",
-	Priority:   0,
+	Priority:   1,
 	Open:       openRBXMK,
 	Dump:       dumpRBXMK,
 	Types: []func() rbxmk.Reflector{

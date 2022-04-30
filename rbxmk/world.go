@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -87,6 +88,10 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 	}
 	if !opt.ExcludeLibraries {
 		libraries := library.All()
+		if !opt.ExcludeProgram {
+			libraries = append(libraries, ProgramLibrary)
+			sort.Sort(libraries)
+		}
 		included := map[string]bool{}
 		for _, lib := range libraries {
 			included[lib.Name] = true
@@ -122,11 +127,6 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 			if err := world.Open(lib); err != nil {
 				return nil, err
 			}
-		}
-	}
-	if !opt.ExcludeProgram {
-		if err := world.Open(ProgramLibrary); err != nil {
-			return nil, err
 		}
 	}
 	for _, arg := range opt.Args {
@@ -179,6 +179,7 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 var ProgramLibrary = rbxmk.Library{
 	Name:       "program",
 	ImportedAs: "",
+	Priority:   -1,
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)
 		lib.RawSetString("_RBXMK_VERSION", lua.LString(VersionString()))

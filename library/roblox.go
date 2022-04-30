@@ -13,7 +13,7 @@ func init() { register(Roblox) }
 var Roblox = rbxmk.Library{
 	Name:       "roblox",
 	ImportedAs: "",
-	Priority:   1,
+	Priority:   2,
 	Open:       openRoblox,
 	Dump:       dumpRoblox,
 	Types: []func() rbxmk.Reflector{
