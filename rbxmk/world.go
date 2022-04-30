@@ -178,7 +178,7 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 var ProgramLibrary = rbxmk.Library{
 	Name:       "program",
 	ImportedAs: "",
-	Priority:   -1,
+	Priority:   0,
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)
 		lib.RawSetString("_RBXMK_VERSION", lua.LString(VersionString()))

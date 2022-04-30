@@ -12,7 +12,7 @@ func init() { register(Base) }
 var Base = rbxmk.Library{
 	Name:       "base",
 	ImportedAs: "",
-	Priority:   0,
+	Priority:   -1,
 	Open:       openBase,
 	Dump:       dumpBase,
 }
