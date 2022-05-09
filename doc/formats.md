@@ -187,10 +187,10 @@ Indent | string | `"\t"`  | Determines the indentation of encoded content. If an
 The **desc.json** format encodes a root descriptor file, more commonly known as
 an "API dump", in JSON format.
 
-Direction | Type                 | Description
-----------|----------------------|------------
-Decode    | [RootDesc][RootDesc] | A root descriptor.
-Encode    | [RootDesc][RootDesc] | A root descriptor.
+Direction | Type         | Description
+----------|--------------|------------
+Decode    | [Desc][Desc] | A root descriptor.
+Encode    | [Desc][Desc] | A root descriptor.
 
 This format has no options.
 
@@ -402,10 +402,10 @@ Encode    | Objects                | A list of Instances, interpreted as childre
 
 This format has the following options:
 
-Field    | Type                                | Default       | Description
----------|-------------------------------------|---------------|------------
-Desc     | [RootDesc][RootDesc] \| bool \| nil | `nil`         | Sets the descriptor to be used when encoding or decoding. If `false`, then no descriptor is used. Otherwise, the descriptor of the root instance is used **with all descendants**, falling back to [globalDesc][rbxmk.globalDesc].
-DescMode | string                              | `"NonStrict"` | Determines how deviations from the descriptor are handled. `"NonStrict"` causes deviations to be ignored. `"Strict"` causes an error to be thrown for the first deviation. `"Preserve"` tries to retain as much information as possible, usually by behaving as if no descriptor is set.
+Field    | Type                        | Default       | Description
+---------|-----------------------------|---------------|------------
+Desc     | [Desc][Desc] \| bool \| nil | `nil`         | Sets the descriptor to be used when encoding or decoding. If `false`, then no descriptor is used. Otherwise, the descriptor of the root instance is used **with all descendants**, falling back to [globalDesc][rbxmk.globalDesc].
+DescMode | string                      | `"NonStrict"` | Determines how deviations from the descriptor are handled. `"NonStrict"` causes deviations to be ignored. `"Strict"` causes an error to be thrown for the first deviation. `"Preserve"` tries to retain as much information as possible, usually by behaving as if no descriptor is set.
 
 ## rbxlx
 [rbxlx]: #user-content-rbxlx
@@ -469,5 +469,5 @@ This format has no options.
 [Intlike]: types.md#user-content-intlike
 [Numberlike]: types.md#user-content-numberlike
 [rbxmk.globalDesc]: libraries.md#user-content-rbxmkglobaldesc
-[RootDesc]: types.md#user-content-rootdesc
+[Desc]: types.md#user-content-desc
 [Stringlike]: types.md#user-content-stringlike

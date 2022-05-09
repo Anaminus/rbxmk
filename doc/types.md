@@ -31,7 +31,7 @@ This document contains a reference to the types available to rbxmk scripts.
 24. [ParameterDesc][ParameterDesc]
 25. [PropertyDesc][PropertyDesc]
 26. [RBXAssetOptions][RBXAssetOptions]
-27. [RootDesc][RootDesc]
+27. [Desc][Desc]
 28. [Stringlike][Stringlike]
 29. [TypeDesc][TypeDesc]
 30. [UniqueId][UniqueId]
@@ -242,8 +242,8 @@ Member                                       | Kind
 [DescAction.SetFields][DescAction.SetFields] | method
 
 A DescAction can be created with the [DescAction.new][DescAction.new]
-constructor. It is also returned from the [RootDesc.Diff][RootDesc.Diff] method
-and the [desc-patch.json](formats.md#user-content-desc-patchjson) format.
+constructor. It is also returned from the [Desc.Diff][Desc.Diff] method and the
+[desc-patch.json](formats.md#user-content-desc-patchjson) format.
 
 ### DescAction.new
 [DescAction.new]: #user-content-descactionnew
@@ -544,7 +544,7 @@ An Instance can be created with the [Instance.new][Instance.new] constructor.
 
 ### Instance.new
 [Instance.new]: #user-content-instancenew
-<code>Instance.new(className: [string](##), parent: [Instance][Instance]?, desc: [RootDesc][RootDesc]?): [Instance][Instance] \| [DataModel][DataModel]</code>
+<code>Instance.new(className: [string](##), parent: [Instance][Instance]?, desc: [Desc][Desc]?): [Instance][Instance] \| [DataModel][DataModel]</code>
 
 The **Instance.new** constructor returns a new Instance of the given class.
 *className* sets the [ClassName][Instance.ClassName] property of the instance.
@@ -796,7 +796,7 @@ instance. AttrConfig is inherited, the behavior of which is described in the
 
 ### Instance[sym.Desc]
 [Instance.sym.Desc]: #user-content-instancesymdesc
-<code>Instance\[sym.Desc\]: [RootDesc][RootDesc] \| [nil](##)</code>
+<code>Instance\[sym.Desc\]: [Desc][Desc] \| [nil](##)</code>
 
 The **Desc** symbol is the descriptor being used by the instance. Desc is
 inherited, the behavior of which is described in the [Value
@@ -835,7 +835,7 @@ inheritance](README.md#user-content-value-inheritance) section.
 
 ### Instance[sym.RawDesc]
 [Instance.sym.RawDesc]: #user-content-instancesymrawdesc
-<code>Instance\[sym.RawDesc\]: [RootDesc][RootDesc] \| [bool](##) \| [nil](##)</code>
+<code>Instance\[sym.RawDesc\]: [Desc][Desc] \| [bool](##) \| [nil](##)</code>
 
 The **RawDesc** symbol is the raw member corresponding to to
 [sym.Desc][Instance.sym.Desc]. It is similar to Desc, except that it considers
@@ -929,119 +929,119 @@ Cookies        | [Cookies][Cookies]?              | Optional cookies to send wit
 Format         | [FormatSelector][FormatSelector] | The format used to encode or decode an asset.
 Body           | [any](##)?                       | The body of an asset, to be encoded by the specified format.
 
-## RootDesc
-[RootDesc]: #user-content-rootdesc
+## Desc
+[Desc]: #user-content-Desc
 
-The **RootDesc** type describes an entire API. It has the following members:
+The **Desc** type describes an entire API. It has the following members:
 
 Member                                       | Kind
 ---------------------------------------------|-----
-[RootDesc.Class][RootDesc.Class]             | method
-[RootDesc.Classes][RootDesc.Classes]         | method
-[RootDesc.ClassTag][RootDesc.ClassTag]       | method
-[RootDesc.Copy][RootDesc.Copy]               | method
-[RootDesc.Diff][RootDesc.Diff]               | method
-[RootDesc.Enum][RootDesc.Enum]               | method
-[RootDesc.EnumItem][RootDesc.EnumItem]       | method
-[RootDesc.EnumItems][RootDesc.EnumItems]     | method
-[RootDesc.EnumItemTag][RootDesc.EnumItemTag] | method
-[RootDesc.Enums][RootDesc.Enums]             | method
-[RootDesc.EnumTag][RootDesc.EnumTag]         | method
-[RootDesc.EnumTypes][RootDesc.EnumTypes]     | method
-[RootDesc.Member][RootDesc.Member]           | method
-[RootDesc.Members][RootDesc.Members]         | method
-[RootDesc.MemberTag][RootDesc.MemberTag]     | method
-[RootDesc.Patch][RootDesc.Patch]             | method
-[RootDesc.SetClass][RootDesc.SetClass]       | method
-[RootDesc.SetEnum][RootDesc.SetEnum]         | method
-[RootDesc.SetEnumItem][RootDesc.SetEnumItem] | method
-[RootDesc.SetMember][RootDesc.SetMember]     | method
+[Desc.Class][Desc.Class]             | method
+[Desc.Classes][Desc.Classes]         | method
+[Desc.ClassTag][Desc.ClassTag]       | method
+[Desc.Copy][Desc.Copy]               | method
+[Desc.Diff][Desc.Diff]               | method
+[Desc.Enum][Desc.Enum]               | method
+[Desc.EnumItem][Desc.EnumItem]       | method
+[Desc.EnumItems][Desc.EnumItems]     | method
+[Desc.EnumItemTag][Desc.EnumItemTag] | method
+[Desc.Enums][Desc.Enums]             | method
+[Desc.EnumTag][Desc.EnumTag]         | method
+[Desc.EnumTypes][Desc.EnumTypes]     | method
+[Desc.Member][Desc.Member]           | method
+[Desc.Members][Desc.Members]         | method
+[Desc.MemberTag][Desc.MemberTag]     | method
+[Desc.Patch][Desc.Patch]             | method
+[Desc.SetClass][Desc.SetClass]       | method
+[Desc.SetEnum][Desc.SetEnum]         | method
+[Desc.SetEnumItem][Desc.SetEnumItem] | method
+[Desc.SetMember][Desc.SetMember]     | method
 
-A RootDesc can be created with the [RootDesc.new][RootDesc.new] constructor.
+A Desc can be created with the [Desc.new][Desc.new] constructor.
 
-### RootDesc.new
-[RootDesc.new]: #user-content-rootdescnew
-<code>RootDesc.new(): [RootDesc][RootDesc]</code>
+### Desc.new
+[Desc.new]: #user-content-descnew
+<code>Desc.new(): [Desc][Desc]</code>
 
-The **new** constructor creates a new RootDesc.
+The **new** constructor creates a new Desc.
 
-### RootDesc.Class
-[RootDesc.Class]: #user-content-rootdescclass
-<code>RootDesc:Class(class: [string](##)): [ClassDesc][ClassDesc]?</code>
+### Desc.Class
+[Desc.Class]: #user-content-descclass
+<code>Desc:Class(class: [string](##)): [ClassDesc][ClassDesc]?</code>
 
 The **Class** method returns the class of the API corresponding to the name
 *class*, or nil if the class does not exist.
 
-### RootDesc.Classes
-[RootDesc.Classes]: #user-content-rootdescclasses
-<code>RootDesc:Classes(): {[string](##)}</code>
+### Desc.Classes
+[Desc.Classes]: #user-content-descclasses
+<code>Desc:Classes(): {[string](##)}</code>
 
 The **Classes** method returns a list of names of all the classes of the API.
 
-### RootDesc.ClassTag
-[RootDesc.ClassTag]: #user-content-rootdescclasstag
-<code>RootDesc:ClassTag(class: [string](##), tag: [string](##)): [bool](##)?</code>
+### Desc.ClassTag
+[Desc.ClassTag]: #user-content-descclasstag
+<code>Desc:ClassTag(class: [string](##), tag: [string](##)): [bool](##)?</code>
 
 Returns whether *tag* is set for the class corresponding to the name *class*.
 Returns nil if the class does not exist.
 
-### RootDesc.Copy
-[RootDesc.Copy]: #user-content-rootdesccopy
-<code>RootDesc:Copy(): [RootDesc][RootDesc]</code>
+### Desc.Copy
+[Desc.Copy]: #user-content-desccopy
+<code>Desc:Copy(): [Desc][Desc]</code>
 
-The **Copy** method returns a deep copy of the RootDesc.
+The **Copy** method returns a deep copy of the Desc.
 
-### RootDesc.Diff
-[RootDesc.Diff]: #user-content-rootdescdiff
-<code>RootDesc:Diff(next: [RootDesc][RootDesc]?): (diff: [DescActions][DescActions])</code>
+### Desc.Diff
+[Desc.Diff]: #user-content-descdiff
+<code>Desc:Diff(next: [Desc][Desc]?): (diff: [DescActions][DescActions])</code>
 
 The **Diff** method compares the root descriptor with another and returns the
 differences between them. A nil value for *next* is treated the same as an empty
 descriptor. The result is a list of actions that describe how to transform the
 descriptor into *next*.
 
-### RootDesc.Enum
-[RootDesc.Enum]: #user-content-rootdescenum
+### Desc.Enum
+[Desc.Enum]: #user-content-descenum
 
 The **Enum** method returns the enum of the API corresponding to the name
 *enum*, or nil if the enum does not exist.
 
-### RootDesc.EnumItem
-[RootDesc.EnumItem]: #user-content-rootdescenumitem
+### Desc.EnumItem
+[Desc.EnumItem]: #user-content-descenumitem
 
 The **EnumItem** method returns the enum item of the API corresponding to the
 enum name *enum* and item name *item*, or nil if the enum or item does not
 exist.
 
-### RootDesc.EnumItems
-[RootDesc.EnumItems]: #user-content-rootdescenumitems
+### Desc.EnumItems
+[Desc.EnumItems]: #user-content-descenumitems
 
 The **EnumItems** method returns a list of names of all the items of the enum
 corresponding to the name *enum*. Returns nil if the enum does not exist.
 
-### RootDesc.EnumItemTag
-[RootDesc.EnumItemTag]: #user-content-rootdescenumitemtag
+### Desc.EnumItemTag
+[Desc.EnumItemTag]: #user-content-descenumitemtag
 
 Returns whether *tag* is set for the enum item corresponding to the name *item*
 of the enum named *enum*. Returns nil if the enum or item does not exist.
 
-### RootDesc.Enums
-[RootDesc.Enums]: #user-content-rootdescenums
+### Desc.Enums
+[Desc.Enums]: #user-content-descenums
 
 The **Enums** method returns a list of names of all the enums of the API.
 
-### RootDesc.EnumTag
-[RootDesc.EnumTag]: #user-content-rootdescenumtag
+### Desc.EnumTag
+[Desc.EnumTag]: #user-content-descenumtag
 
 Returns whether *tag* is set for the enum corresponding to the name *enum*.
 Returns nil if the enum does not exist.
 
-### RootDesc.EnumTypes
-[RootDesc.EnumTypes]: #user-content-rootdescenumtypes
-<code>RootDesc:EnumTypes(): [Enums](##)</code>
+### Desc.EnumTypes
+[Desc.EnumTypes]: #user-content-descenumtypes
+<code>Desc:EnumTypes(): [Enums](##)</code>
 
 The **EnumTypes** method returns a set of enum values generated from the current
-state of the RootDesc. These enums are associated with the RootDesc, and may be
+state of the Desc. These enums are associated with the Desc, and may be
 used by certain properties, so it is important to generate them before operating
 on such properties. Additionally, EnumTypes should be called after modifying
 enum and enum item descriptors, to regenerate the enum values.
@@ -1051,41 +1051,41 @@ pattern is to assign the result of EnumTypes to the "Enum" variable so that it
 matches Roblox's API:
 
 ```lua
-Enum = rootDesc:EnumTypes()
+Enum = Desc:EnumTypes()
 print(Enum.NormalId.Front)
 ```
 
-### RootDesc.Member
-[RootDesc.Member]: #user-content-rootdescmember
+### Desc.Member
+[Desc.Member]: #user-content-descmember
 
 The **Member** method returns the class member of the API corresponding to the
 class name *enum* and member name *item*, or nil if the class or member does not
 exist.
 
-### RootDesc.Members
-[RootDesc.Members]: #user-content-rootdescmembers
+### Desc.Members
+[Desc.Members]: #user-content-descmembers
 
 The **Members** method returns a list of names of all the members of the class
 corresponding to the name *class*. Returns nil if the class does not exist.
 
-### RootDesc.MemberTag
-[RootDesc.MemberTag]: #user-content-rootdescmembertag
+### Desc.MemberTag
+[Desc.MemberTag]: #user-content-descmembertag
 
 Returns whether *tag* is set for the class member corresponding to the name
 *member* of the class named *class*. Returns nil if the class or member does not
 exist.
 
-### RootDesc.Patch
-[RootDesc.Patch]: #user-content-rootdescpatch
-<code>RootDesc:Patch(actions: [DescActions][DescActions])</code>
+### Desc.Patch
+[Desc.Patch]: #user-content-descpatch
+<code>Desc:Patch(actions: [DescActions][DescActions])</code>
 
 The **Patch** method transforms the root descriptor according to a list of
 actions. Each action in the list is applied in order. Actions that are
 incompatible are ignored.
 
-### RootDesc.SetClass
-[RootDesc.SetClass]: #user-content-rootdescsetclass
-<code>RootDesc:SetClass(class: [string](##), desc: [ClassDesc][ClassDesc]?): [bool](##)</code>
+### Desc.SetClass
+[Desc.SetClass]: #user-content-descsetclass
+<code>Desc:SetClass(class: [string](##), desc: [ClassDesc][ClassDesc]?): [bool](##)</code>
 
 The **SetClass** method sets the fields of the class corresponding to the name
 *class*. If the class already exists, then only non-nil fields are set. Fields
@@ -1094,9 +1094,9 @@ removed.
 
 Returns false if *desc* is nil and no class exists. Returns true otherwise.
 
-### RootDesc.SetEnum
-[RootDesc.SetEnum]: #user-content-rootdescsetenum
-<code>RootDesc:SetEnum(enum: [string](##), desc: [EnumDesc][EnumDesc]?): [bool](##)</code>
+### Desc.SetEnum
+[Desc.SetEnum]: #user-content-descsetenum
+<code>Desc:SetEnum(enum: [string](##), desc: [EnumDesc][EnumDesc]?): [bool](##)</code>
 
 The **SetEnum** method sets the fields of the enum corresponding to the name
 *enum*. If the enum already exists, then only non-nil fields are set. Fields
@@ -1104,9 +1104,9 @@ with the incorrect type are ignored. If *desc* is nil, then the enum is removed.
 
 Returns false if *desc* is nil and no enum exists. Returns true otherwise.
 
-### RootDesc.SetEnumItem
-[RootDesc.SetEnumItem]: #user-content-rootdescsetenumitem
-<code>RootDesc:SetEnumItem(enum: [string](##),item: [string](##), desc: [EnumItemDesc][EnumItemDesc]?): [bool](##)?</code>
+### Desc.SetEnumItem
+[Desc.SetEnumItem]: #user-content-descsetenumitem
+<code>Desc:SetEnumItem(enum: [string](##),item: [string](##), desc: [EnumItemDesc][EnumItemDesc]?): [bool](##)?</code>
 
 The **SetEnumItem** method sets the fields of the enum item corresponding to the
 name *item* of the enum named *enum*. If the item already exists, then only
@@ -1116,9 +1116,9 @@ nil, then the enum is removed.
 Returns nil if the enum does not exist. Returns false if *desc* is nil and no
 item exists. Returns true otherwise.
 
-### RootDesc.SetMember
-[RootDesc.SetMember]: #user-content-rootdescsetmember
-<code>RootDesc:SetMember(class: [string](##), member: [string](##), desc: [MemberDesc][MemberDesc]?): [bool](##)?</code>
+### Desc.SetMember
+[Desc.SetMember]: #user-content-descsetmember
+<code>Desc:SetMember(class: [string](##), member: [string](##), desc: [MemberDesc][MemberDesc]?): [bool](##)?</code>
 
 The **SetMember** method sets the fields of the member corresponding to the name
 *member* of the class named *class*. If the member already exists, then only

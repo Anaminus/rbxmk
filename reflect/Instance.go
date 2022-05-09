@@ -31,7 +31,7 @@ func pushPropertyTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
 	return u, nil
 }
 
-func checkEnumDesc(desc *rtypes.RootDesc, name, class, prop string) (*rtypes.Enum, error) {
+func checkEnumDesc(desc *rtypes.Desc, name, class, prop string) (*rtypes.Enum, error) {
 	var enumValue *rtypes.Enum
 	if desc.EnumTypes != nil {
 		enumValue = desc.EnumTypes.Enum(name)
@@ -55,7 +55,7 @@ func checkEnumDesc(desc *rtypes.RootDesc, name, class, prop string) (*rtypes.Enu
 	return enumValue, nil
 }
 
-func checkClassDesc(desc *rtypes.RootDesc, name, class, prop string) (*rbxdump.Class, error) {
+func checkClassDesc(desc *rtypes.Desc, name, class, prop string) (*rbxdump.Class, error) {
 	classDesc := desc.Classes[name]
 	if classDesc == nil {
 		return nil, fmt.Errorf(
@@ -126,7 +126,7 @@ func reflectOne(s rbxmk.State, value types.Value) (lv lua.LValue, err error) {
 	return lv, nil
 }
 
-func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string) (lv lua.LValue, err error) {
+func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string) (lv lua.LValue, err error) {
 	var classDesc *rbxdump.Class
 	if desc != nil {
 		classDesc = desc.Classes[inst.ClassName]
@@ -207,7 +207,7 @@ func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, na
 	return pushPropertyTo(s, value)
 }
 
-func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string, value types.Value) (types.PropValue, error) {
+func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string, value types.Value) (types.PropValue, error) {
 	var classDesc *rbxdump.Class
 	if desc != nil {
 		classDesc = desc.Classes[inst.ClassName]
@@ -343,7 +343,7 @@ func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc,
 	return prop, nil
 }
 
-func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.RootDesc, name string, value types.Value) error {
+func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string, value types.Value) error {
 	prop, err := canSetProperty(s, inst, desc, name, value)
 	if err != nil {
 		return err
@@ -576,8 +576,8 @@ func Instance() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
-					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
-					case *rtypes.RootDesc:
+					switch v := s.PullAnyOf(3, "Desc", "bool", "nil").(type) {
+					case *rtypes.Desc:
 						inst.SetDesc(v, false)
 					case types.Bool:
 						if v {
@@ -594,7 +594,7 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType: dt.Or{
-							dt.Prim("RootDesc"),
+							dt.Prim("Desc"),
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
@@ -617,8 +617,8 @@ func Instance() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
-					switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
-					case *rtypes.RootDesc:
+					switch v := s.PullAnyOf(3, "Desc", "bool", "nil").(type) {
+					case *rtypes.Desc:
 						inst.SetDesc(v, false)
 					case types.Bool:
 						if v {
@@ -635,7 +635,7 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Property {
 					return dump.Property{
 						ValueType: dt.Or{
-							dt.Prim("RootDesc"),
+							dt.Prim("Desc"),
 							dt.Prim("bool"),
 							dt.Prim("nil"),
 						},
@@ -1176,17 +1176,17 @@ func Instance() rbxmk.Reflector {
 						return s.RaiseError("DataModel Parent must be nil")
 					}
 
-					var desc *rtypes.RootDesc
+					var desc *rtypes.Desc
 					var blocked bool
 					if s.Count() >= 3 {
-						switch v := s.PullAnyOf(3, "RootDesc", "bool", "nil").(type) {
+						switch v := s.PullAnyOf(3, "Desc", "bool", "nil").(type) {
 						case rtypes.NilType:
 						case types.Bool:
 							if v {
 								return s.RaiseError("descriptor cannot be true")
 							}
 							blocked = true
-						case *rtypes.RootDesc:
+						case *rtypes.Desc:
 							desc = v
 						default:
 							return s.ReflectorError(3)
@@ -1220,7 +1220,7 @@ func Instance() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "className", Type: dt.Prim("string")},
 								{Name: "parent", Type: dt.Optional{T: dt.Prim("Instance")}},
-								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("RootDesc"), dt.Prim("bool")}}}},
+								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim("Desc"), dt.Prim("bool")}}}},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Or{dt.Prim("Instance"), dt.Prim("DataModel")}},
@@ -1268,7 +1268,7 @@ func Instance() rbxmk.Reflector {
 			Nil,
 			Objects,
 			Optional,
-			RootDesc,
+			Desc,
 			String,
 			Symbol,
 			Variant,

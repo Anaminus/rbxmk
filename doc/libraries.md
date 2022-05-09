@@ -184,7 +184,7 @@ for details on how this field is inherited by [Instances][Instance].
 
 ### rbxmk.globalDesc
 [rbxmk.globalDesc]: #user-content-rbxmkglobaldesc
-<code>rbxmk.globalDesc: [RootDesc][RootDesc]?</code>
+<code>rbxmk.globalDesc: [Desc][Desc]?</code>
 
 The **globalDesc** field gets or sets the global root descriptor. Most items
 that utilize a root descriptor will fallback to the global descriptor when
@@ -640,12 +640,12 @@ The following symbols are defined:
 Symbol                                          | Description
 ------------------------------------------------|------------
 [sym.AttrConfig][Instance.sym.AttrConfig]       | Gets the inherited [AttrConfig][AttrConfig] of an instance.
-[sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][RootDesc] of an instance.
+[sym.Desc][Instance.sym.Desc]                   | Gets the inherited [descriptor][Desc] of an instance.
 [sym.IsService][Instance.sym.IsService]         | Determines whether an instance is a service.
 [sym.Metadata][DataModel.sym.Metadata]          | Gets the metadata of a [DataModel][DataModel].
 [sym.Properties][Instance.sym.Properties]       | Gets the properties of an instance.
 [sym.RawAttrConfig][Instance.sym.RawAttrConfig] | Accesses the direct [AttrConfig][AttrConfig] of an instance.
-[sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][RootDesc] of an instance.
+[sym.RawDesc][Instance.sym.RawDesc]             | Accesses the direct [descriptor][Desc] of an instance.
 [sym.Reference][Instance.sym.Reference]         | Determines the value used to identify the instance.
 
 ## table
@@ -785,5 +785,5 @@ print(typeof(model.WorldPivotData.Value)) --> CFrame
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
 [RBXAssetOptions]: types.md#user-content-rbxassetoptions
-[RootDesc]: types.md#user-content-rootdesc
+[Desc]: types.md#user-content-desc
 [TypeDesc]: types.md#user-content-typedesc

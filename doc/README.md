@@ -311,15 +311,15 @@ The solution to this is **descriptors**. A descriptor contains information about
 what classes exist, the properties that exist on each class, what enums are
 defined, and so on.
 
-The primary descriptor type is the [**RootDesc**][RootDesc]. This contains a
-complete description of the classes and enums of an entire API.
+The primary descriptor type is the [**Desc**][Desc]. This contains a complete
+description of the classes and enums of an entire API.
 
-An [Instance][Instance] can have a RootDesc assigned to it. This state is
+An [Instance][Instance] can have a Desc assigned to it. This state is
 inherited by any descendant instances. See [sym.Desc][Instance.sym.Desc] for
 more information.
 
 Additionally, the [rbxmk.globalDesc][rbxmk.globalDesc] field may be used to
-apply a RootDesc globally. When globalDesc is set, any instance that wouldn't
+apply a Desc globally. When globalDesc is set, any instance that wouldn't
 otherwise inherit a descriptor will use this global descriptor.
 
 When an instance has a descriptor, several behaviors are enforced:
@@ -340,7 +340,7 @@ When an instance has a descriptor, several behaviors are enforced:
   [DataModel.GetService](types.md#user-content-datamodelgetservice) must have
   the "Service" tag.
 
-A RootDesc has methods to get and set information on the fly. Descriptors for a
+A Desc has methods to get and set information on the fly. Descriptors for a
 particular API element are represented by a dictionary that contains the fields
 of the element. The following types are related:
 
@@ -348,6 +348,7 @@ Type                           | Description
 -------------------------------|------------
 [CallbackDesc][CallbackDesc]   | Describes a callback class member.
 [ClassDesc][ClassDesc]         | Describes a class.
+[Desc][Desc]                   | Describes an entire API.
 [EnumDesc][EnumDesc]           | Describes an enum.
 [EnumItemDesc][EnumItemDesc]   | Describes an enum item.
 [EventDesc][EventDesc]         | Describes an event class member.
@@ -355,17 +356,16 @@ Type                           | Description
 [MemberDesc][MemberDesc]       | A sum of the defined member types.
 [ParameterDesc][ParameterDesc] | Describes a parameter of a function, event, or callback.
 [PropertyDesc][PropertyDesc]   | Describes a property class member.
-[RootDesc][RootDesc]           | Describes an entire API.
 [TypeDesc][TypeDesc]           | Describes the type of a value.
 
 ### Diffing and Patching
 [diffing-and-patching]: #user-content-diffing-and-patching
 
 Descriptors can be compared and patched with the
-[RootDesc.Diff](types.md#user-content-rootdescdiff) and
-[RootDesc.Patch](types.md#user-content-rootdescpatch) methods. Diff returns a
-list of [**DescActions**](types.md#user-content-descaction), which describe how
-to transform the first descriptor into the second. Patch can used to apply this
+[Desc.Diff](types.md#user-content-descdiff) and
+[Desc.Patch](types.md#user-content-descpatch) methods. Diff returns a list
+of [**DescActions**](types.md#user-content-descaction), which describe how to
+transform the first descriptor into the second. Patch can used to apply this
 transformation.
 
 ```lua
@@ -397,7 +397,7 @@ Certain symbol fields on [Instances][Instance] have an inheritance behavior.
 Member                                    | Principal type           | Raw member                                      | Global field
 ------------------------------------------|--------------------------|-------------------------------------------------|-------------
 [sym.AttrConfig][Instance.sym.AttrConfig] | [AttrConfig][AttrConfig] | [sym.RawAttrConfig][Instance.sym.RawAttrConfig] | [rbxmk.globalAttrConfig][rbxmk.globalAttrConfig]
-[sym.Desc][Instance.sym.Desc]             | [RootDesc][RootDesc]     | [sym.RawDesc][Instance.sym.RawDesc]             | [rbxmk.globalDesc][rbxmk.globalDesc]
+[sym.Desc][Instance.sym.Desc]             | [Desc][Desc]             | [sym.RawDesc][Instance.sym.RawDesc]             | [rbxmk.globalDesc][rbxmk.globalDesc]
 
 The following sections describe the aspects of this behavior for each member.
 
@@ -526,5 +526,5 @@ The following directories are marked as roots:
 [PropertyDesc]: types.md#user-content-propertydesc
 [rbxmk.globalAttrConfig]: libraries.md#user-content-rbxmkglobalattrconfig
 [rbxmk.globalDesc]: libraries.md#user-content-rbxmkglobaldesc
-[RootDesc]: types.md#user-content-rootdesc
+[Desc]: types.md#user-content-desc
 [TypeDesc]: types.md#user-content-typedesc

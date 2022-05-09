@@ -45,7 +45,7 @@ func TestLatestDesc(t *testing.T) {
 			}
 			t.Log("Classes", len(desc.Classes))
 			t.Log("Enums", len(desc.Enums))
-			if _, err := reflect.RootDesc().PushTo(s.Context(), desc); err != nil {
+			if _, err := reflect.Desc().PushTo(s.Context(), desc); err != nil {
 				t.Errorf("reflect latest descriptor: %s", err.Error())
 			}
 		},

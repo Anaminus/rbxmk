@@ -27,7 +27,7 @@ var RBXMK = rbxmk.Library{
 		reflect.Enums,
 		reflect.FormatSelector,
 		reflect.Nil,
-		reflect.RootDesc,
+		reflect.Desc,
 		reflect.String,
 		reflect.Symbol,
 		reflect.Table,
@@ -205,7 +205,7 @@ func rbxmkOpIndex(s rbxmk.State) int {
 func rbxmkOpNewindex(s rbxmk.State) int {
 	switch field := s.Pull(2, "string").(types.String); field {
 	case "globalDesc":
-		desc, _ := s.PullOpt(3, nil, "RootDesc").(*rtypes.RootDesc)
+		desc, _ := s.PullOpt(3, nil, "Desc").(*rtypes.Desc)
 		if desc == nil {
 			s.Desc = nil
 		}
@@ -274,7 +274,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Description: "Libraries/rbxmk:Fields/globalAttrConfig/Description",
 				},
 				"globalDesc": dump.Property{
-					ValueType:   dt.Optional{T: dt.Prim("RootDesc")},
+					ValueType:   dt.Optional{T: dt.Prim("Desc")},
 					Summary:     "Libraries/rbxmk:Fields/globalDesc/Summary",
 					Description: "Libraries/rbxmk:Fields/globalDesc/Description",
 				},

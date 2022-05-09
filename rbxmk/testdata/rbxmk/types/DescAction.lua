@@ -1,4 +1,4 @@
-local root = RootDesc.new()
+local root = Desc.new()
 root:SetClass("Class", {
 	Name = "Class",
 	Superclass = "",
@@ -9,7 +9,7 @@ root:SetEnum("Enum", {
 	Name = "Enum",
 	Tags = {},
 })
-local diff = RootDesc.new():Diff(root)
+local diff = Desc.new():Diff(root)
 local desc = diff[1]
 local other = diff[2]
 

@@ -6,7 +6,7 @@
 
 <section data-name="Description">
 
-<p>The <b>RootDesc</b> type describes an entire API. It has the following
+<p>The <b>Desc</b> type describes an entire API. It has the following
 members:</p>
 
 <p>$MEMBERS</p>
@@ -19,13 +19,13 @@ members:</p>
 
 <section data-name="Summary">
 
-<p>Creates a RootDesc.</p>
+<p>Creates a Desc.</p>
 
 </section>
 
 <section data-name="Description">
 
-<p>The <b>new</b> constructor creates a new RootDesc.</p>
+<p>The <b>new</b> constructor creates a new Desc.</p>
 
 </section>
 
@@ -90,13 +90,13 @@ API.</p>
 
 <section data-name="Summary">
 
-<p>Returns a deep copy of the RootDesc.</p>
+<p>Returns a deep copy of the Desc.</p>
 
 </section>
 
 <section data-name="Description">
 
-<p>The <b>Copy</b> method returns a deep copy of the RootDesc.</p>
+<p>The <b>Copy</b> method returns a deep copy of the Desc.</p>
 
 </section>
 
@@ -220,16 +220,16 @@ exist.</p>
 <section data-name="Description">
 
 <p>The <b>EnumTypes</b> method returns a set of enum values generated from the
-current state of the RootDesc. These enums are associated with the RootDesc, and
-may be used by certain properties, so it is important to generate them before
-operating on such properties. Additionally, EnumTypes should be called after
-modifying enum and enum item descriptors, to regenerate the enum values.</p>
+current state of the Desc. These enums are associated with the Desc, and may be
+used by certain properties, so it is important to generate them before operating
+on such properties. Additionally, EnumTypes should be called after modifying
+enum and enum item descriptors, to regenerate the enum values.</p>
 
 <p>The API of the resulting enums matches that of Roblox's Enums type. A common
 pattern is to assign the result of EnumTypes to the "Enum" variable so that it
 matches Roblox's API:</p>
 
-<pre><code class="language-lua">Enum = rootDesc:EnumTypes()
+<pre><code class="language-lua">Enum = desc:EnumTypes()
 print(Enum.NormalId.Front)
 </code></pre>
 

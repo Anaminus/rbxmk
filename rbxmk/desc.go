@@ -40,7 +40,7 @@ func mergeDump(prev, next *rbxdump.Root) *rbxdump.Root {
 	return prev
 }
 
-func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err error) {
+func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) {
 	var prev *rbxdump.Root
 	if d.Latest {
 		// Fetch version GUID.
@@ -71,7 +71,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err err
 		if err != nil {
 			return nil, fmt.Errorf("include latest descriptor: decode dump: %w", err)
 		}
-		prev = v.(*rtypes.RootDesc).Root
+		prev = v.(*rtypes.Desc).Root
 	}
 	for _, path := range d.Files {
 		f, err := os.Open(path)
@@ -83,7 +83,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err err
 		if err != nil {
 			return nil, fmt.Errorf("include descriptor from file: decode dump %s: %w", path, err)
 		}
-		next := v.(*rtypes.RootDesc).Root
+		next := v.(*rtypes.Desc).Root
 		prev = mergeDump(prev, next)
 	}
 	for _, path := range d.Patches {
@@ -109,7 +109,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.RootDesc, err err
 	if prev == nil {
 		return nil, nil
 	}
-	return &rtypes.RootDesc{Root: prev}, nil
+	return &rtypes.Desc{Root: prev}, nil
 }
 
 func (d *DescFlags) SetFlags(flags *pflag.FlagSet) {

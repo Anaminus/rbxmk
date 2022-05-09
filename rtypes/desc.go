@@ -7,24 +7,24 @@ import (
 	"github.com/robloxapi/rbxdump/diff"
 )
 
-// RootDesc wraps a rbxdump.Root to implement types.Value.
-type RootDesc struct {
+// Desc wraps a rbxdump.Root to implement types.Value.
+type Desc struct {
 	*rbxdump.Root
 	EnumTypes *Enums
 }
 
 // Type returns a string identifying the type of the value.
-func (*RootDesc) Type() string {
-	return "RootDesc"
+func (*Desc) Type() string {
+	return "Desc"
 }
 
 // String returns a string representation of the value.
-func (d *RootDesc) String() string {
-	return "RootDesc"
+func (d *Desc) String() string {
+	return "Desc"
 }
 
-func (d *RootDesc) Copy() *RootDesc {
-	c := &RootDesc{Root: d.Root.Copy()}
+func (d *Desc) Copy() *Desc {
+	c := &Desc{Root: d.Root.Copy()}
 	if d.EnumTypes != nil {
 		c.GenerateEnumTypes()
 	}
@@ -33,7 +33,7 @@ func (d *RootDesc) Copy() *RootDesc {
 
 // ClassIsA returns whether class is a subclass of superclass. Returns false if
 // d is nil, or if class or superclass are not valid classes.
-func (d *RootDesc) ClassIsA(class, superclass string) bool {
+func (d *Desc) ClassIsA(class, superclass string) bool {
 	if d == nil {
 		return false
 	}
@@ -49,7 +49,7 @@ func (d *RootDesc) ClassIsA(class, superclass string) bool {
 
 // Class returns the class descriptor from a class name. Returns nil if d is
 // nil, or the class was not found.
-func (d *RootDesc) Class(name string) (class *rbxdump.Class) {
+func (d *Desc) Class(name string) (class *rbxdump.Class) {
 	if d == nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (d *RootDesc) Class(name string) (class *rbxdump.Class) {
 
 // Enum returns the enum descriptor from an enum name. Returns nil if d is nil,
 // or the enum was not found.
-func (d *RootDesc) Enum(name string) (enum *rbxdump.Enum) {
+func (d *Desc) Enum(name string) (enum *rbxdump.Enum) {
 	if d == nil {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (d *RootDesc) Enum(name string) (enum *rbxdump.Enum) {
 
 // EnumItem returns the enum item descriptor from an enum and item name. Returns
 // nil if d is nil, or the enum or item was not found.
-func (d *RootDesc) EnumItem(enum, name string) (item *rbxdump.EnumItem) {
+func (d *Desc) EnumItem(enum, name string) (item *rbxdump.EnumItem) {
 	if d == nil {
 		return nil
 	}
@@ -80,7 +80,7 @@ func (d *RootDesc) EnumItem(enum, name string) (item *rbxdump.EnumItem) {
 
 // Member gets a member descriptor from a class, or any class it inherits from.
 // Returns nil if d is nil, or if the class or member was not found.
-func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
+func (d *Desc) Member(class, name string) (member rbxdump.Member) {
 	if d == nil {
 		return nil
 	}
@@ -96,7 +96,7 @@ func (d *RootDesc) Member(class, name string) (member rbxdump.Member) {
 
 // Property gets a property descriptor from a class, or any class it inherits
 // from. Returns nil if d is nil, or if the class or member was not found.
-func (d *RootDesc) Property(class, name string) *rbxdump.Property {
+func (d *Desc) Property(class, name string) *rbxdump.Property {
 	if d == nil {
 		return nil
 	}
@@ -115,7 +115,7 @@ func (d *RootDesc) Property(class, name string) *rbxdump.Property {
 
 // GenerateEnumTypes sets EnumTypes to a collection of enum values generated
 // from the root's enum descriptors.
-func (d *RootDesc) GenerateEnumTypes() {
+func (d *Desc) GenerateEnumTypes() {
 	enums := make([]*Enum, 0, len(d.Enums))
 	for name, enumDesc := range d.Enums {
 		itemDescs := make([]*rbxdump.EnumItem, 0, len(enumDesc.Items))
@@ -141,7 +141,7 @@ func (d *RootDesc) GenerateEnumTypes() {
 }
 
 // Of returns the root descriptor of an instance. If inst is nil, r is returned.
-func (d *RootDesc) Of(inst *Instance) *RootDesc {
+func (d *Desc) Of(inst *Instance) *Desc {
 	if inst != nil {
 		if desc := inst.Desc(); desc != nil {
 			return desc

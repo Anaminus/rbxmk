@@ -12,16 +12,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(RootDesc) }
-func RootDesc() rbxmk.Reflector {
+func init() { register(Desc) }
+func Desc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "RootDesc",
-		PushTo:   rbxmk.PushPtrTypeTo("RootDesc"),
-		PullFrom: rbxmk.PullTypeFrom("RootDesc"),
+		Name:     "Desc",
+		PushTo:   rbxmk.PushPtrTypeTo("Desc"),
+		PullFrom: rbxmk.PullTypeFrom("Desc"),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case **rtypes.RootDesc:
-				*p = v.(*rtypes.RootDesc)
+			case **rtypes.Desc:
+				*p = v.(*rtypes.Desc)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -30,22 +30,22 @@ func RootDesc() rbxmk.Reflector {
 		Methods: rbxmk.Methods{
 			"Copy": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					return s.Push(root.Copy())
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Prim("RootDesc")},
+							{Type: dt.Prim("Desc")},
 						},
-						Summary:     "Types/RootDesc:Methods/Copy/Summary",
-						Description: "Types/RootDesc:Methods/Copy/Description",
+						Summary:     "Types/Desc:Methods/Copy/Summary",
+						Description: "Types/Desc:Methods/Copy/Description",
 					}
 				},
 			},
 			"Class": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					desc, ok := root.Classes[class]
 					if !ok {
@@ -61,14 +61,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("ClassDesc")}},
 						},
-						Summary:     "Types/RootDesc:Methods/Class/Summary",
-						Description: "Types/RootDesc:Methods/Class/Description",
+						Summary:     "Types/Desc:Methods/Class/Summary",
+						Description: "Types/Desc:Methods/Class/Description",
 					}
 				},
 			},
 			"Classes": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					classes := make(rtypes.Array, 0, len(root.Classes))
 					for _, class := range root.Classes {
 						classes = append(classes, types.String(class.Name))
@@ -83,14 +83,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "Types/RootDesc:Methods/Classes/Summary",
-						Description: "Types/RootDesc:Methods/Classes/Description",
+						Summary:     "Types/Desc:Methods/Classes/Summary",
+						Description: "Types/Desc:Methods/Classes/Description",
 					}
 				},
 			},
 			"SetClass": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					desc := s.PullOpt(3, rtypes.Nil, "ClassDesc")
 					switch desc := desc.(type) {
@@ -120,14 +120,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Types/RootDesc:Methods/SetClass/Summary",
-						Description: "Types/RootDesc:Methods/SetClass/Description",
+						Summary:     "Types/Desc:Methods/SetClass/Summary",
+						Description: "Types/Desc:Methods/SetClass/Description",
 					}
 				},
 			},
 			"ClassTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					tag := string(s.Pull(3, "string").(types.String))
 					desc, ok := root.Classes[class]
@@ -145,14 +145,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/ClassTag/Summary",
-						Description: "Types/RootDesc:Methods/ClassTag/Description",
+						Summary:     "Types/Desc:Methods/ClassTag/Summary",
+						Description: "Types/Desc:Methods/ClassTag/Description",
 					}
 				},
 			},
 			"Member": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					member := string(s.Pull(3, "string").(types.String))
 					classDesc, ok := root.Classes[class]
@@ -174,14 +174,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("MemberDesc")}},
 						},
-						Summary:     "Types/RootDesc:Methods/Member/Summary",
-						Description: "Types/RootDesc:Methods/Member/Description",
+						Summary:     "Types/Desc:Methods/Member/Summary",
+						Description: "Types/Desc:Methods/Member/Description",
 					}
 				},
 			},
 			"Members": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					classDesc, ok := root.Classes[class]
 					if !ok {
@@ -201,14 +201,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
 						},
-						Summary:     "Types/RootDesc:Methods/Members/Summary",
-						Description: "Types/RootDesc:Methods/Members/Description",
+						Summary:     "Types/Desc:Methods/Members/Summary",
+						Description: "Types/Desc:Methods/Members/Description",
 					}
 				},
 			},
 			"SetMember": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					member := string(s.Pull(3, "string").(types.String))
 					memberDesc := s.PullOpt(4, rtypes.Nil, "MemberDesc")
@@ -253,14 +253,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/SetMember/Summary",
-						Description: "Types/RootDesc:Methods/SetMember/Description",
+						Summary:     "Types/Desc:Methods/SetMember/Summary",
+						Description: "Types/Desc:Methods/SetMember/Description",
 					}
 				},
 			},
 			"MemberTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					class := string(s.Pull(2, "string").(types.String))
 					member := string(s.Pull(3, "string").(types.String))
 					tag := string(s.Pull(4, "string").(types.String))
@@ -284,14 +284,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/MemberTag/Summary",
-						Description: "Types/RootDesc:Methods/MemberTag/Description",
+						Summary:     "Types/Desc:Methods/MemberTag/Summary",
+						Description: "Types/Desc:Methods/MemberTag/Description",
 					}
 				},
 			},
 			"Enum": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					desc, ok := root.Enums[enum]
 					if !ok {
@@ -307,14 +307,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("EnumDesc")}},
 						},
-						Summary:     "Types/RootDesc:Methods/Enum/Summary",
-						Description: "Types/RootDesc:Methods/Enum/Description",
+						Summary:     "Types/Desc:Methods/Enum/Summary",
+						Description: "Types/Desc:Methods/Enum/Description",
 					}
 				},
 			},
 			"Enums": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enums := make(rtypes.Array, 0, len(root.Enums))
 					for _, enum := range root.Enums {
 						enums = append(enums, types.String(enum.Name))
@@ -329,14 +329,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Array{T: dt.Prim("string")}},
 						},
-						Summary:     "Types/RootDesc:Methods/Enums/Summary",
-						Description: "Types/RootDesc:Methods/Enums/Description",
+						Summary:     "Types/Desc:Methods/Enums/Summary",
+						Description: "Types/Desc:Methods/Enums/Description",
 					}
 				},
 			},
 			"SetEnum": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					desc := s.PullOpt(3, rtypes.Nil, "EnumDesc")
 					switch desc := desc.(type) {
@@ -366,14 +366,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("bool")},
 						},
-						Summary:     "Types/RootDesc:Methods/SetEnum/Summary",
-						Description: "Types/RootDesc:Methods/SetEnum/Description",
+						Summary:     "Types/Desc:Methods/SetEnum/Summary",
+						Description: "Types/Desc:Methods/SetEnum/Description",
 					}
 				},
 			},
 			"EnumTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					tag := string(s.Pull(3, "string").(types.String))
 					desc, ok := root.Enums[enum]
@@ -391,14 +391,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/EnumTag/Summary",
-						Description: "Types/RootDesc:Methods/EnumTag/Description",
+						Summary:     "Types/Desc:Methods/EnumTag/Summary",
+						Description: "Types/Desc:Methods/EnumTag/Description",
 					}
 				},
 			},
 			"EnumItem": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					item := string(s.Pull(3, "string").(types.String))
 					enumDesc, ok := root.Enums[enum]
@@ -420,14 +420,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("EnumItemDesc")}},
 						},
-						Summary:     "Types/RootDesc:Methods/EnumItem/Summary",
-						Description: "Types/RootDesc:Methods/EnumItem/Description",
+						Summary:     "Types/Desc:Methods/EnumItem/Summary",
+						Description: "Types/Desc:Methods/EnumItem/Description",
 					}
 				},
 			},
 			"EnumItems": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
@@ -447,14 +447,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
 						},
-						Summary:     "Types/RootDesc:Methods/EnumItems/Summary",
-						Description: "Types/RootDesc:Methods/EnumItems/Description",
+						Summary:     "Types/Desc:Methods/EnumItems/Summary",
+						Description: "Types/Desc:Methods/EnumItems/Description",
 					}
 				},
 			},
 			"SetEnumItem": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					item := string(s.Pull(3, "string").(types.String))
 					itemDesc := s.PullOpt(4, rtypes.Nil, "EnumItemDesc")
@@ -490,14 +490,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/SetEnumItem/Summary",
-						Description: "Types/RootDesc:Methods/SetEnumItem/Description",
+						Summary:     "Types/Desc:Methods/SetEnumItem/Summary",
+						Description: "Types/Desc:Methods/SetEnumItem/Description",
 					}
 				},
 			},
 			"EnumItemTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					enum := string(s.Pull(2, "string").(types.String))
 					item := string(s.Pull(3, "string").(types.String))
 					tag := string(s.Pull(4, "string").(types.String))
@@ -521,14 +521,14 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Optional{T: dt.Prim("bool")}},
 						},
-						Summary:     "Types/RootDesc:Methods/EnumItemTag/Summary",
-						Description: "Types/RootDesc:Methods/EnumItemTag/Description",
+						Summary:     "Types/Desc:Methods/EnumItemTag/Summary",
+						Description: "Types/Desc:Methods/EnumItemTag/Description",
 					}
 				},
 			},
 			"EnumTypes": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc)
+					root := v.(*rtypes.Desc)
 					root.GenerateEnumTypes()
 					return s.Push(root.EnumTypes)
 				},
@@ -537,18 +537,18 @@ func RootDesc() rbxmk.Reflector {
 						Returns: dump.Parameters{
 							{Type: dt.Prim("Enums")},
 						},
-						Summary:     "Types/RootDesc:Methods/EnumTypes/Summary",
-						Description: "Types/RootDesc:Methods/EnumTypes/Description",
+						Summary:     "Types/Desc:Methods/EnumTypes/Summary",
+						Description: "Types/Desc:Methods/EnumTypes/Description",
 					}
 				},
 			},
 			"Diff": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					prev := v.(*rtypes.RootDesc).Root
+					prev := v.(*rtypes.Desc).Root
 					var next *rbxdump.Root
-					switch v := s.PullAnyOf(2, "RootDesc", "nil").(type) {
+					switch v := s.PullAnyOf(2, "Desc", "nil").(type) {
 					case rtypes.NilType:
-					case *rtypes.RootDesc:
+					case *rtypes.Desc:
 						next = v.Root
 					default:
 						return s.ReflectorError(1)
@@ -564,19 +564,19 @@ func RootDesc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "next", Type: dt.Optional{T: dt.Prim("RootDesc")}},
+							{Name: "next", Type: dt.Optional{T: dt.Prim("Desc")}},
 						},
 						Returns: dump.Parameters{
 							{Name: "diff", Type: dt.Prim("DescActions")},
 						},
-						Summary:     "Types/RootDesc:Methods/Diff/Summary",
-						Description: "Types/RootDesc:Methods/Diff/Description",
+						Summary:     "Types/Desc:Methods/Diff/Summary",
+						Description: "Types/Desc:Methods/Diff/Description",
 					}
 				},
 			},
 			"Patch": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					root := v.(*rtypes.RootDesc).Root
+					root := v.(*rtypes.Desc).Root
 					descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
 					actions := make([]diff.Action, len(descActions))
 					for i, action := range descActions {
@@ -590,8 +590,8 @@ func RootDesc() rbxmk.Reflector {
 						Parameters: dump.Parameters{
 							{Name: "actions", Type: dt.Prim("DescActions")},
 						},
-						Summary:     "Types/RootDesc:Methods/Patch/Summary",
-						Description: "Types/RootDesc:Methods/Patch/Description",
+						Summary:     "Types/Desc:Methods/Patch/Summary",
+						Description: "Types/Desc:Methods/Patch/Description",
 					}
 				},
 			},
@@ -599,7 +599,7 @@ func RootDesc() rbxmk.Reflector {
 		Constructors: rbxmk.Constructors{
 			"new": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
-					return s.Push(&rtypes.RootDesc{Root: &rbxdump.Root{
+					return s.Push(&rtypes.Desc{Root: &rbxdump.Root{
 						Classes: make(map[string]*rbxdump.Class),
 						Enums:   make(map[string]*rbxdump.Enum),
 					}})
@@ -608,10 +608,10 @@ func RootDesc() rbxmk.Reflector {
 					return dump.MultiFunction{
 						dump.Function{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("RootDesc")},
+								{Type: dt.Prim("Desc")},
 							},
-							Summary:     "Types/RootDesc:Constructors/new/Summary",
-							Description: "Types/RootDesc:Constructors/new/Description",
+							Summary:     "Types/Desc:Constructors/new/Summary",
+							Description: "Types/Desc:Constructors/new/Description",
 						},
 					}
 				},
@@ -619,8 +619,8 @@ func RootDesc() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Types/RootDesc:Summary",
-				Description: "Types/RootDesc:Description",
+				Summary:     "Types/Desc:Summary",
+				Description: "Types/Desc:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

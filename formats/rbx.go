@@ -43,7 +43,7 @@ func rbxTypes() []func() rbxmk.Reflector {
 		reflect.ProtectedString,
 		reflect.Ray,
 		reflect.Rect,
-		reflect.RootDesc,
+		reflect.Desc,
 		reflect.SharedString,
 		reflect.String,
 		reflect.Token,
@@ -64,7 +64,7 @@ func RBXL() rbxmk.Format {
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
-			"Desc":     {"RootDesc", "bool"},
+			"Desc":     {"Desc", "bool"},
 			"DescMode": {"string"},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
@@ -121,7 +121,7 @@ func RBXM() rbxmk.Format {
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
-			"Desc":     {"RootDesc", "bool"},
+			"Desc":     {"Desc", "bool"},
 			"DescMode": {"string"},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
@@ -178,7 +178,7 @@ func RBXLX() rbxmk.Format {
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{
-			"Desc":     {"RootDesc", "bool"},
+			"Desc":     {"Desc", "bool"},
 			"DescMode": {"string"},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
@@ -235,7 +235,7 @@ func RBXMX() rbxmk.Format {
 		EncodeTypes: []string{"Instance", "Objects"},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{
-			"Desc":     {"RootDesc", "bool"},
+			"Desc":     {"Desc", "bool"},
 			"DescMode": {"string"},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
@@ -315,16 +315,16 @@ func descModeOf(f rbxmk.FormatOptions, field string) (mode descMode, err error) 
 	return mode, nil
 }
 
-// descOf gets a descriptor from a given field. A RootDesc field returns the
-// RootDesc. A false bool returns nil. Otherwise, if v is an Instance, returns
-// the descriptor according to g.Desc.Of(v). Otherwise, returns g.Desc.
+// descOf gets a descriptor from a given field. A Desc field returns the Desc. A
+// false bool returns nil. Otherwise, if v is an Instance, returns the
+// descriptor according to g.Desc.Of(v). Otherwise, returns g.Desc.
 //
 // If v is an Objects, then no descriptor can be reasonably selected, so g.Desc
 // is returned instead.
-func descOf(f rbxmk.FormatOptions, field string, g rbxmk.Global, v types.Value) (desc *rtypes.RootDesc) {
+func descOf(f rbxmk.FormatOptions, field string, g rbxmk.Global, v types.Value) (desc *rtypes.Desc) {
 	if f != nil {
 		switch v := f.ValueOf("Desc").(type) {
-		case *rtypes.RootDesc:
+		case *rtypes.Desc:
 			return v
 		case types.Bool:
 			if !v {
@@ -355,7 +355,7 @@ type decprop struct {
 type rbxDecoder struct {
 	method func(r io.Reader) (root *rbxfile.Root, err error)
 	r      io.Reader
-	desc   *rtypes.RootDesc
+	desc   *rtypes.Desc
 	mode   descMode
 	refs   decinst
 	prefs  []decprop
@@ -1022,7 +1022,7 @@ type encprop struct {
 type rbxEncoder struct {
 	method func(w io.Writer, root *rbxfile.Root) (err error)
 	w      io.Writer
-	desc   *rtypes.RootDesc
+	desc   *rtypes.Desc
 	mode   descMode
 	refs   encinst
 	prefs  []encprop

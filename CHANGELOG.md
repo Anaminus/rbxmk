@@ -3,6 +3,10 @@ This document describes changes between versions of rbxmk. The `imperative`
 branch is the latest unreleased version.
 
 ## imperative
+**Incompatibilities**
+- The RootDesc type is renamed to [Desc](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-desc).
+	- RootDesc.new is now [Desc.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-descnew)
+
 **Highlights:**
 - Add `plugin` dump format, which enables custom dump formats.
 	- Runs a Lua script in a limited environment.

@@ -1,13 +1,13 @@
-T.Pass(typeof(RootDesc.new()) == "RootDesc", "new returns RootDesc")
+T.Pass(typeof(Desc.new()) == "Desc", "new returns Desc")
 
-local desc = RootDesc.new()
+local desc = Desc.new()
 
 -- Metamethod tests
-T.Pass(typeof(desc) == "RootDesc"                   , "type of descriptor is RootDesc")
+T.Pass(typeof(desc) == "Desc"                       , "type of descriptor is Desc")
 T.Pass(type(getmetatable(desc)) == "string"         , "metatable of descriptor is locked")
 T.Pass(not string.match(tostring(desc), "^userdata"), "descriptor converts to a string")
 T.Pass(desc == desc                                 , "descriptor is equal to itself")
-T.Pass(desc ~= RootDesc.new()                       , "descriptor is not equal to another descriptor of the same type")
+T.Pass(desc ~= Desc.new()                           , "descriptor is not equal to another descriptor of the same type")
 
 -- Classes
 local classA = {Name = "ClassA"}
@@ -207,8 +207,8 @@ local Enum = desc:EnumTypes()
 T.Pass(#Enum:GetEnums() == 0, "EnumTypes reflects no defined enums.")
 
 -- Diff
-local prev = RootDesc.new()
-local next = RootDesc.new()
+local prev = Desc.new()
+local next = Desc.new()
 T.Fail(function() return prev:Diff(42) end        , "Diff with non-desc")
 T.Pass(function() return prev:Diff(next) end      , "Diff with desc")
 T.Pass(function() return prev:Diff(nil) end       , "Diff with nil")

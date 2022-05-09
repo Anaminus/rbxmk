@@ -18,17 +18,17 @@ func Desc() rbxmk.Format {
 		Name:       "desc.json",
 		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "RootDesc"
+			return typeName == "Desc"
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			root, err := rbxdumpjson.Decode(r)
 			if err != nil {
 				return nil, err
 			}
-			return &rtypes.RootDesc{Root: root}, nil
+			return &rtypes.Desc{Root: root}, nil
 		},
 		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
-			root := v.(*rtypes.RootDesc).Root
+			root := v.(*rtypes.Desc).Root
 			if err := rbxdumpjson.Encode(w, root); err != nil {
 				return err
 			}
@@ -41,7 +41,7 @@ func Desc() rbxmk.Format {
 			}
 		},
 		Types: []func() rbxmk.Reflector{
-			reflect.RootDesc,
+			reflect.Desc,
 		},
 	}
 }

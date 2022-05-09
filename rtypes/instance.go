@@ -17,7 +17,7 @@ type Instance struct {
 	properties     map[string]types.PropValue
 	children       []*Instance
 	parent         *Instance
-	desc           *RootDesc
+	desc           *Desc
 	descBlocked    bool
 	attrcfg        *AttrConfig
 	attrcfgBlocked bool
@@ -563,7 +563,7 @@ func (inst *Instance) GetFullName() string {
 // of current instance is nil, then the parent is searched, and so on, until a
 // non-nil or blocked descriptor is found. Nil is returned if no descriptors are
 // found.
-func (inst *Instance) Desc() *RootDesc {
+func (inst *Instance) Desc() *Desc {
 	parent := inst
 	for parent != nil {
 		if parent.descBlocked {
@@ -579,14 +579,14 @@ func (inst *Instance) Desc() *RootDesc {
 
 // RawDesc returns the root descriptor for the instance, and whether it is
 // blocked.
-func (inst *Instance) RawDesc() (desc *RootDesc, blocked bool) {
+func (inst *Instance) RawDesc() (desc *Desc, blocked bool) {
 	return inst.desc, inst.descBlocked
 }
 
 // SetDesc sets root as the root descriptor for the instance. If blocked is
 // true, then the root descriptor is set to nil, and Desc will return nil if it
 // reaches the instance.
-func (inst *Instance) SetDesc(root *RootDesc, blocked bool) {
+func (inst *Instance) SetDesc(root *Desc, blocked bool) {
 	if blocked {
 		inst.desc = nil
 		inst.descBlocked = true
@@ -647,7 +647,7 @@ func (inst *Instance) FindFirstAncestorWhichIsA(class string) *Instance {
 }
 
 // WithDescIsA is like IsA, but includes a global descriptor.
-func (inst *Instance) WithDescIsA(globalDesc *RootDesc, className string) bool {
+func (inst *Instance) WithDescIsA(globalDesc *Desc, className string) bool {
 	desc := globalDesc.Of(inst)
 	if desc == nil {
 		return inst.ClassName == className
@@ -664,7 +664,7 @@ func (inst *Instance) WithDescIsA(globalDesc *RootDesc, className string) bool {
 
 // WithDescFindFirstChildWhichIsA is like FindFirstChildWhichIsA, but includes a
 // global descriptor.
-func (inst *Instance) WithDescFindFirstChildWhichIsA(globalDesc *RootDesc, class string, recurse bool) *Instance {
+func (inst *Instance) WithDescFindFirstChildWhichIsA(globalDesc *Desc, class string, recurse bool) *Instance {
 	for _, child := range inst.children {
 		// TODO: improve performance by handling descriptors directly.
 		if child.WithDescIsA(globalDesc, class) {
@@ -681,7 +681,7 @@ func (inst *Instance) WithDescFindFirstChildWhichIsA(globalDesc *RootDesc, class
 
 // WithDescFindFirstAncestorWhichIsA is like FindFirstAncestorWhichIsA, but
 // includes a global descriptor.
-func (inst *Instance) WithDescFindFirstAncestorWhichIsA(globalDesc *RootDesc, class string) *Instance {
+func (inst *Instance) WithDescFindFirstAncestorWhichIsA(globalDesc *Desc, class string) *Instance {
 	parent := inst.parent
 	for parent != nil {
 		if parent.WithDescIsA(globalDesc, class) {
