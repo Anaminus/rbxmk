@@ -267,7 +267,9 @@ func TestScripts(t *testing.T) {
 
 	for _, file := range files {
 		t.Run(filepath.ToSlash(file), func(t *testing.T) {
-			program := &cobra.Command{}
+			program := &cobra.Command{
+				SilenceUsage: true,
+			}
 
 			c := RunCommand{
 				Init: func(c *RunCommand, s rbxmk.State) { initMain(s, t) },
