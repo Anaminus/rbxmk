@@ -28,7 +28,7 @@ var Program = &cobra.Command{
 	Use:           "rbxmk",
 	Short:         Doc("Commands:Summary"),
 	Long:          Doc("Commands:Summary"),
-	SilenceUsage:  false,
+	SilenceUsage:  true,
 	SilenceErrors: true,
 }
 
