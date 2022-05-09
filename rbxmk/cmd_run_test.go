@@ -238,7 +238,7 @@ func initMain(s rbxmk.State, t *testing.T) {
 func TestScripts(t *testing.T) {
 	var files []string
 	wd, _ := os.Getwd()
-	for _, arg := range os.Args[2:] {
+	for _, arg := range os.Args[1:] {
 		if strings.HasPrefix(arg, "-test.") {
 			continue
 		}
