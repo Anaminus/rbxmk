@@ -5,7 +5,6 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
-	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func setUserdata(s rbxmk.State, t string) int {
@@ -31,19 +30,6 @@ func openTypes(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, len(exprims))
 	for _, t := range exprims {
 		name := t.Name
-		if name == "Optional" {
-			lib.RawSetString("some", s.WrapFunc(func(s rbxmk.State) int {
-				return setUserdata(s, name)
-			}))
-			lib.RawSetString("none", s.WrapFunc(func(s rbxmk.State) int {
-				v := s.CheckString(1)
-				u := s.L.NewUserData(rtypes.None(v))
-				s.L.SetMetatable(u, s.L.GetTypeMetatable(name))
-				s.L.Push(u)
-				return 1
-			}))
-			continue
-		}
 		lib.RawSetString(t.Name, s.WrapFunc(func(s rbxmk.State) int {
 			return setUserdata(s, name)
 		}))
@@ -68,21 +54,6 @@ func dumpTypes(s rbxmk.State) dump.Library {
 					typ = prim
 				}
 			}
-		}
-		if t.Name == "Optional" {
-			lib.Struct.Fields["some"] = dump.Function{
-				Parameters:  []dt.Parameter{{Name: "type", Type: dt.Prim("any")}},
-				Returns:     []dt.Parameter{{Type: dt.Prim(t.Name)}},
-				Summary:     "Libraries/types:Fields/" + t.Name + "/Summary",
-				Description: "Libraries/types:Fields/" + t.Name + "/Description",
-			}
-			lib.Struct.Fields["none"] = dump.Function{
-				Parameters:  []dt.Parameter{{Name: "type", Type: dt.Prim("string")}},
-				Returns:     []dt.Parameter{{Type: dt.Prim(t.Name)}},
-				Summary:     "Libraries/types:Fields/" + t.Name + "/Summary",
-				Description: "Libraries/types:Fields/" + t.Name + "/Description",
-			}
-			continue
 		}
 		lib.Struct.Fields[t.Name] = dump.Function{
 			Parameters:  []dt.Parameter{{Name: "value", Type: typ}},

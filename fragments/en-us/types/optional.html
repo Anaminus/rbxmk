@@ -1,0 +1,57 @@
+<section data-name="Summary">
+
+<p>An optional exprim of a type.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>Optional</b> type is an exprim that encapsulates another type, such
+that the value is either present or not present.</p>
+
+</section>
+
+<section data-name="Constructors">
+
+<section data-name="none">
+
+<section data-name="Summary">
+
+<p>An Optional with no value.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>none</b> constructor returns an empty Optional exprim of the given
+type.</p>
+
+<pre><code class="language-lua">model.WorldPivotData = Optional.none("CFrame") -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> nil</code></pre>
+
+</section>
+
+</section>
+
+<section data-name="some">
+
+<section data-name="Summary">
+
+<p>An Optional with some value.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>some</b> constructor returns an Optional exprim with the type of
+<i>value</i>, that encapsulates <i>value</i>.</p>
+
+<pre><code class="language-lua">local value = CFrame.new(1,2,3)
+model.WorldPivotData = Optional.some(value) -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> CFrame</code></pre>
+
+</section>
+
+</section>
+
+</section>

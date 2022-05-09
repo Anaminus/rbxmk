@@ -14,14 +14,14 @@ T.Pass(typeof(none.WorldPivotData.Value) == "nil", "read xml, nome type is nil")
 
 -- Write xml, no desc
 local model = Instance.new("Model")
-model.WorldPivotData = types.some(CFrame.new(1,2,3))
+model.WorldPivotData = Optional.some(CFrame.new(1,2,3))
 model = rbxmk.decodeFormat("rbxmx", rbxmk.encodeFormat("rbxmx", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "Optional", "write xml some, value is optional")
 T.Pass(typeof(model.WorldPivotData.Value) == "CFrame", "write xml some, type is CFrame")
 T.Pass(model.WorldPivotData.Value == CFrame.new(1,2,3), "write xml some, CFrame has value")
 
 local model = Instance.new("Model")
-model.WorldPivotData = types.none("CFrame")
+model.WorldPivotData = Optional.none("CFrame")
 model = rbxmk.decodeFormat("rbxmx", rbxmk.encodeFormat("rbxmx", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "Optional", "write xml none, value is optional")
 T.Pass(typeof(model.WorldPivotData.Value) == "nil", "write xml none, type is nil")
@@ -41,13 +41,13 @@ T.Pass(typeof(none.WorldPivotData) == "nil", "read xml with desc, none is nil")
 
 -- Write xml, with desc
 local model = Instance.new("Model")
-model.WorldPivotData = types.some(CFrame.new(1,2,3))
+model.WorldPivotData = Optional.some(CFrame.new(1,2,3))
 model = rbxmk.decodeFormat("rbxmx", rbxmk.encodeFormat("rbxmx", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "CFrame", "write xml some with desc, value is CFrame")
 T.Pass(model.WorldPivotData == CFrame.new(1,2,3), "write xml some with desc, CFrame has value")
 
 local model = Instance.new("Model")
-model.WorldPivotData = types.none("CFrame")
+model.WorldPivotData = Optional.none("CFrame")
 model = rbxmk.decodeFormat("rbxmx", rbxmk.encodeFormat("rbxmx", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "nil", "write xml none with desc, value is nil")
 
@@ -67,14 +67,14 @@ T.Pass(typeof(none.WorldPivotData.Value) == "nil", "read binary, nome type is ni
 
 -- Write binary, no desc
 local model = Instance.new("Model")
-model.WorldPivotData = types.some(CFrame.new(1,2,3))
+model.WorldPivotData = Optional.some(CFrame.new(1,2,3))
 model = rbxmk.decodeFormat("rbxm", rbxmk.encodeFormat("rbxm", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "Optional", "write binary some, value is optional")
 T.Pass(typeof(model.WorldPivotData.Value) == "CFrame", "write binary some, type is CFrame")
 T.Pass(model.WorldPivotData.Value == CFrame.new(1,2,3), "write binary some, CFrame has value")
 
 local model = Instance.new("Model")
-model.WorldPivotData = types.none("CFrame")
+model.WorldPivotData = Optional.none("CFrame")
 model = rbxmk.decodeFormat("rbxm", rbxmk.encodeFormat("rbxm", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "Optional", "write binary none, value is optional")
 T.Pass(typeof(model.WorldPivotData.Value) == "nil", "write binary none, type is nil")
@@ -94,12 +94,12 @@ T.Pass(typeof(none.WorldPivotData) == "nil", "read binary with desc, none is nil
 
 -- Write binary, with desc
 local model = Instance.new("Model")
-model.WorldPivotData = types.some(CFrame.new(1,2,3))
+model.WorldPivotData = Optional.some(CFrame.new(1,2,3))
 model = rbxmk.decodeFormat("rbxm", rbxmk.encodeFormat("rbxm", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "CFrame", "write binary some with desc, value is CFrame")
 T.Pass(model.WorldPivotData == CFrame.new(1,2,3), "write binary some with desc, CFrame has value")
 
 local model = Instance.new("Model")
-model.WorldPivotData = types.none("CFrame")
+model.WorldPivotData = Optional.none("CFrame")
 model = rbxmk.decodeFormat("rbxm", rbxmk.encodeFormat("rbxm", model)):GetChildren()[1]
 T.Pass(typeof(model.WorldPivotData) == "nil", "write binary none with desc, value is nil")

@@ -48,6 +48,48 @@ func Optional() rbxmk.Reflector {
 				return rtypes.Some(v)
 			}
 		},
+		Constructors: rbxmk.Constructors{
+			"none": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					typ := string(s.Pull(1, "string").(types.String))
+					return s.Push(rtypes.None(typ))
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "type", Type: dt.Prim("string")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Optional")},
+							},
+							Summary:     "Types/Optional:Constructors/none/Summary",
+							Description: "Types/Optional:Constructors/none/Description",
+						},
+					}
+				},
+			},
+			"some": rbxmk.Constructor{
+				Func: func(s rbxmk.State) int {
+					value := s.Pull(1, "Variant")
+					return s.Push(rtypes.Some(value))
+				},
+				Dump: func() dump.MultiFunction {
+					return dump.MultiFunction{
+						{
+							Parameters: dump.Parameters{
+								{Name: "value", Type: dt.Prim("any")},
+							},
+							Returns: dump.Parameters{
+								{Type: dt.Prim("Optional")},
+							},
+							Summary:     "Types/Optional:Constructors/some/Summary",
+							Description: "Types/Optional:Constructors/some/Description",
+						},
+					}
+				},
+			},
+		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Prim("Optional"),
@@ -56,6 +98,7 @@ func Optional() rbxmk.Reflector {
 			}
 		},
 		Types: []func() rbxmk.Reflector{
+			String,
 			Variant,
 		},
 	}

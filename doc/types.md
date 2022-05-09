@@ -28,13 +28,14 @@ This document contains a reference to the types available to rbxmk scripts.
 21. [Intlike][Intlike]
 22. [MemberDesc][MemberDesc]
 23. [Numberlike][Numberlike]
-24. [ParameterDesc][ParameterDesc]
-25. [PropertyDesc][PropertyDesc]
-26. [RBXAssetOptions][RBXAssetOptions]
-27. [Desc][Desc]
-28. [Stringlike][Stringlike]
-29. [TypeDesc][TypeDesc]
-30. [UniqueId][UniqueId]
+24. [Optional][Optional]
+25. [ParameterDesc][ParameterDesc]
+26. [PropertyDesc][PropertyDesc]
+27. [RBXAssetOptions][RBXAssetOptions]
+28. [Desc][Desc]
+29. [Stringlike][Stringlike]
+30. [TypeDesc][TypeDesc]
+31. [UniqueId][UniqueId]
 
 </td></tr></tbody>
 </table>
@@ -883,6 +884,40 @@ floating-point number. The following types are number-like:
 - int
 - int64
 - token
+
+## Optional
+[Optional]: #user-content-optional
+
+The **Optional** type is an [exprim](README.md#user-content-explicit-primitives)
+that encapsulates another type, such that the value is either present or not
+present.
+
+An Optional can be created with the [Optional.none][Optional.none] and
+[Optional.some][Optional.some] constructors.
+
+## Optional.none
+[Optional.none]: #user-content-optionalnone
+<code>Optional.none(type: [string](##)): [Optional][Optional]</code>
+
+The **none** constructor returns an empty Optional exprim of the given type.
+
+```lua
+model.WorldPivotData = Optional.none("CFrame") -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> nil
+```
+
+## Optional.some
+[Optional.some]: #user-content-optionalsome
+<code>Optional.some(value: [any](##)): [Optional][Optional]</code>
+
+The **some** constructor returns an Optional exprim with the type of *value*,
+that encapsulates *value*.
+
+```lua
+local value = CFrame.new(1,2,3)
+model.WorldPivotData = Optional.some(value) -- type is Optional<CFrame>
+print(typeof(model.WorldPivotData.Value)) --> CFrame
+```
 
 ## ParameterDesc
 [ParameterDesc]: #user-content-parameterdesc
