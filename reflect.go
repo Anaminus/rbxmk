@@ -230,17 +230,14 @@ func PushPtrTypeTo(t string) Pusher {
 // metatable registered as type t.
 func PullTypeFrom(t string) Puller {
 	return func(c Context, lv lua.LValue) (v types.Value, err error) {
-		u, ok := lv.(*lua.LUserData)
-		if !ok {
-			return nil, TypeError{Want: t, Got: lv.Type().String()}
+		if u, ok := lv.(*lua.LUserData); ok {
+			if u.Metatable == c.GetTypeMetatable(t) {
+				if v, ok = u.Value().(types.Value); ok {
+					return v, nil
+				}
+			}
 		}
-		if u.Metatable != c.GetTypeMetatable(t) {
-			return nil, TypeError{Want: t, Got: lv.Type().String()}
-		}
-		if v, ok = u.Value().(types.Value); !ok {
-			return nil, TypeError{Want: t, Got: lv.Type().String()}
-		}
-		return v, nil
+		return nil, TypeError{Want: t, Got: lv.Type().String()}
 	}
 }
 
