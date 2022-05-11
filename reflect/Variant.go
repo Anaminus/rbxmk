@@ -42,7 +42,7 @@ func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
 	}
 	if rfl.PushTo == nil {
-		return nil, fmt.Errorf("unable to cast %c to Variant", rfl.Name)
+		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
 	}
 	values, err := rfl.PushTo(c, v)
 	if err != nil {
