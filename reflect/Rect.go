@@ -8,12 +8,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Rect = "Rect"
+
 func init() { register(Rect) }
 func Rect() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Rect",
-		PushTo:   rbxmk.PushTypeTo("Rect"),
-		PullFrom: rbxmk.PullTypeFrom("Rect"),
+		Name:     T_Rect,
+		PushTo:   rbxmk.PushTypeTo(T_Rect),
+		PullFrom: rbxmk.PullTypeFrom(T_Rect),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.Rect:
@@ -25,13 +27,13 @@ func Rect() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Rect").(types.Rect)
+				v := s.Pull(1, T_Rect).(types.Rect)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Rect").(types.Rect)
-				op := s.Pull(2, "Rect").(types.Rect)
+				v := s.Pull(1, T_Rect).(types.Rect)
+				op := s.Pull(2, T_Rect).(types.Rect)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -43,7 +45,7 @@ func Rect() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("Vector2"),
+						ValueType:   dt.Prim(T_Vector2),
 						ReadOnly:    true,
 						Summary:     "Types/Rect:Properties/Min/Summary",
 						Description: "Types/Rect:Properties/Min/Description",
@@ -56,7 +58,7 @@ func Rect() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("Vector2"),
+						ValueType:   dt.Prim(T_Vector2),
 						ReadOnly:    true,
 						Summary:     "Types/Rect:Properties/Max/Summary",
 						Description: "Types/Rect:Properties/Max/Description",
@@ -69,7 +71,7 @@ func Rect() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/Rect:Properties/Width/Summary",
 						Description: "Types/Rect:Properties/Width/Description",
@@ -82,7 +84,7 @@ func Rect() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/Rect:Properties/Height/Summary",
 						Description: "Types/Rect:Properties/Height/Description",
@@ -96,13 +98,13 @@ func Rect() rbxmk.Reflector {
 					var v types.Rect
 					switch s.Count() {
 					case 2:
-						v.Min = s.Pull(1, "Vector2").(types.Vector2)
-						v.Max = s.Pull(2, "Vector2").(types.Vector2)
+						v.Min = s.Pull(1, T_Vector2).(types.Vector2)
+						v.Max = s.Pull(2, T_Vector2).(types.Vector2)
 					case 4:
-						v.Min.X = float32(s.Pull(1, "float").(types.Float))
-						v.Min.Y = float32(s.Pull(2, "float").(types.Float))
-						v.Max.Y = float32(s.Pull(3, "float").(types.Float))
-						v.Max.Y = float32(s.Pull(4, "float").(types.Float))
+						v.Min.X = float32(s.Pull(1, T_Float).(types.Float))
+						v.Min.Y = float32(s.Pull(2, T_Float).(types.Float))
+						v.Max.Y = float32(s.Pull(3, T_Float).(types.Float))
+						v.Max.Y = float32(s.Pull(4, T_Float).(types.Float))
 					default:
 						return s.RaiseError("expected 2 or 4 arguments")
 					}
@@ -112,24 +114,24 @@ func Rect() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "min", Type: dt.Prim("Vector2")},
-								{Name: "max", Type: dt.Prim("Vector2")},
+								{Name: "min", Type: dt.Prim(T_Vector2)},
+								{Name: "max", Type: dt.Prim(T_Vector2)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Rect")},
+								{Type: dt.Prim(T_Rect)},
 							},
 							Summary:     "Types/Rect:Constructors/new/Vector2/Summary",
 							Description: "Types/Rect:Constructors/new/Vector2/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "minX", Type: dt.Prim("float")},
-								{Name: "minY", Type: dt.Prim("float")},
-								{Name: "maxX", Type: dt.Prim("float")},
-								{Name: "maxY", Type: dt.Prim("float")},
+								{Name: "minX", Type: dt.Prim(T_Float)},
+								{Name: "minY", Type: dt.Prim(T_Float)},
+								{Name: "maxX", Type: dt.Prim(T_Float)},
+								{Name: "maxY", Type: dt.Prim(T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Rect")},
+								{Type: dt.Prim(T_Rect)},
 							},
 							Summary:     "Types/Rect:Constructors/new/Components/Summary",
 							Description: "Types/Rect:Constructors/new/Components/Description",

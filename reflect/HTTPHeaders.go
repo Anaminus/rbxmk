@@ -11,14 +11,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_HTTPHeaders = "HTTPHeaders"
+
 func init() { register(HTTPHeaders) }
 func HTTPHeaders() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "HTTPHeaders",
+		Name: T_HTTPHeaders,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			headers, ok := v.(rtypes.HTTPHeaders)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "HTTPHeaders", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_HTTPHeaders, Got: v.Type()}
 			}
 			table := c.CreateTable(0, len(headers))
 			for name, values := range headers {
@@ -33,7 +35,7 @@ func HTTPHeaders() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
 			}
 			headers := make(rtypes.HTTPHeaders)
 			err = table.ForEach(func(k, lv lua.LValue) error {
@@ -64,7 +66,7 @@ func HTTPHeaders() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Map{K: dt.Prim("string"), V: dt.Or{dt.Prim("string"), dt.Array{T: dt.Prim("string")}}},
+				Underlying:  dt.Map{K: dt.Prim(T_String), V: dt.Or{dt.Prim(T_String), dt.Array{T: dt.Prim(T_String)}}},
 				Summary:     "Types/HTTPHeaders:Summary",
 				Description: "Types/HTTPHeaders:Description",
 			}

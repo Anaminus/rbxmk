@@ -12,12 +12,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Desc = "Desc"
+
 func init() { register(Desc) }
 func Desc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Desc",
-		PushTo:   rbxmk.PushPtrTypeTo("Desc"),
-		PullFrom: rbxmk.PullTypeFrom("Desc"),
+		Name:     T_Desc,
+		PushTo:   rbxmk.PushPtrTypeTo(T_Desc),
+		PullFrom: rbxmk.PullTypeFrom(T_Desc),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case **rtypes.Desc:
@@ -36,7 +38,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Prim("Desc")},
+							{Type: dt.Prim(T_Desc)},
 						},
 						Summary:     "Types/Desc:Methods/Copy/Summary",
 						Description: "Types/Desc:Methods/Copy/Description",
@@ -46,7 +48,7 @@ func Desc() rbxmk.Reflector {
 			"Class": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
+					class := string(s.Pull(2, T_String).(types.String))
 					desc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -56,10 +58,10 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("ClassDesc")}},
+							{Type: dt.Optional{T: dt.Prim(T_ClassDesc)}},
 						},
 						Summary:     "Types/Desc:Methods/Class/Summary",
 						Description: "Types/Desc:Methods/Class/Description",
@@ -81,7 +83,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Array{T: dt.Prim("string")}},
+							{Type: dt.Array{T: dt.Prim(T_String)}},
 						},
 						Summary:     "Types/Desc:Methods/Classes/Summary",
 						Description: "Types/Desc:Methods/Classes/Description",
@@ -91,8 +93,8 @@ func Desc() rbxmk.Reflector {
 			"SetClass": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
-					desc := s.PullOpt(3, rtypes.Nil, "ClassDesc")
+					class := string(s.Pull(2, T_String).(types.String))
+					desc := s.PullOpt(3, rtypes.Nil, T_ClassDesc)
 					switch desc := desc.(type) {
 					case rtypes.NilType:
 						if _, ok := root.Classes[class]; ok {
@@ -114,11 +116,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
-							{Name: "desc", Type: dt.Optional{T: dt.Prim("ClassDesc")}},
+							{Name: "class", Type: dt.Prim(T_String)},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim(T_ClassDesc)}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
+							{Type: dt.Prim(T_Bool)},
 						},
 						Summary:     "Types/Desc:Methods/SetClass/Summary",
 						Description: "Types/Desc:Methods/SetClass/Description",
@@ -128,8 +130,8 @@ func Desc() rbxmk.Reflector {
 			"ClassTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
-					tag := string(s.Pull(3, "string").(types.String))
+					class := string(s.Pull(2, T_String).(types.String))
+					tag := string(s.Pull(3, T_String).(types.String))
 					desc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -139,11 +141,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
-							{Name: "tag", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim(T_String)},
+							{Name: "tag", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/ClassTag/Summary",
 						Description: "Types/Desc:Methods/ClassTag/Description",
@@ -153,8 +155,8 @@ func Desc() rbxmk.Reflector {
 			"Member": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
-					member := string(s.Pull(3, "string").(types.String))
+					class := string(s.Pull(2, T_String).(types.String))
+					member := string(s.Pull(3, T_String).(types.String))
 					classDesc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -168,11 +170,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
-							{Name: "member", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim(T_String)},
+							{Name: "member", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("MemberDesc")}},
+							{Type: dt.Optional{T: dt.Prim(T_MemberDesc)}},
 						},
 						Summary:     "Types/Desc:Methods/Member/Summary",
 						Description: "Types/Desc:Methods/Member/Description",
@@ -182,7 +184,7 @@ func Desc() rbxmk.Reflector {
 			"Members": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
+					class := string(s.Pull(2, T_String).(types.String))
 					classDesc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -199,7 +201,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
+							{Type: dt.Optional{T: dt.Array{T: dt.Prim(T_String)}}},
 						},
 						Summary:     "Types/Desc:Methods/Members/Summary",
 						Description: "Types/Desc:Methods/Members/Description",
@@ -209,9 +211,9 @@ func Desc() rbxmk.Reflector {
 			"SetMember": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
-					member := string(s.Pull(3, "string").(types.String))
-					memberDesc := s.PullOpt(4, rtypes.Nil, "MemberDesc")
+					class := string(s.Pull(2, T_String).(types.String))
+					member := string(s.Pull(3, T_String).(types.String))
+					memberDesc := s.PullOpt(4, rtypes.Nil, T_MemberDesc)
 					classDesc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -246,12 +248,12 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
-							{Name: "member", Type: dt.Prim("string")},
-							{Name: "desc", Type: dt.Optional{T: dt.Prim("ClassDesc")}},
+							{Name: "class", Type: dt.Prim(T_String)},
+							{Name: "member", Type: dt.Prim(T_String)},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim(T_ClassDesc)}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/SetMember/Summary",
 						Description: "Types/Desc:Methods/SetMember/Description",
@@ -261,9 +263,9 @@ func Desc() rbxmk.Reflector {
 			"MemberTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					class := string(s.Pull(2, "string").(types.String))
-					member := string(s.Pull(3, "string").(types.String))
-					tag := string(s.Pull(4, "string").(types.String))
+					class := string(s.Pull(2, T_String).(types.String))
+					member := string(s.Pull(3, T_String).(types.String))
+					tag := string(s.Pull(4, T_String).(types.String))
 					classDesc, ok := root.Classes[class]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -277,12 +279,12 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "class", Type: dt.Prim("string")},
-							{Name: "member", Type: dt.Prim("string")},
-							{Name: "tag", Type: dt.Prim("string")},
+							{Name: "class", Type: dt.Prim(T_String)},
+							{Name: "member", Type: dt.Prim(T_String)},
+							{Name: "tag", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/MemberTag/Summary",
 						Description: "Types/Desc:Methods/MemberTag/Description",
@@ -292,7 +294,7 @@ func Desc() rbxmk.Reflector {
 			"Enum": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
+					enum := string(s.Pull(2, T_String).(types.String))
 					desc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -302,10 +304,10 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("EnumDesc")}},
+							{Type: dt.Optional{T: dt.Prim(T_EnumDesc)}},
 						},
 						Summary:     "Types/Desc:Methods/Enum/Summary",
 						Description: "Types/Desc:Methods/Enum/Description",
@@ -327,7 +329,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Array{T: dt.Prim("string")}},
+							{Type: dt.Array{T: dt.Prim(T_String)}},
 						},
 						Summary:     "Types/Desc:Methods/Enums/Summary",
 						Description: "Types/Desc:Methods/Enums/Description",
@@ -337,8 +339,8 @@ func Desc() rbxmk.Reflector {
 			"SetEnum": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
-					desc := s.PullOpt(3, rtypes.Nil, "EnumDesc")
+					enum := string(s.Pull(2, T_String).(types.String))
+					desc := s.PullOpt(3, rtypes.Nil, T_EnumDesc)
 					switch desc := desc.(type) {
 					case rtypes.NilType:
 						if _, ok := root.Enums[enum]; ok {
@@ -360,11 +362,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
-							{Name: "desc", Type: dt.Optional{T: dt.Prim("EnumDesc")}},
+							{Name: "enum", Type: dt.Prim(T_String)},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim(T_EnumDesc)}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("bool")},
+							{Type: dt.Prim(T_Bool)},
 						},
 						Summary:     "Types/Desc:Methods/SetEnum/Summary",
 						Description: "Types/Desc:Methods/SetEnum/Description",
@@ -374,8 +376,8 @@ func Desc() rbxmk.Reflector {
 			"EnumTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
-					tag := string(s.Pull(3, "string").(types.String))
+					enum := string(s.Pull(2, T_String).(types.String))
+					tag := string(s.Pull(3, T_String).(types.String))
 					desc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -385,11 +387,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
-							{Name: "tag", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim(T_String)},
+							{Name: "tag", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/EnumTag/Summary",
 						Description: "Types/Desc:Methods/EnumTag/Description",
@@ -399,8 +401,8 @@ func Desc() rbxmk.Reflector {
 			"EnumItem": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
-					item := string(s.Pull(3, "string").(types.String))
+					enum := string(s.Pull(2, T_String).(types.String))
+					item := string(s.Pull(3, T_String).(types.String))
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -414,11 +416,11 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
-							{Name: "item", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim(T_String)},
+							{Name: "item", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("EnumItemDesc")}},
+							{Type: dt.Optional{T: dt.Prim(T_EnumItemDesc)}},
 						},
 						Summary:     "Types/Desc:Methods/EnumItem/Summary",
 						Description: "Types/Desc:Methods/EnumItem/Description",
@@ -428,7 +430,7 @@ func Desc() rbxmk.Reflector {
 			"EnumItems": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
+					enum := string(s.Pull(2, T_String).(types.String))
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -445,7 +447,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Array{T: dt.Prim("string")}}},
+							{Type: dt.Optional{T: dt.Array{T: dt.Prim(T_String)}}},
 						},
 						Summary:     "Types/Desc:Methods/EnumItems/Summary",
 						Description: "Types/Desc:Methods/EnumItems/Description",
@@ -455,9 +457,9 @@ func Desc() rbxmk.Reflector {
 			"SetEnumItem": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
-					item := string(s.Pull(3, "string").(types.String))
-					itemDesc := s.PullOpt(4, rtypes.Nil, "EnumItemDesc")
+					enum := string(s.Pull(2, T_String).(types.String))
+					item := string(s.Pull(3, T_String).(types.String))
+					itemDesc := s.PullOpt(4, rtypes.Nil, T_EnumItemDesc)
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -483,12 +485,12 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
-							{Name: "item", Type: dt.Prim("string")},
-							{Name: "desc", Type: dt.Optional{T: dt.Prim("EnumItemDesc")}},
+							{Name: "enum", Type: dt.Prim(T_String)},
+							{Name: "item", Type: dt.Prim(T_String)},
+							{Name: "desc", Type: dt.Optional{T: dt.Prim(T_EnumItemDesc)}},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/SetEnumItem/Summary",
 						Description: "Types/Desc:Methods/SetEnumItem/Description",
@@ -498,9 +500,9 @@ func Desc() rbxmk.Reflector {
 			"EnumItemTag": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc)
-					enum := string(s.Pull(2, "string").(types.String))
-					item := string(s.Pull(3, "string").(types.String))
-					tag := string(s.Pull(4, "string").(types.String))
+					enum := string(s.Pull(2, T_String).(types.String))
+					item := string(s.Pull(3, T_String).(types.String))
+					tag := string(s.Pull(4, T_String).(types.String))
 					enumDesc, ok := root.Enums[enum]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -514,12 +516,12 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enum", Type: dt.Prim("string")},
-							{Name: "item", Type: dt.Prim("string")},
-							{Name: "tag", Type: dt.Prim("string")},
+							{Name: "enum", Type: dt.Prim(T_String)},
+							{Name: "item", Type: dt.Prim(T_String)},
+							{Name: "tag", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("bool")}},
+							{Type: dt.Optional{T: dt.Prim(T_Bool)}},
 						},
 						Summary:     "Types/Desc:Methods/EnumItemTag/Summary",
 						Description: "Types/Desc:Methods/EnumItemTag/Description",
@@ -535,7 +537,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Prim("Enums")},
+							{Type: dt.Prim(T_Enums)},
 						},
 						Summary:     "Types/Desc:Methods/EnumTypes/Summary",
 						Description: "Types/Desc:Methods/EnumTypes/Description",
@@ -546,7 +548,7 @@ func Desc() rbxmk.Reflector {
 				Func: func(s rbxmk.State, v types.Value) int {
 					prev := v.(*rtypes.Desc).Root
 					var next *rbxdump.Root
-					switch v := s.PullAnyOf(2, "Desc", "nil").(type) {
+					switch v := s.PullAnyOf(2, T_Desc, T_Nil).(type) {
 					case rtypes.NilType:
 					case *rtypes.Desc:
 						next = v.Root
@@ -564,10 +566,10 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "next", Type: dt.Optional{T: dt.Prim("Desc")}},
+							{Name: "next", Type: dt.Optional{T: dt.Prim(T_Desc)}},
 						},
 						Returns: dump.Parameters{
-							{Name: "diff", Type: dt.Prim("DescActions")},
+							{Name: "diff", Type: dt.Prim(T_DescActions)},
 						},
 						Summary:     "Types/Desc:Methods/Diff/Summary",
 						Description: "Types/Desc:Methods/Diff/Description",
@@ -577,7 +579,7 @@ func Desc() rbxmk.Reflector {
 			"Patch": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					root := v.(*rtypes.Desc).Root
-					descActions := s.Pull(2, "DescActions").(rtypes.DescActions)
+					descActions := s.Pull(2, T_DescActions).(rtypes.DescActions)
 					actions := make([]diff.Action, len(descActions))
 					for i, action := range descActions {
 						actions[i] = action.Action
@@ -588,7 +590,7 @@ func Desc() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "actions", Type: dt.Prim("DescActions")},
+							{Name: "actions", Type: dt.Prim(T_DescActions)},
 						},
 						Summary:     "Types/Desc:Methods/Patch/Summary",
 						Description: "Types/Desc:Methods/Patch/Description",
@@ -608,7 +610,7 @@ func Desc() rbxmk.Reflector {
 					return dump.MultiFunction{
 						dump.Function{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Desc")},
+								{Type: dt.Prim(T_Desc)},
 							},
 							Summary:     "Types/Desc:Constructors/new/Summary",
 							Description: "Types/Desc:Constructors/new/Description",

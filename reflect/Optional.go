@@ -9,15 +9,17 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Optional = "Optional"
+
 func init() { register(Optional) }
 func Optional() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:   "Optional",
+		Name:   T_Optional,
 		Flags:  rbxmk.Exprim,
-		PushTo: rbxmk.PushTypeTo("Optional"),
+		PushTo: rbxmk.PushTypeTo(T_Optional),
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
-				if u.Metatable == c.GetTypeMetatable("Optional") {
+				if u.Metatable == c.GetTypeMetatable(T_Optional) {
 					if v, ok := u.Value().(rtypes.Optional); ok {
 						return v, nil
 					}
@@ -58,17 +60,17 @@ func Optional() rbxmk.Reflector {
 		Constructors: rbxmk.Constructors{
 			"none": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
-					typ := string(s.Pull(1, "string").(types.String))
+					typ := string(s.Pull(1, T_String).(types.String))
 					return s.Push(rtypes.None(typ))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "type", Type: dt.Prim("string")},
+								{Name: "type", Type: dt.Prim(T_String)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Optional")},
+								{Type: dt.Prim(T_Optional)},
 							},
 							Summary:     "Types/Optional:Constructors/none/Summary",
 							Description: "Types/Optional:Constructors/none/Description",
@@ -78,7 +80,7 @@ func Optional() rbxmk.Reflector {
 			},
 			"some": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
-					value := s.Pull(1, "Variant")
+					value := s.Pull(1, T_Variant)
 					return s.Push(rtypes.Some(value))
 				},
 				Dump: func() dump.MultiFunction {
@@ -88,7 +90,7 @@ func Optional() rbxmk.Reflector {
 								{Name: "value", Type: dt.Prim("any")},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Optional")},
+								{Type: dt.Prim(T_Optional)},
 							},
 							Summary:     "Types/Optional:Constructors/some/Summary",
 							Description: "Types/Optional:Constructors/some/Description",
@@ -99,7 +101,7 @@ func Optional() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Prim("Optional"),
+				Underlying:  dt.Prim(T_Optional),
 				Summary:     "Types/Optional:Summary",
 				Description: "Types/Optional:Description",
 			}

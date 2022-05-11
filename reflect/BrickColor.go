@@ -10,12 +10,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_BrickColor = "BrickColor"
+
 func init() { register(BrickColor) }
 func BrickColor() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "BrickColor",
-		PushTo:   rbxmk.PushTypeTo("BrickColor"),
-		PullFrom: rbxmk.PullTypeFrom("BrickColor"),
+		Name:     T_BrickColor,
+		PushTo:   rbxmk.PushTypeTo(T_BrickColor),
+		PullFrom: rbxmk.PullTypeFrom(T_BrickColor),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.BrickColor:
@@ -27,13 +29,13 @@ func BrickColor() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "BrickColor").(types.BrickColor)
+				v := s.Pull(1, T_BrickColor).(types.BrickColor)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "BrickColor").(types.BrickColor)
-				op := s.Pull(2, "BrickColor").(types.BrickColor)
+				v := s.Pull(1, T_BrickColor).(types.BrickColor)
+				op := s.Pull(2, T_BrickColor).(types.BrickColor)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -45,7 +47,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim(T_String),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/Name/Summary",
 						Description: "Types/BrickColor:Properties/Name/Description",
@@ -58,7 +60,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("int"),
+						ValueType:   dt.Prim(T_Int),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/Number/Summary",
 						Description: "Types/BrickColor:Properties/Number/Description",
@@ -71,7 +73,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/R/Summary",
 						Description: "Types/BrickColor:Properties/R/Description",
@@ -84,7 +86,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/G/Summary",
 						Description: "Types/BrickColor:Properties/G/Description",
@@ -97,7 +99,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/B/Summary",
 						Description: "Types/BrickColor:Properties/B/Description",
@@ -110,7 +112,7 @@ func BrickColor() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("Color3"),
+						ValueType:   dt.Prim(T_Color3),
 						ReadOnly:    true,
 						Summary:     "Types/BrickColor:Properties/Color/Summary",
 						Description: "Types/BrickColor:Properties/Color/Description",
@@ -124,7 +126,7 @@ func BrickColor() rbxmk.Reflector {
 					var v types.BrickColor
 					switch s.Count() {
 					case 1:
-						switch arg := s.PullAnyOf(1, "int", "string", "Color3").(type) {
+						switch arg := s.PullAnyOf(1, T_Int, T_String, T_Color3).(type) {
 						case types.Int:
 							v = types.NewBrickColor(int(arg))
 						case types.String:
@@ -136,9 +138,9 @@ func BrickColor() rbxmk.Reflector {
 						}
 					case 3:
 						v = types.NewBrickColorFromColor(
-							float64(s.Pull(1, "float").(types.Float)),
-							float64(s.Pull(2, "float").(types.Float)),
-							float64(s.Pull(3, "float").(types.Float)),
+							float64(s.Pull(1, T_Float).(types.Float)),
+							float64(s.Pull(2, T_Float).(types.Float)),
+							float64(s.Pull(3, T_Float).(types.Float)),
 						)
 					default:
 						return s.RaiseError("expected 1 or 3 arguments")
@@ -149,42 +151,42 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "value", Type: dt.Prim("int")},
+								{Name: "value", Type: dt.Prim(T_Int)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/new/Number/Summary",
 							Description: "Types/BrickColor:Constructors/new/Number/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "r", Type: dt.Prim("float")},
-								{Name: "g", Type: dt.Prim("float")},
-								{Name: "b", Type: dt.Prim("float")},
+								{Name: "r", Type: dt.Prim(T_Float)},
+								{Name: "g", Type: dt.Prim(T_Float)},
+								{Name: "b", Type: dt.Prim(T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/new/Components/Summary",
 							Description: "Types/BrickColor:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "name", Type: dt.Prim("string")},
+								{Name: "name", Type: dt.Prim(T_String)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/new/Name/Summary",
 							Description: "Types/BrickColor:Constructors/new/Name/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "color", Type: dt.Prim("Color3")},
+								{Name: "color", Type: dt.Prim(T_Color3)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/new/Color/Summary",
 							Description: "Types/BrickColor:Constructors/new/Color/Description",
@@ -194,17 +196,17 @@ func BrickColor() rbxmk.Reflector {
 			},
 			"palette": {
 				Func: func(s rbxmk.State) int {
-					index := int(s.Pull(1, "int").(types.Int))
+					index := int(s.Pull(1, T_Int).(types.Int))
 					return s.Push(types.NewBrickColorFromPalette(index))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "index", Type: dt.Prim("int")},
+								{Name: "index", Type: dt.Prim(T_Int)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/palette/Summary",
 							Description: "Types/BrickColor:Constructors/palette/Description",
@@ -221,7 +223,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/random/Summary",
 							Description: "Types/BrickColor:Constructors/random/Description",
@@ -237,7 +239,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/White/Summary",
 							Description: "Types/BrickColor:Constructors/White/Description",
@@ -253,7 +255,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Gray/Summary",
 							Description: "Types/BrickColor:Constructors/Gray/Description",
@@ -269,7 +271,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/DarkGray/Summary",
 							Description: "Types/BrickColor:Constructors/DarkGray/Description",
@@ -285,7 +287,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Black/Summary",
 							Description: "Types/BrickColor:Constructors/Black/Description",
@@ -301,7 +303,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Red/Summary",
 							Description: "Types/BrickColor:Constructors/Red/Description",
@@ -317,7 +319,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Yellow/Summary",
 							Description: "Types/BrickColor:Constructors/Yellow/Description",
@@ -333,7 +335,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Green/Summary",
 							Description: "Types/BrickColor:Constructors/Green/Description",
@@ -349,7 +351,7 @@ func BrickColor() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("BrickColor")},
+								{Type: dt.Prim(T_BrickColor)},
 							},
 							Summary:     "Types/BrickColor:Constructors/Blue/Summary",
 							Description: "Types/BrickColor:Constructors/Blue/Description",

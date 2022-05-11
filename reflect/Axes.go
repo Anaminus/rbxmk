@@ -42,12 +42,14 @@ func setAxesFromNormalIdName(axes *types.Axes, name string) {
 	}
 }
 
+const T_Axes = "Axes"
+
 func init() { register(Axes) }
 func Axes() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Axes",
-		PushTo:   rbxmk.PushTypeTo("Axes"),
-		PullFrom: rbxmk.PullTypeFrom("Axes"),
+		Name:     T_Axes,
+		PushTo:   rbxmk.PushTypeTo(T_Axes),
+		PullFrom: rbxmk.PullTypeFrom(T_Axes),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.Axes:
@@ -59,13 +61,13 @@ func Axes() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Axes").(types.Axes)
+				v := s.Pull(1, T_Axes).(types.Axes)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Axes").(types.Axes)
-				op := s.Pull(2, "Axes").(types.Axes)
+				v := s.Pull(1, T_Axes).(types.Axes)
+				op := s.Pull(2, T_Axes).(types.Axes)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -77,7 +79,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/X/Summary",
 						Description: "Types/Axes:Properties/X/Description",
@@ -90,7 +92,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Y/Summary",
 						Description: "Types/Axes:Properties/Y/Description",
@@ -103,7 +105,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Z/Summary",
 						Description: "Types/Axes:Properties/Z/Description",
@@ -116,7 +118,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Right/Summary",
 						Description: "Types/Axes:Properties/Right/Description",
@@ -129,7 +131,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Top/Summary",
 						Description: "Types/Axes:Properties/Top/Description",
@@ -142,7 +144,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Back/Summary",
 						Description: "Types/Axes:Properties/Back/Description",
@@ -155,7 +157,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Left/Summary",
 						Description: "Types/Axes:Properties/Left/Description",
@@ -168,7 +170,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Bottom/Summary",
 						Description: "Types/Axes:Properties/Bottom/Description",
@@ -181,7 +183,7 @@ func Axes() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Axes:Properties/Front/Summary",
 						Description: "Types/Axes:Properties/Front/Description",
@@ -232,9 +234,9 @@ func Axes() rbxmk.Reflector {
 					var v types.Axes
 					switch s.Count() {
 					case 3:
-						v.X = bool(s.Pull(1, "bool").(types.Bool))
-						v.Y = bool(s.Pull(2, "bool").(types.Bool))
-						v.Z = bool(s.Pull(3, "bool").(types.Bool))
+						v.X = bool(s.Pull(1, T_Bool).(types.Bool))
+						v.Y = bool(s.Pull(2, T_Bool).(types.Bool))
+						v.Z = bool(s.Pull(3, T_Bool).(types.Bool))
 					default:
 						return s.RaiseError("expected 0 or 3 arguments")
 					}
@@ -244,9 +246,9 @@ func Axes() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "x", Type: dt.Prim("bool")},
-								{Name: "y", Type: dt.Prim("bool")},
-								{Name: "z", Type: dt.Prim("bool")},
+								{Name: "x", Type: dt.Prim(T_Bool)},
+								{Name: "y", Type: dt.Prim(T_Bool)},
+								{Name: "z", Type: dt.Prim(T_Bool)},
 							},
 							Summary:     "Types/Axes:Constructors/fromComponents/Summary",
 							Description: "Types/Axes:Constructors/fromComponents/Description",

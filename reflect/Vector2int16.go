@@ -8,12 +8,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Vector2int16 = "Vector2int16"
+
 func init() { register(Vector2int16) }
 func Vector2int16() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Vector2int16",
-		PushTo:   rbxmk.PushTypeTo("Vector2int16"),
-		PullFrom: rbxmk.PullTypeFrom("Vector2int16"),
+		Name:     T_Vector2int16,
+		PushTo:   rbxmk.PushTypeTo(T_Vector2int16),
+		PullFrom: rbxmk.PullTypeFrom(T_Vector2int16),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.Vector2int16:
@@ -25,29 +27,29 @@ func Vector2int16() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
-				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
+				op := s.Pull(2, T_Vector2int16).(types.Vector2int16)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 			"__add": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
-				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
+				op := s.Pull(2, T_Vector2int16).(types.Vector2int16)
 				return s.Push(v.Add(op))
 			},
 			"__sub": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
-				op := s.Pull(2, "Vector2int16").(types.Vector2int16)
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
+				op := s.Pull(2, T_Vector2int16).(types.Vector2int16)
 				return s.Push(v.Sub(op))
 			},
 			"__mul": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
-				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
+				switch op := s.PullAnyOf(2, T_Number, T_Vector2int16).(type) {
 				case types.Double:
 					return s.Push(v.MulN(float64(op)))
 				case types.Vector2int16:
@@ -57,8 +59,8 @@ func Vector2int16() rbxmk.Reflector {
 				}
 			},
 			"__div": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
-				switch op := s.PullAnyOf(2, "number", "Vector2int16").(type) {
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
+				switch op := s.PullAnyOf(2, T_Number, T_Vector2int16).(type) {
 				case types.Double:
 					return s.Push(v.DivN(float64(op)))
 				case types.Vector2int16:
@@ -68,7 +70,7 @@ func Vector2int16() rbxmk.Reflector {
 				}
 			},
 			"__unm": func(s rbxmk.State) int {
-				v := s.Pull(1, "Vector2int16").(types.Vector2int16)
+				v := s.Pull(1, T_Vector2int16).(types.Vector2int16)
 				return s.Push(v.Neg())
 			},
 		},
@@ -79,7 +81,7 @@ func Vector2int16() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("int"),
+						ValueType:   dt.Prim(T_Int),
 						ReadOnly:    true,
 						Summary:     "Types/Vector2int16:Properties/X/Summary",
 						Description: "Types/Vector2int16:Properties/X/Description",
@@ -92,7 +94,7 @@ func Vector2int16() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("int"),
+						ValueType:   dt.Prim(T_Int),
 						ReadOnly:    true,
 						Summary:     "Types/Vector2int16:Properties/Y/Summary",
 						Description: "Types/Vector2int16:Properties/Y/Description",
@@ -107,8 +109,8 @@ func Vector2int16() rbxmk.Reflector {
 					switch s.Count() {
 					case 0:
 					case 2:
-						v.X = int16(s.Pull(1, "int").(types.Int))
-						v.Y = int16(s.Pull(2, "int").(types.Int))
+						v.X = int16(s.Pull(1, T_Int).(types.Int))
+						v.Y = int16(s.Pull(2, T_Int).(types.Int))
 					default:
 						return s.RaiseError("expected 0 or 2 arguments")
 					}
@@ -118,18 +120,18 @@ func Vector2int16() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Vector2int16")},
+								{Type: dt.Prim(T_Vector2int16)},
 							},
 							Summary:     "Types/Vector2int16:Constructors/new/Zero/Summary",
 							Description: "Types/Vector2int16:Constructors/new/Zero/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "x", Type: dt.Prim("int")},
-								{Name: "y", Type: dt.Prim("int")},
+								{Name: "x", Type: dt.Prim(T_Int)},
+								{Name: "y", Type: dt.Prim(T_Int)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Vector2int16")},
+								{Type: dt.Prim(T_Vector2int16)},
 							},
 							Summary:     "Types/Vector2int16:Constructors/new/Components/Summary",
 							Description: "Types/Vector2int16:Constructors/new/Components/Description",
@@ -147,50 +149,50 @@ func Vector2int16() rbxmk.Reflector {
 					},
 					Add: []dump.Binop{
 						{
-							Operand:     dt.Prim("Vector2int16"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Vector2int16),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Add/Summary",
 							Description: "Types/Vector2int16:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
-							Operand:     dt.Prim("Vector2int16"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Vector2int16),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Sub/Summary",
 							Description: "Types/Vector2int16:Operators/Sub/Description",
 						},
 					},
 					Mul: []dump.Binop{
 						{
-							Operand:     dt.Prim("Vector2int16"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Vector2int16),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Mul/Vector2int16/Summary",
 							Description: "Types/Vector2int16:Operators/Mul/Vector2int16/Description",
 						},
 						{
-							Operand:     dt.Prim("number"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Number),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Mul/Number/Summary",
 							Description: "Types/Vector2int16:Operators/Mul/Number/Description",
 						},
 					},
 					Div: []dump.Binop{
 						{
-							Operand:     dt.Prim("Vector2int16"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Vector2int16),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Div/Vector2int16/Summary",
 							Description: "Types/Vector2int16:Operators/Div/Vector2int16/Description",
 						},
 						{
-							Operand:     dt.Prim("number"),
-							Result:      dt.Prim("Vector2int16"),
+							Operand:     dt.Prim(T_Number),
+							Result:      dt.Prim(T_Vector2int16),
 							Summary:     "Types/Vector2int16:Operators/Div/Number/Summary",
 							Description: "Types/Vector2int16:Operators/Div/Number/Description",
 						},
 					},
 					Unm: &dump.Unop{
-						Result:      dt.Prim("Vector2int16"),
+						Result:      dt.Prim(T_Vector2int16),
 						Summary:     "Types/Vector2int16:Operators/Unm/Summary",
 						Description: "Types/Vector2int16:Operators/Unm/Description",
 					},

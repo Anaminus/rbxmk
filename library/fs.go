@@ -62,8 +62,8 @@ func fsDir(s rbxmk.State) int {
 }
 
 func fsMkdir(s rbxmk.State) int {
-	path := string(s.Pull(1, "string").(types.String))
-	all := bool(s.PullOpt(2, types.Bool(false), "bool").(types.Bool))
+	path := string(s.Pull(1, reflect.T_String).(types.String))
+	all := bool(s.PullOpt(2, types.Bool(false), reflect.T_Bool).(types.Bool))
 	ok, err := FSSource{World: s.World}.MkDir(path, all)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -77,8 +77,8 @@ func fsMkdir(s rbxmk.State) int {
 }
 
 func fsRead(s rbxmk.State) int {
-	filename := string(s.Pull(1, "string").(types.String))
-	selector := s.PullOpt(2, rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
+	filename := string(s.Pull(1, reflect.T_String).(types.String))
+	selector := s.PullOpt(2, rtypes.FormatSelector{}, reflect.T_FormatSelector).(rtypes.FormatSelector)
 	v, err := FSSource{World: s.World}.Read(filename, selector)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -87,8 +87,8 @@ func fsRead(s rbxmk.State) int {
 }
 
 func fsRemove(s rbxmk.State) int {
-	path := string(s.Pull(1, "string").(types.String))
-	all := bool(s.PullOpt(2, types.Bool(false), "bool").(types.Bool))
+	path := string(s.Pull(1, reflect.T_String).(types.String))
+	all := bool(s.PullOpt(2, types.Bool(false), reflect.T_Bool).(types.Bool))
 	ok, err := FSSource{World: s.World}.Remove(path, all)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -102,8 +102,8 @@ func fsRemove(s rbxmk.State) int {
 }
 
 func fsRename(s rbxmk.State) int {
-	from := string(s.Pull(1, "string").(types.String))
-	to := string(s.Pull(2, "string").(types.String))
+	from := string(s.Pull(1, reflect.T_String).(types.String))
+	to := string(s.Pull(2, reflect.T_String).(types.String))
 	ok, err := FSSource{World: s.World}.Rename(from, to)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -136,8 +136,8 @@ func fsStat(s rbxmk.State) int {
 }
 
 func fsWrite(s rbxmk.State) int {
-	filename := string(s.Pull(1, "string").(types.String))
-	selector := s.PullOpt(3, rtypes.FormatSelector{}, "FormatSelector").(rtypes.FormatSelector)
+	filename := string(s.Pull(1, reflect.T_String).(types.String))
+	selector := s.PullOpt(3, rtypes.FormatSelector{}, reflect.T_FormatSelector).(rtypes.FormatSelector)
 	if selector.Format == "" {
 		selector.Format = s.Ext(filename)
 	}
@@ -166,11 +166,11 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"mkdir": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-						{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+						{Name: "path", Type: dt.Prim(reflect.T_String)},
+						{Name: "all", Type: dt.Optional{T: dt.Prim(reflect.T_Bool)}},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("bool")},
+						{Type: dt.Prim("boolean")},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/mkdir/Summary",
@@ -178,8 +178,8 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"read": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+						{Name: "path", Type: dt.Prim(reflect.T_String)},
+						{Name: "format", Type: dt.Optional{T: dt.Prim(reflect.T_FormatSelector)}},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
@@ -190,11 +190,11 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"remove": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-						{Name: "all", Type: dt.Optional{T: dt.Prim("bool")}},
+						{Name: "path", Type: dt.Prim(reflect.T_String)},
+						{Name: "all", Type: dt.Optional{T: dt.Prim(reflect.T_Bool)}},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("bool")},
+						{Type: dt.Prim("boolean")},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/remove/Summary",
@@ -202,11 +202,11 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"rename": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "old", Type: dt.Prim("string")},
-						{Name: "new", Type: dt.Prim("string")},
+						{Name: "old", Type: dt.Prim(reflect.T_String)},
+						{Name: "new", Type: dt.Prim(reflect.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("bool")},
+						{Type: dt.Prim("boolean")},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/rename/Summary",
@@ -225,9 +225,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(reflect.T_String)},
 						{Name: "value", Type: dt.Prim("any")},
-						{Name: "format", Type: dt.Optional{T: dt.Prim("FormatSelector")}},
+						{Name: "format", Type: dt.Optional{T: dt.Prim(reflect.T_FormatSelector)}},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/write/Summary",
@@ -241,7 +241,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 			"DirEntry": dump.TypeDef{
 				Underlying: dt.Struct{
 					"Name":  dt.Prim("string"),
-					"IsDir": dt.Prim("bool"),
+					"IsDir": dt.Prim("boolean"),
 				},
 				Summary:     "Libraries/fs/Types/DirEntry:Summary",
 				Description: "Libraries/fs/Types/DirEntry:Description",
@@ -249,9 +249,9 @@ func dumpFS(s rbxmk.State) dump.Library {
 			"FileInfo": dump.TypeDef{
 				Underlying: dt.Struct{
 					"Name":    dt.Prim("string"),
-					"IsDir":   dt.Prim("bool"),
-					"Size":    dt.Prim("int"),
-					"ModTime": dt.Prim("int"),
+					"IsDir":   dt.Prim("boolean"),
+					"Size":    dt.Prim("number"),
+					"ModTime": dt.Prim("number"),
 				},
 				Summary:     "Libraries/fs/Types/FileInfo:Summary",
 				Description: "Libraries/fs/Types/FileInfo:Description",

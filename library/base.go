@@ -820,7 +820,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "s", Type: dt.Prim("string")},
 								{Name: "pattern", Type: dt.Prim("string")},
 								{Name: "init", Type: dt.Optional{T: dt.Prim("int")}, Default: `1`},
-								{Name: "plain", Type: dt.Optional{T: dt.Prim("bool")}, Default: `false`},
+								{Name: "plain", Type: dt.Optional{T: dt.Prim("boolean")}, Default: `false`},
 							},
 							Returns: dump.Parameters{
 								{Name: "start", Type: dt.Optional{T: dt.Prim("number")}},

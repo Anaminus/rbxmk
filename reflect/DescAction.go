@@ -11,12 +11,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_DescAction = "DescAction"
+
 func init() { register(DescAction) }
 func DescAction() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "DescAction",
-		PushTo:   rbxmk.PushPtrTypeTo("DescAction"),
-		PullFrom: rbxmk.PullTypeFrom("DescAction"),
+		Name:     T_DescAction,
+		PushTo:   rbxmk.PushPtrTypeTo(T_DescAction),
+		PullFrom: rbxmk.PullTypeFrom(T_DescAction),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case **rtypes.DescAction:
@@ -28,7 +30,7 @@ func DescAction() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "DescAction").(*rtypes.DescAction)
+				v := s.Pull(1, T_DescAction).(*rtypes.DescAction)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
@@ -101,11 +103,11 @@ func DescAction() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					action.Primary = string(s.Pull(3, "string").(types.String))
+					action.Primary = string(s.Pull(3, T_String).(types.String))
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim(T_String),
 						Summary:     "Types/DescAction:Properties/Primary/Summary",
 						Description: "Types/DescAction:Properties/Primary/Description",
 					}
@@ -118,11 +120,11 @@ func DescAction() rbxmk.Reflector {
 				},
 				Set: func(s rbxmk.State, v types.Value) {
 					action := v.(*rtypes.DescAction)
-					action.Secondary = string(s.Pull(3, "string").(types.String))
+					action.Secondary = string(s.Pull(3, T_String).(types.String))
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim(T_String),
 						Summary:     "Types/DescAction:Properties/Secondary/Summary",
 						Description: "Types/DescAction:Properties/Secondary/Description",
 					}
@@ -133,7 +135,7 @@ func DescAction() rbxmk.Reflector {
 			"Field": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					name := string(s.Pull(2, "string").(types.String))
+					name := string(s.Pull(2, T_String).(types.String))
 					fvalue, ok := action.Fields[name]
 					if !ok {
 						return s.Push(rtypes.Nil)
@@ -148,7 +150,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "name", Type: dt.Prim(T_String)},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim("any")},
@@ -176,7 +178,7 @@ func DescAction() rbxmk.Reflector {
 			"SetField": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					name := string(s.Pull(2, "string").(types.String))
+					name := string(s.Pull(2, T_String).(types.String))
 					fvalue := s.L.Get(3)
 					if fvalue == lua.LNil {
 						delete(action.Fields, name)
@@ -195,7 +197,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "name", Type: dt.Prim(T_String)},
 							{Name: "value", Type: dt.Prim("any")},
 						},
 						Summary:     "Types/DescAction:Methods/SetField/Summary",
@@ -206,7 +208,7 @@ func DescAction() rbxmk.Reflector {
 			"SetFields": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					action := v.(*rtypes.DescAction)
-					fields := s.Pull(2, "DescFields").(rtypes.DescFields)
+					fields := s.Pull(2, T_DescFields).(rtypes.DescFields)
 					action.Fields = rbxdump.Fields(fields)
 					return 0
 				},
@@ -250,7 +252,7 @@ func DescAction() rbxmk.Reflector {
 								{Name: "element", Type: dt.Prim("Enum.DescActionElement")},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("DescAction")},
+								{Type: dt.Prim(T_DescAction)},
 							},
 							Summary:     "Types/DescAction:Constructors/new/Summary",
 							Description: "Types/DescAction:Constructors/new/Description",

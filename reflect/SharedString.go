@@ -7,10 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_SharedString = "SharedString"
+
 func init() { register(SharedString) }
 func SharedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "SharedString",
+		Name:  T_SharedString,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.SharedString)), nil
@@ -20,13 +22,13 @@ func SharedString() rbxmk.Reflector {
 			case lua.LString:
 				return types.SharedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable("SharedString") {
+				if v.Metatable == c.GetTypeMetatable(T_SharedString) {
 					if v, ok := v.Value().(types.SharedString); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "SharedString", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_SharedString, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

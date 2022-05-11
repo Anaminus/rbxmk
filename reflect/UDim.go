@@ -8,12 +8,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_UDim = "UDim"
+
 func init() { register(UDim) }
 func UDim() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "UDim",
-		PushTo:   rbxmk.PushTypeTo("UDim"),
-		PullFrom: rbxmk.PullTypeFrom("UDim"),
+		Name:     T_UDim,
+		PushTo:   rbxmk.PushTypeTo(T_UDim),
+		PullFrom: rbxmk.PullTypeFrom(T_UDim),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.UDim:
@@ -25,28 +27,28 @@ func UDim() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "UDim").(types.UDim)
+				v := s.Pull(1, T_UDim).(types.UDim)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "UDim").(types.UDim)
-				op := s.Pull(2, "UDim").(types.UDim)
+				v := s.Pull(1, T_UDim).(types.UDim)
+				op := s.Pull(2, T_UDim).(types.UDim)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 			"__add": func(s rbxmk.State) int {
-				v := s.Pull(1, "UDim").(types.UDim)
-				op := s.Pull(2, "UDim").(types.UDim)
+				v := s.Pull(1, T_UDim).(types.UDim)
+				op := s.Pull(2, T_UDim).(types.UDim)
 				return s.Push(v.Add(op))
 			},
 			"__sub": func(s rbxmk.State) int {
-				v := s.Pull(1, "UDim").(types.UDim)
-				op := s.Pull(2, "UDim").(types.UDim)
+				v := s.Pull(1, T_UDim).(types.UDim)
+				op := s.Pull(2, T_UDim).(types.UDim)
 				return s.Push(v.Sub(op))
 			},
 			"__unm": func(s rbxmk.State) int {
-				v := s.Pull(1, "UDim").(types.UDim)
+				v := s.Pull(1, T_UDim).(types.UDim)
 				return s.Push(v.Neg())
 			},
 		},
@@ -57,7 +59,7 @@ func UDim() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/UDim:Properties/Scale/Summary",
 						Description: "Types/UDim:Properties/Scale/Description",
@@ -70,7 +72,7 @@ func UDim() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("int"),
+						ValueType:   dt.Prim(T_Int),
 						ReadOnly:    true,
 						Summary:     "Types/UDim:Properties/Offset/Summary",
 						Description: "Types/UDim:Properties/Offset/Description",
@@ -82,19 +84,19 @@ func UDim() rbxmk.Reflector {
 			"new": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.UDim{
-						Scale:  float32(s.Pull(1, "float").(types.Float)),
-						Offset: int32(s.Pull(2, "int").(types.Int)),
+						Scale:  float32(s.Pull(1, T_Float).(types.Float)),
+						Offset: int32(s.Pull(2, T_Int).(types.Int)),
 					})
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "scale", Type: dt.Prim("float")},
-								{Name: "offset", Type: dt.Prim("int")},
+								{Name: "scale", Type: dt.Prim(T_Float)},
+								{Name: "offset", Type: dt.Prim(T_Int)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("UDim")},
+								{Type: dt.Prim(T_UDim)},
 							},
 							Summary:     "Types/UDim:Constructors/new/Summary",
 							Description: "Types/UDim:Constructors/new/Description",
@@ -112,22 +114,22 @@ func UDim() rbxmk.Reflector {
 					},
 					Add: []dump.Binop{
 						{
-							Operand:     dt.Prim("UDim"),
-							Result:      dt.Prim("UDim"),
+							Operand:     dt.Prim(T_UDim),
+							Result:      dt.Prim(T_UDim),
 							Summary:     "Types/UDim:Operators/Add/Summary",
 							Description: "Types/UDim:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
-							Operand:     dt.Prim("UDim"),
-							Result:      dt.Prim("UDim"),
+							Operand:     dt.Prim(T_UDim),
+							Result:      dt.Prim(T_UDim),
 							Summary:     "Types/UDim:Operators/Sub/Summary",
 							Description: "Types/UDim:Operators/Sub/Description",
 						},
 					},
 					Unm: &dump.Unop{
-						Result:      dt.Prim("UDim"),
+						Result:      dt.Prim(T_UDim),
 						Summary:     "Types/UDim:Operators/Unm/Summary",
 						Description: "Types/UDim:Operators/Unm/Description",
 					},

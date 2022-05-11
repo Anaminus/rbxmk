@@ -18,7 +18,7 @@ func Desc() rbxmk.Format {
 		Name:       "desc.json",
 		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Desc"
+			return typeName == reflect.T_Desc
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			root, err := rbxdumpjson.Decode(r)
@@ -50,10 +50,10 @@ func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {
 	return rbxmk.Format{
 		Name:        "desc-patch.json",
-		EncodeTypes: []string{"DescActions"},
+		EncodeTypes: []string{reflect.T_DescActions},
 		MediaTypes:  []string{"application/json", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "DescActions"
+			return typeName == reflect.T_DescActions
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var actions rtypes.DescActions

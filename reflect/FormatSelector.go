@@ -11,10 +11,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_FormatSelector = "FormatSelector"
+
 func init() { register(FormatSelector) }
 func FormatSelector() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "FormatSelector",
+		Name: T_FormatSelector,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			switch v := v.(type) {
 			case types.Stringlike:
@@ -117,7 +119,7 @@ func FormatSelector() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Or{dt.Prim("string"), dt.Struct{"Format": dt.Prim("string"), "...": dt.Prim("any")}},
+				Underlying:  dt.Or{dt.Prim(T_String), dt.Struct{"Format": dt.Prim(T_String), "...": dt.Prim("any")}},
 				Summary:     "Types/FormatSelector:Summary",
 				Description: "Types/FormatSelector:Description",
 			}

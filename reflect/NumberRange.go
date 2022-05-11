@@ -8,12 +8,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_NumberRange = "NumberRange"
+
 func init() { register(NumberRange) }
 func NumberRange() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "NumberRange",
-		PushTo:   rbxmk.PushTypeTo("NumberRange"),
-		PullFrom: rbxmk.PullTypeFrom("NumberRange"),
+		Name:     T_NumberRange,
+		PushTo:   rbxmk.PushTypeTo(T_NumberRange),
+		PullFrom: rbxmk.PullTypeFrom(T_NumberRange),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.NumberRange:
@@ -25,13 +27,13 @@ func NumberRange() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "NumberRange").(types.NumberRange)
+				v := s.Pull(1, T_NumberRange).(types.NumberRange)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "NumberRange").(types.NumberRange)
-				op := s.Pull(2, "NumberRange").(types.NumberRange)
+				v := s.Pull(1, T_NumberRange).(types.NumberRange)
+				op := s.Pull(2, T_NumberRange).(types.NumberRange)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -43,7 +45,7 @@ func NumberRange() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/NumberRange:Properties/Min/Summary",
 						Description: "Types/NumberRange:Properties/Min/Description",
@@ -56,7 +58,7 @@ func NumberRange() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("float"),
+						ValueType:   dt.Prim(T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/NumberRange:Properties/Max/Summary",
 						Description: "Types/NumberRange:Properties/Max/Description",
@@ -70,11 +72,11 @@ func NumberRange() rbxmk.Reflector {
 					var v types.NumberRange
 					switch s.Count() {
 					case 1:
-						v.Min = float32(s.Pull(1, "float").(types.Float))
+						v.Min = float32(s.Pull(1, T_Float).(types.Float))
 						v.Max = v.Min
 					case 2:
-						v.Min = float32(s.Pull(1, "float").(types.Float))
-						v.Max = float32(s.Pull(2, "float").(types.Float))
+						v.Min = float32(s.Pull(1, T_Float).(types.Float))
+						v.Max = float32(s.Pull(2, T_Float).(types.Float))
 						if v.Min > v.Max {
 							return s.RaiseError("invalid range")
 						}
@@ -87,21 +89,21 @@ func NumberRange() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "value", Type: dt.Prim("float")},
+								{Name: "value", Type: dt.Prim(T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("NumberRange")},
+								{Type: dt.Prim(T_NumberRange)},
 							},
 							Summary:     "Types/NumberRange:Constructors/new/Single/Summary",
 							Description: "Types/NumberRange:Constructors/new/Single/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "minimum", Type: dt.Prim("float")},
-								{Name: "maxmimum", Type: dt.Prim("float")},
+								{Name: "minimum", Type: dt.Prim(T_Float)},
+								{Name: "maxmimum", Type: dt.Prim(T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("NumberRange")},
+								{Type: dt.Prim(T_NumberRange)},
 							},
 							Summary:     "Types/NumberRange:Constructors/new/Range/Summary",
 							Description: "Types/NumberRange:Constructors/new/Range/Description",

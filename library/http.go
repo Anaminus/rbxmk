@@ -32,7 +32,7 @@ func openHTTP(s rbxmk.State) *lua.LTable {
 }
 
 func httpRequest(s rbxmk.State) int {
-	options := s.Pull(1, "HTTPOptions").(rtypes.HTTPOptions)
+	options := s.Pull(1, reflect.T_HTTPOptions).(rtypes.HTTPOptions)
 	request, err := rbxmk.BeginHTTPRequest(s.World, options)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -46,10 +46,10 @@ func dumpHTTP(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"request": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim("HTTPOptions")},
+						{Name: "options", Type: dt.Prim(reflect.T_HTTPOptions)},
 					},
 					Returns: dump.Parameters{
-						{Name: "req", Type: dt.Prim("HTTPRequest")},
+						{Name: "req", Type: dt.Prim(reflect.T_HTTPRequest)},
 					},
 					Summary:     "Libraries/http:Fields/request/Summary",
 					Description: "Libraries/http:Fields/request/Description",

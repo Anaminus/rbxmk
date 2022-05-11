@@ -10,14 +10,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_ParameterDesc = "ParameterDesc"
+
 func init() { register(ParameterDesc) }
 func ParameterDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "ParameterDesc",
+		Name: T_ParameterDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			param, ok := v.(rtypes.ParameterDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "ParameterDesc", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_ParameterDesc, Got: v.Type()}
 			}
 			var table *lua.LTable
 			if param.Optional {
@@ -41,13 +43,13 @@ func ParameterDesc() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
 			}
-			typ, err := c.PullFromDictionary(table, "Type", "TypeDesc")
+			typ, err := c.PullFromDictionary(table, "Type", T_TypeDesc)
 			if err != nil {
 				return nil, err
 			}
-			name, err := c.PullFromDictionary(table, "Name", "string")
+			name, err := c.PullFromDictionary(table, "Name", T_String)
 			if err != nil {
 				return nil, err
 			}
@@ -57,7 +59,7 @@ func ParameterDesc() rbxmk.Reflector {
 					Name: string(name.(types.String)),
 				},
 			}
-			def, err := c.PullFromDictionaryOpt(table, "Default", rtypes.Nil, "string")
+			def, err := c.PullFromDictionaryOpt(table, "Default", rtypes.Nil, T_String)
 			if err != nil {
 				return nil, err
 			}
@@ -83,9 +85,9 @@ func ParameterDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"Type":    dt.Prim("TypeDesc"),
-					"Name":    dt.Prim("string"),
-					"Default": dt.Optional{T: dt.Prim("string")},
+					"Type":    dt.Prim(T_TypeDesc),
+					"Name":    dt.Prim(T_String),
+					"Default": dt.Optional{T: dt.Prim(T_String)},
 				},
 				Summary:     "Types/ParameterDesc:Summary",
 				Description: "Types/ParameterDesc:Description",

@@ -7,10 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Float = "float"
+
 func init() { register(Float) }
 func Float() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "float",
+		Name:  T_Float,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Float)), nil
@@ -20,13 +22,13 @@ func Float() rbxmk.Reflector {
 			case lua.LNumber:
 				return types.Float(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable("float") {
+				if v.Metatable == c.GetTypeMetatable(T_Float) {
 					if v, ok := v.Value().(types.Float); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "float", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Float, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

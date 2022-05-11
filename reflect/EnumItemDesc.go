@@ -10,20 +10,22 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_EnumItemDesc = "EnumItemDesc"
+
 func init() { register(EnumItemDesc) }
 func EnumItemDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "EnumItemDesc",
+		Name: T_EnumItemDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.EnumItemDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "EnumItemDesc", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_EnumItemDesc, Got: v.Type()}
 			}
 			item := rbxdump.EnumItem(desc)
-			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(item.Fields()))
+			return c.MustReflector(T_DescFields).PushTo(c, rtypes.DescFields(item.Fields()))
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
+			fields, err := c.MustReflector(T_DescFields).PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}
@@ -43,10 +45,10 @@ func EnumItemDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"Name":  dt.Prim("string"),
-					"Value": dt.Prim("int"),
-					"Index": dt.Optional{T: dt.Prim("int")},
-					"Tags":  dt.Array{T: dt.Prim("string")},
+					"Name":  dt.Prim(T_String),
+					"Value": dt.Prim(T_Int),
+					"Index": dt.Optional{T: dt.Prim(T_Int)},
+					"Tags":  dt.Array{T: dt.Prim(T_String)},
 				},
 				Summary:     "Types/EnumItemDesc:Summary",
 				Description: "Types/EnumItemDesc:Description",

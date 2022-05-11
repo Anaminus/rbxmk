@@ -40,7 +40,7 @@ func getFormatSelectors(s rbxmk.State, n int) (selectors []rtypes.FormatSelector
 	c := s.Count()
 	selectors = make([]rtypes.FormatSelector, 0, c-n+1)
 	for i := n; i <= c; i++ {
-		selector := s.Pull(i, "FormatSelector").(rtypes.FormatSelector)
+		selector := s.Pull(i, reflect.T_FormatSelector).(rtypes.FormatSelector)
 		selectors = append(selectors, selector)
 	}
 	return selectors
@@ -59,7 +59,7 @@ func clipboardRead(s rbxmk.State) int {
 }
 
 func clipboardWrite(s rbxmk.State) int {
-	value := s.Pull(1, "Variant")
+	value := s.Pull(1, reflect.T_Variant)
 	selectors := getFormatSelectors(s, 2)
 	err := ClipboardSource{World: s.World}.Write(value, selectors...)
 	if err != nil {
@@ -74,7 +74,7 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"read": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim(reflect.T_String)},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
@@ -86,7 +86,7 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 				"write": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
-						{Name: "...", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim(reflect.T_String)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/clipboard:Fields/write/Summary",

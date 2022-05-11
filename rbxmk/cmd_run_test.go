@@ -13,6 +13,7 @@ import (
 	"github.com/anaminus/cobra"
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
@@ -227,7 +228,7 @@ func initMain(s rbxmk.State, t *testing.T) {
 		return s.Push(types.String(fmt.Sprintf("%p", s.CheckUserData(1))))
 	}))
 
-	T.RawSetString("DummySymbol", s.UserDataOf(rtypes.Symbol{Name: "DummySymbol"}, "Symbol"))
+	T.RawSetString("DummySymbol", s.UserDataOf(rtypes.Symbol{Name: "DummySymbol"}, reflect.T_Symbol))
 
 	s.L.SetGlobal("T", T)
 }

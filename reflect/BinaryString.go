@@ -7,10 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_BinaryString = "BinaryString"
+
 func init() { register(BinaryString) }
 func BinaryString() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "BinaryString",
+		Name:  T_BinaryString,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.BinaryString)), nil
@@ -20,13 +22,13 @@ func BinaryString() rbxmk.Reflector {
 			case lua.LString:
 				return types.BinaryString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable("BinaryString") {
+				if v.Metatable == c.GetTypeMetatable(T_BinaryString) {
 					if v, ok := v.Value().(types.BinaryString); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "BinaryString", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_BinaryString, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

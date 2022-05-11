@@ -72,11 +72,11 @@ func JSON() rbxmk.Format {
 		Name:       "json",
 		MediaTypes: []string{"application/json", "text/plain"},
 		Options: map[string][]string{
-			"Indent": {"string"},
+			"Indent": {reflect.T_String},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {
-			case "nil", "bool", "double", "string", "Array", "Dictionary":
+			case reflect.T_Nil, reflect.T_Bool, reflect.T_Double, reflect.T_String, reflect.T_Array, reflect.T_Dictionary:
 				return true
 			}
 			return false

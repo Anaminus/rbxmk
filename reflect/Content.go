@@ -7,10 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Content = "Content"
+
 func init() { register(Content) }
 func Content() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "Content",
+		Name:  T_Content,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.Content)), nil
@@ -20,13 +22,13 @@ func Content() rbxmk.Reflector {
 			case lua.LString:
 				return types.Content(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable("Content") {
+				if v.Metatable == c.GetTypeMetatable(T_Content) {
 					if v, ok := v.Value().(types.Content); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "Content", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Content, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

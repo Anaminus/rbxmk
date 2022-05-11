@@ -8,12 +8,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Ray = "Ray"
+
 func init() { register(Ray) }
 func Ray() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Ray",
-		PushTo:   rbxmk.PushTypeTo("Ray"),
-		PullFrom: rbxmk.PullTypeFrom("Ray"),
+		Name:     T_Ray,
+		PushTo:   rbxmk.PushTypeTo(T_Ray),
+		PullFrom: rbxmk.PullTypeFrom(T_Ray),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.Ray:
@@ -25,13 +27,13 @@ func Ray() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Ray").(types.Ray)
+				v := s.Pull(1, T_Ray).(types.Ray)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Ray").(types.Ray)
-				op := s.Pull(2, "Ray").(types.Ray)
+				v := s.Pull(1, T_Ray).(types.Ray)
+				op := s.Pull(2, T_Ray).(types.Ray)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -43,7 +45,7 @@ func Ray() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("Vector3"),
+						ValueType:   dt.Prim(T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/Ray:Properties/Origin/Summary",
 						Description: "Types/Ray:Properties/Origin/Description",
@@ -56,7 +58,7 @@ func Ray() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("Vector3"),
+						ValueType:   dt.Prim(T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/Ray:Properties/Direction/Summary",
 						Description: "Types/Ray:Properties/Direction/Description",
@@ -67,16 +69,16 @@ func Ray() rbxmk.Reflector {
 		Methods: rbxmk.Methods{
 			"ClosestPoint": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					point := s.Pull(2, "Vector3").(types.Vector3)
+					point := s.Pull(2, T_Vector3).(types.Vector3)
 					return s.Push(v.(types.Ray).ClosestPoint(point))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "point", Type: dt.Prim("Vector3")},
+							{Name: "point", Type: dt.Prim(T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("Vector3")},
+							{Type: dt.Prim(T_Vector3)},
 						},
 						Summary:     "Types/Ray:Methods/ClosestPoint/Summary",
 						Description: "Types/Ray:Methods/ClosestPoint/Description",
@@ -85,16 +87,16 @@ func Ray() rbxmk.Reflector {
 			},
 			"Distance": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					point := s.Pull(2, "Vector3").(types.Vector3)
+					point := s.Pull(2, T_Vector3).(types.Vector3)
 					return s.Push(types.Float(v.(types.Ray).Distance(point)))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "point", Type: dt.Prim("Vector3")},
+							{Name: "point", Type: dt.Prim(T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("float")},
+							{Type: dt.Prim(T_Float)},
 						},
 						Summary:     "Types/Ray:Methods/Distance/Summary",
 						Description: "Types/Ray:Methods/Distance/Description",
@@ -106,19 +108,19 @@ func Ray() rbxmk.Reflector {
 			"new": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.Ray{
-						Origin:    s.Pull(1, "Vector3").(types.Vector3),
-						Direction: s.Pull(2, "Vector3").(types.Vector3),
+						Origin:    s.Pull(1, T_Vector3).(types.Vector3),
+						Direction: s.Pull(2, T_Vector3).(types.Vector3),
 					})
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "origin", Type: dt.Prim("Vector3")},
-								{Name: "direction", Type: dt.Prim("Vector3")},
+								{Name: "origin", Type: dt.Prim(T_Vector3)},
+								{Name: "direction", Type: dt.Prim(T_Vector3)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Ray")},
+								{Type: dt.Prim(T_Ray)},
 							},
 							Summary:     "Types/Ray:Constructors/new/Summary",
 							Description: "Types/Ray:Constructors/new/Description",

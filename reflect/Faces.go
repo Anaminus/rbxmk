@@ -57,12 +57,14 @@ func setFacesFromAxisName(faces *types.Faces, name string) {
 	}
 }
 
+const T_Faces = "Faces"
+
 func init() { register(Faces) }
 func Faces() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Faces",
-		PushTo:   rbxmk.PushTypeTo("Faces"),
-		PullFrom: rbxmk.PullTypeFrom("Faces"),
+		Name:     T_Faces,
+		PushTo:   rbxmk.PushTypeTo(T_Faces),
+		PullFrom: rbxmk.PullTypeFrom(T_Faces),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.Faces:
@@ -74,13 +76,13 @@ func Faces() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Faces").(types.Faces)
+				v := s.Pull(1, T_Faces).(types.Faces)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Faces").(types.Faces)
-				op := s.Pull(2, "Faces").(types.Faces)
+				v := s.Pull(1, T_Faces).(types.Faces)
+				op := s.Pull(2, T_Faces).(types.Faces)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -92,7 +94,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Right/Summary",
 						Description: "Types/Faces:Properties/Right/Description",
@@ -105,7 +107,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Top/Summary",
 						Description: "Types/Faces:Properties/Top/Description",
@@ -118,7 +120,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Back/Summary",
 						Description: "Types/Faces:Properties/Back/Description",
@@ -131,7 +133,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Left/Summary",
 						Description: "Types/Faces:Properties/Left/Description",
@@ -144,7 +146,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Bottom/Summary",
 						Description: "Types/Faces:Properties/Bottom/Description",
@@ -157,7 +159,7 @@ func Faces() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("bool"),
+						ValueType:   dt.Prim(T_Bool),
 						ReadOnly:    true,
 						Summary:     "Types/Faces:Properties/Front/Summary",
 						Description: "Types/Faces:Properties/Front/Description",
@@ -208,12 +210,12 @@ func Faces() rbxmk.Reflector {
 					var v types.Faces
 					switch s.Count() {
 					case 6:
-						v.Right = bool(s.Pull(1, "bool").(types.Bool))
-						v.Top = bool(s.Pull(2, "bool").(types.Bool))
-						v.Back = bool(s.Pull(3, "bool").(types.Bool))
-						v.Left = bool(s.Pull(4, "bool").(types.Bool))
-						v.Bottom = bool(s.Pull(5, "bool").(types.Bool))
-						v.Front = bool(s.Pull(6, "bool").(types.Bool))
+						v.Right = bool(s.Pull(1, T_Bool).(types.Bool))
+						v.Top = bool(s.Pull(2, T_Bool).(types.Bool))
+						v.Back = bool(s.Pull(3, T_Bool).(types.Bool))
+						v.Left = bool(s.Pull(4, T_Bool).(types.Bool))
+						v.Bottom = bool(s.Pull(5, T_Bool).(types.Bool))
+						v.Front = bool(s.Pull(6, T_Bool).(types.Bool))
 					default:
 						return s.RaiseError("expected 0 or 6 arguments")
 					}
@@ -223,12 +225,12 @@ func Faces() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "right", Type: dt.Prim("bool")},
-								{Name: "top", Type: dt.Prim("bool")},
-								{Name: "back", Type: dt.Prim("bool")},
-								{Name: "left", Type: dt.Prim("bool")},
-								{Name: "bottom", Type: dt.Prim("bool")},
-								{Name: "front", Type: dt.Prim("bool")},
+								{Name: "right", Type: dt.Prim(T_Bool)},
+								{Name: "top", Type: dt.Prim(T_Bool)},
+								{Name: "back", Type: dt.Prim(T_Bool)},
+								{Name: "left", Type: dt.Prim(T_Bool)},
+								{Name: "bottom", Type: dt.Prim(T_Bool)},
+								{Name: "front", Type: dt.Prim(T_Bool)},
 							},
 							Summary:     "Types/Faces:Constructors/fromComponents/Summary",
 							Description: "Types/Faces:Constructors/fromComponents/Description",

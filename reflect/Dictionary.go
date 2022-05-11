@@ -10,22 +10,24 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Dictionary = "Dictionary"
+
 func init() { register(Dictionary) }
 func Dictionary() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "Dictionary",
+		Name: T_Dictionary,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if c.CycleGuard() {
 				defer c.CycleClear()
 			}
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "Dictionary", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_Dictionary, Got: v.Type()}
 			}
 			if c.CycleMark(&dict) {
 				return nil, fmt.Errorf("dictionaries cannot be cyclic")
 			}
-			variantRfl := c.MustReflector("Variant")
+			variantRfl := c.MustReflector(T_Variant)
 			table := c.CreateTable(0, len(dict))
 			for k, v := range dict {
 				lv, err := variantRfl.PushTo(c, v)
@@ -42,12 +44,12 @@ func Dictionary() rbxmk.Reflector {
 			}
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
 			}
 			if c.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
-			variantRfl := c.MustReflector("Variant")
+			variantRfl := c.MustReflector(T_Variant)
 			dict := make(rtypes.Dictionary)
 			err = table.ForEach(func(k, lv lua.LValue) error {
 				v, err := variantRfl.PullFrom(c, lv)

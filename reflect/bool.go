@@ -8,10 +8,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Bool = "bool"
+
 func init() { register(Bool) }
 func Bool() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "bool",
+		Name: T_Bool,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LBool(v.(types.Bool)), nil
 		},
@@ -19,7 +21,7 @@ func Bool() rbxmk.Reflector {
 			if n, ok := lv.(lua.LBool); ok {
 				return types.Bool(n), nil
 			}
-			return nil, rbxmk.TypeError{Want: "bool", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Bool, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
@@ -32,7 +34,7 @@ func Bool() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Prim("boolean"),
+				Underlying:  dt.Prim(T_Bool),
 				Summary:     "Types/bool:Summary",
 				Description: "Types/bool:Description",
 			}

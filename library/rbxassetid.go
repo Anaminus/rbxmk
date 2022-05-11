@@ -38,7 +38,7 @@ func openRBXAssetID(s rbxmk.State) *lua.LTable {
 }
 
 func rbxassetidRead(s rbxmk.State) int {
-	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
+	options := s.Pull(1, reflect.T_RBXAssetOptions).(rtypes.RBXAssetOptions)
 	body, err := RBXAssetIDSource{World: s.World}.Read(options)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -47,7 +47,7 @@ func rbxassetidRead(s rbxmk.State) int {
 }
 
 func rbxassetidWrite(s rbxmk.State) int {
-	options := s.Pull(1, "RBXAssetOptions").(rtypes.RBXAssetOptions)
+	options := s.Pull(1, reflect.T_RBXAssetOptions).(rtypes.RBXAssetOptions)
 	err := RBXAssetIDSource{World: s.World}.Write(options)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -61,7 +61,7 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"read": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim("RBXAssetOptions")},
+						{Name: "options", Type: dt.Prim(reflect.T_RBXAssetOptions)},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim("any")},
@@ -72,7 +72,7 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim("RBXAssetOptions")},
+						{Name: "options", Type: dt.Prim(reflect.T_RBXAssetOptions)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxassetid:Fields/write/Summary",

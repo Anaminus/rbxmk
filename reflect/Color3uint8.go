@@ -9,30 +9,32 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Color3uint8 = "Color3uint8"
+
 func init() { register(Color3uint8) }
 func Color3uint8() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  "Color3uint8",
+		Name:  T_Color3uint8,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			u := c.NewUserData(types.Color3(v.(rtypes.Color3uint8)))
-			c.SetMetatable(u, c.GetTypeMetatable("Color3"))
+			c.SetMetatable(u, c.GetTypeMetatable(T_Color3))
 			return u, nil
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
 				switch u.Metatable {
-				case c.GetTypeMetatable("Color3"):
+				case c.GetTypeMetatable(T_Color3):
 					if v, ok := u.Value().(types.Color3); ok {
 						return rtypes.Color3uint8(v), nil
 					}
-				case c.GetTypeMetatable("Color3uint8"):
+				case c.GetTypeMetatable(T_Color3uint8):
 					if v, ok := u.Value().(rtypes.Color3uint8); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "Color3uint8", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Color3uint8, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
@@ -54,7 +56,7 @@ func Color3uint8() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Prim("Color3"),
+				Underlying:  dt.Prim(T_Color3),
 				Summary:     "Types/Color3uint8:Summary",
 				Description: "Types/Color3uint8:Description",
 			}

@@ -7,10 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Double = "double"
+
 func init() { register(Double) }
 func Double() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "double",
+		Name: T_Double,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Double)), nil
 		},
@@ -19,13 +21,13 @@ func Double() rbxmk.Reflector {
 			case lua.LNumber:
 				return types.Double(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable("double") {
+				if v.Metatable == c.GetTypeMetatable(T_Double) {
 					if v, ok := v.Value().(types.Double); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: "double", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Double, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

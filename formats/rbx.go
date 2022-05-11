@@ -61,14 +61,14 @@ func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
 		Name:        "rbxl",
-		EncodeTypes: []string{"Instance", "Objects"},
+		EncodeTypes: []string{reflect.T_Instance, reflect.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
-			"Desc":     {"Desc", "bool"},
-			"DescMode": {"string"},
+			"Desc":     {reflect.T_Desc, reflect.T_Bool},
+			"DescMode": {reflect.T_String},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
+			return typeName == reflect.T_Instance
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
@@ -118,14 +118,14 @@ func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
 		Name:        "rbxm",
-		EncodeTypes: []string{"Instance", "Objects"},
+		EncodeTypes: []string{reflect.T_Instance, reflect.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
-			"Desc":     {"Desc", "bool"},
-			"DescMode": {"string"},
+			"Desc":     {reflect.T_Desc, reflect.T_Bool},
+			"DescMode": {reflect.T_String},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
+			return typeName == reflect.T_Instance
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
@@ -175,14 +175,14 @@ func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
 		Name:        "rbxlx",
-		EncodeTypes: []string{"Instance", "Objects"},
+		EncodeTypes: []string{reflect.T_Instance, reflect.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{
-			"Desc":     {"Desc", "bool"},
-			"DescMode": {"string"},
+			"Desc":     {reflect.T_Desc, reflect.T_Bool},
+			"DescMode": {reflect.T_String},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
+			return typeName == reflect.T_Instance
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
@@ -232,14 +232,14 @@ func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
 		Name:        "rbxmx",
-		EncodeTypes: []string{"Instance", "Objects"},
+		EncodeTypes: []string{reflect.T_Instance, reflect.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{
-			"Desc":     {"Desc", "bool"},
-			"DescMode": {"string"},
+			"Desc":     {reflect.T_Desc, reflect.T_Bool},
+			"DescMode": {reflect.T_String},
 		},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Instance"
+			return typeName == reflect.T_Instance
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)

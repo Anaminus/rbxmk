@@ -10,22 +10,24 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_PropertyDesc = "PropertyDesc"
+
 func init() { register(PropertyDesc) }
 func PropertyDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "PropertyDesc",
+		Name: T_PropertyDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.PropertyDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "PropertyDesc", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_PropertyDesc, Got: v.Type()}
 			}
 			member := rbxdump.Property(desc)
 			fields := member.Fields()
 			fields["MemberType"] = member.MemberType()
-			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(fields))
+			return c.MustReflector(T_DescFields).PushTo(c, rtypes.DescFields(fields))
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
+			fields, err := c.MustReflector(T_DescFields).PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}
@@ -45,15 +47,15 @@ func PropertyDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"MemberType":    dt.Prim("string"),
-					"Name":          dt.Prim("string"),
-					"ValueType":     dt.Prim("TypeDesc"),
-					"Category":      dt.Prim("string"),
-					"ReadSecurity":  dt.Prim("string"),
-					"WriteSecurity": dt.Prim("string"),
-					"CanLoad":       dt.Prim("bool"),
-					"CanSave":       dt.Prim("bool"),
-					"Tags":          dt.Array{T: dt.Prim("string")},
+					"MemberType":    dt.Prim(T_String),
+					"Name":          dt.Prim(T_String),
+					"ValueType":     dt.Prim(T_TypeDesc),
+					"Category":      dt.Prim(T_String),
+					"ReadSecurity":  dt.Prim(T_String),
+					"WriteSecurity": dt.Prim(T_String),
+					"CanLoad":       dt.Prim(T_Bool),
+					"CanSave":       dt.Prim(T_Bool),
+					"Tags":          dt.Array{T: dt.Prim(T_String)},
 				},
 				Summary:     "Types/PropertyDesc:Summary",
 				Description: "Types/PropertyDesc:Description",

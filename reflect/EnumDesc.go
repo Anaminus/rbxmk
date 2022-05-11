@@ -10,20 +10,22 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_EnumDesc = "EnumDesc"
+
 func init() { register(EnumDesc) }
 func EnumDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "EnumDesc",
+		Name: T_EnumDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.EnumDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "EnumDesc", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_EnumDesc, Got: v.Type()}
 			}
 			enum := rbxdump.Enum(desc)
-			return c.MustReflector("DescFields").PushTo(c, rtypes.DescFields(enum.Fields()))
+			return c.MustReflector(T_DescFields).PushTo(c, rtypes.DescFields(enum.Fields()))
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := c.MustReflector("DescFields").PullFrom(c, lv)
+			fields, err := c.MustReflector(T_DescFields).PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}
@@ -43,8 +45,8 @@ func EnumDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"Name": dt.Prim("string"),
-					"Tags": dt.Array{T: dt.Prim("string")},
+					"Name": dt.Prim(T_String),
+					"Tags": dt.Array{T: dt.Prim(T_String)},
 				},
 				Summary:     "Types/EnumDesc:Summary",
 				Description: "Types/EnumDesc:Description",

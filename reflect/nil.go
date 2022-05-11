@@ -8,10 +8,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Nil = "nil"
+
 func init() { register(Nil) }
 func Nil() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "nil",
+		Name: T_Nil,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNil, nil
 		},
@@ -19,7 +21,7 @@ func Nil() rbxmk.Reflector {
 			if lv == lua.LNil {
 				return rtypes.Nil, nil
 			}
-			return nil, rbxmk.TypeError{Want: "nil", Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: T_Nil, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

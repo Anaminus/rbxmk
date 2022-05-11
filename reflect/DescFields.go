@@ -12,14 +12,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_DescFields = "DescFields"
+
 func init() { register(DescFields) }
 func DescFields() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: "DescFields",
+		Name: T_DescFields,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			fields, ok := v.(rtypes.DescFields)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "DescFields", Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: T_DescFields, Got: v.Type()}
 			}
 			table := c.CreateTable(0, len(fields))
 			for k, v := range fields {
@@ -32,7 +34,7 @@ func DescFields() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: "table", Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
 			}
 			fields := rbxdump.Fields{}
 			err = table.ForEach(func(k, v lua.LValue) error {
@@ -120,7 +122,7 @@ func pullDescField(c rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		return string(v), nil
 	case *lua.LTable:
 		if v.RawGetString("Category") != lua.LNil && v.RawGetString("Name") != lua.LNil {
-			t, err := c.World.Pull(v, "TypeDesc")
+			t, err := c.World.Pull(v, T_TypeDesc)
 			if err != nil {
 				return nil, fmt.Errorf("field %q: %w", k, err)
 			}
@@ -130,7 +132,7 @@ func pullDescField(c rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		case "Parameters":
 			a := make([]rbxdump.Parameter, v.Len())
 			for i := 1; i <= len(a); i++ {
-				p, err := c.PullFromArray(v, i, "ParameterDesc")
+				p, err := c.PullFromArray(v, i, T_ParameterDesc)
 				if err != nil {
 					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
 				}
@@ -140,7 +142,7 @@ func pullDescField(c rbxmk.Context, k string, v lua.LValue) (f interface{}, err 
 		case "Tags":
 			a := make(rbxdump.Tags, v.Len())
 			for i := 1; i <= len(a); i++ {
-				tag, err := c.PullFromArray(v, i, "string")
+				tag, err := c.PullFromArray(v, i, T_String)
 				if err != nil {
 					return nil, fmt.Errorf("field %s[%d]: %w", k, i, err)
 				}

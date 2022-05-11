@@ -239,7 +239,7 @@ func CSV() rbxmk.Format {
 		Name:       "csv",
 		MediaTypes: []string{"text/csv", "text/plain"},
 		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
-			return typeName == "Array"
+			return typeName == reflect.T_Array
 		},
 		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			cr := csv.NewReader(r)

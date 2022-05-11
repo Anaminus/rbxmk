@@ -11,12 +11,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Cookie = "Cookie"
+
 func init() { register(Cookie) }
 func Cookie() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     "Cookie",
-		PushTo:   rbxmk.PushTypeTo("Cookie"),
-		PullFrom: rbxmk.PullTypeFrom("Cookie"),
+		Name:     T_Cookie,
+		PushTo:   rbxmk.PushTypeTo(T_Cookie),
+		PullFrom: rbxmk.PullTypeFrom(T_Cookie),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *rtypes.Cookie:
@@ -28,13 +30,13 @@ func Cookie() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, "Cookie").(rtypes.Cookie)
+				v := s.Pull(1, T_Cookie).(rtypes.Cookie)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, "Cookie").(rtypes.Cookie)
-				op := s.Pull(2, "Cookie").(rtypes.Cookie)
+				v := s.Pull(1, T_Cookie).(rtypes.Cookie)
+				op := s.Pull(2, T_Cookie).(rtypes.Cookie)
 				s.L.Push(lua.LBool(v.Name == op.Name && v.Value == op.Value))
 				return 1
 			},
@@ -47,7 +49,7 @@ func Cookie() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim(T_String),
 						ReadOnly:    true,
 						Summary:     "Types/Cookie:Properties/Name/Summary",
 						Description: "Types/Cookie:Properties/Name/Description",
@@ -58,7 +60,7 @@ func Cookie() rbxmk.Reflector {
 		Constructors: rbxmk.Constructors{
 			"from": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
-					location := string(s.Pull(1, "string").(types.String))
+					location := string(s.Pull(1, T_String).(types.String))
 					cookies, err := rbxmk.CookiesFrom(location)
 					if err != nil {
 						return s.RaiseError("unknown location %q", location)
@@ -72,14 +74,14 @@ func Cookie() rbxmk.Reflector {
 					return dump.MultiFunction{
 						dump.Function{
 							Parameters: dump.Parameters{
-								{Name: "location", Type: dt.Prim("string"),
+								{Name: "location", Type: dt.Prim(T_String),
 									Enums: dt.Enums{
 										`"studio"`,
 									},
 								},
 							},
 							Returns: dump.Parameters{
-								{Name: "cookies", Type: dt.Prim("Cookies")},
+								{Name: "cookies", Type: dt.Prim(T_Cookies)},
 							},
 							CanError:    true,
 							Summary:     "Types/Cookie:Constructors/from/Summary",
@@ -90,8 +92,8 @@ func Cookie() rbxmk.Reflector {
 			},
 			"new": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {
-					name := string(s.Pull(1, "string").(types.String))
-					value := string(s.Pull(2, "string").(types.String))
+					name := string(s.Pull(1, T_String).(types.String))
+					value := string(s.Pull(2, T_String).(types.String))
 					cookie := rtypes.Cookie{Cookie: &http.Cookie{Name: name, Value: value}}
 					return s.Push(cookie)
 				},
@@ -99,11 +101,11 @@ func Cookie() rbxmk.Reflector {
 					return dump.MultiFunction{
 						dump.Function{
 							Parameters: dump.Parameters{
-								{Name: "name", Type: dt.Prim("string")},
-								{Name: "value", Type: dt.Prim("string")},
+								{Name: "name", Type: dt.Prim(T_String)},
+								{Name: "value", Type: dt.Prim(T_String)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("Cookie")},
+								{Type: dt.Prim(T_Cookie)},
 							},
 							Summary:     "Types/Cookie:Constructors/new/Summary",
 							Description: "Types/Cookie:Constructors/new/Description",

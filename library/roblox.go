@@ -98,10 +98,10 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 		},
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
-				Underlying: dt.Prim("Instance"),
+				Underlying: dt.Prim(reflect.T_Instance),
 				Symbols: dump.Properties{
 					"Metadata": dump.Property{
-						ValueType:   dt.Dictionary{V: dt.Prim("string")},
+						ValueType:   dt.Dictionary{V: dt.Prim(reflect.T_String)},
 						Summary:     "Libraries/roblox/Types/DataModel:Symbols/Metadata/Summary",
 						Description: "Libraries/roblox/Types/DataModel:Symbols/Metadata/Description",
 					},
@@ -109,10 +109,10 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 				Methods: dump.Methods{
 					"GetService": dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim("string")},
+							{Name: "name", Type: dt.Prim(reflect.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("Instance")},
+							{Type: dt.Prim(reflect.T_Instance)},
 						},
 						Summary:     "Libraries/roblox/Types/DataModel:Methods/GetService/Summary",
 						Description: "Libraries/roblox/Types/DataModel:Methods/GetService/Description",
