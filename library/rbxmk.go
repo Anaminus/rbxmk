@@ -24,10 +24,11 @@ var RBXMK = rbxmk.Library{
 	Dump:       dumpRBXMK,
 	Types: []func() rbxmk.Reflector{
 		reflect.AttrConfig,
+		reflect.Desc,
 		reflect.Enums,
 		reflect.FormatSelector,
+		reflect.Instance,
 		reflect.Nil,
-		reflect.Desc,
 		reflect.String,
 		reflect.Symbol,
 		reflect.Table,
@@ -35,14 +36,17 @@ var RBXMK = rbxmk.Library{
 }
 
 func openRBXMK(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 8)
+	lib := s.L.CreateTable(0, 11)
 	lib.RawSetString("decodeFormat", s.WrapFunc(rbxmkDecodeFormat))
 	lib.RawSetString("encodeFormat", s.WrapFunc(rbxmkEncodeFormat))
 	lib.RawSetString("formatCanDecode", s.WrapFunc(rbxmkFormatCanDecode))
+	lib.RawSetString("get", s.WrapFunc(rbxmkGet))
 	lib.RawSetString("loadFile", s.WrapFunc(rbxmkLoadFile))
 	lib.RawSetString("loadString", s.WrapFunc(rbxmkLoadString))
+	lib.RawSetString("propType", s.WrapFunc(rbxmkPropType))
 	lib.RawSetString("runFile", s.WrapFunc(rbxmkRunFile))
 	lib.RawSetString("runString", s.WrapFunc(rbxmkRunString))
+	lib.RawSetString("set", s.WrapFunc(rbxmkSet))
 
 	lv, _ := s.MustReflector("Enums").PushTo(s.Context(), s.Enums())
 	lib.RawSetString("Enum", lv)
@@ -102,6 +106,39 @@ func rbxmkFormatCanDecode(s rbxmk.State) int {
 	return s.Push(types.Bool(format.CanDecode(s.Global, selector, typeName)))
 }
 
+func fallbacksFromArg(s rbxmk.State, n int, instance *rtypes.Instance) (desc *rtypes.Desc, rfl rbxmk.Reflector) {
+	var fallbackDesc *rtypes.Desc
+	switch v := s.PullAnyOf(n, "string", "Desc", "nil").(type) {
+	case types.String:
+		if rfl = s.Reflector(string(v)); rfl.Name == "" {
+			s.RaiseError("unknown type %q", string(v))
+			return desc, rfl
+		}
+	case *rtypes.Desc:
+		fallbackDesc = v
+	case rtypes.NilType:
+	default:
+		s.ReflectorError(n)
+		return desc, rfl
+	}
+	if desc = s.Desc.Of(instance); desc == nil {
+		desc = fallbackDesc
+	}
+	return desc, rfl
+}
+
+func rbxmkGet(s rbxmk.State) int {
+	instance := s.Pull(1, "Instance").(*rtypes.Instance)
+	property := string(s.Pull(2, "string").(types.String))
+	desc, rfl := fallbacksFromArg(s, 3, instance)
+	lv, err := reflect.GetProperty(s, instance, property, desc, rfl)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	s.L.Push(lv)
+	return 1
+}
+
 func rbxmkLoadFile(s rbxmk.State) int {
 	fileName := filepath.Clean(s.CheckString(1))
 	fn, err := s.L.LoadFile(fileName)
@@ -120,6 +157,15 @@ func rbxmkLoadString(s rbxmk.State) int {
 	}
 	s.L.Push(fn)
 	return 1
+}
+
+func rbxmkPropType(s rbxmk.State) int {
+	instance := s.Pull(1, "Instance").(*rtypes.Instance)
+	property := string(s.Pull(2, "string").(types.String))
+	if value := instance.Get(property); value != nil {
+		return s.Push(types.String(value.Type()))
+	}
+	return s.Push(rtypes.Nil)
 }
 
 func rbxmkRunFile(s rbxmk.State) int {
@@ -181,6 +227,18 @@ func rbxmkRunString(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	return s.Count() - nt
+}
+
+func rbxmkSet(s rbxmk.State) int {
+	instance := s.Pull(1, "Instance").(*rtypes.Instance)
+	property := string(s.Pull(2, "string").(types.String))
+	value := s.CheckAny(3)
+	desc, rfl := fallbacksFromArg(s, 4, instance)
+	err := reflect.SetProperty(s, instance, property, value, desc, rfl)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
+	return 0
 }
 
 func rbxmkOpIndex(s rbxmk.State) int {
@@ -268,6 +326,23 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Summary:     "Libraries/rbxmk:Fields/formatCanDecode/Summary",
 					Description: "Libraries/rbxmk:Fields/formatCanDecode/Description",
 				},
+				"get": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "instance", Type: dt.Prim("Instance")},
+						{Name: "property", Type: dt.Prim("string")},
+						{Name: "fallback", Type: dt.Or{
+							dt.Prim("string"),
+							dt.Prim("Desc"),
+							dt.Prim("nil"),
+						}},
+					},
+					Returns: dump.Parameters{
+						{Name: "value", Type: dt.Prim("any")},
+					},
+					CanError:    true,
+					Summary:     "Libraries/rbxmk:Fields/get/Summary",
+					Description: "Libraries/rbxmk:Fields/get/Description",
+				},
 				"globalAttrConfig": dump.Property{
 					ValueType:   dt.Optional{T: dt.Prim("AttrConfig")},
 					Summary:     "Libraries/rbxmk:Fields/globalAttrConfig/Summary",
@@ -300,6 +375,18 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",
 					Description: "Libraries/rbxmk:Fields/loadString/Description",
 				},
+				"propType": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "instance", Type: dt.Prim("Instance")},
+						{Name: "property", Type: dt.Prim("string")},
+					},
+					Returns: dump.Parameters{
+						{Name: "type", Type: dt.Optional{T: dt.Prim("string")}},
+					},
+					CanError:    true,
+					Summary:     "Libraries/rbxmk:Fields/propType/Summary",
+					Description: "Libraries/rbxmk:Fields/propType/Description",
+				},
 				"runFile": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim("string")},
@@ -323,6 +410,21 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/runString/Summary",
 					Description: "Libraries/rbxmk:Fields/runString/Description",
+				},
+				"set": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "instance", Type: dt.Prim("Instance")},
+						{Name: "property", Type: dt.Prim("string")},
+						{Name: "value", Type: dt.Prim("any")},
+						{Name: "fallback", Type: dt.Or{
+							dt.Prim("string"),
+							dt.Prim("Desc"),
+							dt.Prim("nil"),
+						}},
+					},
+					CanError:    true,
+					Summary:     "Libraries/rbxmk:Fields/set/Summary",
+					Description: "Libraries/rbxmk:Fields/set/Description",
 				},
 			},
 			Summary:     "Libraries/rbxmk:Summary",

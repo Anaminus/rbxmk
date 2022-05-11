@@ -12,9 +12,13 @@ import (
 func init() { register(Color3uint8) }
 func Color3uint8() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:   "Color3uint8",
-		Flags:  rbxmk.Exprim,
-		PushTo: rbxmk.PushTypeTo("Color3uint8"),
+		Name:  "Color3uint8",
+		Flags: rbxmk.Exprim,
+		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+			u := c.NewUserData(types.Color3(v.(rtypes.Color3uint8)))
+			c.SetMetatable(u, c.GetTypeMetatable("Color3"))
+			return u, nil
+		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			if u, ok := lv.(*lua.LUserData); ok {
 				switch u.Metatable {

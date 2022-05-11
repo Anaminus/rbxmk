@@ -48,6 +48,13 @@ func Optional() rbxmk.Reflector {
 				return rtypes.Some(v)
 			}
 		},
+		Properties: rbxmk.Properties{
+			"Value": rbxmk.Property{
+				Get: func(s rbxmk.State, v types.Value) int {
+					return s.Push(v.(rtypes.Optional).Alias())
+				},
+			},
+		},
 		Constructors: rbxmk.Constructors{
 			"none": rbxmk.Constructor{
 				Func: func(s rbxmk.State) int {

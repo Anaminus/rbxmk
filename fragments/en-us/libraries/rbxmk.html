@@ -95,6 +95,24 @@ format does not define types it decodes into.</p>
 
 </section>
 
+<section data-name="get">
+
+<p>The <b>get</b> function gets the <i>property</i> of <i>instance</i>. If
+<i>instance</i> has a descriptor, then it is used to determine the type when
+getting the property. Otherwise <i>fallback</i> is used. If <i>fallback</i> is a
+string, then the type named by the string is used. If <i>fallback</i> is a Desc,
+then that descriptor is used. If <i>fallback</i> is nil, then the type will be
+derived directly from the value of the property.</p>
+
+<p>Note that <i>fallback</i> is always treated as less specific than the
+descriptor of <i>instance</i>. The purpose of the get function is to provide a
+descriptor-agnostic way to get properties that have ambiguous types in the
+absence of a descriptor. With a descriptor, the function behaves the same as
+indexing the property directly. Without a descriptor, the <i>fallback</i>
+argument is used to determine the type instead.</p>
+
+</section>
+
 <section data-name="globalAttrConfig">
 
 <section data-name="Summary">
@@ -177,6 +195,14 @@ href="type:Instance">Instances</a>.</p>
 
 </section>
 
+<section data-name="propType">
+
+<p>The <b>propType</b> function returns the unreflected type of the value of
+<i>property</i> from <i>instance</i>. Returns nil if the property is
+uninitialized.</p>
+
+</section>
+
 <section data-name="runFile">
 
 <section data-name="Summary">
@@ -216,6 +242,24 @@ the values returned by the script.</p>
 <p>The script runs in the context of the calling script.</p>
 
 </section>
+
+</section>
+
+<section data-name="set">
+
+<p>The <b>set</b> function sets the <i>property</i> of <i>instance</i> to
+<i>value</i>. If <i>instance</i> has a descriptor, then it is used to determine
+the type when setting the property. Otherwise, <i>fallback</i> is used. If
+<i>fallback</i> is a string, then the type named by the string is used. If
+<i>fallback</i> is a Desc, then that descriptor is used. If <i>fallback</i> is
+nil, then the type will be derived directly from <i>value</i>.</p>
+
+<p>Note that <i>fallback</i> is always treated as less specific than the
+descriptor of </i>instance</i>. The purpose of the set function is to provide a
+descriptor-agnostic way to set properties that have ambiguous types in the
+absence of a descriptor. With a descriptor, the function behaves the same as
+assigning to the property directly. Without a descriptor, the <i>fallback</i>
+argument is used to determine the type instead.</p>
 
 </section>
 

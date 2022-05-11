@@ -14,23 +14,6 @@ import (
 	"github.com/robloxapi/types"
 )
 
-// pushPropertyTo behaves like PushVariantTo, except that exprims types are
-// reflected as userdata.
-func pushPropertyTo(s rbxmk.State, v types.Value) (lv lua.LValue, err error) {
-	rfl := s.Reflector(v.Type())
-	if rfl.Name == "" {
-		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
-	}
-	if rfl.PushTo == nil {
-		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
-	}
-	if rfl.Flags&rbxmk.Exprim == 0 {
-		return PushVariantTo(s.Context(), v)
-	}
-	u := s.UserDataOf(v, rfl.Name)
-	return u, nil
-}
-
 func checkEnumDesc(desc *rtypes.Desc, name, class, prop string) (*rtypes.Enum, error) {
 	var enumValue *rtypes.Enum
 	if desc.EnumTypes != nil {
@@ -126,225 +109,245 @@ func reflectOne(s rbxmk.State, value types.Value) (lv lua.LValue, err error) {
 	return lv, nil
 }
 
-func getProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string) (lv lua.LValue, err error) {
+// GetProperty attempts to get property name from inst. If desc is specified, it
+// is used to ensure the value type is correct. Otherwise, if fallback is
+// specified, the value is reflected according to fallback. Otherwise, the value
+// is reflected as a Variant.
+func GetProperty(s rbxmk.State, inst *rtypes.Instance, name string, desc *rtypes.Desc, fallback rbxmk.Reflector) (lv lua.LValue, err error) {
 	var classDesc *rbxdump.Class
 	if desc != nil {
 		classDesc = desc.Classes[inst.ClassName]
 	}
-	value := inst.Get(name)
-	if classDesc != nil {
-		propDesc := desc.Property(classDesc.Name, name)
-		if propDesc == nil {
-			return nil, fmt.Errorf("%s is not a valid member", name)
+	if classDesc == nil {
+		value := inst.Get(name)
+		if fallback.Name != "" && fallback.PushTo != nil {
+			// Push using fallback reflector.
+			return fallback.PushTo(s.Context(), value)
 		}
 		if value == nil {
-			return nil, fmt.Errorf("property %s not initialized", name)
+			// Fallback to nil.
+			return lua.LNil, nil
 		}
-		switch propDesc.ValueType.Category {
-		case "Class":
-			switch value := value.(type) {
-			case *rtypes.Instance:
-				if value == nil {
-					return lua.LNil, nil
-				}
-				class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-				if err != nil {
-					return nil, fmt.Errorf("%s", err)
-				}
-				if !value.WithDescIsA(desc, class.Name) {
-					return nil, fmt.Errorf("instance of class %s expected, got %s", class.Name, value.ClassName)
-				}
-				return reflectOne(s, value)
-			default:
-				return nil, fmt.Errorf("stored value type %s is not an instance", value.Type())
-			}
-		case "Enum":
-			enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-			if err != nil {
-				return nil, err
-			}
-			token, ok := value.(types.Token)
-			if !ok {
-				return nil, fmt.Errorf("stored value type %s is not a token", value.Type())
-			}
-			item := enum.Value(int(token))
-			if item == nil {
-				return nil, fmt.Errorf("invalid stored value %d for enum %s", value, enum.Name())
-			}
-			return reflectOne(s, item)
-		default:
-			pt := propDesc.ValueType.Name
-			opt := strings.HasSuffix(pt, "?")
-			if opt {
-				pt = strings.TrimSuffix(pt, "?")
-				switch v := value.(type) {
-				case rtypes.Optional:
-					switch inner := v.Value().(type) {
-					case nil:
-						return reflectOne(s, rtypes.Nil)
-					case types.PropValue:
-						value = inner
-					}
-				}
-			}
-			rfl := s.Reflector(pt)
-			if rfl.Name != "" && rfl.ConvertFrom != nil {
-				if v := rfl.ConvertFrom(value); v != nil {
-					return reflectOne(s, v)
-				}
-			}
-			if vt := value.Type(); vt != pt {
-				return nil, fmt.Errorf("stored value type %s does not match property type %s", vt, pt)
-			}
-		}
-		// Push without converting exprims.
+		// Push as variant.
 		return PushVariantTo(s.Context(), value)
+	}
+
+	// Push using descriptor.
+	propDesc := desc.Property(classDesc.Name, name)
+	if propDesc == nil {
+		return nil, fmt.Errorf("%s is not a valid member", name)
+	}
+	value := inst.Get(name)
+	if value == nil {
+		return nil, fmt.Errorf("property %s not initialized", name)
+	}
+	switch propDesc.ValueType.Category {
+	case "Class":
+		switch value := value.(type) {
+		case *rtypes.Instance:
+			if value == nil {
+				return lua.LNil, nil
+			}
+			class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+			if err != nil {
+				return nil, fmt.Errorf("%s", err)
+			}
+			if !value.WithDescIsA(desc, class.Name) {
+				return nil, fmt.Errorf("instance of class %s expected, got %s", class.Name, value.ClassName)
+			}
+			return reflectOne(s, value)
+		default:
+			return nil, fmt.Errorf("stored value type %s is not an instance", value.Type())
+		}
+	case "Enum":
+		enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+		if err != nil {
+			return nil, err
+		}
+		token, ok := value.(types.Token)
+		if !ok {
+			return nil, fmt.Errorf("stored value type %s is not a token", value.Type())
+		}
+		item := enum.Value(int(token))
+		if item == nil {
+			return nil, fmt.Errorf("invalid stored value %d for enum %s", value, enum.Name())
+		}
+		return reflectOne(s, item)
+	default:
+		pt := propDesc.ValueType.Name
+		opt := strings.HasSuffix(pt, "?")
+		if opt {
+			pt = strings.TrimSuffix(pt, "?")
+			switch v := value.(type) {
+			case rtypes.Optional:
+				switch inner := v.Value().(type) {
+				case nil:
+					return reflectOne(s, rtypes.Nil)
+				case types.PropValue:
+					value = inner
+				}
+			}
+		}
+		rfl := s.Reflector(pt)
+		if rfl.Name != "" && rfl.ConvertFrom != nil {
+			if v := rfl.ConvertFrom(value); v != nil {
+				return reflectOne(s, v)
+			}
+		}
+		if vt := value.Type(); vt != pt {
+			return nil, fmt.Errorf("stored value type %s does not match property type %s", vt, pt)
+		}
 	}
 	if value == nil {
 		// Fallback to nil.
 		return lua.LNil, nil
 	}
-	return pushPropertyTo(s, value)
+	return PushVariantTo(s.Context(), value)
 }
 
-func canSetProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string, value types.Value) (types.PropValue, error) {
+func canSetProperty(s rbxmk.State, inst *rtypes.Instance, name string, lvalue lua.LValue, desc *rtypes.Desc, fallback rbxmk.Reflector) (pvalue types.PropValue, err error) {
 	var classDesc *rbxdump.Class
 	if desc != nil {
 		classDesc = desc.Classes[inst.ClassName]
 	}
-	if classDesc != nil {
-		propDesc := desc.Property(classDesc.Name, name)
-		if propDesc == nil {
-			return nil, fmt.Errorf("%s is not a valid member", name)
+	if classDesc == nil {
+		var value types.Value
+		if fallback.Name != "" && fallback.PullFrom != nil {
+			// Pull using fallback reflector.
+			value, err = fallback.PullFrom(s.Context(), lvalue)
+		} else {
+			// Pull as variant.
+			value, err = PullVariantFrom(s.Context(), lvalue)
 		}
-		switch propDesc.ValueType.Category {
-		case "Class":
-			switch value := value.(type) {
-			case rtypes.NilType:
-				return (*rtypes.Instance)(nil), nil
-			case *rtypes.Instance:
-				if value == nil {
-					return value, nil
-				}
-				class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
-				if err != nil {
-					return nil, err
-				}
-				if !value.WithDescIsA(desc, class.Name) {
-					return nil, fmt.Errorf("instance of class %s expected, got %s", class.Name, inst.ClassName)
-				}
-				return value, nil
-			default:
-				return nil, fmt.Errorf("Instance expected, got %s", value.Type())
-			}
-		case "Enum":
-			enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+		if err != nil {
+			return nil, err
+		}
+		if _, ok := value.(rtypes.NilType); ok {
+			return nil, nil
+		}
+		pvalue, ok := value.(types.PropValue)
+		if !ok {
+			return nil, fmt.Errorf("cannot assign %s as property", value.Type())
+		}
+		return pvalue, nil
+	}
+
+	// Pull using descriptor.
+	propDesc := desc.Property(classDesc.Name, name)
+	if propDesc == nil {
+		return nil, fmt.Errorf("%s is not a valid member", name)
+	}
+	switch propDesc.ValueType.Category {
+	case "Class":
+		switch lvalue := lvalue.(type) {
+		case *lua.LNilType:
+			return (*rtypes.Instance)(nil), nil
+		case *lua.LUserData:
+			value, err := Instance().PullFrom(s.Context(), lvalue)
 			if err != nil {
 				return nil, err
 			}
-			switch value := value.(type) {
-			case types.Token:
-				item := enum.Value(int(value))
-				if item == nil {
-					return nil, fmt.Errorf("invalid value %d for enum %s", value, enum.Name())
-				}
-				return value, nil
-			case *rtypes.EnumItem:
-				item := enum.Value(value.Value())
-				if item == nil {
-					return nil, fmt.Errorf(
-						"invalid value %s (%d) for enum %s",
-						value.String(),
-						value.Value(),
-						enum.String(),
-					)
-				}
-				if a, b := enum.Name(), value.Enum().Name(); a != b {
-					return nil, fmt.Errorf("expected enum %s, got %s", a, b)
-				}
-				if a, b := item.Name(), value.Name(); a != b {
-					return nil, fmt.Errorf("expected enum item %s, got %s", a, b)
-				}
-				return types.Token(item.Value()), nil
-			case types.Intlike:
-				v := int(value.Intlike())
-				item := enum.Value(v)
-				if item == nil {
-					return nil, fmt.Errorf("invalid value %d for enum %s", v, enum.Name())
-				}
-				return types.Token(item.Value()), nil
-			case types.Numberlike:
-				v := int(value.Numberlike())
-				item := enum.Value(v)
-				if item == nil {
-					return nil, fmt.Errorf("invalid value %d for enum %s", v, enum.Name())
-				}
-				return types.Token(item.Value()), nil
-			case types.Stringlike:
-				v := value.Stringlike()
-				item := enum.Item(v)
-				if item == nil {
-					return nil, fmt.Errorf("invalid value %s for enum %s", v, enum.Name())
-				}
-				return types.Token(item.Value()), nil
-			default:
-				return nil, fmt.Errorf("invalid value for enum %s", enum.Name())
+			instProp := value.(*rtypes.Instance)
+			class, err := checkClassDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+			if err != nil {
+				return nil, err
 			}
+			if instProp != nil && !instProp.WithDescIsA(desc, class.Name) {
+				return nil, fmt.Errorf("instance of class %s expected, got %s", class.Name, instProp.ClassName)
+			}
+			return instProp, nil
 		default:
-			pt := propDesc.ValueType.Name
-			vt := value.Type()
-			opt := strings.HasSuffix(pt, "?")
-			if opt {
-				pt = strings.TrimSuffix(pt, "?")
-				switch v := value.(type) {
-				case rtypes.NilType:
-					// Convert nil to None of property type.
-					return rtypes.None(pt), nil
-				case rtypes.Optional:
-					inner := v.Value()
+			return nil, fmt.Errorf("Instance expected, got %s", s.World.Typeof(lvalue))
+		}
+	case "Enum":
+		enum, err := checkEnumDesc(desc, propDesc.ValueType.Name, classDesc.Name, propDesc.Name)
+		if err != nil {
+			return nil, err
+		}
+		item := enum.Pull(lvalue)
+		if item == nil {
+			return nil, fmt.Errorf("invalid value for enum %s", enum.Name())
+		}
+		return types.Token(item.Value()), nil
+	default:
+		var value types.Value
+		pt := propDesc.ValueType.Name
+		vt := ""
+		opt := strings.HasSuffix(pt, "?")
+		if opt {
+			pt = strings.TrimSuffix(pt, "?")
+			switch lvalue := lvalue.(type) {
+			case *lua.LNilType:
+				// Convert nil to None of property type.
+				return rtypes.None(pt), nil
+			default:
+				if v, err := Optional().PullFrom(s.Context(), lvalue); err == nil {
+					optional := v.(rtypes.Optional)
+					inner := optional.Value()
 					if inner == nil {
-						// Returning rtypes.None(pt) here would have the effect
-						// of converting None of any type to None of property
-						// type.
+						// Returning rtypes.None(pt) here would have the effect of
+						// converting None of any type to None of property type.
 
-						// Attempt to convert value as-is. Set opt to false to
+						// Attempt to convert value as optional. Set opt to false to
 						// prevent reboxing.
+						value = optional
 						opt = false
 					} else {
 						value = inner
 					}
-					vt = v.ValueType()
+					vt = optional.ValueType()
 				}
-				// value, pt, and vt are unboxed; can be inspected as usual.
-			}
-			if vt != pt {
-				// Attempt to convert value type to property type.
-				rfl := s.Reflector(pt)
-				if rfl.Name == "" || rfl.ConvertFrom == nil {
-					return nil, fmt.Errorf("%s expected, got %s", pt, vt)
-				}
-				if value = rfl.ConvertFrom(value); value == nil {
-					return nil, fmt.Errorf("%s expected, got %s", pt, vt)
-				}
-			}
-			if opt {
-				// Rebox value into optional.
-				value = rtypes.Some(value)
 			}
 		}
+		rfl := s.Reflector(pt)
+		// If value was not acquired from optional, get it now.
+		if value == nil {
+			if rfl.Name == "" {
+				return nil, fmt.Errorf("descriptor has unknown type %q for property %s.%s", pt, classDesc.Name, propDesc.Name)
+			}
+			if rfl.PullFrom == nil {
+				return nil, fmt.Errorf("cannot set type %s", pt)
+			}
+			value, err = rfl.PullFrom(s.Context(), lvalue)
+			if err != nil {
+				return nil, err
+			}
+			vt = value.Type()
+		}
+		// value, pt, and vt are unboxed; can be inspected as usual.
+		if vt != pt {
+			// Attempt to convert value type to property type.
+			if rfl.Name == "" {
+				rfl = s.Reflector(pt)
+			}
+			if rfl.Name == "" || rfl.ConvertFrom == nil {
+				return nil, rbxmk.TypeError{Want: pt, Got: vt}
+			}
+			if value = rfl.ConvertFrom(value); value == nil {
+				return nil, rbxmk.TypeError{Want: pt, Got: vt}
+			}
+		}
+		if _, ok := value.(rtypes.NilType); ok {
+			return nil, nil
+		}
+		pvalue, ok := value.(types.PropValue)
+		if !ok {
+			return nil, fmt.Errorf("cannot assign %s as property", value.Type())
+		}
+		if opt {
+			// Rebox value into optional.
+			pvalue = rtypes.Some(pvalue)
+		}
+		return pvalue, nil
 	}
-	if _, ok := value.(rtypes.NilType); ok {
-		return nil, nil
-	}
-	prop, ok := value.(types.PropValue)
-	if !ok {
-		return nil, fmt.Errorf("cannot assign %s as property", value.Type())
-	}
-	return prop, nil
 }
 
-func setProperty(s rbxmk.State, inst *rtypes.Instance, desc *rtypes.Desc, name string, value types.Value) error {
-	prop, err := canSetProperty(s, inst, desc, name, value)
+// SetProperty attempts to set property name of inst to value. If desc is
+// specified, it is used to ensure the value type is correct for the property.
+// Otherwise, if fallback is specified, the value is reflected according to
+// fallback. Otherwise, the value is reflected as a Variant.
+func SetProperty(s rbxmk.State, inst *rtypes.Instance, name string, value lua.LValue, desc *rtypes.Desc, fallback rbxmk.Reflector) error {
+	prop, err := canSetProperty(s, inst, name, value, desc, fallback)
 	if err != nil {
 		return err
 	}
@@ -425,7 +428,7 @@ func Instance() rbxmk.Reflector {
 				}
 
 				// Try property.
-				lv, err := getProperty(s, inst, s.Desc.Of(inst), name)
+				lv, err := GetProperty(s, inst, name, s.Desc.Of(inst), rbxmk.Reflector{})
 				if err != nil {
 					return s.RaiseError("%s", err)
 				}
@@ -442,8 +445,8 @@ func Instance() rbxmk.Reflector {
 				}
 
 				// Try property.
-				value := PullVariant(s, 3)
-				if err := setProperty(s, inst, s.Desc.Of(inst), name, value); err != nil {
+				lv := s.CheckAny(3)
+				if err := SetProperty(s, inst, name, lv, s.Desc.Of(inst), rbxmk.Reflector{}); err != nil {
 					return s.RaiseError("%s", err)
 				}
 				return 0
@@ -730,7 +733,7 @@ func Instance() rbxmk.Reflector {
 					props := inst.PropertyNames()
 					dict := s.L.CreateTable(0, len(props))
 					for _, name := range props {
-						if value, err := getProperty(s, inst, desc, name); err == nil {
+						if value, err := GetProperty(s, inst, name, desc, rbxmk.Reflector{}); err == nil {
 							dict.RawSetString(name, value)
 						}
 					}
@@ -740,15 +743,23 @@ func Instance() rbxmk.Reflector {
 				Set: func(s rbxmk.State, v types.Value) {
 					inst := v.(*rtypes.Instance)
 					desc := s.Desc.Of(inst)
-					dict := s.PullAnyOf(3, "Dictionary").(rtypes.Dictionary)
-					props := make(map[string]types.PropValue, len(dict))
-					for name, value := range dict {
-						prop, err := canSetProperty(s, inst, desc, name, value)
-						if err != nil {
-							s.RaiseError("%s", err)
-							return
+					dict := s.L.CheckTable(3)
+					props := map[string]types.PropValue{}
+					err := dict.ForEach(func(k, v lua.LValue) error {
+						name, ok := k.(lua.LString)
+						if !ok {
+							return nil
 						}
-						props[name] = prop
+						prop, err := canSetProperty(s, inst, string(name), v, desc, rbxmk.Reflector{})
+						if err != nil {
+							return err
+						}
+						props[string(name)] = prop
+						return nil
+					})
+					if err != nil {
+						s.RaiseError("%s", err)
+						return
 					}
 					inst.SetProperties(props, true)
 				},

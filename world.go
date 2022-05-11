@@ -238,24 +238,6 @@ func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
 // Members and Exprim is set, then the Value field will be injected if it does
 // not already exist.
 func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
-	if r.Flags&Exprim != 0 {
-		// Inject Value field, if possible.
-		if r.Properties == nil {
-			r.Properties = make(map[string]Property, 1)
-		}
-		if _, ok := r.Properties["Value"]; !ok {
-			r.Properties["Value"] = Property{
-				Get: func(s State, v types.Value) int {
-					if v, ok := v.(types.Aliaser); ok {
-						// Push underlying type.
-						return s.Push(v.Alias())
-					}
-					// Fallback to current value.
-					return s.Push(v)
-				},
-			}
-		}
-	}
 	// Validate properties.
 	for _, property := range r.Properties {
 		if property.Get == nil {
@@ -280,26 +262,10 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 	// Unconditional fields.
 	mt.RawSetString("__type", lua.LString(r.Name))
 	mt.RawSetString("__metatable", lua.LString("the metatable is locked"))
-
-	if r.Flags&Exprim != 0 {
-		// Show type and value, if possible.
-		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
-			if u, ok := l.Get(1).(*lua.LUserData); ok {
-				if v, ok := u.Value().(types.Stringer); ok {
-					l.Push(lua.LString(r.Name + ": " + v.String()))
-					return 1
-				}
-			}
-			l.Push(lua.LString(r.Name))
-			return 1
-		}))
-	} else {
-		// Just show type.
-		mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
-			l.Push(lua.LString(r.Name))
-			return 1
-		}))
-	}
+	mt.RawSetString("__tostring", w.l.NewFunction(func(l *lua.LState) int {
+		l.Push(lua.LString(r.Name))
+		return 1
+	}))
 
 	var customIndex Metamethod
 	var customNewindex Metamethod
