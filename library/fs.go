@@ -25,6 +25,8 @@ var FS = rbxmk.Library{
 	Dump:       dumpFS,
 	Types: []func() rbxmk.Reflector{
 		reflect.Bool,
+		reflect.DirEntry,
+		reflect.FileInfo,
 		reflect.FormatSelector,
 		reflect.String,
 		reflect.Variant,
@@ -50,11 +52,8 @@ func fsDir(s rbxmk.State) int {
 		return s.RaiseError("%s", err)
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
-	for _, entry := range files {
-		tentry := s.L.CreateTable(0, 2)
-		tentry.RawSetString("Name", lua.LString(entry.Name()))
-		tentry.RawSetString("IsDir", lua.LBool(entry.IsDir()))
-		tfiles.Append(tentry)
+	for i, entry := range files {
+		s.PushToArray(tfiles, i+1, rtypes.DirEntry{DirEntry: entry})
 	}
 	s.L.Push(tfiles)
 	return 1
@@ -126,13 +125,7 @@ func fsStat(s rbxmk.State) int {
 		s.L.Push(lua.LNil)
 		return 1
 	}
-	tinfo := s.L.CreateTable(0, 4)
-	tinfo.RawSetString("Name", lua.LString(info.Name()))
-	tinfo.RawSetString("IsDir", lua.LBool(info.IsDir()))
-	tinfo.RawSetString("Size", lua.LNumber(info.Size()))
-	tinfo.RawSetString("ModTime", lua.LNumber(info.ModTime().Unix()))
-	s.L.Push(tinfo)
-	return 1
+	return s.Push(rtypes.FileInfo{FileInfo: info})
 }
 
 func fsWrite(s rbxmk.State) int {
@@ -158,7 +151,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "path", Type: dt.Prim("string")},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Array{T: dt.Prim("DirEntry")}}},
+						{Type: dt.Optional{T: dt.Array{T: dt.Prim(rtypes.T_DirEntry)}}},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/dir/Summary",
@@ -217,7 +210,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "path", Type: dt.Prim("string")},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Prim("FileInfo")}},
+						{Type: dt.Optional{T: dt.Prim(rtypes.T_FileInfo)}},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/stat/Summary",
@@ -236,26 +229,6 @@ func dumpFS(s rbxmk.State) dump.Library {
 			},
 			Summary:     "Libraries/fs:Summary",
 			Description: "Libraries/fs:Description",
-		},
-		Types: dump.TypeDefs{
-			"DirEntry": dump.TypeDef{
-				Underlying: dt.Struct{
-					"Name":  dt.Prim("string"),
-					"IsDir": dt.Prim("boolean"),
-				},
-				Summary:     "Libraries/fs/Types/DirEntry:Summary",
-				Description: "Libraries/fs/Types/DirEntry:Description",
-			},
-			"FileInfo": dump.TypeDef{
-				Underlying: dt.Struct{
-					"Name":    dt.Prim("string"),
-					"IsDir":   dt.Prim("boolean"),
-					"Size":    dt.Prim("number"),
-					"ModTime": dt.Prim("number"),
-				},
-				Summary:     "Libraries/fs/Types/FileInfo:Summary",
-				Description: "Libraries/fs/Types/FileInfo:Description",
-			},
 		},
 	}
 }
