@@ -289,7 +289,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				return s.ArgError(1, err.Error())
 			}
-			switch index := s.PullAnyOfOpt(2, nil, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, nil, rtypes.T_String, rtypes.T_Symbol).(type) {
 			case types.String:
 				if method, ok := r.Methods[string(index)]; ok {
 					s.L.Push(s.WrapMethod(func(s State) int {
@@ -328,7 +328,7 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			if err != nil {
 				s.ArgError(1, err.Error())
 			}
-			switch index := s.PullAnyOfOpt(2, nil, "string", "Symbol").(type) {
+			switch index := s.PullAnyOfOpt(2, nil, rtypes.T_String, rtypes.T_Symbol).(type) {
 			case types.String:
 				if _, ok := r.Methods[string(index)]; ok {
 					return s.RaiseError("%s of %s cannot be assigned to", index, r.Name)
@@ -947,7 +947,7 @@ func (w *World) SetEnumGlobal() {
 	if w.Desc == nil {
 		return
 	}
-	rfl := w.Reflector("Enums")
+	rfl := w.Reflector(rtypes.T_Enums)
 	if rfl.Name == "" {
 		return
 	}
