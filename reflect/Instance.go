@@ -1018,7 +1018,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "attribute", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("any")}},
+							{Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						Summary:     "Types/Instance:Methods/GetAttribute/Summary",
 						Description: "Types/Instance:Methods/GetAttribute/Description",
@@ -1252,7 +1252,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "property", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim("any")}},
+							{Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						CanError:    true,
 						Summary:     "Types/Instance:Operators/Index/Summary",
@@ -1261,7 +1261,7 @@ func Instance() rbxmk.Reflector {
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "property", Type: dt.Prim(rtypes.T_String)},
-							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+							{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						CanError:    true,
 						Summary:     "Types/Instance:Operators/Newindex/Summary",

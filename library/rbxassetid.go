@@ -64,7 +64,7 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 						{Name: "options", Type: dt.Prim(rtypes.T_RBXAssetOptions)},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxassetid:Fields/read/Summary",

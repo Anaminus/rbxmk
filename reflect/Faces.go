@@ -195,7 +195,7 @@ func Faces() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+								{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 							},
 							Summary:     "Types/Faces:Constructors/new/Summary",
 							Description: "Types/Faces:Constructors/new/Description",

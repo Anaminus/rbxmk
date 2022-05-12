@@ -84,7 +84,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 					"AssetID": dt.Prim(rtypes.T_Int64),
 					"Cookies": dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
 					"Format":  dt.Prim(rtypes.T_FormatSelector),
-					"Body":    dt.Optional{T: dt.Prim("any")},
+					"Body":    dt.Optional{T: dt.Prim(rtypes.T_Any)},
 				},
 				Summary:     "Types/RBXAssetOptions:Summary",
 				Description: "Types/RBXAssetOptions:Description",

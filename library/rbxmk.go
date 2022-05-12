@@ -296,7 +296,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "bytes", Type: dt.Prim(rtypes.T_BinaryString)},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/decodeFormat/Summary",
@@ -305,7 +305,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 				"encodeFormat": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "format", Type: dt.Prim(rtypes.T_String)},
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
 						{Name: "bytes", Type: dt.Prim(rtypes.T_BinaryString)},
@@ -337,7 +337,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						}},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/get/Summary",
@@ -390,10 +390,10 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 				"runFile": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
-						{Name: "...", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/runFile/Summary",
@@ -402,10 +402,10 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 				"runString": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "source", Type: dt.Prim(rtypes.T_String)},
-						{Name: "...", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/runString/Summary",
@@ -415,7 +415,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "instance", Type: dt.Prim(rtypes.T_Instance)},
 						{Name: "property", Type: dt.Prim(rtypes.T_String)},
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 						{Name: "fallback", Type: dt.Or{
 							dt.Prim(rtypes.T_String),
 							dt.Prim(rtypes.T_Desc),

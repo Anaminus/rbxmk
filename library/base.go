@@ -225,12 +225,12 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"assert": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "v", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						{Name: "message", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, Default: `"assertion failed!"`},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					CanError:    true,
 					Summary:     "Libraries/base:Fields/assert/Summary",
@@ -238,7 +238,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"error": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "message", Type: dt.Prim("any")},
+						{Name: "message", Type: dt.Prim(rtypes.T_Any)},
 						{Name: "level", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
 					},
 					CanError:    true,
@@ -260,11 +260,11 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"next": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-						{Name: "index", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
-						{Name: "index", Type: dt.Optional{T: dt.Prim("any")}},
-						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/base:Fields/next/Summary",
 					Description: "Libraries/base:Fields/next/Description",
@@ -284,18 +284,18 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"pcall": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "f", Type: dt.Prim(rtypes.T_LuaFunction)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim(rtypes.T_LuaBoolean)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/base:Fields/pcall/Summary",
 					Description: "Libraries/base:Fields/pcall/Description",
 				},
 				"print": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/base:Fields/print/Summary",
 					Description: "Libraries/base:Fields/print/Description",
@@ -304,10 +304,10 @@ func dumpBase(s rbxmk.State) dump.Library {
 					{
 						Parameters: dump.Parameters{
 							{Name: "index", Type: dt.Prim(rtypes.T_LuaInteger)},
-							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						Returns: dump.Parameters{
-							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						CanError:    true,
 						Summary:     "Libraries/base:Fields/select/Index/Summary",
@@ -316,7 +316,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 					{
 						Parameters: dump.Parameters{
 							{Name: "count", Type: dt.Prim(rtypes.T_LuaString), Enums: dt.Enums{`"#"`}},
-							{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim(rtypes.T_LuaInteger)},
@@ -328,7 +328,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"tonumber": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "x", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 						{Name: "base", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `10`},
 					},
 					Returns: dump.Parameters{
@@ -339,7 +339,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"tostring": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "v", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaString)},
@@ -349,7 +349,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"type": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Prim("any")},
+						{Name: "v", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaString)},
@@ -364,7 +364,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/base:Fields/unpack/Summary",
 					Description: "Libraries/base:Fields/unpack/Description",
@@ -373,21 +373,21 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "f", Type: dt.Prim(rtypes.T_LuaFunction)},
 						{Name: "msgh", Type: dt.Function{
-							Parameters: []dt.Parameter{{Name: "err", Type: dt.Prim("any")}},
-							Returns:    []dt.Parameter{{Type: dt.Prim("any")}},
+							Parameters: []dt.Parameter{{Name: "err", Type: dt.Prim(rtypes.T_Any)}},
+							Returns:    []dt.Parameter{{Type: dt.Prim(rtypes.T_Any)}},
 						}},
-						{Name: "...", Type: dt.Prim("any")},
+						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim(rtypes.T_LuaBoolean)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/base:Fields/xpcall/Summary",
 					Description: "Libraries/base:Fields/xpcall/Description",
 				},
 				"getmetatable": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Prim("any")},
+						{Name: "v", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim(rtypes.T_LuaTable)}},
@@ -835,7 +835,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						"format": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "format", Type: dt.Prim(rtypes.T_LuaString)},
-								{Name: "...", Type: dt.Prim("any")},
+								{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_LuaString)},
@@ -990,7 +990,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								Parameters: dump.Parameters{
 									{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
 									{Name: "index", Type: dt.Prim(rtypes.T_LuaInteger)},
-									{Name: "value", Type: dt.Prim("any")},
+									{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 								},
 								Summary:     "Libraries/base/Fields/table:Fields/insert/Insert/Summary",
 								Description: "Libraries/base/Fields/table:Fields/insert/Insert/Description",
@@ -998,7 +998,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							{
 								Parameters: dump.Parameters{
 									{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-									{Name: "value", Type: dt.Prim("any")},
+									{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 								},
 								Summary:     "Libraries/base/Fields/table:Fields/insert/Append/Summary",
 								Description: "Libraries/base/Fields/table:Fields/insert/Append/Description",
@@ -1020,7 +1020,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `#t`},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim("any")},
+								{Type: dt.Prim(rtypes.T_Any)},
 							},
 							Summary:     "Libraries/base/Fields/table:Fields/remove/Summary",
 							Description: "Libraries/base/Fields/table:Fields/remove/Description",
@@ -1030,8 +1030,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
 								{Name: "comp", Type: dt.Optional{T: dt.Function{
 									Parameters: dump.Parameters{
-										{Name: "a", Type: dt.Prim("any")},
-										{Name: "b", Type: dt.Prim("any")},
+										{Name: "a", Type: dt.Prim(rtypes.T_Any)},
+										{Name: "b", Type: dt.Prim(rtypes.T_Any)},
 									},
 									Returns: dump.Parameters{
 										{Type: dt.Prim(rtypes.T_LuaBoolean)},

@@ -103,7 +103,7 @@ func HTTPOptions() rbxmk.Reflector {
 					"ResponseFormat": dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
 					"Headers":        dt.Optional{T: dt.Prim(rtypes.T_HTTPHeaders)},
 					"Cookies":        dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
-					"Body":           dt.Optional{T: dt.Prim("any")},
+					"Body":           dt.Optional{T: dt.Prim(rtypes.T_Any)},
 				},
 				Summary:     "Types/HTTPOptions:Summary",
 				Description: "Types/HTTPOptions:Description",

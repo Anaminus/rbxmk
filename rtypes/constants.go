@@ -1,5 +1,8 @@
 package rtypes
 
+// Type name constant for any type.
+const T_Any = "any"
+
 // Type name constants for primitive Lua types.
 const (
 	T_LuaNil      = "nil"

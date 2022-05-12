@@ -139,7 +139,7 @@ func dumpTable(s rbxmk.State) dump.Library {
 				"create": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "cap", Type: dt.Prim(rtypes.T_LuaInteger)},
-						{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaTable)},
@@ -150,7 +150,7 @@ func dumpTable(s rbxmk.State) dump.Library {
 				"find": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 						{Name: "init", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
 					},
 					Returns: dump.Parameters{
@@ -176,7 +176,7 @@ func dumpTable(s rbxmk.State) dump.Library {
 				},
 				"pack": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaTable)},
@@ -191,7 +191,7 @@ func dumpTable(s rbxmk.State) dump.Library {
 						{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim("any")}},
+						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
 					},
 					Summary:     "Libraries/table:Fields/unpack/Summary",
 					Description: "Libraries/table:Fields/unpack/Description",

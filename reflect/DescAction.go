@@ -151,7 +151,7 @@ func DescAction() rbxmk.Reflector {
 							{Name: "name", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim("any")},
+							{Type: dt.Prim(rtypes.T_Any)},
 						},
 						Summary:     "Types/DescAction:Methods/Field/Summary",
 						Description: "Types/DescAction:Methods/Field/Description",
@@ -166,7 +166,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Dictionary{V: dt.Prim("any")}},
+							{Type: dt.Dictionary{V: dt.Prim(rtypes.T_Any)}},
 						},
 						Summary:     "Types/DescAction:Methods/Fields/Summary",
 						Description: "Types/DescAction:Methods/Fields/Description",
@@ -196,7 +196,7 @@ func DescAction() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim(rtypes.T_String)},
-							{Name: "value", Type: dt.Prim("any")},
+							{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 						},
 						Summary:     "Types/DescAction:Methods/SetField/Summary",
 						Description: "Types/DescAction:Methods/SetField/Description",
@@ -213,7 +213,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "fields", Type: dt.Dictionary{V: dt.Prim("any")}},
+							{Name: "fields", Type: dt.Dictionary{V: dt.Prim(rtypes.T_Any)}},
 						},
 						Summary:     "Types/DescAction:Methods/SetFields/Summary",
 						Description: "Types/DescAction:Methods/SetFields/Description",

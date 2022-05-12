@@ -175,7 +175,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "format", Type: dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)}},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/read/Summary",
@@ -219,7 +219,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 				"write": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
-						{Name: "value", Type: dt.Prim("any")},
+						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
 						{Name: "format", Type: dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)}},
 					},
 					CanError:    true,
