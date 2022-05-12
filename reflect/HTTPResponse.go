@@ -95,7 +95,7 @@ func HTTPResponse() rbxmk.Reflector {
 					"StatusMessage": dt.Prim(rtypes.T_String),
 					"Headers":       dt.Prim(rtypes.T_HTTPHeaders),
 					"Cookies":       dt.Prim(rtypes.T_Cookies),
-					"Body":          dt.Optional{T: dt.Prim("any")},
+					"Body":          dt.Optional{T: dt.Prim(rtypes.T_Variant)},
 				},
 				Summary:     "Types/HTTPResponse:Summary",
 				Description: "Types/HTTPResponse:Description",

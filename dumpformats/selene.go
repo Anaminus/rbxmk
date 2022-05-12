@@ -301,6 +301,9 @@ func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t 
 			buf.WriteString("type = ")
 			seleneEscapeString(buf, p.String())
 			return
+		case "Variant":
+			buf.WriteString("type = \"any\"")
+			return
 		}
 	}
 

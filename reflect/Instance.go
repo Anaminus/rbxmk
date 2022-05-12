@@ -1154,7 +1154,7 @@ func Instance() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "attribute", Type: dt.Prim(rtypes.T_String)},
-							{Name: "value", Type: dt.Optional{T: dt.Prim("any")}},
+							{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Variant)}},
 						},
 						Summary:     "Types/Instance:Methods/SetAttribute/Summary",
 						Description: "Types/Instance:Methods/SetAttribute/Description",

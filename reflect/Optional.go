@@ -85,7 +85,7 @@ func Optional() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "value", Type: dt.Prim("any")},
+								{Name: "value", Type: dt.Prim(rtypes.T_Variant)},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_Optional)},
