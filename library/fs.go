@@ -46,7 +46,7 @@ func openFS(s rbxmk.State) *lua.LTable {
 }
 
 func fsDir(s rbxmk.State) int {
-	dirname := s.CheckString(1)
+	dirname := string(s.Pull(1, rtypes.T_String).(types.String))
 	files, err := FSSource{World: s.World}.Dir(dirname)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -116,7 +116,7 @@ func fsRename(s rbxmk.State) int {
 }
 
 func fsStat(s rbxmk.State) int {
-	filename := s.CheckString(1)
+	filename := string(s.Pull(1, rtypes.T_String).(types.String))
 	info, err := FSSource{World: s.World}.Stat(filename)
 	if err != nil {
 		return s.RaiseError("%s", err)
@@ -148,7 +148,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"dir": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Array{T: dt.Prim(rtypes.T_DirEntry)}}},
@@ -207,7 +207,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 				},
 				"stat": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Optional{T: dt.Prim(rtypes.T_FileInfo)}},
