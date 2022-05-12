@@ -5,17 +5,16 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_NumberSequenceKeypoint = "NumberSequenceKeypoint"
 
 func init() { register(NumberSequenceKeypoint) }
 func NumberSequenceKeypoint() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_NumberSequenceKeypoint,
-		PushTo:   rbxmk.PushTypeTo(T_NumberSequenceKeypoint),
-		PullFrom: rbxmk.PullTypeFrom(T_NumberSequenceKeypoint),
+		Name:     rtypes.T_NumberSequenceKeypoint,
+		PushTo:   rbxmk.PushTypeTo(rtypes.T_NumberSequenceKeypoint),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_NumberSequenceKeypoint),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.NumberSequenceKeypoint:
@@ -27,13 +26,13 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
+				v := s.Pull(1, rtypes.T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
-				op := s.Pull(2, T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
+				v := s.Pull(1, rtypes.T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
+				op := s.Pull(2, rtypes.T_NumberSequenceKeypoint).(types.NumberSequenceKeypoint)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -45,7 +44,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/NumberSequenceKeypoint:Properties/Time/Summary",
 						Description: "Types/NumberSequenceKeypoint:Properties/Time/Description",
@@ -58,7 +57,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/NumberSequenceKeypoint:Properties/Value/Summary",
 						Description: "Types/NumberSequenceKeypoint:Properties/Value/Description",
@@ -71,7 +70,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/NumberSequenceKeypoint:Properties/Envelope/Summary",
 						Description: "Types/NumberSequenceKeypoint:Properties/Envelope/Description",
@@ -85,12 +84,12 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 					var v types.NumberSequenceKeypoint
 					switch s.Count() {
 					case 2:
-						v.Time = float32(s.Pull(1, T_Float).(types.Float))
-						v.Value = float32(s.Pull(2, T_Float).(types.Float))
+						v.Time = float32(s.Pull(1, rtypes.T_Float).(types.Float))
+						v.Value = float32(s.Pull(2, rtypes.T_Float).(types.Float))
 					case 3:
-						v.Time = float32(s.Pull(1, T_Float).(types.Float))
-						v.Value = float32(s.Pull(2, T_Float).(types.Float))
-						v.Envelope = float32(s.Pull(3, T_Float).(types.Float))
+						v.Time = float32(s.Pull(1, rtypes.T_Float).(types.Float))
+						v.Value = float32(s.Pull(2, rtypes.T_Float).(types.Float))
+						v.Envelope = float32(s.Pull(3, rtypes.T_Float).(types.Float))
 					default:
 						return s.RaiseError("expected 2 or 3 arguments")
 					}
@@ -100,23 +99,23 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "time", Type: dt.Prim(T_Float)},
-								{Name: "value", Type: dt.Prim(T_Float)},
+								{Name: "time", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "value", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_ColorSequenceKeypoint)},
+								{Type: dt.Prim(rtypes.T_ColorSequenceKeypoint)},
 							},
 							Summary:     "Types/NumberSequenceKeypoint:Constructors/new/Components/Summary",
 							Description: "Types/NumberSequenceKeypoint:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "time", Type: dt.Prim(T_Float)},
-								{Name: "value", Type: dt.Prim(T_Float)},
-								{Name: "envelope", Type: dt.Prim(T_Float)},
+								{Name: "time", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "value", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "envelope", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_ColorSequenceKeypoint)},
+								{Type: dt.Prim(rtypes.T_ColorSequenceKeypoint)},
 							},
 							Summary:     "Types/NumberSequenceKeypoint:Constructors/new/Envelope/Summary",
 							Description: "Types/NumberSequenceKeypoint:Constructors/new/Envelope/Description",

@@ -7,6 +7,8 @@ import (
 	"github.com/robloxapi/rbxdump/diff"
 )
 
+const T_Desc = "Desc"
+
 // Desc wraps a rbxdump.Root to implement types.Value.
 type Desc struct {
 	*rbxdump.Root
@@ -15,7 +17,7 @@ type Desc struct {
 
 // Type returns a string identifying the type of the value.
 func (*Desc) Type() string {
-	return "Desc"
+	return T_Desc
 }
 
 // String returns a string representation of the value.
@@ -150,13 +152,17 @@ func (d *Desc) Of(inst *Instance) *Desc {
 	return d
 }
 
+const T_ClassDesc = "ClassDesc"
+
 // ClassDesc wraps a rbxdump.Class to implement types.Value.
 type ClassDesc rbxdump.Class
 
 // Type returns a string identifying the type of the value.
 func (ClassDesc) Type() string {
-	return "ClassDesc"
+	return T_ClassDesc
 }
+
+const T_MemberDesc = "MemberDesc"
 
 // MemberDesc wraps a rbxdump.Member to implement types.Value.
 type MemberDesc struct {
@@ -165,40 +171,50 @@ type MemberDesc struct {
 
 // Type returns a string identifying the type of the value.
 func (MemberDesc) Type() string {
-	return "MemberDesc"
+	return T_MemberDesc
 }
+
+const T_PropertyDesc = "PropertyDesc"
 
 // PropertyDesc wraps a rbxdump.Property to implement types.Value.
 type PropertyDesc rbxdump.Property
 
 // Type returns a string identifying the type of the value.
 func (PropertyDesc) Type() string {
-	return "PropertyDesc"
+	return T_PropertyDesc
 }
+
+const T_FunctionDesc = "FunctionDesc"
 
 // FunctionDesc wraps a rbxdump.Function to implement types.Value.
 type FunctionDesc rbxdump.Function
 
 // Type returns a string identifying the type of the value.
 func (FunctionDesc) Type() string {
-	return "FunctionDesc"
+	return T_FunctionDesc
 }
+
+const T_EventDesc = "EventDesc"
 
 // EventDesc wraps a rbxdump.Event to implement types.Value.
 type EventDesc rbxdump.Event
 
 // Type returns a string identifying the type of the value.
 func (EventDesc) Type() string {
-	return "EventDesc"
+	return T_EventDesc
 }
+
+const T_CallbackDesc = "CallbackDesc"
 
 // CallbackDesc wraps a rbxdump.Callback to implement types.Value.
 type CallbackDesc rbxdump.Callback
 
 // Type returns a string identifying the type of the value.
 func (CallbackDesc) Type() string {
-	return "CallbackDesc"
+	return T_CallbackDesc
 }
+
+const T_ParameterDesc = "ParameterDesc"
 
 // ParameterDesc wraps a rbxdump.Parameter to implement types.Value.
 type ParameterDesc struct {
@@ -207,8 +223,10 @@ type ParameterDesc struct {
 
 // Type returns a string identifying the type of the value.
 func (ParameterDesc) Type() string {
-	return "ParameterDesc"
+	return T_ParameterDesc
 }
+
+const T_TypeDesc = "TypeDesc"
 
 // TypeDesc wraps a rbxdump.Type to implement types.Value.
 type TypeDesc struct {
@@ -217,32 +235,40 @@ type TypeDesc struct {
 
 // Type returns a string identifying the type of the value.
 func (TypeDesc) Type() string {
-	return "TypeDesc"
+	return T_TypeDesc
 }
+
+const T_EnumDesc = "EnumDesc"
 
 // EnumDesc wraps a rbxdump.Enum to implement types.Value.
 type EnumDesc rbxdump.Enum
 
 // Type returns a string identifying the type of the value.
 func (EnumDesc) Type() string {
-	return "EnumDesc"
+	return T_EnumDesc
 }
+
+const T_EnumItemDesc = "EnumItemDesc"
 
 // EnumItemDesc wraps a rbxdump.EnumItem to implement types.Value.
 type EnumItemDesc rbxdump.EnumItem
 
 // Type returns a string identifying the type of the value.
 func (EnumItemDesc) Type() string {
-	return "EnumItemDesc"
+	return T_EnumItemDesc
 }
+
+const T_DescActions = "DescActions"
 
 // DescActions is a list of DescAction values that implements types.Value.
 type DescActions []*DescAction
 
 // Type returns a string identifying the type of the value.
 func (DescActions) Type() string {
-	return "DescActions"
+	return T_DescActions
 }
+
+const T_DescAction = "DescAction"
 
 // DescAction wraps a diff.Action to implement types.Value.
 type DescAction struct {
@@ -251,7 +277,7 @@ type DescAction struct {
 
 // Type returns a string identifying the type of the value.
 func (*DescAction) Type() string {
-	return "DescAction"
+	return T_DescAction
 }
 
 // String returns a string representation of the value.
@@ -259,10 +285,12 @@ func (a *DescAction) String() string {
 	return a.Action.String()
 }
 
+const T_DescFields = "DescFields"
+
 // DescFields wraps a rbxdump.Fields to implement types.Value.
 type DescFields rbxdump.Fields
 
 // Type returns a string identifying the type of the value.
 func (DescFields) Type() string {
-	return "DescFields"
+	return T_DescFields
 }

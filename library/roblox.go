@@ -6,6 +6,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/reflect"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(Roblox) }
@@ -98,10 +99,10 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 		},
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
-				Underlying: dt.Prim(reflect.T_Instance),
+				Underlying: dt.Prim(rtypes.T_Instance),
 				Symbols: dump.Properties{
 					"Metadata": dump.Property{
-						ValueType:   dt.Dictionary{V: dt.Prim(reflect.T_String)},
+						ValueType:   dt.Dictionary{V: dt.Prim(rtypes.T_String)},
 						Summary:     "Libraries/roblox/Types/DataModel:Symbols/Metadata/Summary",
 						Description: "Libraries/roblox/Types/DataModel:Symbols/Metadata/Description",
 					},
@@ -109,10 +110,10 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 				Methods: dump.Methods{
 					"GetService": dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim(reflect.T_String)},
+							{Name: "name", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(reflect.T_Instance)},
+							{Type: dt.Prim(rtypes.T_Instance)},
 						},
 						Summary:     "Libraries/roblox/Types/DataModel:Methods/GetService/Summary",
 						Description: "Libraries/roblox/Types/DataModel:Methods/GetService/Description",

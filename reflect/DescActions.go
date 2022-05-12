@@ -9,18 +9,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_DescActions = "DescActions"
-
 func init() { register(DescActions) }
 func DescActions() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_DescActions,
+		Name: rtypes.T_DescActions,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			actions, ok := v.(rtypes.DescActions)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_DescActions, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_DescActions, Got: v.Type()}
 			}
-			actionRfl := c.MustReflector(T_DescAction)
+			actionRfl := c.MustReflector(rtypes.T_DescAction)
 			table := c.CreateTable(len(actions), 0)
 			for i, v := range actions {
 				lv, err := actionRfl.PushTo(c, v)
@@ -34,9 +32,9 @@ func DescActions() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			actionRfl := c.MustReflector(T_DescAction)
+			actionRfl := c.MustReflector(rtypes.T_DescAction)
 			n := table.Len()
 			actions := make(rtypes.DescActions, n)
 			for i := 1; i <= n; i++ {
@@ -59,7 +57,7 @@ func DescActions() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Array{T: dt.Prim(T_DescAction)},
+				Underlying:  dt.Array{T: dt.Prim(rtypes.T_DescAction)},
 				Summary:     "Types/DescActions:Summary",
 				Description: "Types/DescActions:Description",
 			}

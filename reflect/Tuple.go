@@ -8,12 +8,10 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Tuple = "Tuple"
-
 func init() { register(Tuple) }
 func Tuple() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_Tuple,
+		Name: rtypes.T_Tuple,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			panic("incorrect use of Tuple reflection (use State.PushTuple)")
 		},

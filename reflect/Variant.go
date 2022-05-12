@@ -23,14 +23,14 @@ func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 	case types.Stringlike:
 		return lua.LString(v.Stringlike()), nil
 	case rtypes.Array:
-		rfl := c.MustReflector(T_Array)
+		rfl := c.MustReflector(rtypes.T_Array)
 		values, err := rfl.PushTo(c, v)
 		if err != nil {
 			return nil, err
 		}
 		return values, nil
 	case rtypes.Dictionary:
-		rfl := c.MustReflector(T_Dictionary)
+		rfl := c.MustReflector(rtypes.T_Dictionary)
 		values, err := rfl.PushTo(c, v)
 		if err != nil {
 			return nil, err
@@ -63,12 +63,12 @@ func PullVariantFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) 
 		return types.String(lv), nil
 	case *lua.LTable:
 		if lv.Len() > 0 {
-			arrayRfl := c.MustReflector(T_Array)
+			arrayRfl := c.MustReflector(rtypes.T_Array)
 			if v, err = arrayRfl.PullFrom(c, lv); err == nil {
 				return v, nil
 			}
 		}
-		dictRfl := c.MustReflector(T_Dictionary)
+		dictRfl := c.MustReflector(rtypes.T_Dictionary)
 		v, err := dictRfl.PullFrom(c, lv)
 		return v, err
 	case *lua.LUserData:
@@ -100,12 +100,10 @@ func PullVariant(s rbxmk.State, n int) (v types.Value) {
 	return v
 }
 
-const T_Variant = "Variant"
-
 func init() { register(Variant) }
 func Variant() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_Variant,
+		Name:     rtypes.T_Variant,
 		PushTo:   PushVariantTo,
 		PullFrom: PullVariantFrom,
 		SetTo: func(p interface{}, v types.Value) error {

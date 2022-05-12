@@ -9,14 +9,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_NumberSequence = "NumberSequence"
-
 func init() { register(NumberSequence) }
 func NumberSequence() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_NumberSequence,
-		PushTo:   rbxmk.PushTypeTo(T_NumberSequence),
-		PullFrom: rbxmk.PullTypeFrom(T_NumberSequence),
+		Name:     rtypes.T_NumberSequence,
+		PushTo:   rbxmk.PushTypeTo(rtypes.T_NumberSequence),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_NumberSequence),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.NumberSequence:
@@ -28,13 +26,13 @@ func NumberSequence() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_NumberSequence).(types.NumberSequence)
+				v := s.Pull(1, rtypes.T_NumberSequence).(types.NumberSequence)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, T_NumberSequence).(types.NumberSequence)
-				op := s.Pull(2, T_NumberSequence).(types.NumberSequence)
+				v := s.Pull(1, rtypes.T_NumberSequence).(types.NumberSequence)
+				op := s.Pull(2, rtypes.T_NumberSequence).(types.NumberSequence)
 				if len(op) != len(v) {
 					s.L.Push(lua.LFalse)
 					return 1
@@ -53,7 +51,7 @@ func NumberSequence() rbxmk.Reflector {
 			"Keypoints": {
 				Get: func(s rbxmk.State, v types.Value) int {
 					u := v.(types.NumberSequence)
-					keypointRfl := s.MustReflector(T_NumberSequenceKeypoint)
+					keypointRfl := s.MustReflector(rtypes.T_NumberSequenceKeypoint)
 					table := s.L.CreateTable(len(u), 0)
 					for i, v := range u {
 						lv, err := keypointRfl.PushTo(s.Context(), v)
@@ -67,7 +65,7 @@ func NumberSequence() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Array{T: dt.Prim(T_NumberSequenceKeypoint)},
+						ValueType:   dt.Array{T: dt.Prim(rtypes.T_NumberSequenceKeypoint)},
 						ReadOnly:    true,
 						Summary:     "Types/NumberSequence:Properties/Keypoints/Summary",
 						Description: "Types/NumberSequence:Properties/Keypoints/Description",
@@ -81,7 +79,7 @@ func NumberSequence() rbxmk.Reflector {
 					var v types.NumberSequence
 					switch s.Count() {
 					case 1:
-						switch c := s.PullAnyOf(1, T_Float, T_Table).(type) {
+						switch c := s.PullAnyOf(1, rtypes.T_Float, rtypes.T_Table).(type) {
 						case types.Float:
 							v = types.NumberSequence{
 								types.NumberSequenceKeypoint{Time: 0, Value: float32(c)},
@@ -93,7 +91,7 @@ func NumberSequence() rbxmk.Reflector {
 								return s.RaiseError("NumberSequence requires at least 2 keypoints")
 							}
 							v = make(types.NumberSequence, n)
-							keypointRfl := s.MustReflector(T_NumberSequenceKeypoint)
+							keypointRfl := s.MustReflector(rtypes.T_NumberSequenceKeypoint)
 							for i := 1; i <= n; i++ {
 								k, err := keypointRfl.PullFrom(s.Context(), c.RawGetInt(i))
 								if err != nil {
@@ -118,8 +116,8 @@ func NumberSequence() rbxmk.Reflector {
 						}
 					case 2:
 						v = types.NumberSequence{
-							types.NumberSequenceKeypoint{Time: 0, Value: float32(s.Pull(1, T_Float).(types.Float))},
-							types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, T_Float).(types.Float))},
+							types.NumberSequenceKeypoint{Time: 0, Value: float32(s.Pull(1, rtypes.T_Float).(types.Float))},
+							types.NumberSequenceKeypoint{Time: 1, Value: float32(s.Pull(2, rtypes.T_Float).(types.Float))},
 						}
 					default:
 						return s.RaiseError("expected 1 or 2 arguments")
@@ -130,31 +128,31 @@ func NumberSequence() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "value", Type: dt.Prim(T_Float)},
+								{Name: "value", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_NumberSequence)},
+								{Type: dt.Prim(rtypes.T_NumberSequence)},
 							},
 							Summary:     "Types/NumberSequence:Constructors/new/Single/Summary",
 							Description: "Types/NumberSequence:Constructors/new/Single/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "value0", Type: dt.Prim(T_Float)},
-								{Name: "value1", Type: dt.Prim(T_Float)},
+								{Name: "value0", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "value1", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_NumberSequence)},
+								{Type: dt.Prim(rtypes.T_NumberSequence)},
 							},
 							Summary:     "Types/NumberSequence:Constructors/new/Range/Summary",
 							Description: "Types/NumberSequence:Constructors/new/Range/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "keypoints", Type: dt.Array{T: dt.Prim(T_NumberSequenceKeypoint)}},
+								{Name: "keypoints", Type: dt.Array{T: dt.Prim(rtypes.T_NumberSequenceKeypoint)}},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_NumberSequence)},
+								{Type: dt.Prim(rtypes.T_NumberSequence)},
 							},
 							CanError:    true,
 							Summary:     "Types/NumberSequence:Constructors/new/Keypoints/Summary",

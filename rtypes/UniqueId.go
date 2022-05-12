@@ -5,6 +5,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_UniqueId = "UniqueId"
+
 // UniqueId represents a unique identifier.
 type UniqueId struct {
 	Random types.Int64
@@ -14,7 +16,7 @@ type UniqueId struct {
 
 // Type returns a string identifying the type of the value.
 func (UniqueId) Type() string {
-	return "UniqueId"
+	return T_UniqueId
 }
 
 // String returns a string representation of the value.

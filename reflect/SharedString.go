@@ -4,15 +4,14 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_SharedString = "SharedString"
 
 func init() { register(SharedString) }
 func SharedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  T_SharedString,
+		Name:  rtypes.T_SharedString,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.SharedString)), nil
@@ -22,13 +21,13 @@ func SharedString() rbxmk.Reflector {
 			case lua.LString:
 				return types.SharedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable(T_SharedString) {
+				if v.Metatable == c.GetTypeMetatable(rtypes.T_SharedString) {
 					if v, ok := v.Value().(types.SharedString); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: T_SharedString, Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: rtypes.T_SharedString, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

@@ -10,16 +10,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_TypeDesc = "TypeDesc"
-
 func init() { register(TypeDesc) }
 func TypeDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_TypeDesc,
+		Name: rtypes.T_TypeDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			typ, ok := v.(rtypes.TypeDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_TypeDesc, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_TypeDesc, Got: v.Type()}
 			}
 			table := c.CreateTable(0, 2)
 			if err := c.PushToDictionary(table, "Category", types.String(typ.Embedded.Category)); err != nil {
@@ -33,13 +31,13 @@ func TypeDesc() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			category, err := c.PullFromDictionary(table, "Category", T_String)
+			category, err := c.PullFromDictionary(table, "Category", rtypes.T_String)
 			if err != nil {
 				return nil, err
 			}
-			name, err := c.PullFromDictionary(table, "Name", T_String)
+			name, err := c.PullFromDictionary(table, "Name", rtypes.T_String)
 			if err != nil {
 				return nil, err
 			}
@@ -63,8 +61,8 @@ func TypeDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"Category": dt.Prim(T_String),
-					"Name":     dt.Prim(T_String),
+					"Category": dt.Prim(rtypes.T_String),
+					"Name":     dt.Prim(rtypes.T_String),
 				},
 				Summary:     "Types/TypeDesc:Summary",
 				Description: "Types/TypeDesc:Description",

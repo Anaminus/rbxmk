@@ -9,18 +9,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_PhysicalProperties = "PhysicalProperties"
-
 func init() { register(PhysicalProperties) }
 func PhysicalProperties() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_PhysicalProperties,
+		Name: rtypes.T_PhysicalProperties,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if pp, ok := v.(types.PhysicalProperties); ok && !pp.CustomPhysics {
 				return lua.LNil, nil
 			}
 			u := c.NewUserData(v)
-			c.SetMetatable(u, c.GetTypeMetatable(T_PhysicalProperties))
+			c.SetMetatable(u, c.GetTypeMetatable(rtypes.T_PhysicalProperties))
 			return u, nil
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
@@ -28,16 +26,16 @@ func PhysicalProperties() rbxmk.Reflector {
 			case *lua.LNilType:
 				return types.PhysicalProperties{}, nil
 			case *lua.LUserData:
-				if lv.Metatable != c.GetTypeMetatable(T_PhysicalProperties) {
-					return nil, rbxmk.TypeError{Want: T_PhysicalProperties, Got: lv.Type().String()}
+				if lv.Metatable != c.GetTypeMetatable(rtypes.T_PhysicalProperties) {
+					return nil, rbxmk.TypeError{Want: rtypes.T_PhysicalProperties, Got: lv.Type().String()}
 				}
 				v, ok := lv.Value().(types.Value)
 				if !ok {
-					return nil, rbxmk.TypeError{Want: T_PhysicalProperties, Got: lv.Type().String()}
+					return nil, rbxmk.TypeError{Want: rtypes.T_PhysicalProperties, Got: lv.Type().String()}
 				}
 				return v, nil
 			default:
-				return nil, rbxmk.TypeError{Want: T_PhysicalProperties, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_PhysicalProperties, Got: lv.Type().String()}
 			}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
@@ -60,7 +58,7 @@ func PhysicalProperties() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_PhysicalProperties).(types.PhysicalProperties)
+				v := s.Pull(1, rtypes.T_PhysicalProperties).(types.PhysicalProperties)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
@@ -72,7 +70,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/PhysicalProperties:Properties/Density/Summary",
 						Description: "Types/PhysicalProperties:Properties/Density/Description",
@@ -85,7 +83,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/PhysicalProperties:Properties/Friction/Summary",
 						Description: "Types/PhysicalProperties:Properties/Friction/Description",
@@ -98,7 +96,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/PhysicalProperties:Properties/Elasticity/Summary",
 						Description: "Types/PhysicalProperties:Properties/Elasticity/Description",
@@ -111,7 +109,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/PhysicalProperties:Properties/FrictionWeight/Summary",
 						Description: "Types/PhysicalProperties:Properties/FrictionWeight/Description",
@@ -124,7 +122,7 @@ func PhysicalProperties() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/PhysicalProperties:Properties/ElasticityWeight/Summary",
 						Description: "Types/PhysicalProperties:Properties/ElasticityWeight/Description",
@@ -138,15 +136,15 @@ func PhysicalProperties() rbxmk.Reflector {
 					var v types.PhysicalProperties
 					switch s.Count() {
 					case 3:
-						v.Density = float32(s.Pull(1, T_Float).(types.Float))
-						v.Friction = float32(s.Pull(2, T_Float).(types.Float))
-						v.Elasticity = float32(s.Pull(3, T_Float).(types.Float))
+						v.Density = float32(s.Pull(1, rtypes.T_Float).(types.Float))
+						v.Friction = float32(s.Pull(2, rtypes.T_Float).(types.Float))
+						v.Elasticity = float32(s.Pull(3, rtypes.T_Float).(types.Float))
 					case 5:
-						v.Density = float32(s.Pull(1, T_Float).(types.Float))
-						v.Friction = float32(s.Pull(2, T_Float).(types.Float))
-						v.Elasticity = float32(s.Pull(3, T_Float).(types.Float))
-						v.FrictionWeight = float32(s.Pull(4, T_Float).(types.Float))
-						v.ElasticityWeight = float32(s.Pull(5, T_Float).(types.Float))
+						v.Density = float32(s.Pull(1, rtypes.T_Float).(types.Float))
+						v.Friction = float32(s.Pull(2, rtypes.T_Float).(types.Float))
+						v.Elasticity = float32(s.Pull(3, rtypes.T_Float).(types.Float))
+						v.FrictionWeight = float32(s.Pull(4, rtypes.T_Float).(types.Float))
+						v.ElasticityWeight = float32(s.Pull(5, rtypes.T_Float).(types.Float))
 					default:
 						return s.RaiseError("expected 3 or 5 arguments")
 					}
@@ -156,26 +154,26 @@ func PhysicalProperties() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "density", Type: dt.Prim(T_Float)},
-								{Name: "friction", Type: dt.Prim(T_Float)},
-								{Name: "elasticity", Type: dt.Prim(T_Float)},
+								{Name: "density", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "friction", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "elasticity", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_PhysicalProperties)},
+								{Type: dt.Prim(rtypes.T_PhysicalProperties)},
 							},
 							Summary:     "Types/PhysicalProperties:Constructors/new/Components/Summary",
 							Description: "Types/PhysicalProperties:Constructors/new/Components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "density", Type: dt.Prim(T_Float)},
-								{Name: "friction", Type: dt.Prim(T_Float)},
-								{Name: "elasticity", Type: dt.Prim(T_Float)},
-								{Name: "frictionWeight", Type: dt.Prim(T_Float)},
-								{Name: "elasticityWeight", Type: dt.Prim(T_Float)},
+								{Name: "density", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "friction", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "elasticity", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "frictionWeight", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "elasticityWeight", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_PhysicalProperties)},
+								{Type: dt.Prim(rtypes.T_PhysicalProperties)},
 							},
 							Summary:     "Types/PhysicalProperties:Constructors/new/Weights/Summary",
 							Description: "Types/PhysicalProperties:Constructors/new/Weights/Description",

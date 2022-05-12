@@ -4,17 +4,16 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_HTTPRequest = "HTTPRequest"
 
 func init() { register(HTTPRequest) }
 func HTTPRequest() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_HTTPRequest,
-		PushTo:   rbxmk.PushPtrTypeTo(T_HTTPRequest),
-		PullFrom: rbxmk.PullTypeFrom(T_HTTPRequest),
+		Name:     rtypes.T_HTTPRequest,
+		PushTo:   rbxmk.PushPtrTypeTo(rtypes.T_HTTPRequest),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_HTTPRequest),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case **rbxmk.HTTPRequest:
@@ -37,7 +36,7 @@ func HTTPRequest() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "resp", Type: dt.Prim(T_HTTPResponse)},
+							{Name: "resp", Type: dt.Prim(rtypes.T_HTTPResponse)},
 						},
 						CanError:    true,
 						Summary:     "Types/HTTPRequest:Methods/Resolve/Summary",

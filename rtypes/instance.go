@@ -7,6 +7,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Instance = "Instance"
+
 // Instance contains data describing an instance of a particular class. It
 // corresponds to the Instance type in Roblox.
 type Instance struct {
@@ -52,7 +54,7 @@ func NewDataModel() *Instance {
 
 // Type returns a string identifying the type of the value.
 func (*Instance) Type() string {
-	return "Instance"
+	return T_Instance
 }
 
 // String returns a string representation of the instance by returning the Name,

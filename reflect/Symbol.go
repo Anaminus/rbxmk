@@ -7,14 +7,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Symbol = "Symbol"
-
 func init() { register(Symbol) }
 func Symbol() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_Symbol,
-		PushTo:   rbxmk.PushPtrTypeTo(T_Symbol),
-		PullFrom: rbxmk.PullTypeFrom(T_Symbol),
+		Name:     rtypes.T_Symbol,
+		PushTo:   rbxmk.PushPtrTypeTo(rtypes.T_Symbol),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_Symbol),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case **rtypes.Symbol:

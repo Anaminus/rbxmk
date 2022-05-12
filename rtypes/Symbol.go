@@ -1,5 +1,7 @@
 package rtypes
 
+const T_Symbol = "Symbol"
+
 // Symbol is a unique identifier used for accessing members.
 type Symbol struct {
 	Name string
@@ -7,7 +9,7 @@ type Symbol struct {
 
 // Type returns a string identifying the type of the value.
 func (Symbol) Type() string {
-	return "Symbol"
+	return T_Symbol
 }
 
 // String returns a string representation of the value.

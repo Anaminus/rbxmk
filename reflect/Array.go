@@ -10,24 +10,22 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Array = "Array"
-
 func init() { register(Array) }
 func Array() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_Array,
+		Name: rtypes.T_Array,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			if c.CycleGuard() {
 				defer c.CycleClear()
 			}
 			array, ok := v.(rtypes.Array)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Array, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Array, Got: v.Type()}
 			}
 			if c.CycleMark(&array) {
 				return nil, fmt.Errorf("arrays cannot be cyclic")
 			}
-			variantRfl := c.MustReflector(T_Variant)
+			variantRfl := c.MustReflector(rtypes.T_Variant)
 			table := c.CreateTable(len(array), 0)
 			for i, v := range array {
 				lv, err := variantRfl.PushTo(c, v)
@@ -44,12 +42,12 @@ func Array() rbxmk.Reflector {
 			}
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
 			if c.CycleMark(table) {
 				return nil, fmt.Errorf("tables cannot be cyclic")
 			}
-			variantRfl := c.MustReflector(T_Variant)
+			variantRfl := c.MustReflector(rtypes.T_Variant)
 			n := table.Len()
 			array := make(rtypes.Array, n)
 			for i := 1; i <= n; i++ {

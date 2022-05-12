@@ -8,12 +8,10 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Table = "table"
-
 func init() { register(Table) }
 func Table() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_Table,
+		Name: rtypes.T_Table,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			table, ok := v.(rtypes.Table)
 			if !ok {
@@ -24,7 +22,7 @@ func Table() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
 			return rtypes.Table{LTable: table}, nil
 		},

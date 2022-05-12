@@ -5,17 +5,16 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_CFrame = "CFrame"
 
 func init() { register(CFrame) }
 func CFrame() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_CFrame,
-		PushTo:   rbxmk.PushTypeTo(T_CFrame),
-		PullFrom: rbxmk.PullTypeFrom(T_CFrame),
+		Name:     rtypes.T_CFrame,
+		PushTo:   rbxmk.PushTypeTo(rtypes.T_CFrame),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_CFrame),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *types.CFrame:
@@ -27,29 +26,29 @@ func CFrame() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_CFrame).(types.CFrame)
+				v := s.Pull(1, rtypes.T_CFrame).(types.CFrame)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, T_CFrame).(types.CFrame)
-				op := s.Pull(2, T_CFrame).(types.CFrame)
+				v := s.Pull(1, rtypes.T_CFrame).(types.CFrame)
+				op := s.Pull(2, rtypes.T_CFrame).(types.CFrame)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
 			"__add": func(s rbxmk.State) int {
-				v := s.Pull(1, T_CFrame).(types.CFrame)
-				op := s.Pull(2, T_Vector3).(types.Vector3)
+				v := s.Pull(1, rtypes.T_CFrame).(types.CFrame)
+				op := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 				return s.Push(v.AddV3(op))
 			},
 			"__sub": func(s rbxmk.State) int {
-				v := s.Pull(1, T_CFrame).(types.CFrame)
-				op := s.Pull(2, T_Vector3).(types.Vector3)
+				v := s.Pull(1, rtypes.T_CFrame).(types.CFrame)
+				op := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 				return s.Push(v.SubV3(op))
 			},
 			"__mul": func(s rbxmk.State) int {
-				v := s.Pull(1, T_CFrame).(types.CFrame)
-				switch op := s.PullAnyOf(2, T_CFrame, T_Vector3).(type) {
+				v := s.Pull(1, rtypes.T_CFrame).(types.CFrame)
+				switch op := s.PullAnyOf(2, rtypes.T_CFrame, rtypes.T_Vector3).(type) {
 				case types.CFrame:
 					return s.Push(v.Mul(op))
 				case types.Vector3:
@@ -66,7 +65,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/P/Summary",
 						Description: "Types/CFrame:Properties/P/Description",
@@ -79,7 +78,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/Position/Summary",
 						Description: "Types/CFrame:Properties/Position/Description",
@@ -92,7 +91,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/X/Summary",
 						Description: "Types/CFrame:Properties/X/Description",
@@ -105,7 +104,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/Y/Summary",
 						Description: "Types/CFrame:Properties/Y/Description",
@@ -118,7 +117,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Float),
+						ValueType:   dt.Prim(rtypes.T_Float),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/Z/Summary",
 						Description: "Types/CFrame:Properties/Z/Description",
@@ -136,7 +135,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/LookVector/Summary",
 						Description: "Types/CFrame:Properties/LookVector/Description",
@@ -154,7 +153,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/RightVector/Summary",
 						Description: "Types/CFrame:Properties/RightVector/Description",
@@ -172,7 +171,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/UpVector/Summary",
 						Description: "Types/CFrame:Properties/UpVector/Description",
@@ -190,7 +189,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/XVector/Summary",
 						Description: "Types/CFrame:Properties/XVector/Description",
@@ -208,7 +207,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/YVector/Summary",
 						Description: "Types/CFrame:Properties/YVector/Description",
@@ -226,7 +225,7 @@ func CFrame() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Vector3),
+						ValueType:   dt.Prim(rtypes.T_Vector3),
 						ReadOnly:    true,
 						Summary:     "Types/CFrame:Properties/ZVector/Summary",
 						Description: "Types/CFrame:Properties/ZVector/Description",
@@ -242,7 +241,7 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_CFrame)},
+							{Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Summary:     "Types/CFrame:Methods/Inverse/Summary",
 						Description: "Types/CFrame:Methods/Inverse/Description",
@@ -251,18 +250,18 @@ func CFrame() rbxmk.Reflector {
 			},
 			"Lerp": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					goal := s.Pull(2, T_CFrame).(types.CFrame)
-					alpha := float64(s.Pull(3, T_Float).(types.Float))
+					goal := s.Pull(2, rtypes.T_CFrame).(types.CFrame)
+					alpha := float64(s.Pull(3, rtypes.T_Float).(types.Float))
 					return s.Push(v.(types.CFrame).Lerp(goal, alpha))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "goal", Type: dt.Prim(T_CFrame)},
-							{Name: "alpha", Type: dt.Prim(T_Float)},
+							{Name: "goal", Type: dt.Prim(rtypes.T_CFrame)},
+							{Name: "alpha", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_CFrame)},
+							{Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Summary:     "Types/CFrame:Methods/Lerp/Summary",
 						Description: "Types/CFrame:Methods/Lerp/Description",
@@ -271,16 +270,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"ToWorldSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					cf := s.Pull(2, T_CFrame).(types.CFrame)
+					cf := s.Pull(2, rtypes.T_CFrame).(types.CFrame)
 					return s.Push(v.(types.CFrame).ToWorldSpace(cf))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "cf", Type: dt.Prim(T_CFrame)},
+							{Name: "cf", Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_CFrame)},
+							{Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Summary:     "Types/CFrame:Methods/ToWorldSpace/Summary",
 						Description: "Types/CFrame:Methods/ToWorldSpace/Description",
@@ -289,16 +288,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"ToObjectSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					cf := s.Pull(2, T_CFrame).(types.CFrame)
+					cf := s.Pull(2, rtypes.T_CFrame).(types.CFrame)
 					return s.Push(v.(types.CFrame).ToObjectSpace(cf))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "cf", Type: dt.Prim(T_CFrame)},
+							{Name: "cf", Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_CFrame)},
+							{Type: dt.Prim(rtypes.T_CFrame)},
 						},
 						Summary:     "Types/CFrame:Methods/ToObjectSpace/Summary",
 						Description: "Types/CFrame:Methods/ToObjectSpace/Description",
@@ -307,16 +306,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"PointToWorldSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					v3 := s.Pull(2, T_Vector3).(types.Vector3)
+					v3 := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 					return s.Push(v.(types.CFrame).PointToWorldSpace(v3))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "v", Type: dt.Prim(T_Vector3)},
+							{Name: "v", Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_Vector3)},
+							{Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Summary:     "Types/CFrame:Methods/PointToWorldSpace/Summary",
 						Description: "Types/CFrame:Methods/PointToWorldSpace/Description",
@@ -325,16 +324,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"PointToObjectSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					v3 := s.Pull(2, T_Vector3).(types.Vector3)
+					v3 := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 					return s.Push(v.(types.CFrame).PointToObjectSpace(v3))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "v", Type: dt.Prim(T_Vector3)},
+							{Name: "v", Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_Vector3)},
+							{Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Summary:     "Types/CFrame:Methods/PointToObjectSpace/Summary",
 						Description: "Types/CFrame:Methods/PointToObjectSpace/Description",
@@ -343,16 +342,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"VectorToWorldSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					v3 := s.Pull(2, T_Vector3).(types.Vector3)
+					v3 := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 					return s.Push(v.(types.CFrame).VectorToWorldSpace(v3))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "v", Type: dt.Prim(T_Vector3)},
+							{Name: "v", Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_Vector3)},
+							{Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Summary:     "Types/CFrame:Methods/VectorToWorldSpace/Summary",
 						Description: "Types/CFrame:Methods/VectorToWorldSpace/Description",
@@ -361,16 +360,16 @@ func CFrame() rbxmk.Reflector {
 			},
 			"VectorToObjectSpace": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					v3 := s.Pull(2, T_Vector3).(types.Vector3)
+					v3 := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 					return s.Push(v.(types.CFrame).VectorToObjectSpace(v3))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "v", Type: dt.Prim(T_Vector3)},
+							{Name: "v", Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_Vector3)},
+							{Type: dt.Prim(rtypes.T_Vector3)},
 						},
 						Summary:     "Types/CFrame:Methods/VectorToObjectSpace/Summary",
 						Description: "Types/CFrame:Methods/VectorToObjectSpace/Description",
@@ -398,18 +397,18 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "x", Type: dt.Prim(T_Float)},
-							{Name: "y", Type: dt.Prim(T_Float)},
-							{Name: "z", Type: dt.Prim(T_Float)},
-							{Name: "r00", Type: dt.Prim(T_Float)},
-							{Name: "r01", Type: dt.Prim(T_Float)},
-							{Name: "r02", Type: dt.Prim(T_Float)},
-							{Name: "r10", Type: dt.Prim(T_Float)},
-							{Name: "r11", Type: dt.Prim(T_Float)},
-							{Name: "r12", Type: dt.Prim(T_Float)},
-							{Name: "r20", Type: dt.Prim(T_Float)},
-							{Name: "r21", Type: dt.Prim(T_Float)},
-							{Name: "r22", Type: dt.Prim(T_Float)},
+							{Name: "x", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "y", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "z", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r00", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r01", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r02", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r10", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r11", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r12", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r20", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r21", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "r22", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Summary:     "Types/CFrame:Methods/GetComponents/Summary",
 						Description: "Types/CFrame:Methods/GetComponents/Description",
@@ -424,9 +423,9 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "rx", Type: dt.Prim(T_Float)},
-							{Name: "ry", Type: dt.Prim(T_Float)},
-							{Name: "rz", Type: dt.Prim(T_Float)},
+							{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Summary:     "Types/CFrame:Methods/ToEulerAnglesXYZ/Summary",
 						Description: "Types/CFrame:Methods/ToEulerAnglesXYZ/Description",
@@ -441,9 +440,9 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "rx", Type: dt.Prim(T_Float)},
-							{Name: "ry", Type: dt.Prim(T_Float)},
-							{Name: "rz", Type: dt.Prim(T_Float)},
+							{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Summary:     "Types/CFrame:Methods/ToEulerAnglesYXZ/Summary",
 						Description: "Types/CFrame:Methods/ToEulerAnglesYXZ/Description",
@@ -458,9 +457,9 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "rx", Type: dt.Prim(T_Float)},
-							{Name: "ry", Type: dt.Prim(T_Float)},
-							{Name: "rz", Type: dt.Prim(T_Float)},
+							{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+							{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Summary:     "Types/CFrame:Methods/ToOrientation/Summary",
 						Description: "Types/CFrame:Methods/ToOrientation/Description",
@@ -475,8 +474,8 @@ func CFrame() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "axis", Type: dt.Prim(T_Vector3)},
-							{Name: "rotation", Type: dt.Prim(T_Float)},
+							{Name: "axis", Type: dt.Prim(rtypes.T_Vector3)},
+							{Name: "rotation", Type: dt.Prim(rtypes.T_Float)},
 						},
 						Summary:     "Types/CFrame:Methods/ToAxisAngle/Summary",
 						Description: "Types/CFrame:Methods/ToAxisAngle/Description",
@@ -492,42 +491,42 @@ func CFrame() rbxmk.Reflector {
 					case 0:
 						v = types.NewCFrame()
 					case 1:
-						pos := s.Pull(1, T_Vector3).(types.Vector3)
+						pos := s.Pull(1, rtypes.T_Vector3).(types.Vector3)
 						v = types.NewCFrameFromVector3(pos)
 					case 2:
-						pos := s.Pull(1, T_Vector3).(types.Vector3)
-						lookAt := s.Pull(2, T_Vector3).(types.Vector3)
+						pos := s.Pull(1, rtypes.T_Vector3).(types.Vector3)
+						lookAt := s.Pull(2, rtypes.T_Vector3).(types.Vector3)
 						v = types.NewCFrameFromLook(pos, lookAt)
 					case 3:
 						v = types.NewCFrameFromPosition(
-							float64(s.Pull(1, T_Float).(types.Float)),
-							float64(s.Pull(2, T_Float).(types.Float)),
-							float64(s.Pull(3, T_Float).(types.Float)),
+							float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(3, rtypes.T_Float).(types.Float)),
 						)
 					case 7:
 						v = types.NewCFrameFromQuat(
-							float64(s.Pull(1, T_Float).(types.Float)),
-							float64(s.Pull(2, T_Float).(types.Float)),
-							float64(s.Pull(3, T_Float).(types.Float)),
-							float64(s.Pull(4, T_Float).(types.Float)),
-							float64(s.Pull(5, T_Float).(types.Float)),
-							float64(s.Pull(6, T_Float).(types.Float)),
-							float64(s.Pull(7, T_Float).(types.Float)),
+							float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(3, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(4, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(5, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(6, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(7, rtypes.T_Float).(types.Float)),
 						)
 					case 12:
 						v = types.NewCFrameFromComponents(
-							float64(s.Pull(1, T_Float).(types.Float)),
-							float64(s.Pull(2, T_Float).(types.Float)),
-							float64(s.Pull(3, T_Float).(types.Float)),
-							float64(s.Pull(4, T_Float).(types.Float)),
-							float64(s.Pull(5, T_Float).(types.Float)),
-							float64(s.Pull(6, T_Float).(types.Float)),
-							float64(s.Pull(7, T_Float).(types.Float)),
-							float64(s.Pull(8, T_Float).(types.Float)),
-							float64(s.Pull(9, T_Float).(types.Float)),
-							float64(s.Pull(10, T_Float).(types.Float)),
-							float64(s.Pull(11, T_Float).(types.Float)),
-							float64(s.Pull(12, T_Float).(types.Float)),
+							float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(3, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(4, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(5, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(6, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(7, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(8, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(9, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(10, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(11, rtypes.T_Float).(types.Float)),
+							float64(s.Pull(12, rtypes.T_Float).(types.Float)),
 						)
 					default:
 						return s.RaiseError("unexpected number of arguments")
@@ -538,77 +537,77 @@ func CFrame() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/Identity/Summary",
 							Description: "Types/CFrame:Constructors/new/Identity/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "position", Type: dt.Prim(T_Vector3)},
+								{Name: "position", Type: dt.Prim(rtypes.T_Vector3)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/Position/Summary",
 							Description: "Types/CFrame:Constructors/new/Position/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "position", Type: dt.Prim(T_Vector3)},
-								{Name: "lookAt", Type: dt.Prim(T_Vector3)},
+								{Name: "position", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "lookAt", Type: dt.Prim(rtypes.T_Vector3)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/LookAt/Summary",
 							Description: "Types/CFrame:Constructors/new/LookAt/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "x", Type: dt.Prim(T_Float)},
-								{Name: "y", Type: dt.Prim(T_Float)},
-								{Name: "z", Type: dt.Prim(T_Float)},
+								{Name: "x", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "y", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "z", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/Position components/Summary",
 							Description: "Types/CFrame:Constructors/new/Position components/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "x", Type: dt.Prim(T_Float)},
-								{Name: "y", Type: dt.Prim(T_Float)},
-								{Name: "z", Type: dt.Prim(T_Float)},
-								{Name: "qx", Type: dt.Prim(T_Float)},
-								{Name: "qy", Type: dt.Prim(T_Float)},
-								{Name: "qz", Type: dt.Prim(T_Float)},
-								{Name: "qw", Type: dt.Prim(T_Float)},
+								{Name: "x", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "y", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "z", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "qx", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "qy", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "qz", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "qw", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/Quaternion/Summary",
 							Description: "Types/CFrame:Constructors/new/Quaternion/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "x", Type: dt.Prim(T_Float)},
-								{Name: "y", Type: dt.Prim(T_Float)},
-								{Name: "z", Type: dt.Prim(T_Float)},
-								{Name: "r00", Type: dt.Prim(T_Float)},
-								{Name: "r01", Type: dt.Prim(T_Float)},
-								{Name: "r02", Type: dt.Prim(T_Float)},
-								{Name: "r10", Type: dt.Prim(T_Float)},
-								{Name: "r11", Type: dt.Prim(T_Float)},
-								{Name: "r12", Type: dt.Prim(T_Float)},
-								{Name: "r20", Type: dt.Prim(T_Float)},
-								{Name: "r21", Type: dt.Prim(T_Float)},
-								{Name: "r22", Type: dt.Prim(T_Float)},
+								{Name: "x", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "y", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "z", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r00", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r01", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r02", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r10", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r11", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r12", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r20", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r21", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "r22", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/new/Components/Summary",
 							Description: "Types/CFrame:Constructors/new/Components/Description",
@@ -619,21 +618,21 @@ func CFrame() rbxmk.Reflector {
 			"fromEulerAnglesXYZ": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromAngles(
-						float64(s.Pull(1, T_Float).(types.Float)),
-						float64(s.Pull(2, T_Float).(types.Float)),
-						float64(s.Pull(3, T_Float).(types.Float)),
+						float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(3, rtypes.T_Float).(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "rx", Type: dt.Prim(T_Float)},
-								{Name: "ry", Type: dt.Prim(T_Float)},
-								{Name: "rz", Type: dt.Prim(T_Float)},
+								{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/fromEulerAnglesXYZ/Summary",
 							Description: "Types/CFrame:Constructors/fromEulerAnglesXYZ/Description",
@@ -644,21 +643,21 @@ func CFrame() rbxmk.Reflector {
 			"fromEulerAnglesYXZ": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromOrientation(
-						float64(s.Pull(1, T_Float).(types.Float)),
-						float64(s.Pull(2, T_Float).(types.Float)),
-						float64(s.Pull(3, T_Float).(types.Float)),
+						float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(3, rtypes.T_Float).(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "rx", Type: dt.Prim(T_Float)},
-								{Name: "ry", Type: dt.Prim(T_Float)},
-								{Name: "rz", Type: dt.Prim(T_Float)},
+								{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/fromEulerAnglesYXZ/Summary",
 							Description: "Types/CFrame:Constructors/fromEulerAnglesYXZ/Description",
@@ -669,21 +668,21 @@ func CFrame() rbxmk.Reflector {
 			"Angles": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromAngles(
-						float64(s.Pull(1, T_Float).(types.Float)),
-						float64(s.Pull(2, T_Float).(types.Float)),
-						float64(s.Pull(3, T_Float).(types.Float)),
+						float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(3, rtypes.T_Float).(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "rx", Type: dt.Prim(T_Float)},
-								{Name: "ry", Type: dt.Prim(T_Float)},
-								{Name: "rz", Type: dt.Prim(T_Float)},
+								{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/Angles/Summary",
 							Description: "Types/CFrame:Constructors/Angles/Description",
@@ -694,21 +693,21 @@ func CFrame() rbxmk.Reflector {
 			"fromOrientation": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromOrientation(
-						float64(s.Pull(1, T_Float).(types.Float)),
-						float64(s.Pull(2, T_Float).(types.Float)),
-						float64(s.Pull(3, T_Float).(types.Float)),
+						float64(s.Pull(1, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(2, rtypes.T_Float).(types.Float)),
+						float64(s.Pull(3, rtypes.T_Float).(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "rx", Type: dt.Prim(T_Float)},
-								{Name: "ry", Type: dt.Prim(T_Float)},
-								{Name: "rz", Type: dt.Prim(T_Float)},
+								{Name: "rx", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "ry", Type: dt.Prim(rtypes.T_Float)},
+								{Name: "rz", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/fromOrientation/Summary",
 							Description: "Types/CFrame:Constructors/fromOrientation/Description",
@@ -719,19 +718,19 @@ func CFrame() rbxmk.Reflector {
 			"fromAxisAngle": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromAxisAngle(
-						s.Pull(1, T_Vector3).(types.Vector3),
-						float64(s.Pull(2, T_Float).(types.Float)),
+						s.Pull(1, rtypes.T_Vector3).(types.Vector3),
+						float64(s.Pull(2, rtypes.T_Float).(types.Float)),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "axis", Type: dt.Prim(T_Vector3)},
-								{Name: "rotation", Type: dt.Prim(T_Float)},
+								{Name: "axis", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "rotation", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/fromAxisAngle/Summary",
 							Description: "Types/CFrame:Constructors/fromAxisAngle/Description",
@@ -742,23 +741,23 @@ func CFrame() rbxmk.Reflector {
 			"fromMatrix": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromMatrix(
-						s.Pull(1, T_Vector3).(types.Vector3),
-						s.Pull(2, T_Vector3).(types.Vector3),
-						s.Pull(3, T_Vector3).(types.Vector3),
-						s.Pull(4, T_Vector3).(types.Vector3),
+						s.Pull(1, rtypes.T_Vector3).(types.Vector3),
+						s.Pull(2, rtypes.T_Vector3).(types.Vector3),
+						s.Pull(3, rtypes.T_Vector3).(types.Vector3),
+						s.Pull(4, rtypes.T_Vector3).(types.Vector3),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "position", Type: dt.Prim(T_Vector3)},
-								{Name: "vx", Type: dt.Prim(T_Vector3)},
-								{Name: "vy", Type: dt.Prim(T_Vector3)},
-								{Name: "vz", Type: dt.Prim(T_Vector3)},
+								{Name: "position", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "vx", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "vy", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "vz", Type: dt.Prim(rtypes.T_Vector3)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/fromMatrix/Summary",
 							Description: "Types/CFrame:Constructors/fromMatrix/Description",
@@ -769,21 +768,21 @@ func CFrame() rbxmk.Reflector {
 			"lookAt": {
 				Func: func(s rbxmk.State) int {
 					return s.Push(types.NewCFrameFromLookAt(
-						s.Pull(1, T_Vector3).(types.Vector3),
-						s.Pull(2, T_Vector3).(types.Vector3),
-						s.PullOpt(3, types.Vector3{X: 0, Y: 1, Z: 0}, T_Vector3).(types.Vector3),
+						s.Pull(1, rtypes.T_Vector3).(types.Vector3),
+						s.Pull(2, rtypes.T_Vector3).(types.Vector3),
+						s.PullOpt(3, types.Vector3{X: 0, Y: 1, Z: 0}, rtypes.T_Vector3).(types.Vector3),
 					))
 				},
 				Dump: func() dump.MultiFunction {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "position", Type: dt.Prim(T_Vector3)},
-								{Name: "lookAt", Type: dt.Prim(T_Vector3)},
-								{Name: "up", Type: dt.Optional{T: dt.Prim(T_Vector3)}, Default: `Vector3.new(0, 1, 0)`},
+								{Name: "position", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "lookAt", Type: dt.Prim(rtypes.T_Vector3)},
+								{Name: "up", Type: dt.Optional{T: dt.Prim(rtypes.T_Vector3)}, Default: `Vector3.new(0, 1, 0)`},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_CFrame)},
+								{Type: dt.Prim(rtypes.T_CFrame)},
 							},
 							Summary:     "Types/CFrame:Constructors/lookAt/Summary",
 							Description: "Types/CFrame:Constructors/lookAt/Description",
@@ -801,30 +800,30 @@ func CFrame() rbxmk.Reflector {
 					},
 					Mul: []dump.Binop{
 						{
-							Operand:     dt.Prim(T_CFrame),
-							Result:      dt.Prim(T_CFrame),
+							Operand:     dt.Prim(rtypes.T_CFrame),
+							Result:      dt.Prim(rtypes.T_CFrame),
 							Summary:     "Types/CFrame:Operators/Mul/CFrame/Summary",
 							Description: "Types/CFrame:Operators/Mul/CFrame/Description",
 						},
 						{
-							Operand:     dt.Prim(T_Vector3),
-							Result:      dt.Prim(T_Vector3),
+							Operand:     dt.Prim(rtypes.T_Vector3),
+							Result:      dt.Prim(rtypes.T_Vector3),
 							Summary:     "Types/CFrame:Operators/Mul/Vector3/Summary",
 							Description: "Types/CFrame:Operators/Mul/Vector3/Description",
 						},
 					},
 					Add: []dump.Binop{
 						{
-							Operand:     dt.Prim(T_Vector3),
-							Result:      dt.Prim(T_CFrame),
+							Operand:     dt.Prim(rtypes.T_Vector3),
+							Result:      dt.Prim(rtypes.T_CFrame),
 							Summary:     "Types/CFrame:Operators/Add/Summary",
 							Description: "Types/CFrame:Operators/Add/Description",
 						},
 					},
 					Sub: []dump.Binop{
 						{
-							Operand:     dt.Prim(T_Vector3),
-							Result:      dt.Prim(T_CFrame),
+							Operand:     dt.Prim(rtypes.T_Vector3),
+							Result:      dt.Prim(rtypes.T_CFrame),
 							Summary:     "Types/CFrame:Operators/Sub/Summary",
 							Description: "Types/CFrame:Operators/Sub/Description",
 						},

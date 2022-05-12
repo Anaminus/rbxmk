@@ -4,6 +4,8 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 )
 
+const T_Table = "table"
+
 // Table wraps a Lua table to implement types.Value.
 type Table struct {
 	*lua.LTable
@@ -11,7 +13,7 @@ type Table struct {
 
 // Type returns a string identifying the type of the value.
 func (Table) Type() string {
-	return "table"
+	return T_Table
 }
 
 // String returns a string representation of the value.

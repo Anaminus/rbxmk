@@ -4,13 +4,15 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Color3uint8 = "Color3uint8"
+
 // Color3uint8 wraps a Color3 value to be interpreted as the Color3uint8 Roblox
 // type.
 type Color3uint8 types.Color3
 
 // Type returns a string indicating the type of the value.
 func (Color3uint8) Type() string {
-	return "Color3uint8"
+	return T_Color3uint8
 }
 
 // String returns a string representation of the value.

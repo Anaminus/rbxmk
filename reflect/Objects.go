@@ -9,18 +9,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Objects = "Objects"
-
 func init() { register(Objects) }
 func Objects() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_Objects,
+		Name: rtypes.T_Objects,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			objects, ok := v.(rtypes.Objects)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Objects, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Objects, Got: v.Type()}
 			}
-			instRfl := c.MustReflector(T_Instance)
+			instRfl := c.MustReflector(rtypes.T_Instance)
 			table := c.CreateTable(len(objects), 0)
 			for i, v := range objects {
 				lv, err := instRfl.PushTo(c, v)
@@ -34,9 +32,9 @@ func Objects() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			instRfl := c.MustReflector(T_Instance)
+			instRfl := c.MustReflector(rtypes.T_Instance)
 			n := table.Len()
 			objects := make(rtypes.Objects, n)
 			for i := 1; i <= n; i++ {
@@ -59,7 +57,7 @@ func Objects() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Array{T: dt.Prim(T_Instance)},
+				Underlying:  dt.Array{T: dt.Prim(rtypes.T_Instance)},
 				Summary:     "Types/Objects:Summary",
 				Description: "Types/Objects:Description",
 			}

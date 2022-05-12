@@ -2,6 +2,8 @@ package rtypes
 
 import "github.com/robloxapi/types"
 
+const T_FormatSelector = "FormatSelector"
+
 // FormatSelector selects a format and provides options for configuring the
 // format.
 type FormatSelector struct {
@@ -11,7 +13,7 @@ type FormatSelector struct {
 
 // Type returns a string identifying the type of the value.
 func (FormatSelector) Type() string {
-	return "FormatSelector"
+	return T_FormatSelector
 }
 
 // String returns a string representation of the value.

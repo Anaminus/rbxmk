@@ -9,16 +9,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_HTTPOptions = "HTTPOptions"
-
 func init() { register(HTTPOptions) }
 func HTTPOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_HTTPOptions,
+		Name: rtypes.T_HTTPOptions,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.HTTPOptions)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_HTTPOptions, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_HTTPOptions, Got: v.Type()}
 			}
 			table := c.CreateTable(0, 7)
 			if err := c.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
@@ -47,25 +45,25 @@ func HTTPOptions() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			url, err := c.PullFromDictionary(table, "URL", T_String)
+			url, err := c.PullFromDictionary(table, "URL", rtypes.T_String)
 			if err != nil {
 				return nil, err
 			}
-			method, err := c.PullFromDictionaryOpt(table, "Method", types.String("GET"), T_String)
+			method, err := c.PullFromDictionaryOpt(table, "Method", types.String("GET"), rtypes.T_String)
 			if err != nil {
 				return nil, err
 			}
-			responseFormat, err := c.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, T_FormatSelector)
+			responseFormat, err := c.PullFromDictionaryOpt(table, "ResponseFormat", rtypes.FormatSelector{}, rtypes.T_FormatSelector)
 			if err != nil {
 				return nil, err
 			}
-			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), T_HTTPHeaders)
+			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), rtypes.T_HTTPHeaders)
 			if err != nil {
 				return nil, err
 			}
-			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), T_Cookies)
+			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), rtypes.T_Cookies)
 			if err != nil {
 				return nil, err
 			}
@@ -76,7 +74,7 @@ func HTTPOptions() rbxmk.Reflector {
 				Headers:        headers.(rtypes.HTTPHeaders),
 				Cookies:        cookies.(rtypes.Cookies),
 			}
-			requestFormat, err := c.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, T_FormatSelector)
+			requestFormat, err := c.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, rtypes.T_FormatSelector)
 			if err != nil {
 				return nil, err
 			}
@@ -99,12 +97,12 @@ func HTTPOptions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"URL":            dt.Prim(T_String),
-					"Method":         dt.Optional{T: dt.Prim(T_String)},
-					"RequestFormat":  dt.Optional{T: dt.Prim(T_FormatSelector)},
-					"ResponseFormat": dt.Optional{T: dt.Prim(T_FormatSelector)},
-					"Headers":        dt.Optional{T: dt.Prim(T_HTTPHeaders)},
-					"Cookies":        dt.Optional{T: dt.Prim(T_Cookies)},
+					"URL":            dt.Prim(rtypes.T_String),
+					"Method":         dt.Optional{T: dt.Prim(rtypes.T_String)},
+					"RequestFormat":  dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
+					"ResponseFormat": dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
+					"Headers":        dt.Optional{T: dt.Prim(rtypes.T_HTTPHeaders)},
+					"Cookies":        dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
 					"Body":           dt.Optional{T: dt.Prim("any")},
 				},
 				Summary:     "Types/HTTPOptions:Summary",

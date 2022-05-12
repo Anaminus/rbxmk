@@ -6,6 +6,10 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_HTTPRequest = "HTTPRequest"
+
+const T_HTTPOptions = "HTTPOptions"
+
 // HTTPOptions specifies options to an HTTP request.
 type HTTPOptions struct {
 	URL            string
@@ -19,8 +23,10 @@ type HTTPOptions struct {
 
 // Type returns a string identifying the type of the value.
 func (HTTPOptions) Type() string {
-	return "HTTPOptions"
+	return T_HTTPOptions
 }
+
+const T_HTTPResponse = "HTTPResponse"
 
 // HTTPResponse contains the response to an HTTP request.
 type HTTPResponse struct {
@@ -34,8 +40,10 @@ type HTTPResponse struct {
 
 // Type returns a string identifying the type of the value.
 func (HTTPResponse) Type() string {
-	return "HTTPResponse"
+	return T_HTTPResponse
 }
+
+const T_HTTPHeaders = "HTTPHeaders"
 
 // HTTPHeaders contains the headers of an HTTP request or response.
 type HTTPHeaders http.Header
@@ -76,8 +84,10 @@ func (h HTTPHeaders) RetrieveSetCookies() Cookies {
 
 // Type returns a string identifying the type of the value.
 func (HTTPHeaders) Type() string {
-	return "HTTPHeaders"
+	return T_HTTPHeaders
 }
+
+const T_RBXAssetOptions = "RBXAssetOptions"
 
 // RBXAssetOptions specifies options to a Roblox web request.
 type RBXAssetOptions struct {
@@ -89,5 +99,5 @@ type RBXAssetOptions struct {
 
 // Type returns a string identifying the type of the value.
 func (RBXAssetOptions) Type() string {
-	return "RBXAssetOptions"
+	return T_RBXAssetOptions
 }

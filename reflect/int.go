@@ -4,15 +4,14 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_Int = "int"
 
 func init() { register(Int) }
 func Int() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  T_Int,
+		Name:  rtypes.T_Int,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LNumber(v.(types.Int)), nil
@@ -22,13 +21,13 @@ func Int() rbxmk.Reflector {
 			case lua.LNumber:
 				return types.Int(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable(T_Int) {
+				if v.Metatable == c.GetTypeMetatable(rtypes.T_Int) {
 					if v, ok := v.Value().(types.Int); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: T_Int, Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: rtypes.T_Int, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

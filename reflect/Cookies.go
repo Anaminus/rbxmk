@@ -9,18 +9,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Cookies = "Cookies"
-
 func init() { register(Cookies) }
 func Cookies() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_Cookies,
+		Name: rtypes.T_Cookies,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			cookies, ok := v.(rtypes.Cookies)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Cookies, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Cookies, Got: v.Type()}
 			}
-			cookieRfl := c.MustReflector(T_Cookie)
+			cookieRfl := c.MustReflector(rtypes.T_Cookie)
 			table := c.CreateTable(len(cookies), 0)
 			for i, v := range cookies {
 				lv, err := cookieRfl.PushTo(c, v)
@@ -34,9 +32,9 @@ func Cookies() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			cookieRfl := c.MustReflector(T_Cookie)
+			cookieRfl := c.MustReflector(rtypes.T_Cookie)
 			n := table.Len()
 			cookies := make(rtypes.Cookies, n)
 			for i := 1; i <= n; i++ {
@@ -59,7 +57,7 @@ func Cookies() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Array{T: dt.Prim(T_Cookie)},
+				Underlying:  dt.Array{T: dt.Prim(rtypes.T_Cookie)},
 				Summary:     "Types/Cookies:Summary",
 				Description: "Types/Cookies:Description",
 			}

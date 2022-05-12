@@ -11,16 +11,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_RBXAssetOptions = "RBXAssetOptions"
-
 func init() { register(RBXAssetOptions) }
 func RBXAssetOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_RBXAssetOptions,
+		Name: rtypes.T_RBXAssetOptions,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			options, ok := v.(rtypes.RBXAssetOptions)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_RBXAssetOptions, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_RBXAssetOptions, Got: v.Type()}
 			}
 			if options.AssetID <= 0 {
 				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
@@ -43,13 +41,13 @@ func RBXAssetOptions() rbxmk.Reflector {
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 			table, ok := lv.(*lua.LTable)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_Table, Got: lv.Type().String()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			assetID, err := c.PullFromDictionary(table, "AssetID", T_Int64)
+			assetID, err := c.PullFromDictionary(table, "AssetID", rtypes.T_Int64)
 			if err != nil {
 				return nil, err
 			}
-			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), T_Cookies)
+			cookies, err := c.PullFromDictionaryOpt(table, "Cookies", rtypes.Cookies(nil), rtypes.T_Cookies)
 			if err != nil {
 				return nil, err
 			}
@@ -57,7 +55,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 				AssetID: int64(assetID.(types.Int64)),
 				Cookies: cookies.(rtypes.Cookies),
 			}
-			format, err := c.PullFromDictionary(table, "Format", T_FormatSelector)
+			format, err := c.PullFromDictionary(table, "Format", rtypes.T_FormatSelector)
 			if err != nil {
 				return nil, err
 			}
@@ -83,9 +81,9 @@ func RBXAssetOptions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"AssetID": dt.Prim(T_Int64),
-					"Cookies": dt.Optional{T: dt.Prim(T_Cookies)},
-					"Format":  dt.Prim(T_FormatSelector),
+					"AssetID": dt.Prim(rtypes.T_Int64),
+					"Cookies": dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
+					"Format":  dt.Prim(rtypes.T_FormatSelector),
 					"Body":    dt.Optional{T: dt.Prim("any")},
 				},
 				Summary:     "Types/RBXAssetOptions:Summary",

@@ -35,8 +35,6 @@ func nextUID() rtypes.UniqueId {
 	return uid.base
 }
 
-const T_UniqueId = "UniqueId"
-
 func init() {
 	register(UniqueId)
 
@@ -48,9 +46,9 @@ func init() {
 
 func UniqueId() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_UniqueId,
-		PushTo:   rbxmk.PushTypeTo(T_UniqueId),
-		PullFrom: rbxmk.PullTypeFrom(T_UniqueId),
+		Name:     rtypes.T_UniqueId,
+		PushTo:   rbxmk.PushTypeTo(rtypes.T_UniqueId),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_UniqueId),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case *rtypes.UniqueId:
@@ -62,13 +60,13 @@ func UniqueId() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_UniqueId).(rtypes.UniqueId)
+				v := s.Pull(1, rtypes.T_UniqueId).(rtypes.UniqueId)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
 			"__eq": func(s rbxmk.State) int {
-				v := s.Pull(1, T_UniqueId).(rtypes.UniqueId)
-				op := s.Pull(2, T_UniqueId).(rtypes.UniqueId)
+				v := s.Pull(1, rtypes.T_UniqueId).(rtypes.UniqueId)
+				op := s.Pull(2, rtypes.T_UniqueId).(rtypes.UniqueId)
 				s.L.Push(lua.LBool(v == op))
 				return 1
 			},
@@ -80,7 +78,7 @@ func UniqueId() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Int64),
+						ValueType:   dt.Prim(rtypes.T_Int64),
 						ReadOnly:    true,
 						Summary:     "Types/UniqueId:Properties/Random/Summary",
 						Description: "Types/UniqueId:Properties/Random/Description",
@@ -93,7 +91,7 @@ func UniqueId() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Int64),
+						ValueType:   dt.Prim(rtypes.T_Int64),
 						ReadOnly:    true,
 						Summary:     "Types/UniqueId:Properties/Time/Summary",
 						Description: "Types/UniqueId:Properties/Time/Description",
@@ -106,7 +104,7 @@ func UniqueId() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Int64),
+						ValueType:   dt.Prim(rtypes.T_Int64),
 						ReadOnly:    true,
 						Summary:     "Types/UniqueId:Properties/Index/Summary",
 						Description: "Types/UniqueId:Properties/Index/Description",
@@ -122,9 +120,9 @@ func UniqueId() rbxmk.Reflector {
 					case 0:
 						v = nextUID()
 					case 3:
-						v.Random = s.Pull(1, T_Int64).(types.Int64)
-						v.Time = uint32(s.Pull(2, T_Int64).(types.Int64))
-						v.Index = uint32(s.Pull(2, T_Int64).(types.Int64))
+						v.Random = s.Pull(1, rtypes.T_Int64).(types.Int64)
+						v.Time = uint32(s.Pull(2, rtypes.T_Int64).(types.Int64))
+						v.Index = uint32(s.Pull(2, rtypes.T_Int64).(types.Int64))
 					default:
 						return s.RaiseError("expected 0 or 3 arguments")
 					}
@@ -135,19 +133,19 @@ func UniqueId() rbxmk.Reflector {
 						{
 							Parameters: dump.Parameters{},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_UniqueId)},
+								{Type: dt.Prim(rtypes.T_UniqueId)},
 							},
 							Summary:     "Types/UniqueId:Constructors/new/Generated/Summary",
 							Description: "Types/UniqueId:Constructors/new/Generated/Description",
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "random", Type: dt.Prim(T_Int64)},
-								{Name: "time", Type: dt.Prim(T_Int64)},
-								{Name: "index", Type: dt.Prim(T_Int64)},
+								{Name: "random", Type: dt.Prim(rtypes.T_Int64)},
+								{Name: "time", Type: dt.Prim(rtypes.T_Int64)},
+								{Name: "index", Type: dt.Prim(rtypes.T_Int64)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(T_UniqueId)},
+								{Type: dt.Prim(rtypes.T_UniqueId)},
 							},
 							Summary:     "Types/UniqueId:Constructors/new/Components/Summary",
 							Description: "Types/UniqueId:Constructors/new/Components/Description",

@@ -10,24 +10,22 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_CallbackDesc = "CallbackDesc"
-
 func init() { register(CallbackDesc) }
 func CallbackDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_CallbackDesc,
+		Name: rtypes.T_CallbackDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.CallbackDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_CallbackDesc, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_CallbackDesc, Got: v.Type()}
 			}
 			member := rbxdump.Callback(desc)
 			fields := member.Fields()
 			fields["MemberType"] = member.MemberType()
-			return c.MustReflector(T_DescFields).PushTo(c, rtypes.DescFields(fields))
+			return c.MustReflector(rtypes.T_DescFields).PushTo(c, rtypes.DescFields(fields))
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := c.MustReflector(T_DescFields).PullFrom(c, lv)
+			fields, err := c.MustReflector(rtypes.T_DescFields).PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}
@@ -47,12 +45,12 @@ func CallbackDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"MemberType": dt.Prim(T_String),
-					"Name":       dt.Prim(T_String),
-					"ReturnType": dt.Prim(T_TypeDesc),
-					"Security":   dt.Prim(T_String),
-					"Parameters": dt.Array{T: dt.Prim(T_ParameterDesc)},
-					"Tags":       dt.Array{T: dt.Prim(T_String)},
+					"MemberType": dt.Prim(rtypes.T_String),
+					"Name":       dt.Prim(rtypes.T_String),
+					"ReturnType": dt.Prim(rtypes.T_TypeDesc),
+					"Security":   dt.Prim(rtypes.T_String),
+					"Parameters": dt.Array{T: dt.Prim(rtypes.T_ParameterDesc)},
+					"Tags":       dt.Array{T: dt.Prim(rtypes.T_String)},
 				},
 				Summary:     "Types/CallbackDesc:Summary",
 				Description: "Types/CallbackDesc:Description",

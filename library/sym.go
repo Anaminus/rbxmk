@@ -24,14 +24,14 @@ var Sym = rbxmk.Library{
 
 func openSym(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 7)
-	lib.RawSetString("AttrConfig", s.UserDataOf(rtypes.Symbol{Name: "AttrConfig"}, reflect.T_Symbol))
-	lib.RawSetString("Desc", s.UserDataOf(rtypes.Symbol{Name: "Desc"}, reflect.T_Symbol))
-	lib.RawSetString("IsService", s.UserDataOf(rtypes.Symbol{Name: "IsService"}, reflect.T_Symbol))
-	lib.RawSetString("Metadata", s.UserDataOf(rtypes.Symbol{Name: "Metadata"}, reflect.T_Symbol))
-	lib.RawSetString("Properties", s.UserDataOf(rtypes.Symbol{Name: "Properties"}, reflect.T_Symbol))
-	lib.RawSetString("RawAttrConfig", s.UserDataOf(rtypes.Symbol{Name: "RawAttrConfig"}, reflect.T_Symbol))
-	lib.RawSetString("RawDesc", s.UserDataOf(rtypes.Symbol{Name: "RawDesc"}, reflect.T_Symbol))
-	lib.RawSetString("Reference", s.UserDataOf(rtypes.Symbol{Name: "Reference"}, reflect.T_Symbol))
+	lib.RawSetString("AttrConfig", s.UserDataOf(rtypes.Symbol{Name: "AttrConfig"}, rtypes.T_Symbol))
+	lib.RawSetString("Desc", s.UserDataOf(rtypes.Symbol{Name: "Desc"}, rtypes.T_Symbol))
+	lib.RawSetString("IsService", s.UserDataOf(rtypes.Symbol{Name: "IsService"}, rtypes.T_Symbol))
+	lib.RawSetString("Metadata", s.UserDataOf(rtypes.Symbol{Name: "Metadata"}, rtypes.T_Symbol))
+	lib.RawSetString("Properties", s.UserDataOf(rtypes.Symbol{Name: "Properties"}, rtypes.T_Symbol))
+	lib.RawSetString("RawAttrConfig", s.UserDataOf(rtypes.Symbol{Name: "RawAttrConfig"}, rtypes.T_Symbol))
+	lib.RawSetString("RawDesc", s.UserDataOf(rtypes.Symbol{Name: "RawDesc"}, rtypes.T_Symbol))
+	lib.RawSetString("Reference", s.UserDataOf(rtypes.Symbol{Name: "Reference"}, rtypes.T_Symbol))
 	return lib
 }
 
@@ -40,49 +40,49 @@ func dumpSym(s rbxmk.State) dump.Library {
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"AttrConfig": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/AttrConfig/Summary",
 					Description: "Libraries/sym:Fields/AttrConfig/Description",
 				},
 				"Desc": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/Desc/Summary",
 					Description: "Libraries/sym:Fields/Desc/Description",
 				},
 				"IsService": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/IsService/Summary",
 					Description: "Libraries/sym:Fields/IsService/Description",
 				},
 				"Metadata": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/Metadata/Summary",
 					Description: "Libraries/sym:Fields/Metadata/Description",
 				},
 				"Properties": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/Properties/Summary",
 					Description: "Libraries/sym:Fields/Properties/Description",
 				},
 				"RawAttrConfig": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/RawAttrConfig/Summary",
 					Description: "Libraries/sym:Fields/RawAttrConfig/Description",
 				},
 				"RawDesc": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/RawDesc/Summary",
 					Description: "Libraries/sym:Fields/RawDesc/Description",
 				},
 				"Reference": dump.Property{
-					ValueType:   dt.Prim(reflect.T_Symbol),
+					ValueType:   dt.Prim(rtypes.T_Symbol),
 					ReadOnly:    true,
 					Summary:     "Libraries/sym:Fields/Reference/Summary",
 					Description: "Libraries/sym:Fields/Reference/Description",

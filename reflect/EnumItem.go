@@ -9,14 +9,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_EnumItem = "EnumItem"
-
 func init() { register(EnumItem) }
 func EnumItem() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     T_EnumItem,
-		PushTo:   rbxmk.PushPtrTypeTo(T_EnumItem),
-		PullFrom: rbxmk.PullTypeFrom(T_EnumItem),
+		Name:     rtypes.T_EnumItem,
+		PushTo:   rbxmk.PushPtrTypeTo(rtypes.T_EnumItem),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_EnumItem),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
 			case **rtypes.EnumItem:
@@ -28,7 +26,7 @@ func EnumItem() rbxmk.Reflector {
 		},
 		Metatable: rbxmk.Metatable{
 			"__tostring": func(s rbxmk.State) int {
-				v := s.Pull(1, T_EnumItem).(*rtypes.EnumItem)
+				v := s.Pull(1, rtypes.T_EnumItem).(*rtypes.EnumItem)
 				s.L.Push(lua.LString(v.String()))
 				return 1
 			},
@@ -40,7 +38,7 @@ func EnumItem() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_String),
+						ValueType:   dt.Prim(rtypes.T_String),
 						ReadOnly:    true,
 						Summary:     "Types/EnumItem:Properties/Name/Summary",
 						Description: "Types/EnumItem:Properties/Name/Description",
@@ -53,7 +51,7 @@ func EnumItem() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Int),
+						ValueType:   dt.Prim(rtypes.T_Int),
 						ReadOnly:    true,
 						Summary:     "Types/EnumItem:Properties/Value/Summary",
 						Description: "Types/EnumItem:Properties/Value/Description",
@@ -66,7 +64,7 @@ func EnumItem() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Prim(T_Enum),
+						ValueType:   dt.Prim(rtypes.T_Enum),
 						ReadOnly:    true,
 						Summary:     "Types/EnumItem:Properties/EnumType/Summary",
 						Description: "Types/EnumItem:Properties/EnumType/Description",
@@ -77,17 +75,17 @@ func EnumItem() rbxmk.Reflector {
 		Methods: rbxmk.Methods{
 			"IsA": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					enumName := string(s.Pull(2, T_String).(types.String))
+					enumName := string(s.Pull(2, rtypes.T_String).(types.String))
 					item := v.(*rtypes.EnumItem)
 					return s.Push(types.Bool(item.Enum().Name() == enumName))
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "enumName", Type: dt.Prim(T_String)},
+							{Name: "enumName", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Prim(T_Bool)},
+							{Type: dt.Prim(rtypes.T_Bool)},
 						},
 						Summary:     "Types/EnumItem:Methods/IsA/Summary",
 						Description: "Types/EnumItem:Methods/IsA/Description",

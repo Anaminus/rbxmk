@@ -4,6 +4,8 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const T_Optional = "Optional"
+
 // Optional is a types.Value that may have some value, or none.
 type Optional struct {
 	typ   string
@@ -11,7 +13,7 @@ type Optional struct {
 }
 
 func (o Optional) Type() string {
-	return "Optional"
+	return T_Optional
 }
 
 // Copy returns a copy of the Optional. If the underlying value does not

@@ -6,6 +6,8 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 )
 
+const T_Enums = "Enums"
+
 // Enums is a collection of Enum values.
 type Enums struct {
 	enums     []*Enum
@@ -14,7 +16,7 @@ type Enums struct {
 
 // Type returns a string identifying the type of the value.
 func (*Enums) Type() string {
-	return "Enums"
+	return T_Enums
 }
 
 // String returns a string representation of the value.
@@ -46,6 +48,8 @@ func (e *Enums) Include(enums ...*Enum) {
 	}
 }
 
+const T_Enum = "Enum"
+
 // Enum contains a set of named values.
 type Enum struct {
 	name       string
@@ -56,7 +60,7 @@ type Enum struct {
 
 // Type returns a string identifying the type of the value.
 func (*Enum) Type() string {
-	return "Enum"
+	return T_Enum
 }
 
 // String returns a string representation of the value.
@@ -116,6 +120,8 @@ func (e *Enum) Pull(lv lua.LValue) *EnumItem {
 	return nil
 }
 
+const T_EnumItem = "EnumItem"
+
 // EnumItem represents one possible value of an enum.
 type EnumItem struct {
 	enum  *Enum
@@ -125,7 +131,7 @@ type EnumItem struct {
 
 // Type returns a string identifying the type of the value.
 func (*EnumItem) Type() string {
-	return "EnumItem"
+	return T_EnumItem
 }
 
 // String returns a string representation of the value.

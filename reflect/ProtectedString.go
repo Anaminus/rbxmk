@@ -4,15 +4,14 @@ import (
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
-
-const T_ProtectedString = "ProtectedString"
 
 func init() { register(ProtectedString) }
 func ProtectedString() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:  T_ProtectedString,
+		Name:  rtypes.T_ProtectedString,
 		Flags: rbxmk.Exprim,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return lua.LString(v.(types.ProtectedString)), nil
@@ -22,13 +21,13 @@ func ProtectedString() rbxmk.Reflector {
 			case lua.LString:
 				return types.ProtectedString(v), nil
 			case *lua.LUserData:
-				if v.Metatable == c.GetTypeMetatable(T_ProtectedString) {
+				if v.Metatable == c.GetTypeMetatable(rtypes.T_ProtectedString) {
 					if v, ok := v.Value().(types.ProtectedString); ok {
 						return v, nil
 					}
 				}
 			}
-			return nil, rbxmk.TypeError{Want: T_ProtectedString, Got: lv.Type().String()}
+			return nil, rbxmk.TypeError{Want: rtypes.T_ProtectedString, Got: lv.Type().String()}
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {

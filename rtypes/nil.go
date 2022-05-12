@@ -1,5 +1,7 @@
 package rtypes
 
+const T_Nil = "nil"
+
 // NilType represents a nil value that implements types.Value.
 type NilType struct{}
 
@@ -8,7 +10,7 @@ var Nil NilType
 
 // Type returns a string identifying the type of the value.
 func (NilType) Type() string {
-	return "nil"
+	return T_Nil
 }
 
 // String returns a string representation of the value.

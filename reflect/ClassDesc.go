@@ -10,22 +10,20 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_ClassDesc = "ClassDesc"
-
 func init() { register(ClassDesc) }
 func ClassDesc() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: T_ClassDesc,
+		Name: rtypes.T_ClassDesc,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			desc, ok := v.(rtypes.ClassDesc)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: T_ClassDesc, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_ClassDesc, Got: v.Type()}
 			}
 			class := rbxdump.Class(desc)
-			return c.MustReflector(T_DescFields).PushTo(c, rtypes.DescFields(class.Fields()))
+			return c.MustReflector(rtypes.T_DescFields).PushTo(c, rtypes.DescFields(class.Fields()))
 		},
 		PullFrom: func(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
-			fields, err := c.MustReflector(T_DescFields).PullFrom(c, lv)
+			fields, err := c.MustReflector(rtypes.T_DescFields).PullFrom(c, lv)
 			if err != nil {
 				return nil, err
 			}
@@ -45,10 +43,10 @@ func ClassDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"Name":           dt.Prim(T_String),
-					"Superclass":     dt.Prim(T_String),
-					"MemoryCategory": dt.Prim(T_String),
-					"Tags":           dt.Array{T: dt.Prim(T_String)},
+					"Name":           dt.Prim(rtypes.T_String),
+					"Superclass":     dt.Prim(rtypes.T_String),
+					"MemoryCategory": dt.Prim(rtypes.T_String),
+					"Tags":           dt.Array{T: dt.Prim(rtypes.T_String)},
 				},
 				Summary:     "Types/ClassDesc:Summary",
 				Description: "Types/ClassDesc:Description",
