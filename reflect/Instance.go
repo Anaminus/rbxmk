@@ -568,7 +568,7 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			rtypes.Symbol{Name: "Desc"}: {
+			rtypes.Symbol{Name: rtypes.T_Desc}: {
 				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					desc := inst.Desc()
@@ -606,7 +606,7 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			rtypes.Symbol{Name: "RawDesc"}: {
+			rtypes.Symbol{Name: "Raw" + rtypes.T_Desc}: {
 				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					desc, blocked := inst.RawDesc()
@@ -647,7 +647,7 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			rtypes.Symbol{Name: "AttrConfig"}: {
+			rtypes.Symbol{Name: rtypes.T_AttrConfig}: {
 				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					attrcfg := inst.AttrConfig()
@@ -685,7 +685,7 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
-			rtypes.Symbol{Name: "RawAttrConfig"}: {
+			rtypes.Symbol{Name: "Raw" + rtypes.T_AttrConfig}: {
 				Get: func(s rbxmk.State, v types.Value) int {
 					inst := v.(*rtypes.Instance)
 					attrcfg, blocked := inst.RawAttrConfig()
