@@ -103,7 +103,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 								{Name: "value", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(rtypes.T_ColorSequenceKeypoint)},
+								{Type: dt.Prim(rtypes.T_NumberSequenceKeypoint)},
 							},
 							Summary:     "Types/NumberSequenceKeypoint:Constructors/new/Components/Summary",
 							Description: "Types/NumberSequenceKeypoint:Constructors/new/Components/Description",
@@ -115,7 +115,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 								{Name: "envelope", Type: dt.Prim(rtypes.T_Float)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Prim(rtypes.T_ColorSequenceKeypoint)},
+								{Type: dt.Prim(rtypes.T_NumberSequenceKeypoint)},
 							},
 							Summary:     "Types/NumberSequenceKeypoint:Constructors/new/Envelope/Summary",
 							Description: "Types/NumberSequenceKeypoint:Constructors/new/Envelope/Description",
