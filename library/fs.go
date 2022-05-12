@@ -163,7 +163,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "all", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("boolean")},
+						{Type: dt.Prim(rtypes.T_LuaBoolean)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/mkdir/Summary",
@@ -187,7 +187,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "all", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("boolean")},
+						{Type: dt.Prim(rtypes.T_LuaBoolean)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/remove/Summary",
@@ -199,7 +199,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "new", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("boolean")},
+						{Type: dt.Prim(rtypes.T_LuaBoolean)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/rename/Summary",

@@ -136,7 +136,7 @@ func (w *World) PullArrayOf(lv lua.LValue, t string) (v rtypes.Array, err error)
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		return nil, TypeError{Want: "table", Got: lv.Type().String()}
+		return nil, TypeError{Want: rtypes.T_LuaTable, Got: lv.Type().String()}
 	}
 	if s.CycleMark(table) {
 		return nil, fmt.Errorf("tables cannot be cyclic")
@@ -190,7 +190,7 @@ func (w *World) PullDictionaryOf(lv lua.LValue, t string) (v rtypes.Dictionary, 
 	}
 	table, ok := lv.(*lua.LTable)
 	if !ok {
-		return nil, TypeError{Want: "table", Got: lv.Type().String()}
+		return nil, TypeError{Want: rtypes.T_LuaTable, Got: lv.Type().String()}
 	}
 	if s.CycleMark(table) {
 		return nil, fmt.Errorf("tables cannot be cyclic")

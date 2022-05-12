@@ -88,7 +88,7 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 						{Name: "value", Type: dt.Prim("any")},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
+						{Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Summary:     "Libraries/roblox:Fields/typeof/Summary",
 					Description: "Libraries/roblox:Fields/typeof/Description",

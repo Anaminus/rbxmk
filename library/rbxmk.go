@@ -358,7 +358,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Name: "func", Type: dt.Prim("function")},
+						{Name: "func", Type: dt.Prim(rtypes.T_LuaFunction)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/loadFile/Summary",
@@ -369,7 +369,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "source", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Name: "func", Type: dt.Prim("function")},
+						{Name: "func", Type: dt.Prim(rtypes.T_LuaFunction)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/loadString/Summary",

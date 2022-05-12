@@ -7,6 +7,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(String) }
@@ -49,11 +50,11 @@ func dumpString(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"split": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "s", Type: dt.Prim("string")},
-						{Name: "sep", Type: dt.Optional{T: dt.Prim("string")}, Default: `","`},
+						{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
+						{Name: "sep", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, Default: `","`},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Array{T: dt.Prim("string")}},
+						{Type: dt.Array{T: dt.Prim(rtypes.T_LuaString)}},
 					},
 					Summary:     "Libraries/string:Fields/split/Summary",
 					Description: "Libraries/string:Fields/split/Description",

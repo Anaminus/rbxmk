@@ -7,6 +7,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(Math) }
@@ -87,12 +88,12 @@ func dumpMath(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"clamp": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-						{Name: "min", Type: dt.Prim("number")},
-						{Name: "max", Type: dt.Prim("number")},
+						{Name: "x", Type: dt.Prim(rtypes.T_LuaNumber)},
+						{Name: "min", Type: dt.Prim(rtypes.T_LuaNumber)},
+						{Name: "max", Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
+						{Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/math:Fields/clamp/Summary",
@@ -100,31 +101,31 @@ func dumpMath(s rbxmk.State) dump.Library {
 				},
 				"log": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
-						{Name: "base", Type: dt.Optional{T: dt.Prim("number")}, Default: "𝑒"},
+						{Name: "x", Type: dt.Prim(rtypes.T_LuaNumber)},
+						{Name: "base", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}, Default: "𝑒"},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
+						{Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Summary:     "Libraries/math:Fields/log/Summary",
 					Description: "Libraries/math:Fields/log/Description",
 				},
 				"round": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
+						{Name: "x", Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
+						{Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Summary:     "Libraries/math:Fields/round/Summary",
 					Description: "Libraries/math:Fields/round/Description",
 				},
 				"sign": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Prim("number")},
+						{Name: "x", Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("number")},
+						{Type: dt.Prim(rtypes.T_LuaNumber)},
 					},
 					Summary:     "Libraries/math:Fields/sign/Summary",
 					Description: "Libraries/math:Fields/sign/Description",

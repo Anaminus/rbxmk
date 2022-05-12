@@ -1,5 +1,18 @@
 package rtypes
 
+// Type name constants for primitive Lua types.
+const (
+	T_LuaNil      = "nil"
+	T_LuaBoolean  = "boolean"
+	T_LuaNumber   = "number"
+	T_LuaString   = "string"
+	T_LuaTable    = "table"
+	T_LuaFunction = "function"
+	T_LuaThread   = "thread"
+	T_LuaUserData = "userdata"
+	T_LuaInteger  = "integer" // Number interpreted internally as an integer.
+)
+
 // Type name constants for types package.
 const (
 	T_Axes                   = "Axes"

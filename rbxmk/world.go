@@ -13,6 +13,7 @@ import (
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/enums"
 	"github.com/anaminus/rbxmk/formats"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 // ParseLuaValue parses a string into a Lua value. Numbers, bools, and nil are
@@ -207,7 +208,7 @@ var ProgramLibrary = rbxmk.Library{
 			Struct: dump.Struct{
 				Fields: dump.Fields{
 					"_RBXMK_VERSION": dump.Property{
-						ValueType:   dt.Prim("string"),
+						ValueType:   dt.Prim(rtypes.T_LuaString),
 						ReadOnly:    true,
 						Summary:     "Libraries/program:Fields/_RBXMK_VERSION/Summary",
 						Description: "Libraries/program:Fields/_RBXMK_VERSION/Description",

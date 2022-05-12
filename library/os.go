@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(OS) }
@@ -60,10 +61,10 @@ func dumpOS(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"getenv": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "name", Type: dt.Optional{T: dt.Prim("string")}},
+						{Name: "name", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Or{dt.Optional{T: dt.Prim("string")}, dt.Dictionary{V: dt.Prim("string")}}},
+						{Type: dt.Or{dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, dt.Dictionary{V: dt.Prim(rtypes.T_LuaString)}}},
 					},
 					Summary:     "Libraries/os:Fields/getenv/Summary",
 					Description: "Libraries/os:Fields/getenv/Description",

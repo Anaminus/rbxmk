@@ -7,6 +7,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/rtypes"
 )
 
 func init() { register(Path) }
@@ -76,41 +77,41 @@ func dumpPath(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"clean": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
+						{Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Summary:     "Libraries/path:Fields/clean/Summary",
 					Description: "Libraries/path:Fields/clean/Description",
 				},
 				"expand": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
+						{Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Summary:     "Libraries/path:Fields/expand/Summary",
 					Description: "Libraries/path:Fields/expand/Description",
 				},
 				"join": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Prim("string")},
+						{Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Summary:     "Libraries/path:Fields/join/Summary",
 					Description: "Libraries/path:Fields/join/Description",
 				},
 				"split": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "path", Type: dt.Prim("string")},
-						{Name: "...", Type: dt.Prim("string")},
+						{Name: "path", Type: dt.Prim(rtypes.T_LuaString)},
+						{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Prim("string")},
+						{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/path:Fields/split/Summary",
