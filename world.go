@@ -35,7 +35,7 @@ type World struct {
 	formats    map[string]Format
 	enums      *rtypes.Enums
 
-	Global
+	rtypes.Global
 
 	tmponce sync.Once
 	tmpdir  string

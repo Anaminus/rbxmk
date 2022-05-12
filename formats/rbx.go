@@ -67,10 +67,10 @@ func RBXL() rbxmk.Format {
 			"Desc":     {rtypes.T_Desc, rtypes.T_Bool},
 			"DescMode": {rtypes.T_String},
 		},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Instance
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -87,7 +87,7 @@ func RBXL() rbxmk.Format {
 			}
 			return d.rbx()
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			desc := descOf(f, "Desc", g, v)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -124,10 +124,10 @@ func RBXM() rbxmk.Format {
 			"Desc":     {rtypes.T_Desc, rtypes.T_Bool},
 			"DescMode": {rtypes.T_String},
 		},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Instance
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -144,7 +144,7 @@ func RBXM() rbxmk.Format {
 			}
 			return d.rbx()
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			desc := descOf(f, "Desc", g, v)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -181,10 +181,10 @@ func RBXLX() rbxmk.Format {
 			"Desc":     {rtypes.T_Desc, rtypes.T_Bool},
 			"DescMode": {rtypes.T_String},
 		},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Instance
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -201,7 +201,7 @@ func RBXLX() rbxmk.Format {
 			}
 			return d.rbx()
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			desc := descOf(f, "Desc", g, v)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -238,10 +238,10 @@ func RBXMX() rbxmk.Format {
 			"Desc":     {rtypes.T_Desc, rtypes.T_Bool},
 			"DescMode": {rtypes.T_String},
 		},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Instance
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			desc := descOf(f, "Desc", g, nil)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -258,7 +258,7 @@ func RBXMX() rbxmk.Format {
 			}
 			return d.rbx()
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			desc := descOf(f, "Desc", g, v)
 			mode, err := descModeOf(f, "DescMode")
 			if err != nil {
@@ -321,7 +321,7 @@ func descModeOf(f rbxmk.FormatOptions, field string) (mode descMode, err error) 
 //
 // If v is an Objects, then no descriptor can be reasonably selected, so g.Desc
 // is returned instead.
-func descOf(f rbxmk.FormatOptions, field string, g rbxmk.Global, v types.Value) (desc *rtypes.Desc) {
+func descOf(f rbxmk.FormatOptions, field string, g rtypes.Global, v types.Value) (desc *rtypes.Desc) {
 	if f != nil {
 		switch v := f.ValueOf("Desc").(type) {
 		case *rtypes.Desc:

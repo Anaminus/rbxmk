@@ -238,10 +238,10 @@ func CSV() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "csv",
 		MediaTypes: []string{"text/csv", "text/plain"},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Array
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			cr := csv.NewReader(r)
 			cr.ReuseRecord = true
 			var vrecords rtypes.Array
@@ -261,7 +261,7 @@ func CSV() rbxmk.Format {
 			}
 			return vrecords, nil
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			if _, ok := v.(rtypes.Dictionary); ok {
 				// Assume empty array, encode as no content.
 				return nil
@@ -315,7 +315,7 @@ func L10nCSV() rbxmk.Format {
 		Name:       "l10n.csv",
 		MediaTypes: []string{"text/csv", "text/plain"},
 		CanDecode:  canDecodeInstance,
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			b, err := decodeL10nCSV(r)
 			if err != nil {
 				return nil, fmt.Errorf("decode CSV: %w", err)
@@ -324,7 +324,7 @@ func L10nCSV() rbxmk.Format {
 			table.Set("Contents", types.String(b))
 			return table, nil
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			b, ok := rtypes.Stringable(v)
 			if !ok {
 				return cannotEncode(v)

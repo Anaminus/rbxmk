@@ -16,6 +16,7 @@ import (
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/reflect"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -112,7 +113,7 @@ func runDumpPluginCommand(cmd *cobra.Command, args []string) error {
 	je.SetEscapeHTML(false)
 	je.SetIndent("", "")
 	je.Encode(root)
-	table, _ := formats.JSON().Decode(rbxmk.Global{}, nil, &buf)
+	table, _ := formats.JSON().Decode(rtypes.Global{}, nil, &buf)
 	world.RegisterReflector(reflect.Dictionary())
 	world.State().Push(table)
 

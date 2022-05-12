@@ -152,10 +152,10 @@ func RBXAttr() rbxmk.Format {
 	return rbxmk.Format{
 		Name:       "rbxattr",
 		MediaTypes: []string{"application/octet-stream"},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var model rbxattr.Model
 			if _, err = model.ReadFrom(r); err != nil {
 				return nil, fmt.Errorf("decode attributes: %w", err)
@@ -172,7 +172,7 @@ func RBXAttr() rbxmk.Format {
 			}
 			return dict, nil
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			dict, ok := v.(rtypes.Dictionary)
 			if !ok {
 				return fmt.Errorf("Dictionary expected, got %s", v.Type())

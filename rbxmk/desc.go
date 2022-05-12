@@ -66,7 +66,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) 
 			resp.Body.Close()
 			return nil, fmt.Errorf("include latest descriptor: fetch version GUID: %s", resp.Status)
 		}
-		v, err := formats.Desc().Decode(rbxmk.Global{}, nil, resp.Body)
+		v, err := formats.Desc().Decode(rtypes.Global{}, nil, resp.Body)
 		resp.Body.Close()
 		if err != nil {
 			return nil, fmt.Errorf("include latest descriptor: decode dump: %w", err)
@@ -78,7 +78,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) 
 		if err != nil {
 			return nil, fmt.Errorf("include descriptor from file: open %s: %w", path, err)
 		}
-		v, err := formats.Desc().Decode(rbxmk.Global{}, nil, f)
+		v, err := formats.Desc().Decode(rtypes.Global{}, nil, f)
 		f.Close()
 		if err != nil {
 			return nil, fmt.Errorf("include descriptor from file: decode dump %s: %w", path, err)
@@ -91,7 +91,7 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) 
 		if err != nil {
 			return nil, fmt.Errorf("include patch from file: open %s: %w", path, err)
 		}
-		v, err := formats.DescPatch().Decode(rbxmk.Global{}, nil, f)
+		v, err := formats.DescPatch().Decode(rtypes.Global{}, nil, f)
 		f.Close()
 		if err != nil {
 			return nil, fmt.Errorf("include patch from file: decode patches %s: %w", path, err)

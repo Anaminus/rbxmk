@@ -11,7 +11,7 @@ import (
 
 // HTTPRequest performs and HTTP request with a promise-like API.
 type HTTPRequest struct {
-	global Global
+	global rtypes.Global
 
 	cancel context.CancelFunc
 

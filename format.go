@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
 )
 
@@ -29,15 +30,15 @@ type Format struct {
 	Options map[string][]string
 
 	// CanDecode returns whether the format decodes into the given type.
-	CanDecode func(g Global, opt FormatOptions, typeName string) bool
+	CanDecode func(g rtypes.Global, opt FormatOptions, typeName string) bool
 
 	// Encode receives a value of one of a number of types and encodes it as a
 	// sequence of bytes written to w.
-	Encode func(g Global, opt FormatOptions, w io.Writer, v types.Value) error
+	Encode func(g rtypes.Global, opt FormatOptions, w io.Writer, v types.Value) error
 
 	// Decode receives a sequence of bytes read from r, and decodes it into a
 	// value of a single type.
-	Decode func(g Global, opt FormatOptions, r io.Reader) (types.Value, error)
+	Decode func(g rtypes.Global, opt FormatOptions, r io.Reader) (types.Value, error)
 
 	// Dump returns a description of the format.
 	Dump func() dump.Format

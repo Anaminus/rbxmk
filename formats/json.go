@@ -74,14 +74,14 @@ func JSON() rbxmk.Format {
 		Options: map[string][]string{
 			"Indent": {rtypes.T_String},
 		},
-		CanDecode: func(g rbxmk.Global, f rbxmk.FormatOptions, typeName string) bool {
+		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			switch typeName {
 			case rtypes.T_Nil, rtypes.T_Bool, rtypes.T_Double, rtypes.T_String, rtypes.T_Array, rtypes.T_Dictionary:
 				return true
 			}
 			return false
 		},
-		Decode: func(g rbxmk.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
+		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
 			var u interface{}
 			j := json.NewDecoder(r)
 			if err := j.Decode(&u); err != nil {
@@ -89,7 +89,7 @@ func JSON() rbxmk.Format {
 			}
 			return decodeJSON(u), nil
 		},
-		Encode: func(g rbxmk.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
+		Encode: func(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.Value) error {
 			j := json.NewEncoder(w)
 			j.SetIndent("", "\t")
 			if v, ok := stringOf(f, "Indent"); ok {
