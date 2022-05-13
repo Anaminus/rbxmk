@@ -166,7 +166,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Dictionary{V: dt.Prim(rtypes.T_Any)}},
+							{Type: dt.Dictionary{V: dt.Prim(rtypes.T_DescFields)}},
 						},
 						Summary:     "Types/DescAction:Methods/Fields/Summary",
 						Description: "Types/DescAction:Methods/Fields/Description",
