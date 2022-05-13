@@ -18,10 +18,10 @@ var HTTP = rbxmk.Library{
 	Open:       openHTTP,
 	Dump:       dumpHTTP,
 	Types: []func() rbxmk.Reflector{
-		reflect.HTTPHeaders,
-		reflect.HTTPOptions,
-		reflect.HTTPRequest,
-		reflect.HTTPResponse,
+		reflect.HttpHeaders,
+		reflect.HttpOptions,
+		reflect.HttpRequest,
+		reflect.HttpResponse,
 	},
 }
 
@@ -32,8 +32,8 @@ func openHTTP(s rbxmk.State) *lua.LTable {
 }
 
 func httpRequest(s rbxmk.State) int {
-	options := s.Pull(1, rtypes.T_HTTPOptions).(rtypes.HTTPOptions)
-	request, err := rbxmk.BeginHTTPRequest(s.World, options)
+	options := s.Pull(1, rtypes.T_HttpOptions).(rtypes.HttpOptions)
+	request, err := rbxmk.BeginHttpRequest(s.World, options)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -46,10 +46,10 @@ func dumpHTTP(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"request": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim(rtypes.T_HTTPOptions)},
+						{Name: "options", Type: dt.Prim(rtypes.T_HttpOptions)},
 					},
 					Returns: dump.Parameters{
-						{Name: "req", Type: dt.Prim(rtypes.T_HTTPRequest)},
+						{Name: "req", Type: dt.Prim(rtypes.T_HttpRequest)},
 					},
 					Summary:     "Libraries/http:Fields/request/Summary",
 					Description: "Libraries/http:Fields/request/Description",

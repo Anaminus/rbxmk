@@ -9,14 +9,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(HTTPOptions) }
-func HTTPOptions() rbxmk.Reflector {
+func init() { register(HttpOptions) }
+func HttpOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: rtypes.T_HTTPOptions,
+		Name: rtypes.T_HttpOptions,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
-			options, ok := v.(rtypes.HTTPOptions)
+			options, ok := v.(rtypes.HttpOptions)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: rtypes.T_HTTPOptions, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_HttpOptions, Got: v.Type()}
 			}
 			table := c.CreateTable(0, 7)
 			if err := c.PushToDictionary(table, "URL", types.String(options.URL)); err != nil {
@@ -59,7 +59,7 @@ func HTTPOptions() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), rtypes.T_HTTPHeaders)
+			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HttpHeaders(nil), rtypes.T_HttpHeaders)
 			if err != nil {
 				return nil, err
 			}
@@ -67,11 +67,11 @@ func HTTPOptions() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			options := rtypes.HTTPOptions{
+			options := rtypes.HttpOptions{
 				URL:            string(url.(types.String)),
 				Method:         string(method.(types.String)),
 				ResponseFormat: responseFormat.(rtypes.FormatSelector),
-				Headers:        headers.(rtypes.HTTPHeaders),
+				Headers:        headers.(rtypes.HttpHeaders),
 				Cookies:        cookies.(rtypes.Cookies),
 			}
 			requestFormat, err := c.PullFromDictionaryOpt(table, "RequestFormat", rtypes.FormatSelector{}, rtypes.T_FormatSelector)
@@ -87,8 +87,8 @@ func HTTPOptions() rbxmk.Reflector {
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case *rtypes.HTTPOptions:
-				*p = v.(rtypes.HTTPOptions)
+			case *rtypes.HttpOptions:
+				*p = v.(rtypes.HttpOptions)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -101,18 +101,18 @@ func HTTPOptions() rbxmk.Reflector {
 					"Method":         dt.Optional{T: dt.Prim(rtypes.T_String)},
 					"RequestFormat":  dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
 					"ResponseFormat": dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
-					"Headers":        dt.Optional{T: dt.Prim(rtypes.T_HTTPHeaders)},
+					"Headers":        dt.Optional{T: dt.Prim(rtypes.T_HttpHeaders)},
 					"Cookies":        dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
 					"Body":           dt.Optional{T: dt.Prim(rtypes.T_Any)},
 				},
-				Summary:     "Types/HTTPOptions:Summary",
-				Description: "Types/HTTPOptions:Description",
+				Summary:     "Types/HttpOptions:Summary",
+				Description: "Types/HttpOptions:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{
 			Cookies,
 			FormatSelector,
-			HTTPHeaders,
+			HttpHeaders,
 			String,
 			Variant,
 		},

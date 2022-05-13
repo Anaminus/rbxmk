@@ -14,7 +14,7 @@ if not id then
 	error(string.format("failed to parse asset ID from URL %q", url), 0)
 end
 local options = {
-	AssetID = id,
+	AssetId = id,
 	Format = "rbxm",
 }
 if useStudioCookies then

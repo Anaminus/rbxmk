@@ -8,16 +8,16 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(HTTPRequest) }
-func HTTPRequest() rbxmk.Reflector {
+func init() { register(HttpRequest) }
+func HttpRequest() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name:     rtypes.T_HTTPRequest,
-		PushTo:   rbxmk.PushPtrTypeTo(rtypes.T_HTTPRequest),
-		PullFrom: rbxmk.PullTypeFrom(rtypes.T_HTTPRequest),
+		Name:     rtypes.T_HttpRequest,
+		PushTo:   rbxmk.PushPtrTypeTo(rtypes.T_HttpRequest),
+		PullFrom: rbxmk.PullTypeFrom(rtypes.T_HttpRequest),
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case **rbxmk.HTTPRequest:
-				*p = v.(*rbxmk.HTTPRequest)
+			case **rbxmk.HttpRequest:
+				*p = v.(*rbxmk.HttpRequest)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -26,7 +26,7 @@ func HTTPRequest() rbxmk.Reflector {
 		Methods: rbxmk.Methods{
 			"Resolve": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					req := v.(*rbxmk.HTTPRequest)
+					req := v.(*rbxmk.HttpRequest)
 					resp, err := req.Resolve()
 					if err != nil {
 						return s.RaiseError("%s", err)
@@ -36,36 +36,36 @@ func HTTPRequest() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Name: "resp", Type: dt.Prim(rtypes.T_HTTPResponse)},
+							{Name: "resp", Type: dt.Prim(rtypes.T_HttpResponse)},
 						},
 						CanError:    true,
-						Summary:     "Types/HTTPRequest:Methods/Resolve/Summary",
-						Description: "Types/HTTPRequest:Methods/Resolve/Description",
+						Summary:     "Types/HttpRequest:Methods/Resolve/Summary",
+						Description: "Types/HttpRequest:Methods/Resolve/Description",
 					}
 				},
 			},
 			"Cancel": {
 				Func: func(s rbxmk.State, v types.Value) int {
-					req := v.(*rbxmk.HTTPRequest)
+					req := v.(*rbxmk.HttpRequest)
 					req.Cancel()
 					return 0
 				},
 				Dump: func() dump.Function {
 					return dump.Function{
-						Summary:     "Types/HTTPRequest:Methods/Cancel/Summary",
-						Description: "Types/HTTPRequest:Methods/Cancel/Description",
+						Summary:     "Types/HttpRequest:Methods/Cancel/Summary",
+						Description: "Types/HttpRequest:Methods/Cancel/Description",
 					}
 				},
 			},
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Summary:     "Types/HTTPRequest:Summary",
-				Description: "Types/HTTPRequest:Description",
+				Summary:     "Types/HttpRequest:Summary",
+				Description: "Types/HttpRequest:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{
-			HTTPResponse,
+			HttpResponse,
 		},
 	}
 }

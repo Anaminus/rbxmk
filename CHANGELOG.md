@@ -4,6 +4,13 @@ branch is the latest unreleased version.
 
 ## imperative
 **Incompatibilities**
+- Identifiers with uppercase acronyms are renamed to lowercase to improve familiarity with Roblox's API. The following APIs are affected:
+	- HTTPHeaders → HttpHeaders
+	- HTTPOptions → HttpOptions
+	- HTTPRequest → HttpRequest
+	- HTTPResponse → HttpResponse
+	- RBXAssetOptions → RbxAssetOptions
+		- RbxAssetOptions.**AssetID** → RbxAssetOptions.**AssetId**
 - The RootDesc type is renamed to [Desc](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-desc).
 	- RootDesc.new is now [Desc.new](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-descnew)
 - The Optional functions under the [type library](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-types) are moved to constructors of the [Optional](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-optional) type.

@@ -6,50 +6,50 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_HTTPRequest = "HTTPRequest"
+const T_HttpRequest = "HttpRequest"
 
-const T_HTTPOptions = "HTTPOptions"
+const T_HttpOptions = "HttpOptions"
 
-// HTTPOptions specifies options to an HTTP request.
-type HTTPOptions struct {
+// HttpOptions specifies options to an HTTP request.
+type HttpOptions struct {
 	URL            string
 	Method         string
 	RequestFormat  FormatSelector
 	ResponseFormat FormatSelector
-	Headers        HTTPHeaders
+	Headers        HttpHeaders
 	Cookies        Cookies
 	Body           types.Value
 }
 
 // Type returns a string identifying the type of the value.
-func (HTTPOptions) Type() string {
-	return T_HTTPOptions
+func (HttpOptions) Type() string {
+	return T_HttpOptions
 }
 
-const T_HTTPResponse = "HTTPResponse"
+const T_HttpResponse = "HttpResponse"
 
-// HTTPResponse contains the response to an HTTP request.
-type HTTPResponse struct {
+// HttpResponse contains the response to an HTTP request.
+type HttpResponse struct {
 	Success       bool
 	StatusCode    int
 	StatusMessage string
-	Headers       HTTPHeaders
+	Headers       HttpHeaders
 	Cookies       Cookies
 	Body          types.Value
 }
 
 // Type returns a string identifying the type of the value.
-func (HTTPResponse) Type() string {
-	return T_HTTPResponse
+func (HttpResponse) Type() string {
+	return T_HttpResponse
 }
 
-const T_HTTPHeaders = "HTTPHeaders"
+const T_HttpHeaders = "HttpHeaders"
 
-// HTTPHeaders contains the headers of an HTTP request or response.
-type HTTPHeaders http.Header
+// HttpHeaders contains the headers of an HTTP request or response.
+type HttpHeaders http.Header
 
 // AppendCookie formats and adds the given cookies to the Cookie header.
-func (h HTTPHeaders) AppendCookies(c Cookies) HTTPHeaders {
+func (h HttpHeaders) AppendCookies(c Cookies) HttpHeaders {
 	req := http.Request{Header: http.Header(h)}
 	for _, cookie := range c {
 		req.AddCookie(cookie.Cookie)
@@ -58,7 +58,7 @@ func (h HTTPHeaders) AppendCookies(c Cookies) HTTPHeaders {
 }
 
 // AppendSetCookie formats and adds the given cookies to the Set-Cookie header.
-func (h HTTPHeaders) AppendSetCookies(c Cookies) HTTPHeaders {
+func (h HttpHeaders) AppendSetCookies(c Cookies) HttpHeaders {
 	for _, cookie := range c {
 		if v := cookie.Cookie.String(); v != "" {
 			http.Header(h).Add("Set-Cookie", v)
@@ -68,12 +68,12 @@ func (h HTTPHeaders) AppendSetCookies(c Cookies) HTTPHeaders {
 }
 
 // RetrieveCookies parses the Cookie header.
-func (h HTTPHeaders) RetrieveCookies() Cookies {
-	return HTTPHeaders{"Set-Cookie": h["Cookie"]}.RetrieveSetCookies()
+func (h HttpHeaders) RetrieveCookies() Cookies {
+	return HttpHeaders{"Set-Cookie": h["Cookie"]}.RetrieveSetCookies()
 }
 
 // RetrieveSetCookies parses the Set-Cookie header.
-func (h HTTPHeaders) RetrieveSetCookies() Cookies {
+func (h HttpHeaders) RetrieveSetCookies() Cookies {
 	cs := (&http.Response{Header: http.Header(h)}).Cookies()
 	cookies := make(Cookies, len(cs))
 	for i, c := range cs {
@@ -83,21 +83,21 @@ func (h HTTPHeaders) RetrieveSetCookies() Cookies {
 }
 
 // Type returns a string identifying the type of the value.
-func (HTTPHeaders) Type() string {
-	return T_HTTPHeaders
+func (HttpHeaders) Type() string {
+	return T_HttpHeaders
 }
 
-const T_RBXAssetOptions = "RBXAssetOptions"
+const T_RbxAssetOptions = "RbxAssetOptions"
 
-// RBXAssetOptions specifies options to a Roblox web request.
-type RBXAssetOptions struct {
-	AssetID int64
+// RbxAssetOptions specifies options to a Roblox web request.
+type RbxAssetOptions struct {
+	AssetId int64
 	Cookies Cookies
 	Format  FormatSelector
 	Body    types.Value
 }
 
 // Type returns a string identifying the type of the value.
-func (RBXAssetOptions) Type() string {
-	return T_RBXAssetOptions
+func (RbxAssetOptions) Type() string {
+	return T_RbxAssetOptions
 }

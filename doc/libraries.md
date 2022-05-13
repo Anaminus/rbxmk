@@ -437,11 +437,11 @@ Name                         | Description
 
 ### http.request
 [http.request]: #user-content-httprequest
-<code>http.request(options: [HTTPOptions][HTTPOptions]): (req: [HTTPRequest][HTTPRequest])</code>
+<code>http.request(options: [HttpOptions][HttpOptions]): (req: [HttpRequest][HttpRequest])</code>
 
 The **request** function begins a request with the specified
-[options][HTTPOptions]. Returns a [request object][HTTPRequest] that may be
-[resolved][HTTPRequest.Resolve] or [canceled][HTTPRequest.Cancel]. Throws an
+[options][HttpOptions]. Returns a [request object][HttpRequest] that may be
+[resolved][HttpRequest.Resolve] or [canceled][HttpRequest.Cancel]. Throws an
 error if the request could not be started.
 
 ## math
@@ -577,21 +577,21 @@ Name                                 | Description
 
 ### rbxassetid.read
 [rbxassetid.read]: #user-content-rbxassetidread
-<code>rbxassetid.read(options: [RBXAssetOptions][RBXAssetOptions]): (value: [any](##))</code>
+<code>rbxassetid.read(options: [RbxAssetOptions][RbxAssetOptions]): (value: [any](##))</code>
 
 The **read** function downloads an asset according to the given
-[options][RBXAssetOptions]. Returns the content of the asset corresponding to
-AssetID, decoded according to Format.
+[options][RbxAssetOptions]. Returns the content of the asset corresponding to
+AssetId, decoded according to Format.
 
 Throws an error if a problem occurred while downloading the asset.
 
 ### rbxassetid.write
 [rbxassetid.write]: #user-content-rbxassetidwrite
-<code>rbxassetid.write(options: [RBXAssetOptions][RBXAssetOptions])</code>
+<code>rbxassetid.write(options: [RbxAssetOptions][RbxAssetOptions])</code>
 
 The **write** function uploads to an existing asset according to the given
-[options][RBXAssetOptions]. The Body is encoded according to Format, then
-uploaded to AssetID. AssetID must be the ID of an existing asset.
+[options][RbxAssetOptions]. The Body is encoded according to Format, then
+uploaded to AssetId. AssetId must be the ID of an existing asset.
 
 Throws an error if a problem occurred while uploading the asset.
 
@@ -770,10 +770,10 @@ print(typeof(model.WorldPivotData.Value)) --> CFrame
 [EnumItemDesc]: types.md#user-content-enumitemdesc
 [EventDesc]: types.md#user-content-eventdesc
 [FunctionDesc]: types.md#user-content-functiondesc
-[HTTPOptions]: types.md#user-content-httpoptions
-[HTTPRequest]: types.md#user-content-httprequest
-[HTTPRequest.Resolve]: types.md#user-content-httprequestresolve
-[HTTPRequest.Cancel]: types.md#user-content-httprequestcancel
+[HttpOptions]: types.md#user-content-httpoptions
+[HttpRequest]: types.md#user-content-httprequest
+[HttpRequest.Resolve]: types.md#user-content-httprequestresolve
+[HttpRequest.Cancel]: types.md#user-content-httprequestcancel
 [Instance.sym.AttrConfig]: types.md#user-content-instancesymattrconfig
 [Instance.sym.Desc]: types.md#user-content-instancesymdesc
 [Instance.sym.IsService]: types.md#user-content-instancesymisservice
@@ -784,6 +784,6 @@ print(typeof(model.WorldPivotData.Value)) --> CFrame
 [Instance]: types.md#user-content-instance
 [ParameterDesc]: types.md#user-content-parameterdesc
 [PropertyDesc]: types.md#user-content-propertydesc
-[RBXAssetOptions]: types.md#user-content-rbxassetoptions
+[RbxAssetOptions]: types.md#user-content-rbxassetoptions
 [Desc]: types.md#user-content-desc
 [TypeDesc]: types.md#user-content-typedesc

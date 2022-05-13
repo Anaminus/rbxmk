@@ -4,7 +4,7 @@
 
 local id, output = ...
 local asset = rbxassetid.read({
-	AssetID = id,
+	AssetId = id,
 	Format = "bin",
 })
 fs.write(output, asset, "bin")

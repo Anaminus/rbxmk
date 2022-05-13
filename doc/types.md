@@ -20,10 +20,10 @@ This document contains a reference to the types available to rbxmk scripts.
 13. [Faces][Faces]
 14. [FormatSelector][FormatSelector]
 15. [FunctionDesc][FunctionDesc]
-16. [HTTPHeaders][HTTPHeaders]
-17. [HTTPOptions][HTTPOptions]
-18. [HTTPRequest][HTTPRequest]
-19. [HTTPResponse][HTTPResponse]
+16. [HttpHeaders][HttpHeaders]
+17. [HttpOptions][HttpOptions]
+18. [HttpRequest][HttpRequest]
+19. [HttpResponse][HttpResponse]
 20. [Instance][Instance]
 21. [Intlike][Intlike]
 22. [MemberDesc][MemberDesc]
@@ -31,7 +31,7 @@ This document contains a reference to the types available to rbxmk scripts.
 24. [Optional][Optional]
 25. [ParameterDesc][ParameterDesc]
 26. [PropertyDesc][PropertyDesc]
-27. [RBXAssetOptions][RBXAssetOptions]
+27. [RbxAssetOptions][RbxAssetOptions]
 28. [Desc][Desc]
 29. [Stringlike][Stringlike]
 30. [TypeDesc][TypeDesc]
@@ -423,11 +423,11 @@ Security   | [string](##)                     | The security context required to
 Parameters | {[ParameterDesc][ParameterDesc]} | The parameters of the function.
 Tags       | {[string](##)}                   | The tags set for the member.
 
-## HTTPHeaders
-[HTTPHeaders]: #user-content-httpheaders
-<code>type HTTPHeaders = {\[[string](##)\]: [string](##)\|{[string](##)}}</code>
+## HttpHeaders
+[HttpHeaders]: #user-content-httpheaders
+<code>type HttpHeaders = {\[[string](##)\]: [string](##)\|{[string](##)}}</code>
 
-The **HTTPHeaders** type is a table that specifies the headers of an HTTP
+The **HttpHeaders** type is a table that specifies the headers of an HTTP
 request or response. Each entry consists of a header name mapped to a string
 value. If a header requires multiple values, the name may be mapped to an array
 of values instead.
@@ -435,11 +435,11 @@ of values instead.
 For response headers, a header is always mapped to an array, and each array will
 have at least one value.
 
-## HTTPOptions
-[HTTPOptions]: #user-content-httpoptions
-<code>type HTTPOptions = {URL: [string](##), Method: [string](##)?, RequestFormat: [FormatSelector][FormatSelector], ResponseFormat: [FormatSelector][FormatSelector], Headers: [HTTPHeaders][HTTPHeaders]?, Cookies: [Cookies][Cookies]?, Body: [any](##)?}</code>
+## HttpOptions
+[HttpOptions]: #user-content-httpoptions
+<code>type HttpOptions = {URL: [string](##), Method: [string](##)?, RequestFormat: [FormatSelector][FormatSelector], ResponseFormat: [FormatSelector][FormatSelector], Headers: [HttpHeaders][HttpHeaders]?, Cookies: [Cookies][Cookies]?, Body: [any](##)?}</code>
 
-The **HTTPOptions** type is a table that specifies how an HTTP request is made.
+The **HttpOptions** type is a table that specifies how an HTTP request is made.
 It has the following fields:
 
 Field          | Type                              | Description
@@ -448,7 +448,7 @@ URL            | [string](##)                      | The URL to make to request 
 Method         | [string](##)?                     | The HTTP method. Defaults to GET.
 RequestFormat  | [FormatSelector][FormatSelector]? | The format used to encode the request body.
 ResponseFormat | [FormatSelector][FormatSelector]? | The format used to decode the response body.
-Headers        | [HTTPHeaders][HTTPHeaders]?       | The HTTP headers to include with the request.
+Headers        | [HttpHeaders][HttpHeaders]?       | The HTTP headers to include with the request.
 Cookies        | [Cookies][Cookies]?               | Cookies to append to the Cookie header.
 Body           | [any](##)?                        | The body of the request, to be encoded by the specified format.
 
@@ -458,36 +458,36 @@ is unspecified, then no response body is returned.
 Use of the Cookies field ensures that cookies sent with the request are
 well-formed, and is preferred over setting the Cookie header directly.
 
-## HTTPRequest
-[HTTPRequest]: #user-content-httprequest
-<code>type HTTPRequest</code>
+## HttpRequest
+[HttpRequest]: #user-content-httprequest
+<code>type HttpRequest</code>
 
-The **HTTPRequest** type represents a pending HTTP request. It has the following
+The **HttpRequest** type represents a pending HTTP request. It has the following
 members:
 
 Member                                     | Kind
 -------------------------------------------|-----
-[HTTPRequest.Resolve][HTTPRequest.Resolve] | method
-[HTTPRequest.Cancel][HTTPRequest.Cancel]   | method
+[HttpRequest.Resolve][HttpRequest.Resolve] | method
+[HttpRequest.Cancel][HttpRequest.Cancel]   | method
 
-### HTTPRequest.Resolve
-[HTTPRequest.Resolve]: #user-content-httprequestresolve
-<code>HTTPRequest:Resolve(): (resp: [HTTPResponse][HTTPResponse])</code>
+### HttpRequest.Resolve
+[HttpRequest.Resolve]: #user-content-httprequestresolve
+<code>HttpRequest:Resolve(): (resp: [HttpResponse][HttpResponse])</code>
 
 The **Resolve** method blocks until the request has finished, and returns the
 response. Throws an error if a problem occurred while resolving the request.
 
-### HTTPRequest.Cancel
-[HTTPRequest.Cancel]: #user-content-httprequestcancel
-<code>HTTPRequest:Cancel()</code>
+### HttpRequest.Cancel
+[HttpRequest.Cancel]: #user-content-httprequestcancel
+<code>HttpRequest:Cancel()</code>
 
 The **Cancel** method cancels the pending request.
 
-## HTTPResponse
-[HTTPResponse]: #user-content-httpresponse
-<code>type HTTPResponse = {Success: [bool](##), StatusCode: [int](##), StatusMessage: [string](##), Headers: [HTTPHeaders][HTTPHeaders], Cookies: [Cookies][Cookies], Body: [any](##)?}</code>
+## HttpResponse
+[HttpResponse]: #user-content-httpresponse
+<code>type HttpResponse = {Success: [bool](##), StatusCode: [int](##), StatusMessage: [string](##), Headers: [HttpHeaders][HttpHeaders], Cookies: [Cookies][Cookies], Body: [any](##)?}</code>
 
-The **HTTPResponse** type is a table that contains the response of a request. It
+The **HttpResponse** type is a table that contains the response of a request. It
 has the following fields:
 
 Field         | Type                       | Description
@@ -495,7 +495,7 @@ Field         | Type                       | Description
 Success       | [bool](##)                 | Whether the request succeeded. True if StatusCode between 200 and 299.
 StatusCode    | [int](##)                  | The HTTP status code of the response.
 StatusMessage | [string](##)               | A readable message corresponding to the StatusCode.
-Headers       | [HTTPHeaders][HTTPHeaders] | A set of response headers.
+Headers       | [HttpHeaders][HttpHeaders] | A set of response headers.
 Cookies       | [Cookies][Cookies]         | Cookies parsed from the Set-Cookie header.
 Body          | [any](##)?                 | The decoded body of the response.
 
@@ -950,16 +950,16 @@ Tags          | {[string](##)}       | The tags set for the member.
 ValueType     | [TypeDesc][TypeDesc] | The type of the value of the property.
 WriteSecurity | [string](##)         | The security context required to set the member.
 
-## RBXAssetOptions
-[RBXAssetOptions]: #user-content-rbxassetoptions
-<code>type RBXAssetOptions = {AssetID: [int64](##), Cookies: [Cookies][Cookies]?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
+## RbxAssetOptions
+[RbxAssetOptions]: #user-content-rbxassetoptions
+<code>type RbxAssetOptions = {AssetId: [int64](##), Cookies: [Cookies][Cookies]?, Format: [FormatSelector][FormatSelector], Body: [any](##)?}</code>
 
-The **RBXAssetOptions** type is a table that specifies the options of a request
+The **RbxAssetOptions** type is a table that specifies the options of a request
 to an asset on the Roblox website. It has the following fields:
 
 Field          | Type                             | Description
 ---------------|----------------------------------|------------
-AssetID        | [int64](##)                      | The ID of the asset to request.
+AssetId        | [int64](##)                      | The ID of the asset to request.
 Cookies        | [Cookies][Cookies]?              | Optional cookies to send with requests, usually used for authentication.
 Format         | [FormatSelector][FormatSelector] | The format used to encode or decode an asset.
 Body           | [any](##)?                       | The body of an asset, to be encoded by the specified format.

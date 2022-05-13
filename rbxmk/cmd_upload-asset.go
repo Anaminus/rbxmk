@@ -100,17 +100,17 @@ func (c *UploadAssetCommand) Run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("read file: %w", err)
 	}
 
-	options := rtypes.RBXAssetOptions{
-		AssetID: c.ID,
+	options := rtypes.RbxAssetOptions{
+		AssetId: c.ID,
 		Cookies: c.Cookies,
 		Format:  rtypes.FormatSelector{Format: assetFormat.Name},
 		Body:    body,
 	}
 	var id int64 = -1
 	if c.ID == 0 {
-		id, err = library.RBXAssetIDSource{World: world}.Create(options)
+		id, err = library.RbxAssetIdSource{World: world}.Create(options)
 	} else {
-		err = library.RBXAssetIDSource{World: world}.Write(options)
+		err = library.RbxAssetIdSource{World: world}.Write(options)
 	}
 	if err != nil {
 		return fmt.Errorf("upload asset: %w", err)

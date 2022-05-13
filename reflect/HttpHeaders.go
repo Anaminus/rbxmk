@@ -11,14 +11,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(HTTPHeaders) }
-func HTTPHeaders() rbxmk.Reflector {
+func init() { register(HttpHeaders) }
+func HttpHeaders() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: rtypes.T_HTTPHeaders,
+		Name: rtypes.T_HttpHeaders,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
-			headers, ok := v.(rtypes.HTTPHeaders)
+			headers, ok := v.(rtypes.HttpHeaders)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: rtypes.T_HTTPHeaders, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_HttpHeaders, Got: v.Type()}
 			}
 			table := c.CreateTable(0, len(headers))
 			for name, values := range headers {
@@ -35,7 +35,7 @@ func HTTPHeaders() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			headers := make(rtypes.HTTPHeaders)
+			headers := make(rtypes.HttpHeaders)
 			err = table.ForEach(func(k, lv lua.LValue) error {
 				name, ok := k.(lua.LString)
 				if !ok {
@@ -55,8 +55,8 @@ func HTTPHeaders() rbxmk.Reflector {
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case *rtypes.HTTPHeaders:
-				*p = v.(rtypes.HTTPHeaders)
+			case *rtypes.HttpHeaders:
+				*p = v.(rtypes.HttpHeaders)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -65,8 +65,8 @@ func HTTPHeaders() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying:  dt.Map{K: dt.Prim(rtypes.T_String), V: dt.Or{dt.Prim(rtypes.T_String), dt.Array{T: dt.Prim(rtypes.T_String)}}},
-				Summary:     "Types/HTTPHeaders:Summary",
-				Description: "Types/HTTPHeaders:Description",
+				Summary:     "Types/HttpHeaders:Summary",
+				Description: "Types/HttpHeaders:Description",
 			}
 		},
 	}

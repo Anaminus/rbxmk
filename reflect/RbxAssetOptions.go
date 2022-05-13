@@ -11,20 +11,20 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(RBXAssetOptions) }
-func RBXAssetOptions() rbxmk.Reflector {
+func init() { register(RbxAssetOptions) }
+func RbxAssetOptions() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: rtypes.T_RBXAssetOptions,
+		Name: rtypes.T_RbxAssetOptions,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
-			options, ok := v.(rtypes.RBXAssetOptions)
+			options, ok := v.(rtypes.RbxAssetOptions)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: rtypes.T_RBXAssetOptions, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_RbxAssetOptions, Got: v.Type()}
 			}
-			if options.AssetID <= 0 {
-				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
+			if options.AssetId <= 0 {
+				return nil, fmt.Errorf("field AssetId (%d) must be greater than 0", options.AssetId)
 			}
 			table := c.CreateTable(0, 4)
-			if err := c.PushToDictionary(table, "AssetID", types.Int64(options.AssetID)); err != nil {
+			if err := c.PushToDictionary(table, "AssetId", types.Int64(options.AssetId)); err != nil {
 				return nil, err
 			}
 			if err := c.PushToDictionary(table, "Format", options.Format); err != nil {
@@ -43,7 +43,7 @@ func RBXAssetOptions() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: rtypes.T_Table, Got: lv.Type().String()}
 			}
-			assetID, err := c.PullFromDictionary(table, "AssetID", rtypes.T_Int64)
+			assetID, err := c.PullFromDictionary(table, "AssetId", rtypes.T_Int64)
 			if err != nil {
 				return nil, err
 			}
@@ -51,8 +51,8 @@ func RBXAssetOptions() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			options := rtypes.RBXAssetOptions{
-				AssetID: int64(assetID.(types.Int64)),
+			options := rtypes.RbxAssetOptions{
+				AssetId: int64(assetID.(types.Int64)),
 				Cookies: cookies.(rtypes.Cookies),
 			}
 			format, err := c.PullFromDictionary(table, "Format", rtypes.T_FormatSelector)
@@ -64,15 +64,15 @@ func RBXAssetOptions() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			if options.AssetID <= 0 {
-				return nil, fmt.Errorf("field AssetID (%d) must be greater than 0", options.AssetID)
+			if options.AssetId <= 0 {
+				return nil, fmt.Errorf("field AssetId (%d) must be greater than 0", options.AssetId)
 			}
 			return options, nil
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case *rtypes.RBXAssetOptions:
-				*p = v.(rtypes.RBXAssetOptions)
+			case *rtypes.RbxAssetOptions:
+				*p = v.(rtypes.RbxAssetOptions)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -81,13 +81,13 @@ func RBXAssetOptions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Underlying: dt.Struct{
-					"AssetID": dt.Prim(rtypes.T_Int64),
+					"AssetId": dt.Prim(rtypes.T_Int64),
 					"Cookies": dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
 					"Format":  dt.Prim(rtypes.T_FormatSelector),
 					"Body":    dt.Optional{T: dt.Prim(rtypes.T_Any)},
 				},
-				Summary:     "Types/RBXAssetOptions:Summary",
-				Description: "Types/RBXAssetOptions:Description",
+				Summary:     "Types/RbxAssetOptions:Summary",
+				Description: "Types/RbxAssetOptions:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{

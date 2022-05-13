@@ -7,15 +7,15 @@
 -- Example:
 --     rbxmk run download-audio.rbxmk.lua assetList.txt assets
 
-local assetIDs, outputDirectory = ...
+local assetIds, outputDirectory = ...
 fs.mkdir(outputDirectory, true)
 
-local list = fs.read(assetIDs, "bin")
+local list = fs.read(assetIds, "bin")
 for id in string.gmatch(list, "[^\r\n]+") do
 	id = tonumber(id)
 	if id then
 		local ok, data = pcall(rbxassetid.read, {
-			AssetID = id,
+			AssetId = id,
 			Format = "bin",
 		})
 		if not ok then

@@ -9,14 +9,14 @@ import (
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
-// HTTPRequest performs and HTTP request with a promise-like API.
-type HTTPRequest struct {
+// HttpRequest performs and HTTP request with a promise-like API.
+type HttpRequest struct {
 	global rtypes.Global
 
 	cancel context.CancelFunc
 
 	respch chan *http.Response
-	resp   *rtypes.HTTPResponse
+	resp   *rtypes.HttpResponse
 
 	errch chan error
 	err   error
@@ -26,12 +26,12 @@ type HTTPRequest struct {
 }
 
 // Type returns a string identifying the type of the value.
-func (*HTTPRequest) Type() string {
-	return "HTTPRequest"
+func (*HttpRequest) Type() string {
+	return "HttpRequest"
 }
 
 // do concurrently begins the request.
-func (r *HTTPRequest) do(client *Client, req *http.Request) {
+func (r *HttpRequest) do(client *Client, req *http.Request) {
 	defer close(r.respch)
 	defer close(r.errch)
 	resp, err := client.Do(req)
@@ -43,15 +43,15 @@ func (r *HTTPRequest) do(client *Client, req *http.Request) {
 }
 
 // Resolve blocks until the request resolves.
-func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
+func (r *HttpRequest) Resolve() (*rtypes.HttpResponse, error) {
 	if r.resp != nil || r.err != nil {
 		return r.resp, r.err
 	}
 	select {
 	case resp := <-r.respch:
 		defer resp.Body.Close()
-		headers := rtypes.HTTPHeaders(resp.Header)
-		r.resp = &rtypes.HTTPResponse{
+		headers := rtypes.HttpHeaders(resp.Header)
+		r.resp = &rtypes.HttpResponse{
 			Success:       200 <= resp.StatusCode && resp.StatusCode < 300,
 			StatusCode:    resp.StatusCode,
 			StatusMessage: resp.Status,
@@ -70,7 +70,7 @@ func (r *HTTPRequest) Resolve() (*rtypes.HTTPResponse, error) {
 }
 
 // Cancel cancels the request.
-func (r *HTTPRequest) Cancel() {
+func (r *HttpRequest) Cancel() {
 	if r.resp != nil || r.err != nil {
 		return
 	}
@@ -80,11 +80,11 @@ func (r *HTTPRequest) Cancel() {
 	r.err = <-r.errch
 }
 
-// BeginHTTPRequest begins an HTTP request according to the given options, in
+// BeginHttpRequest begins an HTTP request according to the given options, in
 // the context of the given world.
 //
 // The request starts immediately, and can either be resolved or canceled.
-func BeginHTTPRequest(w *World, options rtypes.HTTPOptions) (request *HTTPRequest, err error) {
+func BeginHttpRequest(w *World, options rtypes.HttpOptions) (request *HttpRequest, err error) {
 	var buf *bytes.Buffer
 	if options.RequestFormat.Format != "" {
 		reqfmt := w.Format(options.RequestFormat.Format)
@@ -120,12 +120,12 @@ func BeginHTTPRequest(w *World, options rtypes.HTTPOptions) (request *HTTPReques
 		return nil, err
 	}
 	if options.Headers == nil {
-		options.Headers = rtypes.HTTPHeaders{}
+		options.Headers = rtypes.HttpHeaders{}
 	}
 	req.Header = http.Header(options.Headers.AppendCookies(options.Cookies))
 
 	// Push request object.
-	request = &HTTPRequest{
+	request = &HttpRequest{
 		global: w.Global,
 		cancel: cancel,
 		respch: make(chan *http.Response),
@@ -137,10 +137,10 @@ func BeginHTTPRequest(w *World, options rtypes.HTTPOptions) (request *HTTPReques
 	return request, nil
 }
 
-// DoHTTPRequest begins and resolves an HTTPRequest. Returns an error if the
+// DoHttpRequest begins and resolves an HttpRequest. Returns an error if the
 // reponse did not return a successful status.
-func DoHTTPRequest(w *World, options rtypes.HTTPOptions) (resp *rtypes.HTTPResponse, err error) {
-	request, err := BeginHTTPRequest(w, options)
+func DoHttpRequest(w *World, options rtypes.HttpOptions) (resp *rtypes.HttpResponse, err error) {
+	request, err := BeginHttpRequest(w, options)
 	if err != nil {
 		return nil, err
 	}

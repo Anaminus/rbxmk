@@ -124,11 +124,11 @@ local game = remodel.readPlaceAsset("123456789")
 rbxmk:
 ```lua
 -- No authentication.
-local game = rbxassetid.read({AssetID=123456789, Format="rbxl"})
+local game = rbxassetid.read({AssetId=123456789, Format="rbxl"})
 
 -- Using REMODEL_AUTH environment variable for authentication.
 local auth = {Cookie.new(".ROBLOSECURITY", os.getenv("REMODEL_AUTH") or "")}
-local game = rbxassetid.read({AssetID=123456789, Format="rbxl", Cookies=auth})
+local game = rbxassetid.read({AssetId=123456789, Format="rbxl", Cookies=auth})
 ```
 
 ### remodel.readModelAsset
@@ -140,11 +140,11 @@ local model = remodel.readModelAsset("123456789")
 rbxmk:
 ```lua
 -- No authentication.
-local model = rbxassetid.read({AssetID=123456789, Format="rbxm"}):GetChildren()
+local model = rbxassetid.read({AssetId=123456789, Format="rbxm"}):GetChildren()
 
 -- Using REMODEL_AUTH environment variable for authentication.
 local auth = {Cookie.new(".ROBLOSECURITY", os.getenv("REMODEL_AUTH") or "")}
-local model = rbxassetid.read({AssetID=123456789, Format="rbxm", Cookies=auth}):GetChildren()
+local model = rbxassetid.read({AssetId=123456789, Format="rbxm", Cookies=auth}):GetChildren()
 ```
 
 ### remodel.writePlaceFile
@@ -189,7 +189,7 @@ rbxmk:
 ```lua
 -- Using REMODEL_AUTH environment variable for authentication.
 local auth = {Cookie.new(".ROBLOSECURITY", os.getenv("REMODEL_AUTH") or "")}
-rbxassetid.write({AssetID=123456789, Format="rbxl", Body=game})
+rbxassetid.write({AssetId=123456789, Format="rbxl", Body=game})
 ```
 
 
@@ -203,7 +203,7 @@ rbxmk:
 ```lua
 -- Using REMODEL_AUTH environment variable for authentication.
 local auth = {Cookie.new(".ROBLOSECURITY", os.getenv("REMODEL_AUTH") or "")}
-rbxassetid.write({AssetID=123456789, Format="rbxm", Body=instance})
+rbxassetid.write({AssetId=123456789, Format="rbxm", Body=instance})
 ```
 
 ### remodel.getRawProperty

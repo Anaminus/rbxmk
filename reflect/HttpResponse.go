@@ -9,14 +9,14 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func init() { register(HTTPResponse) }
-func HTTPResponse() rbxmk.Reflector {
+func init() { register(HttpResponse) }
+func HttpResponse() rbxmk.Reflector {
 	return rbxmk.Reflector{
-		Name: rtypes.T_HTTPResponse,
+		Name: rtypes.T_HttpResponse,
 		PushTo: func(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
-			resp, ok := v.(rtypes.HTTPResponse)
+			resp, ok := v.(rtypes.HttpResponse)
 			if !ok {
-				return nil, rbxmk.TypeError{Want: rtypes.T_HTTPResponse, Got: v.Type()}
+				return nil, rbxmk.TypeError{Want: rtypes.T_HttpResponse, Got: v.Type()}
 			}
 			table := c.CreateTable(0, 5)
 			if err := c.PushToDictionary(table, "Success", types.Bool(resp.Success)); err != nil {
@@ -56,7 +56,7 @@ func HTTPResponse() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HTTPHeaders(nil), rtypes.T_HTTPHeaders)
+			headers, err := c.PullFromDictionaryOpt(table, "Headers", rtypes.HttpHeaders(nil), rtypes.T_HttpHeaders)
 			if err != nil {
 				return nil, err
 			}
@@ -68,11 +68,11 @@ func HTTPResponse() rbxmk.Reflector {
 			if err != nil {
 				return nil, err
 			}
-			resp := rtypes.HTTPResponse{
+			resp := rtypes.HttpResponse{
 				Success:       bool(success.(types.Bool)),
 				StatusCode:    int(statusCode.(types.Int)),
 				StatusMessage: string(statusMessage.(types.String)),
-				Headers:       headers.(rtypes.HTTPHeaders),
+				Headers:       headers.(rtypes.HttpHeaders),
 				Cookies:       cookies.(rtypes.Cookies),
 				Body:          body,
 			}
@@ -80,8 +80,8 @@ func HTTPResponse() rbxmk.Reflector {
 		},
 		SetTo: func(p interface{}, v types.Value) error {
 			switch p := p.(type) {
-			case *rtypes.HTTPResponse:
-				*p = v.(rtypes.HTTPResponse)
+			case *rtypes.HttpResponse:
+				*p = v.(rtypes.HttpResponse)
 			default:
 				return setPtrErr(p, v)
 			}
@@ -93,18 +93,18 @@ func HTTPResponse() rbxmk.Reflector {
 					"Success":       dt.Prim(rtypes.T_Bool),
 					"StatusCode":    dt.Prim(rtypes.T_Int),
 					"StatusMessage": dt.Prim(rtypes.T_String),
-					"Headers":       dt.Prim(rtypes.T_HTTPHeaders),
+					"Headers":       dt.Prim(rtypes.T_HttpHeaders),
 					"Cookies":       dt.Prim(rtypes.T_Cookies),
 					"Body":          dt.Optional{T: dt.Prim(rtypes.T_Variant)},
 				},
-				Summary:     "Types/HTTPResponse:Summary",
-				Description: "Types/HTTPResponse:Description",
+				Summary:     "Types/HttpResponse:Summary",
+				Description: "Types/HttpResponse:Description",
 			}
 		},
 		Types: []func() rbxmk.Reflector{
 			Bool,
 			Cookies,
-			HTTPHeaders,
+			HttpHeaders,
 			Int,
 			String,
 			Variant,

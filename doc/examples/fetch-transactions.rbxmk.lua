@@ -51,7 +51,7 @@ local CurrentUser do
 		return
 	end
 	CurrentUser = {
-		ID = resp.Body.id,
+		id = resp.Body.id,
 		name = resp.Body.name,
 		displayName = resp.Body.displayName,
 	}
@@ -60,7 +60,7 @@ end
 local function getPage(txnType, next)
 	local txnURL = "https://economy.roblox.com/v2/users/%d/transactions?transactionType=%s&limit=100&cursor=%s"
 	local resp = http.request({
-		URL = string.format(txnURL, CurrentUser.ID, txnType, next or ""),
+		URL = string.format(txnURL, CurrentUser.id, txnType, next or ""),
 		Method = "GET",
 		ResponseFormat = "json",
 		Cookies = cookies,

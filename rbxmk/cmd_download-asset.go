@@ -76,8 +76,8 @@ func (c *DownloadAssetCommand) Run(cmd *cobra.Command, args []string) error {
 	}
 
 	// Download asset.
-	body, err := library.RBXAssetIDSource{World: world}.Read(rtypes.RBXAssetOptions{
-		AssetID: c.ID,
+	body, err := library.RbxAssetIdSource{World: world}.Read(rtypes.RbxAssetOptions{
+		AssetId: c.ID,
 		Cookies: c.Cookies,
 		Format:  rtypes.FormatSelector{Format: assetFormat.Name},
 	})

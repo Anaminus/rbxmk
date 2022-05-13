@@ -18,20 +18,20 @@ import (
 const rbxassetidReadURL = "https://assetdelivery.roblox.com/v1/assetId/%d"
 const rbxassetidWriteURL = "https://data.roblox.com/Data/Upload.ashx?assetid=%d"
 
-func init() { register(RBXAssetID) }
+func init() { register(RbxAssetId) }
 
-var RBXAssetID = rbxmk.Library{
+var RbxAssetId = rbxmk.Library{
 	Name:       "rbxassetid",
 	ImportedAs: "rbxassetid",
 	Priority:   10,
-	Open:       openRBXAssetID,
-	Dump:       dumpRBXAssetID,
+	Open:       openRbxAssetId,
+	Dump:       dumpRbxAssetId,
 	Types: []func() rbxmk.Reflector{
-		reflect.RBXAssetOptions,
+		reflect.RbxAssetOptions,
 	},
 }
 
-func openRBXAssetID(s rbxmk.State) *lua.LTable {
+func openRbxAssetId(s rbxmk.State) *lua.LTable {
 	lib := s.L.CreateTable(0, 2)
 	lib.RawSetString("read", s.WrapFunc(rbxassetidRead))
 	lib.RawSetString("write", s.WrapFunc(rbxassetidWrite))
@@ -39,8 +39,8 @@ func openRBXAssetID(s rbxmk.State) *lua.LTable {
 }
 
 func rbxassetidRead(s rbxmk.State) int {
-	options := s.Pull(1, rtypes.T_RBXAssetOptions).(rtypes.RBXAssetOptions)
-	body, err := RBXAssetIDSource{World: s.World}.Read(options)
+	options := s.Pull(1, rtypes.T_RbxAssetOptions).(rtypes.RbxAssetOptions)
+	body, err := RbxAssetIdSource{World: s.World}.Read(options)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
@@ -48,21 +48,21 @@ func rbxassetidRead(s rbxmk.State) int {
 }
 
 func rbxassetidWrite(s rbxmk.State) int {
-	options := s.Pull(1, rtypes.T_RBXAssetOptions).(rtypes.RBXAssetOptions)
-	err := RBXAssetIDSource{World: s.World}.Write(options)
+	options := s.Pull(1, rtypes.T_RbxAssetOptions).(rtypes.RbxAssetOptions)
+	err := RbxAssetIdSource{World: s.World}.Write(options)
 	if err != nil {
 		return s.RaiseError("%s", err)
 	}
 	return 0
 }
 
-func dumpRBXAssetID(s rbxmk.State) dump.Library {
+func dumpRbxAssetId(s rbxmk.State) dump.Library {
 	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"read": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim(rtypes.T_RBXAssetOptions)},
+						{Name: "options", Type: dt.Prim(rtypes.T_RbxAssetOptions)},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
@@ -73,7 +73,7 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 				},
 				"write": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "options", Type: dt.Prim(rtypes.T_RBXAssetOptions)},
+						{Name: "options", Type: dt.Prim(rtypes.T_RbxAssetOptions)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxassetid:Fields/write/Summary",
@@ -88,8 +88,8 @@ func dumpRBXAssetID(s rbxmk.State) dump.Library {
 	return lib
 }
 
-// RBXAssetIDSource provides access to assets on the Roblox website.
-type RBXAssetIDSource struct {
+// RbxAssetIdSource provides access to assets on the Roblox website.
+type RbxAssetIdSource struct {
 	*rbxmk.World
 }
 
@@ -103,15 +103,15 @@ func (err assetError) Error() string {
 }
 
 // Read downloads an asset according to the given options.
-func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value, err error) {
+func (s RbxAssetIdSource) Read(options rtypes.RbxAssetOptions) (body types.Value, err error) {
 	if options.Format.Format == "" {
 		return nil, fmt.Errorf("must specify Format for decoding")
 	}
-	resp, err := rbxmk.DoHTTPRequest(s.World, rtypes.HTTPOptions{
-		URL:            fmt.Sprintf(rbxassetidReadURL, options.AssetID),
+	resp, err := rbxmk.DoHttpRequest(s.World, rtypes.HttpOptions{
+		URL:            fmt.Sprintf(rbxassetidReadURL, options.AssetId),
 		Method:         "GET",
 		ResponseFormat: rtypes.FormatSelector{Format: formats.F_Binary},
-		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
+		Headers:        rtypes.HttpHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("get asset location: %w", err)
@@ -134,11 +134,11 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 		}
 		return nil, fmt.Errorf("response errors:\n%s", strings.Join(s, "\n"))
 	}
-	resp, err = rbxmk.DoHTTPRequest(s.World, rtypes.HTTPOptions{
+	resp, err = rbxmk.DoHttpRequest(s.World, rtypes.HttpOptions{
 		URL:            assetResponse.Location,
 		Method:         "GET",
 		ResponseFormat: options.Format,
-		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
+		Headers:        rtypes.HttpHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("get asset content: %w", err)
@@ -147,15 +147,15 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 }
 
 // Write uploads an asset according to the given options.
-func (s RBXAssetIDSource) Write(options rtypes.RBXAssetOptions) error {
+func (s RbxAssetIdSource) Write(options rtypes.RbxAssetOptions) error {
 	if options.Format.Format == "" {
 		return fmt.Errorf("must specify Format for encoding")
 	}
-	_, err := rbxmk.DoHTTPRequest(s.World, rtypes.HTTPOptions{
-		URL:           fmt.Sprintf(rbxassetidWriteURL, options.AssetID),
+	_, err := rbxmk.DoHttpRequest(s.World, rtypes.HttpOptions{
+		URL:           fmt.Sprintf(rbxassetidWriteURL, options.AssetId),
 		Method:        "POST",
 		RequestFormat: options.Format,
-		Headers:       rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
+		Headers:       rtypes.HttpHeaders{}.AppendCookies(options.Cookies),
 		Body:          options.Body,
 	})
 	return err
@@ -163,7 +163,7 @@ func (s RBXAssetIDSource) Write(options rtypes.RBXAssetOptions) error {
 
 // Create creates and uploads a new asset according to the given options.
 // Returns the ID of the created asset.
-func (s RBXAssetIDSource) Create(options rtypes.RBXAssetOptions) (assetID int64, err error) {
+func (s RbxAssetIdSource) Create(options rtypes.RbxAssetOptions) (assetID int64, err error) {
 	if options.Format.Format == "" {
 		return -1, fmt.Errorf("must specify Format for encoding")
 	}
