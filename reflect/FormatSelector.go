@@ -117,7 +117,18 @@ func FormatSelector() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
-				Underlying:  dt.Or{dt.Prim(rtypes.T_String), dt.Struct{"Format": dt.Prim(rtypes.T_String), "...": dt.Prim(rtypes.T_Any)}},
+				Underlying: dt.Or{
+					dt.Prim(rtypes.T_String),
+					dt.Table{
+						Struct: dt.Struct{
+							"Format": dt.Prim(rtypes.T_String),
+						},
+						Map: dt.Map{
+							K: dt.Prim(rtypes.T_String),
+							V: dt.Prim(rtypes.T_Any),
+						},
+					},
+				},
 				Summary:     "Types/FormatSelector:Summary",
 				Description: "Types/FormatSelector:Description",
 			}
