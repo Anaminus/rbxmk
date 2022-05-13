@@ -60,10 +60,6 @@ func defaultAttrConfig(inst *rtypes.Instance) rtypes.AttrConfig {
 }
 
 func getAttributes(s rbxmk.State, inst *rtypes.Instance) rtypes.Dictionary {
-	format := s.Format("rbxattr")
-	if format.Name == "" {
-		s.RaiseError("cannot decode attributes: format \"rbxattr\" not registered")
-	}
 	attrcfg := defaultAttrConfig(inst)
 	v := inst.Get(attrcfg.Property)
 	if v == nil {
@@ -75,7 +71,7 @@ func getAttributes(s rbxmk.State, inst *rtypes.Instance) rtypes.Dictionary {
 		return nil
 	}
 	r := strings.NewReader(sv.Stringlike())
-	dict, err := format.Decode(s.Global, nil, r)
+	dict, err := rtypes.DecodeAttributes(r)
 	if err != nil {
 		s.RaiseError("decode attributes from %q: %s", attrcfg.Property, err)
 		return nil
@@ -84,13 +80,9 @@ func getAttributes(s rbxmk.State, inst *rtypes.Instance) rtypes.Dictionary {
 }
 
 func setAttributes(s rbxmk.State, inst *rtypes.Instance, dict rtypes.Dictionary) {
-	format := s.Format("rbxattr")
-	if format.Name == "" {
-		s.RaiseError("cannot encode attributes: format \"rbxattr\" not registered")
-	}
 	attrcfg := defaultAttrConfig(inst)
 	var w bytes.Buffer
-	if err := format.Encode(s.Global, nil, &w, dict); err != nil {
+	if err := rtypes.EncodeAttributes(&w, dict); err != nil {
 		s.RaiseError("encode attributes to %q: %s", attrcfg.Property, err)
 		return
 	}
