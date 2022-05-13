@@ -27,7 +27,7 @@ type HttpRequest struct {
 
 // Type returns a string identifying the type of the value.
 func (*HttpRequest) Type() string {
-	return "HttpRequest"
+	return rtypes.T_HttpRequest
 }
 
 // do concurrently begins the request.
