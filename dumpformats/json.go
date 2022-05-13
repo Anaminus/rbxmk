@@ -8,10 +8,12 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 )
 
+const F_JSON = "json"
+
 func init() { register(JSON) }
 
 var JSON = Format{
-	Name: "json",
+	Name: F_JSON,
 	Options: Options{
 		"indent": "\t",
 	},

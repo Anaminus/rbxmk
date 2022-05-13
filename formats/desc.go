@@ -12,10 +12,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const F_Desc = "desc.json"
+
 func init() { register(Desc) }
 func Desc() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "desc.json",
+		Name:       F_Desc,
 		MediaTypes: []string{"application/json", "text/plain"},
 		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Desc
@@ -45,6 +47,8 @@ func Desc() rbxmk.Format {
 		},
 	}
 }
+
+const F_DescPatch = "desc-patch.json"
 
 func init() { register(DescPatch) }
 func DescPatch() rbxmk.Format {

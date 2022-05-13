@@ -233,10 +233,12 @@ func encodeL10nCSV(w io.Writer, b []byte) error {
 	return nil
 }
 
+const F_CSV = "csv"
+
 func init() { register(CSV) }
 func CSV() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "csv",
+		Name:       F_CSV,
 		MediaTypes: []string{"text/csv", "text/plain"},
 		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_Array
@@ -308,6 +310,8 @@ func CSV() rbxmk.Format {
 		},
 	}
 }
+
+const F_L10nCSV = "l10n.csv"
 
 func init() { register(L10nCSV) }
 func L10nCSV() rbxmk.Format {

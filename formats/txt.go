@@ -10,10 +10,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const F_Text = "txt"
+
 func init() { register(Text) }
 func Text() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "txt",
+		Name:       F_Text,
 		MediaTypes: []string{"text/plain"},
 		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_String

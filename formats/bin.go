@@ -10,10 +10,12 @@ import (
 	"github.com/robloxapi/types"
 )
 
+const F_Binary = "bin"
+
 func init() { register(Binary) }
 func Binary() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "bin",
+		Name:       F_Binary,
 		MediaTypes: []string{"application/octet-stream"},
 		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == rtypes.T_BinaryString

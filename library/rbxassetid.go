@@ -9,6 +9,7 @@ import (
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
+	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
@@ -109,7 +110,7 @@ func (s RBXAssetIDSource) Read(options rtypes.RBXAssetOptions) (body types.Value
 	resp, err := rbxmk.DoHTTPRequest(s.World, rtypes.HTTPOptions{
 		URL:            fmt.Sprintf(rbxassetidReadURL, options.AssetID),
 		Method:         "GET",
-		ResponseFormat: rtypes.FormatSelector{Format: "bin"},
+		ResponseFormat: rtypes.FormatSelector{Format: formats.F_Binary},
 		Headers:        rtypes.HTTPHeaders{}.AppendCookies(options.Cookies),
 	})
 	if err != nil {

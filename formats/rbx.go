@@ -57,10 +57,12 @@ func rbxTypes() []func() rbxmk.Reflector {
 	}
 }
 
+const F_RBXL = "rbxl"
+
 func init() { register(RBXL) }
 func RBXL() rbxmk.Format {
 	return rbxmk.Format{
-		Name:        "rbxl",
+		Name:        F_RBXL,
 		EncodeTypes: []string{rtypes.T_Instance, rtypes.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
@@ -114,10 +116,12 @@ func RBXL() rbxmk.Format {
 	}
 }
 
+const F_RBXM = "rbxm"
+
 func init() { register(RBXM) }
 func RBXM() rbxmk.Format {
 	return rbxmk.Format{
-		Name:        "rbxm",
+		Name:        F_RBXM,
 		EncodeTypes: []string{rtypes.T_Instance, rtypes.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio"},
 		Options: map[string][]string{
@@ -171,10 +175,12 @@ func RBXM() rbxmk.Format {
 	}
 }
 
+const F_RBXLX = "rbxlx"
+
 func init() { register(RBXLX) }
 func RBXLX() rbxmk.Format {
 	return rbxmk.Format{
-		Name:        "rbxlx",
+		Name:        F_RBXLX,
 		EncodeTypes: []string{rtypes.T_Instance, rtypes.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{
@@ -228,10 +234,12 @@ func RBXLX() rbxmk.Format {
 	}
 }
 
+const F_RBXMX = "rbxmx"
+
 func init() { register(RBXMX) }
 func RBXMX() rbxmk.Format {
 	return rbxmk.Format{
-		Name:        "rbxmx",
+		Name:        F_RBXMX,
 		EncodeTypes: []string{rtypes.T_Instance, rtypes.T_Objects},
 		MediaTypes:  []string{"application/x-roblox-studio", "application/xml", "text/plain"},
 		Options: map[string][]string{

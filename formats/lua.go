@@ -40,10 +40,12 @@ func encodeScript(g rtypes.Global, f rbxmk.FormatOptions, w io.Writer, v types.V
 	return err
 }
 
+const F_ModuleScriptLua = "modulescript.lua"
+
 func init() { register(ModuleScriptLua) }
 func ModuleScriptLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "modulescript.lua",
+		Name:       F_ModuleScriptLua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -60,10 +62,12 @@ func ModuleScriptLua() rbxmk.Format {
 	}
 }
 
+const F_ScriptLua = "script.lua"
+
 func init() { register(ScriptLua) }
 func ScriptLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "script.lua",
+		Name:       F_ScriptLua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -80,10 +84,12 @@ func ScriptLua() rbxmk.Format {
 	}
 }
 
+const F_LocalScriptLua = "localscript.lua"
+
 func init() { register(LocalScriptLua) }
 func LocalScriptLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "localscript.lua",
+		Name:       F_LocalScriptLua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -100,10 +106,12 @@ func LocalScriptLua() rbxmk.Format {
 	}
 }
 
+const F_Lua = "lua"
+
 func init() { register(Lua) }
 func Lua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "lua",
+		Name:       F_Lua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -120,10 +128,12 @@ func Lua() rbxmk.Format {
 	}
 }
 
+const F_ServerLua = "server.lua"
+
 func init() { register(ServerLua) }
 func ServerLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "server.lua",
+		Name:       F_ServerLua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -140,10 +150,12 @@ func ServerLua() rbxmk.Format {
 	}
 }
 
+const F_ClientLua = "client.lua"
+
 func init() { register(ClientLua) }
 func ClientLua() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "client.lua",
+		Name:       F_ClientLua,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -163,10 +175,12 @@ func ClientLua() rbxmk.Format {
 ////////////////////////////////////////////////////////////////////////////////
 // Luau
 
+const F_ModuleScriptLuau = "modulescript.luau"
+
 func init() { register(ModuleScriptLuau) }
 func ModuleScriptLuau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "modulescript.luau",
+		Name:       F_ModuleScriptLuau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -183,10 +197,12 @@ func ModuleScriptLuau() rbxmk.Format {
 	}
 }
 
+const F_ScriptLuau = "script.luau"
+
 func init() { register(ScriptLuau) }
 func ScriptLuau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "script.luau",
+		Name:       F_ScriptLuau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -203,10 +219,12 @@ func ScriptLuau() rbxmk.Format {
 	}
 }
 
+const F_LocalScriptLuau = "localscript.luau"
+
 func init() { register(LocalScriptLuau) }
 func LocalScriptLuau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "localscript.luau",
+		Name:       F_LocalScriptLuau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -223,10 +241,12 @@ func LocalScriptLuau() rbxmk.Format {
 	}
 }
 
+const F_Luau = "luau"
+
 func init() { register(Luau) }
 func Luau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "luau",
+		Name:       F_Luau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -243,10 +263,12 @@ func Luau() rbxmk.Format {
 	}
 }
 
+const F_ServerLuau = "server.luau"
+
 func init() { register(ServerLuau) }
 func ServerLuau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "server.luau",
+		Name:       F_ServerLuau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {
@@ -263,10 +285,12 @@ func ServerLuau() rbxmk.Format {
 	}
 }
 
+const F_ClientLuau = "client.luau"
+
 func init() { register(ClientLuau) }
 func ClientLuau() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "client.luau",
+		Name:       F_ClientLuau,
 		MediaTypes: []string{"application/lua", "text/plain"},
 		CanDecode:  canDecodeInstance,
 		Decode: func(g rtypes.Global, f rbxmk.FormatOptions, r io.Reader) (v types.Value, err error) {

@@ -147,10 +147,12 @@ func encodeAttributeValue(t types.Value) (a rbxattr.Value, err error) {
 	}
 }
 
+const F_RBXAttr = "rbxattr"
+
 func init() { register(RBXAttr) }
 func RBXAttr() rbxmk.Format {
 	return rbxmk.Format{
-		Name:       "rbxattr",
+		Name:       F_RBXAttr,
 		MediaTypes: []string{"application/octet-stream"},
 		CanDecode: func(g rtypes.Global, f rbxmk.FormatOptions, typeName string) bool {
 			return typeName == "Instance"

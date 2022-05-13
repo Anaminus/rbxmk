@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/rtypes"
 )
@@ -33,7 +34,7 @@ type UploadAssetCommand struct {
 func (c *UploadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
 	flags.Int64Var(&c.ID, "id", 0, DocFlag("Commands/upload-asset:Flags/id"))
-	flags.StringVar(&c.AssetFormat, "format", "bin", DocFlag("Commands/upload-asset:Flags/format"))
+	flags.StringVar(&c.AssetFormat, "format", formats.F_Binary, DocFlag("Commands/upload-asset:Flags/format"))
 	flags.StringVar(&c.FileFormat, "file-format", "", DocFlag("Commands/upload-asset:Flags/file-format"))
 }
 
