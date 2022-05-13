@@ -171,7 +171,7 @@ func Faces() rbxmk.Reflector {
 					var v types.Faces
 					n := s.Count()
 					for i := 1; i <= n; i++ {
-						switch value := PullVariant(s, i).(type) {
+						switch value := s.PullAnyOf(i, rtypes.T_EnumItem, rtypes.T_String, rtypes.T_Int).(type) {
 						case *rtypes.EnumItem:
 							if enum := value.Enum(); enum != nil {
 								switch enum.Name() {
@@ -181,12 +181,10 @@ func Faces() rbxmk.Reflector {
 									setFacesFromAxisName(&v, value.Name())
 								}
 							}
-						case types.Intlike:
-							setFacesFromNormalIdValue(&v, int(value.Intlike()))
-						case types.Numberlike:
-							setFacesFromNormalIdValue(&v, int(value.Numberlike()))
-						case types.Stringlike:
-							setFacesFromNormalIdName(&v, value.Stringlike())
+						case types.Int:
+							setFacesFromNormalIdValue(&v, int(value))
+						case types.String:
+							setFacesFromNormalIdName(&v, string(value))
 						}
 					}
 					return s.Push(v)
@@ -195,7 +193,11 @@ func Faces() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+								{Name: "...", Type: dt.Or{
+									dt.Prim(rtypes.T_EnumItem),
+									dt.Prim(rtypes.T_String),
+									dt.Prim(rtypes.T_Int),
+								}},
 							},
 							Summary:     "Types/Faces:Constructors/new/Summary",
 							Description: "Types/Faces:Constructors/new/Description",

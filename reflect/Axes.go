@@ -195,7 +195,7 @@ func Axes() rbxmk.Reflector {
 					var v types.Axes
 					n := s.Count()
 					for i := 1; i <= n; i++ {
-						switch value := PullVariant(s, i).(type) {
+						switch value := s.PullAnyOf(i, rtypes.T_EnumItem, rtypes.T_String, rtypes.T_Int).(type) {
 						case *rtypes.EnumItem:
 							if enum := value.Enum(); enum != nil {
 								switch enum.Name() {
@@ -205,12 +205,10 @@ func Axes() rbxmk.Reflector {
 									setAxesFromNormalIdName(&v, value.Name())
 								}
 							}
-						case types.Intlike:
-							setAxesFromAxisValue(&v, int(value.Intlike()))
-						case types.Numberlike:
-							setAxesFromAxisValue(&v, int(value.Numberlike()))
-						case types.Stringlike:
-							setAxesFromNormalIdName(&v, value.Stringlike())
+						case types.Int:
+							setAxesFromAxisValue(&v, int(value))
+						case types.String:
+							setAxesFromNormalIdName(&v, string(value))
 						}
 					}
 					return s.Push(v)
@@ -219,7 +217,11 @@ func Axes() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+								{Name: "...", Type: dt.Or{
+									dt.Prim(rtypes.T_EnumItem),
+									dt.Prim(rtypes.T_String),
+									dt.Prim(rtypes.T_Int),
+								}},
 							},
 							Summary:     "Types/Axes:Constructors/new/Summary",
 							Description: "Types/Axes:Constructors/new/Description",
