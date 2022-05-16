@@ -12,18 +12,19 @@ require (
 	github.com/andybalholm/cascadia v1.3.1
 	github.com/inconshreveable/mousetrap v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/peterh/liner v1.2.1
+	github.com/peterh/liner v1.2.2
 	github.com/robloxapi/rbxattr v0.1.1
 	github.com/robloxapi/rbxdump v0.4.1
-	github.com/robloxapi/rbxfile v0.5.0
+	github.com/robloxapi/rbxfile v0.6.0
 	github.com/robloxapi/types v0.2.1
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
+	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
+	golang.org/x/net v0.0.0-20220513224357-95641704303c
+	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a
+	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171
 )
 
 require (
 	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
-	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/mattn/go-runewidth v0.0.13 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 )
