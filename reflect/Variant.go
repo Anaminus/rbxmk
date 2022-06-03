@@ -10,7 +10,10 @@ import (
 	"github.com/robloxapi/types"
 )
 
-func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+// PushBasicTo converts a basic type to its Lua equivalent. Converts nil, bool,
+// number, string, array and dictionary. Returns (nil, error) if an error
+// occurred. Returns (nil, nil) if the value could not be converted.
+func PushBasicTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 	switch v := v.(type) {
 	case rtypes.NilType:
 		return lua.LNil, nil
@@ -36,22 +39,15 @@ func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
 			return nil, err
 		}
 		return values, nil
+	default:
+		return nil, nil
 	}
-	rfl := c.Reflector(v.Type())
-	if rfl.Name == "" {
-		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
-	}
-	if rfl.PushTo == nil {
-		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
-	}
-	values, err := rfl.PushTo(c, v)
-	if err != nil {
-		return nil, err
-	}
-	return values, nil
 }
 
-func PullVariantFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+// PullBasicFrom converts a Lua value to its type equivalent. Converts, nil,
+// bool, number, string, array, and dictionary. Returns (nil, error) if can
+// error occurred, and (nil, nil) if the value could not be converted.
+func PullBasicFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
 	switch lv := lv.(type) {
 	case *lua.LNilType:
 		return rtypes.Nil, nil
@@ -71,6 +67,44 @@ func PullVariantFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) 
 		dictRfl := c.MustReflector(rtypes.T_Dictionary)
 		v, err := dictRfl.PullFrom(c, lv)
 		return v, err
+	default:
+		return nil, nil
+	}
+}
+
+func PushVariantTo(c rbxmk.Context, v types.Value) (lv lua.LValue, err error) {
+	lv, err = PushBasicTo(c, v)
+	if err != nil {
+		return nil, err
+	}
+	if lv != nil {
+		return lv, nil
+	}
+	// Try reflecting according to type.
+	rfl := c.Reflector(v.Type())
+	if rfl.Name == "" {
+		return nil, fmt.Errorf("unknown type %q", string(v.Type()))
+	}
+	if rfl.PushTo == nil {
+		return nil, fmt.Errorf("unable to cast %s to Variant", rfl.Name)
+	}
+	values, err := rfl.PushTo(c, v)
+	if err != nil {
+		return nil, err
+	}
+	return values, nil
+}
+
+func PullVariantFrom(c rbxmk.Context, lv lua.LValue) (v types.Value, err error) {
+	v, err = PullBasicFrom(c, lv)
+	if err != nil {
+		return nil, err
+	}
+	if v != nil {
+		return v, nil
+	}
+	// Try reflecting according to type.
+	switch lv := lv.(type) {
 	case *lua.LUserData:
 		name, ok := c.GetMetaField(lv, "__type").(lua.LString)
 		if !ok {
