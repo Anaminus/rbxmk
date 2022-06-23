@@ -1,0 +1,56 @@
+<section data-name="Summary">
+
+<p>Encodes JSON patch data.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>patch.json</b> format is defined for encoding JSON patches as defined
+by <a href="https://datatracker.ietf.org/doc/html/rfc6902/">RFC 6902</a>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>JsonPatch</td>
+<td>List of JsonOperation values.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>JsonPatch</td>
+<td>List of JsonOperation values.</td>
+</tr>
+</tbody>
+</table>
+
+<p>This format has the following options:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Indent</td>
+<td>string</td>
+<td><code>"\t"</code></td>
+<td>Determines the indentation of encoded content. If an empty string, then the
+content is minified.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
