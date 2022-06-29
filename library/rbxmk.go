@@ -108,7 +108,7 @@ func rbxmkFormatCanDecode(s rbxmk.State) int {
 
 func fallbacksFromArg(s rbxmk.State, n int, instance *rtypes.Instance) (desc *rtypes.Desc, rfl rbxmk.Reflector) {
 	var fallbackDesc *rtypes.Desc
-	switch v := s.PullAnyOf(n, rtypes.T_String, rtypes.T_Desc, rtypes.T_Nil).(type) {
+	switch v := s.PullAnyOfOpt(n, nil, rtypes.T_String, rtypes.T_Desc).(type) {
 	case types.String:
 		if rfl = s.Reflector(string(v)); rfl.Name == "" {
 			s.RaiseError("unknown type %q", string(v))
@@ -116,7 +116,7 @@ func fallbacksFromArg(s rbxmk.State, n int, instance *rtypes.Instance) (desc *rt
 		}
 	case *rtypes.Desc:
 		fallbackDesc = v
-	case rtypes.NilType:
+	case nil:
 	default:
 		s.ReflectorError(n)
 		return desc, rfl

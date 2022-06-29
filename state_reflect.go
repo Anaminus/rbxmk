@@ -62,7 +62,7 @@ func (s State) PullAnyOf(n int, t ...string) (v types.Value) {
 // the first successful reflection among the types in t. If no types succeeded,
 // then nil is returned.
 func (s State) PullAnyOfOpt(n int, d types.Value, t ...string) (v types.Value) {
-	return s.World.PullAnyOfOpt(s.CheckAny(n), d, t...)
+	return s.World.PullAnyOfOpt(s.L.Get(n), d, t...)
 }
 
 // PushArrayOf pushes an rtypes.Array, ensuring that each element is reflected
