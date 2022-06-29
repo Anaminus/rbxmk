@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/anaminus/cobra v1.4.1-z
 	github.com/anaminus/drill v0.3.2
-	github.com/anaminus/gopher-lua v0.4.1
+	github.com/anaminus/gopher-lua v0.4.2
 	github.com/anaminus/parse v0.3.0
 	github.com/anaminus/pflag v1.0.6-z
 	github.com/andybalholm/cascadia v1.3.1

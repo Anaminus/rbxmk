@@ -24,6 +24,9 @@ branch is the latest unreleased version.
 	  write output.
 - Add "Priority" field to libraries in dump format.
 
+**Fixes**:
+- Fix table.concat being unable to concatenate large tables.
+
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
 The [Documentation page][doc-imperative] provides a complete reference for this version of rbxmk.

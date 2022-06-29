@@ -5,8 +5,8 @@ github.com/anaminus/cobra v1.4.1-z/go.mod h1:QL0hRcJECXKdHjECv0HWdhFv1u8pj8pTi0V
 github.com/anaminus/deep v0.0.0-20190609161759-a37cba07138a/go.mod h1:Huz2U5cYiGw7Yk7krg8FWM4MCyeVGuRBghqSh0Rsa7c=
 github.com/anaminus/drill v0.3.2 h1:xgxfG2qbdMy6vNeqY5GdHvwtDh/pfJIWYRSvffuMXrA=
 github.com/anaminus/drill v0.3.2/go.mod h1:3aNCW4tg3ld+J3rTcd3HFzBrgSc/WB56vwhiV6yR0NQ=
-github.com/anaminus/gopher-lua v0.4.1 h1:jGNZDm/sORN5FSovtznZ3u+qzV5fhvNo9Zh91+1G+7c=
-github.com/anaminus/gopher-lua v0.4.1/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
+github.com/anaminus/gopher-lua v0.4.2 h1:WYXvtWUH3VgmCv1keqNjoa7QVWumm5zZ+l7RdQ6SW1M=
+github.com/anaminus/gopher-lua v0.4.2/go.mod h1:45X10dz2CCARuFZaQ8naBv0g/xDfisi8jpqY3N36TfQ=
 github.com/anaminus/parse v0.3.0 h1:aVt1BsOaECHKY5JrvN/z21jkG5LABBLXG2zvqUedGU8=
 github.com/anaminus/parse v0.3.0/go.mod h1:5EP2T2CqY4EDBxl2S/qhFSSb2VjW+iIqG+8Scy3mZN8=
 github.com/anaminus/pflag v1.0.6-z h1:f68KbzkgHiV5t+lk+wNpmWbQT6bOZY9ZU89NTs3w8LM=
