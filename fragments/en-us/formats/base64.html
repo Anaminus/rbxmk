@@ -1,0 +1,56 @@
+<section data-name="Summary">
+
+<p>Encodes data in Base64.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>base64</b> format is defined for encoding strings in the <a
+href="https://en.wikipedia.org/wiki/Base64">Base64</a> format.</p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decode</td>
+<td>BinaryString</td>
+<td>Raw binary data.</td>
+</tr>
+<tr>
+<td>Encode</td>
+<td>Stringable</td>
+<td>Any string-like value.</td>
+</tr>
+</tbody>
+</table>
+
+<p>This format has the following options:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Width</td>
+<td>string</td>
+<td><code>0</code></td>
+<td>Causes the encoded result to be wrapped to the given number of characters.
+Does not wrap if the width is less than 1.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
