@@ -108,6 +108,7 @@ func (v VersionInfo) String() string {
 type VersionCommand struct {
 	Format  string
 	Verbose bool
+	Error   bool
 }
 
 func (c *VersionCommand) SetFlags(flags *pflag.FlagSet) {
@@ -148,5 +149,11 @@ func (c *VersionCommand) WriteInfo(w io.Writer) error {
 }
 
 func (c *VersionCommand) Run(cmd *cobra.Command, args []string) error {
-	return c.WriteInfo(cmd.OutOrStdout())
+	var w io.Writer
+	if c.Error {
+		w = cmd.ErrOrStderr()
+	} else {
+		w = cmd.OutOrStdout()
+	}
+	return c.WriteInfo(w)
 }
