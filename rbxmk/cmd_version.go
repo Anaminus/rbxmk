@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"runtime"
 	"runtime/debug"
 	"strings"
@@ -114,7 +115,7 @@ func (c *VersionCommand) SetFlags(flags *pflag.FlagSet) {
 	flags.BoolVarP(&c.Verbose, "verbose", "v", false, DocFlag("Commands/version:Flags/verbose"))
 }
 
-func (c *VersionCommand) Run(cmd *cobra.Command, args []string) error {
+func (c *VersionCommand) WriteInfo(w io.Writer) error {
 	info := VersionInfo{
 		Version:    Version,
 		Prerelease: Prerelease,
@@ -134,14 +135,18 @@ func (c *VersionCommand) Run(cmd *cobra.Command, args []string) error {
 	}
 	switch c.Format {
 	case "json":
-		je := json.NewEncoder(cmd.OutOrStdout())
+		je := json.NewEncoder(w)
 		je.SetEscapeHTML(false)
 		je.SetIndent("", "\t")
-		je.Encode(info)
+		return je.Encode(info)
 	case "text":
-		cmd.Println(info.String())
+		_, err := fmt.Fprintln(w, info.String())
+		return err
 	default:
 		return fmt.Errorf("unknown format %q", c.Format)
 	}
-	return nil
+}
+
+func (c *VersionCommand) Run(cmd *cobra.Command, args []string) error {
+	return c.WriteInfo(cmd.OutOrStdout())
 }
