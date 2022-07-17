@@ -50,7 +50,15 @@ type GoInfo struct {
 	Compiler   string
 	TargetOS   string
 	TargetArch string
-	Build      *debug.BuildInfo `json:",omitempty"`
+	Build      *BuildInfo `json:",omitempty"`
+}
+
+type BuildInfo struct {
+	GoVersion string
+	Path      string          `json:",omitempty"`
+	Main      debug.Module    `json:",omitempty"`
+	Deps      []*debug.Module `json:",omitempty"`
+	Settings  []debug.BuildSetting
 }
 
 func writeModuleString(s *strings.Builder, mod debug.Module, prefix string) {
@@ -94,11 +102,15 @@ func (v VersionInfo) String() string {
 		fmt.Fprintf(&s, "go compiler: %s\n", v.Go.Compiler)
 		fmt.Fprintf(&s, "go target: %s/%s\n", v.Go.TargetOS, v.Go.TargetArch)
 		if v.Go.Build != nil {
-			fmt.Fprintf(&s, "path: %s\n", v.Go.Build.Path)
-			fmt.Fprintf(&s, "modules:\n")
-			writeModuleString(&s, v.Go.Build.Main, "mod")
-			for _, dep := range v.Go.Build.Deps {
-				writeModuleString(&s, *dep, "dep")
+			if v.Go.Build.Path != "" {
+				fmt.Fprintf(&s, "path: %s\n", v.Go.Build.Path)
+			}
+			if v.Go.Build.Main != (debug.Module{}) || len(v.Go.Build.Deps) > 0 {
+				fmt.Fprintf(&s, "modules:\n")
+				writeModuleString(&s, v.Go.Build.Main, "mod")
+				for _, dep := range v.Go.Build.Deps {
+					writeModuleString(&s, *dep, "dep")
+				}
 			}
 		}
 	}
@@ -107,13 +119,13 @@ func (v VersionInfo) String() string {
 
 type VersionCommand struct {
 	Format  string
-	Verbose bool
+	Verbose int
 	Error   bool
 }
 
 func (c *VersionCommand) SetFlags(flags *pflag.FlagSet) {
 	flags.StringVarP(&c.Format, "format", "f", "text", DocFlag("Commands/version:Flags/format"))
-	flags.BoolVarP(&c.Verbose, "verbose", "v", false, DocFlag("Commands/version:Flags/verbose"))
+	flags.CountVarP(&c.Verbose, "verbose", "v", DocFlag("Commands/version:Flags/verbose"))
 }
 
 func (c *VersionCommand) WriteInfo(w io.Writer) error {
@@ -122,7 +134,7 @@ func (c *VersionCommand) WriteInfo(w io.Writer) error {
 		Prerelease: Prerelease,
 		Build:      Build,
 	}
-	if c.Verbose {
+	if c.Verbose > 0 {
 		info.Config = &ConfigInfo{
 			SSLLogVar: sslKeyLogFileEnvVar,
 		}
@@ -132,7 +144,18 @@ func (c *VersionCommand) WriteInfo(w io.Writer) error {
 			TargetOS:   runtime.GOOS,
 			TargetArch: runtime.GOARCH,
 		}
-		info.Go.Build, _ = debug.ReadBuildInfo()
+		if c.Verbose > 1 {
+			binfo, _ := debug.ReadBuildInfo()
+			info.Go.Build = (*BuildInfo)(binfo)
+			if c.Verbose < 2 {
+				info.Go.Build.Settings = nil
+			}
+			if c.Verbose < 3 {
+				info.Go.Build.Path = ""
+				info.Go.Build.Main = debug.Module{}
+				info.Go.Build.Deps = nil
+			}
+		}
 	}
 	switch c.Format {
 	case "json":
