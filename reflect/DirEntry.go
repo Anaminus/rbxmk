@@ -18,7 +18,7 @@ func DirEntry() rbxmk.Reflector {
 			if !ok {
 				return nil, rbxmk.TypeError{Want: rtypes.T_DirEntry, Got: v.Type()}
 			}
-			table := c.CreateTable(0, 4)
+			table := c.CreateTable(0, 2)
 			if err := c.PushToDictionary(table, "Name", types.String(options.Name())); err != nil {
 				return nil, err
 			}
