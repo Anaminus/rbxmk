@@ -102,6 +102,12 @@ func (v VersionInfo) String() string {
 		fmt.Fprintf(&s, "go compiler: %s\n", v.Go.Compiler)
 		fmt.Fprintf(&s, "go target: %s/%s\n", v.Go.TargetOS, v.Go.TargetArch)
 		if v.Go.Build != nil {
+			fmt.Fprintf(&s, "settings:\n")
+			if len(v.Go.Build.Settings) > 0 {
+				for _, setting := range v.Go.Build.Settings {
+					fmt.Fprintf(&s, "\t%s=%s\n", setting.Key, setting.Value)
+				}
+			}
 			if v.Go.Build.Path != "" {
 				fmt.Fprintf(&s, "path: %s\n", v.Go.Build.Path)
 			}
