@@ -67,7 +67,20 @@ func init() {
 
 var ProgramContext, ProgramExit = context.WithCancel(context.Background())
 
+// Include build information when the program panics.
+func PanicWithBuildInfo() {
+	if v := recover(); v != nil {
+		(&VersionCommand{
+			Format:  "text",
+			Verbose: 2,
+			Error:   true,
+		}).WriteInfo(os.Stderr)
+		panic(v)
+	}
+}
+
 func main() {
+	defer PanicWithBuildInfo()
 	ctx, stop := signal.NotifyContext(ProgramContext, os.Kill)
 	defer stop()
 
