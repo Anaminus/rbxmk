@@ -35,14 +35,9 @@ func VersionString() string {
 
 type VersionInfo struct {
 	Version    string
-	Prerelease string      `json:",omitempty"`
-	Build      string      `json:",omitempty"`
-	Config     *ConfigInfo `json:",omitempty"`
-	Go         *GoInfo     `json:",omitempty"`
-}
-
-type ConfigInfo struct {
-	SSLLogVar string `json:",omitempty"`
+	Prerelease string  `json:",omitempty"`
+	Build      string  `json:",omitempty"`
+	Go         *GoInfo `json:",omitempty"`
 }
 
 type GoInfo struct {
@@ -92,11 +87,6 @@ func (v VersionInfo) String() string {
 	if v.Build != "" {
 		fmt.Fprintf(&s, "rbxmk build: %s\n", v.Build)
 	}
-	if v.Config != nil {
-		if v.Config.SSLLogVar != "" {
-			fmt.Fprintf(&s, "ssl log var: %s\n", v.Config.SSLLogVar)
-		}
-	}
 	if v.Go != nil {
 		fmt.Fprintf(&s, "go version: %s\n", v.Go.Version)
 		fmt.Fprintf(&s, "go compiler: %s\n", v.Go.Compiler)
@@ -141,9 +131,6 @@ func (c *VersionCommand) WriteInfo(w io.Writer) error {
 		Build:      Build,
 	}
 	if c.Verbose > 0 {
-		info.Config = &ConfigInfo{
-			SSLLogVar: sslKeyLogFileEnvVar,
-		}
 		info.Go = &GoInfo{
 			Version:    runtime.Version(),
 			Compiler:   runtime.Compiler,
