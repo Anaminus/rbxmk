@@ -88,6 +88,8 @@ func (f Fields) MarshalJSON() (b []byte, err error) {
 			f.Kind = "Function"
 		case MultiFunction:
 			f.Kind = "MultiFunction"
+		case Enum:
+			f.Kind = "Enum"
 		default:
 			continue
 		}
@@ -194,6 +196,11 @@ type Enum struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the enum.
 	Description string `json:",omitempty"`
+}
+
+// Type implements Value by returning the Enum primitive.
+func (v Enum) Type() dt.Type {
+	return dt.Prim("Enum")
 }
 
 // EnumItems maps a name to an enum.

@@ -266,70 +266,30 @@ func DescAction() rbxmk.Reflector {
 			}
 		},
 		Enums: rbxmk.Enums{
-			"Type": func() dump.Enum {
+			"DescActionType": func() dump.Enum {
 				return dump.Enum{
 					Items: dump.EnumItems{
-						diff.Remove.String(): {
-							Value:       int(diff.Remove),
-							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Remove.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Type/Items/" + diff.Remove.String() + "/Description",
-						},
-						diff.Change.String(): {
-							Value:       int(diff.Change),
-							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Change.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Type/Items/" + diff.Change.String() + "/Description",
-						},
-						diff.Add.String(): {
-							Value:       int(diff.Add),
-							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Add.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Type/Items/" + diff.Add.String() + "/Description",
-						},
+						diff.Remove.String(): {Value: int(diff.Remove)},
+						diff.Change.String(): {Value: int(diff.Change)},
+						diff.Add.String():    {Value: int(diff.Add)},
 					},
-					Summary:     "Types/DescAction:Enums/Type/Summary",
-					Description: "Types/DescAction:Enums/Type/Description",
+					Summary:     "Types/DescAction:Enums/DescActionType/Summary",
+					Description: "Types/DescAction:Enums/DescActionType/Description",
 				}
 			},
-			"Element": func() dump.Enum {
+			"DescActionElement": func() dump.Enum {
 				return dump.Enum{
 					Items: dump.EnumItems{
-						diff.Class.String(): {
-							Value:       int(diff.Class),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Class.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Class.String() + "/Description",
-						},
-						diff.Property.String(): {
-							Value:       int(diff.Property),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Property.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Property.String() + "/Description",
-						},
-						diff.Function.String(): {
-							Value:       int(diff.Function),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Function.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Function.String() + "/Description",
-						},
-						diff.Event.String(): {
-							Value:       int(diff.Event),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Event.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Event.String() + "/Description",
-						},
-						diff.Callback.String(): {
-							Value:       int(diff.Callback),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Callback.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Callback.String() + "/Description",
-						},
-						diff.Enum.String(): {
-							Value:       int(diff.Enum),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Enum.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.Enum.String() + "/Description",
-						},
-						diff.EnumItem.String(): {
-							Value:       int(diff.EnumItem),
-							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.EnumItem.String() + "/Summary",
-							Description: "Types/DescAction:Enums/Element/Items/" + diff.EnumItem.String() + "/Description",
-						},
+						diff.Class.String():    {Value: int(diff.Class)},
+						diff.Property.String(): {Value: int(diff.Property)},
+						diff.Function.String(): {Value: int(diff.Function)},
+						diff.Event.String():    {Value: int(diff.Event)},
+						diff.Callback.String(): {Value: int(diff.Callback)},
+						diff.Enum.String():     {Value: int(diff.Enum)},
+						diff.EnumItem.String(): {Value: int(diff.EnumItem)},
 					},
-					Summary:     "Types/DescAction:Enums/Element/Summary",
-					Description: "Types/DescAction:Enums/Element/Description",
+					Summary:     "Types/DescAction:Enums/DescActionElement/Summary",
+					Description: "Types/DescAction:Enums/DescActionElement/Description",
 				}
 			},
 		},

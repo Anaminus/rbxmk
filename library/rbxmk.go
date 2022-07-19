@@ -282,14 +282,23 @@ func rbxmkOpNewindex(s rbxmk.State) int {
 }
 
 func dumpRBXMK(s rbxmk.State) dump.Library {
+	enums := s.Enums()
+	enumsDump := dump.Struct{
+		Fields:      dump.Fields{},
+		Summary:     "Libraries/rbxmk:Fields/Enum/Summary",
+		Description: "Libraries/rbxmk:Fields/Enum/Description",
+	}
+	for _, enum := range enums.Enums() {
+		enumDump := s.EnumDump(enum.Name())
+		if enumDump == nil {
+			continue
+		}
+		enumsDump.Fields[enum.Name()] = *enumDump
+	}
 	lib := dump.Library{
 		Struct: dump.Struct{
 			Fields: dump.Fields{
-				"Enum": dump.Property{
-					ValueType:   dt.Prim(rtypes.T_Enums),
-					Summary:     "Libraries/rbxmk:Fields/Enum/Summary",
-					Description: "Libraries/rbxmk:Fields/Enum/Description",
-				},
+				"Enum": enumsDump,
 				"decodeFormat": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "format", Type: dt.Prim(rtypes.T_String)},

@@ -34,6 +34,7 @@ type World struct {
 	reflectors map[string]Reflector
 	formats    map[string]Format
 	enums      *rtypes.Enums
+	enumDumps  map[string]dump.Enum
 
 	rtypes.Global
 
@@ -499,29 +500,18 @@ func (w *World) RegisterReflector(r Reflector) {
 		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
 	}
 
-	var table *lua.LTable
-	if n := len(r.Constructors) + len(r.Enums); n > 0 {
-		table = w.l.CreateTable(0, n)
-		w.l.G.Global.RawSetString(r.Name, table)
-	}
-
-	for name, ctor := range r.Constructors {
-		if c := ctor.Func; c != nil {
-			table.RawSetString(name, w.WrapFunc(func(s State) int {
-				return c(s)
-			}))
+	if n := len(r.Constructors); n > 0 {
+		ctors := w.l.CreateTable(0, n)
+		for name, ctor := range r.Constructors {
+			if c := ctor.Func; c != nil {
+				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
+					return c(s)
+				}))
+			}
 		}
+		w.l.G.Global.RawSetString(r.Name, ctors)
 	}
 
-	if r.Environment != nil {
-		r.Environment(w.State())
-	}
-
-	for _, t := range r.Types {
-		w.RegisterReflector(t())
-	}
-
-	// Must apply after type registration to ensure Enum type is registered.
 	for name, def := range r.Enums {
 		enum := def()
 		items := make([]rtypes.NewItem, 0, len(enum.Items))
@@ -537,8 +527,15 @@ func (w *World) RegisterReflector(r Reflector) {
 			}
 			return items[i].Value < items[j].Value
 		})
-		// w.RegisterEnums(rtypes.NewEnum(name, items...))
-		w.PushToDictionary(table, name, rtypes.NewEnum(name, items...))
+		w.RegisterEnum(rtypes.NewEnum(name, items...), &enum)
+	}
+
+	if r.Environment != nil {
+		r.Environment(w.State())
+	}
+
+	for _, t := range r.Types {
+		w.RegisterReflector(t())
 	}
 }
 
@@ -667,6 +664,25 @@ func (w *World) RegisterEnums(enums ...*rtypes.Enum) {
 	w.enums.Include(enums...)
 }
 
+// RegisterEnum registers a single Enum value with an optional dump description.
+// Panics if multiple different enums are registered with the same name.
+func (w *World) RegisterEnum(enum *rtypes.Enum, desc *dump.Enum) {
+	if w.enums == nil {
+		w.enums = rtypes.NewEnums()
+	}
+	if e := w.enums.Enum(enum.Name()); e != nil && e != enum {
+		panic("enum " + enum.Name() + " already registered")
+	}
+	w.enums.Include(enum)
+	if desc == nil {
+		return
+	}
+	if w.enumDumps == nil {
+		w.enumDumps = map[string]dump.Enum{}
+	}
+	w.enumDumps[enum.Name()] = *desc
+}
+
 // Enum returns the Enum registered with the given name. If the name is not
 // registered, then nil is returned.
 func (w *World) Enum(name string) *rtypes.Enum {
@@ -693,6 +709,17 @@ func (w *World) Enums() *rtypes.Enums {
 		w.enums = rtypes.NewEnums()
 	}
 	return w.enums
+}
+
+// EnumDump returns a description associated with the enum registered under
+// name. Returns nil if the name is not registered, or the enum does not have a
+// description.
+func (w *World) EnumDump(name string) *dump.Enum {
+	enum, ok := w.enumDumps[name]
+	if !ok {
+		return nil
+	}
+	return &enum
 }
 
 // Ext returns the extension of filename that most closely matches the name of a
