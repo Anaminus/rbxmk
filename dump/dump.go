@@ -24,6 +24,8 @@ type Root struct {
 	Libraries Libraries
 	// Types contains types defined by the API.
 	Types TypeDefs `json:",omitempty"`
+	// Enums contains enums defined by the API.
+	Enums Enums `json:",omitempty"`
 	// Formats contains formats registered by a world.
 	Formats Formats
 	// Fragments contains fragment references requested by the program.
@@ -49,6 +51,8 @@ type Library struct {
 	Struct Struct `json:",omitempty"`
 	// Types contains types defined by the library.
 	Types TypeDefs `json:",omitempty"`
+	// Enums contains enums defined by the library.
+	Enums Enums `json:",omitempty"`
 }
 
 // Formats maps a name to a format.
@@ -155,6 +159,8 @@ type TypeDef struct {
 	Methods Methods `json:",omitempty"`
 	// Constructors describes constructor functions that create the type.
 	Constructors Constructors `json:",omitempty"`
+	// Enums describes enums related to the type.
+	Enums Enums `json:",omitempty"`
 	// Summary is a fragment reference pointing to a short summary of the type.
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
@@ -175,6 +181,35 @@ type Methods = map[string]Function
 
 // Constructors maps a name to a number of constructor functions.
 type Constructors = map[string]MultiFunction
+
+// Enums maps a name to an enum.
+type Enums map[string]Enum
+
+// Enum describes the API of an enum.
+type Enum struct {
+	// Items are the items that exist on the enum.
+	Items EnumItems
+	// Summary is a fragment reference pointing to a short summary of the enum.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the enum.
+	Description string `json:",omitempty"`
+}
+
+// EnumItems maps a name to an enum.
+type EnumItems map[string]EnumItem
+
+// EnumItem describes the API of an enum item.
+type EnumItem struct {
+	// Value is the value of the item.
+	Value int
+	// Summary is a fragment reference pointing to a short summary of the enum
+	// item.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the enum item.
+	Description string `json:",omitempty"`
+}
 
 // Function describes the API of a function.
 type Function struct {

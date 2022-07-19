@@ -54,6 +54,12 @@ Library object.</td>
 <td>A collection of globally defined data types. Maps a type name to a TypeDef
 object.</td>
 </tr>
+<tr>
+<td>Enums</td>
+<td>object?</td>
+<td>A collection of globally defined enums. Maps an enum name to an Enum
+object.</td>
+</tr>
 <td>Formats</td>
 <td>object</td>
 <td>A collection of globally defined formats. Maps a type name to a Format
@@ -113,6 +119,12 @@ Libraries are loaded by ascending priority.</td>
 <td>object?</td>
 <td>A collection of data types defined by the library. Maps a type name to a
 TypeDef object.</td>
+</tr>
+<tr>
+<td>Enums</td>
+<td>object?</td>
+<td>A collection of enums defined by the library. Maps an enum name to an Enum
+object.</td>
 </tr>
 </tbody>
 </table>
@@ -378,6 +390,12 @@ object.</td>
 name to an array of Function objects.</td>
 </tr>
 <tr>
+<td>Enums</td>
+<td>object?</td>
+<td>Describes enums related to the type. Maps an enum name to an Enum
+object.</td>
+</tr>
+<tr>
 <td>Summary</td>
 <td>string</td>
 <td>A fragment reference pointing to a short summary of the type.</td>
@@ -386,6 +404,74 @@ name to an array of Function objects.</td>
 <td>Description</td>
 <td>string</td>
 <td>A fragment reference pointing to a detailed description of the type.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Enum">
+
+<p>An <b>Enum</b> object describes an enum. It has the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Items</td>
+<td>object</td>
+<td>Describes the items of the enum. Maps an item name to an EnumItem
+object.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string</td>
+<td>A fragment reference pointing to a short summary of the enum.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string</td>
+<td>A fragment reference pointing to a detailed description of the enum.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="EnumItem">
+
+<p>An <b>EnumItem</b> object describes an enum item. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value</td>
+<td>number</td>
+<td>The value of the item.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the item.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the item.</td>
 </tr>
 </tbody>
 </table>
