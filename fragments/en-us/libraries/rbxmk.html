@@ -97,6 +97,14 @@ format does not define types it decodes into.</p>
 
 <section data-name="get">
 
+<section data-name="Summary">
+
+Gets the property of an instance.
+
+</section>
+
+<section data-name="Description">
+
 <p>The <b>get</b> function gets the <i>property</i> of <i>instance</i>. If
 <i>instance</i> has a descriptor, then it is used to determine the type when
 getting the property. Otherwise <i>fallback</i> is used. If <i>fallback</i> is a
@@ -110,6 +118,8 @@ descriptor-agnostic way to get properties that have ambiguous types in the
 absence of a descriptor. With a descriptor, the function behaves the same as
 indexing the property directly. Without a descriptor, the <i>fallback</i>
 argument is used to determine the type instead.</p>
+
+</section>
 
 </section>
 
@@ -195,9 +205,19 @@ section for details on how this field is inherited by <a href="type:Instance">In
 
 <section data-name="propType">
 
+<section data-name="Summary">
+
+Gets the unreflected type of an instance property.
+
+</section>
+
+<section data-name="Description">
+
 <p>The <b>propType</b> function returns the unreflected type of the value of
 <i>property</i> from <i>instance</i>. Returns nil if the property is
 uninitialized.</p>
+
+</section>
 
 </section>
 
@@ -245,6 +265,14 @@ the values returned by the script.</p>
 
 <section data-name="set">
 
+<section data-name="Summary">
+
+Sets the property of an instance.
+
+</section>
+
+<section data-name="Description">
+
 <p>The <b>set</b> function sets the <i>property</i> of <i>instance</i> to
 <i>value</i>. If <i>instance</i> has a descriptor, then it is used to determine
 the type when setting the property. Otherwise, <i>fallback</i> is used. If
@@ -258,6 +286,8 @@ descriptor-agnostic way to set properties that have ambiguous types in the
 absence of a descriptor. With a descriptor, the function behaves the same as
 assigning to the property directly. Without a descriptor, the <i>fallback</i>
 argument is used to determine the type instead.</p>
+
+</section>
 
 </section>
 
