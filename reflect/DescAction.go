@@ -265,21 +265,73 @@ func DescAction() rbxmk.Reflector {
 				Description: "Types/DescAction:Description",
 			}
 		},
-		Enums: []*rtypes.Enum{
-			rtypes.NewEnum("DescActionType",
-				rtypes.NewItem{Name: diff.Remove.String(), Value: int(diff.Remove)},
-				rtypes.NewItem{Name: diff.Change.String(), Value: int(diff.Change)},
-				rtypes.NewItem{Name: diff.Add.String(), Value: int(diff.Add)},
-			),
-			rtypes.NewEnum("DescActionElement",
-				rtypes.NewItem{Name: diff.Class.String(), Value: int(diff.Class)},
-				rtypes.NewItem{Name: diff.Property.String(), Value: int(diff.Property)},
-				rtypes.NewItem{Name: diff.Function.String(), Value: int(diff.Function)},
-				rtypes.NewItem{Name: diff.Event.String(), Value: int(diff.Event)},
-				rtypes.NewItem{Name: diff.Callback.String(), Value: int(diff.Callback)},
-				rtypes.NewItem{Name: diff.Enum.String(), Value: int(diff.Enum)},
-				rtypes.NewItem{Name: diff.EnumItem.String(), Value: int(diff.EnumItem)},
-			),
+		Enums: rbxmk.Enums{
+			"Type": func() dump.Enum {
+				return dump.Enum{
+					Items: dump.EnumItems{
+						diff.Remove.String(): {
+							Value:       int(diff.Remove),
+							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Remove.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Type/Items/" + diff.Remove.String() + "/Description",
+						},
+						diff.Change.String(): {
+							Value:       int(diff.Change),
+							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Change.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Type/Items/" + diff.Change.String() + "/Description",
+						},
+						diff.Add.String(): {
+							Value:       int(diff.Add),
+							Summary:     "Types/DescAction:Enums/Type/Items/" + diff.Add.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Type/Items/" + diff.Add.String() + "/Description",
+						},
+					},
+					Summary:     "Types/DescAction:Enums/Type/Summary",
+					Description: "Types/DescAction:Enums/Type/Description",
+				}
+			},
+			"Element": func() dump.Enum {
+				return dump.Enum{
+					Items: dump.EnumItems{
+						diff.Class.String(): {
+							Value:       int(diff.Class),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Class.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Class.String() + "/Description",
+						},
+						diff.Property.String(): {
+							Value:       int(diff.Property),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Property.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Property.String() + "/Description",
+						},
+						diff.Function.String(): {
+							Value:       int(diff.Function),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Function.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Function.String() + "/Description",
+						},
+						diff.Event.String(): {
+							Value:       int(diff.Event),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Event.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Event.String() + "/Description",
+						},
+						diff.Callback.String(): {
+							Value:       int(diff.Callback),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Callback.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Callback.String() + "/Description",
+						},
+						diff.Enum.String(): {
+							Value:       int(diff.Enum),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.Enum.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.Enum.String() + "/Description",
+						},
+						diff.EnumItem.String(): {
+							Value:       int(diff.EnumItem),
+							Summary:     "Types/DescAction:Enums/Element/Items/" + diff.EnumItem.String() + "/Summary",
+							Description: "Types/DescAction:Enums/Element/Items/" + diff.EnumItem.String() + "/Description",
+						},
+					},
+					Summary:     "Types/DescAction:Enums/Element/Summary",
+					Description: "Types/DescAction:Enums/Element/Description",
+				}
+			},
 		},
 		Types: []func() rbxmk.Reflector{
 			Array,
@@ -289,6 +341,7 @@ func DescAction() rbxmk.Reflector {
 			ParameterDesc,
 			String,
 			TypeDesc,
+			Enum,
 		},
 	}
 }

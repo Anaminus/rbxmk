@@ -499,19 +499,19 @@ func (w *World) RegisterReflector(r Reflector) {
 		w.l.SetField(w.l.Get(lua.RegistryIndex), r.Name, mt)
 	}
 
-	if r.Constructors != nil {
-		ctors := w.l.CreateTable(0, len(r.Constructors))
-		for name, ctor := range r.Constructors {
-			if c := ctor.Func; c != nil {
-				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
-					return c(s)
-				}))
-			}
-		}
-		w.l.G.Global.RawSetString(r.Name, ctors)
+	var table *lua.LTable
+	if n := len(r.Constructors) + len(r.Enums); n > 0 {
+		table = w.l.CreateTable(0, n)
+		w.l.G.Global.RawSetString(r.Name, table)
 	}
 
-	w.RegisterEnums(r.Enums...)
+	for name, ctor := range r.Constructors {
+		if c := ctor.Func; c != nil {
+			table.RawSetString(name, w.WrapFunc(func(s State) int {
+				return c(s)
+			}))
+		}
+	}
 
 	if r.Environment != nil {
 		r.Environment(w.State())
@@ -519,6 +519,26 @@ func (w *World) RegisterReflector(r Reflector) {
 
 	for _, t := range r.Types {
 		w.RegisterReflector(t())
+	}
+
+	// Must apply after type registration to ensure Enum type is registered.
+	for name, def := range r.Enums {
+		enum := def()
+		items := make([]rtypes.NewItem, 0, len(enum.Items))
+		for name, item := range enum.Items {
+			items = append(items, rtypes.NewItem{
+				Name:  name,
+				Value: item.Value,
+			})
+		}
+		sort.Slice(items, func(i, j int) bool {
+			if items[i].Value == items[j].Value {
+				return items[i].Name < items[j].Name
+			}
+			return items[i].Value < items[j].Value
+		})
+		// w.RegisterEnums(rtypes.NewEnum(name, items...))
+		w.PushToDictionary(table, name, rtypes.NewEnum(name, items...))
 	}
 }
 

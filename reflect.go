@@ -76,9 +76,9 @@ type Reflector struct {
 	// reflector's type. Returns nil if the value could not be converted.
 	ConvertFrom func(v types.Value) types.Value
 
-	// Enums lists Enum values that related to the type. These are registered
-	// along with the reflector.
-	Enums []*rtypes.Enum
+	// Enums defines enums that related to the type. These are registered along
+	// with the reflector.
+	Enums Enums
 
 	// Types is a list of additional type reflectors that this reflector depends
 	// on.
@@ -203,6 +203,9 @@ type Constructor struct {
 	// one possible signature of the constructor.
 	Dump func() dump.MultiFunction
 }
+
+// Enums is a set of enums keyed by name.
+type Enums map[string]func() dump.Enum
 
 // PushTypeTo returns a Pusher that converts v to a userdata set with a type
 // metatable registered as type t. Each push always produces a new userdata.
