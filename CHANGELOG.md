@@ -16,7 +16,8 @@ branch is the latest unreleased version.
 - The Optional functions under the [type library](https://github.com/Anaminus/rbxmk/blob/imperative/doc/libraries.md#user-content-types) are moved to constructors of the [Optional](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-optional) type.
 	- types.none is now [Optional.none](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-optionalnone).
 	- types.some is now [Optional.some](https://github.com/Anaminus/rbxmk/blob/imperative/doc/types.md#user-content-optionalsome).
-
+- The `path.expand` function errors for unknown variables, or in rare cases where a path could not be located.
+	- With stdin, certain variables expand to the working directory instead of an empty string.
 **Highlights:**
 - Add `base64` format for encoding and decoding strings in Base64.
 - Add `plugin` dump format, which enables custom dump formats.

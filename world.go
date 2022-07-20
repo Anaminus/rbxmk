@@ -745,35 +745,62 @@ func (w *World) Ext(filename string) (ext string) {
 }
 
 // Expand expands a string containing predefined variables.
-func (w *World) Expand(path string) string {
-	return os.Expand(path, func(v string) string {
+func (w *World) Expand(path string) (s string, err error) {
+	s = os.Expand(path, func(v string) string {
 		switch v {
 		case "script_name", "sn":
 			if entry, ok := w.PeekFile(); ok {
 				if entry.Path == "" {
 					return ""
 				}
-				path, _ := filepath.Abs(entry.Path)
+				var path string
+				path, err = filepath.Abs(entry.Path)
+				if err != nil {
+					err = fmt.Errorf("expand %s: %w", v, err)
+				}
 				return filepath.Base(path)
 			}
 		case "script_directory", "script_dir", "sd":
 			if entry, ok := w.PeekFile(); ok {
 				if entry.Path == "" {
-					return ""
+					var dir string
+					dir, err = os.Getwd()
+					return dir
 				}
-				path, _ := filepath.Abs(entry.Path)
+				var path string
+				path, err = filepath.Abs(entry.Path)
+				if err != nil {
+					err = fmt.Errorf("expand %s: %w", v, err)
+				}
 				return filepath.Dir(path)
 			}
 		case "root_script_directory", "root_script_dir", "rsd":
-			return w.RootDir()
+			rootdir := w.RootDir()
+			if rootdir == "" {
+				rootdir, err = os.Getwd()
+				if err != nil {
+					err = fmt.Errorf("expand %s: %w", v, err)
+				}
+			}
+			return rootdir
 		case "working_directory", "working_dir", "wd":
-			wd, _ := os.Getwd()
+			var wd string
+			wd, err = os.Getwd()
+			if err != nil {
+				err = fmt.Errorf("expand %s: %w", v, err)
+			}
 			return wd
 		case "temp_directory", "temp_dir", "tmp":
-			return w.TempDir()
+			t := w.TempDir()
+			if t == "" {
+				err = fmt.Errorf("expand %s: could not find temporary directory", v)
+			}
+			return t
 		}
+		err = fmt.Errorf("unknown variable %q", v)
 		return ""
 	})
+	return s, err
 }
 
 // Split returns the components of a file path.

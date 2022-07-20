@@ -57,22 +57,29 @@ variables are expanded:</p>
 </tr>
 <tr>
 <td><code>$script_directory</code>, <code>$script_dir</code>, <code>$sd</code></td>
-<td>The directory of the currently running script. Empty for stdin.</td>
+<td>The directory of the currently running script. Expands to the working
+directory for stdin. Causes an error if the working directory could not be
+located.</td>
 </tr>
 <tr>
 <td><code>$root_script_directory</code>, <code>$root_script_dir</code>, <code>$rsd</code></td>
-<td>The directory of the first running script. Empty for stdin.</td>
+<td>The directory of the first running script. Expands to the working directory
+for stdin. Causes an error if the working directory could not be located.</td>
 </tr>
 <tr>
 <td><code>$working_directory</code>, <code>$working_dir</code>, <code>$wd</code></td>
-<td>The current working directory.</td>
+<td>The current working directory. Causes an error if the working directory
+could not be located.</td>
 </tr>
 <tr>
 <td><code>$temp_directory</code>, <code>$temp_dir</code>, <code>$tmp</code></td>
-<td>The directory for temporary files.</td>
+<td>The directory for temporary files. Causes an error if a temporary directory
+could not be located.</td>
 </tr>
 </tbody>
 </table>
+
+<p>Other variables cause an error to be thrown.</p>
 
 </section>
 

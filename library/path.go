@@ -38,7 +38,10 @@ func pathClean(s rbxmk.State) int {
 
 func pathExpand(s rbxmk.State) int {
 	path := s.CheckString(1)
-	expanded := s.World.Expand(path)
+	expanded, err := s.World.Expand(path)
+	if err != nil {
+		return s.RaiseError("%s", err)
+	}
 	s.L.Push(lua.LString(expanded))
 	return 1
 
@@ -92,6 +95,7 @@ func dumpPath(s rbxmk.State) dump.Library {
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaString)},
 					},
+					CanError:    true,
 					Summary:     "Libraries/path:Fields/expand/Summary",
 					Description: "Libraries/path:Fields/expand/Description",
 				},
