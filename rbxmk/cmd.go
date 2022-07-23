@@ -58,4 +58,24 @@ func (c *CommandRegistry) NewFlag(def dump.Flag, flags *pflag.FlagSet, name stri
 	return flag
 }
 
+// ExistingCommand is similar to NewCommand, but does not overwrite the fields
+// of cmd.
+func (c *CommandRegistry) ExistingCommand(def dump.Command, cmd *cobra.Command) *cobra.Command {
+	if c.Command == nil {
+		c.Command = map[*cobra.Command]*dump.Command{}
+	}
+	c.Command[cmd] = &def
+	return cmd
+}
+
+// ExistingFlag is similar to NewFlag, but does not overwrite the fields of
+// flag.
+func (c *CommandRegistry) ExistingFlag(def dump.Flag, flag *pflag.Flag) *pflag.Flag {
+	if c.Flag == nil {
+		c.Flag = map[*pflag.Flag]*dump.Flag{}
+	}
+	c.Flag[flag] = &def
+	return flag
+}
+
 var Register CommandRegistry

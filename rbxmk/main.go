@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/anaminus/cobra"
+	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rbxmk/render/term"
 	terminal "golang.org/x/term"
@@ -59,6 +60,38 @@ func init() {
 		return width
 	})
 	Program.SetUsageTemplate(usageTemplate)
+
+	Program.PersistentPreRun = func(_ *cobra.Command, _ []string) {
+		for _, cmd := range Program.Commands() {
+			switch cmd.Name() {
+			case "completion":
+				Register.ExistingCommand(dump.Command{
+					Arguments:   "Commands/completion:Arguments",
+					Summary:     "Commands/completion:Summary",
+					Description: "Commands/completion:Description",
+				}, cmd)
+				cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
+					Register.ExistingFlag(dump.Flag{Description: "Commands/completion:Flags/" + f.Name}, f)
+				})
+				for _, sub := range cmd.Commands() {
+					Register.ExistingCommand(dump.Command{
+						Arguments:   "Commands/completion/" + sub.Name() + ":Arguments",
+						Summary:     "Commands/completion/" + sub.Name() + ":Summary",
+						Description: "Commands/completion/" + sub.Name() + ":Description",
+					}, sub)
+				}
+			case "help":
+				Register.ExistingCommand(dump.Command{
+					Arguments:   "Commands/help:Arguments",
+					Summary:     "Commands/help:Summary",
+					Description: "Commands/help:Description",
+				}, cmd)
+				cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
+					Register.ExistingFlag(dump.Flag{Description: "Commands/help:Flags/" + f.Name}, f)
+				})
+			}
+		}
+	}
 }
 
 var ProgramContext, ProgramExit = context.WithCancel(context.Background())
