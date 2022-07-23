@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
 
+	"github.com/anaminus/cobra"
 	lua "github.com/anaminus/gopher-lua"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
@@ -168,6 +170,35 @@ func dumpTypes(dst dump.TypeDefs, src []func() rbxmk.Reflector) {
 	}
 }
 
+func walkCommands(def dump.Command, reg CommandRegistry, cmd *cobra.Command) dump.Command {
+	flags := cmd.PersistentFlags()
+	flagdefs := dump.Flags{}
+	flags.VisitAll(func(f *pflag.Flag) {
+		flagdef := reg.Flag[f]
+		if flagdef == nil {
+			panic(fmt.Errorf("command %q: flag %q: missing definition", cmd.CommandPath(), f.Name))
+		}
+		flagdefs[f.Name] = *flagdef
+	})
+	if len(flagdefs) > 0 {
+		def.Flags = flagdefs
+	}
+
+	subdefs := dump.Commands{}
+	for _, sub := range cmd.Commands() {
+		subdef := reg.Command[sub]
+		if subdef == nil {
+			panic(fmt.Errorf("command %q: missing definition", sub.CommandPath()))
+		}
+		subdefs[sub.Name()] = walkCommands(*subdef, reg, sub)
+	}
+	if len(subdefs) > 0 {
+		def.Commands = subdefs
+	}
+
+	return def
+}
+
 func DumpWorld(world *rbxmk.World) dump.Root {
 	state := world.State()
 	root := dump.Root{
@@ -194,6 +225,8 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		}
 		root.Libraries = append(root.Libraries, lib)
 	}
+	root.Program = *Register.Command[Program]
+	root.Program = walkCommands(root.Program, Register, Program)
 	root.Fragments = DocFragments()
 	root.Description = "Libraries"
 	return root
