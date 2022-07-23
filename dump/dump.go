@@ -95,6 +95,22 @@ type Flags map[string]Flag
 
 // Flag describes a command flag.
 type Flag struct {
+	// Type indicates the value type of the flag.
+	Type string
+	// Default indicates the default value for the flag.
+	Default string `json:",omitempty"`
+	// Deprecated indicates whether the flag is deprecated, and if so, the new
+	// flag to use.
+	Deprecated string `json:",omitempty"`
+	// Hidden indicates whether the flag is hidden.
+	Hidden bool `json:",omitempty"`
+	// Shorthand indicates a one-letter abbreviation for the flag.
+	Shorthand string `json:",omitempty"`
+	// ShorthandDeprecated indicates whether the Shorthand of the flag is
+	// deprecated, and if so, the new flag to use.
+	ShorthandDeprecated string `json:",omitempty"`
+	// Description is a fragment reference pointing to a description of the
+	// flag.
 	Description string `json:",omitempty"`
 }
 

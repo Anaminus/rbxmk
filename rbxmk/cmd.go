@@ -51,6 +51,14 @@ func (c *CommandRegistry) NewFlag(def dump.Flag, flags *pflag.FlagSet, name stri
 	if flag == nil {
 		panic("flag does not exist")
 	}
+
+	def.Type = flag.Value.Type()
+	def.Shorthand = flag.Shorthand
+	def.Default = flag.DefValue
+	def.Deprecated = flag.Deprecated
+	def.Hidden = flag.Hidden
+	def.ShorthandDeprecated = flag.ShorthandDeprecated
+
 	c.Flag[flag] = &def
 	if def.Description != "" {
 		flag.Usage = DocFlag(def.Description)
@@ -74,6 +82,14 @@ func (c *CommandRegistry) ExistingFlag(def dump.Flag, flag *pflag.Flag) *pflag.F
 	if c.Flag == nil {
 		c.Flag = map[*pflag.Flag]*dump.Flag{}
 	}
+
+	def.Type = flag.Value.Type()
+	def.Shorthand = flag.Shorthand
+	def.Default = flag.DefValue
+	def.Deprecated = flag.Deprecated
+	def.Hidden = flag.Hidden
+	def.ShorthandDeprecated = flag.ShorthandDeprecated
+
 	c.Flag[flag] = &def
 	return flag
 }
