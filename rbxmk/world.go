@@ -43,10 +43,17 @@ type WorldFlags struct {
 }
 
 func (f *WorldFlags) SetFlags(flags *pflag.FlagSet) {
-	flags.StringArrayVar(&f.IncludedRoots, "include-root", nil, DocFlag("Flags/world:Flags/include-root"))
-	flags.StringArrayVar(&f.Libraries, "libraries", nil, DocFlag("Flags/world:Flags/libraries"))
-	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, DocFlag("Flags/world:Flags/allow-insecure-paths"))
-	flags.BoolVar(&f.Debug, "debug", false, DocFlag("Flags/world:Flags/debug"))
+	flags.StringArrayVar(&f.IncludedRoots, "include-root", nil, "")
+	Register.NewFlag(dump.Flag{Description: "Flags/world:Flags/include-root"}, flags, "include-root")
+
+	flags.StringArrayVar(&f.Libraries, "libraries", nil, "")
+	Register.NewFlag(dump.Flag{Description: "Flags/world:Flags/libraries"}, flags, "libraries")
+
+	flags.BoolVar(&f.InsecurePaths, "allow-insecure-paths", false, "")
+	Register.NewFlag(dump.Flag{Description: "Flags/world:Flags/allow-insecure-paths"}, flags, "allow-insecure-paths")
+
+	flags.BoolVar(&f.Debug, "debug", false, "")
+	Register.NewFlag(dump.Flag{Description: "Flags/world:Flags/debug"}, flags, "debug")
 }
 
 // WorldOpt are options to InitWorld.

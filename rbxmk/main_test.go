@@ -11,6 +11,5 @@ func TestFragments(t *testing.T) {
 			t.Fatal(v)
 		}
 	}()
-	DocumentCommands()
 	UnresolvedFragments()
 }

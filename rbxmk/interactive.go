@@ -7,18 +7,21 @@ import (
 
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rbxmk/render/term"
 	"github.com/kballard/go-shellquote"
 	"github.com/peterh/liner"
 )
 
-var exitCommand = &cobra.Command{
-	Use:   "exit " + Doc("Commands/exit:Arguments"),
-	Short: Doc("Commands/exit:Summary"),
-	Long:  Doc("Commands/exit:Description"),
-	Args:  cobra.NoArgs,
-	Run:   ExitCommand{}.Run,
-}
+var exitCommand = Register.NewCommand(dump.Command{
+	Arguments:   "Commands/exit:Arguments",
+	Summary:     "Commands/exit:Summary",
+	Description: "Commands/exit:Description",
+}, &cobra.Command{
+	Use:  "exit",
+	Args: cobra.NoArgs,
+	Run:  ExitCommand{}.Run,
+})
 
 type ExitCommand struct{}
 

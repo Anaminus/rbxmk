@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/anaminus/rbxmk/rtypes"
@@ -15,10 +16,14 @@ import (
 
 func init() {
 	var c DownloadAssetCommand
-	var cmd = &cobra.Command{
+	var cmd = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/download-asset:Arguments",
+		Summary:     "Commands/download-asset:Summary",
+		Description: "Commands/download-asset:Description",
+	}, &cobra.Command{
 		Use:  "download-asset",
 		RunE: c.Run,
-	}
+	})
 	c.SetFlags(cmd.PersistentFlags())
 	Program.AddCommand(cmd)
 }
@@ -32,9 +37,15 @@ type DownloadAssetCommand struct {
 
 func (c *DownloadAssetCommand) SetFlags(flags *pflag.FlagSet) {
 	SetCookieFlags(&c.Cookies, flags)
-	flags.Int64Var(&c.ID, "id", 0, DocFlag("Commands/download-asset:Flags/id"))
-	flags.StringVar(&c.AssetFormat, "format", formats.F_Binary, DocFlag("Commands/download-asset:Flags/format"))
-	flags.StringVar(&c.FileFormat, "file-format", "", DocFlag("Commands/download-asset:Flags/file-format"))
+
+	flags.Int64Var(&c.ID, "id", 0, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/download-asset:Flags/id"}, flags, "id")
+
+	flags.StringVar(&c.AssetFormat, "format", formats.F_Binary, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/download-asset:Flags/format"}, flags, "format")
+
+	flags.StringVar(&c.FileFormat, "file-format", "", "")
+	Register.NewFlag(dump.Flag{Description: "Commands/download-asset:Flags/file-format"}, flags, "file-format")
 }
 
 func (c *DownloadAssetCommand) Run(cmd *cobra.Command, args []string) error {

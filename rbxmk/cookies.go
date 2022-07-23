@@ -6,6 +6,7 @@ import (
 
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rtypes"
 )
 
@@ -17,7 +18,9 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookies-from", DocFlag("Flags/cookies:Flags/cookies-from"))
+	}), "cookies-from", "")
+	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookies-from"}, flags, "cookies-from")
+
 	flags.Var(funcFlag(func(v string) error {
 		f, err := os.Open(v)
 		if err != nil {
@@ -30,7 +33,9 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookies-file", DocFlag("Flags/cookies:Flags/cookies-file"))
+	}), "cookies-file", "")
+	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookies-file"}, flags, "cookies-file")
+
 	flags.Var(funcFlag(func(v string) error {
 		content := os.Getenv(v)
 		cookies, err := rbxmk.DecodeCookies(strings.NewReader(content))
@@ -39,5 +44,6 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		}
 		*c = append(*c, cookies...)
 		return nil
-	}), "cookie-var", DocFlag("Flags/cookies:Flags/cookie-var"))
+	}), "cookie-var", "")
+	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookie-var"}, flags, "cookie-var")
 }

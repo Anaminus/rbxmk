@@ -23,13 +23,14 @@ func DocFlag(fragref string) string { return docState.DocFlag(fragref) }
 func DocFragments() []string        { return docState.DocFragments() }
 func UnresolvedFragments()          { docState.UnresolvedFragments() }
 
-var Program = &cobra.Command{
+var Program = Register.NewCommand(dump.Command{
+	Summary:     "Commands:Summary",
+	Description: "Commands:Summary",
+}, &cobra.Command{
 	Use:           "rbxmk",
-	Short:         Doc("Commands:Summary"),
-	Long:          Doc("Commands:Summary"),
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
+})
 
 // Template function that expands environment variables. Each argument is an
 // alternating key and value. The last value is the string to expand.
@@ -83,7 +84,6 @@ func main() {
 	Program.SetOut(os.Stdout)
 	Program.SetErr(os.Stderr)
 
-	DocumentCommands()
 	UnresolvedFragments()
 
 	if err := Starter()(ctx); err != nil {

@@ -28,6 +28,8 @@ type Root struct {
 	Enums Enums `json:",omitempty"`
 	// Formats contains formats registered by a world.
 	Formats Formats
+	// Program contains the root command created by the program.
+	Program Command
 	// Fragments contains fragment references requested by the program.
 	Fragments []string
 	// Description is a fragment reference pointing to a general description of
@@ -65,6 +67,34 @@ type Format struct {
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
 	// the format.
+	Description string `json:",omitempty"`
+}
+
+// Commands maps a name to a command.
+type Commands map[string]Command
+
+// Command describes a program command.
+type Command struct {
+	// Arguments is a fragment reference pointing to a definition of the
+	// command's arguments.
+	Arguments string `json:",omitempty"`
+	// Summary is a fragment reference pointing to a short summary of the
+	// command.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the command.
+	Description string `json:",omitempty"`
+	// Flags contains the flags defined on the command.
+	Flags Flags `json:",omitempty"`
+	// Commands contains subcommands defined on the command.
+	Commands Commands `json:",omitempty"`
+}
+
+// Flags maps a name to a flag.
+type Flags map[string]Flag
+
+// Flag describes a command flag.
+type Flag struct {
 	Description string `json:",omitempty"`
 }
 

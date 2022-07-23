@@ -8,17 +8,22 @@ import (
 	"github.com/anaminus/gopher-lua/parse"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/library"
 	"github.com/peterh/liner"
 )
 
 func init() {
 	var c InteractiveCommand
-	var cmd = &cobra.Command{
+	var cmd = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/interactive:Arguments",
+		Summary:     "Commands/interactive:Summary",
+		Description: "Commands/interactive:Description",
+	}, &cobra.Command{
 		Use:     "interactive",
 		Aliases: []string{"i"},
 		RunE:    c.Run,
-	}
+	})
 	c.SetFlags(cmd.PersistentFlags())
 	Program.AddCommand(cmd)
 }

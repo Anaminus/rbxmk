@@ -10,14 +10,19 @@ import (
 
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
+	"github.com/anaminus/rbxmk/dump"
 )
 
 func init() {
 	var c VersionCommand
-	var cmd = &cobra.Command{
+	var cmd = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/version:Arguments",
+		Summary:     "Commands/version:Summary",
+		Description: "Commands/version:Description",
+	}, &cobra.Command{
 		Use:  "version",
 		RunE: c.Run,
-	}
+	})
 	c.SetFlags(cmd.PersistentFlags())
 	Program.AddCommand(cmd)
 }
@@ -120,8 +125,11 @@ type VersionCommand struct {
 }
 
 func (c *VersionCommand) SetFlags(flags *pflag.FlagSet) {
-	flags.StringVarP(&c.Format, "format", "f", "text", DocFlag("Commands/version:Flags/format"))
-	flags.CountVarP(&c.Verbose, "verbose", "v", DocFlag("Commands/version:Flags/verbose"))
+	flags.StringVarP(&c.Format, "format", "f", "text", "")
+	Register.NewFlag(dump.Flag{Description: "Commands/version:Flags/format"}, flags, "format")
+
+	flags.CountVarP(&c.Verbose, "verbose", "v", "")
+	Register.NewFlag(dump.Flag{Description: "Commands/version:Flags/verbose"}, flags, "verbose")
 }
 
 func (c *VersionCommand) WriteInfo(w io.Writer) error {

@@ -10,6 +10,7 @@ import (
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/library"
 )
 
@@ -27,10 +28,14 @@ func shortenPath(filename string) string {
 }
 
 func initRunCommand(c *RunCommand) *cobra.Command {
-	var cmd = &cobra.Command{
+	var cmd = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/run:Arguments",
+		Summary:     "Commands/run:Summary",
+		Description: "Commands/run:Description",
+	}, &cobra.Command{
 		Use:  "run",
 		RunE: c.Run,
-	}
+	})
 	c.SetFlags(cmd.PersistentFlags())
 	cmd.FParseErrWhitelist.UnknownFlags = true
 	cmd.Flags().KeepUnknownFlags = true

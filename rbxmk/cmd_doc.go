@@ -7,17 +7,22 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/pflag"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rbxmk/render/html"
 	"github.com/anaminus/rbxmk/rbxmk/render/term"
 )
 
 func init() {
 	var c DocCommand
-	var cmd = &cobra.Command{
+	var cmd = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/doc:Arguments",
+		Summary:     "Commands/doc:Summary",
+		Description: "Commands/doc:Description",
+	}, &cobra.Command{
 		Use:  "doc",
 		Args: cobra.MaximumNArgs(1),
 		RunE: c.Run,
-	}
+	})
 	c.SetFlags(cmd.PersistentFlags())
 	Program.AddCommand(cmd)
 }
@@ -31,11 +36,20 @@ type DocCommand struct {
 }
 
 func (c *DocCommand) SetFlags(flags *pflag.FlagSet) {
-	flags.BoolVarP(&c.List, "list", "l", false, DocFlag("Commands/doc:Flags/list"))
-	flags.StringVarP(&c.Format, "format", "f", "terminal", DocFlag("Commands/doc:Flags/format"))
-	flags.IntVarP(&c.Width, "width", "w", 0, DocFlag("Commands/doc:Flags/width"))
-	flags.BoolVarP(&c.ForExport, "export", "", false, DocFlag("Commands/doc:Flags/export"))
-	flags.BoolVarP(&c.Recursive, "recursive", "r", false, DocFlag("Commands/doc:Flags/recursive"))
+	flags.BoolVarP(&c.List, "list", "l", false, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/doc:Flags/list"}, flags, "list")
+
+	flags.StringVarP(&c.Format, "format", "f", "terminal", "")
+	Register.NewFlag(dump.Flag{Description: "Commands/doc:Flags/format"}, flags, "format")
+
+	flags.IntVarP(&c.Width, "width", "w", 0, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/doc:Flags/width"}, flags, "width")
+
+	flags.BoolVarP(&c.ForExport, "export", "", false, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/doc:Flags/export"}, flags, "export")
+
+	flags.BoolVarP(&c.Recursive, "recursive", "r", false, "")
+	Register.NewFlag(dump.Flag{Description: "Commands/doc:Flags/recursive"}, flags, "recursive")
 }
 
 func (c *DocCommand) Run(cmd *cobra.Command, args []string) error {

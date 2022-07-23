@@ -7,6 +7,7 @@ import (
 
 	"github.com/anaminus/pflag"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
@@ -113,13 +114,18 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) 
 }
 
 func (d *DescFlags) SetFlags(flags *pflag.FlagSet) {
-	flags.BoolVar(&d.Latest, "desc-latest", false, DocFlag("Flags/desc:Flags/desc-latest"))
+	flags.BoolVar(&d.Latest, "desc-latest", false, "")
+	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-latest"}, flags, "desc-latest")
+
 	flags.Var(funcFlag(func(v string) error {
 		d.Files = append(d.Files, v)
 		return nil
-	}), "desc-file", DocFlag("Flags/desc:Flags/desc-file"))
+	}), "desc-file", "")
+	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-file"}, flags, "desc-file")
+
 	flags.Var(funcFlag(func(v string) error {
 		d.Patches = append(d.Patches, v)
 		return nil
-	}), "desc-patch", DocFlag("Flags/desc:Flags/desc-patch"))
+	}), "desc-patch", "")
+	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-patch"}, flags, "desc-patch")
 }

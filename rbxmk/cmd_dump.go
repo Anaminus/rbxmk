@@ -12,6 +12,7 @@ import (
 
 	"github.com/anaminus/cobra"
 	"github.com/anaminus/rbxmk"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dumpformats"
 	"github.com/anaminus/rbxmk/formats"
 	"github.com/anaminus/rbxmk/library"
@@ -21,20 +22,25 @@ import (
 )
 
 func init() {
-	var Dump = &cobra.Command{
+	var Dump = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/dump:Arguments",
+		Summary:     "Commands/dump:Summary",
+		Description: "Commands/dump:Description",
+	}, &cobra.Command{
 		Use:  "dump",
 		Args: cobra.NoArgs,
-	}
+	})
 
 	for _, format := range dumpformats.All() {
 		name := format.Name
-		dump := format.Func
+		fn := format.Func
 		opts := dumpformats.Options{}
-		cmd := &cobra.Command{
-			Use:   name,
-			Short: Doc("Commands/dump/" + name + ":Summary"),
-			Long:  Doc("Commands/dump/" + name + ":Description"),
-			Args:  cobra.NoArgs,
+		cmd := Register.NewCommand(dump.Command{
+			Summary:     "Commands/dump/" + name + ":Summary",
+			Description: "Commands/dump/" + name + ":Description",
+		}, &cobra.Command{
+			Use:  name,
+			Args: cobra.NoArgs,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				// Populate dump.
 				world, err := InitWorld(WorldOpt{
@@ -48,29 +54,31 @@ func init() {
 				root := DumpWorld(world)
 
 				// Dump format.
-				return dump(cmd.OutOrStdout(), root, opts)
+				return fn(cmd.OutOrStdout(), root, opts)
 			},
-		}
+		})
 		flags := cmd.PersistentFlags()
 		for flag, value := range format.Options {
-			usage := Doc("Commands/dump/" + name + ":Flags/" + flag)
 			switch value := value.(type) {
 			case string:
-				opts[flag] = flags.String(flag, value, usage)
+				opts[flag] = flags.String(flag, value, "")
 			default:
 				panic("unimplemented dump format option type")
 			}
+			Register.NewFlag(dump.Flag{Description: "Commands/dump/" + name + ":Flags/" + flag}, flags, flag)
 		}
 		Dump.AddCommand(cmd)
 	}
 
-	var plugin = &cobra.Command{
-		Use:   "plugin " + Doc("Commands/dump/plugin:Arguments"),
-		Short: Doc("Commands/dump/plugin:Summary"),
-		Long:  Doc("Commands/dump/plugin:Description"),
-		Args:  cobra.ExactArgs(1),
-		RunE:  runDumpPluginCommand,
-	}
+	var plugin = Register.NewCommand(dump.Command{
+		Arguments:   "Commands/dump/plugin:Arguments",
+		Summary:     "Commands/dump/plugin:Summary",
+		Description: "Commands/dump/plugin:Description",
+	}, &cobra.Command{
+		Use:  "plugin",
+		Args: cobra.ExactArgs(1),
+		RunE: runDumpPluginCommand,
+	})
 	Dump.AddCommand(plugin)
 
 	Program.AddCommand(Dump)
