@@ -4,18 +4,17 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"text/template"
 
 	"github.com/anaminus/cobra"
+	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/rbxmk/render/term"
 	terminal "golang.org/x/term"
 )
 
-var Frag = NewFragments(initFragRoot())
-
-// FragContent renders in HTML without the outer section or body.
-func FragContent(fragref string) string {
-	return Frag.ResolveWith(fragref, FragOptions{Inner: true})
-}
+var Frag = NewFragments(initFragRoot(), template.FuncMap{
+	"expand": os.Expand,
+})
 
 var docState = NewDocState(Frag)
 
@@ -47,10 +46,6 @@ func expand(p ...string) string {
 }
 
 func init() {
-	fragTmplFuncs["frag"] = FragContent
-	fragTmplFuncs["fraglist"] = Frag.List
-	fragTmplFuncs["expand"] = os.Expand
-
 	cobra.AddTemplateFunc("frag", func(fragref string) string {
 		return Frag.ResolveWith(fragref, FragOptions{
 			Renderer: term.NewRenderer(-1).Render,

@@ -119,9 +119,6 @@ func ParseFragRef(s, suffix string, filesep rune, dir bool) (items []string, inf
 // unwrapped content.
 type Renderer = func(w io.Writer, s *goquery.Selection) error
 
-// Global template functions.
-var fragTmplFuncs = template.FuncMap{}
-
 // FragOptions configure ExecuteFragTmpl.
 type FragOptions struct {
 	// Data included with the executed template.
@@ -157,9 +154,45 @@ func normalizeSpacing(buf *bytes.Buffer, opt FragOptions) {
 	}
 }
 
+// Fragments provides methods for resolving fragments.
+type Fragments struct {
+	root drill.Node
+
+	mut   sync.RWMutex
+	cache map[string]*htmldrill.Node
+
+	tmplFuncs template.FuncMap
+
+	// Sep is the separator used for fragment references to separate path
+	// content from section content. Defaults to ':'.
+	Sep rune
+
+	// Suffix is the Suffix applied to the base file portion of fragment
+	// references. Defaults to ".html".
+	Suffix string
+}
+
+// NewFragments returns a new Fragments initialized with root.
+func NewFragments(root drill.Node, funcs template.FuncMap) *Fragments {
+	frag := &Fragments{
+		root:      root,
+		cache:     map[string]*htmldrill.Node{},
+		tmplFuncs: template.FuncMap{},
+		Sep:       ':',
+		Suffix:    ".html",
+	}
+	for name, fn := range funcs {
+		frag.tmplFuncs[name] = fn
+	}
+	// Renders in HTML without the outer section or body.
+	frag.tmplFuncs["frag"] = frag.Content
+	frag.tmplFuncs["fraglist"] = frag.List
+	return frag
+}
+
 // ExecuteFragTmpl converts the result of node, in template format, to a final
 // rendering.
-func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
+func (f *Fragments) ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	// True if node is the root of the file.
 	var isRoot bool
 	if n, ok := node.(*htmldrill.Node); ok {
@@ -169,7 +202,7 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	// Parse template.
 	tmplText := node.Fragment()
 	t := template.New("root")
-	t.Funcs(fragTmplFuncs)
+	t.Funcs(f.tmplFuncs)
 	t.Funcs(opt.TmplFuncs)
 	t, err := t.Parse(tmplText)
 	if err != nil {
@@ -226,32 +259,6 @@ func ExecuteFragTmpl(fragref string, node drill.Node, opt FragOptions) string {
 	return buf.String()
 }
 
-// Fragments provides methods for resolving fragments.
-type Fragments struct {
-	root drill.Node
-
-	mut   sync.RWMutex
-	cache map[string]*htmldrill.Node
-
-	// Sep is the separator used for fragment references to separate path
-	// content from section content. Defaults to ':'.
-	Sep rune
-
-	// Suffix is the Suffix applied to the base file portion of fragment
-	// references. Defaults to ".html".
-	Suffix string
-}
-
-// NewFragments returns a new Fragments initialized with root.
-func NewFragments(root drill.Node) *Fragments {
-	return &Fragments{
-		root:   root,
-		cache:  map[string]*htmldrill.Node{},
-		Sep:    ':',
-		Suffix: ".html",
-	}
-}
-
 // Resolve returns the content of the fragment referred to by fragref.
 // Returns an empty string if no content was found.
 func (f *Fragments) Resolve(fragref string) string {
@@ -264,7 +271,7 @@ func (f *Fragments) ResolveWith(fragref string, opt FragOptions) string {
 	if node == nil {
 		return ""
 	}
-	return ExecuteFragTmpl(fragref, node, opt)
+	return f.ExecuteFragTmpl(fragref, node, opt)
 }
 
 // Length returns the number of child fragment references available under the
@@ -297,6 +304,11 @@ func (f *Fragments) Count(fragref string) int {
 		}
 	}
 	return 0
+}
+
+// Content renders in HTML without the outer section or body.
+func (f *Fragments) Content(fragref string) string {
+	return f.ResolveWith(fragref, FragOptions{Inner: true})
 }
 
 // List returns a list of child fragment references available under the fragment
@@ -471,7 +483,7 @@ func (d *DocState) DocWith(fragref string, opt FragOptions) string {
 		d.failed[fragref] = struct{}{}
 		return "{" + Language + ":" + fragref + "}"
 	}
-	return ExecuteFragTmpl(fragref, node, opt)
+	return d.fragState.ExecuteFragTmpl(fragref, node, opt)
 }
 
 // Doc returns the content of the fragment referred to by fragref. The given
