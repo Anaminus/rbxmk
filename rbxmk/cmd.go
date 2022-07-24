@@ -25,6 +25,11 @@ func (c *CommandRegistry) NewCommand(def dump.Command, cmd *cobra.Command) *cobr
 	if c.Command == nil {
 		c.Command = map[*cobra.Command]*dump.Command{}
 	}
+
+	def.Aliases = make([]string, len(cmd.Aliases))
+	copy(def.Aliases, cmd.Aliases)
+	def.Hidden = cmd.Hidden
+
 	c.Command[cmd] = &def
 	if def.Arguments != "" {
 		name := cmd.Name()

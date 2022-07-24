@@ -75,6 +75,10 @@ type Commands map[string]Command
 
 // Command describes a program command.
 type Command struct {
+	// Aliases lists available aliases for the command.
+	Aliases []string `json:",omitempty"`
+	// Hidden indicates whether the command is hidden.
+	Hidden bool `json:",omitempty"`
 	// Arguments is a fragment reference pointing to a definition of the
 	// command's arguments.
 	Arguments string `json:",omitempty"`
