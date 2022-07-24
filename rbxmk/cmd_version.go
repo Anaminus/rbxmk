@@ -16,7 +16,6 @@ import (
 func init() {
 	var c VersionCommand
 	var cmd = Register.NewCommand(dump.Command{
-		Arguments:   "Commands/version:Arguments",
 		Summary:     "Commands/version:Summary",
 		Description: "Commands/version:Description",
 	}, &cobra.Command{

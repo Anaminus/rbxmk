@@ -16,7 +16,6 @@ import (
 func init() {
 	var c InteractiveCommand
 	var cmd = Register.NewCommand(dump.Command{
-		Arguments:   "Commands/interactive:Arguments",
 		Summary:     "Commands/interactive:Summary",
 		Description: "Commands/interactive:Description",
 	}, &cobra.Command{
