@@ -18,6 +18,7 @@ type CommandRegistry struct {
 //     - def.Arguments sets cmd.Use
 //     - def.Summary sets cmd.Short
 //     - def.Description sets cmd.Long
+//     - def.Deprecated sets cmd.Deprecated
 //
 // Returns cmd.
 func (c *CommandRegistry) NewCommand(def dump.Command, cmd *cobra.Command) *cobra.Command {
@@ -36,6 +37,9 @@ func (c *CommandRegistry) NewCommand(def dump.Command, cmd *cobra.Command) *cobr
 	}
 	if def.Description != "" {
 		cmd.Long = Doc(def.Description)
+	}
+	if def.Deprecated != "" {
+		cmd.Deprecated = Doc(def.Deprecated)
 	}
 	return cmd
 }

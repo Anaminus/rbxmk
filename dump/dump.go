@@ -84,6 +84,9 @@ type Command struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the command.
 	Description string `json:",omitempty"`
+	// Deprecated is a fragment reference pointing to a message detailing the
+	// deprecation of the command.
+	Deprecated string `json:",omitempty"`
 	// Flags contains the flags defined on the command.
 	Flags Flags `json:",omitempty"`
 	// Commands contains subcommands defined on the command.
