@@ -55,13 +55,17 @@ func (c *CommandRegistry) NewFlag(def dump.Flag, flags *pflag.FlagSet, name stri
 	def.Type = flag.Value.Type()
 	def.Shorthand = flag.Shorthand
 	def.Default = flag.DefValue
-	def.Deprecated = flag.Deprecated
 	def.Hidden = flag.Hidden
-	def.ShorthandDeprecated = flag.ShorthandDeprecated
 
 	c.Flag[flag] = &def
 	if def.Description != "" {
 		flag.Usage = DocFlag(def.Description)
+	}
+	if def.Deprecated != "" {
+		flag.Deprecated = DocFlag(def.Deprecated)
+	}
+	if def.ShorthandDeprecated != "" {
+		flag.ShorthandDeprecated = DocFlag(def.ShorthandDeprecated)
 	}
 	return flag
 }

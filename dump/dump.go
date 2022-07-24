@@ -99,15 +99,16 @@ type Flag struct {
 	Type string
 	// Default indicates the default value for the flag.
 	Default string `json:",omitempty"`
-	// Deprecated indicates whether the flag is deprecated, and if so, the new
-	// flag to use.
+	// Deprecated indicates whether the flag is deprecated, and if so, a
+	// fragment reference pointing to a message describing the deprecation.
 	Deprecated string `json:",omitempty"`
 	// Hidden indicates whether the flag is hidden.
 	Hidden bool `json:",omitempty"`
 	// Shorthand indicates a one-letter abbreviation for the flag.
 	Shorthand string `json:",omitempty"`
-	// ShorthandDeprecated indicates whether the Shorthand of the flag is
-	// deprecated, and if so, the new flag to use.
+	// ShorthandDeprecated indicates whether the shorthand of the flag is
+	// deprecated, and if so, a fragment reference pointing to a message
+	// describing the deprecation.
 	ShorthandDeprecated string `json:",omitempty"`
 	// Description is a fragment reference pointing to a description of the
 	// flag.
