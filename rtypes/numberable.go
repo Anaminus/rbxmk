@@ -4,7 +4,7 @@ import (
 	"github.com/robloxapi/types"
 )
 
-const T_Number = "Number"
+const T_Number = "number"
 
 // Numberable returns v as a floating-point number. ok is false if the value
 // could not be converted. Types that can be converted are the built-in numeric
