@@ -99,6 +99,7 @@ func Optional() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "group",
 				Underlying:  dt.Prim(rtypes.T_Optional),
 				Summary:     "Types/Optional:Summary",
 				Description: "Types/Optional:Description",

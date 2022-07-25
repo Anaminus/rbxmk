@@ -54,6 +54,7 @@ func Color3uint8() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "roblox",
 				Underlying:  dt.Prim(rtypes.T_Color3),
 				Summary:     "Types/Color3uint8:Summary",
 				Description: "Types/Color3uint8:Description",

@@ -29,6 +29,7 @@ func Tuple() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "group",
 				Summary:     "Types/Tuple:Summary",
 				Description: "Types/Tuple:Description",
 			}

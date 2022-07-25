@@ -60,6 +60,7 @@ func TypeDesc() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Struct{
 					"Category": dt.Prim(rtypes.T_String),
 					"Name":     dt.Prim(rtypes.T_String),

@@ -619,6 +619,7 @@ func Desc() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "rbxmk",
 				Summary:     "Types/Desc:Summary",
 				Description: "Types/Desc:Description",
 			}

@@ -50,6 +50,7 @@ func Double() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/double:Summary",
 				Description: "Types/double:Description",
 			}

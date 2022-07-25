@@ -64,6 +64,7 @@ func HttpHeaders() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "rbxmk",
 				Underlying:  dt.Map{K: dt.Prim(rtypes.T_String), V: dt.Or{dt.Prim(rtypes.T_String), dt.Array{T: dt.Prim(rtypes.T_String)}}},
 				Summary:     "Types/HttpHeaders:Summary",
 				Description: "Types/HttpHeaders:Description",

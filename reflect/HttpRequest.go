@@ -60,6 +60,7 @@ func HttpRequest() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "rbxmk",
 				Summary:     "Types/HttpRequest:Summary",
 				Description: "Types/HttpRequest:Description",
 			}

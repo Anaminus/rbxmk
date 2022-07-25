@@ -42,6 +42,7 @@ func EnumItemDesc() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Struct{
 					"Name":  dt.Prim(rtypes.T_String),
 					"Value": dt.Prim(rtypes.T_Int),

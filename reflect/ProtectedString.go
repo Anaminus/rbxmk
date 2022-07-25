@@ -49,6 +49,7 @@ func ProtectedString() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "roblox",
 				Summary:     "Types/ProtectedString:Summary",
 				Description: "Types/ProtectedString:Description",
 			}

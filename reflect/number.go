@@ -32,6 +32,7 @@ func Number() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/number:Summary",
 				Description: "Types/number:Description",
 			}

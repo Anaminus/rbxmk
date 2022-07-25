@@ -41,6 +41,7 @@ func String() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/string:Summary",
 				Description: "Types/string:Description",
 			}

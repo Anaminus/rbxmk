@@ -223,6 +223,7 @@ func UDim2() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "roblox",
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
 						Summary:     "Types/UDim2:Operators/Eq/Summary",

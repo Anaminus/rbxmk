@@ -89,6 +89,7 @@ func HttpResponse() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Struct{
 					"Success":       dt.Prim(rtypes.T_Bool),
 					"StatusCode":    dt.Prim(rtypes.T_Int),

@@ -184,6 +184,7 @@ func PhysicalProperties() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "roblox",
 				Summary:     "Types/PhysicalProperties:Summary",
 				Description: "Types/PhysicalProperties:Description",
 			}

@@ -15,6 +15,7 @@ func JsonValue() rbxmk.Reflector {
 		PullFrom: PullBasicFrom,
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Or{
 					dt.Prim(rtypes.T_Nil),
 					dt.Prim(rtypes.T_Bool),

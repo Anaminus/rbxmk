@@ -37,6 +37,7 @@ func Table() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "group",
 				Summary:     "Types/table:Summary",
 				Description: "Types/table:Description",
 			}

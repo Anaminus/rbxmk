@@ -68,6 +68,7 @@ func Array() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "group",
 				Summary:     "Types/Array:Summary",
 				Description: "Types/Array:Description",
 			}

@@ -96,6 +96,7 @@ func JsonOperation() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Struct{
 					"op":    dt.Prim(rtypes.T_String),
 					"path":  dt.Prim(rtypes.T_String),

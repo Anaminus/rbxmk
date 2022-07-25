@@ -126,6 +126,7 @@ func ColorSequenceKeypoint() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "roblox",
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
 						Summary:     "Types/ColorSequenceKeypoint:Operators/Eq/Summary",

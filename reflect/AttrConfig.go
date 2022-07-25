@@ -67,6 +67,7 @@ func AttrConfig() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "rbxmk",
 				Summary:     "Types/AttrConfig:Summary",
 				Description: "Types/AttrConfig:Description",
 			}

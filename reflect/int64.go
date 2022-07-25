@@ -51,6 +51,7 @@ func Int64() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/int64:Summary",
 				Description: "Types/int64:Description",
 			}

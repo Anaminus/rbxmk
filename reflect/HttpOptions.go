@@ -96,6 +96,7 @@ func HttpOptions() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Struct{
 					"URL":            dt.Prim(rtypes.T_String),
 					"Method":         dt.Optional{T: dt.Prim(rtypes.T_String)},

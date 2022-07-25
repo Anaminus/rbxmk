@@ -114,6 +114,7 @@ func Cookie() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
 						Summary:     "Types/Cookie:Operators/Eq/Summary",

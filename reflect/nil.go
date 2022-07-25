@@ -32,6 +32,7 @@ func Nil() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/nil:Summary",
 				Description: "Types/nil:Description",
 			}

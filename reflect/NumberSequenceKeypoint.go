@@ -126,6 +126,7 @@ func NumberSequenceKeypoint() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "roblox",
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
 						Summary:     "Types/NumberSequenceKeypoint:Operators/Eq/Summary",

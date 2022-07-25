@@ -1238,6 +1238,7 @@ func Instance() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "roblox",
 				Operators: &dump.Operators{
 					Index: &dump.Function{
 						Parameters: dump.Parameters{

@@ -49,6 +49,7 @@ func SharedString() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "roblox",
 				Summary:     "Types/SharedString:Summary",
 				Description: "Types/SharedString:Description",
 			}

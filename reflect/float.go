@@ -51,6 +51,7 @@ func Float() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "primitive",
 				Summary:     "Types/float:Summary",
 				Description: "Types/float:Description",
 			}

@@ -117,6 +117,7 @@ func FormatSelector() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "rbxmk",
 				Underlying: dt.Or{
 					dt.Prim(rtypes.T_String),
 					dt.Table{

@@ -24,6 +24,7 @@ func Symbol() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "rbxmk",
 				Summary:     "Types/Symbol:Summary",
 				Description: "Types/Symbol:Description",
 			}

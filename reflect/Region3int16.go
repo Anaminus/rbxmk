@@ -92,6 +92,7 @@ func Region3int16() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category: "roblox",
 				Operators: &dump.Operators{
 					Eq: &dump.Cmpop{
 						Summary:     "Types/Region3int16:Operators/Eq/Summary",

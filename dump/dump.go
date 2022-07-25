@@ -203,6 +203,8 @@ func (v Struct) Type() dt.Type {
 
 // TypeDef describes the definition of a type.
 type TypeDef struct {
+	// Category describes a category for the type.
+	Category string `json:",omitempty"`
 	// Underlying indicates that the type has an underlying type.
 	Underlying dt.Type `json:",omitempty"`
 	// Operators describes the operators defined on the type.

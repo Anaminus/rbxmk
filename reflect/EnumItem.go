@@ -95,6 +95,7 @@ func EnumItem() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "roblox",
 				Summary:     "Types/EnumItem:Summary",
 				Description: "Types/EnumItem:Description",
 			}

@@ -73,6 +73,7 @@ func Dictionary() rbxmk.Reflector {
 		},
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
+				Category:    "group",
 				Summary:     "Types/Dictionary:Summary",
 				Description: "Types/Dictionary:Description",
 			}
