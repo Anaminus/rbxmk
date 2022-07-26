@@ -66,7 +66,6 @@ func init() {
 			switch cmd.Name() {
 			case "completion":
 				Register.ExistingCommand(dump.Command{
-					Arguments:   "Commands/completion:Arguments",
 					Summary:     "Commands/completion:Summary",
 					Description: "Commands/completion:Description",
 				}, cmd)
@@ -75,7 +74,6 @@ func init() {
 				})
 				for _, sub := range cmd.Commands() {
 					Register.ExistingCommand(dump.Command{
-						Arguments:   "Commands/completion/" + sub.Name() + ":Arguments",
 						Summary:     "Commands/completion/" + sub.Name() + ":Summary",
 						Description: "Commands/completion/" + sub.Name() + ":Description",
 					}, sub)
