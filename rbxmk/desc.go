@@ -115,17 +115,25 @@ func (d DescFlags) Resolve(client *rbxmk.Client) (desc *rtypes.Desc, err error) 
 
 func (d *DescFlags) SetFlags(flags *pflag.FlagSet) {
 	flags.BoolVar(&d.Latest, "desc-latest", false, "")
-	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-latest"}, flags, "desc-latest")
+	Register.NewFlag(dump.Flag{
+		Description: "Flags/desc:Flags/desc-latest",
+	}, flags, "desc-latest")
 
 	flags.Var(funcFlag(func(v string) error {
 		d.Files = append(d.Files, v)
 		return nil
 	}), "desc-file", "")
-	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-file"}, flags, "desc-file")
+	Register.NewFlag(dump.Flag{
+		Type:        "path",
+		Description: "Flags/desc:Flags/desc-file",
+	}, flags, "desc-file")
 
 	flags.Var(funcFlag(func(v string) error {
 		d.Patches = append(d.Patches, v)
 		return nil
 	}), "desc-patch", "")
-	Register.NewFlag(dump.Flag{Description: "Flags/desc:Flags/desc-patch"}, flags, "desc-patch")
+	Register.NewFlag(dump.Flag{
+		Type:        "path",
+		Description: "Flags/desc:Flags/desc-patch",
+	}, flags, "desc-patch")
 }

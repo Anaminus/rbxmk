@@ -19,7 +19,10 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		*c = append(*c, cookies...)
 		return nil
 	}), "cookies-from", "")
-	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookies-from"}, flags, "cookies-from")
+	Register.NewFlag(dump.Flag{
+		Type:        "location",
+		Description: "Flags/cookies:Flags/cookies-from",
+	}, flags, "cookies-from")
 
 	flags.Var(funcFlag(func(v string) error {
 		f, err := os.Open(v)
@@ -34,7 +37,10 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		*c = append(*c, cookies...)
 		return nil
 	}), "cookies-file", "")
-	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookies-file"}, flags, "cookies-file")
+	Register.NewFlag(dump.Flag{
+		Type:        "path",
+		Description: "Flags/cookies:Flags/cookies-file",
+	}, flags, "cookies-file")
 
 	flags.Var(funcFlag(func(v string) error {
 		content := os.Getenv(v)
@@ -45,5 +51,8 @@ func SetCookieFlags(c *rtypes.Cookies, flags *pflag.FlagSet) {
 		*c = append(*c, cookies...)
 		return nil
 	}), "cookie-var", "")
-	Register.NewFlag(dump.Flag{Description: "Flags/cookies:Flags/cookie-var"}, flags, "cookie-var")
+	Register.NewFlag(dump.Flag{
+		Type:        "var",
+		Description: "Flags/cookies:Flags/cookie-var",
+	}, flags, "cookie-var")
 }

@@ -61,12 +61,14 @@ func (c *CommandRegistry) NewFlag(def dump.Flag, flags *pflag.FlagSet, name stri
 		panic("flag does not exist")
 	}
 
-	def.Type = flag.Value.Type()
 	def.Shorthand = flag.Shorthand
 	def.Default = flag.DefValue
 	def.Hidden = flag.Hidden
 
 	c.Flag[flag] = &def
+	if def.Type == "" {
+		def.Type = flag.Value.Type()
+	}
 	if def.Description != "" {
 		flag.Usage = DocFlag(def.Description)
 	}
