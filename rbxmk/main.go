@@ -77,6 +77,9 @@ func init() {
 						Summary:     "Commands/completion/" + sub.Name() + ":Summary",
 						Description: "Commands/completion/" + sub.Name() + ":Description",
 					}, sub)
+					sub.PersistentFlags().VisitAll(func(f *pflag.Flag) {
+						Register.ExistingFlag(dump.Flag{Description: "Flags/completion:Flags/" + f.Name}, f)
+					})
 				}
 			case "help":
 				Register.ExistingCommand(dump.Command{
