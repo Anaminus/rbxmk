@@ -1,0 +1,28 @@
+<section data-name="Summary">
+
+<p>Generate autocompletion script for zsh.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Generate the autocompletion script for the zsh shell.</p>
+
+<p>If shell completion is not already enabled in your environment you will need
+to enable it. You can execute the following once:</p>
+
+<pre><code class="language-bash">echo "autoload -U compinit; compinit" >> ~/.zshrc</code></pre>
+
+<p>To load completions for every new session, execute once:</p>
+
+<p><b>Linux:</b></p>
+
+<pre><code class="language-bash">rbxmk completion zsh > "${fpath[1]}/_rbxmk"</code></pre>
+
+<p><b>macOS:</b></p>
+
+<pre><code class="language-bash">rbxmk completion zsh > /usr/local/share/zsh/site-functions/_rbxmk</code></pre>
+
+<p>You will need to start a new shell for this setup to take effect.</p>
+
+</section>

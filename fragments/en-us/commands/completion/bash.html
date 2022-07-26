@@ -1,0 +1,30 @@
+<section data-name="Summary">
+
+<p>Generate autocompletion script for bash.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>Generate the autocompletion script for the bash shell.</p>
+
+<p>This script depends on the 'bash-completion' package. If it is not installed
+already, you can install it via your OS's package manager.</p>
+
+<p>To load completions in your current shell session:</p>
+
+<pre><code class="language-bash">source <(rbxmk completion bash)</code></pre>
+
+<p>To load completions for every new session, execute once:</p>
+
+<p><b>Linux:</b></p>
+
+<pre><code class="language-bash">rbxmk completion bash > /etc/bash_completion.d/rbxmk</code></pre>
+
+<p><b>macOS:</b></p>
+
+<pre><code class="language-bash">rbxmk completion bash > /usr/local/etc/bash_completion.d/rbxmk</code></pre>
+
+<p>You will need to start a new shell for this setup to take effect.</p>
+
+</section>
