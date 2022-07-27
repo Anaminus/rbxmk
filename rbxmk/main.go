@@ -69,6 +69,12 @@ func init() {
 	})
 	Program.SetUsageTemplate(usageTemplate)
 
+	Program.PersistentFlags().BoolP("help", "h", false, "")
+	Register.NewFlag(dump.Flag{
+		Persistent:  true,
+		Description: "Commands/help:Flags/help",
+	}, Program.PersistentFlags(), "help")
+
 	Program.PersistentPreRun = func(_ *cobra.Command, _ []string) {
 		for _, cmd := range Program.Commands() {
 			switch cmd.Name() {
@@ -77,18 +83,26 @@ func init() {
 					Summary:     "Commands/completion:Summary",
 					Description: "Commands/completion:Description",
 				}, cmd)
-				flags := cmd.PersistentFlags()
+				flags := allFlags(cmd)
 				flags.VisitAll(func(f *pflag.Flag) {
-					Register.NewFlag(dump.Flag{Description: "Commands/completion:Flags/" + f.Name}, flags, f.Name)
+					if Register.Flag[f] == nil {
+						Register.NewFlag(dump.Flag{
+							Description: "Commands/completion:Flags/" + f.Name,
+						}, flags, f.Name)
+					}
 				})
 				for _, sub := range cmd.Commands() {
 					Register.NewCommand(dump.Command{
 						Summary:     "Commands/completion/" + sub.Name() + ":Summary",
 						Description: "Commands/completion/" + sub.Name() + ":Description",
 					}, sub)
-					flags := sub.PersistentFlags()
+					flags := allFlags(sub)
 					flags.VisitAll(func(f *pflag.Flag) {
-						Register.NewFlag(dump.Flag{Description: "Flags/completion:Flags/" + f.Name}, flags, f.Name)
+						if Register.Flag[f] == nil {
+							Register.NewFlag(dump.Flag{
+								Description: "Commands/completion:Flags/" + f.Name,
+							}, flags, f.Name)
+						}
 					})
 				}
 			case "help":
@@ -97,9 +111,13 @@ func init() {
 					Summary:     "Commands/help:Summary",
 					Description: "Commands/help:Description",
 				}, cmd)
-				flags := cmd.PersistentFlags()
+				flags := allFlags(cmd)
 				flags.VisitAll(func(f *pflag.Flag) {
-					Register.NewFlag(dump.Flag{Description: "Commands/help:Flags/" + f.Name}, flags, f.Name)
+					if Register.Flag[f] == nil {
+						Register.NewFlag(dump.Flag{
+							Description: "Commands/help:Flags/" + f.Name,
+						}, flags, f.Name)
+					}
 				})
 			}
 		}
