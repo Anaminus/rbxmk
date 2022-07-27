@@ -54,7 +54,7 @@ func TestLatestDesc(t *testing.T) {
 		Use:  "run",
 		RunE: c.Run,
 	}
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	program.AddCommand(cmd)
 
 	if err := program.Execute(); err != nil {

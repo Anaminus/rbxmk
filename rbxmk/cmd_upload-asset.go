@@ -25,7 +25,7 @@ func init() {
 		Args: cobra.ExactArgs(1),
 		RunE: c.Run,
 	})
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	Program.AddCommand(cmd)
 }
 

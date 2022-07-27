@@ -23,7 +23,7 @@ func init() {
 		Args: cobra.MaximumNArgs(1),
 		RunE: c.Run,
 	})
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	Program.AddCommand(cmd)
 }
 

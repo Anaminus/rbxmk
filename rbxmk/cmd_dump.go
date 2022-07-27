@@ -57,7 +57,7 @@ func init() {
 				return fn(cmd.OutOrStdout(), root, opts)
 			},
 		})
-		flags := cmd.PersistentFlags()
+		flags := cmd.Flags()
 		for flag, value := range format.Options {
 			switch value := value.(type) {
 			case string:

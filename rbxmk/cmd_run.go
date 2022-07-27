@@ -36,7 +36,7 @@ func initRunCommand(c *RunCommand) *cobra.Command {
 		Use:  "run",
 		RunE: c.Run,
 	})
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	cmd.FParseErrWhitelist.UnknownFlags = true
 	cmd.Flags().KeepUnknownFlags = true
 	return cmd

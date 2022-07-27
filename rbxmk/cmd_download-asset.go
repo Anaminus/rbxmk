@@ -24,7 +24,7 @@ func init() {
 		Use:  "download-asset",
 		RunE: c.Run,
 	})
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	Program.AddCommand(cmd)
 }
 

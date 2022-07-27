@@ -22,7 +22,7 @@ func init() {
 		Use:  "version",
 		RunE: c.Run,
 	})
-	c.SetFlags(cmd.PersistentFlags())
+	c.SetFlags(cmd.Flags())
 	Program.AddCommand(cmd)
 }
 
