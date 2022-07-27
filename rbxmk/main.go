@@ -65,30 +65,33 @@ func init() {
 		for _, cmd := range Program.Commands() {
 			switch cmd.Name() {
 			case "completion":
-				Register.ExistingCommand(dump.Command{
+				Register.NewCommand(dump.Command{
 					Summary:     "Commands/completion:Summary",
 					Description: "Commands/completion:Description",
 				}, cmd)
-				cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
-					Register.ExistingFlag(dump.Flag{Description: "Commands/completion:Flags/" + f.Name}, f)
+				flags := cmd.PersistentFlags()
+				flags.VisitAll(func(f *pflag.Flag) {
+					Register.NewFlag(dump.Flag{Description: "Commands/completion:Flags/" + f.Name}, flags, f.Name)
 				})
 				for _, sub := range cmd.Commands() {
-					Register.ExistingCommand(dump.Command{
+					Register.NewCommand(dump.Command{
 						Summary:     "Commands/completion/" + sub.Name() + ":Summary",
 						Description: "Commands/completion/" + sub.Name() + ":Description",
 					}, sub)
-					sub.PersistentFlags().VisitAll(func(f *pflag.Flag) {
-						Register.ExistingFlag(dump.Flag{Description: "Flags/completion:Flags/" + f.Name}, f)
+					flags := sub.PersistentFlags()
+					flags.VisitAll(func(f *pflag.Flag) {
+						Register.NewFlag(dump.Flag{Description: "Flags/completion:Flags/" + f.Name}, flags, f.Name)
 					})
 				}
 			case "help":
-				Register.ExistingCommand(dump.Command{
+				Register.NewCommand(dump.Command{
 					Arguments:   "Commands/help:Arguments",
 					Summary:     "Commands/help:Summary",
 					Description: "Commands/help:Description",
 				}, cmd)
-				cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
-					Register.ExistingFlag(dump.Flag{Description: "Commands/help:Flags/" + f.Name}, f)
+				flags := cmd.PersistentFlags()
+				flags.VisitAll(func(f *pflag.Flag) {
+					Register.NewFlag(dump.Flag{Description: "Commands/help:Flags/" + f.Name}, flags, f.Name)
 				})
 			}
 		}
