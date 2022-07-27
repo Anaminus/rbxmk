@@ -47,6 +47,14 @@ func expand(p ...string) string {
 	return os.Expand(s, func(s string) string { return m[s] })
 }
 
+// Returns all local and inherited flags on a command.
+func allFlags(c *cobra.Command) *pflag.FlagSet {
+	out := pflag.NewFlagSet(c.Name(), pflag.ContinueOnError)
+	c.LocalFlags().VisitAll(func(f *pflag.Flag) { out.AddFlag(f) })
+	c.InheritedFlags().VisitAll(func(f *pflag.Flag) { out.AddFlag(f) })
+	return out
+}
+
 func init() {
 	cobra.AddTemplateFunc("frag", func(fragref string) string {
 		return Frag.ResolveWith(fragref, FragOptions{
