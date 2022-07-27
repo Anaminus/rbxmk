@@ -1,0 +1,18 @@
+<section data-name="Desc">
+
+<p>Sets the descriptor to be used when encoding or decoding. If
+<code>false</code>, then no descriptor is used. Otherwise, the descriptor of the
+root instance is used <b>with all descendants</b>, falling back to <a
+href="api:rbxmk.globalDesc">globalDesc</a>.</p>
+
+</section>
+
+<section data-name="DescMode">
+
+<p>Determines how deviations from the descriptor are handled.
+<code>"NonStrict"</code> causes deviations to be ignored. <code>"Strict"</code>
+causes an error to be thrown for the first deviation. <code>"Preserve"</code>
+tries to retain as much information as possible, usually by behaving as if no
+descriptor is set.</p>
+
+</section>

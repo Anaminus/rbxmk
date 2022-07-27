@@ -7,6 +7,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/rbxdump"
@@ -108,6 +109,18 @@ func RBXL() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Desc": dump.FormatOption{
+						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Default:     "nil",
+						Description: "Formats/options/rbx:Desc",
+					},
+					"DescMode": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"NonStrict"`,
+						Description: "Formats/options/rbx:DescMode",
+					},
+				},
 				Summary:     "Formats/rbxl:Summary",
 				Description: "Formats/rbxl:Description",
 			}
@@ -167,6 +180,18 @@ func RBXM() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Desc": dump.FormatOption{
+						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Default:     "nil",
+						Description: "Formats/options/rbx:Desc",
+					},
+					"DescMode": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"NonStrict"`,
+						Description: "Formats/options/rbx:DescMode",
+					},
+				},
 				Summary:     "Formats/rbxm:Summary",
 				Description: "Formats/rbxm:Description",
 			}
@@ -226,6 +251,18 @@ func RBXLX() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Desc": dump.FormatOption{
+						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Default:     "nil",
+						Description: "Formats/options/rbx:Desc",
+					},
+					"DescMode": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"NonStrict"`,
+						Description: "Formats/options/rbx:DescMode",
+					},
+				},
 				Summary:     "Formats/rbxlx:Summary",
 				Description: "Formats/rbxlx:Description",
 			}
@@ -285,6 +322,18 @@ func RBXMX() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Desc": dump.FormatOption{
+						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Default:     "nil",
+						Description: "Formats/options/rbx:Desc",
+					},
+					"DescMode": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"NonStrict"`,
+						Description: "Formats/options/rbx:DescMode",
+					},
+				},
 				Summary:     "Formats/rbxmx:Summary",
 				Description: "Formats/rbxmx:Description",
 			}

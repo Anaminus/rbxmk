@@ -6,6 +6,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
@@ -82,6 +83,13 @@ func Base64() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Width": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_Int),
+						Default:     "0",
+						Description: "Formats/base64:Options/Width",
+					},
+				},
 				Summary:     "Formats/base64:Summary",
 				Description: "Formats/base64:Description",
 			}

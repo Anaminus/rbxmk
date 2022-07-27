@@ -6,6 +6,7 @@ import (
 
 	"github.com/anaminus/rbxmk"
 	"github.com/anaminus/rbxmk/dump"
+	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/reflect"
 	"github.com/anaminus/rbxmk/rtypes"
 	"github.com/robloxapi/types"
@@ -48,6 +49,13 @@ func JSON() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Indent": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"\t"`,
+						Description: "Formats/options/json:Indent",
+					},
+				},
 				Summary:     "Formats/json:Summary",
 				Description: "Formats/json:Description",
 			}
@@ -97,6 +105,13 @@ func JSONPatch() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Options: dump.FormatOptions{
+					"Indent": dump.FormatOption{
+						Type:        dt.Prim(rtypes.T_String),
+						Default:     `"\t"`,
+						Description: "Formats/options/json:Indent",
+					},
+				},
 				Summary:     "Formats/patch.json:Summary",
 				Description: "Formats/patch.json:Description",
 			}
