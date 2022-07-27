@@ -121,6 +121,8 @@ type Flag struct {
 	Type string
 	// Default indicates the default value for the flag.
 	Default string `json:",omitempty"`
+	// Whether the flag is inherited by subcommands.
+	Persistent bool `json:",omitempty"`
 	// Deprecated indicates whether the flag is deprecated, and if so, a
 	// fragment reference pointing to a message describing the deprecation.
 	Deprecated string `json:",omitempty"`
