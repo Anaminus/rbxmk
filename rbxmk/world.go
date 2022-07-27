@@ -181,7 +181,7 @@ func dumpTypes(dst dump.TypeDefs, src []func() rbxmk.Reflector) {
 }
 
 func walkCommands(def dump.Command, reg CommandRegistry, cmd *cobra.Command) dump.Command {
-	flags := cmd.PersistentFlags()
+	flags := allFlags(cmd)
 	flagdefs := dump.Flags{}
 	flags.VisitAll(func(f *pflag.Flag) {
 		flagdef := reg.Flag[f]
