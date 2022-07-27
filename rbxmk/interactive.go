@@ -30,7 +30,7 @@ func (ExitCommand) Run(cmd *cobra.Command, args []string) {
 }
 
 func resetFlags(cmd *cobra.Command) {
-	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+	cmd.LocalFlags().VisitAll(func(f *pflag.Flag) {
 		f.Changed = false
 	})
 	for _, sub := range cmd.Commands() {
