@@ -238,7 +238,6 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 	root.Program = *Register.Command[Program]
 	root.Program = walkCommands(root.Program, Register, Program)
 	root.Fragments = DocFragments()
-	root.Description = "Libraries"
 	return root
 }
 

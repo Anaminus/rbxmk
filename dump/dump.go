@@ -32,9 +32,6 @@ type Root struct {
 	Program Command
 	// Fragments contains fragment references requested by the program.
 	Fragments []string
-	// Description is a fragment reference pointing to a general description of
-	// the API.
-	Description string `json:",omitempty"`
 }
 
 // Libraries is a list of libraries.
