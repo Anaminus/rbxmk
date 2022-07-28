@@ -262,7 +262,7 @@ func seleneWriteParameters(buf *bufio.Writer, structTypes map[string]struct{}, p
 	buf.WriteString("\n\t]\n")
 }
 
-func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t dt.Type, arg bool) {
+func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t dt.Kind, arg bool) {
 	if !arg {
 		buf.WriteString("\t")
 	}
@@ -327,7 +327,7 @@ func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t 
 }
 
 // Get the underlying primitive type.
-func getPrim(t dt.Type) dt.Type {
+func getPrim(t dt.Kind) dt.Kind {
 	switch t := t.(type) {
 	case dt.Prim:
 		return t
