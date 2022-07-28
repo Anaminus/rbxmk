@@ -53,28 +53,29 @@ be minified (use --indent="" to specify an empty string).
 <td>Libraries</td>
 <td>array</td>
 <td>A list of libraries available in the Lua environment. Each element is a
-Library object.</td>
+<a href="#library">Library</a> object.</td>
 </tr>
 <tr>
 <td>Types</td>
 <td>object?</td>
-<td>A collection of globally defined data types. Maps a type name to a TypeDef
-object.</td>
+<td>A collection of globally defined data types. Maps a type name to a <a
+href="#typedef">TypeDef</a> object.</td>
 </tr>
 <tr>
 <td>Enums</td>
 <td>object?</td>
-<td>A collection of globally defined enums. Maps an enum name to an Enum
-object.</td>
+<td>A collection of globally defined enums. Maps an enum name to an <a
+href="#enum">Enum</a> object.</td>
 </tr>
 <td>Formats</td>
 <td>object</td>
-<td>A collection of globally defined formats. Maps a type name to a Format
-object.</td>
+<td>A collection of globally defined formats. Maps a type name to a <a
+href="#format">Format</a> object.</td>
 </tr>
 <td>Program</td>
 <td>object</td>
-<td>A Command object describing the top-level program command.</td>
+<td>A <a href="#command">Command</a> object describing the top-level program
+command.</td>
 </tr>
 </tbody>
 </table>
@@ -115,19 +116,20 @@ Libraries are loaded by ascending priority.</td>
 <tr>
 <td>Struct</td>
 <td>object?</td>
-<td>A Struct object that describes the contents of the library.</td>
+<td>A <a href="#struct">Struct</a> object that describes the contents of the
+library.</td>
 </tr>
 <tr>
 <td>Types</td>
 <td>object?</td>
-<td>A collection of data types defined by the library. Maps a type name to a
-TypeDef object.</td>
+<td>A collection of data types defined by the library. Maps a type name to a <a
+href="#typedef">TypeDef</a> object.</td>
 </tr>
 <tr>
 <td>Enums</td>
 <td>object?</td>
-<td>A collection of enums defined by the library. Maps an enum name to an Enum
-object.</td>
+<td>A collection of enums defined by the library. Maps an enum name to an <a
+href="#enum">Enum</a> object.</td>
 </tr>
 </tbody>
 </table>
@@ -151,7 +153,8 @@ fields:</p>
 <tr>
 <td>Options</td>
 <td>object?</td>
-<td>The options of the format. Maps an option name to a FormatOption object.</td>
+<td>The options of the format. Maps an option name to a <a
+href="#formatoption">FormatOption</a> object.</td>
 </tr>
 <tr>
 <td>Summary</td>
@@ -185,7 +188,8 @@ has the following fields:</p>
 <tr>
 <td>Type</td>
 <td>object</td>
-<td>A Type object that describes the value type of the option.</td>
+<td>A <a href="#type">Type</a> object that describes the value type of the
+option.</td>
 </tr>
 <tr>
 <td>Default</td>
@@ -219,7 +223,8 @@ number of constant fields. It has the following fields.</p>
 <tr>
 <td>Fields</td>
 <td>object</td>
-<td>The fields of the structure. Maps a field name to a Field object.</td>
+<td>The fields of the structure. Maps a field name to a <a
+href="#field">Field</a> object.</td>
 </tr>
 <tr>
 <td>Summary</td>
@@ -277,23 +282,25 @@ following fields:</p>
 <tr>
 <td>Function</td>
 <td>object</td>
-<td>Describes a function. Value is a Function object.</td>
+<td>Describes a function. Value is a <a href="#function">Function</a>
+object.</td>
 </tr>
 <tr>
 <td>MultiFunction</td>
 <td>array</td>
-<td>Describes a function with multiple signatures. Each element is a Function
-object.</td>
+<td>Describes a function with multiple signatures. Each element is a <a
+href="#function">Function</a> object.</td>
 </tr>
 <tr>
 <td>Property</td>
 <td>object</td>
-<td>Describes a property. Value is a Property object.</td>
+<td>Describes a property. Value is a <a href="#property">Property</a>
+object.</td>
 </tr>
 <tr>
 <td>Struct</td>
 <td>object</td>
-<td>Describes a struct. Value is a Struct object.</td>
+<td>Describes a struct. Value is a <a href="#struct">Struct</a> object.</td>
 </tr>
 </tbody>
 </table>
@@ -314,7 +321,8 @@ object.</td>
 <tr>
 <td>ValueType</td>
 <td>object</td>
-<td>A Type object that describes the value type of the property.</td>
+<td>A <a href="#type">Type</a> object that describes the value type of the
+property.</td>
 </tr>
 <tr>
 <td>ReadOnly</td>
@@ -353,14 +361,14 @@ following fields:</p>
 <tr>
 <td>Parameters</td>
 <td>array</td>
-<td>Describes the values received by the function. Each element is a Parameter
-object.</td>
+<td>Describes the values received by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
 </tr>
 <tr>
 <td>Returns</td>
 <td>array</td>
-<td>Describes the values returned by the function. Each element is a Parameter
-object.</td>
+<td>Describes the values returned by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
 </tr>
 <tr>
 <td>CanError</td>
@@ -405,42 +413,44 @@ following fields:</p>
 <tr>
 <td>Underlying</td>
 <td>object?</td>
-<td>A Type object that describes the underlying type, if any.</td>
+<td>A <a href="#type">Type</a> object that describes the underlying type, if
+any.</td>
 </tr>
 <tr>
 <td>Operators</td>
 <td>object?</td>
-<td>An Operators object that describes the operators defined on the type.</td>
+<td>An <a href="#operators">Operators</a> object that describes the operators
+defined on the type.</td>
 </tr>
 <tr>
 <td>Properties</td>
 <td>object?</td>
-<td>Describes the properties defined on the type. Maps a property name to a
-Property object.</td>
+<td>Describes the properties defined on the type. Maps a property name to a <a
+href="#property">Property</a> object.</td>
 </tr>
 <tr>
 <td>Symbols</td>
 <td>object?</td>
-<td>Describes the symbols defined on the type. Maps a symbol name to a Property
-object.</td>
+<td>Describes the symbols defined on the type. Maps a symbol name to a <a
+href="#property">Property</a> object.</td>
 </tr>
 <tr>
 <td>Methods</td>
 <td>object?</td>
-<td>Describes the methods defined on the type. Maps a method name to a Function
-object.</td>
+<td>Describes the methods defined on the type. Maps a method name to a <a
+href="#function">Function</a> object.</td>
 </tr>
 <tr>
 <td>Constructors</td>
 <td>object?</td>
 <td>Describes constructor functions that create the type. Maps a constructor
-name to an array of Function objects.</td>
+name to an array of <a href="#function">Function</a> objects.</td>
 </tr>
 <tr>
 <td>Enums</td>
 <td>object?</td>
-<td>Describes enums related to the type. Maps an enum name to an Enum
-object.</td>
+<td>Describes enums related to the type. Maps an enum name to an <a
+href="#enum">Enum</a> object.</td>
 </tr>
 <tr>
 <td>Summary</td>
@@ -473,8 +483,8 @@ object.</td>
 <tr>
 <td>Items</td>
 <td>object</td>
-<td>Describes the items of the enum. Maps an item name to an EnumItem
-object.</td>
+<td>Describes the items of the enum. Maps an item name to an <a
+href="#enumitem">EnumItem</a> object.</td>
 </tr>
 <tr>
 <td>Summary</td>
@@ -552,13 +562,14 @@ fields:</p>
 <tr>
 <td>Flags</td>
 <td>object?</td>
-<td>Describes the flags of the command. Maps a flag name to a Flag object.</td>
+<td>Describes the flags of the command. Maps a flag name to a <a
+href="#flag">Flag</a> object.</td>
 </tr>
 <tr>
 <td>Commands</td>
 <td>object?</td>
-<td>Describes the sub-commands of the command. Maps a command name to a Command
-object.</td>
+<td>Describes the sub-commands of the command. Maps a command name to a <a
+href="#command">Command</a> object.</td>
 </tr>
 </tbody>
 </table>
@@ -647,7 +658,8 @@ new flag to use.</td>
 <tr>
 <td>Type</td>
 <td>object</td>
-<td>A Type object that describes the type of the parameter.</td>
+<td>A <a href="#type">Type</a> object that describes the type of the
+parameter.</td>
 </tr>
 <tr>
 <td>Default</td>
@@ -739,14 +751,14 @@ following additional fields:</p>
 <tr>
 <td>Parameters</td>
 <td>array</td>
-<td>The values received by the function. Each element is a Parameter
-object.</td>
+<td>The values received by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
 </tr>
 <tr>
 <td>Returns</td>
 <td>array</td>
-<td>The values returned by the function. Each element is a Parameter
-object.</td>
+<td>The values returned by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
 </tr>
 </tbody>
 </table>
@@ -770,7 +782,7 @@ type. It has the following additional fields:</p>
 <tr>
 <td>Type</td>
 <td>object</td>
-<td>A Type object indicating each element of the array.</td>
+<td>A <a href="#type">Type</a> object indicating each element of the array.</td>
 </tr>
 </tbody>
 </table>
@@ -794,7 +806,7 @@ following additional fields:</p>
 <tr>
 <td>Types</td>
 <td>array</td>
-<td>An array of Type objects.</td>
+<td>An array of <a href="#type">Type</a> objects.</td>
 </tr>
 </tbody>
 </table>
@@ -818,7 +830,7 @@ following additional fields:</p>
 <tr>
 <td>Type</td>
 <td>object</td>
-<td>A Type object indicating the underlying type.</td>
+<td>A <a href="#type">Type</a> object indicating the underlying type.</td>
 </tr>
 </tbody>
 </table>
@@ -842,7 +854,7 @@ additional fields:</p>
 <tr>
 <td>Type</td>
 <td>object</td>
-<td>A Type object indicating the underlying type.</td>
+<td>A <a href="#type">Type</a> object indicating the underlying type.</td>
 </tr>
 </tbody>
 </table>
@@ -866,7 +878,8 @@ has the following additional fields:</p>
 <tr>
 <td>Fields</td>
 <td>object</td>
-<td>The fields of the struct. Maps a field name to a Type object.</td>
+<td>The fields of the struct. Maps a field name to a <a href="#type">Type</a>
+object.</td>
 </tr>
 </tbody>
 </table>
@@ -890,12 +903,12 @@ value. It has the following additional fields:</p>
 <tr>
 <td>Key</td>
 <td>object</td>
-<td>A Type object indicating the type of each key.</td>
+<td>A <a href="#type">Type</a> object indicating the type of each key.</td>
 </tr>
 <tr>
 <td>Value</td>
 <td>object</td>
-<td>A Type object indicating the type of each value.</td>
+<td>A <a href="#type">Type</a> object indicating the type of each value.</td>
 </tr>
 </tbody>
 </table>
@@ -919,7 +932,7 @@ to a value. It has the following additional fields:</p>
 <tr>
 <td>Value</td>
 <td>object</td>
-<td>A Type object indicating the type of each value.</td>
+<td>A <a href="#type">Type</a> object indicating the type of each value.</td>
 </tr>
 </tbody>
 </table>
@@ -943,17 +956,18 @@ part. It has the following additional fields:</p>
 <tr>
 <td>Key</td>
 <td>object</td>
-<td>A Type object indicating the type of each key.</td>
+<td>A <a href="#type">Type</a> object indicating the type of each key.</td>
 </tr>
 <tr>
 <td>Value</td>
 <td>object</td>
-<td>A Type object indicating the type of each value.</td>
+<td>A <a href="#type">Type</a> object indicating the type of each value.</td>
 </tr>
 <tr>
 <td>Fields</td>
 <td>object</td>
-<td>The fields of the table. Maps a field name to a Type object.</td>
+<td>The fields of the table. Maps a field name to a <a href="#type">Type</a>
+object.</td>
 </tr>
 </tbody>
 </table>
@@ -986,92 +1000,92 @@ following fields:</p>
 <tr>
 <td>Add</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __add
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __add operator.</td>
 </tr>
 <tr>
 <td>Sub</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __sub
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __sub operator.</td>
 </tr>
 <tr>
 <td>Mul</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __mul
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __mul operator.</td>
 </tr>
 <tr>
 <td>Div</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __div
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __div operator.</td>
 </tr>
 <tr>
 <td>Mod</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __mod
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __mod operator.</td>
 </tr>
 <tr>
 <td>Pow</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __pow
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __pow operator.</td>
 </tr>
 <tr>
 <td>Concat</td>
 <td>array</td>
-<td>An array of Binop objects that describes signatures for the __concat
-operator.</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __concat operator.</td>
 </tr>
 <tr>
 <td>Eq</td>
 <td>object?</td>
-<td>A Cmpop object that describes the signature for the __eq operator, if
-defined.</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__eq operator, if defined.</td>
 </tr>
 <tr>
 <td>Le</td>
 <td>object?</td>
-<td>A Cmpop object that describes the signature for the __le operator, if
-defined.</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__le operator, if defined.</td>
 </tr>
 <tr>
 <td>Lt</td>
 <td>object?</td>
-<td>A Cmpop object that describes the signature for the __lt operator, if
-defined.</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__lt operator, if defined.</td>
 </tr>
 <tr>
 <td>Len</td>
 <td>object?</td>
-<td>A Unop object that describes the signature for the __len operator, if
-defined.</td>
+<td>A <a href="#unop">Unop</a> object that describes the signature for the __len
+operator, if defined.</td>
 </tr>
 <tr>
 <td>Unm</td>
 <td>object?</td>
-<td>A Unop object that describes the signature for the __unm operator, if
-defined.</td>
+<td>A <a href="#unop">Unop</a> object that describes the signature for the __unm
+operator, if defined.</td>
 </tr>
 <tr>
 <td>Call</td>
 <td>object?</td>
-<td>A Function object that describes the signature for the __call operator, if
-defined.</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __call operator, if defined.</td>
 </tr>
 <tr>
 <td>Index</td>
 <td>object?</td>
-<td>A Function object that describes the signature for the __index operator, if
-defined.</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __index operator, if defined.</td>
 </tr>
 <tr>
 <td>Newindex</td>
 <td>object?</td>
-<td>A Function object that describes the signature for the __newindex operator,
-if defined.</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __newindex operator, if defined.</td>
 </tr>
 </tbody>
 </table>
@@ -1095,12 +1109,12 @@ fields:</p>
 <tr>
 <td>Operand</td>
 <td>object</td>
-<td>The type of the right operand.</td>
+<td>The <a href="#type">Type</a> of the right operand.</td>
 </tr>
 <tr>
 <td>Result</td>
 <td>object</td>
-<td>The type of the result of the operation.</td>
+<td>The <a href="#type">Type</a> of the result of the operation.</td>
 </tr>
 <tr>
 <td>Summary</td>
@@ -1164,7 +1178,7 @@ operator.</td>
 <tr>
 <td>Result</td>
 <td>object</td>
-<td>The type of the result of the operation.</td>
+<td>The <a href="#type">Type</a> of the result of the operation.</td>
 </tr>
 <tr>
 <td>Summary</td>
