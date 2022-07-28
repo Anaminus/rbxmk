@@ -48,10 +48,6 @@ func ListFragments(root dump.Root, write func(path, ref string)) {
 	fragWriteTypes(write, "types", root.Types)
 	write("formats", "Formats")
 	fragWriteFormats(write, "formats", root.Formats)
-	write("fragments", "Fragments")
-	for _, frag := range root.Fragments {
-		write("fragments", frag)
-	}
 }
 
 func fragWriteFormats(write func(path, ref string), p string, formats dump.Formats) {

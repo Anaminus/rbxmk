@@ -30,8 +30,6 @@ type Root struct {
 	Formats Formats
 	// Program contains the root command created by the program.
 	Program Command
-	// Fragments contains fragment references requested by the program.
-	Fragments []string
 }
 
 // Libraries is a list of libraries.
