@@ -47,6 +47,15 @@ func (t Type) MarshalJSON() (b []byte, err error) {
 	return marshal(v)
 }
 
+func unmarshalKind[K Kind](b []byte, t *Kind) error {
+	var k K
+	if err := json.Unmarshal(b, &k); err != nil {
+		return err
+	}
+	*t = k
+	return nil
+}
+
 func (t *Type) UnmarshalJSON(b []byte) (err error) {
 	var v map[string]json.RawMessage
 	if err := json.Unmarshal(b, &v); err != nil {
@@ -60,34 +69,39 @@ func (t *Type) UnmarshalJSON(b []byte) (err error) {
 		kind = k
 		break
 	}
+	var unmarshal func(b []byte, t *Kind) error
 	switch kind {
 	case "":
 		return fmt.Errorf("missing type kind")
 	case K_Primitive:
-		return new(KindPrim).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindPrim]
 	case K_Function:
-		return new(KindFunction).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindFunction]
 	case K_Array:
-		return new(KindArray).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindArray]
 	case K_Or:
-		return new(KindOr).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindOr]
 	case K_Optional:
-		return new(KindOptional).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindOptional]
 	case K_Group:
-		return new(KindGroup).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindGroup]
 	case K_Struct:
-		return new(KindStruct).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindStruct]
 	case K_Map:
-		return new(KindMap).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindMap]
 	case K_Dictionary:
-		return new(KindDictionary).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindDictionary]
 	case K_Table:
-		return new(KindTable).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindTable]
 	case K_Functions:
-		return new(KindMultiFunctionType).unmarshal(b, &t.Kind)
+		unmarshal = unmarshalKind[KindMultiFunctionType]
 	default:
 		return fmt.Errorf("unknown type kind %q", kind)
 	}
+	if err := unmarshal(b, &t.Kind); err != nil {
+		return fmt.Errorf("kind %s: %w", kind, err)
+	}
+	return nil
 }
 
 // KindPrim is a Type that indicates the name of some defined type.
@@ -101,13 +115,6 @@ func (t KindPrim) k()           {}
 func (t KindPrim) Kind() string { return K_Primitive }
 func (t KindPrim) String() string {
 	return string(t)
-}
-func (k KindPrim) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
 }
 
 // KindFunction is a Type that indicates the signature of a function type.
@@ -151,13 +158,6 @@ func (t KindFunction) String() string {
 	s.WriteByte(')')
 	return s.String()
 }
-func (k KindFunction) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // Parameter describes a function parameter.
 type Parameter struct {
@@ -190,13 +190,6 @@ func (t KindArray) k()           {}
 func (t KindArray) Kind() string { return K_Array }
 func (t KindArray) String() string {
 	return "{" + t.Type.String() + "}"
-}
-func (k KindArray) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
 }
 
 // KindOr is a Type that indicates a union of two or more types.
@@ -234,13 +227,6 @@ func (t KindOr) String() string {
 	}
 	return s.String()
 }
-func (k KindOr) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // KindOptional is a Type that indicates a type of T or nil (shorthand for T | nil).
 type KindOptional struct {
@@ -256,13 +242,6 @@ func (t KindOptional) Kind() string { return K_Optional }
 func (t KindOptional) String() string {
 	return t.Type.String() + "?"
 }
-func (k KindOptional) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // KindGroup is a Type that ensures the inner type is grouped unambiguously.
 type KindGroup struct {
@@ -277,13 +256,6 @@ func (t KindGroup) k()           {}
 func (t KindGroup) Kind() string { return K_Group }
 func (t KindGroup) String() string {
 	return "(" + t.Type.String() + ")"
-}
-func (k KindGroup) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
 }
 
 // KindStruct is a Type that indicates a table with a number of named fields.
@@ -328,13 +300,6 @@ func (t KindStruct) String() string {
 	s.WriteByte('}')
 	return s.String()
 }
-func (k KindStruct) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // KindMap is a Type that indicates a table where each element maps a key to a
 // value.
@@ -352,13 +317,6 @@ func (t KindMap) Kind() string { return K_Map }
 func (t KindMap) String() string {
 	return "{[" + t.K.String() + "]: " + t.V.String() + "}"
 }
-func (k KindMap) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // KindDictionary is a Type that indicates a table where each element maps a
 // string to a value.
@@ -374,13 +332,6 @@ func (t KindDictionary) k()           {}
 func (t KindDictionary) Kind() string { return K_Dictionary }
 func (t KindDictionary) String() string {
 	return "{[string]: " + t.Type.String() + "}"
-}
-func (k KindDictionary) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
 }
 
 // KindTable is a Type that indicates a table with both a map part and a struct
@@ -418,13 +369,6 @@ func (t KindTable) String() string {
 	s.WriteByte('}')
 	return s.String()
 }
-func (k KindTable) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
-}
 
 // KindMultiFunctionType is a Type that indicates a function with multiple
 // signatures.
@@ -438,11 +382,4 @@ func (KindMultiFunctionType) k()           {}
 func (KindMultiFunctionType) Kind() string { return K_Functions }
 func (KindMultiFunctionType) String() string {
 	return "(...) -> (...)"
-}
-func (k KindMultiFunctionType) unmarshal(b []byte, t *Kind) error {
-	if err := json.Unmarshal(b, &k); err != nil {
-		return err
-	}
-	*t = k
-	return nil
 }
