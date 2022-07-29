@@ -31,8 +31,6 @@ be minified (use --indent="" to specify an empty string).
 
 <section data-name="Structure">
 
-<section data-name="Root">
-
 <p>The following top-level fields are specified:</p>
 
 <table>
@@ -79,6 +77,332 @@ command.</td>
 </tr>
 </tbody>
 </table>
+
+<section data-name="Command">
+
+<p>A <b>Command</b> object describes a program command. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the command.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the command.</td>
+</tr>
+<tr>
+<td>Flags</td>
+<td>object?</td>
+<td>Describes the flags of the command. Maps a flag name to a <a
+href="#flag">Flag</a> object.</td>
+</tr>
+<tr>
+<td>Commands</td>
+<td>object?</td>
+<td>Describes the sub-commands of the command. Maps a command name to a <a
+href="#command">Command</a> object.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="Flag">
+
+<p>A <b>Flag</b> object describes a flag of a program command. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>string</td>
+<td>Indicates the value type of the flag.</td>
+</tr>
+<tr>
+<td>Default</td>
+<td>string?</td>
+<td>Indicates the default value for the flag.</td>
+</tr>
+<tr>
+<td>Persistent</td>
+<td>bool?</td>
+<td>Indicates whether the flag is inherited by subcommands.</td>
+</tr>
+<tr>
+<td>Deprecated</td>
+<td>string?</td>
+<td>Indicates whether the flag is deprecated, and if so, the new flag to
+use.</td>
+</tr>
+<tr>
+<td>Hidden</td>
+<td>bool?</td>
+<td>Indicates whether the flag is hidden.</td>
+</tr>
+<tr>
+<td>Shorthand</td>
+<td>string?</td>
+<td>Indicates a one-letter abbreviation for the flag.</td>
+</tr>
+<tr>
+<td>ShorthandDeprecated</td>
+<td>string?</td>
+<td>Indicates whether the shorthand of the flag is deprecated, and if so, the
+new flag to use.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a description of the flag.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>
+
+<section data-name="Enum">
+
+<p>An <b>Enum</b> object describes an enum. It has the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Items</td>
+<td>object</td>
+<td>Describes the items of the enum. Maps an item name to an <a
+href="#enumitem">EnumItem</a> object.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string</td>
+<td>A fragment reference pointing to a short summary of the enum.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string</td>
+<td>A fragment reference pointing to a detailed description of the enum.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="EnumItem">
+
+<p>An <b>EnumItem</b> object describes an enum item. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value</td>
+<td>number</td>
+<td>The value of the item.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the item.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the item.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>
+
+<section data-name="Format">
+
+<p>A <b>Format</b> is an object that describes a format. It has the following
+fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Options</td>
+<td>object?</td>
+<td>The options of the format. Maps an option name to a <a
+href="#formatoption">FormatOption</a> object.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the format.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the format.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="FormatOption">
+
+<p>A <b>FormatOption</b> is an object that describes an option of a format. It
+has the following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A <a href="#type">Type</a> object that describes the value type of the
+option.</td>
+</tr>
+<tr>
+<td>Default</td>
+<td>string</td>
+<td>A string describing the default value of the option.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a description of the option.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>
+
+<section data-name="Function">
+
+<p>A <b>Function</b> is an object that describes a function. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td>array</td>
+<td>Describes the values received by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
+</tr>
+<tr>
+<td>Returns</td>
+<td>array</td>
+<td>Describes the values returned by the function. Each element is a <a
+href="#parameter">Parameter</a> object.</td>
+</tr>
+<tr>
+<td>CanError</td>
+<td>bool?</td>
+<td>Whether the function may throw an error, excluding type errors from received
+arguments.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the function.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the function.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="Parameter">
+
+<p>A <b>Parameter</b> object describes the parameter of a function.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string?</td>
+<td>The name of the parameter.</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>object</td>
+<td>A <a href="#type">Type</a> object that describes the type of the
+parameter.</td>
+</tr>
+<tr>
+<td>Default</td>
+<td>string?</td>
+<td>The default value if the type is optional. Always omitted for return
+values.</td>
+</tr>
+<tr>
+<td>Enums</td>
+<td>array?</td>
+<td>Literal values that can be passed to the parameter. Each element is a
+string.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
 
 </section>
 
@@ -136,9 +460,116 @@ href="#enum">Enum</a> object.</td>
 
 </section>
 
-<section data-name="Format">
+<section data-name="Operators">
 
-<p>A <b>Format</b> is an object that describes a format. It has the following
+<p>An <b>Operators</b> object describes the operators of a type. It has the
+following fields:</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __add operator.</td>
+</tr>
+<tr>
+<td>Sub</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __sub operator.</td>
+</tr>
+<tr>
+<td>Mul</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __mul operator.</td>
+</tr>
+<tr>
+<td>Div</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __div operator.</td>
+</tr>
+<tr>
+<td>Mod</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __mod operator.</td>
+</tr>
+<tr>
+<td>Pow</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __pow operator.</td>
+</tr>
+<tr>
+<td>Concat</td>
+<td>array</td>
+<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
+the __concat operator.</td>
+</tr>
+<tr>
+<td>Eq</td>
+<td>object?</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__eq operator, if defined.</td>
+</tr>
+<tr>
+<td>Le</td>
+<td>object?</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__le operator, if defined.</td>
+</tr>
+<tr>
+<td>Lt</td>
+<td>object?</td>
+<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
+__lt operator, if defined.</td>
+</tr>
+<tr>
+<td>Len</td>
+<td>object?</td>
+<td>A <a href="#unop">Unop</a> object that describes the signature for the __len
+operator, if defined.</td>
+</tr>
+<tr>
+<td>Unm</td>
+<td>object?</td>
+<td>A <a href="#unop">Unop</a> object that describes the signature for the __unm
+operator, if defined.</td>
+</tr>
+<tr>
+<td>Call</td>
+<td>object?</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __call operator, if defined.</td>
+</tr>
+<tr>
+<td>Index</td>
+<td>object?</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __index operator, if defined.</td>
+</tr>
+<tr>
+<td>Newindex</td>
+<td>object?</td>
+<td>A <a href="#function">Function</a> object that describes the signature for
+the __newindex operator, if defined.</td>
+</tr>
+</tbody>
+</table>
+
+<section data-name="Binop">
+
+<p>A <b>Binop</b> object describes a binary operator. It has the following
 fields:</p>
 
 <table>
@@ -151,30 +582,35 @@ fields:</p>
 </thead>
 <tbody>
 <tr>
-<td>Options</td>
-<td>object?</td>
-<td>The options of the format. Maps an option name to a <a
-href="#formatoption">FormatOption</a> object.</td>
+<td>Operand</td>
+<td>object</td>
+<td>The <a href="#type">Type</a> of the right operand.</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>object</td>
+<td>The <a href="#type">Type</a> of the result of the operation.</td>
 </tr>
 <tr>
 <td>Summary</td>
 <td>string?</td>
-<td>A fragment reference to a short summary of the format.</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
 </tr>
 <tr>
 <td>Description</td>
 <td>string?</td>
-<td>A fragment reference to a detailed description of the format.</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
 </tr>
 </tbody>
 </table>
 
 </section>
 
-<section data-name="FormatOption">
+<section data-name="Cmpop">
 
-<p>A <b>FormatOption</b> is an object that describes an option of a format. It
-has the following fields:</p>
+<p>A <b>Cmpop</b> object describes a comparison operator. It has the following
+fields:</p>
 
 <table>
 <thead>
@@ -186,20 +622,91 @@ has the following fields:</p>
 </thead>
 <tbody>
 <tr>
-<td>Type</td>
-<td>object</td>
-<td>A <a href="#type">Type</a> object that describes the value type of the
-option.</td>
-</tr>
-<tr>
-<td>Default</td>
-<td>string</td>
-<td>A string describing the default value of the option.</td>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
 </tr>
 <tr>
 <td>Description</td>
 <td>string?</td>
-<td>A fragment reference to a description of the option.</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+<section data-name="Unop">
+
+<p>A <b>Unop</b> object describes a unary operator.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Result</td>
+<td>object</td>
+<td>The <a href="#type">Type</a> of the result of the operation.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference pointing to a short summary of the operator.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference pointing to a detailed description of the
+operator.</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</section>
+
+<section data-name="Property">
+
+<p>A <b>Property</b> describes a single value within a structure. It has the
+following fields.</p>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ValueType</td>
+<td>object</td>
+<td>A <a href="#type">Type</a> object that describes the value type of the
+property.</td>
+</tr>
+<tr>
+<td>ReadOnly</td>
+<td>bool?</td>
+<td>Whether the property can be written.</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>string?</td>
+<td>A fragment reference to a short summary of the property.</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>string?</td>
+<td>A fragment reference to a detailed description of the property.</td>
 </tr>
 </tbody>
 </table>
@@ -238,8 +745,6 @@ href="#field">Field</a> object.</td>
 </tr>
 </tbody>
 </table>
-
-</section>
 
 <section data-name="Field">
 
@@ -288,91 +793,6 @@ object.</td>
 </table>
 
 </section>
-
-<section data-name="Property">
-
-<p>A <b>Property</b> describes a single value within a structure. It has the
-following fields.</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ValueType</td>
-<td>object</td>
-<td>A <a href="#type">Type</a> object that describes the value type of the
-property.</td>
-</tr>
-<tr>
-<td>ReadOnly</td>
-<td>bool?</td>
-<td>Whether the property can be written.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference to a short summary of the property.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference to a detailed description of the property.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Function">
-
-<p>A <b>Function</b> is an object that describes a function. It has the
-following fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Parameters</td>
-<td>array</td>
-<td>Describes the values received by the function. Each element is a <a
-href="#parameter">Parameter</a> object.</td>
-</tr>
-<tr>
-<td>Returns</td>
-<td>array</td>
-<td>Describes the values returned by the function. Each element is a <a
-href="#parameter">Parameter</a> object.</td>
-</tr>
-<tr>
-<td>CanError</td>
-<td>bool?</td>
-<td>Whether the function may throw an error, excluding type errors from received
-arguments.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference to a short summary of the function.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference to a detailed description of the function.</td>
-</tr>
-</tbody>
-</table>
 
 </section>
 
@@ -446,217 +866,6 @@ href="#enum">Enum</a> object.</td>
 <td>Description</td>
 <td>string</td>
 <td>A fragment reference pointing to a detailed description of the type.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Enum">
-
-<p>An <b>Enum</b> object describes an enum. It has the following fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Items</td>
-<td>object</td>
-<td>Describes the items of the enum. Maps an item name to an <a
-href="#enumitem">EnumItem</a> object.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string</td>
-<td>A fragment reference pointing to a short summary of the enum.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string</td>
-<td>A fragment reference pointing to a detailed description of the enum.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="EnumItem">
-
-<p>An <b>EnumItem</b> object describes an enum item. It has the following
-fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Value</td>
-<td>number</td>
-<td>The value of the item.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference pointing to a short summary of the item.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a detailed description of the item.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Command">
-
-<p>A <b>Command</b> object describes a program command. It has the following
-fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference pointing to a short summary of the command.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a detailed description of the command.</td>
-</tr>
-<tr>
-<td>Flags</td>
-<td>object?</td>
-<td>Describes the flags of the command. Maps a flag name to a <a
-href="#flag">Flag</a> object.</td>
-</tr>
-<tr>
-<td>Commands</td>
-<td>object?</td>
-<td>Describes the sub-commands of the command. Maps a command name to a <a
-href="#command">Command</a> object.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Flag">
-
-<p>A <b>Flag</b> object describes a flag of a program command. It has the
-following fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Type</td>
-<td>string</td>
-<td>Indicates the value type of the flag.</td>
-</tr>
-<tr>
-<td>Default</td>
-<td>string?</td>
-<td>Indicates the default value for the flag.</td>
-</tr>
-<tr>
-<td>Persistent</td>
-<td>bool?</td>
-<td>Indicates whether the flag is inherited by subcommands.</td>
-</tr>
-<tr>
-<td>Deprecated</td>
-<td>string?</td>
-<td>Indicates whether the flag is deprecated, and if so, the new flag to
-use.</td>
-</tr>
-<tr>
-<td>Hidden</td>
-<td>bool?</td>
-<td>Indicates whether the flag is hidden.</td>
-</tr>
-<tr>
-<td>Shorthand</td>
-<td>string?</td>
-<td>Indicates a one-letter abbreviation for the flag.</td>
-</tr>
-<tr>
-<td>ShorthandDeprecated</td>
-<td>string?</td>
-<td>Indicates whether the shorthand of the flag is deprecated, and if so, the
-new flag to use.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a description of the flag.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Parameter">
-
-<p>A <b>Parameter</b> object describes the parameter of a function.</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Name</td>
-<td>string?</td>
-<td>The name of the parameter.</td>
-</tr>
-<tr>
-<td>Type</td>
-<td>object</td>
-<td>A <a href="#type">Type</a> object that describes the type of the
-parameter.</td>
-</tr>
-<tr>
-<td>Default</td>
-<td>string?</td>
-<td>The default value if the type is optional. Always omitted for return
-values.</td>
-</tr>
-<tr>
-<td>Enums</td>
-<td>array?</td>
-<td>Literal values that can be passed to the parameter. Each element is a
-string.</td>
 </tr>
 </tbody>
 </table>
@@ -845,219 +1054,6 @@ object.</td>
 has no fields.</p>
 
 </section>
-
-</section>
-
-<section data-name="Operators">
-
-<p>An <b>Operators</b> object describes the operators of a type. It has the
-following fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Add</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __add operator.</td>
-</tr>
-<tr>
-<td>Sub</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __sub operator.</td>
-</tr>
-<tr>
-<td>Mul</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __mul operator.</td>
-</tr>
-<tr>
-<td>Div</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __div operator.</td>
-</tr>
-<tr>
-<td>Mod</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __mod operator.</td>
-</tr>
-<tr>
-<td>Pow</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __pow operator.</td>
-</tr>
-<tr>
-<td>Concat</td>
-<td>array</td>
-<td>An array of <a href="#binop">Binop</a> objects that describes signatures for
-the __concat operator.</td>
-</tr>
-<tr>
-<td>Eq</td>
-<td>object?</td>
-<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
-__eq operator, if defined.</td>
-</tr>
-<tr>
-<td>Le</td>
-<td>object?</td>
-<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
-__le operator, if defined.</td>
-</tr>
-<tr>
-<td>Lt</td>
-<td>object?</td>
-<td>A <a href="#cmpop">Cmpop</a> object that describes the signature for the
-__lt operator, if defined.</td>
-</tr>
-<tr>
-<td>Len</td>
-<td>object?</td>
-<td>A <a href="#unop">Unop</a> object that describes the signature for the __len
-operator, if defined.</td>
-</tr>
-<tr>
-<td>Unm</td>
-<td>object?</td>
-<td>A <a href="#unop">Unop</a> object that describes the signature for the __unm
-operator, if defined.</td>
-</tr>
-<tr>
-<td>Call</td>
-<td>object?</td>
-<td>A <a href="#function">Function</a> object that describes the signature for
-the __call operator, if defined.</td>
-</tr>
-<tr>
-<td>Index</td>
-<td>object?</td>
-<td>A <a href="#function">Function</a> object that describes the signature for
-the __index operator, if defined.</td>
-</tr>
-<tr>
-<td>Newindex</td>
-<td>object?</td>
-<td>A <a href="#function">Function</a> object that describes the signature for
-the __newindex operator, if defined.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Binop">
-
-<p>A <b>Binop</b> object describes a binary operator. It has the following
-fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Operand</td>
-<td>object</td>
-<td>The <a href="#type">Type</a> of the right operand.</td>
-</tr>
-<tr>
-<td>Result</td>
-<td>object</td>
-<td>The <a href="#type">Type</a> of the result of the operation.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference pointing to a short summary of the operator.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a detailed description of the
-operator.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Cmpop">
-
-<p>A <b>Cmpop</b> object describes a comparison operator. It has the following
-fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference pointing to a short summary of the operator.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a detailed description of the
-operator.</td>
-</tr>
-</tbody>
-</table>
-
-</section>
-
-<section data-name="Unop">
-
-<p>A <b>Unop</b> object describes a unary operator.</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Result</td>
-<td>object</td>
-<td>The <a href="#type">Type</a> of the result of the operation.</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>string?</td>
-<td>A fragment reference pointing to a short summary of the operator.</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>string?</td>
-<td>A fragment reference pointing to a detailed description of the
-operator.</td>
-</tr>
-</tbody>
-</table>
 
 </section>
 
