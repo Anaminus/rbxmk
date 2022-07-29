@@ -145,15 +145,15 @@ func (f Fields) MarshalJSON() (b []byte, err error) {
 		f := make(field, 1)
 		switch v := v.(type) {
 		case Property:
-			f["Property"] = v
+			f[V_Property] = v
 		case Struct:
-			f["Struct"] = v
+			f[V_Struct] = v
 		case Function:
-			f["Function"] = v
+			f[V_Function] = v
 		case MultiFunction:
-			f["MultiFunction"] = v
+			f[V_MultiFunction] = v
 		case Enum:
-			f["Enum"] = v
+			f[V_Enum] = v
 		default:
 			continue
 		}
@@ -163,10 +163,10 @@ func (f Fields) MarshalJSON() (b []byte, err error) {
 }
 
 // Unmarshal b as V, and set to f[k] on success.
-func unmarshalValue[V Value](b []byte, f Fields, k, typ string) error {
+func unmarshalValue[V Value](b []byte, f Fields, k string) error {
 	var v V
 	if err := json.Unmarshal(b, &v); err != nil {
-		return fmt.Errorf("decode value type %s: %w", typ, err)
+		return fmt.Errorf("decode value type %s: %w", v.Kind(), err)
 	}
 	f[k] = v
 	return nil
@@ -184,22 +184,22 @@ func (f Fields) UnmarshalJSON(b []byte) (err error) {
 			typ = t
 			break
 		}
-		var unmarshal func(b []byte, f Fields, k, typ string) error
+		var unmarshal func(b []byte, f Fields, k string) error
 		switch typ {
-		case "Property":
+		case V_Property:
 			unmarshal = unmarshalValue[Property]
-		case "Struct":
+		case V_Struct:
 			unmarshal = unmarshalValue[Struct]
-		case "Function":
+		case V_Function:
 			unmarshal = unmarshalValue[Function]
-		case "MultiFunction":
+		case V_MultiFunction:
 			unmarshal = unmarshalValue[MultiFunction]
-		case "Enum":
+		case V_Enum:
 			unmarshal = unmarshalValue[Enum]
 		default:
 			return fmt.Errorf("field %q: unknown type %q", k, typ)
 		}
-		if err := unmarshal(r[typ], f, k, typ); err != nil {
+		if err := unmarshal(r[typ], f, k); err != nil {
 			return fmt.Errorf("field %q: %w", k, err)
 		}
 	}
@@ -211,6 +211,9 @@ type TypeDefs = map[string]TypeDef
 
 // Value is a value that has a Type.
 type Value interface {
+	// Kind returns a name describing the kind of type.
+	Kind() string
+	// Type returns a type definition.
 	Type() dt.Type
 }
 
@@ -228,6 +231,10 @@ type Property struct {
 	Description string `json:",omitempty"`
 }
 
+const V_Property = "Property"
+
+func (v Property) Kind() string { return V_Property }
+
 // Type implements Value by returning v.ValueType.
 func (v Property) Type() dt.Type {
 	return v.ValueType
@@ -244,6 +251,10 @@ type Struct struct {
 	// the struct.
 	Description string `json:",omitempty"`
 }
+
+const V_Struct = "Struct"
+
+func (v Struct) Kind() string { return V_Struct }
 
 // Type implements Value by returning a dt.Struct that maps each field name the
 // type of the field's value.
@@ -308,6 +319,10 @@ type Enum struct {
 	Description string `json:",omitempty"`
 }
 
+const V_Enum = "Enum"
+
+func (v Enum) Kind() string { return V_Enum }
+
 // Type implements Value by returning the Enum primitive.
 func (v Enum) Type() dt.Type {
 	return dt.Prim("Enum")
@@ -345,6 +360,10 @@ type Function struct {
 	Description string `json:",omitempty"`
 }
 
+const V_Function = "Function"
+
+func (v Function) Kind() string { return V_Function }
+
 // Type implements Value by returning a dt.Function with the parameters and
 // returns of the value.
 func (v Function) Type() dt.Type {
@@ -359,6 +378,10 @@ func (v Function) Type() dt.Type {
 
 // MultiFunction describes a Function with multiple signatures.
 type MultiFunction []Function
+
+const V_MultiFunction = "MultiFunction"
+
+func (v MultiFunction) Kind() string { return V_MultiFunction }
 
 // Type implements Value by returning dt.MultiFunctionType.
 func (MultiFunction) Type() dt.Type {
