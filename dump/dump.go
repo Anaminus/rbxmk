@@ -28,7 +28,7 @@ type Root struct {
 	// Enums contains enums defined by the API.
 	Enums Enums `json:",omitempty"`
 	// Formats contains formats registered by a world.
-	Formats Formats
+	Formats Formats `json:",omitempty"`
 	// Program contains the root command created by the program.
 	Program Command
 }
