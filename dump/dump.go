@@ -45,12 +45,12 @@ type Library struct {
 	ImportedAs string
 	// Priority determines the order in which the library is loaded.
 	Priority int
-	// Struct contains the items of the library.
-	Struct Struct `json:",omitempty"`
 	// Types contains types defined by the library.
 	Types TypeDefs `json:",omitempty"`
 	// Enums contains enums defined by the library.
 	Enums Enums `json:",omitempty"`
+	// Struct contains the items of the library.
+	Struct Struct `json:",omitempty"`
 }
 
 // Formats maps a name to a format.
@@ -58,14 +58,15 @@ type Formats map[string]Format
 
 // Format describes a format.
 type Format struct {
-	// Options describes the options of the format.
-	Options FormatOptions `json:",omitempty"`
 	// Summary is a fragment reference pointing to a short summary of the
 	// format.
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
 	// the format.
 	Description string `json:",omitempty"`
+
+	// Options describes the options of the format.
+	Options FormatOptions `json:",omitempty"`
 }
 
 // FormatOptions maps a name to a format option.
@@ -76,6 +77,7 @@ type FormatOption struct {
 	Type dt.Type
 	// Default is a string describing the default value for the option.
 	Default string
+
 	// Description is a fragment reference pointing to a detailed description of
 	// the option.
 	Description string `json:",omitempty"`
@@ -90,6 +92,7 @@ type Command struct {
 	Aliases []string `json:",omitempty"`
 	// Hidden indicates whether the command is hidden.
 	Hidden bool `json:",omitempty"`
+
 	// Arguments is a fragment reference pointing to a definition of the
 	// command's arguments.
 	Arguments string `json:",omitempty"`
@@ -102,6 +105,7 @@ type Command struct {
 	// Deprecated is a fragment reference pointing to a message detailing the
 	// deprecation of the command.
 	Deprecated string `json:",omitempty"`
+
 	// Flags contains the flags defined on the command.
 	Flags Flags `json:",omitempty"`
 	// Commands contains subcommands defined on the command.
@@ -117,22 +121,23 @@ type Flag struct {
 	Type string
 	// Default indicates the default value for the flag.
 	Default string `json:",omitempty"`
+	// Shorthand indicates a one-letter abbreviation for the flag.
+	Shorthand string `json:",omitempty"`
+	// Hidden indicates whether the flag is hidden.
+	Hidden bool `json:",omitempty"`
 	// Whether the flag is inherited by subcommands.
 	Persistent bool `json:",omitempty"`
+	// Description is a fragment reference pointing to a description of the
+	// flag.
+
+	Description string `json:",omitempty"`
 	// Deprecated indicates whether the flag is deprecated, and if so, a
 	// fragment reference pointing to a message describing the deprecation.
 	Deprecated string `json:",omitempty"`
-	// Hidden indicates whether the flag is hidden.
-	Hidden bool `json:",omitempty"`
-	// Shorthand indicates a one-letter abbreviation for the flag.
-	Shorthand string `json:",omitempty"`
 	// ShorthandDeprecated indicates whether the shorthand of the flag is
 	// deprecated, and if so, a fragment reference pointing to a message
 	// describing the deprecation.
 	ShorthandDeprecated string `json:",omitempty"`
-	// Description is a fragment reference pointing to a description of the
-	// flag.
-	Description string `json:",omitempty"`
 }
 
 // Fields maps a name to a value.
@@ -225,6 +230,7 @@ type Property struct {
 	ValueType dt.Type
 	// ReadOnly indicates whether the property can be written to.
 	ReadOnly bool `json:",omitempty"`
+
 	// Summary is a fragment reference pointing to a short summary of the
 	// property.
 	Summary string `json:",omitempty"`
@@ -246,14 +252,15 @@ func (v Property) Type() dt.Type {
 
 // Struct describes the API of a table with a number of fields.
 type Struct struct {
-	// Fields are the fields of the structure.
-	Fields Fields
 	// Summary is a fragment reference pointing to a short summary of the
 	// struct.
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
 	// the struct.
 	Description string `json:",omitempty"`
+
+	// Fields are the fields of the structure.
+	Fields Fields
 }
 
 const V_Struct = "Struct"
@@ -278,25 +285,27 @@ type TypeDef struct {
 	Category string `json:",omitempty"`
 	// Underlying indicates that the type has an underlying type.
 	Underlying *dt.Type `json:",omitempty"`
-	// Operators describes the operators defined on the type.
-	Operators *Operators `json:",omitempty"`
+	// Requires is a list of names of types that the type depends on.
+	Requires []string
+
+	// Summary is a fragment reference pointing to a short summary of the type.
+	Summary string `json:",omitempty"`
+	// Description is a fragment reference pointing to a detailed description of
+	// the type.
+	Description string `json:",omitempty"`
+
+	// Constructors describes constructor functions that create the type.
+	Constructors Constructors `json:",omitempty"`
 	// Properties describes the properties defined on the type.
 	Properties Properties `json:",omitempty"`
 	// Symbols describes the symbols defined on the type.
 	Symbols Symbols `json:",omitempty"`
 	// Methods describes the methods defined on the type.
 	Methods Methods `json:",omitempty"`
-	// Constructors describes constructor functions that create the type.
-	Constructors Constructors `json:",omitempty"`
+	// Operators describes the operators defined on the type.
+	Operators *Operators `json:",omitempty"`
 	// Enums describes enums related to the type.
 	Enums Enums `json:",omitempty"`
-	// Summary is a fragment reference pointing to a short summary of the type.
-	Summary string `json:",omitempty"`
-	// Description is a fragment reference pointing to a detailed description of
-	// the type.
-	Description string `json:",omitempty"`
-	// Requires is a list of names of types that the type depends on.
-	Requires []string
 }
 
 // Properties maps a name to a Property.
@@ -316,13 +325,14 @@ type Enums map[string]Enum
 
 // Enum describes the API of an enum.
 type Enum struct {
-	// Items are the items that exist on the enum.
-	Items EnumItems
 	// Summary is a fragment reference pointing to a short summary of the enum.
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
 	// the enum.
 	Description string `json:",omitempty"`
+
+	// Items are the items that exist on the enum.
+	Items EnumItems
 }
 
 const V_Enum = "Enum"
@@ -343,6 +353,7 @@ type EnumItems map[string]EnumItem
 type EnumItem struct {
 	// Value is the value of the item.
 	Value int
+
 	// Summary is a fragment reference pointing to a short summary of the enum
 	// item.
 	Summary string `json:",omitempty"`
@@ -353,19 +364,21 @@ type EnumItem struct {
 
 // Function describes the API of a function.
 type Function struct {
-	// Parameters are the values received by the function.
-	Parameters Parameters `json:",omitempty"`
-	// Returns are the values returned by the function.
-	Returns Parameters `json:",omitempty"`
 	// CanError returns whether the function may throw an error, excluding type
 	// errors from received arguments.
 	CanError bool `json:",omitempty"`
+
 	// Summary is a fragment reference pointing to a short summary of the
 	// function.
 	Summary string `json:",omitempty"`
 	// Description is a fragment reference pointing to a detailed description of
 	// the function.
 	Description string `json:",omitempty"`
+
+	// Parameters are the values received by the function.
+	Parameters Parameters `json:",omitempty"`
+	// Returns are the values returned by the function.
+	Returns Parameters `json:",omitempty"`
 }
 
 const V_Function = "Function"
@@ -450,6 +463,7 @@ type Binop struct {
 	Operand dt.Type
 	// Result is the type of the result of the operation.
 	Result dt.Type
+
 	// Summary is a fragment reference pointing to a short summary of the
 	// operator.
 	Summary string `json:",omitempty"`
@@ -474,6 +488,7 @@ type Cmpop struct {
 type Unop struct {
 	// Result is the type of the result of the operation.
 	Result dt.Type
+
 	// Summary is a fragment reference pointing to a short summary of the
 	// operator.
 	Summary string `json:",omitempty"`
