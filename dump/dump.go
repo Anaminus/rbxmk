@@ -215,6 +215,8 @@ type Value interface {
 	Kind() string
 	// Type returns a type definition.
 	Type() dt.Type
+
+	v()
 }
 
 // Property describes the API of a property.
@@ -232,6 +234,8 @@ type Property struct {
 }
 
 const V_Property = "Property"
+
+func (v Property) v() {}
 
 func (v Property) Kind() string { return V_Property }
 
@@ -253,6 +257,8 @@ type Struct struct {
 }
 
 const V_Struct = "Struct"
+
+func (v Struct) v() {}
 
 func (v Struct) Kind() string { return V_Struct }
 
@@ -321,6 +327,8 @@ type Enum struct {
 
 const V_Enum = "Enum"
 
+func (v Enum) v() {}
+
 func (v Enum) Kind() string { return V_Enum }
 
 // Type implements Value by returning the Enum primitive.
@@ -362,6 +370,8 @@ type Function struct {
 
 const V_Function = "Function"
 
+func (v Function) v() {}
+
 func (v Function) Kind() string { return V_Function }
 
 // Type implements Value by returning a dt.Function with the parameters and
@@ -380,6 +390,8 @@ func (v Function) Type() dt.Type {
 type MultiFunction []Function
 
 const V_MultiFunction = "MultiFunction"
+
+func (v MultiFunction) v() {}
 
 func (v MultiFunction) Kind() string { return V_MultiFunction }
 
