@@ -4,6 +4,7 @@ package dump
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 
 	"github.com/anaminus/rbxmk/dump/dt"
 )
@@ -138,30 +139,57 @@ type Flag struct {
 type Fields map[string]Value
 
 func (f Fields) MarshalJSON() (b []byte, err error) {
-	type field struct {
-		Kind  string
-		Value Value
-	}
+	type field map[string]Value
 	m := make(map[string]field, len(f))
 	for k, v := range f {
-		f := field{Kind: "", Value: v}
-		switch v.(type) {
+		f := make(field, 1)
+		switch v := v.(type) {
 		case Property:
-			f.Kind = "Property"
+			f["Property"] = v
 		case Struct:
-			f.Kind = "Struct"
+			f["Struct"] = v
 		case Function:
-			f.Kind = "Function"
+			f["Function"] = v
 		case MultiFunction:
-			f.Kind = "MultiFunction"
+			f["MultiFunction"] = v
 		case Enum:
-			f.Kind = "Enum"
+			f["Enum"] = v
 		default:
 			continue
 		}
 		m[k] = f
 	}
 	return marshal(m)
+}
+
+func (f Fields) UnmarshalJSON(b []byte) (err error) {
+	type field map[string]json.RawMessage
+	var m map[string]field
+	if err := json.Unmarshal(b, &m); err != nil {
+		return err
+	}
+	for k, r := range m {
+		var typ string
+		for t := range r {
+			typ = t
+			break
+		}
+		switch typ {
+		case "Property":
+			return new(Property).unmarshal(r[typ], f, k, typ)
+		case "Struct":
+			return new(Struct).unmarshal(r[typ], f, k, typ)
+		case "Function":
+			return new(Function).unmarshal(r[typ], f, k, typ)
+		case "MultiFunction":
+			return new(MultiFunction).unmarshal(r[typ], f, k, typ)
+		case "Enum":
+			return new(Enum).unmarshal(r[typ], f, k, typ)
+		default:
+			return fmt.Errorf("field %q: unknown type %q", k, typ)
+		}
+	}
+	return nil
 }
 
 // TypeDefs maps a name to a type definition.
@@ -191,6 +219,14 @@ func (v Property) Type() dt.Type {
 	return v.ValueType
 }
 
+func (v Property) unmarshal(b []byte, f Fields, k, typ string) error {
+	if err := json.Unmarshal(b, &v); err != nil {
+		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+	}
+	f[k] = v
+	return nil
+}
+
 // Struct describes the API of a table with a number of fields.
 type Struct struct {
 	// Fields are the fields of the structure.
@@ -211,6 +247,14 @@ func (v Struct) Type() dt.Type {
 		k[name] = value.Type()
 	}
 	return dt.Type{Kind: k}
+}
+
+func (v Struct) unmarshal(b []byte, f Fields, k, typ string) error {
+	if err := json.Unmarshal(b, &v); err != nil {
+		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+	}
+	f[k] = v
+	return nil
 }
 
 // TypeDef describes the definition of a type.
@@ -271,6 +315,14 @@ func (v Enum) Type() dt.Type {
 	return dt.Prim("Enum")
 }
 
+func (v Enum) unmarshal(b []byte, f Fields, k, typ string) error {
+	if err := json.Unmarshal(b, &v); err != nil {
+		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+	}
+	f[k] = v
+	return nil
+}
+
 // EnumItems maps a name to an enum.
 type EnumItems map[string]EnumItem
 
@@ -315,12 +367,28 @@ func (v Function) Type() dt.Type {
 	return dt.Function(fn)
 }
 
+func (v Function) unmarshal(b []byte, f Fields, k, typ string) error {
+	if err := json.Unmarshal(b, &v); err != nil {
+		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+	}
+	f[k] = v
+	return nil
+}
+
 // MultiFunction describes a Function with multiple signatures.
 type MultiFunction []Function
 
 // Type implements Value by returning dt.MultiFunctionType.
 func (MultiFunction) Type() dt.Type {
 	return dt.Functions()
+}
+
+func (v MultiFunction) unmarshal(b []byte, f Fields, k, typ string) error {
+	if err := json.Unmarshal(b, &v); err != nil {
+		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+	}
+	f[k] = v
+	return nil
 }
 
 // Parameter describes a function parameter.

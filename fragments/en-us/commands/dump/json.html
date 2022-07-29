@@ -243,32 +243,10 @@ href="#field">Field</a> object.</td>
 
 <section data-name="Field">
 
-<p>A <b>Field</b> is an object that describes the field of a Struct. It has the
-following fields:</p>
-
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Kind</td>
-<td>string</td>
-<td>Determines the type of the Value field.</td>
-</tr>
-<tr>
-<td>Value</td>
-<td>...</td>
-<td>Describes the field.</td>
-</tr>
-</tbody>
-</table>
-
-<p>The following values are possible for the Kind field:</p>
+<p>A <b>Field</b> is an object that describes the field of a <a
+href="#struct">Struct</a>. A struct field may have one of a number of kinds of
+type, so the Field object has exactly one field, where the key indicates the
+kind, and the value describes type. The following kinds are possible:</p>
 
 <table>
 <thead>
