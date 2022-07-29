@@ -184,19 +184,23 @@ func (f Fields) UnmarshalJSON(b []byte) (err error) {
 			typ = t
 			break
 		}
+		var unmarshal func(b []byte, f Fields, k, typ string) error
 		switch typ {
 		case "Property":
-			return unmarshalValue[Property](r[typ], f, k, typ)
+			unmarshal = unmarshalValue[Property]
 		case "Struct":
-			return unmarshalValue[Struct](r[typ], f, k, typ)
+			unmarshal = unmarshalValue[Struct]
 		case "Function":
-			return unmarshalValue[Function](r[typ], f, k, typ)
+			unmarshal = unmarshalValue[Function]
 		case "MultiFunction":
-			return unmarshalValue[MultiFunction](r[typ], f, k, typ)
+			unmarshal = unmarshalValue[MultiFunction]
 		case "Enum":
-			return unmarshalValue[Enum](r[typ], f, k, typ)
+			unmarshal = unmarshalValue[Enum]
 		default:
 			return fmt.Errorf("field %q: unknown type %q", k, typ)
+		}
+		if err := unmarshal(r[typ], f, k, typ); err != nil {
+			return err
 		}
 	}
 	return nil
