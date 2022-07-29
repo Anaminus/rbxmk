@@ -882,11 +882,22 @@ as a Luau type definition.</p>
 of type, and the value describes the kind. The following fields are
 possible:</p>
 
-<section data-name="primitive">
+<section data-name="array">
 
-<p><b>Type:</b> string</p>
+<p><b>Type:</b> <a href="#type">Type</a></p>
 
-<p>The <b>primitive</b> kind indicates the type of a primitive value.</p>
+<p>The <b>array</b> kind indicates an array of elements, each element having the
+inner type.</p>
+
+</section>
+
+<section data-name="dictionary">
+
+<p><b>Type:</b> <a href="#type">Type</a></p>
+
+<p>The <b>dictionary</b> kind describes a table where each element maps a string
+to a value. The inner type object indicates the type of each value in the
+map.</p>
 
 </section>
 
@@ -925,29 +936,12 @@ values.</td>
 
 </section>
 
-<section data-name="array">
+<section data-name="functions">
 
-<p><b>Type:</b> <a href="#type">Type</a></p>
+<p><b>Type:</b> object</p>
 
-<p>The <b>array</b> kind indicates an array of elements, each element having the
-inner type.</p>
-
-</section>
-
-<section data-name="or">
-
-<p><b>Type:</b> array</p>
-
-<p>The <b>or</b> kind describes a union of two or more types. Each element of
-the array is a <a href="#type">Type</a> object.</p>
-
-</section>
-
-<section data-name="optional">
-
-<p><b>Type:</b> <a href="#type">Type</a></p>
-
-<p>The <b>optional</b> kind describes a type that can also be nil.</p>
+<p>The <b>functions</b> kind indicates a function with multiple signatures. It
+has no fields.</p>
 
 </section>
 
@@ -956,15 +950,6 @@ the array is a <a href="#type">Type</a> object.</p>
 <p><b>Type:</b> <a href="#type">Type</a></p>
 
 <p>The <b>group</b> kind groups the inner type.</p>
-
-</section>
-
-<section data-name="struct">
-
-<p><b>Type:</b> object</p>
-
-<p>The <b>struct</b> kind describes a table with a number of named fields. Each
-field maps a name to a <a href="#type">Type</a> object.</p>
 
 </section>
 
@@ -999,13 +984,37 @@ value. It has the following fields:</p>
 
 </section>
 
-<section data-name="dictionary">
+<section data-name="optional">
 
 <p><b>Type:</b> <a href="#type">Type</a></p>
 
-<p>The <b>dictionary</b> kind describes a table where each element maps a string
-to a value. The inner type object indicates the type of each value in the
-map.</p>
+<p>The <b>optional</b> kind describes a type that can also be nil.</p>
+
+</section>
+
+<section data-name="or">
+
+<p><b>Type:</b> array</p>
+
+<p>The <b>or</b> kind describes a union of two or more types. Each element of
+the array is a <a href="#type">Type</a> object.</p>
+
+</section>
+
+<section data-name="primitive">
+
+<p><b>Type:</b> string</p>
+
+<p>The <b>primitive</b> kind indicates the type of a primitive value.</p>
+
+</section>
+
+<section data-name="struct">
+
+<p><b>Type:</b> object</p>
+
+<p>The <b>struct</b> kind describes a table with a number of named fields. Each
+field maps a name to a <a href="#type">Type</a> object.</p>
 
 </section>
 
@@ -1043,15 +1052,6 @@ object.</td>
 </tr>
 </tbody>
 </table>
-
-</section>
-
-<section data-name="functions">
-
-<p><b>Type:</b> object</p>
-
-<p>The <b>functions</b> kind indicates a function with multiple signatures. It
-has no fields.</p>
 
 </section>
 
