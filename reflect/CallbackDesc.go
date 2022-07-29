@@ -45,14 +45,14 @@ func CallbackDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"MemberType": dt.Prim(rtypes.T_String),
 					"Name":       dt.Prim(rtypes.T_String),
 					"ReturnType": dt.Prim(rtypes.T_TypeDesc),
 					"Security":   dt.Prim(rtypes.T_String),
-					"Parameters": dt.Array{T: dt.Prim(rtypes.T_ParameterDesc)},
-					"Tags":       dt.Array{T: dt.Prim(rtypes.T_String)},
-				},
+					"Parameters": dt.Array(dt.Prim(rtypes.T_ParameterDesc)),
+					"Tags":       dt.Array(dt.Prim(rtypes.T_String)),
+				})),
 				Summary:     "Types/CallbackDesc:Summary",
 				Description: "Types/CallbackDesc:Description",
 			}

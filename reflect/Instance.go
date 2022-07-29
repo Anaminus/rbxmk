@@ -518,7 +518,7 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Optional{T: dt.Prim(rtypes.T_Instance)},
+						ValueType:   dt.Optional(dt.Prim(rtypes.T_Instance)),
 						Summary:     "Types/Instance:Properties/Parent/Summary",
 						Description: "Types/Instance:Properties/Parent/Description",
 					}
@@ -588,11 +588,11 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType: dt.Or{
+						ValueType: dt.Or(
 							dt.Prim(rtypes.T_Desc),
 							dt.Prim(rtypes.T_Bool),
 							dt.Prim(rtypes.T_Nil),
-						},
+						),
 						Summary:     "Types/Instance:Symbols/Desc/Summary",
 						Description: "Types/Instance:Symbols/Desc/Description",
 					}
@@ -629,11 +629,11 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType: dt.Or{
+						ValueType: dt.Or(
 							dt.Prim(rtypes.T_Desc),
 							dt.Prim(rtypes.T_Bool),
 							dt.Prim(rtypes.T_Nil),
-						},
+						),
 						Summary:     "Types/Instance:Symbols/RawDesc/Summary",
 						Description: "Types/Instance:Symbols/RawDesc/Description",
 					}
@@ -667,11 +667,11 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType: dt.Or{
+						ValueType: dt.Or(
 							dt.Prim(rtypes.T_AttrConfig),
 							dt.Prim(rtypes.T_Bool),
 							dt.Prim(rtypes.T_Nil),
-						},
+						),
 						Summary:     "Types/Instance:Symbols/AttrConfig/Summary",
 						Description: "Types/Instance:Symbols/AttrConfig/Description",
 					}
@@ -708,11 +708,11 @@ func Instance() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType: dt.Or{
+						ValueType: dt.Or(
 							dt.Prim(rtypes.T_AttrConfig),
 							dt.Prim(rtypes.T_Bool),
 							dt.Prim(rtypes.T_Nil),
-						},
+						),
 						Summary:     "Types/Instance:Symbols/RawAttrConfig/Summary",
 						Description: "Types/Instance:Symbols/RawAttrConfig/Description",
 					}
@@ -818,7 +818,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "...", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/Descend/Summary",
 						Description: "Types/Instance:Methods/Descend/Description",
@@ -877,7 +877,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "name", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstAncestor/Summary",
 						Description: "Types/Instance:Methods/FindFirstAncestor/Description",
@@ -898,7 +898,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "className", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstAncestorOfClass/Summary",
 						Description: "Types/Instance:Methods/FindFirstAncestorOfClass/Description",
@@ -919,7 +919,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "className", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstAncestorWhichIsA/Summary",
 						Description: "Types/Instance:Methods/FindFirstAncestorWhichIsA/Description",
@@ -939,10 +939,10 @@ func Instance() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "name", Type: dt.Prim(rtypes.T_String)},
-							{Name: "recurse", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
+							{Name: "recurse", Type: dt.Optional(dt.Prim(rtypes.T_Bool))},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstChild/Summary",
 						Description: "Types/Instance:Methods/FindFirstChild/Description",
@@ -962,10 +962,10 @@ func Instance() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim(rtypes.T_String)},
-							{Name: "recurse", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
+							{Name: "recurse", Type: dt.Optional(dt.Prim(rtypes.T_Bool))},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstChildOfClass/Summary",
 						Description: "Types/Instance:Methods/FindFirstChildOfClass/Description",
@@ -985,10 +985,10 @@ func Instance() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "className", Type: dt.Prim(rtypes.T_String)},
-							{Name: "recurse", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
+							{Name: "recurse", Type: dt.Optional(dt.Prim(rtypes.T_Bool))},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Summary:     "Types/Instance:Methods/FindFirstChildWhichIsA/Summary",
 						Description: "Types/Instance:Methods/FindFirstChildWhichIsA/Description",
@@ -1010,7 +1010,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "attribute", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						Summary:     "Types/Instance:Methods/GetAttribute/Summary",
 						Description: "Types/Instance:Methods/GetAttribute/Description",
@@ -1100,7 +1100,7 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "descendant", Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Name: "descendant", Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim(rtypes.T_Bool)},
@@ -1118,7 +1118,7 @@ func Instance() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "ancestor", Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
+							{Name: "ancestor", Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim(rtypes.T_Bool)},
@@ -1146,7 +1146,7 @@ func Instance() rbxmk.Reflector {
 					return dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "attribute", Type: dt.Prim(rtypes.T_String)},
-							{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Variant)}},
+							{Name: "value", Type: dt.Optional(dt.Prim(rtypes.T_Variant))},
 						},
 						Summary:     "Types/Instance:Methods/SetAttribute/Summary",
 						Description: "Types/Instance:Methods/SetAttribute/Description",
@@ -1222,11 +1222,11 @@ func Instance() rbxmk.Reflector {
 						{
 							Parameters: dump.Parameters{
 								{Name: "className", Type: dt.Prim(rtypes.T_String)},
-								{Name: "parent", Type: dt.Optional{T: dt.Prim(rtypes.T_Instance)}},
-								{Name: "descriptor", Type: dt.Optional{T: dt.Group{T: dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool)}}}},
+								{Name: "parent", Type: dt.Optional(dt.Prim(rtypes.T_Instance))},
+								{Name: "descriptor", Type: dt.Optional(dt.Group(dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool))))},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Or{dt.Prim(rtypes.T_Instance), dt.Prim("DataModel")}},
+								{Type: dt.Or(dt.Prim(rtypes.T_Instance), dt.Prim("DataModel"))},
 							},
 							CanError:    true,
 							Summary:     "Types/Instance:Constructors/new/Summary",
@@ -1245,7 +1245,7 @@ func Instance() rbxmk.Reflector {
 							{Name: "property", Type: dt.Prim(rtypes.T_String)},
 						},
 						Returns: dump.Parameters{
-							{Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						CanError:    true,
 						Summary:     "Types/Instance:Operators/Index/Summary",
@@ -1254,7 +1254,7 @@ func Instance() rbxmk.Reflector {
 					Newindex: &dump.Function{
 						Parameters: dump.Parameters{
 							{Name: "property", Type: dt.Prim(rtypes.T_String)},
-							{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Name: "value", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						CanError:    true,
 						Summary:     "Types/Instance:Operators/Newindex/Summary",

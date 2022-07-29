@@ -90,14 +90,14 @@ func HttpResponse() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"Success":       dt.Prim(rtypes.T_Bool),
 					"StatusCode":    dt.Prim(rtypes.T_Int),
 					"StatusMessage": dt.Prim(rtypes.T_String),
 					"Headers":       dt.Prim(rtypes.T_HttpHeaders),
 					"Cookies":       dt.Prim(rtypes.T_Cookies),
-					"Body":          dt.Optional{T: dt.Prim(rtypes.T_Variant)},
-				},
+					"Body":          dt.Optional(dt.Prim(rtypes.T_Variant)),
+				})),
 				Summary:     "Types/HttpResponse:Summary",
 				Description: "Types/HttpResponse:Description",
 			}

@@ -45,7 +45,7 @@ func PropertyDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"MemberType":    dt.Prim(rtypes.T_String),
 					"Name":          dt.Prim(rtypes.T_String),
 					"ValueType":     dt.Prim(rtypes.T_TypeDesc),
@@ -54,8 +54,8 @@ func PropertyDesc() rbxmk.Reflector {
 					"WriteSecurity": dt.Prim(rtypes.T_String),
 					"CanLoad":       dt.Prim(rtypes.T_Bool),
 					"CanSave":       dt.Prim(rtypes.T_Bool),
-					"Tags":          dt.Array{T: dt.Prim(rtypes.T_String)},
-				},
+					"Tags":          dt.Array(dt.Prim(rtypes.T_String)),
+				})),
 				Summary:     "Types/PropertyDesc:Summary",
 				Description: "Types/PropertyDesc:Description",
 			}

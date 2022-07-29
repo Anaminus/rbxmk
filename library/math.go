@@ -102,7 +102,7 @@ func dumpMath(s rbxmk.State) dump.Library {
 				"log": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "x", Type: dt.Prim(rtypes.T_LuaNumber)},
-						{Name: "base", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}, Default: "𝑒"},
+						{Name: "base", Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber)), Default: "𝑒"},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaNumber)},

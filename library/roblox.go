@@ -100,10 +100,10 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 		Types: dump.TypeDefs{
 			"DataModel": dump.TypeDef{
 				Category:   "rbxmk",
-				Underlying: dt.Prim(rtypes.T_Instance),
+				Underlying: dt.P(dt.Prim(rtypes.T_Instance)),
 				Symbols: dump.Properties{
 					"Metadata": dump.Property{
-						ValueType:   dt.Dictionary{V: dt.Prim(rtypes.T_String)},
+						ValueType:   dt.Dictionary(dt.Prim(rtypes.T_String)),
 						Summary:     "Libraries/roblox/Types/DataModel:Symbols/Metadata/Summary",
 						Description: "Libraries/roblox/Types/DataModel:Symbols/Metadata/Description",
 					},

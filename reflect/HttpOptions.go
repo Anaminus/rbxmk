@@ -97,15 +97,15 @@ func HttpOptions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"URL":            dt.Prim(rtypes.T_String),
-					"Method":         dt.Optional{T: dt.Prim(rtypes.T_String)},
-					"RequestFormat":  dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
-					"ResponseFormat": dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)},
-					"Headers":        dt.Optional{T: dt.Prim(rtypes.T_HttpHeaders)},
-					"Cookies":        dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
-					"Body":           dt.Optional{T: dt.Prim(rtypes.T_Any)},
-				},
+					"Method":         dt.Optional(dt.Prim(rtypes.T_String)),
+					"RequestFormat":  dt.Optional(dt.Prim(rtypes.T_FormatSelector)),
+					"ResponseFormat": dt.Optional(dt.Prim(rtypes.T_FormatSelector)),
+					"Headers":        dt.Optional(dt.Prim(rtypes.T_HttpHeaders)),
+					"Cookies":        dt.Optional(dt.Prim(rtypes.T_Cookies)),
+					"Body":           dt.Optional(dt.Prim(rtypes.T_Any)),
+				})),
 				Summary:     "Types/HttpOptions:Summary",
 				Description: "Types/HttpOptions:Description",
 			}

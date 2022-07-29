@@ -45,12 +45,12 @@ func FileInfo() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"Name":    dt.Prim(rtypes.T_String),
 					"IsDir":   dt.Prim(rtypes.T_Bool),
 					"Size":    dt.Prim(rtypes.T_Int64),
 					"ModTime": dt.Prim(rtypes.T_Int64),
-				},
+				})),
 				Summary:     "Types/FileInfo:Summary",
 				Description: "Types/FileInfo:Description",
 			}

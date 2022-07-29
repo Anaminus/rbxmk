@@ -166,7 +166,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Dictionary{V: dt.Prim(rtypes.T_DescFields)}},
+							{Type: dt.Dictionary(dt.Prim(rtypes.T_DescFields))},
 						},
 						Summary:     "Types/DescAction:Methods/Fields/Summary",
 						Description: "Types/DescAction:Methods/Fields/Description",
@@ -213,7 +213,7 @@ func DescAction() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Parameters: dump.Parameters{
-							{Name: "fields", Type: dt.Dictionary{V: dt.Prim(rtypes.T_Any)}},
+							{Name: "fields", Type: dt.Dictionary(dt.Prim(rtypes.T_Any))},
 						},
 						Summary:     "Types/DescAction:Methods/SetFields/Summary",
 						Description: "Types/DescAction:Methods/SetFields/Description",

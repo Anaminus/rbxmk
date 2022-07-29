@@ -57,7 +57,7 @@ func Enums() rbxmk.Reflector {
 				Dump: func() dump.Function {
 					return dump.Function{
 						Returns: dump.Parameters{
-							{Type: dt.Array{T: dt.Prim(rtypes.T_Enum)}},
+							{Type: dt.Array(dt.Prim(rtypes.T_Enum))},
 						},
 						Summary:     "Types/Enums:Methods/GetEnums/Summary",
 						Description: "Types/Enums:Methods/GetEnums/Description",

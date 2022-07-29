@@ -81,12 +81,12 @@ func RbxAssetOptions() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"AssetId": dt.Prim(rtypes.T_Int64),
-					"Cookies": dt.Optional{T: dt.Prim(rtypes.T_Cookies)},
+					"Cookies": dt.Optional(dt.Prim(rtypes.T_Cookies)),
 					"Format":  dt.Prim(rtypes.T_FormatSelector),
-					"Body":    dt.Optional{T: dt.Prim(rtypes.T_Any)},
-				},
+					"Body":    dt.Optional(dt.Prim(rtypes.T_Any)),
+				})),
 				Summary:     "Types/RbxAssetOptions:Summary",
 				Description: "Types/RbxAssetOptions:Description",
 			}

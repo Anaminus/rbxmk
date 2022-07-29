@@ -779,7 +779,7 @@ func CFrame() rbxmk.Reflector {
 							Parameters: dump.Parameters{
 								{Name: "position", Type: dt.Prim(rtypes.T_Vector3)},
 								{Name: "lookAt", Type: dt.Prim(rtypes.T_Vector3)},
-								{Name: "up", Type: dt.Optional{T: dt.Prim(rtypes.T_Vector3)}, Default: `Vector3.new(0, 1, 0)`},
+								{Name: "up", Type: dt.Optional(dt.Prim(rtypes.T_Vector3)), Default: `Vector3.new(0, 1, 0)`},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_CFrame)},

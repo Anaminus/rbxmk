@@ -58,7 +58,7 @@ func JsonPatch() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category:    "rbxmk",
-				Underlying:  dt.Array{T: dt.Prim(rtypes.T_JsonOperation)},
+				Underlying:  dt.P(dt.Array(dt.Prim(rtypes.T_JsonOperation))),
 				Summary:     "Types/JsonPatch:Summary",
 				Description: "Types/JsonPatch:Description",
 			}

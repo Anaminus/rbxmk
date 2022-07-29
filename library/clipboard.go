@@ -77,7 +77,7 @@ func dumpClipboard(s rbxmk.State) dump.Library {
 						{Name: "...", Type: dt.Prim(rtypes.T_FormatSelector)},
 					},
 					Returns: dump.Parameters{
-						{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "value", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/clipboard:Fields/read/Summary",

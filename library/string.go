@@ -51,10 +51,10 @@ func dumpString(s rbxmk.State) dump.Library {
 				"split": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
-						{Name: "sep", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, Default: `","`},
+						{Name: "sep", Type: dt.Optional(dt.Prim(rtypes.T_LuaString)), Default: `","`},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Array{T: dt.Prim(rtypes.T_LuaString)}},
+						{Type: dt.Array(dt.Prim(rtypes.T_LuaString))},
 					},
 					Summary:     "Libraries/string:Fields/split/Summary",
 					Description: "Libraries/string:Fields/split/Description",

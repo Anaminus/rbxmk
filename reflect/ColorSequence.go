@@ -65,7 +65,7 @@ func ColorSequence() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Array{T: dt.Prim(rtypes.T_ColorSequenceKeypoint)},
+						ValueType:   dt.Array(dt.Prim(rtypes.T_ColorSequenceKeypoint)),
 						ReadOnly:    true,
 						Summary:     "Types/ColorSequence:Properties/Keypoints/Summary",
 						Description: "Types/ColorSequence:Properties/Keypoints/Description",
@@ -149,7 +149,7 @@ func ColorSequence() rbxmk.Reflector {
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "keypoints", Type: dt.Array{T: dt.Prim(rtypes.T_ColorSequenceKeypoint)}},
+								{Name: "keypoints", Type: dt.Array(dt.Prim(rtypes.T_ColorSequenceKeypoint))},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_ColorSequence)},

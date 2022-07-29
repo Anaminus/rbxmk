@@ -97,12 +97,12 @@ func JsonOperation() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"op":    dt.Prim(rtypes.T_String),
 					"path":  dt.Prim(rtypes.T_String),
-					"from":  dt.Optional{T: dt.Prim(rtypes.T_String)},
-					"value": dt.Optional{T: dt.Prim(rtypes.T_JsonValue)},
-				},
+					"from":  dt.Optional(dt.Prim(rtypes.T_String)),
+					"value": dt.Optional(dt.Prim(rtypes.T_JsonValue)),
+				})),
 				Summary:     "Types/JsonOperation:Summary",
 				Description: "Types/JsonOperation:Description",
 			}

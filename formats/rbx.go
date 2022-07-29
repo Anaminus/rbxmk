@@ -111,7 +111,7 @@ func RBXL() rbxmk.Format {
 			return dump.Format{
 				Options: dump.FormatOptions{
 					"Desc": dump.FormatOption{
-						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Type:        dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)),
 						Default:     "nil",
 						Description: "Formats/options/rbx:Desc",
 					},
@@ -182,7 +182,7 @@ func RBXM() rbxmk.Format {
 			return dump.Format{
 				Options: dump.FormatOptions{
 					"Desc": dump.FormatOption{
-						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Type:        dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)),
 						Default:     "nil",
 						Description: "Formats/options/rbx:Desc",
 					},
@@ -253,7 +253,7 @@ func RBXLX() rbxmk.Format {
 			return dump.Format{
 				Options: dump.FormatOptions{
 					"Desc": dump.FormatOption{
-						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Type:        dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)),
 						Default:     "nil",
 						Description: "Formats/options/rbx:Desc",
 					},
@@ -324,7 +324,7 @@ func RBXMX() rbxmk.Format {
 			return dump.Format{
 				Options: dump.FormatOptions{
 					"Desc": dump.FormatOption{
-						Type:        dt.Or{dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)},
+						Type:        dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool), dt.Prim(rtypes.T_Nil)),
 						Default:     "nil",
 						Description: "Formats/options/rbx:Desc",
 					},

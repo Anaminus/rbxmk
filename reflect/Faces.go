@@ -193,11 +193,11 @@ func Faces() rbxmk.Reflector {
 					return dump.MultiFunction{
 						{
 							Parameters: dump.Parameters{
-								{Name: "...", Type: dt.Or{
+								{Name: "...", Type: dt.Or(
 									dt.Prim(rtypes.T_EnumItem),
 									dt.Prim(rtypes.T_String),
 									dt.Prim(rtypes.T_Int),
-								}},
+								)},
 							},
 							Summary:     "Types/Faces:Constructors/new/Summary",
 							Description: "Types/Faces:Constructors/new/Description",

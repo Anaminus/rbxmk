@@ -72,7 +72,7 @@ type FormatOptions map[string]FormatOption
 
 type FormatOption struct {
 	// Type describes the expected types of the option.
-	Type dt.Kind
+	Type dt.Type
 	// Default is a string describing the default value for the option.
 	Default string
 	// Description is a fragment reference pointing to a detailed description of
@@ -169,13 +169,13 @@ type TypeDefs = map[string]TypeDef
 
 // Value is a value that has a Type.
 type Value interface {
-	Type() dt.Kind
+	Type() dt.Type
 }
 
 // Property describes the API of a property.
 type Property struct {
 	// ValueType is the type of the property's value.
-	ValueType dt.Kind
+	ValueType dt.Type
 	// ReadOnly indicates whether the property can be written to.
 	ReadOnly bool `json:",omitempty"`
 	// Summary is a fragment reference pointing to a short summary of the
@@ -187,7 +187,7 @@ type Property struct {
 }
 
 // Type implements Value by returning v.ValueType.
-func (v Property) Type() dt.Kind {
+func (v Property) Type() dt.Type {
 	return v.ValueType
 }
 
@@ -205,12 +205,12 @@ type Struct struct {
 
 // Type implements Value by returning a dt.Struct that maps each field name the
 // type of the field's value.
-func (v Struct) Type() dt.Kind {
-	t := make(dt.Struct, len(v.Fields))
+func (v Struct) Type() dt.Type {
+	k := make(dt.KindStruct, len(v.Fields))
 	for name, value := range v.Fields {
-		t[name] = value.Type()
+		k[name] = value.Type()
 	}
-	return t
+	return dt.Type{Kind: k}
 }
 
 // TypeDef describes the definition of a type.
@@ -218,7 +218,7 @@ type TypeDef struct {
 	// Category describes a category for the type.
 	Category string `json:",omitempty"`
 	// Underlying indicates that the type has an underlying type.
-	Underlying dt.Kind `json:",omitempty"`
+	Underlying *dt.Type `json:",omitempty"`
 	// Operators describes the operators defined on the type.
 	Operators *Operators `json:",omitempty"`
 	// Properties describes the properties defined on the type.
@@ -267,7 +267,7 @@ type Enum struct {
 }
 
 // Type implements Value by returning the Enum primitive.
-func (v Enum) Type() dt.Kind {
+func (v Enum) Type() dt.Type {
 	return dt.Prim("Enum")
 }
 
@@ -305,22 +305,22 @@ type Function struct {
 
 // Type implements Value by returning a dt.Function with the parameters and
 // returns of the value.
-func (v Function) Type() dt.Kind {
-	fn := dt.Function{
+func (v Function) Type() dt.Type {
+	fn := dt.KindFunction{
 		Parameters: make(Parameters, len(v.Parameters)),
 		Returns:    make(Parameters, len(v.Returns)),
 	}
 	copy(fn.Parameters, v.Parameters)
 	copy(fn.Returns, v.Returns)
-	return fn
+	return dt.Function(fn)
 }
 
 // MultiFunction describes a Function with multiple signatures.
 type MultiFunction []Function
 
 // Type implements Value by returning dt.MultiFunctionType.
-func (MultiFunction) Type() dt.Kind {
-	return dt.MultiFunctionType{}
+func (MultiFunction) Type() dt.Type {
+	return dt.Functions()
 }
 
 // Parameter describes a function parameter.
@@ -370,9 +370,9 @@ type Operators struct {
 // outer type definition.
 type Binop struct {
 	// Operand is the type of the right operand.
-	Operand dt.Kind
+	Operand dt.Type
 	// Result is the type of the result of the operation.
-	Result dt.Kind
+	Result dt.Type
 	// Summary is a fragment reference pointing to a short summary of the
 	// operator.
 	Summary string `json:",omitempty"`
@@ -396,7 +396,7 @@ type Cmpop struct {
 // type definition.
 type Unop struct {
 	// Result is the type of the result of the operation.
-	Result dt.Kind
+	Result dt.Type
 	// Summary is a fragment reference pointing to a short summary of the
 	// operator.
 	Summary string `json:",omitempty"`

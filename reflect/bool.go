@@ -34,7 +34,7 @@ func Bool() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category:    "primitive",
-				Underlying:  dt.Prim(rtypes.T_Bool),
+				Underlying:  dt.P(dt.Prim(rtypes.T_Bool)),
 				Summary:     "Types/bool:Summary",
 				Description: "Types/bool:Description",
 			}

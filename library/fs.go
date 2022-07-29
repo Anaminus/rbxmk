@@ -151,7 +151,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Array{T: dt.Prim(rtypes.T_DirEntry)}}},
+						{Type: dt.Optional(dt.Array(dt.Prim(rtypes.T_DirEntry)))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/dir/Summary",
@@ -160,7 +160,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 				"mkdir": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
-						{Name: "all", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
+						{Name: "all", Type: dt.Optional(dt.Prim(rtypes.T_Bool))},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaBoolean)},
@@ -172,7 +172,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 				"read": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
-						{Name: "format", Type: dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)}},
+						{Name: "format", Type: dt.Optional(dt.Prim(rtypes.T_FormatSelector))},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
@@ -184,7 +184,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 				"remove": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
-						{Name: "all", Type: dt.Optional{T: dt.Prim(rtypes.T_Bool)}},
+						{Name: "all", Type: dt.Optional(dt.Prim(rtypes.T_Bool))},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaBoolean)},
@@ -210,7 +210,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Prim(rtypes.T_FileInfo)}},
+						{Type: dt.Optional(dt.Prim(rtypes.T_FileInfo))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/stat/Summary",
@@ -220,7 +220,7 @@ func dumpFS(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "path", Type: dt.Prim(rtypes.T_String)},
 						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
-						{Name: "format", Type: dt.Optional{T: dt.Prim(rtypes.T_FormatSelector)}},
+						{Name: "format", Type: dt.Optional(dt.Prim(rtypes.T_FormatSelector))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/fs:Fields/write/Summary",

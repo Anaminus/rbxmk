@@ -16,14 +16,14 @@ func JsonValue() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Or{
+				Underlying: dt.P(dt.Or(
 					dt.Prim(rtypes.T_Nil),
 					dt.Prim(rtypes.T_Bool),
 					dt.Prim(rtypes.T_Number),
 					dt.Prim(rtypes.T_String),
 					dt.Prim(rtypes.T_Array),
 					dt.Prim(rtypes.T_Dictionary),
-				},
+				)),
 				Summary:     "Types/JsonValue:Summary",
 				Description: "Types/JsonValue:Description",
 			}

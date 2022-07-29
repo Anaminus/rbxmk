@@ -43,12 +43,12 @@ func ClassDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"Name":           dt.Prim(rtypes.T_String),
 					"Superclass":     dt.Prim(rtypes.T_String),
 					"MemoryCategory": dt.Prim(rtypes.T_String),
-					"Tags":           dt.Array{T: dt.Prim(rtypes.T_String)},
-				},
+					"Tags":           dt.Array(dt.Prim(rtypes.T_String)),
+				})),
 				Summary:     "Types/ClassDesc:Summary",
 				Description: "Types/ClassDesc:Description",
 			}

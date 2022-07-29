@@ -64,7 +64,7 @@ func DescFields() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category:    "rbxmk",
-				Underlying:  dt.Dictionary{V: dt.Prim(rtypes.T_Any)},
+				Underlying:  dt.P(dt.Dictionary(dt.Prim(rtypes.T_Any))),
 				Summary:     "Types/DescFields:Summary",
 				Description: "Types/DescFields:Description",
 			}

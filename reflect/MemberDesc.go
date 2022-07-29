@@ -91,12 +91,12 @@ func MemberDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Or{
+				Underlying: dt.P(dt.Or(
 					dt.Prim(rtypes.T_PropertyDesc),
 					dt.Prim(rtypes.T_FunctionDesc),
 					dt.Prim(rtypes.T_EventDesc),
 					dt.Prim(rtypes.T_CallbackDesc),
-				},
+				)),
 				Summary:     "Types/MemberDesc:Summary",
 				Description: "Types/MemberDesc:Description",
 			}

@@ -83,11 +83,11 @@ func ParameterDesc() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"Type":    dt.Prim(rtypes.T_TypeDesc),
 					"Name":    dt.Prim(rtypes.T_String),
-					"Default": dt.Optional{T: dt.Prim(rtypes.T_String)},
-				},
+					"Default": dt.Optional(dt.Prim(rtypes.T_String)),
+				})),
 				Summary:     "Types/ParameterDesc:Summary",
 				Description: "Types/ParameterDesc:Description",
 			}

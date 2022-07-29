@@ -32,7 +32,7 @@ var Selene = Format{
 			// Structs.
 			sortTypeDefs(library.Types, func(defName string, def dump.TypeDef) {
 				// Skip if empty.
-				if def.Underlying == nil &&
+				if def.Underlying.Kind == nil &&
 					len(def.Properties) == 0 &&
 					len(def.Methods) == 0 &&
 					def.Operators == nil {
@@ -50,7 +50,7 @@ var Selene = Format{
 				buf.WriteString("]\n")
 
 				// Type field.
-				if t := def.Underlying; t != nil {
+				if t := def.Underlying.Kind; t != nil {
 					seleneWriteTypeField(buf, structTypes, t, false)
 					buf.WriteString("\n")
 				}
@@ -92,7 +92,7 @@ var Selene = Format{
 						buf.WriteString("]\n")
 						buf.WriteString("\tproperty = true\n")
 						if len(op.Index.Returns) > 0 {
-							seleneWriteTypeField(buf, structTypes, op.Index.Returns[0].Type, false)
+							seleneWriteTypeField(buf, structTypes, op.Index.Returns[0].Type.Kind, false)
 							buf.WriteString("\n")
 						}
 						buf.WriteString("\twritable = \"overridden\"\n")
@@ -103,7 +103,7 @@ var Selene = Format{
 						buf.WriteString("]\n")
 						buf.WriteString("\tproperty = true\n")
 						if len(op.Index.Returns) > 0 {
-							seleneWriteTypeField(buf, structTypes, op.Index.Returns[0].Type, false)
+							seleneWriteTypeField(buf, structTypes, op.Index.Returns[0].Type.Kind, false)
 							buf.WriteString("\n")
 						}
 					}
@@ -144,7 +144,7 @@ func seleneWriteStruct(buf *bufio.Writer, structTypes map[string]struct{}, paren
 		switch v := field.(type) {
 		case dump.Property:
 			seleneWriteProperty(buf, structTypes, v)
-			if p, ok := v.ValueType.(dt.Prim); ok && string(p) == "table" && v.ReadOnly {
+			if p, ok := v.ValueType.Kind.(dt.KindPrim); ok && string(p) == "table" && v.ReadOnly {
 				buf.WriteString("\twritable = \"new-fields\"\n")
 			}
 		case dump.Function:
@@ -159,7 +159,7 @@ func seleneWriteStruct(buf *bufio.Writer, structTypes map[string]struct{}, paren
 
 func seleneWriteProperty(buf *bufio.Writer, structTypes map[string]struct{}, prop dump.Property) {
 	buf.WriteString("\tproperty = true\n")
-	seleneWriteTypeField(buf, structTypes, prop.ValueType, false)
+	seleneWriteTypeField(buf, structTypes, prop.ValueType.Kind, false)
 	buf.WriteString("\n")
 	if !prop.ReadOnly {
 		buf.WriteString("\twritable = \"overridden\"\n")
@@ -191,7 +191,7 @@ func seleneWriteMultiFunction(buf *bufio.Writer, structTypes map[string]struct{}
 				// If the type of the nth parameter from two
 				// functions do not match, convert to any.
 				for i, param := range fn.Parameters {
-					if fn.Parameters[i].Type == nil {
+					if fn.Parameters[i].Type.Kind == nil {
 						fn.Parameters[i].Type = param.Type
 					} else if fn.Parameters[i].Type != param.Type {
 						fn.Parameters[i].Type = dt.Prim("any")
@@ -201,8 +201,8 @@ func seleneWriteMultiFunction(buf *bufio.Writer, structTypes map[string]struct{}
 			// Parameters after the minimum number of arguments
 			// are treated as optional.
 			for i := min; i < max; i++ {
-				if _, ok := fn.Parameters[i].Type.(dt.Optional); !ok {
-					fn.Parameters[i].Type = dt.Optional{T: fn.Parameters[i].Type}
+				if _, ok := fn.Parameters[i].Type.Kind.(dt.KindOptional); !ok {
+					fn.Parameters[i].Type = dt.Optional(fn.Parameters[i].Type)
 				}
 			}
 		}
@@ -248,11 +248,11 @@ func seleneWriteParameters(buf *bufio.Writer, structTypes map[string]struct{}, p
 		}
 	skipEnum:
 
-		seleneWriteTypeField(buf, structTypes, param.Type, true)
+		seleneWriteTypeField(buf, structTypes, param.Type.Kind, true)
 
 	continueArg:
 		// Check optional.
-		if _, ok := param.Type.(dt.Optional); ok {
+		if _, ok := param.Type.Kind.(dt.KindOptional); ok {
 			buf.WriteString(", required = false")
 		}
 
@@ -268,22 +268,22 @@ func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t 
 	}
 
 	switch t.(type) {
-	case dt.Array:
+	case dt.KindArray:
 		buf.WriteString("type = \"table\"")
 		return
-	case dt.Struct:
+	case dt.KindStruct:
 		buf.WriteString("type = \"table\"")
 		return
-	case dt.Dictionary:
+	case dt.KindDictionary:
 		buf.WriteString("type = \"table\"")
 		return
-	case dt.Map:
+	case dt.KindMap:
 		buf.WriteString("type = \"table\"")
 		return
-	case dt.Table:
+	case dt.KindTable:
 		buf.WriteString("type = \"table\"")
 		return
-	case dt.Function:
+	case dt.KindFunction:
 		buf.WriteString("type = \"function\"")
 		return
 	}
@@ -329,12 +329,12 @@ func seleneWriteTypeField(buf *bufio.Writer, structTypes map[string]struct{}, t 
 // Get the underlying primitive type.
 func getPrim(t dt.Kind) dt.Kind {
 	switch t := t.(type) {
-	case dt.Prim:
+	case dt.KindPrim:
 		return t
-	case dt.Optional:
-		return getPrim(t.T)
-	case dt.Group:
-		return getPrim(t.T)
+	case dt.KindOptional:
+		return getPrim(t.Type.Kind)
+	case dt.KindGroup:
+		return getPrim(t.Type.Kind)
 	default:
 		return nil
 	}

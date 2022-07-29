@@ -150,7 +150,7 @@ func dumpJSON(s rbxmk.State) dump.Library {
 						{Name: "next", Type: dt.Prim(rtypes.T_JsonValue)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Array{T: dt.Prim(rtypes.T_JsonPatch)}}},
+						{Type: dt.Optional(dt.Array(dt.Prim(rtypes.T_JsonPatch)))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/json:Fields/diff/Summary",

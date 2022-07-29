@@ -225,12 +225,12 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"assert": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
-						{Name: "message", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, Default: `"assertion failed!"`},
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "v", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
+						{Name: "message", Type: dt.Optional(dt.Prim(rtypes.T_LuaString)), Default: `"assertion failed!"`},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/base:Fields/assert/Summary",
@@ -239,7 +239,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"error": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "message", Type: dt.Prim(rtypes.T_Any)},
-						{Name: "level", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
+						{Name: "level", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `1`},
 					},
 					CanError:    true,
 					Summary:     "Libraries/base:Fields/error/Summary",
@@ -260,11 +260,11 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"next": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-						{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "index", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Returns: dump.Parameters{
-						{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
-						{Name: "value", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "index", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
+						{Name: "value", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Summary:     "Libraries/base:Fields/next/Summary",
 					Description: "Libraries/base:Fields/next/Description",
@@ -284,18 +284,18 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"pcall": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "f", Type: dt.Prim(rtypes.T_LuaFunction)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim(rtypes.T_LuaBoolean)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Summary:     "Libraries/base:Fields/pcall/Summary",
 					Description: "Libraries/base:Fields/pcall/Description",
 				},
 				"print": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Summary:     "Libraries/base:Fields/print/Summary",
 					Description: "Libraries/base:Fields/print/Description",
@@ -304,10 +304,10 @@ func dumpBase(s rbxmk.State) dump.Library {
 					{
 						Parameters: dump.Parameters{
 							{Name: "index", Type: dt.Prim(rtypes.T_LuaInteger)},
-							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						Returns: dump.Parameters{
-							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						CanError:    true,
 						Summary:     "Libraries/base:Fields/select/Index/Summary",
@@ -316,7 +316,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 					{
 						Parameters: dump.Parameters{
 							{Name: "count", Type: dt.Prim(rtypes.T_LuaString), Enums: dt.Enums{`"#"`}},
-							{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+							{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 						},
 						Returns: dump.Parameters{
 							{Type: dt.Prim(rtypes.T_LuaInteger)},
@@ -328,18 +328,18 @@ func dumpBase(s rbxmk.State) dump.Library {
 				},
 				"tonumber": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "x", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
-						{Name: "base", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `10`},
+						{Name: "x", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
+						{Name: "base", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `10`},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}},
+						{Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber))},
 					},
 					Summary:     "Libraries/base:Fields/tonumber/Summary",
 					Description: "Libraries/base:Fields/tonumber/Description",
 				},
 				"tostring": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "v", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "v", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaString)},
@@ -360,11 +360,11 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"unpack": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "list", Type: dt.Prim(rtypes.T_LuaTable)},
-						{Name: "i", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}},
-						{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}},
+						{Name: "i", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger))},
+						{Name: "j", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger))},
 					},
 					Returns: dump.Parameters{
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Summary:     "Libraries/base:Fields/unpack/Summary",
 					Description: "Libraries/base:Fields/unpack/Description",
@@ -372,15 +372,15 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"xpcall": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "f", Type: dt.Prim(rtypes.T_LuaFunction)},
-						{Name: "msgh", Type: dt.Function{
+						{Name: "msgh", Type: dt.Function(dt.KindFunction{
 							Parameters: []dt.Parameter{{Name: "err", Type: dt.Prim(rtypes.T_Any)}},
 							Returns:    []dt.Parameter{{Type: dt.Prim(rtypes.T_Any)}},
-						}},
+						})},
 						{Name: "...", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
 						{Name: "ok", Type: dt.Prim(rtypes.T_LuaBoolean)},
-						{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_Any)}},
+						{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_Any))},
 					},
 					Summary:     "Libraries/base:Fields/xpcall/Summary",
 					Description: "Libraries/base:Fields/xpcall/Description",
@@ -390,7 +390,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						{Name: "v", Type: dt.Prim(rtypes.T_Any)},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Optional{T: dt.Prim(rtypes.T_LuaTable)}},
+						{Type: dt.Optional(dt.Prim(rtypes.T_LuaTable))},
 					},
 					Summary:     "Libraries/base:Fields/getmetatable/Summary",
 					Description: "Libraries/base:Fields/getmetatable/Description",
@@ -398,7 +398,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 				"setmetatable": dump.Function{
 					Parameters: dump.Parameters{
 						{Name: "v", Type: dt.Prim(rtypes.T_LuaTable)},
-						{Name: "metatable", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaTable)}},
+						{Name: "metatable", Type: dt.Optional(dt.Prim(rtypes.T_LuaTable))},
 					},
 					Returns: dump.Parameters{
 						{Type: dt.Prim(rtypes.T_LuaTable)},
@@ -728,20 +728,20 @@ func dumpBase(s rbxmk.State) dump.Library {
 							{
 								Parameters: dump.Parameters{
 									{Name: "format", Type: dt.Prim(rtypes.T_LuaString), Enums: dt.Enums{`"*t"`, `!*t`}},
-									{Name: "time", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}},
+									{Name: "time", Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber))},
 								},
 								Returns: dump.Parameters{
-									{Type: dt.Struct{
+									{Type: dt.Struct(dt.KindStruct{
 										"year":  dt.Prim(rtypes.T_LuaInteger),
 										"month": dt.Prim(rtypes.T_LuaInteger),
 										"day":   dt.Prim(rtypes.T_LuaInteger),
-										"hour":  dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-										"min":   dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-										"sec":   dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-										"wday":  dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-										"yday":  dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-										"isdst": dt.Optional{T: dt.Prim(rtypes.T_LuaBoolean)},
-									}},
+										"hour":  dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+										"min":   dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+										"sec":   dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+										"wday":  dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+										"yday":  dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+										"isdst": dt.Optional(dt.Prim(rtypes.T_LuaBoolean)),
+									})},
 								},
 								Summary:     "Libraries/base/Fields/os:Fields/date/Tabular/Summary",
 								Description: "Libraries/base/Fields/os:Fields/date/Tabular/Description",
@@ -749,7 +749,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							{
 								Parameters: dump.Parameters{
 									{Name: "format", Type: dt.Prim(rtypes.T_LuaString)},
-									{Name: "time", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}},
+									{Name: "time", Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber))},
 								},
 								Returns: dump.Parameters{
 									{Type: dt.Prim(rtypes.T_LuaString)},
@@ -771,15 +771,15 @@ func dumpBase(s rbxmk.State) dump.Library {
 						},
 						"time": dump.Function{
 							Parameters: dump.Parameters{
-								{Name: "t", Type: dt.Optional{T: dt.Struct{
+								{Name: "t", Type: dt.Optional(dt.Struct(dt.KindStruct{
 									"year":  dt.Prim(rtypes.T_LuaInteger),
 									"month": dt.Prim(rtypes.T_LuaInteger),
 									"day":   dt.Prim(rtypes.T_LuaInteger),
-									"hour":  dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-									"min":   dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-									"sec":   dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)},
-									"isdst": dt.Optional{T: dt.Prim(rtypes.T_LuaBoolean)},
-								}}},
+									"hour":  dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+									"min":   dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+									"sec":   dt.Optional(dt.Prim(rtypes.T_LuaInteger)),
+									"isdst": dt.Optional(dt.Prim(rtypes.T_LuaBoolean)),
+								}))},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_LuaNumber)},
@@ -796,8 +796,8 @@ func dumpBase(s rbxmk.State) dump.Library {
 						"byte": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
-								{Name: "i", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
-								{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `i`},
+								{Name: "i", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `1`},
+								{Name: "j", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `i`},
 							},
 							Returns: dump.Parameters{
 								{Name: "...", Type: dt.Prim(rtypes.T_LuaInteger)},
@@ -820,13 +820,13 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Parameters: dump.Parameters{
 								{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
 								{Name: "pattern", Type: dt.Prim(rtypes.T_LuaString)},
-								{Name: "init", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
-								{Name: "plain", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaBoolean)}, Default: `false`},
+								{Name: "init", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `1`},
+								{Name: "plain", Type: dt.Optional(dt.Prim(rtypes.T_LuaBoolean)), Default: `false`},
 							},
 							Returns: dump.Parameters{
-								{Name: "start", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}},
-								{Name: "end", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaNumber)}},
-								{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}},
+								{Name: "start", Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber))},
+								{Name: "end", Type: dt.Optional(dt.Prim(rtypes.T_LuaNumber))},
+								{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_LuaString))},
 							},
 							CanError:    true,
 							Summary:     "Libraries/base/Fields/string:Fields/find/Summary",
@@ -850,11 +850,11 @@ func dumpBase(s rbxmk.State) dump.Library {
 								{Name: "pattern", Type: dt.Prim(rtypes.T_LuaString)},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Function{
+								{Type: dt.Function(dt.KindFunction{
 									Returns: dump.Parameters{
 										{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
 									},
-								}},
+								})},
 							},
 							CanError:    true,
 							Summary:     "Libraries/base/Fields/string:Fields/gmatch/Summary",
@@ -864,22 +864,22 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Parameters: dump.Parameters{
 								{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
 								{Name: "pattern", Type: dt.Prim(rtypes.T_LuaString)},
-								{Name: "repl", Type: dt.Or{
+								{Name: "repl", Type: dt.Or(
 									dt.Prim(rtypes.T_LuaString),
-									dt.Map{
-										K: dt.Prim(rtypes.T_LuaString),
-										V: dt.Or{dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber), dt.Prim("false")},
-									},
-									dt.Function{
+									dt.Map(
+										dt.Prim(rtypes.T_LuaString),
+										dt.Or(dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber), dt.Prim("false")),
+									),
+									dt.Function(dt.KindFunction{
 										Parameters: dump.Parameters{
 											{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
 										},
 										Returns: dump.Parameters{
-											{Type: dt.Or{dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber), dt.Prim("false"), dt.Prim(rtypes.T_LuaNil)}},
+											{Type: dt.Or(dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber), dt.Prim("false"), dt.Prim(rtypes.T_LuaNil))},
 										},
-									},
-								}},
-								{Name: "n", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}},
+									}),
+								)},
+								{Name: "n", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger))},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_LuaString)},
@@ -913,10 +913,10 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Parameters: dump.Parameters{
 								{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
 								{Name: "pattern", Type: dt.Prim(rtypes.T_LuaString)},
-								{Name: "init", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
+								{Name: "init", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `1`},
 							},
 							Returns: dump.Parameters{
-								{Name: "...", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}},
+								{Name: "...", Type: dt.Optional(dt.Prim(rtypes.T_LuaString))},
 							},
 							CanError:    true,
 							Summary:     "Libraries/base/Fields/string:Fields/match/Summary",
@@ -947,7 +947,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 							Parameters: dump.Parameters{
 								{Name: "s", Type: dt.Prim(rtypes.T_LuaString)},
 								{Name: "i", Type: dt.Prim(rtypes.T_LuaInteger)},
-								{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `-1`},
+								{Name: "j", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `-1`},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_LuaString)},
@@ -973,10 +973,10 @@ func dumpBase(s rbxmk.State) dump.Library {
 					Fields: dump.Fields{
 						"concat": dump.Function{
 							Parameters: dump.Parameters{
-								{Name: "t", Type: dt.Array{T: dt.Or{dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber)}}},
-								{Name: "sep", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, Default: `""`},
-								{Name: "i", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `1`},
-								{Name: "j", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `#t`},
+								{Name: "t", Type: dt.Array(dt.Or(dt.Prim(rtypes.T_LuaString), dt.Prim(rtypes.T_LuaNumber)))},
+								{Name: "sep", Type: dt.Optional(dt.Prim(rtypes.T_LuaString)), Default: `""`},
+								{Name: "i", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `1`},
+								{Name: "j", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `#t`},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_LuaString)},
@@ -1017,7 +1017,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						"remove": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-								{Name: "index", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaInteger)}, Default: `#t`},
+								{Name: "index", Type: dt.Optional(dt.Prim(rtypes.T_LuaInteger)), Default: `#t`},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_Any)},
@@ -1028,7 +1028,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 						"sort": dump.Function{
 							Parameters: dump.Parameters{
 								{Name: "t", Type: dt.Prim(rtypes.T_LuaTable)},
-								{Name: "comp", Type: dt.Optional{T: dt.Function{
+								{Name: "comp", Type: dt.Optional(dt.Function(dt.KindFunction{
 									Parameters: dump.Parameters{
 										{Name: "a", Type: dt.Prim(rtypes.T_Any)},
 										{Name: "b", Type: dt.Prim(rtypes.T_Any)},
@@ -1036,7 +1036,7 @@ func dumpBase(s rbxmk.State) dump.Library {
 									Returns: dump.Parameters{
 										{Type: dt.Prim(rtypes.T_LuaBoolean)},
 									},
-								}}},
+								}))},
 							},
 							CanError:    true,
 							Summary:     "Libraries/base/Fields/table:Fields/sort/Summary",

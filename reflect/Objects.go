@@ -58,7 +58,7 @@ func Objects() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category:    "roblox",
-				Underlying:  dt.Array{T: dt.Prim(rtypes.T_Instance)},
+				Underlying:  dt.P(dt.Array(dt.Prim(rtypes.T_Instance))),
 				Summary:     "Types/Objects:Summary",
 				Description: "Types/Objects:Description",
 			}

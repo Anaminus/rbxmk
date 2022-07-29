@@ -39,10 +39,10 @@ func DirEntry() rbxmk.Reflector {
 		Dump: func() dump.TypeDef {
 			return dump.TypeDef{
 				Category: "rbxmk",
-				Underlying: dt.Struct{
+				Underlying: dt.P(dt.Struct(dt.KindStruct{
 					"Name":  dt.Prim(rtypes.T_String),
 					"IsDir": dt.Prim(rtypes.T_Bool),
-				},
+				})),
 				Summary:     "Types/DirEntry:Summary",
 				Description: "Types/DirEntry:Description",
 			}

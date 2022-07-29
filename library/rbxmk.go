@@ -339,11 +339,11 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Parameters: dump.Parameters{
 						{Name: "instance", Type: dt.Prim(rtypes.T_Instance)},
 						{Name: "property", Type: dt.Prim(rtypes.T_String)},
-						{Name: "fallback", Type: dt.Or{
+						{Name: "fallback", Type: dt.Or(
 							dt.Prim(rtypes.T_String),
 							dt.Prim(rtypes.T_Desc),
 							dt.Prim(rtypes.T_Nil),
-						}},
+						)},
 					},
 					Returns: dump.Parameters{
 						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
@@ -353,12 +353,12 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 					Description: "Libraries/rbxmk:Fields/get/Description",
 				},
 				"globalAttrConfig": dump.Property{
-					ValueType:   dt.Optional{T: dt.Prim(rtypes.T_AttrConfig)},
+					ValueType:   dt.Optional(dt.Prim(rtypes.T_AttrConfig)),
 					Summary:     "Libraries/rbxmk:Fields/globalAttrConfig/Summary",
 					Description: "Libraries/rbxmk:Fields/globalAttrConfig/Description",
 				},
 				"globalDesc": dump.Property{
-					ValueType:   dt.Optional{T: dt.Prim(rtypes.T_Desc)},
+					ValueType:   dt.Optional(dt.Prim(rtypes.T_Desc)),
 					Summary:     "Libraries/rbxmk:Fields/globalDesc/Summary",
 					Description: "Libraries/rbxmk:Fields/globalDesc/Description",
 				},
@@ -390,7 +390,7 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "property", Type: dt.Prim(rtypes.T_String)},
 					},
 					Returns: dump.Parameters{
-						{Name: "type", Type: dt.Optional{T: dt.Prim(rtypes.T_String)}},
+						{Name: "type", Type: dt.Optional(dt.Prim(rtypes.T_String))},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/propType/Summary",
@@ -425,11 +425,11 @@ func dumpRBXMK(s rbxmk.State) dump.Library {
 						{Name: "instance", Type: dt.Prim(rtypes.T_Instance)},
 						{Name: "property", Type: dt.Prim(rtypes.T_String)},
 						{Name: "value", Type: dt.Prim(rtypes.T_Any)},
-						{Name: "fallback", Type: dt.Or{
+						{Name: "fallback", Type: dt.Or(
 							dt.Prim(rtypes.T_String),
 							dt.Prim(rtypes.T_Desc),
 							dt.Prim(rtypes.T_Nil),
-						}},
+						)},
 					},
 					CanError:    true,
 					Summary:     "Libraries/rbxmk:Fields/set/Summary",

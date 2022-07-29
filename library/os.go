@@ -61,10 +61,10 @@ func dumpOS(s rbxmk.State) dump.Library {
 			Fields: dump.Fields{
 				"getenv": dump.Function{
 					Parameters: dump.Parameters{
-						{Name: "name", Type: dt.Optional{T: dt.Prim(rtypes.T_LuaString)}},
+						{Name: "name", Type: dt.Optional(dt.Prim(rtypes.T_LuaString))},
 					},
 					Returns: dump.Parameters{
-						{Type: dt.Or{dt.Optional{T: dt.Prim(rtypes.T_LuaString)}, dt.Dictionary{V: dt.Prim(rtypes.T_LuaString)}}},
+						{Type: dt.Or(dt.Optional(dt.Prim(rtypes.T_LuaString)), dt.Dictionary(dt.Prim(rtypes.T_LuaString)))},
 					},
 					Summary:     "Libraries/os:Fields/getenv/Summary",
 					Description: "Libraries/os:Fields/getenv/Description",

@@ -65,7 +65,7 @@ func NumberSequence() rbxmk.Reflector {
 				},
 				Dump: func() dump.Property {
 					return dump.Property{
-						ValueType:   dt.Array{T: dt.Prim(rtypes.T_NumberSequenceKeypoint)},
+						ValueType:   dt.Array(dt.Prim(rtypes.T_NumberSequenceKeypoint)),
 						ReadOnly:    true,
 						Summary:     "Types/NumberSequence:Properties/Keypoints/Summary",
 						Description: "Types/NumberSequence:Properties/Keypoints/Description",
@@ -149,7 +149,7 @@ func NumberSequence() rbxmk.Reflector {
 						},
 						{
 							Parameters: dump.Parameters{
-								{Name: "keypoints", Type: dt.Array{T: dt.Prim(rtypes.T_NumberSequenceKeypoint)}},
+								{Name: "keypoints", Type: dt.Array(dt.Prim(rtypes.T_NumberSequenceKeypoint))},
 							},
 							Returns: dump.Parameters{
 								{Type: dt.Prim(rtypes.T_NumberSequence)},
