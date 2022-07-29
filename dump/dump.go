@@ -166,7 +166,7 @@ func (f Fields) MarshalJSON() (b []byte, err error) {
 func unmarshalValue[V Value](b []byte, f Fields, k, typ string) error {
 	var v V
 	if err := json.Unmarshal(b, &v); err != nil {
-		return fmt.Errorf("field %q: decode value type %s: %w", k, typ, err)
+		return fmt.Errorf("decode value type %s: %w", typ, err)
 	}
 	f[k] = v
 	return nil
@@ -200,7 +200,7 @@ func (f Fields) UnmarshalJSON(b []byte) (err error) {
 			return fmt.Errorf("field %q: unknown type %q", k, typ)
 		}
 		if err := unmarshal(r[typ], f, k, typ); err != nil {
-			return err
+			return fmt.Errorf("field %q: %w", k, err)
 		}
 	}
 	return nil
