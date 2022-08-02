@@ -20,6 +20,7 @@ branch is the latest unreleased version.
 	- With stdin, certain variables expand to the working directory instead of an empty string.
 **Highlights:**
 - Add `base64` format for encoding and decoding strings in Base64.
+- Add `path.rel` function to convert a path into a relative path.
 - Add `plugin` dump format, which enables custom dump formats.
 	- Runs a Lua script in a limited environment.
 	- Receives a table that describes the Lua environment, and a function to

@@ -103,6 +103,29 @@ the path.</p>
 
 </section>
 
+<section data-name="rel">
+
+<section data-name="Summary">
+
+<p>Produces a relative path.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p>The <b>rel</b> function returns a relative path that is equivalent to
+<i>targetPath</i> when joined with <i>basePath</i>, such that following
+equivalence is true:</p>
+
+<pre><code class="language-lua">path.clean(targetPath) == path.join(basePath, path.rel(basePath, targetPath))</code></pre>
+
+<p><a href="api:path.clean">path.clean</a> is called on the result. Returns nil
+if <i>targetPath</i> cannot be made relative to <i>basePath</i>.</p>
+
+</section>
+
+</section>
+
 <section data-name="split">
 
 <section data-name="Summary">

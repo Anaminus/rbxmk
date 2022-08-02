@@ -21,10 +21,11 @@ var Path = rbxmk.Library{
 }
 
 func openPath(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 4)
+	lib := s.L.CreateTable(0, 5)
 	lib.RawSetString("clean", s.WrapFunc(pathClean))
 	lib.RawSetString("expand", s.WrapFunc(pathExpand))
 	lib.RawSetString("join", s.WrapFunc(pathJoin))
+	lib.RawSetString("rel", s.WrapFunc(pathRel))
 	lib.RawSetString("split", s.WrapFunc(pathSplit))
 	return lib
 }
@@ -44,7 +45,6 @@ func pathExpand(s rbxmk.State) int {
 	}
 	s.L.Push(lua.LString(expanded))
 	return 1
-
 }
 
 func pathJoin(s rbxmk.State) int {
@@ -54,6 +54,18 @@ func pathJoin(s rbxmk.State) int {
 	}
 	filename := filepath.Join(j...)
 	s.L.Push(lua.LString(filename))
+	return 1
+}
+
+func pathRel(s rbxmk.State) int {
+	basePath := s.CheckString(1)
+	targetPath := s.CheckString(2)
+	relPath, err := filepath.Rel(basePath, targetPath)
+	if err != nil {
+		s.L.Push(lua.LNil)
+		return 1
+	}
+	s.L.Push(lua.LString(relPath))
 	return 1
 }
 
@@ -108,6 +120,17 @@ func dumpPath(s rbxmk.State) dump.Library {
 					},
 					Summary:     "Libraries/path:Fields/join/Summary",
 					Description: "Libraries/path:Fields/join/Description",
+				},
+				"rel": dump.Function{
+					Parameters: dump.Parameters{
+						{Name: "basePath", Type: dt.Prim(rtypes.T_LuaString)},
+						{Name: "targetPath", Type: dt.Prim(rtypes.T_LuaString)},
+					},
+					Returns: dump.Parameters{
+						{Type: dt.Optional(dt.Prim(rtypes.T_LuaString))},
+					},
+					Summary:     "Libraries/path:Fields/rel/Summary",
+					Description: "Libraries/path:Fields/rel/Description",
 				},
 				"split": dump.Function{
 					Parameters: dump.Parameters{
