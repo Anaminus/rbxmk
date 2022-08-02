@@ -98,7 +98,7 @@ func (t *Type) UnmarshalJSON(b []byte) (err error) {
 	default:
 		return fmt.Errorf("unknown type kind %q", kind)
 	}
-	if err := unmarshal(b, &t.Kind); err != nil {
+	if err := unmarshal(v[kind], &t.Kind); err != nil {
 		return fmt.Errorf("kind %s: %w", kind, err)
 	}
 	return nil
