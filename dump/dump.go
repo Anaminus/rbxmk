@@ -168,16 +168,19 @@ func (f Fields) MarshalJSON() (b []byte, err error) {
 }
 
 // Unmarshal b as V, and set to f[k] on success.
-func unmarshalValue[V Value](b []byte, f Fields, k string) error {
+func unmarshalValue[V Value](b []byte, f *Fields, k string) error {
 	var v V
 	if err := json.Unmarshal(b, &v); err != nil {
 		return fmt.Errorf("decode value type %s: %w", v.Kind(), err)
 	}
-	f[k] = v
+	if *f == nil {
+		*f = Fields{}
+	}
+	(*f)[k] = v
 	return nil
 }
 
-func (f Fields) UnmarshalJSON(b []byte) (err error) {
+func (f *Fields) UnmarshalJSON(b []byte) (err error) {
 	type field map[string]json.RawMessage
 	var m map[string]field
 	if err := json.Unmarshal(b, &m); err != nil {
@@ -189,7 +192,7 @@ func (f Fields) UnmarshalJSON(b []byte) (err error) {
 			typ = t
 			break
 		}
-		var unmarshal func(b []byte, f Fields, k string) error
+		var unmarshal func(b []byte, f *Fields, k string) error
 		switch typ {
 		case V_Property:
 			unmarshal = unmarshalValue[Property]
