@@ -413,12 +413,6 @@ func Instance() rbxmk.Reflector {
 				inst := s.Pull(1, rtypes.T_Instance).(*rtypes.Instance)
 				name := string(s.Pull(2, rtypes.T_String).(types.String))
 
-				// Try GetService.
-				if inst.IsDataModel() && name == "GetService" {
-					s.L.Push(s.WrapMethod(getService))
-					return 1
-				}
-
 				// Try property.
 				lv, err := GetProperty(s, inst, name, s.Desc.Of(inst), rbxmk.Reflector{})
 				if err != nil {
@@ -430,11 +424,6 @@ func Instance() rbxmk.Reflector {
 			"__newindex": func(s rbxmk.State) int {
 				inst := s.Pull(1, rtypes.T_Instance).(*rtypes.Instance)
 				name := string(s.Pull(2, rtypes.T_String).(types.String))
-
-				// Try GetService.
-				if inst.IsDataModel() && name == "GetService" {
-					return s.RaiseError("%s cannot be assigned to", name)
-				}
 
 				// Try property.
 				lv := s.CheckAny(3)
@@ -794,6 +783,13 @@ func Instance() rbxmk.Reflector {
 					}
 					s.RaiseError("symbol Metadata is not a valid member of Instance")
 				},
+				Dump: func() dump.Property {
+					return dump.Property{
+						ValueType:   dt.Prim(rtypes.T_Dictionary),
+						Summary:     "Types/Instance:Symbols/Metadata/Summary",
+						Description: "Types/Instance:Symbols/Metadata/Description",
+					}
+				},
 			},
 		},
 		Methods: rbxmk.Methods{
@@ -1074,6 +1070,26 @@ func Instance() rbxmk.Reflector {
 					}
 				},
 			},
+			"GetService": {
+				Cond: func(v types.Value) bool {
+					return v.(*rtypes.Instance).IsDataModel()
+				},
+				Func: func(s rbxmk.State, v types.Value) int {
+					return getService(s)
+				},
+				Dump: func() dump.Function {
+					return dump.Function{
+						Parameters: dump.Parameters{
+							{Name: "name", Type: dt.Prim(rtypes.T_String)},
+						},
+						Returns: dump.Parameters{
+							{Type: dt.Prim(rtypes.T_Instance)},
+						},
+						Summary:     "Types/Instance:Methods/GetService/Summary",
+						Description: "Types/Instance:Methods/GetService/Description",
+					}
+				},
+			},
 			"IsA": {
 				Func: func(s rbxmk.State, v types.Value) int {
 					className := string(s.Pull(2, rtypes.T_String).(types.String))
@@ -1226,7 +1242,7 @@ func Instance() rbxmk.Reflector {
 								{Name: "descriptor", Type: dt.Optional(dt.Group(dt.Or(dt.Prim(rtypes.T_Desc), dt.Prim(rtypes.T_Bool))))},
 							},
 							Returns: dump.Parameters{
-								{Type: dt.Or(dt.Prim(rtypes.T_Instance), dt.Prim("DataModel"))},
+								{Type: dt.Prim(rtypes.T_Instance)},
 							},
 							CanError:    true,
 							Summary:     "Types/Instance:Constructors/new/Summary",

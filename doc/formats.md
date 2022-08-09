@@ -393,12 +393,11 @@ This format has no options.
 
 The **rbxl** format encodes Instances in the Roblox binary place format.
 
-Direction | Type                   | Description
-----------|------------------------|------------
-Decode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
-Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A DataModel instance.
+Encode    | [Instance][Instance] | A single instance, interpreted as a child to a DataModel.
+Encode    | Objects              | A list of Instances, interpreted as children to a DataModel.
 
 This format has the following options:
 
@@ -412,12 +411,11 @@ DescMode | string                      | `"NonStrict"` | Determines how deviatio
 
 The **rbxlx** format encodes Instances in the Roblox XML place format.
 
-Direction | Type                   | Description
-----------|------------------------|------------
-Decode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
-Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A DataModel instance.
+Encode    | [Instance][Instance] | A single instance, interpreted as a child to a DataModel.
+Encode    | Objects              | A list of Instances, interpreted as children to a DataModel.
 
 This format has the same options as the [rbxl][rbxl] format.
 
@@ -426,12 +424,11 @@ This format has the same options as the [rbxl][rbxl] format.
 
 The **rbxm** format encodes Instances in the Roblox binary model format.
 
-Direction | Type                   | Description
-----------|------------------------|------------
-Decode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
-Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
+Direction | Type                 | Description
+----------|----------------------|------------
+Decode    | [Instance][Instance] | A DataModel instance.
+Encode    | [Instance][Instance] | A single instance, interpreted as a child to a DataModel.
+Encode    | Objects              | A list of Instances, interpreted as children to a DataModel.
 
 This format has the same options as the [rbxl][rbxl] format.
 
@@ -442,8 +439,7 @@ The **rbxmx** format encodes Instances in the Roblox XML model format.
 
 Direction | Type                   | Description
 ----------|------------------------|------------
-Decode    | [DataModel][DataModel] | A DataModel instance.
-Encode    | [DataModel][DataModel] | A DataModel instance.
+Decode    | [Instance][Instance] | A DataModel instance.
 Encode    | [Instance][Instance]   | A single instance, interpreted as a child to a DataModel.
 Encode    | Objects                | A list of Instances, interpreted as children to a DataModel.
 
@@ -461,7 +457,6 @@ Encode    | Stringable | Any string-like value.
 
 This format has no options.
 
-[DataModel]: types.md#user-content-datamodel
 [DescAction]: types.md#user-content-descaction
 [FormatSelector]: types.md#user-content-formatselector
 [Instance.ClassName]: types.md#user-content-instanceclassname

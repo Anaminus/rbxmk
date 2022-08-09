@@ -36,9 +36,7 @@ href="type:Instance[sym.Desc]">sym.Desc</a>
 member. Additionally, new will throw an error if the class does not exist. If no
 descriptor is specified, then any class name will be accepted.</p>
 
-<p>If <i>className</i> is "DataModel", then a <a
-href="type:DataModel">DataModel</a> value is returned. In this case, new will
-throw an error if <i>parent</i> is not nil.</p>
+<p>If <i>className</i> is "DataModel", then <i>parent</i> must be nil.</p>
 
 </section>
 
@@ -60,7 +58,9 @@ throw an error if <i>parent</i> is not nil.</p>
 
 <p>The <b>ClassName</b> property gets or sets the class of the instance.</p>
 
-<p>Unlike in Roblox, ClassName can be modified.</p>
+<p>ClassName can be modified, except when the class is "DataModel". Changing the
+class of an instance has no additional effects; properties are not transformed
+to conform to any descriptors of the class.</p>
 
 </section>
 
@@ -159,6 +159,26 @@ encode and decode the instance.</p>
 
 </section>
 
+<section data-name="Metadata">
+
+<section data-name="Summary">
+
+<p>Gets metadata of the DataModel.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p><i>This member only exists if the instance is of class DataModel.</i></p>
+
+<p>The <b>Metadata</b> symbol gets or sets the metadata associated with the
+DataModel. This metadata is used by certain formats (e.g.
+ExplicitAutoJoints).</p>
+
+</section>
+
+</section>
+
 <section data-name="Properties">
 
 <section data-name="Summary">
@@ -236,10 +256,9 @@ section.</p>
 <section data-name="Description">
 
 <p>The <b>Reference</b> symbol is a string used to refer to the instance from
-within a <a href="type:DataModel">DataModel</a>. Certain formats use this to
-encode a reference to an instance. For example, the RBXMX format will generate
-random UUIDs for its references (e.g.
-"RBX8B658F72923F487FAE2F7437482EF16D").</p>
+within an instance tree. Certain formats use this to encode a reference to an
+instance. For example, the RBXMX format will generate random UUIDs for its
+references (e.g. "RBX8B658F72923F487FAE2F7437482EF16D").</p>
 
 <p>A reference should not be expected to persist when being encoded or
 decoded.</p>
@@ -549,8 +568,34 @@ instance.</p>
 
 <p>The <b>GetFullName</b> method returns the concatenation of the <a
 href="type:Instance.Name">Name</a> of each ancestor of the instance and the
-instance itself, separated by <code>.</code> characters. If an ancestor is a <a
-href="type:DataModel">DataModel</a>, it is not included.</p>
+instance itself, separated by <code>.</code> characters. If an ancestor is a
+DataModel, it is not included.</p>
+
+</section>
+
+</section>
+
+<section data-name="GetService">
+
+<section data-name="Summary">
+
+<p>Gets a service instance from the tree.</p>
+
+</section>
+
+<section data-name="Description">
+
+<p><i>This member only exists if the instance is of class DataModel.</i></p>
+
+<p>The <b>GetService</b> method returns the first child of the DataModel whose
+<a href="type:Instance.ClassName">ClassName</a> equals <i>className</i>. If no
+such child exists, then a new instance of <i>className</i> is created. The <a
+href="type:Instance.Name">Name</a> of the instance is set to <i>className</i>,
+<a href="type:Instance[sym.IsService]">sym.IsService</a> is set to true, and <a
+href="type:Instance.Parent">Parent</a> is set to the DataModel.</p>
+
+<p>If the DataModel has a descriptor, then GetService will throw an error if the
+created class's descriptor does not have the "Service" tag set.</p>
 
 </section>
 

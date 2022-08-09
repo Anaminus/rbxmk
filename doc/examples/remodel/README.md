@@ -32,7 +32,7 @@ Roblox | Remodel | rbxmk
 `Instance.GetChildren`    | Equivalent | Equivalent
 `Instance.GetDescendants` | Equivalent | Equivalent
 `Instance.FindFirstChild` | *recursive* argument is not supported. | *recursive* is supported.
-`DataModel.GetService`    | Inserts service if it does not exist. | Inserts service if it does not exist.
+`Instance.GetService`     | Inserts service if it does not exist. | Inserts service if it does not exist (class must be DataModel).
 
 ## Types
 rbxmk supports all property types available in Roblox, which includes all types
@@ -108,7 +108,7 @@ local model = remodel.readPlaceFile("file.rbxmx")
 
 rbxmk:
 ```lua
--- Returns a DataModel with top-level instances as children.
+-- Returns a DataModel instance with top-level instances as children.
 local model = fs.read("file.rbxm"):GetChildren() -- Implicit format from extension.
 local model = fs.read("file.rbxmx"):GetChildren() -- Implicit format from extension.
 local model = fs.read("file.rbxm", "rbxm"):GetChildren() -- Explicit format.
@@ -156,7 +156,7 @@ remodel.writePlaceFile(game, "file.rbxlx")
 
 rbxmk:
 ```lua
--- game may be a DataModel, Instance, or array of Instances.
+-- game may be an Instance or array of Instances.
 fs.write("file.rbxl", game) -- Implicit format from extension.
 fs.write("file.rbxlx", game) -- Implicit format from extension.
 fs.write("file.rbxl", game, "rbxl") -- Explicit format.
@@ -172,7 +172,7 @@ remodel.writeModelFile(instance, "file.rbxmx")
 
 rbxmk:
 ```lua
--- instance may be a DataModel, Instance, or array of Instances.
+-- instance may be an Instance or array of Instances.
 fs.write("file.rbxm", instance) -- Implicit format from extension.
 fs.write("file.rbxmx", instance) -- Implicit format from extension.
 fs.write("file.rbxm", instance, "rbxm") -- Explicit format.

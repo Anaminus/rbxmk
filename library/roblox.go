@@ -97,33 +97,6 @@ func dumpRoblox(s rbxmk.State) dump.Library {
 			Summary:     "Libraries/roblox:Summary",
 			Description: "Libraries/roblox:Description",
 		},
-		Types: dump.TypeDefs{
-			"DataModel": dump.TypeDef{
-				Category:   "rbxmk",
-				Underlying: dt.P(dt.Prim(rtypes.T_Instance)),
-				Symbols: dump.Properties{
-					"Metadata": dump.Property{
-						ValueType:   dt.Dictionary(dt.Prim(rtypes.T_String)),
-						Summary:     "Libraries/roblox/Types/DataModel:Symbols/Metadata/Summary",
-						Description: "Libraries/roblox/Types/DataModel:Symbols/Metadata/Description",
-					},
-				},
-				Methods: dump.Methods{
-					"GetService": dump.Function{
-						Parameters: dump.Parameters{
-							{Name: "name", Type: dt.Prim(rtypes.T_String)},
-						},
-						Returns: dump.Parameters{
-							{Type: dt.Prim(rtypes.T_Instance)},
-						},
-						Summary:     "Libraries/roblox/Types/DataModel:Methods/GetService/Summary",
-						Description: "Libraries/roblox/Types/DataModel:Methods/GetService/Description",
-					},
-				},
-				Summary:     "Libraries/roblox/Types/DataModel:Summary",
-				Description: "Libraries/roblox/Types/DataModel:Description",
-			},
-		},
 	}
 	return lib
 }
