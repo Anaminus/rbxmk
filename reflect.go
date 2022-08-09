@@ -185,6 +185,9 @@ type Methods map[string]Method
 
 // Method defines a member of a custom type.
 type Method struct {
+	// Cond returns whether the method exists based on some condition involving
+	// the value. The method always exists if Cond is nil.
+	Cond func(v types.Value) bool
 	// Func is the body of the method. The first argument will be the same value
 	// as v.
 	Func func(s State, v types.Value) int

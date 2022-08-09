@@ -293,6 +293,9 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			switch index := s.PullAnyOfOpt(2, nil, rtypes.T_String, rtypes.T_Symbol).(type) {
 			case types.String:
 				if method, ok := r.Methods[string(index)]; ok {
+					if method.Cond != nil && !method.Cond(v) {
+						return s.RaiseError("%q is not a valid member of %s", index, r.Name)
+					}
 					s.L.Push(s.WrapMethod(func(s State) int {
 						v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 						if err != nil {
@@ -331,7 +334,10 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			}
 			switch index := s.PullAnyOfOpt(2, nil, rtypes.T_String, rtypes.T_Symbol).(type) {
 			case types.String:
-				if _, ok := r.Methods[string(index)]; ok {
+				if method, ok := r.Methods[string(index)]; ok {
+					if method.Cond != nil && !method.Cond(v) {
+						return s.RaiseError("%q is not a valid member of %s", index, r.Name)
+					}
 					return s.RaiseError("%s of %s cannot be assigned to", index, r.Name)
 				}
 				if property, ok := r.Properties[string(index)]; ok {
@@ -373,6 +379,9 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 			}
 			if name, ok := s.L.Get(2).(lua.LString); ok {
 				if method, ok := r.Methods[string(name)]; ok {
+					if method.Cond != nil && !method.Cond(v) {
+						return s.RaiseError("%q is not a valid member of %s", name, r.Name)
+					}
 					s.L.Push(s.WrapMethod(func(s State) int {
 						v, err := r.PullFrom(s.Context(), s.CheckAny(1))
 						if err != nil {
@@ -401,7 +410,10 @@ func (w *World) createTypeMetatable(r Reflector) (mt *lua.LTable) {
 				s.ArgError(1, err.Error())
 			}
 			if name, ok := s.L.Get(2).(lua.LString); ok {
-				if _, ok := r.Methods[string(name)]; ok {
+				if method, ok := r.Methods[string(name)]; ok {
+					if method.Cond != nil && !method.Cond(v) {
+						return s.RaiseError("%q is not a valid member of %s", name, r.Name)
+					}
 					return s.RaiseError("%s of %s cannot be assigned to", name, r.Name)
 				}
 				if property, ok := r.Properties[string(name)]; ok {
