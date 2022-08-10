@@ -436,16 +436,17 @@ fields:</p>
 <td>The name of the library.</td>
 </tr>
 <tr>
-<td>ImportedAs</td>
-<td>string</td>
-<td>The name the library is imported under. If empty, then the library is merged
-into the global environment.</td>
-</tr>
-<tr>
 <td>Priority</td>
 <td>int</td>
 <td>The priority that determines the order in which the library is loaded.
 Libraries are loaded by ascending priority.</td>
+</tr>
+<tr>
+<td>Import</td>
+<td>array</td>
+<td>A path indicating where the library is merged. Each element is a string
+representing an element of the path. If empty, the library is merged into the
+global environment.</td>
 </tr>
 <tr>
 <td>Types</td>

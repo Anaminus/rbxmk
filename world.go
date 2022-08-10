@@ -134,19 +134,25 @@ func (w *World) UserDataCacheLen() int {
 type Library struct {
 	// Name is a name that identifies the library.
 	Name string
-	// ImportedAs is the name that the library is imported as. Empty indicates
-	// that the contents of the library are merged into the global environment.
-	ImportedAs string
 	// Priority indicates the order in which the library is loaded in relation
 	// to other libraries.
 	Priority int
-	// Open returns a table with the contents of the library.
+	// Import is a path of indices to where the table returned by Open will be
+	// merged, starting at the global table. If empty, the table is merged
+	// directly into the global table.
+	Import []string
+	// Open returns a table with the contents of the library. If the table is
+	// nil, Open is assumed to have modified the global environment directly.
 	Open func(s State) *lua.LTable
 	// Dump returns a description of the library's API.
 	Dump func(s State) dump.Library
 	// Types returns a list of type reflector expected by the library. Before
 	// opening the library, each reflector is registered.
 	Types []func() Reflector
+}
+
+func (l Library) ImportString() string {
+	return strings.Join(l.Import, ".")
 }
 
 // Libraries is a list of Library values that can be sorted by Priority, then
@@ -186,7 +192,15 @@ func (w *World) Open(lib Library) error {
 		}
 	}
 	src := lib.Open(w.State())
-	return w.MergeTables(w.l.G.Global, src, lib.ImportedAs)
+	if src == nil {
+		return nil
+	}
+	imp := make([]lua.LValue, len(lib.Import))
+	for i, name := range lib.Import {
+		imp[i] = lua.LString(name)
+	}
+	w.MergeTables(w.l.G.Global, src, imp...)
+	return nil
 }
 
 // Library returns the Library registered with the given name. If the name is
@@ -205,34 +219,48 @@ func (w *World) Libraries() Libraries {
 	return libraries
 }
 
-// MargeTables merges src into dst according to name. If name is empty, then
-// each key in src is set in dst. If dst[name] is a table, then each key in src
-// is set in that table. If dst[name] is nil, then it is set directly to src.
-// Does nothing if src or dst is nil. Returns an error if the tables could not
-// be merged.
-func (w *World) MergeTables(dst, src *lua.LTable, name string) error {
-	if src == nil || dst == nil {
+// MergeTables merges src into root according to path. First, the root is
+// drilled into according to path, to get destination dst. Existing tables are
+// used directly, while any other value is overwritten with a new table. If path
+// is empty, then root is used directly as dst.
+//
+// Next, each entry in src is copied to dst. If the values of both the source
+// and destination are tables, then they are merged according to MergeTables
+// with an empty path. Otherwise, the source value overwrites the destination
+// value.
+func (w *World) MergeTables(root, src *lua.LTable, path ...lua.LValue) {
+	if root == nil {
+		panic("merge table: destination is nil")
+	}
+	if src == nil {
+		panic("merge table: source is nil")
+	}
+	dst := root
+	for _, name := range path {
+		switch sub := dst.RawGet(name).(type) {
+		case *lua.LTable:
+			dst = sub
+		default:
+			// Overwrite any non-table value with a table.
+			subtable := w.l.CreateTable(0, 4)
+			dst.RawSet(name, subtable)
+			dst = subtable
+		}
+	}
+	// Some libraries set a metatable.
+	if src.Metatable != nil {
+		dst.Metatable = src.Metatable
+	}
+	src.ForEach(func(k, v lua.LValue) error {
+		if v, ok := v.(*lua.LTable); ok {
+			if d := dst.RawGet(k).(*lua.LTable); ok {
+				w.MergeTables(d, v)
+				return nil
+			}
+		}
+		dst.RawSet(k, v)
 		return nil
-	}
-	if name == "" {
-		src.ForEach(func(k, v lua.LValue) error {
-			dst.RawSet(k, v)
-			return nil
-		})
-		return nil
-	}
-	switch u := dst.RawGetString(name).(type) {
-	case *lua.LTable:
-		src.ForEach(func(k, v lua.LValue) error {
-			u.RawSet(k, v)
-			return nil
-		})
-	case *lua.LNilType:
-		dst.RawSetString(name, src)
-	default:
-		return fmt.Errorf("cannot merge %s into %s", name, u.Type().String())
-	}
-	return nil
+	})
 }
 
 // createTypeMetatable constructs a metatable from the given Reflector. If

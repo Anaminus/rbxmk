@@ -17,11 +17,11 @@ import (
 func init() { register(Clipboard) }
 
 var Clipboard = rbxmk.Library{
-	Name:       "clipboard",
-	ImportedAs: "clipboard",
-	Priority:   10,
-	Open:       openClipboard,
-	Dump:       dumpClipboard,
+	Name:     "clipboard",
+	Import:   []string{"clipboard"},
+	Priority: 10,
+	Open:     openClipboard,
+	Dump:     dumpClipboard,
 	Types: []func() rbxmk.Reflector{
 		reflect.FormatSelector,
 		reflect.Variant,

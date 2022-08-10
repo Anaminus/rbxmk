@@ -13,11 +13,11 @@ import (
 func init() { register(Path) }
 
 var Path = rbxmk.Library{
-	Name:       "path",
-	ImportedAs: "path",
-	Priority:   10,
-	Open:       openPath,
-	Dump:       dumpPath,
+	Name:     "path",
+	Import:   []string{"path"},
+	Priority: 10,
+	Open:     openPath,
+	Dump:     dumpPath,
 }
 
 func openPath(s rbxmk.State) *lua.LTable {

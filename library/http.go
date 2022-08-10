@@ -12,11 +12,11 @@ import (
 func init() { register(HTTP) }
 
 var HTTP = rbxmk.Library{
-	Name:       "http",
-	ImportedAs: "http",
-	Priority:   10,
-	Open:       openHTTP,
-	Dump:       dumpHTTP,
+	Name:     "http",
+	Import:   []string{"http"},
+	Priority: 10,
+	Open:     openHTTP,
+	Dump:     dumpHTTP,
 	Types: []func() rbxmk.Reflector{
 		reflect.HttpHeaders,
 		reflect.HttpOptions,

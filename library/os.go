@@ -14,11 +14,11 @@ import (
 func init() { register(OS) }
 
 var OS = rbxmk.Library{
-	Name:       "os",
-	ImportedAs: "os",
-	Priority:   10,
-	Open:       openOS,
-	Dump:       dumpOS,
+	Name:     "os",
+	Import:   []string{"os"},
+	Priority: 10,
+	Open:     openOS,
+	Dump:     dumpOS,
 }
 
 func openOS(s rbxmk.State) *lua.LTable {

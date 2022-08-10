@@ -11,11 +11,11 @@ import (
 func init() { register(Table) }
 
 var Table = rbxmk.Library{
-	Name:       "table",
-	ImportedAs: "table",
-	Priority:   10,
-	Open:       openTable,
-	Dump:       dumpTable,
+	Name:     "table",
+	Import:   []string{"table"},
+	Priority: 10,
+	Open:     openTable,
+	Dump:     dumpTable,
 }
 
 func openTable(s rbxmk.State) *lua.LTable {

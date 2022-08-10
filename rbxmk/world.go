@@ -226,9 +226,9 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		if lib.Name == "" {
 			lib.Name = l.Name
 		}
-		if lib.ImportedAs == "" {
-			lib.ImportedAs = l.ImportedAs
-		}
+		imp := make([]string, len(l.Import))
+		copy(imp, l.Import)
+		lib.Import = imp
 		lib.Priority = l.Priority
 		if l.Types != nil {
 			dumpTypes(root.Types, l.Types)
@@ -241,9 +241,8 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 }
 
 var ProgramLibrary = rbxmk.Library{
-	Name:       "program",
-	ImportedAs: "",
-	Priority:   0,
+	Name:     "program",
+	Priority: 0,
 	Open: func(s rbxmk.State) *lua.LTable {
 		lib := s.L.CreateTable(0, 1)
 		lib.RawSetString("_RBXMK_VERSION", lua.LString(VersionString()))
@@ -251,8 +250,7 @@ var ProgramLibrary = rbxmk.Library{
 	},
 	Dump: func(s rbxmk.State) dump.Library {
 		return dump.Library{
-			Name:       "program",
-			ImportedAs: "",
+			Name: "program",
 			Struct: dump.Struct{
 				Fields: dump.Fields{
 					"_RBXMK_VERSION": dump.Property{

@@ -112,8 +112,8 @@ var Selene = Format{
 				// Constructors.
 				sortConstructors(def.Constructors, func(ctorName string, ctors dump.MultiFunction) {
 					buf.WriteString("[")
-					if library.ImportedAs != "" {
-						buf.WriteString(library.ImportedAs)
+					if len(library.Import) > 0 {
+						buf.WriteString(library.ImportString())
 						buf.WriteString(".")
 					}
 					buf.WriteString(defName)
@@ -127,7 +127,7 @@ var Selene = Format{
 			})
 
 			// Globals.
-			seleneWriteStruct(buf, structTypes, library.ImportedAs, library.Struct)
+			seleneWriteStruct(buf, structTypes, library.ImportString(), library.Struct)
 		}
 		return buf.Flush()
 	},

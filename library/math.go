@@ -13,11 +13,11 @@ import (
 func init() { register(Math) }
 
 var Math = rbxmk.Library{
-	Name:       "math",
-	ImportedAs: "math",
-	Priority:   10,
-	Open:       openMath,
-	Dump:       dumpMath,
+	Name:     "math",
+	Import:   []string{"math"},
+	Priority: 10,
+	Open:     openMath,
+	Dump:     dumpMath,
 }
 
 func openMath(s rbxmk.State) *lua.LTable {

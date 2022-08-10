@@ -13,11 +13,11 @@ import (
 func init() { register(String) }
 
 var String = rbxmk.Library{
-	Name:       "string",
-	ImportedAs: "string",
-	Priority:   10,
-	Open:       openString,
-	Dump:       dumpString,
+	Name:     "string",
+	Import:   []string{"string"},
+	Priority: 10,
+	Open:     openString,
+	Dump:     dumpString,
 }
 
 func openString(s rbxmk.State) *lua.LTable {

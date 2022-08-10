@@ -17,11 +17,11 @@ import (
 func init() { register(RBXMK) }
 
 var RBXMK = rbxmk.Library{
-	Name:       "rbxmk",
-	ImportedAs: "rbxmk",
-	Priority:   1,
-	Open:       openRBXMK,
-	Dump:       dumpRBXMK,
+	Name:     "rbxmk",
+	Import:   []string{"rbxmk"},
+	Priority: 1,
+	Open:     openRBXMK,
+	Dump:     dumpRBXMK,
 	Types: []func() rbxmk.Reflector{
 		reflect.AttrConfig,
 		reflect.Desc,

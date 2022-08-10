@@ -12,11 +12,11 @@ import (
 func init() { register(Sym) }
 
 var Sym = rbxmk.Library{
-	Name:       "sym",
-	ImportedAs: "sym",
-	Priority:   10,
-	Open:       openSym,
-	Dump:       dumpSym,
+	Name:     "sym",
+	Import:   []string{"sym"},
+	Priority: 10,
+	Open:     openSym,
+	Dump:     dumpSym,
 	Types: []func() rbxmk.Reflector{
 		reflect.Symbol,
 	},

@@ -19,11 +19,11 @@ import (
 func init() { register(JSON) }
 
 var JSON = rbxmk.Library{
-	Name:       "json",
-	ImportedAs: "json",
-	Priority:   10,
-	Open:       openJSON,
-	Dump:       dumpJSON,
+	Name:     "json",
+	Import:   []string{"json"},
+	Priority: 10,
+	Open:     openJSON,
+	Dump:     dumpJSON,
 	Types: []func() rbxmk.Reflector{
 		reflect.JsonPatch,
 		reflect.JsonValue,

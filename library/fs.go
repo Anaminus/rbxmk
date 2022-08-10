@@ -18,11 +18,11 @@ import (
 func init() { register(FS) }
 
 var FS = rbxmk.Library{
-	Name:       "fs",
-	ImportedAs: "fs",
-	Priority:   10,
-	Open:       openFS,
-	Dump:       dumpFS,
+	Name:     "fs",
+	Import:   []string{"fs"},
+	Priority: 10,
+	Open:     openFS,
+	Dump:     dumpFS,
 	Types: []func() rbxmk.Reflector{
 		reflect.Bool,
 		reflect.DirEntry,

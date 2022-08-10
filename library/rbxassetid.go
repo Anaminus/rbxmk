@@ -21,11 +21,11 @@ const rbxassetidWriteURL = "https://data.roblox.com/Data/Upload.ashx?assetid=%d"
 func init() { register(RbxAssetId) }
 
 var RbxAssetId = rbxmk.Library{
-	Name:       "rbxassetid",
-	ImportedAs: "rbxassetid",
-	Priority:   10,
-	Open:       openRbxAssetId,
-	Dump:       dumpRbxAssetId,
+	Name:     "rbxassetid",
+	Import:   []string{"rbxassetid"},
+	Priority: 10,
+	Open:     openRbxAssetId,
+	Dump:     dumpRbxAssetId,
 	Types: []func() rbxmk.Reflector{
 		reflect.RbxAssetOptions,
 	},

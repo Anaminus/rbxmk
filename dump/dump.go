@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/anaminus/rbxmk/dump/dt"
 )
@@ -40,9 +41,10 @@ type Libraries = []Library
 type Library struct {
 	// Name is the name of the library.
 	Name string
-	// ImportedAs is the name that the library is imported as. Empty indicates
-	// that the contents of the library are merged into the global environment.
-	ImportedAs string
+	// Import is a path of indices to where the table returned by Open will be
+	// merged, starting at the global table. If empty, the table is merged
+	// directly into the global table.
+	Import []string
 	// Priority determines the order in which the library is loaded.
 	Priority int
 	// Types contains types defined by the library.
@@ -51,6 +53,10 @@ type Library struct {
 	Enums Enums `json:",omitempty"`
 	// Struct contains the items of the library.
 	Struct Struct `json:",omitempty"`
+}
+
+func (l Library) ImportString() string {
+	return strings.Join(l.Import, ".")
 }
 
 // Formats maps a name to a format.
