@@ -49,9 +49,9 @@ be minified (use --indent="" to specify an empty string).
 </tr>
 <tr>
 <td>Libraries</td>
-<td>array</td>
-<td>A list of libraries available in the Lua environment. Each element is a
-<a href="#library">Library</a> object.</td>
+<td>object?</td>
+<td>A collection of libraries available in the Lua environment. Maps a library
+name to a <a href="#library">Library</a> object.</td>
 </tr>
 <tr>
 <td>Types</td>
@@ -430,11 +430,6 @@ fields:</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Name</td>
-<td>string</td>
-<td>The name of the library.</td>
-</tr>
 <tr>
 <td>Priority</td>
 <td>int</td>

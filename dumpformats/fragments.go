@@ -37,13 +37,14 @@ var Fragments = Format{
 // the reference within root.
 func ListFragments(root dump.Root, write func(path, ref string)) {
 	write("libraries", "Libraries")
-	for _, library := range root.Libraries {
-		p := path.Join("libraries", library.Name)
+	root.Libraries.ForEach(func(name string, library dump.Library) bool {
+		p := path.Join("libraries", name)
 		write(path.Join(p, "Summary"), library.Struct.Summary)
 		write(path.Join(p, "Description"), library.Struct.Description)
 		fragWriteFields(write, path.Join(p, "Fields"), library.Struct.Fields)
 		fragWriteTypes(write, path.Join(p, "Types"), library.Types)
-	}
+		return true
+	})
 	write("types", "Types")
 	fragWriteTypes(write, "types", root.Types)
 	write("formats", "Formats")

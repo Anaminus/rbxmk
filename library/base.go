@@ -207,7 +207,6 @@ func openFilteredLibs(s rbxmk.State, libs []libFilter, upvalues ...lua.LValue) {
 
 func dumpBase(s rbxmk.State) dump.Library {
 	return dump.Library{
-		Name: "base",
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"_G": dump.Property{

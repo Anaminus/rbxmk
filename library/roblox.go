@@ -79,7 +79,6 @@ func robloxTypeof(s rbxmk.State) int {
 
 func dumpRoblox(s rbxmk.State) dump.Library {
 	lib := dump.Library{
-		Name: "roblox",
 		Struct: dump.Struct{
 			Fields: dump.Fields{
 				"typeof": dump.Function{

@@ -23,10 +23,10 @@ var Selene = Format{
 				structTypes[t] = struct{}{}
 			}
 		}
-		for _, library := range root.Libraries {
+		root.Libraries.ForEach(func(name string, library dump.Library) bool {
 			// Library name comment.
 			buf.WriteString("\n# ")
-			buf.WriteString(library.Name)
+			buf.WriteString(name)
 			buf.WriteString(" library\n")
 
 			// Structs.
@@ -128,7 +128,8 @@ var Selene = Format{
 
 			// Globals.
 			seleneWriteStruct(buf, structTypes, library.ImportString(), library.Struct)
-		}
+			return true
+		})
 		return buf.Flush()
 	},
 }

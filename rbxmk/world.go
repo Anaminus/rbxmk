@@ -212,8 +212,9 @@ func walkCommands(def dump.Command, reg CommandRegistry, cmd *cobra.Command) dum
 func DumpWorld(world *rbxmk.World) dump.Root {
 	state := world.State()
 	root := dump.Root{
-		Formats: dump.Formats{},
-		Types:   dump.TypeDefs{},
+		Libraries: dump.Libraries{},
+		Formats:   dump.Formats{},
+		Types:     dump.TypeDefs{},
 	}
 	for _, format := range world.Formats() {
 		root.Formats[format.Name] = format.Dump()
@@ -223,9 +224,6 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 			continue
 		}
 		lib := l.Dump(state)
-		if lib.Name == "" {
-			lib.Name = l.Name
-		}
 		imp := make([]string, len(l.Import))
 		copy(imp, l.Import)
 		lib.Import = imp
@@ -233,7 +231,7 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		if l.Types != nil {
 			dumpTypes(root.Types, l.Types)
 		}
-		root.Libraries = append(root.Libraries, lib)
+		root.Libraries[l.Name] = lib
 	}
 	root.Program = *Register.Command[Program]
 	root.Program = walkCommands(root.Program, Register, Program)
@@ -250,7 +248,6 @@ var ProgramLibrary = rbxmk.Library{
 	},
 	Dump: func(s rbxmk.State) dump.Library {
 		return dump.Library{
-			Name: "program",
 			Struct: dump.Struct{
 				Fields: dump.Fields{
 					"_RBXMK_VERSION": dump.Property{
