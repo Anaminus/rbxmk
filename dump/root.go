@@ -12,4 +12,13 @@ type Root struct {
 	Formats Formats `json:",omitempty"`
 	// Program contains the root command created by the program.
 	Program Command
+	// Environment recursively maps the content of the Lua environment.
+	Environment *EnvRef
+}
+
+// EnvRef represents a value in an environment, which has an associated dump
+// object referred to by Path.
+type EnvRef struct {
+	Path   []string           `json:",omitempty"`
+	Fields map[string]*EnvRef `json:",omitempty"`
 }
