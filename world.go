@@ -24,6 +24,17 @@ type udptr struct {
 	resurrected bool
 }
 
+// EnvHook is called when a value in an environment changes.
+type EnvHook func(e EnvEvent)
+
+// EnvEvent maps a value in an environment to an associated dump object.
+type EnvEvent struct {
+	// EnvPath is an index starting at the global environment.
+	EnvPath []string
+	// DumpPath is an index starting at a dump Root.
+	DumpPath []string
+}
+
 // World contains the entire state of a Lua environment, including a Lua state,
 // and registered Reflectors, Formats, and Sources.
 type World struct {
@@ -41,8 +52,9 @@ type World struct {
 	tmponce sync.Once
 	tmpdir  string
 
-	Client *Client
-	FS     sfs.FS
+	Client  *Client
+	FS      sfs.FS
+	EnvHook EnvHook
 
 	udmut    sync.Mutex
 	userdata map[interface{}]*udptr
@@ -193,14 +205,140 @@ func (w *World) Open(lib Library) error {
 	}
 	src := lib.Open(w.State())
 	if src == nil {
+		w.EmitEvents(lib.Dump(w.State()).Struct, EnvEvent{
+			EnvPath:  []string{},
+			DumpPath: []string{"Libraries", lib.Name},
+		})
 		return nil
 	}
-	imp := make([]lua.LValue, len(lib.Import))
-	for i, name := range lib.Import {
-		imp[i] = lua.LString(name)
+	var e *libEnvContext
+	if w.EnvHook != nil {
+		e = &libEnvContext{Source: lib}
 	}
-	w.MergeTables(w.l.G.Global, src, imp...)
+	w.MergeTables(e, w.l.G.Global, src, lib.Import...)
 	return nil
+}
+
+// EmitEvents recursively traverses value and emits an event for each value
+// found.
+func (w *World) EmitEvents(value dump.Value, event EnvEvent) {
+	if w.EnvHook == nil {
+		return
+	}
+	if indices := value.Indices(); indices == nil {
+		w.EnvHook(event)
+	} else {
+		for _, name := range indices {
+			e := event
+			var v dump.Value
+			e.EnvPath = append(e.EnvPath, name)
+			e.DumpPath, v = value.Index(e.DumpPath, name)
+			w.EmitEvents(v, e)
+		}
+	}
+}
+
+// MergeTables merges src into root according to path. First, the root is
+// drilled into according to path, to get destination dst. Existing tables are
+// used directly, while any other value is overwritten with a new table. If path
+// is empty, then root is used directly as dst.
+//
+// Next, each entry in src is copied to dst. If the values of both the source
+// and destination are tables, then they are merged according to MergeTables
+// with an empty path. Otherwise, the source value overwrites the destination
+// value.
+func (w *World) MergeTables(e *libEnvContext, root, src *lua.LTable, path ...string) {
+	if root == nil {
+		panic("merge table: destination is nil")
+	}
+	if src == nil {
+		panic("merge table: source is nil")
+	}
+	dst := root
+	for _, index := range path {
+		switch sub := dst.RawGetString(index).(type) {
+		case *lua.LTable:
+			dst = sub
+		default:
+			// Overwrite any non-table value with a table.
+			subtable := w.l.CreateTable(0, 4)
+			dst.RawSetString(index, subtable)
+			dst = subtable
+		}
+		e.AppendPath(index)
+	}
+	// Some libraries set a metatable.
+	if src.Metatable != nil {
+		dst.Metatable = src.Metatable
+	}
+	s := w.State()
+	src.ForEach(func(k, v lua.LValue) error {
+		if v, ok := v.(*lua.LTable); ok {
+			if d := dst.RawGet(k).(*lua.LTable); ok {
+				w.MergeTables(e.Index(s, k), d, v)
+				return nil
+			}
+		}
+		dst.RawSet(k, v)
+		e.EmitEvent(w, k)
+		return nil
+	})
+}
+
+// libEnvContext provides context for an environment hook while drilling into a
+// library.
+type libEnvContext struct {
+	Source Library
+	Value  dump.Value
+	EnvEvent
+}
+
+// Index returns a new context for the value at key. Returns nil if no value
+// exists.
+func (e *libEnvContext) Index(s State, key lua.LValue) (d *libEnvContext) {
+	if e == nil {
+		return nil
+	}
+	var name string
+	if n, ok := key.(lua.LString); ok {
+		name = string(n)
+	} else {
+		return nil
+	}
+	d = &libEnvContext{Source: e.Source}
+	d.EnvPath = make([]string, len(e.EnvPath)+1)
+	copy(d.EnvPath, e.EnvPath)
+	d.EnvPath[len(d.EnvPath)-1] = name
+	if e.Value == nil {
+		dump := e.Source.Dump(s)
+		d.DumpPath = []string{"Libraries", e.Source.Name}
+		d.DumpPath, d.Value = dump.Struct.Index(d.DumpPath, name)
+		return d
+	}
+	d.DumpPath, d.Value = e.Value.Index(d.DumpPath, name)
+	if d.Value == nil {
+		return nil
+	}
+	return d
+}
+
+// EmitEvent emits an event for key in the current context, if a value at key
+// exists.
+func (e *libEnvContext) EmitEvent(w *World, key lua.LValue) {
+	if e == nil || w.EnvHook == nil {
+		return
+	}
+	if d := e.Index(w.State(), key); d != nil {
+		w.EnvHook(d.EnvEvent)
+	}
+}
+
+// AppendPath appends name to EnvPath, if e exists.
+func (e *libEnvContext) AppendPath(name string) {
+	if e == nil {
+		return
+	}
+	e.EnvPath = append(e.EnvPath, name)
 }
 
 // Library returns the Library registered with the given name. If the name is
@@ -217,50 +355,6 @@ func (w *World) Libraries() Libraries {
 	}
 	sort.Sort(libraries)
 	return libraries
-}
-
-// MergeTables merges src into root according to path. First, the root is
-// drilled into according to path, to get destination dst. Existing tables are
-// used directly, while any other value is overwritten with a new table. If path
-// is empty, then root is used directly as dst.
-//
-// Next, each entry in src is copied to dst. If the values of both the source
-// and destination are tables, then they are merged according to MergeTables
-// with an empty path. Otherwise, the source value overwrites the destination
-// value.
-func (w *World) MergeTables(root, src *lua.LTable, path ...lua.LValue) {
-	if root == nil {
-		panic("merge table: destination is nil")
-	}
-	if src == nil {
-		panic("merge table: source is nil")
-	}
-	dst := root
-	for _, name := range path {
-		switch sub := dst.RawGet(name).(type) {
-		case *lua.LTable:
-			dst = sub
-		default:
-			// Overwrite any non-table value with a table.
-			subtable := w.l.CreateTable(0, 4)
-			dst.RawSet(name, subtable)
-			dst = subtable
-		}
-	}
-	// Some libraries set a metatable.
-	if src.Metatable != nil {
-		dst.Metatable = src.Metatable
-	}
-	src.ForEach(func(k, v lua.LValue) error {
-		if v, ok := v.(*lua.LTable); ok {
-			if d := dst.RawGet(k).(*lua.LTable); ok {
-				w.MergeTables(d, v)
-				return nil
-			}
-		}
-		dst.RawSet(k, v)
-		return nil
-	})
 }
 
 // createTypeMetatable constructs a metatable from the given Reflector. If
@@ -544,6 +638,12 @@ func (w *World) RegisterReflector(r Reflector) {
 		ctors := w.l.CreateTable(0, n)
 		for name, ctor := range r.Constructors {
 			if c := ctor.Func; c != nil {
+				if w.EnvHook != nil {
+					w.EnvHook(EnvEvent{
+						EnvPath:  []string{r.Name, name},
+						DumpPath: []string{"Types", r.Name, "Constructors", name},
+					})
+				}
 				ctors.RawSetString(name, w.WrapFunc(func(s State) int {
 					return c(s)
 				}))

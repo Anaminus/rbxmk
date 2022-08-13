@@ -77,6 +77,8 @@ type WorldOpt struct {
 	IncludeLibraries rbxmk.Libraries
 	ExcludeProgram   bool
 	Args             []string
+
+	EventHook rbxmk.EnvHook
 }
 
 // InitWorld initializes an rbxmk.World with a common structure.
@@ -85,6 +87,7 @@ func InitWorld(opt WorldOpt) (world *rbxmk.World, err error) {
 		SkipOpenLibs:        true,
 		IncludeGoStackTrace: opt.Debug,
 	}))
+	world.EnvHook = opt.EventHook
 	if !opt.ExcludeRoots {
 		if opt.InsecurePaths {
 			world.FS.SetSecured(false)

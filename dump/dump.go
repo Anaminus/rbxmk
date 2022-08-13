@@ -262,6 +262,16 @@ type Value interface {
 	// Type returns a type definition.
 	Type() dt.Type
 
+	// Index returns the element of the value indexed by name. Returns nil if
+	// the value does not have elements, or no such element exists. Appends to
+	// path the path elements required to reach the indexed element.
+	Index(path []string, name string) ([]string, Value)
+
+	// Indices returns the indices of the elements of the value. Returns an
+	// empty slice if the value has zero elements, and nil if the value cannot
+	// have elements.
+	Indices() []string
+
 	v()
 }
 
@@ -291,6 +301,10 @@ func (v Property) Type() dt.Type {
 	return v.ValueType
 }
 
+func (v Property) Index(path []string, name string) ([]string, Value) { return nil, nil }
+
+func (v Property) Indices() []string { return nil }
+
 // Struct describes the API of a table with a number of fields.
 type Struct struct {
 	// Summary is a fragment reference pointing to a short summary of the
@@ -318,6 +332,19 @@ func (v Struct) Type() dt.Type {
 		k[name] = value.Type()
 	}
 	return dt.Type{Kind: k}
+}
+
+func (v Struct) Index(path []string, name string) ([]string, Value) {
+	return append(path, "Struct", "Fields", name), v.Fields[name]
+}
+
+func (v Struct) Indices() []string {
+	l := make([]string, 0, len(v.Fields))
+	for k := range v.Fields {
+		l = append(l, k)
+	}
+	sort.Strings(l)
+	return l
 }
 
 // TypeDef describes the definition of a type.
@@ -387,6 +414,19 @@ func (v Enum) Type() dt.Type {
 	return dt.Prim("Enum")
 }
 
+func (v Enum) Index(path []string, name string) ([]string, Value) {
+	return append(path, "Enum", "Items", name), v.Items[name]
+}
+
+func (v Enum) Indices() []string {
+	l := make([]string, 0, len(v.Items))
+	for k := range v.Items {
+		l = append(l, k)
+	}
+	sort.Strings(l)
+	return l
+}
+
 // EnumItems maps a name to an enum.
 type EnumItems map[string]EnumItem
 
@@ -402,6 +442,21 @@ type EnumItem struct {
 	// the enum item.
 	Description string `json:",omitempty"`
 }
+
+const V_EnumItem = "EnumItem"
+
+func (v EnumItem) v() {}
+
+func (v EnumItem) Kind() string { return V_EnumItem }
+
+// Type implements Value by returning the EnumItem primitive.
+func (v EnumItem) Type() dt.Type {
+	return dt.Prim("EnumItem")
+}
+
+func (v EnumItem) Index(path []string, name string) ([]string, Value) { return nil, nil }
+
+func (v EnumItem) Indices() []string { return nil }
 
 // Function describes the API of a function.
 type Function struct {
@@ -440,6 +495,10 @@ func (v Function) Type() dt.Type {
 	return dt.Function(fn)
 }
 
+func (v Function) Index(path []string, name string) ([]string, Value) { return nil, nil }
+
+func (v Function) Indices() []string { return nil }
+
 // MultiFunction describes a Function with multiple signatures.
 type MultiFunction []Function
 
@@ -453,6 +512,10 @@ func (v MultiFunction) Kind() string { return V_MultiFunction }
 func (MultiFunction) Type() dt.Type {
 	return dt.Functions()
 }
+
+func (v MultiFunction) Index(path []string, name string) ([]string, Value) { return nil, nil }
+
+func (v MultiFunction) Indices() []string { return nil }
 
 // Parameter describes a function parameter.
 type Parameter = dt.Parameter
