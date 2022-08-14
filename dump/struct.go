@@ -56,6 +56,12 @@ func (s Struct) Resolve(path ...string) any {
 	if len(path) == 0 {
 		return s
 	}
+	name, path := path[0], path[1:]
+	switch name {
+	case "Struct":
+	default:
+		return nil
+	}
 	switch name, path := path[0], path[1:]; name {
 	case "Fields":
 		return s.Fields.Resolve(path...)

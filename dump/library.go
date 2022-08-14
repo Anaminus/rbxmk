@@ -73,11 +73,11 @@ func (l Library) Resolve(path ...string) any {
 	if len(path) == 0 {
 		return l
 	}
-	switch name, path := path[0], path[1:]; name {
+	switch path[0] {
 	case "Types":
-		return l.Types.Resolve(path...)
+		return l.Types.Resolve(path[1:]...)
 	case "Enums":
-		return l.Enums.Resolve(path...)
+		return l.Enums.Resolve(path[1:]...)
 	case "Struct":
 		return l.Struct.Resolve(path...)
 	}
