@@ -114,8 +114,8 @@ func runDumpPluginCommand(cmd *cobra.Command, args []string) error {
 	file := args[0]
 	args = args[1:]
 
-	// Initialize world for dumping.
-	dumpWorld, err := InitWorld(WorldOpt{
+	// Generate dump.
+	root, err := GenerateDump(WorldOpt{
 		ExcludeRoots:     true,
 		IncludeLibraries: library.All(),
 	})
@@ -138,7 +138,6 @@ func runDumpPluginCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	// Push dump as table.
-	root := DumpWorld(dumpWorld)
 	var buf bytes.Buffer
 	je := json.NewEncoder(&buf)
 	je.SetEscapeHTML(false)
