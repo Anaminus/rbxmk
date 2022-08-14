@@ -21,6 +21,33 @@ import (
 	"github.com/robloxapi/types"
 )
 
+// GenerateDump produces a dump.Root for the given world configuration.
+func GenerateDump(opt WorldOpt) (root dump.Root, err error) {
+	env := &dump.EnvRef{}
+	opt.EventHook = func(e rbxmk.EnvEvent) {
+		node := env
+		for _, name := range e.EnvPath {
+			sub, ok := node.Fields[name]
+			if !ok {
+				sub = &dump.EnvRef{}
+				if node.Fields == nil {
+					node.Fields = map[string]*dump.EnvRef{}
+				}
+				node.Fields[name] = sub
+			}
+			node = sub
+		}
+		node.Path = e.DumpPath
+	}
+	world, err := InitWorld(opt)
+	if err != nil {
+		return root, err
+	}
+	root = DumpWorld(world)
+	root.Environment = env
+	return root, nil
+}
+
 func init() {
 	var Dump = Register.NewCommand(dump.Command{
 		Arguments:   "Commands/dump:Arguments",
@@ -42,36 +69,14 @@ func init() {
 			Use:  name,
 			Args: cobra.NoArgs,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				env := &dump.EnvRef{}
-
-				// Populate dump.
-				world, err := InitWorld(WorldOpt{
+				root, err := GenerateDump(WorldOpt{
 					WorldFlags:       WorldFlags{Debug: false},
 					IncludeLibraries: library.All(),
 					ExcludeRoots:     true,
-					EventHook: func(e rbxmk.EnvEvent) {
-						node := env
-						for _, name := range e.EnvPath {
-							sub, ok := node.Fields[name]
-							if !ok {
-								sub = &dump.EnvRef{}
-								if node.Fields == nil {
-									node.Fields = map[string]*dump.EnvRef{}
-								}
-								node.Fields[name] = sub
-							}
-							node = sub
-						}
-						node.Path = e.DumpPath
-					},
 				})
 				if err != nil {
 					return err
 				}
-				root := DumpWorld(world)
-				root.Environment = env
-
-				// Dump format.
 				return fn(cmd.OutOrStdout(), root, opts)
 			},
 		})
