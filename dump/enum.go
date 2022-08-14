@@ -9,6 +9,17 @@ import (
 // Enums maps a name to an enum.
 type Enums map[string]Enum
 
+// Resolve implements Node.
+func (e Enums) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return e
+	}
+	if v, ok := e[path[0]]; ok {
+		return v.Resolve(path[1:]...)
+	}
+	return nil
+}
+
 // Enum describes the API of an enum.
 type Enum struct {
 	// Summary is a fragment reference pointing to a short summary of the enum.
@@ -45,8 +56,31 @@ func (v Enum) Indices() []string {
 	return l
 }
 
+// Resolve implements Node.
+func (v Enum) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return v
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Items":
+		return v.Items.Resolve(path...)
+	}
+	return nil
+}
+
 // EnumItems maps a name to an enum.
 type EnumItems map[string]EnumItem
+
+// Resolve implements Node.
+func (e EnumItems) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return e
+	}
+	if v, ok := e[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // EnumItem describes the API of an enum item.
 type EnumItem struct {

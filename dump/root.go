@@ -16,6 +16,26 @@ type Root struct {
 	Environment *EnvRef
 }
 
+// Resolve implements Node.
+func (r Root) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return r
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Libraries":
+		return r.Libraries.Resolve(path...)
+	case "Types":
+		return r.Types.Resolve(path...)
+	case "Enums":
+		return r.Enums.Resolve(path...)
+	case "Formats":
+		return r.Formats.Resolve(path...)
+	case "Program":
+		return r.Program.Resolve(path...)
+	}
+	return nil
+}
+
 // EnvRef represents a value in an environment, which has an associated dump
 // object referred to by Path.
 type EnvRef struct {

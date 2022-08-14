@@ -3,10 +3,32 @@ package dump
 import "github.com/anaminus/rbxmk/dump/dt"
 
 // Methods maps a name to a method.
-type Methods = map[string]Function
+type Methods map[string]Function
+
+// Resolve implements Node.
+func (m Methods) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return m
+	}
+	if v, ok := m[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // Constructors maps a name to a number of constructor functions.
-type Constructors = map[string]MultiFunction
+type Constructors map[string]MultiFunction
+
+// Resolve implements Node.
+func (c Constructors) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return c
+	}
+	if v, ok := c[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // Function describes the API of a function.
 type Function struct {

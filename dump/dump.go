@@ -24,3 +24,19 @@ type Value interface {
 
 	v()
 }
+
+// Node is a node within a dump tree, with a Root as the top-level node.
+type Node interface {
+	// Resolve recursively resolves path, returning the referred value. Returns
+	// nil if no subnode could be found. Returns the node if path is empty.
+	Resolve(path ...string) any
+}
+
+// resolveValue ensures that a path does not return a value if the path is
+// longer than it should be.
+func resolveValue(path []string, v any) any {
+	if len(path) > 0 {
+		return nil
+	}
+	return v
+}

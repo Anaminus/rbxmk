@@ -8,6 +8,17 @@ import (
 // Libraries is a list of libraries.
 type Libraries map[string]Library
 
+// Resolve implements Node.
+func (l Libraries) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return l
+	}
+	if v, ok := l[path[0]]; ok {
+		return v.Resolve(path[1:]...)
+	}
+	return nil
+}
+
 type libEntry struct {
 	name     string
 	priority int
@@ -55,6 +66,22 @@ type Library struct {
 	Enums Enums `json:",omitempty"`
 	// Struct contains the items of the library.
 	Struct Struct `json:",omitempty"`
+}
+
+// Resolve implements Node.
+func (l Library) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return l
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Types":
+		return l.Types.Resolve(path...)
+	case "Enums":
+		return l.Enums.Resolve(path...)
+	case "Struct":
+		return l.Struct.Resolve(path...)
+	}
+	return nil
 }
 
 func (l Library) ImportString() string {

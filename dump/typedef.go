@@ -3,7 +3,18 @@ package dump
 import "github.com/anaminus/rbxmk/dump/dt"
 
 // TypeDefs maps a name to a type definition.
-type TypeDefs = map[string]TypeDef
+type TypeDefs map[string]TypeDef
+
+// Resolve implements Node.
+func (t TypeDefs) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return t
+	}
+	if v, ok := t[path[0]]; ok {
+		return v.Resolve(path[1:]...)
+	}
+	return nil
+}
 
 // TypeDef describes the definition of a type.
 type TypeDef struct {
@@ -32,4 +43,26 @@ type TypeDef struct {
 	Operators *Operators `json:",omitempty"`
 	// Enums describes enums related to the type.
 	Enums Enums `json:",omitempty"`
+}
+
+// Resolve implements Node.
+func (t TypeDef) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return t
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Constructors":
+		return t.Constructors.Resolve(path...)
+	case "Properties":
+		return t.Properties.Resolve(path...)
+	case "Symbols":
+		return t.Symbols.Resolve(path...)
+	case "Methods":
+		return t.Methods.Resolve(path...)
+	case "Operators":
+		return resolveValue(path, t.Operators)
+	case "Enums":
+		return t.Enums.Resolve(path...)
+	}
+	return nil
 }

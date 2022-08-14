@@ -51,8 +51,35 @@ func (v Struct) Indices() []string {
 	return l
 }
 
+// Resolve implements Node.
+func (s Struct) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return s
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Fields":
+		return s.Fields.Resolve(path...)
+	}
+	return nil
+}
+
 // Fields maps a name to a value.
 type Fields map[string]Value
+
+// Resolve implements Node.
+func (f Fields) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return f
+	}
+	if v, ok := f[path[0]]; ok {
+		if n, ok := v.(Node); ok {
+			return n.Resolve(path[1:]...)
+		} else {
+			return resolveValue(path[1:], v)
+		}
+	}
+	return nil
+}
 
 func marshal(v interface{}) (b []byte, err error) {
 	var buf bytes.Buffer

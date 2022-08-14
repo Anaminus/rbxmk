@@ -3,6 +3,17 @@ package dump
 // Commands maps a name to a command.
 type Commands map[string]Command
 
+// Resolve implements Node.
+func (c Commands) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return c
+	}
+	if v, ok := c[path[0]]; ok {
+		return v.Resolve(path[1:]...)
+	}
+	return nil
+}
+
 // Command describes a program command.
 type Command struct {
 	// Aliases lists available aliases for the command.
@@ -29,8 +40,33 @@ type Command struct {
 	Commands Commands `json:",omitempty"`
 }
 
+// Resolve implements Node.
+func (c Command) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return c
+	}
+	switch name, path := path[0], path[1:]; name {
+	case "Flags":
+		return c.Flags.Resolve(path...)
+	case "Commands":
+		return c.Commands.Resolve(path...)
+	}
+	return nil
+}
+
 // Flags maps a name to a flag.
 type Flags map[string]Flag
+
+// Resolve implements Node.
+func (f Flags) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return f
+	}
+	if v, ok := f[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // Flag describes a command flag.
 type Flag struct {

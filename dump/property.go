@@ -3,10 +3,32 @@ package dump
 import "github.com/anaminus/rbxmk/dump/dt"
 
 // Properties maps a name to a Property.
-type Properties = map[string]Property
+type Properties map[string]Property
+
+// Resolve implements Node.
+func (p Properties) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return p
+	}
+	if v, ok := p[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // Symbols maps a name to a Property.
-type Symbols = map[string]Property
+type Symbols map[string]Property
+
+// Resolve implements Node.
+func (s Symbols) Resolve(path ...string) any {
+	if len(path) == 0 {
+		return s
+	}
+	if v, ok := s[path[0]]; ok {
+		return resolveValue(path[1:], v)
+	}
+	return nil
+}
 
 // Property describes the API of a property.
 type Property struct {
