@@ -41,20 +41,25 @@ local tests = {
 	{"a"           , "/a"             , nil         },
 	{"/a"          , "a"              , nil         },
 
-	{[[C:a\b\c]]          , [[C:a/b/d]]               , [[..\d]]     },
-	{[[C:\]]              , [[D:\]]                   , nil          },
-	{[[C:]]               , [[D:]]                    , nil          },
-	{[[C:\Projects]]      , [[c:\projects\src]]       , [[src]]      },
-	{[[C:\Projects]]      , [[c:\projects]]           , [[.]]        },
-	{[[C:\Projects\a\..]] , [[c:\projects]]           , [[.]]        },
-	{[[\\host\share]]     , [[\\host\share\file.txt]] , [[file.txt]] },
+	{win=true, [[C:a\b\c]]          , [[C:a/b/d]]               , [[..\d]]     },
+	{win=true, [[C:\]]              , [[D:\]]                   , nil          },
+	{win=true, [[C:]]               , [[D:]]                    , nil          },
+	{win=true, [[C:\Projects]]      , [[c:\projects\src]]       , [[src]]      },
+	{win=true, [[C:\Projects]]      , [[c:\projects]]           , [[.]]        },
+	{win=true, [[C:\Projects\a\..]] , [[c:\projects]]           , [[.]]        },
+	{win=true, [[\\host\share]]     , [[\\host\share\file.txt]] , [[file.txt]] },
 }
 
+local windows = path.clean("/") == "\\"
+
 for i, test in ipairs(tests) do
-	local result = path.rel(test[1], test[2])
-	if result then
-		T.Pass(result == path.clean(test[3]), string.format("test %d: expected %q, got %q", i, path.clean(test[3]), result))
-	else
-		T.Pass(result == test[3], "test " .. i .. ": nil result does not match")
+	if not not test.win == windows then
+		local result = path.rel(test[1], test[2])
+		if result then
+			local expected = path.clean(test[3])
+			T.Pass(result == expected, string.format("test %d: expected %q, got %q", i, expected, result))
+		else
+			T.Pass(result == test[3], "test " .. i .. ": nil result does not match")
+		end
 	end
 end
