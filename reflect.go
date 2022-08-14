@@ -121,7 +121,7 @@ func (r Reflector) DumpAll() dump.TypeDef {
 		}
 		if _, ok := def.Symbols[symbol.Name]; !ok {
 			if def.Symbols == nil {
-				def.Symbols = dump.Symbols{}
+				def.Symbols = dump.Properties{}
 			}
 			def.Symbols[symbol.Name] = property.Dump()
 		}

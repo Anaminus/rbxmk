@@ -100,7 +100,7 @@ func fragWriteTypes(write func(path, ref string), p string, types dump.TypeDefs)
 			write(path.Join(p, "Summary"), prop.Summary)
 			write(path.Join(p, "Description"), prop.Description)
 		})
-		sortProperties(dump.Properties(def.Symbols), func(symName string, prop dump.Property) {
+		sortProperties(def.Symbols, func(symName string, prop dump.Property) {
 			p := path.Join(p, "Symbols", symName)
 			write(path.Join(p, "Summary"), prop.Summary)
 			write(path.Join(p, "Description"), prop.Description)

@@ -36,7 +36,7 @@ type TypeDef struct {
 	// Properties describes the properties defined on the type.
 	Properties Properties `json:",omitempty"`
 	// Symbols describes the symbols defined on the type.
-	Symbols Symbols `json:",omitempty"`
+	Symbols Properties `json:",omitempty"`
 	// Methods describes the methods defined on the type.
 	Methods Methods `json:",omitempty"`
 	// Operators describes the operators defined on the type.

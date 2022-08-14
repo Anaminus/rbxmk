@@ -16,20 +16,6 @@ func (p Properties) Resolve(path ...string) any {
 	return nil
 }
 
-// Symbols maps a name to a Property.
-type Symbols map[string]Property
-
-// Resolve implements Node.
-func (s Symbols) Resolve(path ...string) any {
-	if len(path) == 0 {
-		return s
-	}
-	if v, ok := s[path[0]]; ok {
-		return resolveValue(path[1:], v)
-	}
-	return nil
-}
-
 // Property describes the API of a property.
 type Property struct {
 	// ValueType is the type of the property's value.
