@@ -7,9 +7,9 @@ require (
 	github.com/anaminus/cobra v1.4.1-z
 	github.com/anaminus/drill v0.3.2
 	github.com/anaminus/gopher-lua v0.4.2
-	github.com/anaminus/parse v0.3.0
 	github.com/anaminus/pflag v1.0.6-z
 	github.com/andybalholm/cascadia v1.3.1
+	github.com/danieljoos/wincred v1.1.2
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/inconshreveable/mousetrap v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -26,6 +26,7 @@ require (
 )
 
 require (
+	github.com/anaminus/parse v0.3.0 // indirect
 	github.com/bkaradzic/go-lz4 v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/pkg/errors v0.8.1 // indirect

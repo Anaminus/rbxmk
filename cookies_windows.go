@@ -3,60 +3,44 @@
 package rbxmk
 
 import (
+	"bytes"
 	"net/http"
-	"strings"
-	"time"
 
-	"github.com/anaminus/parse"
 	"github.com/anaminus/rbxmk/rtypes"
-	reg "golang.org/x/sys/windows/registry"
+	"github.com/danieljoos/wincred"
 )
 
 func cookiesFromStudio() rtypes.Cookies {
-	const keyPath = `Software\Roblox\RobloxStudioBrowser\roblox.com`
-	key, err := reg.OpenKey(reg.CURRENT_USER, keyPath, reg.QUERY_VALUE)
-	if err != nil {
-		return nil
-	}
-	defer key.Close()
-	v, _, err := key.GetStringValue(".ROBLOSECURITY")
-	if err != nil {
-		return nil
-	}
-	cookie := &http.Cookie{
-		Name:   ".ROBLOSECURITY",
-		Domain: "roblox.com",
-	}
-	if !parseRegistryCookie(cookie, v) {
-		return nil
-	}
-	return rtypes.Cookies{rtypes.Cookie{Cookie: cookie}}
-}
+	const domain = `roblox.com`
+	const credBaseName = `https://www.` + domain + `:RobloxStudioAuth`
+	const cookieListName = credBaseName + `Cookies`
 
-func parseRegistryCookie(cookie *http.Cookie, v string) bool {
-	r := parse.NewTextReader(strings.NewReader(v))
-	if r.Is("SEC::<YES>") {
-		cookie.Secure = true
-		r.Is(",")
+	cookieList, err := wincred.GetGenericCredential(cookieListName)
+	if err != nil {
+		return nil
 	}
-	if r.Is("EXP::<") {
-		value, ok := r.Until('>')
-		if !ok {
-			return false
+	acceptedCookies := map[string]string{}
+	for _, name := range bytes.Split(cookieList.CredentialBlob, []byte{';'}) {
+		if len(name) == 0 {
+			continue
 		}
-		t, err := time.Parse(time.RFC3339, value)
-		if err != nil {
-			return false
-		}
-		cookie.Expires = t
-		r.Is(",")
+		acceptedCookies[credBaseName+string(name)] = string(name)
 	}
-	if r.Is("COOK::<") {
-		value, ok := r.UntilEOF()
-		if !ok {
-			return false
-		}
-		cookie.Value = value[:len(value)-1]
+
+	creds, err := wincred.List()
+	if err != nil {
+		return nil
 	}
-	return r.IsEOF()
+	var cookies rtypes.Cookies
+	for _, cred := range creds {
+		if name, ok := acceptedCookies[cred.TargetName]; ok {
+			cookies = append(cookies, rtypes.Cookie{Cookie: &http.Cookie{
+				Name:   name,
+				Domain: domain,
+				Secure: true,
+				Value:  string(cred.CredentialBlob),
+			}})
+		}
+	}
+	return cookies
 }
