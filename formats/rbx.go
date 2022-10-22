@@ -32,6 +32,7 @@ func rbxTypes() []func() rbxmk.Reflector {
 		reflect.Double,
 		reflect.Faces,
 		reflect.Float,
+		reflect.Font,
 		reflect.Instance,
 		reflect.Int,
 		reflect.Int64,
@@ -877,6 +878,18 @@ func (d *rbxDecoder) convertType(inst *rtypes.Instance, prop string, r rbxfile.V
 				Index:  r.Index,
 			}, nil
 		}
+	case typ.Name == "Font":
+		switch r := r.(type) {
+		case nil:
+			return rtypes.Font{}, nil
+		case rbxfile.ValueFont:
+			return rtypes.Font{
+				Family:       string(r.Family),
+				Weight:       int(r.Weight),
+				Style:        int(r.Style),
+				CachedFaceId: string(r.CachedFaceId),
+			}, nil
+		}
 	}
 	switch d.mode {
 	case modeNonStrict:
@@ -966,6 +979,8 @@ func descTypeFromFileValue(r rbxfile.Value) rbxdump.Type {
 		return typ
 	case rbxfile.ValueUniqueId:
 		return rbxdump.Type{Name: "UniqueId"}
+	case rbxfile.ValueFont:
+		return rbxdump.Type{Name: "Font"}
 	}
 	return rbxdump.Type{}
 }
@@ -1612,6 +1627,18 @@ func (e *rbxEncoder) convertType(inst *rbxfile.Instance, prop string, t types.Pr
 				Index:  t.Index,
 			}, nil
 		}
+	case typ.Name == "Font":
+		switch t := t.(type) {
+		case nil:
+			return rbxfile.ValueFont{}, nil
+		case rtypes.Font:
+			return rbxfile.ValueFont{
+				Family:       rbxfile.ValueContent(t.Family),
+				Weight:       rbxfile.FontWeight(t.Weight),
+				Style:        rbxfile.FontStyle(t.Style),
+				CachedFaceId: rbxfile.ValueContent(t.CachedFaceId),
+			}, nil
+		}
 	}
 	switch e.mode {
 	case modeNonStrict:
@@ -1694,6 +1721,8 @@ func descTypeFromValue(t string) rbxdump.Type {
 		return rbxdump.Type{Name: "SharedString"}
 	case "UniqueId":
 		return rbxdump.Type{Name: "UniqueId"}
+	case "Font":
+		return rbxdump.Type{Name: "Font"}
 	default:
 		if strings.HasSuffix(t, "?") {
 			typ := descTypeFromValue(strings.TrimSuffix(t, "?"))
