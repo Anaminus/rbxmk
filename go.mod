@@ -18,7 +18,7 @@ require (
 	github.com/robloxapi/rbxdump v0.4.1
 	github.com/robloxapi/rbxfile v0.6.4
 	github.com/robloxapi/types v0.2.1
-	github.com/wI2L/jsondiff v0.2.0
+	github.com/wI2L/jsondiff v0.3.0
 	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
 	golang.org/x/net v0.0.0-20220513224357-95641704303c
 	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a
@@ -31,7 +31,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/tidwall/gjson v1.14.0 // indirect
+	github.com/tidwall/gjson v1.14.3 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
-	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 )
