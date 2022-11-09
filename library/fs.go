@@ -34,7 +34,7 @@ var FS = rbxmk.Library{
 }
 
 func openFS(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 6)
+	lib := s.L.CreateTable(0, 7)
 	lib.RawSetString("dir", s.WrapFunc(fsDir))
 	lib.RawSetString("mkdir", s.WrapFunc(fsMkdir))
 	lib.RawSetString("read", s.WrapFunc(fsRead))
@@ -50,6 +50,10 @@ func fsDir(s rbxmk.State) int {
 	files, err := FSSource{World: s.World}.Dir(dirname)
 	if err != nil {
 		return s.RaiseError("%s", err)
+	}
+	if files == nil {
+		s.L.Push(lua.LNil)
+		return 1
 	}
 	tfiles := s.L.CreateTable(len(files), 0)
 	for i, entry := range files {
