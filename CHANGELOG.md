@@ -26,6 +26,7 @@ branch is the latest unreleased version.
 	- Receives a table that describes the Lua environment, and a function to
 	  write output.
 - Add "Priority" field to libraries in dump format.
+- Add support for CFrames in `rbxattr` format.
 
 **Fixes**:
 - Fix table.concat being unable to concatenate large tables.

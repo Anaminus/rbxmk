@@ -71,6 +71,11 @@ func decodeAttributeValue(a rbxattr.Value) (t types.Value, err error) {
 		return types.Vector2(*a), nil
 	case *rbxattr.ValueVector3:
 		return types.Vector3(*a), nil
+	case *rbxattr.ValueCFrame:
+		return types.CFrame{
+			Position: types.Vector3(a.Position),
+			Rotation: a.Rotation,
+		}, nil
 	case *rbxattr.ValueNumberSequence:
 		t := make(types.NumberSequence, len(*a))
 		for i, k := range *a {
@@ -137,6 +142,12 @@ func encodeAttributeValue(t types.Value) (a rbxattr.Value, err error) {
 		return &a, nil
 	case types.Vector3:
 		a := rbxattr.ValueVector3(t)
+		return &a, nil
+	case types.CFrame:
+		a := rbxattr.ValueCFrame{
+			Position: rbxattr.ValueVector3(t.Position),
+			Rotation: t.Rotation,
+		}
 		return &a, nil
 	case types.NumberSequence:
 		a := make(rbxattr.ValueNumberSequence, len(t))
