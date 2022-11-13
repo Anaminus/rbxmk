@@ -35,6 +35,7 @@ var Roblox = rbxmk.Library{
 		reflect.Enums,
 		reflect.Faces,
 		reflect.Float,
+		reflect.Font,
 		reflect.Instance,
 		reflect.Int,
 		reflect.Int64,
