@@ -90,6 +90,7 @@ func Zip() rbxmk.Format {
 		},
 		Dump: func() dump.Format {
 			return dump.Format{
+				Hidden:      true,
 				Summary:     "Formats/zip:Summary",
 				Description: "Formats/zip:Description",
 			}
