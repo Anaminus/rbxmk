@@ -220,6 +220,9 @@ func DumpWorld(world *rbxmk.World) dump.Root {
 		Types:     dump.TypeDefs{},
 	}
 	for _, format := range world.Formats() {
+		if format.Dump == nil {
+			continue
+		}
 		root.Formats[format.Name] = format.Dump()
 	}
 	for _, l := range world.Libraries() {
