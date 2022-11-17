@@ -8,6 +8,7 @@ import (
 	"github.com/anaminus/rbxmk/dump"
 	"github.com/anaminus/rbxmk/dump/dt"
 	"github.com/anaminus/rbxmk/rtypes"
+	"github.com/robloxapi/types"
 )
 
 func init() { register(Path) }
@@ -21,9 +22,10 @@ var Path = rbxmk.Library{
 }
 
 func openPath(s rbxmk.State) *lua.LTable {
-	lib := s.L.CreateTable(0, 5)
+	lib := s.L.CreateTable(0, 6)
 	lib.RawSetString("clean", s.WrapFunc(pathClean))
 	lib.RawSetString("expand", s.WrapFunc(pathExpand))
+	lib.RawSetString("explode", s.WrapFunc(pathExplode))
 	lib.RawSetString("join", s.WrapFunc(pathJoin))
 	lib.RawSetString("rel", s.WrapFunc(pathRel))
 	lib.RawSetString("split", s.WrapFunc(pathSplit))
@@ -45,6 +47,37 @@ func pathExpand(s rbxmk.State) int {
 	}
 	s.L.Push(lua.LString(expanded))
 	return 1
+}
+
+func splitPathAll(s string) []string {
+	if filepath.IsAbs(s) || s == "" || filepath.VolumeName(s) == s {
+		return nil
+	}
+	a := []string{}
+	for {
+		s = filepath.Clean(s)
+		d, b := filepath.Split(s)
+		a = append([]string{b}, a...)
+		if d == "" {
+			// Terminate relative path.
+			break
+		} else if d == s {
+			// Terminate absolute path.
+			return nil
+		}
+		s = d
+	}
+	return a
+}
+
+func pathExplode(s rbxmk.State) int {
+	path := s.CheckString(1)
+	elements := splitPathAll(path)
+	a := make(rtypes.Array, len(elements))
+	for i, element := range elements {
+		a[i] = types.String(element)
+	}
+	return s.PushTuple(a...)
 }
 
 func pathJoin(s rbxmk.State) int {
@@ -110,6 +143,17 @@ func dumpPath(s rbxmk.State) dump.Library {
 					CanError:    true,
 					Summary:     "Libraries/path:Fields/expand/Summary",
 					Description: "Libraries/path:Fields/expand/Description",
+				},
+				"explode": dump.Function{
+					Hidden: true,
+					Parameters: dump.Parameters{
+						{Name: "path", Type: dt.Prim(rtypes.T_LuaString)},
+					},
+					Returns: dump.Parameters{
+						{Name: "...", Type: dt.Prim(rtypes.T_LuaString)},
+					},
+					Summary:     "Libraries/path:Fields/explode/Summary",
+					Description: "Libraries/path:Fields/explode/Description",
 				},
 				"join": dump.Function{
 					Parameters: dump.Parameters{
