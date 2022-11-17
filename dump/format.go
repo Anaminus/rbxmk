@@ -27,6 +27,9 @@ type Format struct {
 
 	// Options describes the options of the format.
 	Options FormatOptions `json:",omitempty"`
+
+	// Hidden sets whether the format should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 // Resolve implements Node.
@@ -64,4 +67,7 @@ type FormatOption struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the option.
 	Description string `json:",omitempty"`
+
+	// Hidden sets whether the option should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }

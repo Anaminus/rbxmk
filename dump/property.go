@@ -29,6 +29,9 @@ type Property struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the property.
 	Description string `json:",omitempty"`
+
+	// Hidden sets whether the property should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 const V_Property = "Property"

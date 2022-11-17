@@ -43,6 +43,9 @@ type TypeDef struct {
 	Operators *Operators `json:",omitempty"`
 	// Enums describes enums related to the type.
 	Enums Enums `json:",omitempty"`
+
+	// Hidden sets whether the definition should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 // Resolve implements Node.

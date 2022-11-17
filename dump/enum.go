@@ -30,6 +30,9 @@ type Enum struct {
 
 	// Items are the items that exist on the enum.
 	Items EnumItems
+
+	// Hidden sets whether the enum should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 const V_Enum = "Enum"
@@ -93,6 +96,9 @@ type EnumItem struct {
 	// Description is a fragment reference pointing to a detailed description of
 	// the enum item.
 	Description string `json:",omitempty"`
+
+	// Hidden sets whether the item should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 const V_EnumItem = "EnumItem"

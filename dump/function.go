@@ -47,6 +47,9 @@ type Function struct {
 	Parameters Parameters `json:",omitempty"`
 	// Returns are the values returned by the function.
 	Returns Parameters `json:",omitempty"`
+
+	// Hidden sets whether the function should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 const V_Function = "Function"
@@ -88,6 +91,16 @@ func (MultiFunction) Type() dt.Type {
 func (v MultiFunction) Index(path []string, name string) ([]string, Value) { return nil, nil }
 
 func (v MultiFunction) Indices() []string { return nil }
+
+// Hidden returns true if all of the functions are hidden.
+func (v MultiFunction) Hidden() bool {
+	for _, f := range v {
+		if !f.Hidden {
+			return false
+		}
+	}
+	return true
+}
 
 // Parameter describes a function parameter.
 type Parameter = dt.Parameter

@@ -66,6 +66,9 @@ type Library struct {
 	Enums Enums `json:",omitempty"`
 	// Struct contains the items of the library.
 	Struct Struct `json:",omitempty"`
+
+	// Hidden sets whether the library should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 // Resolve implements Node.

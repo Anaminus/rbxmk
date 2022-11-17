@@ -20,6 +20,9 @@ type Struct struct {
 
 	// Fields are the fields of the structure.
 	Fields Fields
+
+	// Hidden sets whether the function should be hidden from the public API.
+	Hidden bool `json:",omitempty"`
 }
 
 const V_Struct = "Struct"
