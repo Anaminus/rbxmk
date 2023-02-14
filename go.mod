@@ -16,7 +16,7 @@ require (
 	github.com/peterh/liner v1.2.2
 	github.com/robloxapi/rbxattr v0.3.0
 	github.com/robloxapi/rbxdump v0.4.1
-	github.com/robloxapi/rbxfile v0.6.4
+	github.com/robloxapi/rbxfile v0.6.5
 	github.com/robloxapi/types v0.2.1
 	github.com/wI2L/jsondiff v0.3.0
 	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
