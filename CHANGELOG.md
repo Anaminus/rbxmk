@@ -31,6 +31,7 @@ branch is the latest unreleased version.
 **Fixes**:
 - Fix table.concat being unable to concatenate large tables.
 - Fix fs.dir returning an empty table instead of nil when the path does not point to a directory.
+- Fix nil pointer dereference when writing models that contain UniqueId property types.
 
 See a [comparison with the previous version][cmp-imperative] for a thorough list of changes.
 
