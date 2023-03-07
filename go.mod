@@ -20,9 +20,9 @@ require (
 	github.com/robloxapi/types v0.2.1
 	github.com/wI2L/jsondiff v0.3.0
 	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
-	golang.org/x/net v0.0.0-20220513224357-95641704303c
-	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a
-	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171
+	golang.org/x/net v0.7.0
+	golang.org/x/sys v0.5.0
+	golang.org/x/term v0.5.0
 )
 
 require (
